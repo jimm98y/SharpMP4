@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace BoxGenerator.CSharp
@@ -146,7 +147,7 @@ namespace BoxGenerator.CSharp
 
         public Dictionary<string, string> GenerateParser()
         {
-            Dictionary<string, string> ret = new Dictionary<string, string>();
+            var ret = new Dictionary<string, string>();
             string namespaceHeader  = $@"using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -156,8 +157,8 @@ namespace SharpISOBMFF
 {{
 ";
             // build box factory
-            string factory = namespaceHeader;
-            factory +=
+            var factory = new StringBuilder(namespaceHeader);
+            factory.Append(
     @"    public class BoxFactory
     {
         public Func<string, string, byte[], IMp4Logger, Box> CreateBox = DefaultCreateBox;
@@ -170,7 +171,7 @@ namespace SharpISOBMFF
 
             switch(fourCC)
             {
-";
+");
             foreach (var item in parserDocument.Boxes)
             {
                 string optCondition = "";
@@ -179,13 +180,14 @@ namespace SharpISOBMFF
                 {
                     if (item.Key == "uuid")
                     {
-                        factory += $"               case \"{item.Key}\": return new UserBox(uuid);\r\n";
+                        factory.Append($"               case \"{item.Key}\": return new UserBox(uuid);\r\n");
                     }
                     else
                     {
                         string comment = "";
                         if (item.Value.Single().BoxName.EndsWith("Dup"))
                             comment = " // TODO: fix duplicate";
+
                         string optParams = "";
                         if (item.Value.Single().BoxName == "AudioSampleEntry" || 
                             item.Value.Single().BoxName == "VisualSampleEntry" ||
@@ -206,7 +208,7 @@ namespace SharpISOBMFF
                             elseBlock = "else return new Mp4aBox();";
                         }
 
-                        factory += $"               case \"{item.Key}\": {optCondition} return new {item.Value.Single().BoxName}({optParams});{(optCondition != "" ? $"{elseBlock}break;" : "")}{comment}\r\n";
+                        factory.Append($"               case \"{item.Key}\": {optCondition} return new {item.Value.Single().BoxName}({optParams});{(optCondition != "" ? $"{elseBlock}break;" : "")}{comment}\r\n");
                     }
                 }
                 else
@@ -222,32 +224,32 @@ namespace SharpISOBMFF
                         )
                     {
                         string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
-                        factory += $"               case \"{item.Key}\": return new {item.Value.First().BoxName}();{comment}\r\n";
+                        factory.Append($"               case \"{item.Key}\": return new {item.Value.First().BoxName}();{comment}\r\n");
                     }
                     else if (item.Key == "cprt")
                     {
-                        factory += $"               case \"{item.Key}\": if(parent == \"ilst\") return new AppleCopyrightBox(); else return new CopyrightBox();\r\n";
+                        factory.Append($"               case \"{item.Key}\": if(parent == \"ilst\") return new AppleCopyrightBox(); else return new CopyrightBox();\r\n");
                     }
                     else if (item.Key == "ster")
                     {
-                        factory += $"               case \"{item.Key}\": if(parent == \"grpl\") return new StereoEntityGroupBox(); else return new StereoVideoGroupBox();\r\n";
+                        factory.Append($"               case \"{item.Key}\": if(parent == \"grpl\") return new StereoEntityGroupBox(); else return new StereoVideoGroupBox();\r\n");
                     }
                     else if (item.Value.First().BoxName == "TextMediaBox")
                     {
-                        factory += $"               case \"{item.Key}\": if(parent == \"gmhd\") return new TextGmhdMediaBox(); else if(parent == \"stsd\") return new TextMediaBox(); break;\r\n";
+                        factory.Append($"               case \"{item.Key}\": if(parent == \"gmhd\") return new TextGmhdMediaBox(); else if(parent == \"stsd\") return new TextMediaBox(); break;\r\n");
                     }
                     else if (item.Key == "stri")
                     {
-                        factory += $"               case \"{item.Key}\": if(parent == \"eyes\") return new StereoViewInformationBox(); else return new SubTrackInformationBox();\r\n";
+                        factory.Append($"               case \"{item.Key}\": if(parent == \"eyes\") return new StereoViewInformationBox(); else return new SubTrackInformationBox();\r\n");
                     }
                     else
                     {
-                        factory += $"               case \"{item.Key}\": throw new NotSupportedException($\"\'{item.Key}\' under \'{{parent}}\' is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}\");\r\n";
+                        factory.Append($"               case \"{item.Key}\": throw new NotSupportedException($\"\'{item.Key}\' under \'{{parent}}\' is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}\");\r\n");
                     }
                 }
             }
 
-            factory +=
+            factory.Append(
 @"            }
 
             if(parent == ""ilst"")
@@ -266,15 +268,15 @@ namespace SharpISOBMFF
                     logger.LogDebug($""Unknown box: '{fourCC}'"");
             return new UnknownBox(IsoStream.FromFourCC(fourCC));
         }
-";
+");
 
 
-            factory += @"
+            factory.Append(@"
         public static SampleGroupDescriptionEntry DefaultCreateEntry(string fourCC, IMp4Logger logger = null)
         {
             switch(fourCC)
             {
-";
+");
             foreach (var item in parserDocument.Entries)
             {
                 if (item.Value.Count == 1)
@@ -292,7 +294,7 @@ namespace SharpISOBMFF
                         optParams = $"IsoStream.FromFourCC(\"{item.Key}\")";
                     }
 
-                    factory += $"               case \"{item.Key}\": return new {item.Value.Single().BoxName}({optParams});{comment}\r\n";
+                    factory.Append($"               case \"{item.Key}\": return new {item.Value.Single().BoxName}({optParams});{comment}\r\n");
                 }
                 else
                 {
@@ -304,16 +306,16 @@ namespace SharpISOBMFF
                         item.Value.First().BoxName == "RtpMovieHintInformation")
                     {
                         string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
-                        factory += $"               case \"{item.Key}\": return new {item.Value.First().BoxName}();{comment}\r\n";
+                        factory.Append($"               case \"{item.Key}\": return new {item.Value.First().BoxName}();{comment}\r\n");
                     }
                     else
                     {
-                        factory += $"               case \"{item.Key}\": throw new NotSupportedException(\"\'{item.Key}\' is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}\");\r\n";
+                        factory.Append($"               case \"{item.Key}\": throw new NotSupportedException(\"\'{item.Key}\' is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}\");\r\n");
                     }
                 }
             }
 
-            factory +=
+            factory.Append(
 @"            }
 
             //throw new NotImplementedException(fourCC);
@@ -321,14 +323,14 @@ namespace SharpISOBMFF
                 logger.LogDebug($""Unknown entry: '{fourCC}'"");
             return new UnknownEntry(IsoStream.FromFourCC(fourCC));
         }
-";
+");
 
-            factory += @"
+            factory.Append(@"
         public static Descriptor DefaultCreateDescriptor(byte tag, IMp4Logger logger = null)
         {
             switch (tag)
             {
-";
+");
             foreach (var item in parserDocument.Descriptors)
             {
                 if (!item.Key.StartsWith("0x"))
@@ -336,44 +338,44 @@ namespace SharpISOBMFF
                     string key = "DescriptorTags." + item.Key;
                     if (item.Key == "DecSpecificInfoTag")
                     {
-                        factory += $"               case {key}: return new GenericDecoderSpecificInfo(); // TODO: choose the specific descriptor\r\n";
+                        factory.Append($"               case {key}: return new GenericDecoderSpecificInfo(); // TODO: choose the specific descriptor\r\n");
                     }
                     else
                     {
-                        factory += $"               case {key}: return new {item.Value.Single().BoxName}();\r\n";
+                        factory.Append($"               case {key}: return new {item.Value.Single().BoxName}();\r\n");
                     }
                 }
             }
 
-            factory +=
+            factory.Append(
     @"          }
 
             //throw new NotImplementedException($""Unknown descriptor: 'tag'"");
             if (logger != null)
                 logger.LogDebug($""Unknown descriptor: '{tag}'"");
-            return new UnknownDescriptor(tag);";
+            return new UnknownDescriptor(tag);");
 
-            factory += @"
+            factory.Append(@"
         }
-";
+");
 
-            factory +=
+            factory.Append(
     @"
     }
 }
-";
-            ret.Add("BoxFactory", factory);
+");
+            ret.Add("BoxFactory", factory.ToString());
 
             foreach (var b in parserDocument.Classes.Values.ToArray())
             {
-                string resultCode = namespaceHeader;
+                var resultCode = new StringBuilder(namespaceHeader);
                 string code = BuildCode(b, parserDocument.Containers);
-                resultCode += code;
-                resultCode +=
+                resultCode.Append(code);
+                resultCode.Append(
     @"
 }
-";
-                ret.Add(b.BoxName, resultCode);
+");
+                ret.Add(b.BoxName, resultCode.ToString());
             }
                         
             return ret;
@@ -381,7 +383,7 @@ namespace SharpISOBMFF
 
         private string BuildCode(PseudoClass b, List<string> containers)
         {
-            string cls = "";
+            var cls = new StringBuilder();
 
             string optAbstract = "";
             if (!string.IsNullOrEmpty(b.Abstract))
@@ -389,25 +391,27 @@ namespace SharpISOBMFF
                 optAbstract = "abstract ";
             }
 
-            cls += $"/*\r\n{b.Syntax.Replace("*/", "*//*")}\r\n*/\r\n";
+            cls.Append($"/*\r\n{b.Syntax.Replace("*/", "*//*")}\r\n*/\r\n");
 
-            cls += @$"public {optAbstract}partial class {b.BoxName}";
+            cls.Append(@$"public {optAbstract}partial class {b.BoxName}");
             if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
             {
-                cls += $" : {b.Extended.BoxName}\r\n{{\r\n";
+                cls.Append($" : {b.Extended.BoxName}\r\n{{\r\n");
             }
             else
             {
                 if (b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier")
-                    cls += $" : Descriptor\r\n{{\r\n";
+                    cls.Append($" : Descriptor\r\n{{\r\n");
                 else
                 {
                     string inType = "IMp4Serializable";
+
                     if (b.BoxName == "SampleGroupDescriptionEntry")
                     {
                         inType = "IHasBoxChildren";
                     }
-                    cls += $" : {inType}\r\n{{\r\n\tpublic StreamMarker Padding {{ get; set; }}\r\n\tprotected IMp4Serializable parent = null;\r\n\tpublic IMp4Serializable GetParent() {{ return parent; }}\r\n\tpublic void SetParent(IMp4Serializable parent) {{ this.parent = parent; }}\r\n";
+
+                    cls.Append($" : {inType}\r\n{{\r\n\tpublic StreamMarker Padding {{ get; set; }}\r\n\tprotected IMp4Serializable parent = null;\r\n\tpublic IMp4Serializable GetParent() {{ return parent; }}\r\n\tpublic void SetParent(IMp4Serializable parent) {{ this.parent = parent; }}\r\n");
                 }
             }
 
@@ -424,7 +428,7 @@ namespace SharpISOBMFF
                     }
                 }
 
-                cls += $"\tpublic const string TYPE = \"{b.Extended.BoxType}\";\r\n";
+                cls.Append($"\tpublic const string TYPE = \"{b.Extended.BoxType}\";\r\n");
             }
             else if (b.Extended != null && !string.IsNullOrEmpty(b.Extended.DescriptorTag))
             {
@@ -433,41 +437,45 @@ namespace SharpISOBMFF
                     if (string.IsNullOrEmpty(b.Abstract)) // do not generate the TYPE constant for abstract types, such as BaseDescriptor
                     {
                         string tag = b.Extended.DescriptorTag;
+
                         if (!tag.StartsWith("0"))
                         {
                             tag = "DescriptorTags." + tag;
                         }
-                        cls += $"\tpublic const byte TYPE = {tag};\r\n";
+
+                        cls.Append($"\tpublic const byte TYPE = {tag};\r\n");
                     }
                 }
                 else
                 {
                     string[] tags = b.Extended.DescriptorTag.Split(new string[] { ".." }, StringSplitOptions.RemoveEmptyEntries);
+                    
                     if (!tags[0].StartsWith("0"))
                     {
                         tags[0] = "DescriptorTags." + tags[0];
                     }
+
                     if (!tags[1].StartsWith("0"))
                     {
                         tags[1] = "DescriptorTags." + tags[1];
                     }
-                    cls += $"\tpublic byte TagMin {{ get; set; }} = {tags[0]};\r\n";
-                    cls += $"\tpublic byte TagMax {{ get; set; }} = {tags[1]};";
+
+                    cls.Append($"\tpublic byte TagMin {{ get; set; }} = {tags[0]};\r\n");
+                    cls.Append($"\tpublic byte TagMax {{ get; set; }} = {tags[1]};");
                 }
             }
 
             string ov = b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) || b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier" ? "override " : "virtual ";
-            cls += $"\tpublic {ov}string DisplayName {{ get {{ return \"{b.BoxName}\"; }} }}";
+            cls.Append($"\tpublic {ov}string DisplayName {{ get {{ return \"{b.BoxName}\"; }} }}");
 
             string ctorContent = b.CtorContent;
             var fields = b.FlattenedFields;
-
 
             bool hasDescriptors = fields.Select(x => GetReadMethod(x).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox";
 
             foreach (var field in fields)
             {
-                cls += "\r\n" + BuildField(b, field);
+                cls.Append("\r\n" + BuildField(b, field));
             }
 
             if (b.BoxName == "MetaBox")
@@ -477,15 +485,15 @@ namespace SharpISOBMFF
                 //  see: https://www.academia.edu/66625880/Forensic_Analysis_of_Video_Files_Using_Metadata
                 //  see: https://web.archive.org/web/20220126080109/https://leo-van-stee.github.io/
                 // TODO: maybe instead of lookahead, we just have to check the parents
-                cls += "\r\npublic bool IsQuickTime { get { return (GetParent() == null || (((Box)GetParent()).FourCC == IsoStream.FromFourCC(\"udta\") || ((Box)GetParent()).FourCC == IsoStream.FromFourCC(\"trak\"))); } }";
+                cls.Append("\r\npublic bool IsQuickTime { get { return (GetParent() == null || (((Box)GetParent()).FourCC == IsoStream.FromFourCC(\"udta\") || ((Box)GetParent()).FourCC == IsoStream.FromFourCC(\"trak\"))); } }");
             }
             else if (b.BoxName == "AVCDecoderConfigurationRecord")
             {
-                cls += "\r\npublic bool HasExtensions { get; set; } = false;";
+                cls.Append("\r\npublic bool HasExtensions { get; set; } = false;");
             }
             else if (b.BoxName == "FullBox")
             {
-                cls += "\r\npublic FullBox(uint boxtype, byte[] uuid) : base(boxtype, uuid) { }\r\n";
+                cls.Append("\r\npublic FullBox(uint boxtype, byte[] uuid) : base(boxtype, uuid) { }\r\n");
             }
 
             string ctorParams = "";
@@ -546,13 +554,12 @@ namespace SharpISOBMFF
                 baseCtorParams = $": base({base4cc}{base4ccseparator}{base4ccparams})";
             }
 
-            cls += $"\r\n\r\n\tpublic {b.BoxName}({ctorParams}){baseCtorParams}\r\n\t{{\r\n";
-            cls += ctorContent;
-            cls += $"\t}}\r\n";
+            cls.Append($"\r\n\r\n\tpublic {b.BoxName}({ctorParams}){baseCtorParams}\r\n\t{{\r\n");
+            cls.Append(ctorContent);
+            cls.Append($"\t}}\r\n");
 
             bool shouldOverride = b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) || b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier";
-            cls += "\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong Read(IsoStream stream, ulong readSize)\r\n\t{\r\n\t\tulong boxSize = 0;";
-
+            cls.Append("\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong Read(IsoStream stream, ulong readSize)\r\n\t{\r\n\t\tulong boxSize = 0;");
 
             if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
             {
@@ -561,32 +568,33 @@ namespace SharpISOBMFF
                 {
                     baseRead = "\r\n\t\tif(IsQuickTime) boxSize += base.Read(stream, readSize);";
                 }
-                cls += baseRead;
+                cls.Append(baseRead);
             }
 
-            cls += AddMissingMethodCode(b, MethodType.Read);
+            cls.Append(AddMissingMethodCode(b, MethodType.Read));
 
             foreach (var field in b.Fields)
             {
-                cls += "\r\n" + BuildMethod(b, null, field, 2, MethodType.Read);
+                cls.Append("\r\n" + BuildMethod(b, null, field, 2, MethodType.Read));
             }
 
             if (b.IsContainer)
             {
-                cls += "\r\n" + "\t\tboxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);";
+                cls.Append("\r\n" + "\t\tboxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);");
             }
+
             else if (hasDescriptors)
             {
                 string objectTypeIndication = "";
                 if (b.BoxName == "DecoderConfigDescriptor")
                     objectTypeIndication = ", objectTypeIndication";
-                cls += "\r\n" + $"\t\tboxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this{objectTypeIndication});";
+                cls.Append("\r\n" + $"\t\tboxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this{objectTypeIndication});");
             }
 
-            cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
+            cls.Append("\r\n\t\treturn boxSize;\r\n\t}\r\n");
 
 
-            cls += "\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong Write(IsoStream stream)\r\n\t{\r\n\t\tulong boxSize = 0;";
+            cls.Append("\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong Write(IsoStream stream)\r\n\t{\r\n\t\tulong boxSize = 0;");
 
             if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
             {
@@ -595,67 +603,69 @@ namespace SharpISOBMFF
                 {
                     baseWrite = "\r\n\t\tif(IsQuickTime) boxSize += base.Write(stream);";
                 }
-                cls += baseWrite;
+                cls.Append(baseWrite);
             }
 
-            cls += AddMissingMethodCode(b, MethodType.Write);
+            cls.Append(AddMissingMethodCode(b, MethodType.Write));
 
             foreach (var field in b.Fields)
             {
-                cls += "\r\n" + BuildMethod(b, null, field, 2, MethodType.Write);
+                cls.Append("\r\n" + BuildMethod(b, null, field, 2, MethodType.Write));
             }
 
             if (b.IsContainer)
             {
-                cls += "\r\n" + "\t\tboxSize += stream.WriteBoxArrayTillEnd(this);";
+                cls.Append("\r\n" + "\t\tboxSize += stream.WriteBoxArrayTillEnd(this);");
             }
             else if (hasDescriptors)
             {
                 string objectTypeIndication = "";
                 if (b.BoxName == "DecoderConfigDescriptor")
                     objectTypeIndication = ", objectTypeIndication";
-                cls += "\r\n" + $"\t\tboxSize += stream.WriteDescriptorsTillEnd(this{objectTypeIndication});";
+                cls.Append("\r\n" + $"\t\tboxSize += stream.WriteDescriptorsTillEnd(this{objectTypeIndication});");
             }
 
-            cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
+            cls.Append("\r\n\t\treturn boxSize;\r\n\t}\r\n");
 
-            cls += "\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong CalculateSize()\r\n\t{\r\n\t\tulong boxSize = 0;";
+            cls.Append("\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong CalculateSize()\r\n\t{\r\n\t\tulong boxSize = 0;");
 
             if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
             {
                 string baseSize = "\r\n\t\tboxSize += base.CalculateSize();";
+                
                 if (b.BoxName == "MetaBox")
                 {
                     baseSize = "\r\n\t\tif(IsQuickTime) boxSize += base.CalculateSize();";
                 }
-                cls += baseSize;
+
+                cls.Append(baseSize);
             }
 
-            cls += AddMissingMethodCode(b, MethodType.Size);
+            cls.Append(AddMissingMethodCode(b, MethodType.Size));
 
             foreach (var field in b.Fields)
             {
-                cls += "\r\n" + BuildMethod(b, null, field, 2, MethodType.Size);
+                cls.Append("\r\n" + BuildMethod(b, null, field, 2, MethodType.Size));
             }
 
             if (b.IsContainer)
             {
-                cls += "\r\n" + "\t\tboxSize += IsoStream.CalculateBoxArray(this);";
+                cls.Append("\r\n" + "\t\tboxSize += IsoStream.CalculateBoxArray(this);");
             }
             else if (hasDescriptors)
             {
                 string objectTypeIndication = "";
                 if (b.BoxName == "DecoderConfigDescriptor")
                     objectTypeIndication = ", objectTypeIndication";
-                cls += "\r\n" + $"\t\tboxSize += IsoStream.CalculateDescriptors(this{objectTypeIndication});";
+                cls.Append("\r\n" + $"\t\tboxSize += IsoStream.CalculateDescriptors(this{objectTypeIndication});");
             }
 
-            cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
+            cls.Append("\r\n\t\treturn boxSize;\r\n\t}\r\n");
 
             // end of class
-            cls += "}\r\n";
+            cls.Append("}\r\n");
 
-            return cls;
+            return cls.ToString();
         }
 
         private string BuildField(PseudoClass b, PseudoCode field)
@@ -663,12 +673,14 @@ namespace SharpISOBMFF
             var block = field as PseudoBlock;
             if (block != null)
             {
-                string ret = "";
+                var ret = new StringBuilder();
+
                 foreach (var f in block.Content)
                 {
-                    ret += "\r\n" + BuildField(b, f);
+                    ret.Append("\r\n" + BuildField(b, f));
                 }
-                return ret;
+
+                return ret.ToString();
             }
 
             string comment = (field as PseudoField)?.Comment;
@@ -944,7 +956,7 @@ namespace SharpISOBMFF
         private string BuildBlock(PseudoClass b, PseudoBlock parent, PseudoBlock block, int level, MethodType methodType)
         {
             string spacing = GetSpacing(level);
-            string ret = "";
+            var ret = new StringBuilder();
 
             string condition = block.Condition?.Replace("'", "\"").Replace("floor(", "(int)Math.Floor((double)");
             string blockType = block.Type;
@@ -1036,11 +1048,11 @@ namespace SharpISOBMFF
                     // this condition is necessary, otherwise AVCDecoderConfigurationRecord can exceed its box size
                     if (methodType == MethodType.Read)
                     {
-                        ret += $"\r\n{spacing}if (boxSize >= readSize || (readSize - boxSize) < 4) return boxSize; else HasExtensions = true;";
+                        ret.Append($"\r\n{spacing}if (boxSize >= readSize || (readSize - boxSize) < 4) return boxSize; else HasExtensions = true;");
                     }
                     else
                     {
-                        ret += $"\r\n{spacing}if (!HasExtensions) return boxSize;";
+                        ret.Append($"\r\n{spacing}if (!HasExtensions) return boxSize;");
                     }
                 }
             }
@@ -1080,7 +1092,7 @@ namespace SharpISOBMFF
                         }
                         else if (variable.Contains("_minus1"))
                         {
-                            variable = variable + " + 1";
+                            variable += " + 1";
                         }
 
                         if (!string.IsNullOrWhiteSpace(variable))
@@ -1122,9 +1134,10 @@ namespace SharpISOBMFF
                                 }
                                 else
                                 {
-                                    variableType = variableType + $"[IsoStream.GetInt({variable})]";
+                                    variableType += $"[IsoStream.GetInt({variable})]";
                                 }
-                                ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
+
+                                ret.Append($"\r\n{spacing}this.{variableName} = new {variableType}{appendType};");
                             }
                         }
                     }
@@ -1135,16 +1148,16 @@ namespace SharpISOBMFF
                 }
             }
 
-            ret += $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
+            ret.Append($"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{");
 
             foreach (var field in block.Content)
             {
-                ret += "\r\n" + BuildMethod(b, block, field, level + 1, methodType);
+                ret.Append("\r\n" + BuildMethod(b, block, field, level + 1, methodType));
             }
 
-            ret += $"\r\n{spacing}}}";
+            ret.Append($"\r\n{spacing}}}");
 
-            return ret;
+            return ret.ToString();
         }
 
         private string BuildSwitchCase(PseudoClass b, PseudoCase swcase, int level, MethodType methodType)
@@ -1723,12 +1736,14 @@ namespace SharpISOBMFF
 
         private string GetSpacing(int level)
         {
-            string ret = "";
+            var ret = new StringBuilder();
+
             for (int i = 0; i < level; i++)
             {
-                ret += "\t";
+                ret.Append("\t");
             }
-            return ret;
+
+            return ret.ToString();
         }
     }
 }

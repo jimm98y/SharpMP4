@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ItuGenerator.CSharp
@@ -32,6 +33,7 @@ namespace ItuGenerator.CSharp
         void FixMethodAllocation(string name, ref string method, ref string typedef);
         string GetDerivedVariables(string name);
         void FixNestedIndexes(List<string> ret, ItuField field);
+        string ContextClass { get; }
     }
 
     public class CSharpGenerator
@@ -45,7 +47,7 @@ namespace ItuGenerator.CSharp
 
         public string GenerateParser(string type, IEnumerable<ItuClass> ituClasses)
         {
-            string resultCode =
+            var resultCode = new StringBuilder(
             $@"using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -53,105 +55,112 @@ using SharpH26X;
 
 namespace Sharp{type}
 {{
-";
-            resultCode += GenerateContext(type, ituClasses);
+");
+            resultCode.Append(GenerateContext(type, ituClasses));
 
             foreach (var ituClass in ituClasses)
             {
-                resultCode += GenerateClass(ituClass);
+                resultCode.Append(GenerateClass(ituClass));
             }
 
-            resultCode +=
+            resultCode.Append(
                 @"
 }
-";
-            return resultCode;
+");
+            return resultCode.ToString();
         }
 
         private string GenerateContext(string type, IEnumerable<ItuClass> ituClasses)
         {
-            string ret = @$"
+            var ret = new StringBuilder(@$"
     public partial class {type}Context : IItuContext
     {{
         public NalUnit NalHeader {{ get; set; }}
-";
+");
             var rbsp = ituClasses.Where(x => x.ClassName.EndsWith("rbsp")).ToArray();
             foreach (var cls in rbsp)
             {
-                ret += $"\t\tpublic {cls.ClassName.ToPropertyCase()} {cls.ClassName.ToPropertyCase()} {{ get; set; }}\r\n";
+                ret.Append($"\t\tpublic {cls.ClassName.ToPropertyCase()} {cls.ClassName.ToPropertyCase()} {{ get; set; }}\r\n");
             }
 
-            ret += @$"
+            ret.Append(@$"
     }}
-";
-            return ret;
+");
+            return ret.ToString();
         }
 
         private string GenerateClass(ItuClass ituClass)
         {
             specificGenerator.FixClassParameters(ituClass);
 
-            string resultCode = @$"
+            var resultCode = new StringBuilder(@$"
     /*
 {ituClass.Syntax.Replace("*/", "*//*")}
     */
     public class {ituClass.ClassName.ToPropertyCase()} : IItuSerializable
     {{
-";
-            resultCode += GenerateFields(ituClass);
+");
+            resultCode.Append(GenerateFields(ituClass));
 
-            resultCode += @"
+            resultCode.Append(@"
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
-";
+");
 
-            resultCode += GenerateCtor(ituClass);
+            resultCode.Append(GenerateCtor(ituClass));
 
-            resultCode += $@"
+            resultCode.Append($@"
          public ulong Read(IItuContext context, ItuStream stream)
          {{
+            {specificGenerator.ContextClass} ituContext = context as {specificGenerator.ContextClass};
+            if (ituContext == null)
+                throw new ArgumentException($""Context should be of type {specificGenerator.ContextClass}"");
+
             ulong size = 0;
-";
-            resultCode += BuildRequiredVariables(ituClass);
+");
+            resultCode.Append(BuildRequiredVariables(ituClass));
 
             foreach (var field in ituClass.Fields)
             {
-                resultCode += "\r\n" + BuildMethod(ituClass, null, field, 3, MethodType.Read);
+                resultCode.Append("\r\n" + BuildMethod(ituClass, null, field, 3, MethodType.Read));
             }
             ituClass.AddedFields.Clear();
-            resultCode += $@"
+            resultCode.Append($@"
 
             return size;
          }}
-";
+");
 
-            resultCode += $@"
+            resultCode.Append($@"
          public ulong Write(IItuContext context, ItuStream stream)
          {{
+            {specificGenerator.ContextClass} ituContext = context as {specificGenerator.ContextClass};
+            if (ituContext == null)
+                throw new ArgumentException($""Context should be of type {specificGenerator.ContextClass}"");
             ulong size = 0;
-";
-            resultCode += BuildRequiredVariables(ituClass);
+");
+            resultCode.Append(BuildRequiredVariables(ituClass));
 
             foreach (var field in ituClass.Fields)
             {
-                resultCode += "\r\n" + BuildMethod(ituClass, null, field, 3, MethodType.Write);
+                resultCode.Append("\r\n" + BuildMethod(ituClass, null, field, 3, MethodType.Write));
             }
             ituClass.AddedFields.Clear();
-            resultCode += $@"
+            resultCode.Append($@"
 
             return size;
          }}
-";
+");
 
-            resultCode += $@"
+            resultCode.Append($@"
     }}
-";
-            return resultCode;
+");
+            return resultCode.ToString();
         }
                 
         private static string BuildRequiredVariables(ItuClass ituClass)
         {
-            string resultCode = "";
+            var resultCode = new StringBuilder();
 
             foreach (var v in ituClass.RequiresDefinition)
             {
@@ -164,7 +173,7 @@ namespace Sharp{type}
                         value = v.Value;
                     }
 
-                    resultCode += $"\r\n\t\t\t{type} {v.Name} {value};";
+                    resultCode.Append($"\r\n\t\t\t{type} {v.Name} {value};");
                 }
                 else
                 {
@@ -190,28 +199,29 @@ namespace Sharp{type}
                         }
                     }
 
-                    string array = "";
+                    var array = new StringBuilder();
                     if (arrayDimensions == 1 && indicesArrayDimensions > 0)
                     {
-                        array += "[";
+                        array.Append("[");
                         for (int i = 0; i < indicesArrayDimensions; i++)
                         {
-                            array += ",";
+                            array.Append(",");
                         }
-                        array += "]";
+                        array.Append("]");
                     }
                     else
                     {
                         for (int i = 0; i < arrayDimensions; i++)
                         {
-                            array += "[]";
+                            array.Append("[]");
                         }
                     }
-                    resultCode += $"\r\n\t\t\t{type}{array} {v.Name} = null;"; // TODO: size
+
+                    resultCode.Append($"\r\n\t\t\t{type}{array} {v.Name} = null;"); // TODO: size
                 }
             }
 
-            return resultCode;
+            return resultCode.ToString();
         }
 
         public int GetLoopNestingLevel(ItuCode code)
@@ -243,28 +253,28 @@ namespace Sharp{type}
             var block = field as ItuBlock;
             if (block != null)
             {
-                return BuildBlock(b, parent, block, level, methodType);
+                return BuildBlock(b, block, level, methodType);
             }
 
             var blockIf = field as ItuBlockIfThenElse;
             if (blockIf != null)
             {
-                string ret = BuildBlock(b, parent, (ItuBlock)blockIf.BlockIf, level, methodType);
+                var ret = new StringBuilder(BuildBlock(b, (ItuBlock)blockIf.BlockIf, level, methodType));
                 foreach (var elseBlock in blockIf.BlockElseIf)
                 {
-                    ret += BuildBlock(b, parent, (ItuBlock)elseBlock, level, methodType);
+                    ret.Append(BuildBlock(b, (ItuBlock)elseBlock, level, methodType));
                 }
                 if (blockIf.BlockElse != null)
                 {
-                    ret += BuildBlock(b, parent, (ItuBlock)blockIf.BlockElse, level, methodType);
+                    ret.Append(BuildBlock(b, (ItuBlock)blockIf.BlockElse, level, methodType));
                 }
-                return ret;
+                return ret.ToString();
             }
 
             var comment = field as ItuComment;
             if (comment != null)
             {
-                return BuildComment(b, comment, level, methodType);
+                return BuildComment(comment, level, methodType);
             }
 
             if ((field as ItuField).Type == null && (!string.IsNullOrWhiteSpace((field as ItuField).Value) || !string.IsNullOrWhiteSpace((field as ItuField).Increment)))
@@ -655,25 +665,24 @@ namespace Sharp{type}
                 }
             }
 
-            
-            string arraySuffix = "";
+            var arraySuffix = new StringBuilder();
             for (int i = 0; i < arrayDimensions; i++)
             {
-                arraySuffix += "[]";
+                arraySuffix.Append("[]");
             }
 
-            return map[field.Type] + arraySuffix;
+            return map[field.Type] + arraySuffix.ToString();
         }
 
-        private string BuildComment(ItuClass b, ItuComment comment, int level, MethodType methodType)
+        private string BuildComment(ItuComment comment, int level, MethodType methodType)
         {
             return $"/* {comment.Comment} */\r\n";
         }
 
-        private string BuildBlock(ItuClass b, ItuBlock parent, ItuBlock block, int level, MethodType methodType)
+        private string BuildBlock(ItuClass b, ItuBlock block, int level, MethodType methodType)
         {
             string spacing = GetSpacing(level);
-            string ret = "";
+            var ret = new StringBuilder();
 
             string condition = block.Condition;
             string blockType = block.Type;
@@ -682,7 +691,7 @@ namespace Sharp{type}
             {
                 if(blockType == "if" || blockType == "else if" || blockType == "while" || blockType == "do")
                 {
-                    condition = FixCondition(b, condition, methodType);
+                    condition = FixCondition(condition, methodType);
                 }
                 else if(blockType == "for")
                 {
@@ -726,14 +735,14 @@ namespace Sharp{type}
                                     int blockSuffixLevel = GetNestedInLoopSuffix(block, "", out suffix);
                                     int fieldSuffixLevel = GetNestedInLoopSuffix(req, "", out _);
 
-                                    string appendType = "";
+                                    var appendType = new StringBuilder();
                                     if (fieldSuffixLevel - blockSuffixLevel > 1)
                                     {
                                         int count = fieldSuffixLevel - blockSuffixLevel - 1;
 
                                         for (int i = 0; i < count; i++)
                                         {
-                                            appendType += "[]";
+                                            appendType.Append("[]");
                                         }
                                     }
 
@@ -754,7 +763,7 @@ namespace Sharp{type}
                                     }
                                     else
                                     {
-                                        variableType = variableType + $"[{variable}]";
+                                        variableType += $"[{variable}]";
                                     }
 
                                     if (variableType.Contains("_minus1[ c ]"))
@@ -786,29 +795,29 @@ namespace Sharp{type}
                                     else if (variableType.Contains("MaxSubLayersVal"))
                                         variableType = variableType.Replace("MaxSubLayersVal", "MaxSubLayersVal + 1");
 
-                                    appendType = specificGenerator.FixAppendType(appendType, variableName);
+                                    appendType = new StringBuilder(specificGenerator.FixAppendType(appendType.ToString(), variableName));
 
                                     // H266
                                     variableType = specificGenerator.FixVariableType(variableType);
 
                                     if (methodType == MethodType.Read)
                                     {
-                                        string fixedAllocations = specificGenerator.FixAllocations(spacing, appendType, variableType, variableName);
+                                        string fixedAllocations = specificGenerator.FixAllocations(spacing, appendType.ToString(), variableType, variableName);
                                         if (!string.IsNullOrEmpty(fixedAllocations))
                                         {
-                                            ret += fixedAllocations;
+                                            ret.Append(fixedAllocations);
                                         }
 
                                         if (fixedAllocations == "") // when null, don't append anything
                                         {
-                                            ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
+                                            ret.Append($"\r\n{spacing}this.{variableName} = new {variableType}{appendType};");
                                         }
                                     }
 
                                     if (variableName == "pt_sublayer_delays_present_flag")
                                     {
                                         if (methodType == MethodType.Read)
-                                            ret += "\r\nthis.pt_sublayer_delays_present_flag[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1] = 1;"; // The value of pt_sublayer_delays_present_flag[bp_max_sublayers_minus1] is inferred to be equal to 1
+                                            ret.Append("\r\nthis.pt_sublayer_delays_present_flag[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1] = 1;"); // The value of pt_sublayer_delays_present_flag[bp_max_sublayers_minus1] is inferred to be equal to 1
                                     }
                                 }
                             }
@@ -822,27 +831,27 @@ namespace Sharp{type}
             }
 
             if (block.Type == "do")
-                ret += $"\r\n{spacing}{blockType}\r\n{spacing}{{";
+                ret.Append($"\r\n{spacing}{blockType}\r\n{spacing}{{");
             else
-                ret += $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
+                ret.Append($"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{");
 
             if (blockType == "do" || blockType == "while")
-                ret += $"\r\n{spacing}\twhileIndex++;\r\n";
+                ret.Append($"\r\n{spacing}\twhileIndex++;\r\n");
 
             foreach (var field in block.Content)
             {
-                ret += "\r\n" + BuildMethod(b, block, field, level + 1, methodType);
+                ret.Append("\r\n" + BuildMethod(b, block, field, level + 1, methodType));
             }
 
-            ret += $"\r\n{spacing}}}";
+            ret.Append($"\r\n{spacing}}}");
 
             if(block.Type == "do")
-                ret += $" while {condition};";
+                ret.Append($" while {condition};");
 
-            return ret;
+            return ret.ToString();
         }       
 
-        private string FixCondition(ItuClass b, string condition, MethodType methodType)
+        private string FixCondition(string condition, MethodType methodType)
         {
             string[] parts = condition.Substring(1, condition.Length - 2).Split(new string[] { "||", "&&" }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -905,11 +914,13 @@ namespace Sharp{type}
             if (string.IsNullOrEmpty(condition))
                 return condition;
 
-            List<string> ret = new List<string>();
+            var ret = new List<string>();
             ItuBlock parent = null;
+
             var field = code as ItuField;
             if (field != null)
                 parent = field.Parent;
+
             var block = code as ItuBlock;
             if (block != null)
                 parent = block.Parent;
@@ -1007,9 +1018,10 @@ namespace Sharp{type}
                     {
                         if (string.IsNullOrWhiteSpace(ff.Name) || !string.IsNullOrEmpty(ff.Value))
                             continue;
+
                         if (condition.Contains(prefix + ff.Name + suffix) && !condition.Contains(prefix + ff.Name + "["))
                         {
-                            if(!condition.Contains("slice_segment_header_extension_length"))
+                            if (!condition.Contains("slice_segment_header_extension_length"))
                                 condition = condition.Replace(prefix + ff.Name + suffix, prefix + ff.Name + str + suffix);
                         }
                     }
@@ -1021,6 +1033,7 @@ namespace Sharp{type}
                             {
                                 if (string.IsNullOrWhiteSpace(ffff.Name) || !string.IsNullOrEmpty(ffff.Value))
                                     continue;
+
                                 if (condition.Contains(prefix + ffff.Name + suffix) && !condition.Contains(prefix + ffff.Name + "["))
                                 {
                                     condition = condition.Replace(prefix + ffff.Name + suffix, prefix + ffff.Name + str + suffix);
@@ -1038,11 +1051,13 @@ namespace Sharp{type}
 
         private int GetNestedInLoopSuffix(ItuCode code, string currentSuffix, out string result)
         {
-            List<string> ret = new List<string>();
+            var ret = new List<string>();
             ItuBlock parent = null;
+
             var field = code as ItuField;
             if (field != null)
                 parent = field.Parent;
+
             var block = code as ItuBlock;
             if (block != null)
                 parent = block.Parent;
@@ -1072,14 +1087,17 @@ namespace Sharp{type}
             result = string.Concat(ret);
             return ret.Count;
         }
-        private string GetSpacing(int level)
+
+        private static string GetSpacing(int level)
         {
-            string ret = "";
+            var ret = new StringBuilder();
+
             for (int i = 0; i < level; i++)
             {
-                ret += "\t";
+                ret.Append("\t");
             }
-            return ret;
+
+            return ret.ToString();
         }
 
         private string GenerateCtor(ItuClass ituClass)
@@ -1105,22 +1123,22 @@ namespace Sharp{type}
             var parameters = ituClass.ClassParameter.Substring(1, ituClass.ClassParameter.Length - 2).Split(',').Select(x => x.Trim()).ToArray();
             if (parameters.Length == 1 && string.IsNullOrEmpty(parameters[0]))
             {
-                return new string[] { };
+                return [];
             }
             return parameters;
         }
 
         private string GenerateFields(ItuClass ituClass)
         {
-            string resultCode = "";
+            var resultCode = new StringBuilder();
             ituClass.FlattenedFields = FlattenFields(ituClass, ituClass.Fields);
 
-            foreach(var field in ituClass.FlattenedFields)
+            foreach (var field in ituClass.FlattenedFields)
             {
-                resultCode += BuildField(ituClass, field);
+                resultCode.Append(BuildField(ituClass, field));
             }
 
-            return resultCode;
+            return resultCode.ToString();
         }
 
         private string BuildField(ItuClass ituClass, ItuField field)
@@ -1181,8 +1199,7 @@ namespace Sharp{type}
 
         public void AddRequiresAllocation(ItuField field)
         {
-            ItuBlock parent = null;
-            parent = field.Parent;
+            ItuBlock parent = field.Parent;
             while (parent != null)
             {
                 if (parent.Type == "for")
@@ -1197,7 +1214,7 @@ namespace Sharp{type}
 
         private List<ItuField> FlattenFields(ItuClass b, IEnumerable<ItuCode> fields, ItuBlock parent = null)
         {
-            Dictionary<string, ItuField> ret = new Dictionary<string, ItuField>();
+            var ret = new Dictionary<string, ItuField>();
 
             if (parent == null)
             {

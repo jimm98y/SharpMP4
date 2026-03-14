@@ -10,7 +10,7 @@ namespace SharpH26X
 {
     public class ItuStream : IDisposable
     {
-        private bool _shouldEscapeNals = true;
+        private readonly bool _shouldEscapeNals = true;
         private int _bitsPosition;
         private int _currentBytePosition = -1;
         private byte _currentByte = 0;
@@ -25,6 +25,10 @@ namespace SharpH26X
 
         private bool _disposedValue;
         private int _lastMarkBeginPosition;
+
+        // Used by ReadNextBits(n) for increased performance.
+        private ulong _readNextBitsCache = 0;
+        private int _readNextBitsRemaining = 0;
 
         public IMp4Logger Logger { get; set; }
 
@@ -65,6 +69,12 @@ namespace SharpH26X
         private int ReadBit()
         {
             int bytePos = _bitsPosition / 8;
+
+            if (_readNextBitsRemaining > 0)
+            {
+                _readNextBitsRemaining--;
+                return (_readNextBitsCache & (ulong)(1 << _readNextBitsRemaining)) != 0 ? 1 : 0;
+            }
 
             if (_currentBytePosition != bytePos)
             {
@@ -459,30 +469,14 @@ namespace SharpH26X
 
         public int ReadNextBits(IItuSerializable serializable, ulong count)
         {
-            var bytes = (_stream as MemoryStream).ToArray();
-            var msstream = new MemoryStream(bytes);
-            msstream.Seek(_stream.Position, SeekOrigin.Begin);
-            using (var ituStream = new ItuStream(msstream, _bitsPosition, _currentBytePosition, _currentByte, _prevByte, _prevPrevByte))
+            for (ulong i = 0; i < count; i++)
             {
-                if (serializable.ReadNextBits == null)
-                {
-                    serializable.ReadNextBits = new int[1];
-                }
-
-                int ret = (int)ituStream.ReadBits(8);
-
-                if (ret == 0xFF)
-                {
-                    serializable.ReadNextBits[serializable.ReadNextBits.Length - 1]++;
-                }
-                else
-                {
-                    var old = serializable.ReadNextBits;
-                    serializable.ReadNextBits = new int[old.Length + 1];
-                    Array.Copy(old, serializable.ReadNextBits, old.Length);
-                }
-                return ret;
+                _readNextBitsCache <<= 1;
+                _readNextBitsCache |= (byte)ReadBit();
             }
+
+            _readNextBitsRemaining += (int)count;
+            return (int)_readNextBitsCache;
         }
 
         public int WriteNextBits(IItuSerializable serializable, ulong count)
@@ -738,10 +732,10 @@ namespace SharpH26X
 
         private void LogBegin(string name)
         {
-            string padding = "-";
+            var padding = new StringBuilder();
             for (int i = 0; i < _logLevel; i++)
             {
-                padding += "-";
+                padding.Append('-');
             }
 
             this.Logger.LogInfo($"{padding} {name}");
@@ -752,16 +746,16 @@ namespace SharpH26X
             if (string.IsNullOrEmpty(name))
                 return;
 
-            string padding = "-";
+            var padding = new StringBuilder();
             for (int i = 0; i < _logLevel; i++)
             {
-                padding += "-";
+                padding.Append('-');
             }
 
-            string endPadding = "";
+            var endPadding = new StringBuilder();
             for (int i = 0; i < 64 - padding.Length - name.Length - size.ToString().Length - 2; i++)
             {
-                endPadding += " ";
+                endPadding.Append(' ');
             }
 
             this.Logger.LogInfo($"{padding} {name}{endPadding}{size}   {value}");

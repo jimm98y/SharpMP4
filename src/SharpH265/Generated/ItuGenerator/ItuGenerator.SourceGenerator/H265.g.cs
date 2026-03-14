@@ -52,6 +52,10 @@ nal_unit( NumBytesInNalUnit ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			this.nal_unit_header =  new NalUnitHeader() ;
@@ -82,6 +86,9 @@ nal_unit( NumBytesInNalUnit ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteClass<NalUnitHeader>(context, this.nal_unit_header, "nal_unit_header"); //NumBytesInRbsp = 0 
@@ -142,26 +149,33 @@ nal_unit_header() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadFixed(size, 1, out this.forbidden_zero_bit, "forbidden_zero_bit"); 
 			size += stream.ReadUnsignedInt(size, 6, out this.nal_unit_type, "nal_unit_type"); 
 			size += stream.ReadUnsignedInt(size, 6, out this.nuh_layer_id, "nuh_layer_id"); 
 			size += stream.ReadUnsignedInt(size, 3, out this.nuh_temporal_id_plus1, "nuh_temporal_id_plus1"); 
-			((H265Context)context).OnNuhTemporalIdPlus1();
+			ituContext.OnNuhTemporalIdPlus1();
 
             return size;
          }
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteFixed(1, this.forbidden_zero_bit, "forbidden_zero_bit"); 
 			size += stream.WriteUnsignedInt(6, this.nal_unit_type, "nal_unit_type"); 
 			size += stream.WriteUnsignedInt(6, this.nuh_layer_id, "nuh_layer_id"); 
 			size += stream.WriteUnsignedInt(3, this.nuh_temporal_id_plus1, "nuh_temporal_id_plus1"); 
-			((H265Context)context).OnNuhTemporalIdPlus1();
+			ituContext.OnNuhTemporalIdPlus1();
 
             return size;
          }
@@ -214,6 +228,10 @@ sps_range_extension() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 1, out this.transform_skip_rotation_enabled_flag, "transform_skip_rotation_enabled_flag"); 
@@ -231,6 +249,9 @@ sps_range_extension() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(1, this.transform_skip_rotation_enabled_flag, "transform_skip_rotation_enabled_flag"); 
@@ -301,6 +322,10 @@ sps_scc_extension() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			long numComps = 0;
@@ -318,7 +343,7 @@ sps_scc_extension() {
 				if ( sps_palette_predictor_initializers_present_flag != 0 )
 				{
 					size += stream.ReadUnsignedIntGolomb(size, out this.sps_num_palette_predictor_initializers_minus1, "sps_num_palette_predictor_initializers_minus1"); 
-					numComps= ( ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ) ? 1 : 3;
+					numComps= ( ituContext.SeqParameterSetRbsp.ChromaFormatIdc == 0 ) ? 1 : 3;
 
 					this.sps_palette_predictor_initializer = new ulong[ numComps][];
 					for ( comp = 0; comp < numComps; comp++ )
@@ -340,6 +365,9 @@ sps_scc_extension() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			long numComps = 0;
@@ -357,7 +385,7 @@ sps_scc_extension() {
 				if ( sps_palette_predictor_initializers_present_flag != 0 )
 				{
 					size += stream.WriteUnsignedIntGolomb( this.sps_num_palette_predictor_initializers_minus1, "sps_num_palette_predictor_initializers_minus1"); 
-					numComps= ( ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ) ? 1 : 3;
+					numComps= ( ituContext.SeqParameterSetRbsp.ChromaFormatIdc == 0 ) ? 1 : 3;
 
 					for ( comp = 0; comp < numComps; comp++ )
 					{
@@ -569,14 +597,18 @@ pic_parameter_set_rbsp() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
 			int whileIndex = -1;
 			size += stream.ReadUnsignedIntGolomb(size, out this.pps_pic_parameter_set_id, "pps_pic_parameter_set_id"); 
-			((H265Context)context).SetPpsPicParameterSetId(pps_pic_parameter_set_id);
+			ituContext.SetPpsPicParameterSetId(pps_pic_parameter_set_id);
 			size += stream.ReadUnsignedIntGolomb(size, out this.pps_seq_parameter_set_id, "pps_seq_parameter_set_id"); 
-			((H265Context)context).SetPpsSeqParameterSetId(pps_seq_parameter_set_id);
+			ituContext.SetPpsSeqParameterSetId(pps_seq_parameter_set_id);
 			size += stream.ReadUnsignedInt(size, 1, out this.dependent_slice_segments_enabled_flag, "dependent_slice_segments_enabled_flag"); 
 			size += stream.ReadUnsignedInt(size, 1, out this.output_flag_present_flag, "output_flag_present_flag"); 
 			size += stream.ReadUnsignedInt(size, 3, out this.num_extra_slice_header_bits, "num_extra_slice_header_bits"); 
@@ -702,14 +734,17 @@ pic_parameter_set_rbsp() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
 			int whileIndex = -1;
 			size += stream.WriteUnsignedIntGolomb( this.pps_pic_parameter_set_id, "pps_pic_parameter_set_id"); 
-			((H265Context)context).SetPpsPicParameterSetId(pps_pic_parameter_set_id);
+			ituContext.SetPpsPicParameterSetId(pps_pic_parameter_set_id);
 			size += stream.WriteUnsignedIntGolomb( this.pps_seq_parameter_set_id, "pps_seq_parameter_set_id"); 
-			((H265Context)context).SetPpsSeqParameterSetId(pps_seq_parameter_set_id);
+			ituContext.SetPpsSeqParameterSetId(pps_seq_parameter_set_id);
 			size += stream.WriteUnsignedInt(1, this.dependent_slice_segments_enabled_flag, "dependent_slice_segments_enabled_flag"); 
 			size += stream.WriteUnsignedInt(1, this.output_flag_present_flag, "output_flag_present_flag"); 
 			size += stream.WriteUnsignedInt(3, this.num_extra_slice_header_bits, "num_extra_slice_header_bits"); 
@@ -878,11 +913,15 @@ pps_range_extension() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
 
-			if ( ((H265Context)context).PicParameterSetRbsp.TransformSkipEnabledFlag != 0 )
+			if ( ituContext.PicParameterSetRbsp.TransformSkipEnabledFlag != 0 )
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_transform_skip_block_size_minus2, "log2_max_transform_skip_block_size_minus2"); 
 			}
@@ -910,11 +949,14 @@ pps_range_extension() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
 
-			if ( ((H265Context)context).PicParameterSetRbsp.TransformSkipEnabledFlag != 0 )
+			if ( ituContext.PicParameterSetRbsp.TransformSkipEnabledFlag != 0 )
 			{
 				size += stream.WriteUnsignedIntGolomb( this.log2_max_transform_skip_block_size_minus2, "log2_max_transform_skip_block_size_minus2"); 
 			}
@@ -1005,6 +1047,10 @@ pps_scc_extension() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			long numComps = 0;
@@ -1055,6 +1101,9 @@ pps_scc_extension() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			long numComps = 0;
@@ -1130,6 +1179,10 @@ sei_rbsp() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			int whileIndex = -1;
@@ -1149,6 +1202,9 @@ sei_rbsp() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			int whileIndex = -1;
@@ -1191,6 +1247,10 @@ access_unit_delimiter_rbsp() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 3, out this.pic_type, "pic_type"); 
@@ -1202,6 +1262,9 @@ access_unit_delimiter_rbsp() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(3, this.pic_type, "pic_type"); 
@@ -1231,6 +1294,10 @@ end_of_seq_rbsp() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 
@@ -1239,6 +1306,9 @@ end_of_seq_rbsp() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 
@@ -1266,6 +1336,10 @@ end_of_bitstream_rbsp() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 
@@ -1274,6 +1348,9 @@ end_of_bitstream_rbsp() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 
@@ -1308,6 +1385,10 @@ rbsp_trailing_bits()
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			int whileIndex = -1;
@@ -1326,6 +1407,9 @@ rbsp_trailing_bits()
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			int whileIndex = -1;
@@ -1369,6 +1453,10 @@ while( !byte_aligned() )
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			int whileIndex = -1;
@@ -1386,6 +1474,9 @@ while( !byte_aligned() )
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			int whileIndex = -1;
@@ -1429,6 +1520,10 @@ byte_alignment() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			int whileIndex = -1;
@@ -1446,6 +1541,9 @@ byte_alignment() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			int whileIndex = -1;
@@ -1719,6 +1817,10 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint j = 0;
@@ -1933,6 +2035,9 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint j = 0;
@@ -2162,6 +2267,10 @@ scaling_list_data() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint sizeId = 0;
@@ -2217,6 +2326,9 @@ scaling_list_data() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint sizeId = 0;
@@ -2305,6 +2417,10 @@ sei_message() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint payloadType = 0;
@@ -2335,13 +2451,16 @@ sei_message() {
 			stream.MarkCurrentBitsPosition();
 			this.sei_payload =  new SeiPayload( payloadType,  payloadSize ) ;
 			size +=  stream.ReadClass<SeiPayload>(size, context, this.sei_payload, "sei_payload"); 
-			((H265Context)context).SetSeiPayload(sei_payload);
+			ituContext.SetSeiPayload(sei_payload);
 
             return size;
          }
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint payloadType = 0;
@@ -2371,7 +2490,7 @@ sei_message() {
 			payloadSize+= last_payload_size_byte;
 			stream.MarkCurrentBitsPosition();
 			size += stream.WriteClass<SeiPayload>(context, this.sei_payload, "sei_payload"); 
-			((H265Context)context).SetSeiPayload(sei_payload);
+			ituContext.SetSeiPayload(sei_payload);
 
             return size;
          }
@@ -2447,6 +2566,10 @@ st_ref_pic_set( stRpsIdx ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint j = 0;
@@ -2460,17 +2583,17 @@ st_ref_pic_set( stRpsIdx ) {
 			if ( inter_ref_pic_set_prediction_flag != 0 )
 			{
 
-				if ( stRpsIdx == ((H265Context)context).SeqParameterSetRbsp.NumShortTermRefPicSets )
+				if ( stRpsIdx == ituContext.SeqParameterSetRbsp.NumShortTermRefPicSets )
 				{
 					size += stream.ReadUnsignedIntGolomb(size, out this.delta_idx_minus1, "delta_idx_minus1"); 
-					((H265Context)context).OnDeltaIdxMinus1(stRpsIdx);
+					ituContext.OnDeltaIdxMinus1(stRpsIdx);
 				}
 				size += stream.ReadUnsignedInt(size, 1, out this.delta_rps_sign, "delta_rps_sign"); 
 				size += stream.ReadUnsignedIntGolomb(size, out this.abs_delta_rps_minus1, "abs_delta_rps_minus1"); 
 
-				this.used_by_curr_pic_flag = new byte[ ((H265Context)context).NumDeltaPocs[ ((H265Context)context).RefRpsIdx ]];
-				this.use_delta_flag = new byte[ ((H265Context)context).NumDeltaPocs[ ((H265Context)context).RefRpsIdx ]];
-				for ( j = 0; j <= ((H265Context)context).NumDeltaPocs[ ((H265Context)context).RefRpsIdx ]; j++ )
+				this.used_by_curr_pic_flag = new byte[ ituContext.NumDeltaPocs[ ituContext.RefRpsIdx ]];
+				this.use_delta_flag = new byte[ ituContext.NumDeltaPocs[ ituContext.RefRpsIdx ]];
+				for ( j = 0; j <= ituContext.NumDeltaPocs[ ituContext.RefRpsIdx ]; j++ )
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.used_by_curr_pic_flag[ j ], "used_by_curr_pic_flag"); 
 
@@ -2491,7 +2614,7 @@ st_ref_pic_set( stRpsIdx ) {
 				{
 					size += stream.ReadUnsignedIntGolomb(size, out this.delta_poc_s0_minus1[ i ], "delta_poc_s0_minus1"); 
 					size += stream.ReadUnsignedInt(size, 1, out this.used_by_curr_pic_s0_flag[ i ], "used_by_curr_pic_s0_flag"); 
-					((H265Context)context).OnUsedByCurrPicS0Flag(i, stRpsIdx, this);
+					ituContext.OnUsedByCurrPicS0Flag(i, stRpsIdx, this);
 				}
 
 				this.delta_poc_s1_minus1 = new ulong[ num_positive_pics];
@@ -2500,7 +2623,7 @@ st_ref_pic_set( stRpsIdx ) {
 				{
 					size += stream.ReadUnsignedIntGolomb(size, out this.delta_poc_s1_minus1[ i ], "delta_poc_s1_minus1"); 
 					size += stream.ReadUnsignedInt(size, 1, out this.used_by_curr_pic_s1_flag[ i ], "used_by_curr_pic_s1_flag"); 
-					((H265Context)context).OnUsedByCurrPicS1Flag(i, stRpsIdx, this);
+					ituContext.OnUsedByCurrPicS1Flag(i, stRpsIdx, this);
 				}
 			}
 
@@ -2509,6 +2632,9 @@ st_ref_pic_set( stRpsIdx ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint j = 0;
@@ -2522,15 +2648,15 @@ st_ref_pic_set( stRpsIdx ) {
 			if ( inter_ref_pic_set_prediction_flag != 0 )
 			{
 
-				if ( stRpsIdx == ((H265Context)context).SeqParameterSetRbsp.NumShortTermRefPicSets )
+				if ( stRpsIdx == ituContext.SeqParameterSetRbsp.NumShortTermRefPicSets )
 				{
 					size += stream.WriteUnsignedIntGolomb( this.delta_idx_minus1, "delta_idx_minus1"); 
-					((H265Context)context).OnDeltaIdxMinus1(stRpsIdx);
+					ituContext.OnDeltaIdxMinus1(stRpsIdx);
 				}
 				size += stream.WriteUnsignedInt(1, this.delta_rps_sign, "delta_rps_sign"); 
 				size += stream.WriteUnsignedIntGolomb( this.abs_delta_rps_minus1, "abs_delta_rps_minus1"); 
 
-				for ( j = 0; j <= ((H265Context)context).NumDeltaPocs[ ((H265Context)context).RefRpsIdx ]; j++ )
+				for ( j = 0; j <= ituContext.NumDeltaPocs[ ituContext.RefRpsIdx ]; j++ )
 				{
 					size += stream.WriteUnsignedInt(1, this.used_by_curr_pic_flag[ j ], "used_by_curr_pic_flag"); 
 
@@ -2549,14 +2675,14 @@ st_ref_pic_set( stRpsIdx ) {
 				{
 					size += stream.WriteUnsignedIntGolomb( this.delta_poc_s0_minus1[ i ], "delta_poc_s0_minus1"); 
 					size += stream.WriteUnsignedInt(1, this.used_by_curr_pic_s0_flag[ i ], "used_by_curr_pic_s0_flag"); 
-					((H265Context)context).OnUsedByCurrPicS0Flag(i, stRpsIdx, this);
+					ituContext.OnUsedByCurrPicS0Flag(i, stRpsIdx, this);
 				}
 
 				for ( i = 0; i < num_positive_pics; i++ )
 				{
 					size += stream.WriteUnsignedIntGolomb( this.delta_poc_s1_minus1[ i ], "delta_poc_s1_minus1"); 
 					size += stream.WriteUnsignedInt(1, this.used_by_curr_pic_s1_flag[ i ], "used_by_curr_pic_s1_flag"); 
-					((H265Context)context).OnUsedByCurrPicS1Flag(i, stRpsIdx, this);
+					ituContext.OnUsedByCurrPicS1Flag(i, stRpsIdx, this);
 				}
 			}
 
@@ -2870,11 +2996,15 @@ sei_payload( payloadType, payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			int whileIndex = -1;
 
-			if ( ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.PREFIX_SEI_NUT )
+			if ( ituContext.NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.PREFIX_SEI_NUT )
 			{
 
 				if ( payloadType == 0 )
@@ -3255,11 +3385,14 @@ sei_payload( payloadType, payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			int whileIndex = -1;
 
-			if ( ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.PREFIX_SEI_NUT )
+			if ( ituContext.NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.PREFIX_SEI_NUT )
 			{
 
 				if ( payloadType == 0 )
@@ -3652,12 +3785,16 @@ buffering_period( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.bp_seq_parameter_set_id, "bp_seq_parameter_set_id"); 
 
-			if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag== 0 )
+			if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag== 0 )
 			{
 				size += stream.ReadUnsignedInt(size, 1, out this.irap_cpb_params_present_flag, "irap_cpb_params_present_flag"); 
 			}
@@ -3670,19 +3807,19 @@ buffering_period( payloadSize ) {
 			size += stream.ReadUnsignedInt(size, 1, out this.concatenation_flag, "concatenation_flag"); 
 			size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1, out this.au_cpb_removal_delay_delta_minus1, "au_cpb_removal_delay_delta_minus1"); 
 
-			if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag != 0 )
+			if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag != 0 )
 			{
 
-				this.nal_initial_cpb_removal_delay = new ulong[ ((H265Context)context).CpbCnt];
-				this.nal_initial_cpb_removal_offset = new ulong[ ((H265Context)context).CpbCnt];
-				this.nal_initial_alt_cpb_removal_delay = new ulong[ ((H265Context)context).CpbCnt];
-				this.nal_initial_alt_cpb_removal_offset = new ulong[ ((H265Context)context).CpbCnt];
-				for ( i = 0; i < ((H265Context)context).CpbCnt; i++ )
+				this.nal_initial_cpb_removal_delay = new ulong[ ituContext.CpbCnt];
+				this.nal_initial_cpb_removal_offset = new ulong[ ituContext.CpbCnt];
+				this.nal_initial_alt_cpb_removal_delay = new ulong[ ituContext.CpbCnt];
+				this.nal_initial_alt_cpb_removal_offset = new ulong[ ituContext.CpbCnt];
+				for ( i = 0; i < ituContext.CpbCnt; i++ )
 				{
 					size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.nal_initial_cpb_removal_delay[ i ], "nal_initial_cpb_removal_delay"); 
 					size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.nal_initial_cpb_removal_offset[ i ], "nal_initial_cpb_removal_offset"); 
 
-					if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0  ||  irap_cpb_params_present_flag != 0 )
+					if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0  ||  irap_cpb_params_present_flag != 0 )
 					{
 						size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.nal_initial_alt_cpb_removal_delay[ i ], "nal_initial_alt_cpb_removal_delay"); 
 						size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.nal_initial_alt_cpb_removal_offset[ i ], "nal_initial_alt_cpb_removal_offset"); 
@@ -3690,19 +3827,19 @@ buffering_period( payloadSize ) {
 				}
 			}
 
-			if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.VclHrdParametersPresentFlag != 0 )
+			if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.VclHrdParametersPresentFlag != 0 )
 			{
 
-				this.vcl_initial_cpb_removal_delay = new ulong[ ((H265Context)context).CpbCnt];
-				this.vcl_initial_cpb_removal_offset = new ulong[ ((H265Context)context).CpbCnt];
-				this.vcl_initial_alt_cpb_removal_delay = new ulong[ ((H265Context)context).CpbCnt];
-				this.vcl_initial_alt_cpb_removal_offset = new ulong[ ((H265Context)context).CpbCnt];
-				for ( i = 0; i < ((H265Context)context).CpbCnt; i++ )
+				this.vcl_initial_cpb_removal_delay = new ulong[ ituContext.CpbCnt];
+				this.vcl_initial_cpb_removal_offset = new ulong[ ituContext.CpbCnt];
+				this.vcl_initial_alt_cpb_removal_delay = new ulong[ ituContext.CpbCnt];
+				this.vcl_initial_alt_cpb_removal_offset = new ulong[ ituContext.CpbCnt];
+				for ( i = 0; i < ituContext.CpbCnt; i++ )
 				{
 					size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.vcl_initial_cpb_removal_delay[ i ], "vcl_initial_cpb_removal_delay"); 
 					size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.vcl_initial_cpb_removal_offset[ i ], "vcl_initial_cpb_removal_offset"); 
 
-					if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0  ||  irap_cpb_params_present_flag != 0 )
+					if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0  ||  irap_cpb_params_present_flag != 0 )
 					{
 						size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.vcl_initial_alt_cpb_removal_delay[ i ], "vcl_initial_alt_cpb_removal_delay"); 
 						size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.vcl_initial_alt_cpb_removal_offset[ i ], "vcl_initial_alt_cpb_removal_offset"); 
@@ -3720,12 +3857,15 @@ buffering_period( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
 			size += stream.WriteUnsignedIntGolomb( this.bp_seq_parameter_set_id, "bp_seq_parameter_set_id"); 
 
-			if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag== 0 )
+			if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag== 0 )
 			{
 				size += stream.WriteUnsignedInt(1, this.irap_cpb_params_present_flag, "irap_cpb_params_present_flag"); 
 			}
@@ -3738,15 +3878,15 @@ buffering_period( payloadSize ) {
 			size += stream.WriteUnsignedInt(1, this.concatenation_flag, "concatenation_flag"); 
 			size += stream.WriteUnsignedIntVariable(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1, this.au_cpb_removal_delay_delta_minus1, "au_cpb_removal_delay_delta_minus1"); 
 
-			if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag != 0 )
+			if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag != 0 )
 			{
 
-				for ( i = 0; i < ((H265Context)context).CpbCnt; i++ )
+				for ( i = 0; i < ituContext.CpbCnt; i++ )
 				{
 					size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.nal_initial_cpb_removal_delay[ i ], "nal_initial_cpb_removal_delay"); 
 					size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.nal_initial_cpb_removal_offset[ i ], "nal_initial_cpb_removal_offset"); 
 
-					if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0  ||  irap_cpb_params_present_flag != 0 )
+					if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0  ||  irap_cpb_params_present_flag != 0 )
 					{
 						size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.nal_initial_alt_cpb_removal_delay[ i ], "nal_initial_alt_cpb_removal_delay"); 
 						size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.nal_initial_alt_cpb_removal_offset[ i ], "nal_initial_alt_cpb_removal_offset"); 
@@ -3754,15 +3894,15 @@ buffering_period( payloadSize ) {
 				}
 			}
 
-			if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.VclHrdParametersPresentFlag != 0 )
+			if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.VclHrdParametersPresentFlag != 0 )
 			{
 
-				for ( i = 0; i < ((H265Context)context).CpbCnt; i++ )
+				for ( i = 0; i < ituContext.CpbCnt; i++ )
 				{
 					size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.vcl_initial_cpb_removal_delay[ i ], "vcl_initial_cpb_removal_delay"); 
 					size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.vcl_initial_cpb_removal_offset[ i ], "vcl_initial_cpb_removal_offset"); 
 
-					if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0  ||  irap_cpb_params_present_flag != 0 )
+					if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0  ||  irap_cpb_params_present_flag != 0 )
 					{
 						size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.vcl_initial_alt_cpb_removal_delay[ i ], "vcl_initial_alt_cpb_removal_delay"); 
 						size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.vcl_initial_alt_cpb_removal_offset[ i ], "vcl_initial_alt_cpb_removal_offset"); 
@@ -3847,29 +3987,33 @@ pic_timing( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
 
-			if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.FrameFieldInfoPresentFlag != 0 )
+			if ( ituContext.SeqParameterSetRbsp.VuiParameters.FrameFieldInfoPresentFlag != 0 )
 			{
 				size += stream.ReadUnsignedInt(size, 4, out this.pic_struct, "pic_struct"); 
 				size += stream.ReadUnsignedInt(size, 2, out this.source_scan_type, "source_scan_type"); 
 				size += stream.ReadUnsignedInt(size, 1, out this.duplicate_flag, "duplicate_flag"); 
 			}
 
-			if ( (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag == 1 || ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0) != 0 )
+			if ( (ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag == 1 || ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0) != 0 )
 			{
 				size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1), out this.au_cpb_removal_delay_minus1, "au_cpb_removal_delay_minus1"); 
 				size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1, out this.pic_dpb_output_delay, "pic_dpb_output_delay"); 
 
-				if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0 )
+				if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0 )
 				{
 					size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayDuLengthMinus1 + 1, out this.pic_dpb_output_du_delay, "pic_dpb_output_du_delay"); 
 				}
 
-				if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0  && 
-    ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicCpbParamsInPicTimingSeiFlag != 0 )
+				if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0  && 
+    ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicCpbParamsInPicTimingSeiFlag != 0 )
 				{
 					size += stream.ReadUnsignedIntGolomb(size, out this.num_decoding_units_minus1, "num_decoding_units_minus1"); 
 					size += stream.ReadUnsignedInt(size, 1, out this.du_common_cpb_removal_delay_flag, "du_common_cpb_removal_delay_flag"); 
@@ -3898,29 +4042,32 @@ pic_timing( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
 
-			if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.FrameFieldInfoPresentFlag != 0 )
+			if ( ituContext.SeqParameterSetRbsp.VuiParameters.FrameFieldInfoPresentFlag != 0 )
 			{
 				size += stream.WriteUnsignedInt(4, this.pic_struct, "pic_struct"); 
 				size += stream.WriteUnsignedInt(2, this.source_scan_type, "source_scan_type"); 
 				size += stream.WriteUnsignedInt(1, this.duplicate_flag, "duplicate_flag"); 
 			}
 
-			if ( (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag == 1 || ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0) != 0 )
+			if ( (ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag == 1 || ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0) != 0 )
 			{
 				size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1), this.au_cpb_removal_delay_minus1, "au_cpb_removal_delay_minus1"); 
 				size += stream.WriteUnsignedIntVariable(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1, this.pic_dpb_output_delay, "pic_dpb_output_delay"); 
 
-				if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0 )
+				if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0 )
 				{
 					size += stream.WriteUnsignedIntVariable(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayDuLengthMinus1 + 1, this.pic_dpb_output_du_delay, "pic_dpb_output_du_delay"); 
 				}
 
-				if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0  && 
-    ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicCpbParamsInPicTimingSeiFlag != 0 )
+				if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0  && 
+    ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicCpbParamsInPicTimingSeiFlag != 0 )
 				{
 					size += stream.WriteUnsignedIntGolomb( this.num_decoding_units_minus1, "num_decoding_units_minus1"); 
 					size += stream.WriteUnsignedInt(1, this.du_common_cpb_removal_delay_flag, "du_common_cpb_removal_delay_flag"); 
@@ -3996,6 +4143,10 @@ pan_scan_rect( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -4025,6 +4176,9 @@ pan_scan_rect( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -4075,6 +4229,10 @@ filler_payload( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint k = 0;
@@ -4090,6 +4248,9 @@ filler_payload( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint k = 0;
@@ -4142,6 +4303,10 @@ user_data_registered_itu_t_t35( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -4171,6 +4336,9 @@ user_data_registered_itu_t_t35( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -4228,6 +4396,10 @@ user_data_unregistered( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -4244,6 +4416,9 @@ user_data_unregistered( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -4289,6 +4464,10 @@ recovery_point( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadSignedIntGolomb(size, out this.recovery_poc_cnt, "recovery_poc_cnt"); 
@@ -4300,6 +4479,9 @@ recovery_point( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteSignedIntGolomb( this.recovery_poc_cnt, "recovery_poc_cnt"); 
@@ -4350,6 +4532,10 @@ if( scene_transition_type > 3 )
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 1, out this.scene_info_present_flag, "scene_info_present_flag"); 
@@ -4371,6 +4557,9 @@ if( scene_transition_type > 3 )
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(1, this.scene_info_present_flag, "scene_info_present_flag"); 
@@ -4416,6 +4605,10 @@ picture_snapshot( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedIntGolomb(size, out this.snapshot_id, "snapshot_id"); 
@@ -4425,6 +4618,9 @@ picture_snapshot( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedIntGolomb( this.snapshot_id, "snapshot_id"); 
@@ -4461,6 +4657,10 @@ progressive_refinement_segment_start( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedIntGolomb(size, out this.progressive_refinement_id, "progressive_refinement_id"); 
@@ -4471,6 +4671,9 @@ progressive_refinement_segment_start( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedIntGolomb( this.progressive_refinement_id, "progressive_refinement_id"); 
@@ -4505,6 +4708,10 @@ progressive_refinement_segment_end( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedIntGolomb(size, out this.progressive_refinement_id, "progressive_refinement_id"); 
@@ -4514,6 +4721,9 @@ progressive_refinement_segment_end( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedIntGolomb( this.progressive_refinement_id, "progressive_refinement_id"); 
@@ -4609,6 +4819,10 @@ film_grain_characteristics( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint c = 0;
@@ -4676,6 +4890,9 @@ film_grain_characteristics( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint c = 0;
@@ -4769,6 +4986,10 @@ post_filter_hint( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint cIdx = 0;
@@ -4778,8 +4999,8 @@ post_filter_hint( payloadSize ) {
 			size += stream.ReadUnsignedIntGolomb(size, out this.filter_hint_size_x, "filter_hint_size_x"); 
 			size += stream.ReadUnsignedInt(size, 2, out this.filter_hint_type, "filter_hint_type"); 
 
-			this.filter_hint_value = new long[ ( ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3 )][][];
-			for ( cIdx = 0; cIdx < ( ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3 ); cIdx++ )
+			this.filter_hint_value = new long[ ( ituContext.SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3 )][][];
+			for ( cIdx = 0; cIdx < ( ituContext.SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3 ); cIdx++ )
 			{
 
 				this.filter_hint_value[ cIdx ] = new long[ filter_hint_size_y][];
@@ -4799,6 +5020,9 @@ post_filter_hint( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint cIdx = 0;
@@ -4808,7 +5032,7 @@ post_filter_hint( payloadSize ) {
 			size += stream.WriteUnsignedIntGolomb( this.filter_hint_size_x, "filter_hint_size_x"); 
 			size += stream.WriteUnsignedInt(2, this.filter_hint_type, "filter_hint_type"); 
 
-			for ( cIdx = 0; cIdx < ( ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3 ); cIdx++ )
+			for ( cIdx = 0; cIdx < ( ituContext.SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3 ); cIdx++ )
 			{
 
 				for ( cy = 0; cy < filter_hint_size_y; cy++ )
@@ -4938,6 +5162,10 @@ tone_mapping_info( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -5012,6 +5240,9 @@ tone_mapping_info( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -5162,6 +5393,10 @@ frame_packing_arrangement( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedIntGolomb(size, out this.frame_packing_arrangement_id, "frame_packing_arrangement_id"); 
@@ -5196,6 +5431,9 @@ frame_packing_arrangement( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedIntGolomb( this.frame_packing_arrangement_id, "frame_packing_arrangement_id"); 
@@ -5268,6 +5506,10 @@ display_orientation( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 1, out this.display_orientation_cancel_flag, "display_orientation_cancel_flag"); 
@@ -5285,6 +5527,9 @@ display_orientation( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(1, this.display_orientation_cancel_flag, "display_orientation_cancel_flag"); 
@@ -5345,6 +5590,10 @@ structure_of_pictures_info( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -5376,6 +5625,9 @@ structure_of_pictures_info( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -5441,16 +5693,20 @@ decoded_picture_hash( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint cIdx = 0;
 			uint i = 0;
 			size += stream.ReadUnsignedInt(size, 8, out this.hash_type, "hash_type"); 
 
-			this.picture_md5 = new byte[ ( ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3 )][];
-			this.picture_crc = new uint[ ( ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3 )];
-			this.picture_checksum = new uint[ ( ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3 )];
-			for ( cIdx = 0; cIdx < ( ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3 ); cIdx++ )
+			this.picture_md5 = new byte[ ( ituContext.SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3 )][];
+			this.picture_crc = new uint[ ( ituContext.SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3 )];
+			this.picture_checksum = new uint[ ( ituContext.SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3 )];
+			for ( cIdx = 0; cIdx < ( ituContext.SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3 ); cIdx++ )
 			{
 
 				if ( hash_type == 0 )
@@ -5477,13 +5733,16 @@ decoded_picture_hash( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint cIdx = 0;
 			uint i = 0;
 			size += stream.WriteUnsignedInt(8, this.hash_type, "hash_type"); 
 
-			for ( cIdx = 0; cIdx < ( ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3 ); cIdx++ )
+			for ( cIdx = 0; cIdx < ( ituContext.SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3 ); cIdx++ )
 			{
 
 				if ( hash_type == 0 )
@@ -5550,6 +5809,10 @@ active_parameter_sets( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -5564,8 +5827,8 @@ active_parameter_sets( payloadSize ) {
 				size += stream.ReadUnsignedIntGolomb(size, out this.active_seq_parameter_set_id[ i ], "active_seq_parameter_set_id"); 
 			}
 
-			this.layer_sps_idx = new ulong[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
-			for ( i = ((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag; i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+			this.layer_sps_idx = new ulong[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
+			for ( i = ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag; i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.layer_sps_idx[ i ], "layer_sps_idx"); 
 			}
@@ -5575,6 +5838,9 @@ active_parameter_sets( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -5588,7 +5854,7 @@ active_parameter_sets( payloadSize ) {
 				size += stream.WriteUnsignedIntGolomb( this.active_seq_parameter_set_id[ i ], "active_seq_parameter_set_id"); 
 			}
 
-			for ( i = ((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag; i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+			for ( i = ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag; i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 			{
 				size += stream.WriteUnsignedIntGolomb( this.layer_sps_idx[ i ], "layer_sps_idx"); 
 			}
@@ -5633,11 +5899,15 @@ decoding_unit_info( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedIntGolomb(size, out this.decoding_unit_idx, "decoding_unit_idx"); 
 
-			if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicCpbParamsInPicTimingSeiFlag== 0 )
+			if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicCpbParamsInPicTimingSeiFlag== 0 )
 			{
 				size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DuCpbRemovalDelayIncrementLengthMinus1 + 1, out this.du_spt_cpb_removal_delay_increment, "du_spt_cpb_removal_delay_increment"); 
 			}
@@ -5653,11 +5923,14 @@ decoding_unit_info( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedIntGolomb( this.decoding_unit_idx, "decoding_unit_idx"); 
 
-			if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicCpbParamsInPicTimingSeiFlag== 0 )
+			if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicCpbParamsInPicTimingSeiFlag== 0 )
 			{
 				size += stream.WriteUnsignedIntVariable(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DuCpbRemovalDelayIncrementLengthMinus1 + 1, this.du_spt_cpb_removal_delay_increment, "du_spt_cpb_removal_delay_increment"); 
 			}
@@ -5700,6 +5973,10 @@ temporal_sub_layer_zero_idx( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 8, out this.temporal_sub_layer_zero_idx, "temporal_sub_layer_zero_idx"); 
@@ -5710,6 +5987,9 @@ temporal_sub_layer_zero_idx( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(8, this.temporal_sub_layer_zero_idx, "temporal_sub_layer_zero_idx"); 
@@ -5788,6 +6068,10 @@ scalable_nesting( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -5805,7 +6089,7 @@ scalable_nesting( payloadSize ) {
 				for ( i = default_op_flag; i <= nesting_num_ops_minus1; i++ )
 				{
 					size += stream.ReadUnsignedInt(size, 3, out this.nesting_max_temporal_id_plus1[ i ], "nesting_max_temporal_id_plus1"); 
-					((H265Context)context).OnNestingMaxTemporalIdPlus1(i);
+					ituContext.OnNestingMaxTemporalIdPlus1(i);
 					size += stream.ReadUnsignedIntGolomb(size, out this.nesting_op_idx[ i ], "nesting_op_idx"); 
 				}
 			}
@@ -5846,6 +6130,9 @@ scalable_nesting( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -5861,7 +6148,7 @@ scalable_nesting( payloadSize ) {
 				for ( i = default_op_flag; i <= nesting_num_ops_minus1; i++ )
 				{
 					size += stream.WriteUnsignedInt(3, this.nesting_max_temporal_id_plus1[ i ], "nesting_max_temporal_id_plus1"); 
-					((H265Context)context).OnNestingMaxTemporalIdPlus1(i);
+					ituContext.OnNestingMaxTemporalIdPlus1(i);
 					size += stream.WriteUnsignedIntGolomb( this.nesting_op_idx[ i ], "nesting_op_idx"); 
 				}
 			}
@@ -5924,6 +6211,10 @@ region_refresh_info( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 1, out this.refreshed_region_flag, "refreshed_region_flag"); 
@@ -5933,6 +6224,9 @@ region_refresh_info( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(1, this.refreshed_region_flag, "refreshed_region_flag"); 
@@ -5963,6 +6257,10 @@ no_display( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 
@@ -5971,6 +6269,9 @@ no_display( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 
@@ -6064,6 +6365,10 @@ time_code( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -6150,6 +6455,9 @@ time_code( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -6262,6 +6570,10 @@ min_display_mastering_luminance u(32)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint c = 0;
@@ -6283,6 +6595,9 @@ min_display_mastering_luminance u(32)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint c = 0;
@@ -6334,6 +6649,10 @@ segmented_rect_frame_packing_arrangement_persistence_flag u(1)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 1, out this.segmented_rect_frame_packing_arrangement_cancel_flag, "segmented_rect_frame_packing_arrangement_cancel_flag"); 
@@ -6349,6 +6668,9 @@ segmented_rect_frame_packing_arrangement_persistence_flag u(1)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(1, this.segmented_rect_frame_packing_arrangement_cancel_flag, "segmented_rect_frame_packing_arrangement_cancel_flag"); 
@@ -6446,6 +6768,10 @@ temporal_motion_constrained_tile_sets( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -6514,6 +6840,9 @@ temporal_motion_constrained_tile_sets( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -6634,6 +6963,10 @@ chroma_resampling_filter_hint( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -6688,6 +7021,9 @@ chroma_resampling_filter_hint( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -6791,6 +7127,10 @@ knee_function_info( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -6820,6 +7160,9 @@ knee_function_info( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -6943,6 +7286,10 @@ colour_remapping_info( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint c = 0;
@@ -7028,6 +7375,9 @@ colour_remapping_info( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint c = 0;
@@ -7125,6 +7475,10 @@ deinterlaced_picture_source_parity_flag  u(1)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 1, out this.deinterlaced_picture_source_parity_flag, "deinterlaced_picture_source_parity_flag"); 
@@ -7134,6 +7488,9 @@ deinterlaced_picture_source_parity_flag  u(1)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(1, this.deinterlaced_picture_source_parity_flag, "deinterlaced_picture_source_parity_flag"); 
@@ -7170,6 +7527,10 @@ max_pic_average_light_level u(16)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 16, out this.max_content_light_level, "max_content_light_level"); 
@@ -7180,6 +7541,9 @@ max_pic_average_light_level u(16)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(16, this.max_content_light_level, "max_content_light_level"); 
@@ -7211,6 +7575,10 @@ dependent_rap_indication( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 
@@ -7219,6 +7587,9 @@ dependent_rap_indication( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 
@@ -7255,6 +7626,10 @@ independent_slice_segment_flag u(1)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedIntGolomb(size, out this.next_segment_address, "next_segment_address"); 
@@ -7269,6 +7644,9 @@ independent_slice_segment_flag u(1)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedIntGolomb( this.next_segment_address, "next_segment_address"); 
@@ -7307,6 +7685,10 @@ preferred_transfer_characteristics u(8)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 8, out this.preferred_transfer_characteristics, "preferred_transfer_characteristics"); 
@@ -7316,6 +7698,9 @@ preferred_transfer_characteristics u(8)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(8, this.preferred_transfer_characteristics, "preferred_transfer_characteristics"); 
@@ -7355,6 +7740,10 @@ ambient_light_y u(16)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 32, out this.ambient_illuminance, "ambient_illuminance"); 
@@ -7366,6 +7755,9 @@ ambient_light_y u(16)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(32, this.ambient_illuminance, "ambient_illuminance"); 
@@ -7442,6 +7834,10 @@ content_colour_volume( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint c = 0;
@@ -7489,6 +7885,9 @@ content_colour_volume( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint c = 0;
@@ -7580,6 +7979,10 @@ equirectangular_projection( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 1, out this.erp_cancel_flag, "erp_cancel_flag"); 
@@ -7603,6 +8006,9 @@ equirectangular_projection( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(1, this.erp_cancel_flag, "erp_cancel_flag"); 
@@ -7654,6 +8060,10 @@ cmp_persistence_flag u(1)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 1, out this.cmp_cancel_flag, "cmp_cancel_flag"); 
@@ -7668,6 +8078,9 @@ cmp_persistence_flag u(1)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(1, this.cmp_cancel_flag, "cmp_cancel_flag"); 
@@ -7723,6 +8136,10 @@ roll_rotation i(32)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 1, out this.sphere_rotation_cancel_flag, "sphere_rotation_cancel_flag"); 
@@ -7741,6 +8158,9 @@ roll_rotation i(32)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(1, this.sphere_rotation_cancel_flag, "sphere_rotation_cancel_flag"); 
@@ -7868,6 +8288,10 @@ regionwise_packing( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -7940,6 +8364,9 @@ regionwise_packing( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -8045,6 +8472,10 @@ omni_viewport( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -8076,6 +8507,9 @@ omni_viewport( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -8161,6 +8595,10 @@ regional_nesting( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -8204,6 +8642,9 @@ regional_nesting( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -8331,6 +8772,10 @@ mcts_extraction_info_sets( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -8453,6 +8898,9 @@ mcts_extraction_info_sets( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -8589,6 +9037,10 @@ sei_message()
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -8626,6 +9078,9 @@ sei_message()
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -8685,6 +9140,10 @@ reserved_sei_message_payload_byte b(8)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -8700,6 +9159,9 @@ reserved_sei_message_payload_byte b(8)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -8872,6 +9334,10 @@ vui_parameters() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 1, out this.aspect_ratio_info_present_flag, "aspect_ratio_info_present_flag"); 
@@ -8942,7 +9408,7 @@ vui_parameters() {
 
 				if ( vui_hrd_parameters_present_flag != 0 )
 				{
-					this.hrd_parameters =  new HrdParameters( 1,  ((H265Context)context).SeqParameterSetRbsp.SpsMaxSubLayersMinus1 ) ;
+					this.hrd_parameters =  new HrdParameters( 1,  ituContext.SeqParameterSetRbsp.SpsMaxSubLayersMinus1 ) ;
 					size +=  stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters, "hrd_parameters"); 
 				}
 			}
@@ -8965,6 +9431,9 @@ vui_parameters() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(1, this.aspect_ratio_info_present_flag, "aspect_ratio_info_present_flag"); 
@@ -9154,6 +9623,10 @@ hrd_parameters( commonInfPresentFlag, maxNumSubLayersMinus1 ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -9161,9 +9634,9 @@ hrd_parameters( commonInfPresentFlag, maxNumSubLayersMinus1 ) {
 			if ( commonInfPresentFlag != 0 )
 			{
 				size += stream.ReadUnsignedInt(size, 1, out this.nal_hrd_parameters_present_flag, "nal_hrd_parameters_present_flag"); 
-				((H265Context)context).OnNalHrdParametersPresentFlag(nal_hrd_parameters_present_flag);
+				ituContext.OnNalHrdParametersPresentFlag(nal_hrd_parameters_present_flag);
 				size += stream.ReadUnsignedInt(size, 1, out this.vcl_hrd_parameters_present_flag, "vcl_hrd_parameters_present_flag"); 
-				((H265Context)context).OnVclHrdParametersPresentFlag(vcl_hrd_parameters_present_flag);
+				ituContext.OnVclHrdParametersPresentFlag(vcl_hrd_parameters_present_flag);
 
 				if ( nal_hrd_parameters_present_flag != 0  ||  vcl_hrd_parameters_present_flag != 0 )
 				{
@@ -9216,7 +9689,7 @@ hrd_parameters( commonInfPresentFlag, maxNumSubLayersMinus1 ) {
 				if ( low_delay_hrd_flag[ i ]== 0 )
 				{
 					size += stream.ReadUnsignedIntGolomb(size, out this.cpb_cnt_minus1[ i ], "cpb_cnt_minus1"); 
-					((H265Context)context).OnCpbCntMinus1(i);
+					ituContext.OnCpbCntMinus1(i);
 				}
 
 				if ( nal_hrd_parameters_present_flag != 0 )
@@ -9237,6 +9710,9 @@ hrd_parameters( commonInfPresentFlag, maxNumSubLayersMinus1 ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -9244,9 +9720,9 @@ hrd_parameters( commonInfPresentFlag, maxNumSubLayersMinus1 ) {
 			if ( commonInfPresentFlag != 0 )
 			{
 				size += stream.WriteUnsignedInt(1, this.nal_hrd_parameters_present_flag, "nal_hrd_parameters_present_flag"); 
-				((H265Context)context).OnNalHrdParametersPresentFlag(nal_hrd_parameters_present_flag);
+				ituContext.OnNalHrdParametersPresentFlag(nal_hrd_parameters_present_flag);
 				size += stream.WriteUnsignedInt(1, this.vcl_hrd_parameters_present_flag, "vcl_hrd_parameters_present_flag"); 
-				((H265Context)context).OnVclHrdParametersPresentFlag(vcl_hrd_parameters_present_flag);
+				ituContext.OnVclHrdParametersPresentFlag(vcl_hrd_parameters_present_flag);
 
 				if ( nal_hrd_parameters_present_flag != 0  ||  vcl_hrd_parameters_present_flag != 0 )
 				{
@@ -9293,7 +9769,7 @@ hrd_parameters( commonInfPresentFlag, maxNumSubLayersMinus1 ) {
 				if ( low_delay_hrd_flag[ i ]== 0 )
 				{
 					size += stream.WriteUnsignedIntGolomb( this.cpb_cnt_minus1[ i ], "cpb_cnt_minus1"); 
-					((H265Context)context).OnCpbCntMinus1(i);
+					ituContext.OnCpbCntMinus1(i);
 				}
 
 				if ( nal_hrd_parameters_present_flag != 0 )
@@ -9352,21 +9828,25 @@ cbr_flag[ i ] u(1)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
 
-			this.bit_rate_value_minus1 = new ulong[ ((H265Context)context).CpbCnt];
-			this.cpb_size_value_minus1 = new ulong[ ((H265Context)context).CpbCnt];
-			this.cpb_size_du_value_minus1 = new ulong[ ((H265Context)context).CpbCnt];
-			this.bit_rate_du_value_minus1 = new ulong[ ((H265Context)context).CpbCnt];
-			this.cbr_flag = new byte[ ((H265Context)context).CpbCnt];
-			for ( i = 0; i < ((H265Context)context).CpbCnt; i++ )
+			this.bit_rate_value_minus1 = new ulong[ ituContext.CpbCnt];
+			this.cpb_size_value_minus1 = new ulong[ ituContext.CpbCnt];
+			this.cpb_size_du_value_minus1 = new ulong[ ituContext.CpbCnt];
+			this.bit_rate_du_value_minus1 = new ulong[ ituContext.CpbCnt];
+			this.cbr_flag = new byte[ ituContext.CpbCnt];
+			for ( i = 0; i < ituContext.CpbCnt; i++ )
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.bit_rate_value_minus1[ i ], "bit_rate_value_minus1"); 
 				size += stream.ReadUnsignedIntGolomb(size, out this.cpb_size_value_minus1[ i ], "cpb_size_value_minus1"); 
 
-				if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0 )
+				if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0 )
 				{
 					size += stream.ReadUnsignedIntGolomb(size, out this.cpb_size_du_value_minus1[ i ], "cpb_size_du_value_minus1"); 
 					size += stream.ReadUnsignedIntGolomb(size, out this.bit_rate_du_value_minus1[ i ], "bit_rate_du_value_minus1"); 
@@ -9379,16 +9859,19 @@ cbr_flag[ i ] u(1)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
 
-			for ( i = 0; i < ((H265Context)context).CpbCnt; i++ )
+			for ( i = 0; i < ituContext.CpbCnt; i++ )
 			{
 				size += stream.WriteUnsignedIntGolomb( this.bit_rate_value_minus1[ i ], "bit_rate_value_minus1"); 
 				size += stream.WriteUnsignedIntGolomb( this.cpb_size_value_minus1[ i ], "cpb_size_value_minus1"); 
 
-				if ( ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0 )
+				if ( ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0 )
 				{
 					size += stream.WriteUnsignedIntGolomb( this.cpb_size_du_value_minus1[ i ], "cpb_size_du_value_minus1"); 
 					size += stream.WriteUnsignedIntGolomb( this.bit_rate_du_value_minus1[ i ], "bit_rate_du_value_minus1"); 
@@ -9608,6 +10091,10 @@ vps_extension() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -9615,9 +10102,9 @@ vps_extension() {
 			uint j = 0;
 			int whileIndex = -1;
 
-			if ( ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 > 0  &&  ((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 )
+			if ( ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 > 0  &&  ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 )
 			{
-				this.profile_tier_level =  new ProfileTierLevel( 0,  ((H265Context)context).VideoParameterSetRbsp.VpsMaxSubLayersMinus1 ) ;
+				this.profile_tier_level =  new ProfileTierLevel( 0,  ituContext.VideoParameterSetRbsp.VpsMaxSubLayersMinus1 ) ;
 				size +=  stream.ReadClass<ProfileTierLevel>(size, context, this.profile_tier_level, "profile_tier_level"); 
 			}
 			size += stream.ReadUnsignedInt(size, 1, out this.splitting_flag, "splitting_flag"); 
@@ -9636,16 +10123,16 @@ vps_extension() {
 			}
 			size += stream.ReadUnsignedInt(size, 1, out this.vps_nuh_layer_id_present_flag, "vps_nuh_layer_id_present_flag"); 
 
-			this.layer_id_in_nuh = new uint[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
-			this.dimension_id = new ulong[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)][];
+			this.layer_id_in_nuh = new uint[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
+			this.dimension_id = new ulong[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)][];
 			this.dimension_id[0] = new ulong[ NumScalabilityTypes];
-			for ( i = 1; i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+			for ( i = 1; i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 			{
 
 				if ( vps_nuh_layer_id_present_flag != 0 )
 				{
 					size += stream.ReadUnsignedInt(size, 6, out this.layer_id_in_nuh[ i ], "layer_id_in_nuh"); 
-					((H265Context)context).OnLayerIdInNuh(i);
+					ituContext.OnLayerIdInNuh(i);
 				}
 
 				if ( splitting_flag== 0 )
@@ -9655,7 +10142,7 @@ vps_extension() {
 					for ( j = 0; j < NumScalabilityTypes; j++ )
 					{
 						size += stream.ReadUnsignedIntVariable(size, (dimension_id_len_minus1[j] + 1), out this.dimension_id[ i ][ j ], "dimension_id"); 
-						((H265Context)context).OnDimensionId();
+						ituContext.OnDimensionId();
 					}
 				}
 			}
@@ -9664,34 +10151,34 @@ vps_extension() {
 			if ( view_id_len > 0 )
 			{
 
-				this.view_id_val = new ulong[ ((H265Context)context).NumViews];
-				for ( i = 0; i < ((H265Context)context).NumViews; i++ )
+				this.view_id_val = new ulong[ ituContext.NumViews];
+				for ( i = 0; i < ituContext.NumViews; i++ )
 				{
 					size += stream.ReadUnsignedIntVariable(size, view_id_len, out this.view_id_val[ i ], "view_id_val"); 
 				}
 			}
 
-			this.direct_dependency_flag = new byte[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)][];
+			this.direct_dependency_flag = new byte[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)][];
 			this.direct_dependency_flag[0] = new byte[((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1];
-			for ( i = 1; i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+			for ( i = 1; i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 			{
 
 				this.direct_dependency_flag[ i ] = new byte[((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1];
 				for ( j = 0; j < i; j++ )
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.direct_dependency_flag[ i ][ j ], "direct_dependency_flag"); 
-					((H265Context)context).OnDirectDependencyFlag();
+					ituContext.OnDirectDependencyFlag();
 				}
 			}
 
-			if ( ((H265Context)context).NumIndependentLayers > 1 )
+			if ( ituContext.NumIndependentLayers > 1 )
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.num_add_layer_sets, "num_add_layer_sets"); 
-				((H265Context)context).OnNumAddLayerSets();
+				ituContext.OnNumAddLayerSets();
  }
  else 
  {
- ((H265Context)context).OnNumAddLayerSets(); 
+ ituContext.OnNumAddLayerSets(); 
 
 			}
 
@@ -9699,11 +10186,11 @@ vps_extension() {
 			for ( i = 0; i < num_add_layer_sets; i++ )
 			{
 
-				this.highest_layer_idx_plus1[ i ] = new ulong[ ((H265Context)context).NumIndependentLayers];
-				for ( j = 1; j < ((H265Context)context).NumIndependentLayers; j++ )
+				this.highest_layer_idx_plus1[ i ] = new ulong[ ituContext.NumIndependentLayers];
+				for ( j = 1; j < ituContext.NumIndependentLayers; j++ )
 				{
 					size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumLayersInTreePartition[ j ] + 1 ) ), out this.highest_layer_idx_plus1[ i ][ j ], "highest_layer_idx_plus1"); 
-					((H265Context)context).OnHighestLayerIdxPlus1(i);
+					ituContext.OnHighestLayerIdxPlus1(i);
 				}
 			}
 			size += stream.ReadUnsignedInt(size, 1, out this.vps_sub_layers_max_minus1_present_flag, "vps_sub_layers_max_minus1_present_flag"); 
@@ -9711,11 +10198,11 @@ vps_extension() {
 			if ( vps_sub_layers_max_minus1_present_flag != 0 )
 			{
 
-				this.sub_layers_vps_max_minus1 = new uint[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
-				for ( i = 0; i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				this.sub_layers_vps_max_minus1 = new uint[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
+				for ( i = 0; i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 					size += stream.ReadUnsignedInt(size, 3, out this.sub_layers_vps_max_minus1[ i ], "sub_layers_vps_max_minus1"); 
-					((H265Context)context).OnSubLayersVpsMaxMinus1();
+					ituContext.OnSubLayersVpsMaxMinus1();
 				}
 			}
 			size += stream.ReadUnsignedInt(size, 1, out this.max_tid_ref_present_flag, "max_tid_ref_present_flag"); 
@@ -9723,12 +10210,12 @@ vps_extension() {
 			if ( max_tid_ref_present_flag != 0 )
 			{
 
-				this.max_tid_il_ref_pics_plus1 = new uint[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)][];
-				for ( i = 0; i < Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				this.max_tid_il_ref_pics_plus1 = new uint[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)][];
+				for ( i = 0; i < Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 
-					this.max_tid_il_ref_pics_plus1[ i ] = new uint[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
-					for ( j = i + 1; j <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); j++ )
+					this.max_tid_il_ref_pics_plus1[ i ] = new uint[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
+					for ( j = i + 1; j <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); j++ )
 					{
 
 						if ( direct_dependency_flag[ j ][ i ] != 0 )
@@ -9743,20 +10230,20 @@ vps_extension() {
 
 			this.vps_profile_present_flag = new byte[ vps_num_profile_tier_level_minus1 + 1];
 			this.profile_tier_level0 = new ProfileTierLevel[ vps_num_profile_tier_level_minus1 + 1];
-			for ( i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 2 : 1); 
+			for ( i = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 2 : 1); 
           i <= vps_num_profile_tier_level_minus1; i++ )
 			{
 				size += stream.ReadUnsignedInt(size, 1, out this.vps_profile_present_flag[ i ], "vps_profile_present_flag"); 
-				this.profile_tier_level0[ i ] =  new ProfileTierLevel( vps_profile_present_flag[ i ],  ((H265Context)context).VideoParameterSetRbsp.VpsMaxSubLayersMinus1 ) ;
+				this.profile_tier_level0[ i ] =  new ProfileTierLevel( vps_profile_present_flag[ i ],  ituContext.VideoParameterSetRbsp.VpsMaxSubLayersMinus1 ) ;
 				size +=  stream.ReadClass<ProfileTierLevel>(size, context, this.profile_tier_level0[ i ], "profile_tier_level0"); 
 			}
 
-			if ( (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) > 1 )
+			if ( (ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ituContext.VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) > 1 )
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.num_add_olss, "num_add_olss"); 
 				size += stream.ReadUnsignedInt(size, 2, out this.default_output_layer_idc, "default_output_layer_idc"); 
 			}
-			NumOutputLayerSets= num_add_olss + (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets);
+			NumOutputLayerSets= num_add_olss + (ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ituContext.VideoParameterSetRbsp.VpsExtension.NumAddLayerSets);
 
 			this.layer_set_idx_for_ols_minus1 = new ulong[ NumOutputLayerSets];
 			this.output_layer_flag = new byte[ NumOutputLayerSets][];
@@ -9765,39 +10252,39 @@ vps_extension() {
 			for ( i = 1; i < NumOutputLayerSets; i++ )
 			{
 
-				if ( (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) > 2  &&  i >= (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) )
+				if ( (ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ituContext.VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) > 2  &&  i >= (ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ituContext.VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) )
 				{
 					size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2( (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) - 1 ) ) , out this.layer_set_idx_for_ols_minus1[ i ], "layer_set_idx_for_ols_minus1"); 
-					((H265Context)context).OnLayerSetIdxForOlsMinus1(i, NumOutputLayerSets);
+					ituContext.OnLayerSetIdxForOlsMinus1(i, NumOutputLayerSets);
 				}
 				else
 				{
-					((H265Context)context).OnLayerSetIdxForOlsMinus1(i, NumOutputLayerSets);
+					ituContext.OnLayerSetIdxForOlsMinus1(i, NumOutputLayerSets);
 				}
 /*  TODO: Review and fix  */
 
 /*  if( i > vps_num_layer_sets_minus1  ||  defaultOutputLayerIdc == 2 )  */
 
 
-				this.output_layer_flag[ i ] = new byte[ ((H265Context)context).NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]];
-				for ( j = 0; j < ((H265Context)context).NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]; j++ )
+				this.output_layer_flag[ i ] = new byte[ ituContext.NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]];
+				for ( j = 0; j < ituContext.NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]; j++ )
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.output_layer_flag[ i ][ j ], "output_layer_flag"); 
-					((H265Context)context).OnOutputLayerFlag(i, j);
+					ituContext.OnOutputLayerFlag(i, j);
 				}
 
-				this.profile_tier_level_idx[ i ] = new ulong[ ((H265Context)context).NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]];
-				for ( j = 0; j < ((H265Context)context).NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]; j++ )
+				this.profile_tier_level_idx[ i ] = new ulong[ ituContext.NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]];
+				for ( j = 0; j < ituContext.NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]; j++ )
 				{
 
-					if ( ((H265Context)context).NecessaryLayerFlag[ i ][ j ] != 0  &&  vps_num_profile_tier_level_minus1 > 0 )
+					if ( ituContext.NecessaryLayerFlag[ i ][ j ] != 0  &&  vps_num_profile_tier_level_minus1 > 0 )
 					{
 						size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2( vps_num_profile_tier_level_minus1 + 1 ) ), out this.profile_tier_level_idx[ i ][ j ], "profile_tier_level_idx"); 
 					}
 				}
 
-				if ( ((H265Context)context).NumOutputLayersInOutputLayerSet[ i ] == 1 
-   &&  ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).OlsHighestOutputLayerId[ i ] ] > 0 )
+				if ( ituContext.NumOutputLayersInOutputLayerSet[ i ] == 1 
+   &&  ituContext.NumDirectRefLayers[ ituContext.OlsHighestOutputLayerId[ i ] ] > 0 )
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.alt_output_layer_flag[ i ], "alt_output_layer_flag"); 
 				}
@@ -9819,8 +10306,8 @@ vps_extension() {
 			if ( rep_format_idx_present_flag != 0 )
 			{
 
-				this.vps_rep_format_idx = new ulong[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
-				for ( i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 1 : 0); i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				this.vps_rep_format_idx = new ulong[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
+				for ( i = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 1 : 0); i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 					size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2( vps_num_rep_formats_minus1 + 1 ) ), out this.vps_rep_format_idx[ i ], "vps_rep_format_idx"); 
 				}
@@ -9828,11 +10315,11 @@ vps_extension() {
 			size += stream.ReadUnsignedInt(size, 1, out this.max_one_active_ref_layer_flag, "max_one_active_ref_layer_flag"); 
 			size += stream.ReadUnsignedInt(size, 1, out this.vps_poc_lsb_aligned_flag, "vps_poc_lsb_aligned_flag"); 
 
-			this.poc_lsb_not_present_flag = new byte[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
-			for ( i = 1; i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+			this.poc_lsb_not_present_flag = new byte[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
+			for ( i = 1; i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 			{
 
-				if ( ((H265Context)context).NumDirectRefLayers[ layer_id_in_nuh[ i ] ] == 0 )
+				if ( ituContext.NumDirectRefLayers[ layer_id_in_nuh[ i ] ] == 0 )
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.poc_lsb_not_present_flag[ i ], "poc_lsb_not_present_flag"); 
 				}
@@ -9849,18 +10336,18 @@ vps_extension() {
 			else 
 			{
 
-				this.direct_dependency_type = new ulong[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)][];
-				for ( i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 1 : 2); i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				this.direct_dependency_type = new ulong[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)][];
+				for ( i = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 1 : 2); i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 
 					this.direct_dependency_type[ i ] = new ulong[ i];
-					for ( j = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); j < i; j++ )
+					for ( j = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); j < i; j++ )
 					{
 
 						if ( direct_dependency_flag[ i ][ j ] != 0 )
 						{
 							size += stream.ReadUnsignedIntVariable(size, (direct_dep_type_len_minus2 + 2), out this.direct_dependency_type[ i ][ j ], "direct_dependency_type"); 
-							((H265Context)context).OnDirectDependencyType();
+							ituContext.OnDirectDependencyType();
 						}
 					}
 				}
@@ -9892,6 +10379,9 @@ vps_extension() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -9899,7 +10389,7 @@ vps_extension() {
 			uint j = 0;
 			int whileIndex = -1;
 
-			if ( ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 > 0  &&  ((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 )
+			if ( ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 > 0  &&  ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 )
 			{
 				size += stream.WriteClass<ProfileTierLevel>(context, this.profile_tier_level, "profile_tier_level"); 
 			}
@@ -9917,13 +10407,13 @@ vps_extension() {
 			}
 			size += stream.WriteUnsignedInt(1, this.vps_nuh_layer_id_present_flag, "vps_nuh_layer_id_present_flag"); 
 
-			for ( i = 1; i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+			for ( i = 1; i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 			{
 
 				if ( vps_nuh_layer_id_present_flag != 0 )
 				{
 					size += stream.WriteUnsignedInt(6, this.layer_id_in_nuh[ i ], "layer_id_in_nuh"); 
-					((H265Context)context).OnLayerIdInNuh(i);
+					ituContext.OnLayerIdInNuh(i);
 				}
 
 				if ( splitting_flag== 0 )
@@ -9932,7 +10422,7 @@ vps_extension() {
 					for ( j = 0; j < NumScalabilityTypes; j++ )
 					{
 						size += stream.WriteUnsignedIntVariable((dimension_id_len_minus1[j] + 1), this.dimension_id[ i ][ j ], "dimension_id"); 
-						((H265Context)context).OnDimensionId();
+						ituContext.OnDimensionId();
 					}
 				}
 			}
@@ -9941,40 +10431,40 @@ vps_extension() {
 			if ( view_id_len > 0 )
 			{
 
-				for ( i = 0; i < ((H265Context)context).NumViews; i++ )
+				for ( i = 0; i < ituContext.NumViews; i++ )
 				{
 					size += stream.WriteUnsignedIntVariable(view_id_len, this.view_id_val[ i ], "view_id_val"); 
 				}
 			}
 
-			for ( i = 1; i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+			for ( i = 1; i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 			{
 
 				for ( j = 0; j < i; j++ )
 				{
 					size += stream.WriteUnsignedInt(1, this.direct_dependency_flag[ i ][ j ], "direct_dependency_flag"); 
-					((H265Context)context).OnDirectDependencyFlag();
+					ituContext.OnDirectDependencyFlag();
 				}
 			}
 
-			if ( ((H265Context)context).NumIndependentLayers > 1 )
+			if ( ituContext.NumIndependentLayers > 1 )
 			{
 				size += stream.WriteUnsignedIntGolomb( this.num_add_layer_sets, "num_add_layer_sets"); 
-				((H265Context)context).OnNumAddLayerSets();
+				ituContext.OnNumAddLayerSets();
  }
  else 
  {
- ((H265Context)context).OnNumAddLayerSets(); 
+ ituContext.OnNumAddLayerSets(); 
 
 			}
 
 			for ( i = 0; i < num_add_layer_sets; i++ )
 			{
 
-				for ( j = 1; j < ((H265Context)context).NumIndependentLayers; j++ )
+				for ( j = 1; j < ituContext.NumIndependentLayers; j++ )
 				{
 					size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumLayersInTreePartition[ j ] + 1 ) ), this.highest_layer_idx_plus1[ i ][ j ], "highest_layer_idx_plus1"); 
-					((H265Context)context).OnHighestLayerIdxPlus1(i);
+					ituContext.OnHighestLayerIdxPlus1(i);
 				}
 			}
 			size += stream.WriteUnsignedInt(1, this.vps_sub_layers_max_minus1_present_flag, "vps_sub_layers_max_minus1_present_flag"); 
@@ -9982,10 +10472,10 @@ vps_extension() {
 			if ( vps_sub_layers_max_minus1_present_flag != 0 )
 			{
 
-				for ( i = 0; i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				for ( i = 0; i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 					size += stream.WriteUnsignedInt(3, this.sub_layers_vps_max_minus1[ i ], "sub_layers_vps_max_minus1"); 
-					((H265Context)context).OnSubLayersVpsMaxMinus1();
+					ituContext.OnSubLayersVpsMaxMinus1();
 				}
 			}
 			size += stream.WriteUnsignedInt(1, this.max_tid_ref_present_flag, "max_tid_ref_present_flag"); 
@@ -9993,10 +10483,10 @@ vps_extension() {
 			if ( max_tid_ref_present_flag != 0 )
 			{
 
-				for ( i = 0; i < Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				for ( i = 0; i < Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 
-					for ( j = i + 1; j <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); j++ )
+					for ( j = i + 1; j <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); j++ )
 					{
 
 						if ( direct_dependency_flag[ j ][ i ] != 0 )
@@ -10009,54 +10499,54 @@ vps_extension() {
 			size += stream.WriteUnsignedInt(1, this.default_ref_layers_active_flag, "default_ref_layers_active_flag"); 
 			size += stream.WriteUnsignedIntGolomb( this.vps_num_profile_tier_level_minus1, "vps_num_profile_tier_level_minus1"); 
 
-			for ( i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 2 : 1); 
+			for ( i = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 2 : 1); 
           i <= vps_num_profile_tier_level_minus1; i++ )
 			{
 				size += stream.WriteUnsignedInt(1, this.vps_profile_present_flag[ i ], "vps_profile_present_flag"); 
 				size += stream.WriteClass<ProfileTierLevel>(context, this.profile_tier_level0[ i ], "profile_tier_level0"); 
 			}
 
-			if ( (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) > 1 )
+			if ( (ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ituContext.VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) > 1 )
 			{
 				size += stream.WriteUnsignedIntGolomb( this.num_add_olss, "num_add_olss"); 
 				size += stream.WriteUnsignedInt(2, this.default_output_layer_idc, "default_output_layer_idc"); 
 			}
-			NumOutputLayerSets= num_add_olss + (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets);
+			NumOutputLayerSets= num_add_olss + (ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ituContext.VideoParameterSetRbsp.VpsExtension.NumAddLayerSets);
 
 			for ( i = 1; i < NumOutputLayerSets; i++ )
 			{
 
-				if ( (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) > 2  &&  i >= (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) )
+				if ( (ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ituContext.VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) > 2  &&  i >= (ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ituContext.VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) )
 				{
 					size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2( (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) - 1 ) ) , this.layer_set_idx_for_ols_minus1[ i ], "layer_set_idx_for_ols_minus1"); 
-					((H265Context)context).OnLayerSetIdxForOlsMinus1(i, NumOutputLayerSets);
+					ituContext.OnLayerSetIdxForOlsMinus1(i, NumOutputLayerSets);
 				}
 				else
 				{
-					((H265Context)context).OnLayerSetIdxForOlsMinus1(i, NumOutputLayerSets);
+					ituContext.OnLayerSetIdxForOlsMinus1(i, NumOutputLayerSets);
 				}
 /*  TODO: Review and fix  */
 
 /*  if( i > vps_num_layer_sets_minus1  ||  defaultOutputLayerIdc == 2 )  */
 
 
-				for ( j = 0; j < ((H265Context)context).NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]; j++ )
+				for ( j = 0; j < ituContext.NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]; j++ )
 				{
 					size += stream.WriteUnsignedInt(1, this.output_layer_flag[ i ][ j ], "output_layer_flag"); 
-					((H265Context)context).OnOutputLayerFlag(i, j);
+					ituContext.OnOutputLayerFlag(i, j);
 				}
 
-				for ( j = 0; j < ((H265Context)context).NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]; j++ )
+				for ( j = 0; j < ituContext.NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]; j++ )
 				{
 
-					if ( ((H265Context)context).NecessaryLayerFlag[ i ][ j ] != 0  &&  vps_num_profile_tier_level_minus1 > 0 )
+					if ( ituContext.NecessaryLayerFlag[ i ][ j ] != 0  &&  vps_num_profile_tier_level_minus1 > 0 )
 					{
 						size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2( vps_num_profile_tier_level_minus1 + 1 ) ), this.profile_tier_level_idx[ i ][ j ], "profile_tier_level_idx"); 
 					}
 				}
 
-				if ( ((H265Context)context).NumOutputLayersInOutputLayerSet[ i ] == 1 
-   &&  ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).OlsHighestOutputLayerId[ i ] ] > 0 )
+				if ( ituContext.NumOutputLayersInOutputLayerSet[ i ] == 1 
+   &&  ituContext.NumDirectRefLayers[ ituContext.OlsHighestOutputLayerId[ i ] ] > 0 )
 				{
 					size += stream.WriteUnsignedInt(1, this.alt_output_layer_flag[ i ], "alt_output_layer_flag"); 
 				}
@@ -10076,7 +10566,7 @@ vps_extension() {
 			if ( rep_format_idx_present_flag != 0 )
 			{
 
-				for ( i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 1 : 0); i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				for ( i = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 1 : 0); i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 					size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2( vps_num_rep_formats_minus1 + 1 ) ), this.vps_rep_format_idx[ i ], "vps_rep_format_idx"); 
 				}
@@ -10084,10 +10574,10 @@ vps_extension() {
 			size += stream.WriteUnsignedInt(1, this.max_one_active_ref_layer_flag, "max_one_active_ref_layer_flag"); 
 			size += stream.WriteUnsignedInt(1, this.vps_poc_lsb_aligned_flag, "vps_poc_lsb_aligned_flag"); 
 
-			for ( i = 1; i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+			for ( i = 1; i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 			{
 
-				if ( ((H265Context)context).NumDirectRefLayers[ layer_id_in_nuh[ i ] ] == 0 )
+				if ( ituContext.NumDirectRefLayers[ layer_id_in_nuh[ i ] ] == 0 )
 				{
 					size += stream.WriteUnsignedInt(1, this.poc_lsb_not_present_flag[ i ], "poc_lsb_not_present_flag"); 
 				}
@@ -10103,16 +10593,16 @@ vps_extension() {
 			else 
 			{
 
-				for ( i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 1 : 2); i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				for ( i = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 1 : 2); i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 
-					for ( j = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); j < i; j++ )
+					for ( j = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); j < i; j++ )
 					{
 
 						if ( direct_dependency_flag[ i ][ j ] != 0 )
 						{
 							size += stream.WriteUnsignedIntVariable((direct_dep_type_len_minus2 + 2), this.direct_dependency_type[ i ][ j ], "direct_dependency_type"); 
-							((H265Context)context).OnDirectDependencyType();
+							ituContext.OnDirectDependencyType();
 						}
 					}
 				}
@@ -10202,6 +10692,10 @@ rep_format() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 16, out this.pic_width_vps_in_luma_samples, "pic_width_vps_in_luma_samples"); 
@@ -10234,6 +10728,9 @@ rep_format() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(16, this.pic_width_vps_in_luma_samples, "pic_width_vps_in_luma_samples"); 
@@ -10312,6 +10809,10 @@ dpb_size() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -10319,21 +10820,21 @@ dpb_size() {
 			uint j = 0;
 			uint k = 0;
 
-			this.sub_layer_flag_info_present_flag = new byte[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets];
-			this.sub_layer_dpb_info_present_flag = new byte[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][];
-			this.max_vps_dec_pic_buffering_minus1 = new ulong[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][][];
-			this.max_vps_num_reorder_pics = new ulong[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][];
-			this.max_vps_latency_increase_plus1 = new ulong[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][];
-			for ( i = 1; i < ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets; i++ )
+			this.sub_layer_flag_info_present_flag = new byte[ ituContext.VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets];
+			this.sub_layer_dpb_info_present_flag = new byte[ ituContext.VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][];
+			this.max_vps_dec_pic_buffering_minus1 = new ulong[ ituContext.VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][][];
+			this.max_vps_num_reorder_pics = new ulong[ ituContext.VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][];
+			this.max_vps_latency_increase_plus1 = new ulong[ ituContext.VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][];
+			for ( i = 1; i < ituContext.VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets; i++ )
 			{
 				currLsIdx= ((H265Context)context).OlsIdxToLsIdx[ i ];
 				size += stream.ReadUnsignedInt(size, 1, out this.sub_layer_flag_info_present_flag[ i ], "sub_layer_flag_info_present_flag"); 
 
-				this.sub_layer_dpb_info_present_flag[ i ] = new byte[ ((H265Context)context).MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1];
-				this.max_vps_dec_pic_buffering_minus1[ i ] = new ulong[ ((H265Context)context).MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1][];
-				this.max_vps_num_reorder_pics[ i ] = new ulong[ ((H265Context)context).MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1];
-				this.max_vps_latency_increase_plus1[ i ] = new ulong[ ((H265Context)context).MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1];
-				for ( j = 0; j <= ((H265Context)context).MaxSubLayersInLayerSetMinus1[ currLsIdx ]; j++ )
+				this.sub_layer_dpb_info_present_flag[ i ] = new byte[ ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1];
+				this.max_vps_dec_pic_buffering_minus1[ i ] = new ulong[ ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1][];
+				this.max_vps_num_reorder_pics[ i ] = new ulong[ ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1];
+				this.max_vps_latency_increase_plus1[ i ] = new ulong[ ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1];
+				for ( j = 0; j <= ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ]; j++ )
 				{
 
 					if ( j > 0  &&  sub_layer_flag_info_present_flag[ i ] != 0 )
@@ -10344,12 +10845,12 @@ dpb_size() {
 					if ( sub_layer_dpb_info_present_flag[ i ][ j ] != 0 )
 					{
 
-						this.max_vps_dec_pic_buffering_minus1[ i ][ j ] = new ulong[ ((H265Context)context).NumLayersInIdList[ currLsIdx ]];
-						for ( k = 0; k < ((H265Context)context).NumLayersInIdList[ currLsIdx ]; k++ )
+						this.max_vps_dec_pic_buffering_minus1[ i ][ j ] = new ulong[ ituContext.NumLayersInIdList[ currLsIdx ]];
+						for ( k = 0; k < ituContext.NumLayersInIdList[ currLsIdx ]; k++ )
 						{
 
-							if ( ((H265Context)context).NecessaryLayerFlag[ i ][ k ] != 0  &&  ( ((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0  || 
-      ( ((H265Context)context).LayerSetLayerIdList[ currLsIdx ][ k ] != 0 ) ) )
+							if ( ituContext.NecessaryLayerFlag[ i ][ k ] != 0  &&  ( ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0  || 
+      ( ituContext.LayerSetLayerIdList[ currLsIdx ][ k ] != 0 ) ) )
 							{
 								size += stream.ReadUnsignedIntGolomb(size, out this.max_vps_dec_pic_buffering_minus1[ i ][ k ][ j ], "max_vps_dec_pic_buffering_minus1"); 
 							}
@@ -10365,6 +10866,9 @@ dpb_size() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -10372,12 +10876,12 @@ dpb_size() {
 			uint j = 0;
 			uint k = 0;
 
-			for ( i = 1; i < ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets; i++ )
+			for ( i = 1; i < ituContext.VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets; i++ )
 			{
 				currLsIdx= ((H265Context)context).OlsIdxToLsIdx[ i ];
 				size += stream.WriteUnsignedInt(1, this.sub_layer_flag_info_present_flag[ i ], "sub_layer_flag_info_present_flag"); 
 
-				for ( j = 0; j <= ((H265Context)context).MaxSubLayersInLayerSetMinus1[ currLsIdx ]; j++ )
+				for ( j = 0; j <= ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ]; j++ )
 				{
 
 					if ( j > 0  &&  sub_layer_flag_info_present_flag[ i ] != 0 )
@@ -10388,11 +10892,11 @@ dpb_size() {
 					if ( sub_layer_dpb_info_present_flag[ i ][ j ] != 0 )
 					{
 
-						for ( k = 0; k < ((H265Context)context).NumLayersInIdList[ currLsIdx ]; k++ )
+						for ( k = 0; k < ituContext.NumLayersInIdList[ currLsIdx ]; k++ )
 						{
 
-							if ( ((H265Context)context).NecessaryLayerFlag[ i ][ k ] != 0  &&  ( ((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0  || 
-      ( ((H265Context)context).LayerSetLayerIdList[ currLsIdx ][ k ] != 0 ) ) )
+							if ( ituContext.NecessaryLayerFlag[ i ][ k ] != 0  &&  ( ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0  || 
+      ( ituContext.LayerSetLayerIdList[ currLsIdx ][ k ] != 0 ) ) )
 							{
 								size += stream.WriteUnsignedIntGolomb( this.max_vps_dec_pic_buffering_minus1[ i ][ k ][ j ], "max_vps_dec_pic_buffering_minus1"); 
 							}
@@ -10558,6 +11062,10 @@ vps_vui() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -10580,22 +11088,22 @@ vps_vui() {
 			if ( bit_rate_present_vps_flag != 0  ||  pic_rate_present_vps_flag != 0 )
 			{
 
-				this.bit_rate_present_flag = new byte[ (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)][];
-				this.pic_rate_present_flag = new byte[ (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)][];
-				this.avg_bit_rate = new uint[ (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)][];
-				this.max_bit_rate = new uint[ (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)][];
-				this.constant_pic_rate_idc = new uint[ (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)][];
-				this.avg_pic_rate = new uint[ (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)][];
-				for ( i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i < (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets); i++ )
+				this.bit_rate_present_flag = new byte[ (ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + 1 + ituContext.VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)][];
+				this.pic_rate_present_flag = new byte[ (ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + 1 + ituContext.VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)][];
+				this.avg_bit_rate = new uint[ (ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + 1 + ituContext.VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)][];
+				this.max_bit_rate = new uint[ (ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + 1 + ituContext.VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)][];
+				this.constant_pic_rate_idc = new uint[ (ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + 1 + ituContext.VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)][];
+				this.avg_pic_rate = new uint[ (ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + 1 + ituContext.VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)][];
+				for ( i = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i < (ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ituContext.VideoParameterSetRbsp.VpsExtension.NumAddLayerSets); i++ )
 				{
 
-					this.bit_rate_present_flag[ i ] = new byte[ ((H265Context)context).MaxSubLayersInLayerSetMinus1[ i ] + 1];
-					this.pic_rate_present_flag[ i ] = new byte[ ((H265Context)context).MaxSubLayersInLayerSetMinus1[ i ] + 1];
-					this.avg_bit_rate[ i ] = new uint[ ((H265Context)context).MaxSubLayersInLayerSetMinus1[ i ] + 1];
-					this.max_bit_rate[ i ] = new uint[ ((H265Context)context).MaxSubLayersInLayerSetMinus1[ i ] + 1];
-					this.constant_pic_rate_idc[ i ] = new uint[ ((H265Context)context).MaxSubLayersInLayerSetMinus1[ i ] + 1];
-					this.avg_pic_rate[ i ] = new uint[ ((H265Context)context).MaxSubLayersInLayerSetMinus1[ i ] + 1];
-					for ( j = 0; j <= ((H265Context)context).MaxSubLayersInLayerSetMinus1[ i ]; j++ )
+					this.bit_rate_present_flag[ i ] = new byte[ ituContext.MaxSubLayersInLayerSetMinus1[ i ] + 1];
+					this.pic_rate_present_flag[ i ] = new byte[ ituContext.MaxSubLayersInLayerSetMinus1[ i ] + 1];
+					this.avg_bit_rate[ i ] = new uint[ ituContext.MaxSubLayersInLayerSetMinus1[ i ] + 1];
+					this.max_bit_rate[ i ] = new uint[ ituContext.MaxSubLayersInLayerSetMinus1[ i ] + 1];
+					this.constant_pic_rate_idc[ i ] = new uint[ ituContext.MaxSubLayersInLayerSetMinus1[ i ] + 1];
+					this.avg_pic_rate[ i ] = new uint[ ituContext.MaxSubLayersInLayerSetMinus1[ i ] + 1];
+					for ( j = 0; j <= ituContext.MaxSubLayersInLayerSetMinus1[ i ]; j++ )
 					{
 
 						if ( bit_rate_present_vps_flag != 0 )
@@ -10639,8 +11147,8 @@ vps_vui() {
 			if ( video_signal_info_idx_present_flag != 0  &&  vps_num_video_signal_info_minus1 > 0 )
 			{
 
-				this.vps_video_signal_info_idx = new uint[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
-				for ( i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				this.vps_video_signal_info_idx = new uint[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
+				for ( i = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 					size += stream.ReadUnsignedInt(size, 4, out this.vps_video_signal_info_idx[ i ], "vps_video_signal_info_idx"); 
 				}
@@ -10650,9 +11158,9 @@ vps_vui() {
 			if ( tiles_not_in_use_flag== 0 )
 			{
 
-				this.tiles_in_use_flag = new byte[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
-				this.loop_filter_not_across_tiles_flag = new byte[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
-				for ( i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				this.tiles_in_use_flag = new byte[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
+				this.loop_filter_not_across_tiles_flag = new byte[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
+				for ( i = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.tiles_in_use_flag[ i ], "tiles_in_use_flag"); 
 
@@ -10662,14 +11170,14 @@ vps_vui() {
 					}
 				}
 
-				this.tile_boundaries_aligned_flag = new byte[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)][];
-				for ( i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 1 : 2); i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				this.tile_boundaries_aligned_flag = new byte[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)][];
+				for ( i = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 1 : 2); i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 
-					this.tile_boundaries_aligned_flag[ i ] = new byte[ ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ]];
-					for ( j = 0; j < ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ]; j++ )
+					this.tile_boundaries_aligned_flag[ i ] = new byte[ ituContext.NumDirectRefLayers[ ituContext.VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ]];
+					for ( j = 0; j < ituContext.NumDirectRefLayers[ ituContext.VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ]; j++ )
 					{
-						layerIdx= ((H265Context)context).LayerIdxInVps[ ((H265Context)context).IdDirectRefLayer[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ][ j ] ];
+						layerIdx= ituContext.LayerIdxInVps[ ituContext.IdDirectRefLayer[ ituContext.VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ][ j ] ];
 
 						if ( tiles_in_use_flag[ i ] != 0  &&  tiles_in_use_flag[ layerIdx ] != 0 )
 						{
@@ -10683,8 +11191,8 @@ vps_vui() {
 			if ( wpp_not_in_use_flag== 0 )
 			{
 
-				this.wpp_in_use_flag = new byte[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
-				for ( i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				this.wpp_in_use_flag = new byte[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
+				for ( i = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.wpp_in_use_flag[ i ], "wpp_in_use_flag"); 
 				}
@@ -10696,20 +11204,20 @@ vps_vui() {
 			if ( ilp_restricted_ref_layers_flag != 0 )
 			{
 
-				this.min_spatial_segment_offset_plus1 = new ulong[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)][];
-				this.ctu_based_offset_enabled_flag = new byte[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)][];
-				this.min_horizontal_ctu_offset_plus1 = new ulong[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)][];
-				for ( i = 1; i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				this.min_spatial_segment_offset_plus1 = new ulong[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)][];
+				this.ctu_based_offset_enabled_flag = new byte[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)][];
+				this.min_horizontal_ctu_offset_plus1 = new ulong[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)][];
+				for ( i = 1; i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 
-					this.min_spatial_segment_offset_plus1[ i ] = new ulong[ ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ]];
-					this.ctu_based_offset_enabled_flag[ i ] = new byte[ ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ]];
-					this.min_horizontal_ctu_offset_plus1[ i ] = new ulong[ ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ]];
-					for ( j = 0; j < ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ]; j++ )
+					this.min_spatial_segment_offset_plus1[ i ] = new ulong[ ituContext.NumDirectRefLayers[ ituContext.VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ]];
+					this.ctu_based_offset_enabled_flag[ i ] = new byte[ ituContext.NumDirectRefLayers[ ituContext.VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ]];
+					this.min_horizontal_ctu_offset_plus1[ i ] = new ulong[ ituContext.NumDirectRefLayers[ ituContext.VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ]];
+					for ( j = 0; j < ituContext.NumDirectRefLayers[ ituContext.VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ]; j++ )
 					{
 
-						if ( ((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0  || 
-        ((H265Context)context).IdDirectRefLayer[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ][ j ] > 0 )
+						if ( ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0  || 
+        ituContext.IdDirectRefLayer[ ituContext.VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ][ j ] > 0 )
 						{
 							size += stream.ReadUnsignedIntGolomb(size, out this.min_spatial_segment_offset_plus1[ i ][ j ], "min_spatial_segment_offset_plus1"); 
 
@@ -10734,11 +11242,11 @@ vps_vui() {
 				size +=  stream.ReadClass<VpsVuiBspHrdParams>(size, context, this.vps_vui_bsp_hrd_params, "vps_vui_bsp_hrd_params"); 
 			}
 
-			this.base_layer_parameter_set_compatibility_flag = new byte[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
-			for ( i = 1; i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+			this.base_layer_parameter_set_compatibility_flag = new byte[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
+			for ( i = 1; i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 			{
 
-				if ( ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ] == 0 )
+				if ( ituContext.NumDirectRefLayers[ ituContext.VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ] == 0 )
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.base_layer_parameter_set_compatibility_flag[ i ], "base_layer_parameter_set_compatibility_flag"); 
 				}
@@ -10749,6 +11257,9 @@ vps_vui() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -10771,10 +11282,10 @@ vps_vui() {
 			if ( bit_rate_present_vps_flag != 0  ||  pic_rate_present_vps_flag != 0 )
 			{
 
-				for ( i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i < (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets); i++ )
+				for ( i = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i < (ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ituContext.VideoParameterSetRbsp.VpsExtension.NumAddLayerSets); i++ )
 				{
 
-					for ( j = 0; j <= ((H265Context)context).MaxSubLayersInLayerSetMinus1[ i ]; j++ )
+					for ( j = 0; j <= ituContext.MaxSubLayersInLayerSetMinus1[ i ]; j++ )
 					{
 
 						if ( bit_rate_present_vps_flag != 0 )
@@ -10816,7 +11327,7 @@ vps_vui() {
 			if ( video_signal_info_idx_present_flag != 0  &&  vps_num_video_signal_info_minus1 > 0 )
 			{
 
-				for ( i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				for ( i = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 					size += stream.WriteUnsignedInt(4, this.vps_video_signal_info_idx[ i ], "vps_video_signal_info_idx"); 
 				}
@@ -10826,7 +11337,7 @@ vps_vui() {
 			if ( tiles_not_in_use_flag== 0 )
 			{
 
-				for ( i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				for ( i = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 					size += stream.WriteUnsignedInt(1, this.tiles_in_use_flag[ i ], "tiles_in_use_flag"); 
 
@@ -10836,12 +11347,12 @@ vps_vui() {
 					}
 				}
 
-				for ( i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 1 : 2); i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				for ( i = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 1 : 2); i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 
-					for ( j = 0; j < ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ]; j++ )
+					for ( j = 0; j < ituContext.NumDirectRefLayers[ ituContext.VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ]; j++ )
 					{
-						layerIdx= ((H265Context)context).LayerIdxInVps[ ((H265Context)context).IdDirectRefLayer[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ][ j ] ];
+						layerIdx= ituContext.LayerIdxInVps[ ituContext.IdDirectRefLayer[ ituContext.VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ][ j ] ];
 
 						if ( tiles_in_use_flag[ i ] != 0  &&  tiles_in_use_flag[ layerIdx ] != 0 )
 						{
@@ -10855,7 +11366,7 @@ vps_vui() {
 			if ( wpp_not_in_use_flag== 0 )
 			{
 
-				for ( i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				for ( i = (uint)(ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 					size += stream.WriteUnsignedInt(1, this.wpp_in_use_flag[ i ], "wpp_in_use_flag"); 
 				}
@@ -10867,14 +11378,14 @@ vps_vui() {
 			if ( ilp_restricted_ref_layers_flag != 0 )
 			{
 
-				for ( i = 1; i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+				for ( i = 1; i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 				{
 
-					for ( j = 0; j < ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ]; j++ )
+					for ( j = 0; j < ituContext.NumDirectRefLayers[ ituContext.VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ]; j++ )
 					{
 
-						if ( ((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0  || 
-        ((H265Context)context).IdDirectRefLayer[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ][ j ] > 0 )
+						if ( ituContext.VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0  || 
+        ituContext.IdDirectRefLayer[ ituContext.VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ][ j ] > 0 )
 						{
 							size += stream.WriteUnsignedIntGolomb( this.min_spatial_segment_offset_plus1[ i ][ j ], "min_spatial_segment_offset_plus1"); 
 
@@ -10898,10 +11409,10 @@ vps_vui() {
 				size += stream.WriteClass<VpsVuiBspHrdParams>(context, this.vps_vui_bsp_hrd_params, "vps_vui_bsp_hrd_params"); 
 			}
 
-			for ( i = 1; i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+			for ( i = 1; i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 			{
 
-				if ( ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ] == 0 )
+				if ( ituContext.NumDirectRefLayers[ ituContext.VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[ i ] ] == 0 )
 				{
 					size += stream.WriteUnsignedInt(1, this.base_layer_parameter_set_compatibility_flag[ i ], "base_layer_parameter_set_compatibility_flag"); 
 				}
@@ -10946,6 +11457,10 @@ video_signal_info() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 3, out this.video_vps_format, "video_vps_format"); 
@@ -10959,6 +11474,9 @@ video_signal_info() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(3, this.video_vps_format, "video_vps_format"); 
@@ -11040,6 +11558,10 @@ vps_vui_bsp_hrd_params() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -11050,13 +11572,13 @@ vps_vui_bsp_hrd_params() {
 			uint t = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.vps_num_add_hrd_params, "vps_num_add_hrd_params"); 
 
-			this.cprms_add_present_flag = new byte[ (uint)((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + 
+			this.cprms_add_present_flag = new byte[ (uint)ituContext.VideoParameterSetRbsp.VpsNumHrdParameters + 
                   vps_num_add_hrd_params];
-			this.num_sub_layer_hrd_minus1 = new ulong[ (uint)((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + 
+			this.num_sub_layer_hrd_minus1 = new ulong[ (uint)ituContext.VideoParameterSetRbsp.VpsNumHrdParameters + 
                   vps_num_add_hrd_params];
-			this.hrd_parameters = new HrdParameters[ (uint)((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + 
+			this.hrd_parameters = new HrdParameters[ (uint)ituContext.VideoParameterSetRbsp.VpsNumHrdParameters + 
                   vps_num_add_hrd_params];
-			for ( i = (uint)((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters; i < (uint)((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + 
+			for ( i = (uint)ituContext.VideoParameterSetRbsp.VpsNumHrdParameters; i < (uint)ituContext.VideoParameterSetRbsp.VpsNumHrdParameters + 
                   vps_num_add_hrd_params; i++ )
 			{
 
@@ -11069,16 +11591,16 @@ vps_vui_bsp_hrd_params() {
 				size +=  stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[ i ], "hrd_parameters"); 
 			}
 
-			if ( (uint)((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params > 0 )
+			if ( (uint)ituContext.VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params > 0 )
 			{
 
-				this.num_signalled_partitioning_schemes = new ulong[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets];
-				this.num_partitions_in_scheme_minus1 = new ulong[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][];
-				this.layer_included_in_partition_flag = new byte[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][][][];
-				this.num_bsp_schedules_minus1 = new ulong[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][][];
-				this.bsp_hrd_idx = new ulong[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][][][][];
-				this.bsp_sched_idx = new ulong[ ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][][][][];
-				for ( h = 1; h < ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets; h++ )
+				this.num_signalled_partitioning_schemes = new ulong[ ituContext.VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets];
+				this.num_partitions_in_scheme_minus1 = new ulong[ ituContext.VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][];
+				this.layer_included_in_partition_flag = new byte[ ituContext.VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][][][];
+				this.num_bsp_schedules_minus1 = new ulong[ ituContext.VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][][];
+				this.bsp_hrd_idx = new ulong[ ituContext.VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][][][][];
+				this.bsp_sched_idx = new ulong[ ituContext.VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][][][][];
+				for ( h = 1; h < ituContext.VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets; h++ )
 				{
 					size += stream.ReadUnsignedIntGolomb(size, out this.num_signalled_partitioning_schemes[ h ], "num_signalled_partitioning_schemes"); 
 
@@ -11092,8 +11614,8 @@ vps_vui_bsp_hrd_params() {
 						for ( k = 0; k <= num_partitions_in_scheme_minus1[ h ][ j ]; k++ )
 						{
 
-							this.layer_included_in_partition_flag[ h ][ j ][ k ] = new byte[ ((H265Context)context).NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ h ] ]];
-							for ( r = 0; r < ((H265Context)context).NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ h ] ]; r++ )
+							this.layer_included_in_partition_flag[ h ][ j ][ k ] = new byte[ ituContext.NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ h ] ]];
+							for ( r = 0; r < ituContext.NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ h ] ]; r++ )
 							{
 								size += stream.ReadUnsignedInt(size, 1, out this.layer_included_in_partition_flag[ h ][ j ][ k ][ r ], "layer_included_in_partition_flag"); 
 							}
@@ -11106,13 +11628,13 @@ vps_vui_bsp_hrd_params() {
 					for ( i = 0; i < num_signalled_partitioning_schemes[ h ] + 1; i++ )
 					{
 
-						this.num_bsp_schedules_minus1[ h ][ i ] = new ulong[ ((H265Context)context).MaxSubLayersInLayerSetMinus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ] + 1];
-						this.bsp_hrd_idx[ h ][ i ] = new ulong[ ((H265Context)context).MaxSubLayersInLayerSetMinus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ] + 1][][];
-						this.bsp_sched_idx[ h ][ i ] = new ulong[ ((H265Context)context).MaxSubLayersInLayerSetMinus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ] + 1][][];
-						for ( t = 0; t <= ((H265Context)context).MaxSubLayersInLayerSetMinus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ]; t++ )
+						this.num_bsp_schedules_minus1[ h ][ i ] = new ulong[ ituContext.MaxSubLayersInLayerSetMinus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ] + 1];
+						this.bsp_hrd_idx[ h ][ i ] = new ulong[ ituContext.MaxSubLayersInLayerSetMinus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ] + 1][][];
+						this.bsp_sched_idx[ h ][ i ] = new ulong[ ituContext.MaxSubLayersInLayerSetMinus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ] + 1][][];
+						for ( t = 0; t <= ituContext.MaxSubLayersInLayerSetMinus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ]; t++ )
 						{
 							size += stream.ReadUnsignedIntGolomb(size, out this.num_bsp_schedules_minus1[ h ][ i ][ t ], "num_bsp_schedules_minus1"); 
-							((H265Context)context).OnNumBspSchedulesMinus1(h, i, t);
+							ituContext.OnNumBspSchedulesMinus1(h, i, t);
 
 							this.bsp_hrd_idx[ h ][ i ][ t ] = new ulong[ num_bsp_schedules_minus1[ h ][ i ][ t ] + 1][];
 							this.bsp_sched_idx[ h ][ i ][ t ] = new ulong[ num_bsp_schedules_minus1[ h ][ i ][ t ] + 1][];
@@ -11124,7 +11646,7 @@ vps_vui_bsp_hrd_params() {
 								for ( k = 0; k <= num_partitions_in_scheme_minus1[ h ][ i ]; k++ )
 								{
 
-									if ( (uint)((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params > 1 )
+									if ( (uint)ituContext.VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params > 1 )
 									{
 										size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2(((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params ) ), out this.bsp_hrd_idx[ h ][ i ][ t ][ j ][ k ], "bsp_hrd_idx"); 
 									}
@@ -11141,6 +11663,9 @@ vps_vui_bsp_hrd_params() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -11151,7 +11676,7 @@ vps_vui_bsp_hrd_params() {
 			uint t = 0;
 			size += stream.WriteUnsignedIntGolomb( this.vps_num_add_hrd_params, "vps_num_add_hrd_params"); 
 
-			for ( i = (uint)((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters; i < (uint)((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + 
+			for ( i = (uint)ituContext.VideoParameterSetRbsp.VpsNumHrdParameters; i < (uint)ituContext.VideoParameterSetRbsp.VpsNumHrdParameters + 
                   vps_num_add_hrd_params; i++ )
 			{
 
@@ -11163,10 +11688,10 @@ vps_vui_bsp_hrd_params() {
 				size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[ i ], "hrd_parameters"); 
 			}
 
-			if ( (uint)((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params > 0 )
+			if ( (uint)ituContext.VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params > 0 )
 			{
 
-				for ( h = 1; h < ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets; h++ )
+				for ( h = 1; h < ituContext.VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets; h++ )
 				{
 					size += stream.WriteUnsignedIntGolomb( this.num_signalled_partitioning_schemes[ h ], "num_signalled_partitioning_schemes"); 
 
@@ -11177,7 +11702,7 @@ vps_vui_bsp_hrd_params() {
 						for ( k = 0; k <= num_partitions_in_scheme_minus1[ h ][ j ]; k++ )
 						{
 
-							for ( r = 0; r < ((H265Context)context).NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ h ] ]; r++ )
+							for ( r = 0; r < ituContext.NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ h ] ]; r++ )
 							{
 								size += stream.WriteUnsignedInt(1, this.layer_included_in_partition_flag[ h ][ j ][ k ][ r ], "layer_included_in_partition_flag"); 
 							}
@@ -11187,10 +11712,10 @@ vps_vui_bsp_hrd_params() {
 					for ( i = 0; i < num_signalled_partitioning_schemes[ h ] + 1; i++ )
 					{
 
-						for ( t = 0; t <= ((H265Context)context).MaxSubLayersInLayerSetMinus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ]; t++ )
+						for ( t = 0; t <= ituContext.MaxSubLayersInLayerSetMinus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ]; t++ )
 						{
 							size += stream.WriteUnsignedIntGolomb( this.num_bsp_schedules_minus1[ h ][ i ][ t ], "num_bsp_schedules_minus1"); 
-							((H265Context)context).OnNumBspSchedulesMinus1(h, i, t);
+							ituContext.OnNumBspSchedulesMinus1(h, i, t);
 
 							for ( j = 0; j <= num_bsp_schedules_minus1[ h ][ i ][ t ]; j++ )
 							{
@@ -11198,7 +11723,7 @@ vps_vui_bsp_hrd_params() {
 								for ( k = 0; k <= num_partitions_in_scheme_minus1[ h ][ i ]; k++ )
 								{
 
-									if ( (uint)((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params > 1 )
+									if ( (uint)ituContext.VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params > 1 )
 									{
 										size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2(((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params ) ), this.bsp_hrd_idx[ h ][ i ][ t ][ j ][ k ], "bsp_hrd_idx"); 
 									}
@@ -11470,6 +11995,10 @@ seq_parameter_set_rbsp() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint MultiLayerExtSpsFlag = 0;
@@ -11477,7 +12006,7 @@ seq_parameter_set_rbsp() {
 			int whileIndex = -1;
 			size += stream.ReadUnsignedInt(size, 4, out this.sps_video_parameter_set_id, "sps_video_parameter_set_id"); 
 
-			if ( ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId == 0 )
+			if ( ituContext.NalHeader.NalUnitHeader.NuhLayerId == 0 )
 			{
 				size += stream.ReadUnsignedInt(size, 3, out this.sps_max_sub_layers_minus1, "sps_max_sub_layers_minus1"); 
 			}
@@ -11485,16 +12014,16 @@ seq_parameter_set_rbsp() {
 			{
 				size += stream.ReadUnsignedInt(size, 3, out this.sps_ext_or_max_sub_layers_minus1, "sps_ext_or_max_sub_layers_minus1"); 
 			}
-			MultiLayerExtSpsFlag= ( ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId != 0  &&  sps_ext_or_max_sub_layers_minus1 == 7 )  ? (uint)1 : (uint)0;
+			MultiLayerExtSpsFlag= ( ituContext.NalHeader.NalUnitHeader.NuhLayerId != 0  &&  sps_ext_or_max_sub_layers_minus1 == 7 )  ? (uint)1 : (uint)0;
 
 			if ( MultiLayerExtSpsFlag== 0 )
 			{
 				size += stream.ReadUnsignedInt(size, 1, out this.sps_temporal_id_nesting_flag, "sps_temporal_id_nesting_flag"); 
-				this.profile_tier_level =  new ProfileTierLevel( 1,  ((H265Context)context).SeqParameterSetRbsp.SpsMaxSubLayersMinus1 ) ;
+				this.profile_tier_level =  new ProfileTierLevel( 1,  ituContext.SeqParameterSetRbsp.SpsMaxSubLayersMinus1 ) ;
 				size +=  stream.ReadClass<ProfileTierLevel>(size, context, this.profile_tier_level, "profile_tier_level"); 
 			}
 			size += stream.ReadUnsignedIntGolomb(size, out this.sps_seq_parameter_set_id, "sps_seq_parameter_set_id"); 
-			((H265Context)context).SetSpsSeqParameterSetId(sps_seq_parameter_set_id);
+			ituContext.SetSpsSeqParameterSetId(sps_seq_parameter_set_id);
 
 			if ( MultiLayerExtSpsFlag != 0 )
 			{
@@ -11546,7 +12075,7 @@ seq_parameter_set_rbsp() {
 			}
 			size += stream.ReadUnsignedIntGolomb(size, out this.log2_min_luma_coding_block_size_minus3, "log2_min_luma_coding_block_size_minus3"); 
 			size += stream.ReadUnsignedIntGolomb(size, out this.log2_diff_max_min_luma_coding_block_size, "log2_diff_max_min_luma_coding_block_size"); 
-			((H265Context)context).OnLog2DiffMaxMinLumaCodingBlockSize();
+			ituContext.OnLog2DiffMaxMinLumaCodingBlockSize();
 			size += stream.ReadUnsignedIntGolomb(size, out this.log2_min_luma_transform_block_size_minus2, "log2_min_luma_transform_block_size_minus2"); 
 			size += stream.ReadUnsignedIntGolomb(size, out this.log2_diff_max_min_luma_transform_block_size, "log2_diff_max_min_luma_transform_block_size"); 
 			size += stream.ReadUnsignedIntGolomb(size, out this.max_transform_hierarchy_depth_inter, "max_transform_hierarchy_depth_inter"); 
@@ -11672,6 +12201,9 @@ seq_parameter_set_rbsp() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint MultiLayerExtSpsFlag = 0;
@@ -11679,7 +12211,7 @@ seq_parameter_set_rbsp() {
 			int whileIndex = -1;
 			size += stream.WriteUnsignedInt(4, this.sps_video_parameter_set_id, "sps_video_parameter_set_id"); 
 
-			if ( ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId == 0 )
+			if ( ituContext.NalHeader.NalUnitHeader.NuhLayerId == 0 )
 			{
 				size += stream.WriteUnsignedInt(3, this.sps_max_sub_layers_minus1, "sps_max_sub_layers_minus1"); 
 			}
@@ -11687,7 +12219,7 @@ seq_parameter_set_rbsp() {
 			{
 				size += stream.WriteUnsignedInt(3, this.sps_ext_or_max_sub_layers_minus1, "sps_ext_or_max_sub_layers_minus1"); 
 			}
-			MultiLayerExtSpsFlag= ( ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId != 0  &&  sps_ext_or_max_sub_layers_minus1 == 7 )  ? (uint)1 : (uint)0;
+			MultiLayerExtSpsFlag= ( ituContext.NalHeader.NalUnitHeader.NuhLayerId != 0  &&  sps_ext_or_max_sub_layers_minus1 == 7 )  ? (uint)1 : (uint)0;
 
 			if ( MultiLayerExtSpsFlag== 0 )
 			{
@@ -11695,7 +12227,7 @@ seq_parameter_set_rbsp() {
 				size += stream.WriteClass<ProfileTierLevel>(context, this.profile_tier_level, "profile_tier_level"); 
 			}
 			size += stream.WriteUnsignedIntGolomb( this.sps_seq_parameter_set_id, "sps_seq_parameter_set_id"); 
-			((H265Context)context).SetSpsSeqParameterSetId(sps_seq_parameter_set_id);
+			ituContext.SetSpsSeqParameterSetId(sps_seq_parameter_set_id);
 
 			if ( MultiLayerExtSpsFlag != 0 )
 			{
@@ -11744,7 +12276,7 @@ seq_parameter_set_rbsp() {
 			}
 			size += stream.WriteUnsignedIntGolomb( this.log2_min_luma_coding_block_size_minus3, "log2_min_luma_coding_block_size_minus3"); 
 			size += stream.WriteUnsignedIntGolomb( this.log2_diff_max_min_luma_coding_block_size, "log2_diff_max_min_luma_coding_block_size"); 
-			((H265Context)context).OnLog2DiffMaxMinLumaCodingBlockSize();
+			ituContext.OnLog2DiffMaxMinLumaCodingBlockSize();
 			size += stream.WriteUnsignedIntGolomb( this.log2_min_luma_transform_block_size_minus2, "log2_min_luma_transform_block_size_minus2"); 
 			size += stream.WriteUnsignedIntGolomb( this.log2_diff_max_min_luma_transform_block_size, "log2_diff_max_min_luma_transform_block_size"); 
 			size += stream.WriteUnsignedIntGolomb( this.max_transform_hierarchy_depth_inter, "max_transform_hierarchy_depth_inter"); 
@@ -11881,6 +12413,10 @@ inter_view_mv_vert_constraint_flag  u(1)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 1, out this.inter_view_mv_vert_constraint_flag, "inter_view_mv_vert_constraint_flag"); 
@@ -11890,6 +12426,9 @@ inter_view_mv_vert_constraint_flag  u(1)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(1, this.inter_view_mv_vert_constraint_flag, "inter_view_mv_vert_constraint_flag"); 
@@ -11994,6 +12533,10 @@ pps_multilayer_extension() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -12066,6 +12609,9 @@ pps_multilayer_extension() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -12182,6 +12728,10 @@ colour_mapping_table() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -12214,6 +12764,9 @@ colour_mapping_table() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -12314,6 +12867,10 @@ colour_mapping_octants( inpDepth, idxY, idxCb, idxCr, inpLength ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint k = 0;
@@ -12324,7 +12881,7 @@ colour_mapping_octants( inpDepth, idxY, idxCb, idxCr, inpLength ) {
 			uint j = 0;
 			uint c = 0;
 
-			if ( inpDepth < ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmOctantDepth )
+			if ( inpDepth < ituContext.PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmOctantDepth )
 			{
 				size += stream.ReadUnsignedInt(size, 1, out this.split_octant_flag, "split_octant_flag"); 
 			}
@@ -12343,7 +12900,7 @@ colour_mapping_octants( inpDepth, idxY, idxCb, idxCr, inpLength ) {
 						this.colour_mapping_octants[ k ][ m ] = new ColourMappingOctants[ 2];
 						for ( n = 0; n < 2; n++ )
 						{
-							this.colour_mapping_octants[ k ][ m ][ n ] =  new ColourMappingOctants( inpDepth + 1,  idxY + (1u  <<  (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2) * k * inpLength / 2,        idxCb + m * inpLength / 2,  idxCr + n * inpLength / 2,  inpLength / 2 ) ;
+							this.colour_mapping_octants[ k ][ m ][ n ] =  new ColourMappingOctants( inpDepth + 1,  idxY + (1u  <<  (int)ituContext.PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2) * k * inpLength / 2,        idxCb + m * inpLength / 2,  idxCr + n * inpLength / 2,  inpLength / 2 ) ;
 							size +=  stream.ReadClass<ColourMappingOctants>(size, context, this.colour_mapping_octants[ k ][ m ][ n ], "colour_mapping_octants"); 
 						}
 					}
@@ -12352,13 +12909,13 @@ colour_mapping_octants( inpDepth, idxY, idxCb, idxCr, inpLength ) {
 			else 
 			{
 
-				this.coded_res_flag = new byte[ (1u  <<  (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)][][][];
-				this.res_coeff_q = new ulong[ (1u  <<  (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)][][][][];
-				this.res_coeff_r = new ulong[ (1u  <<  (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)][][][][];
-				this.res_coeff_s = new byte[ (1u  <<  (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)][][][][];
-				for ( i = 0; i < (1u  <<  (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2); i++ )
+				this.coded_res_flag = new byte[ (1u  <<  (int)ituContext.PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)][][][];
+				this.res_coeff_q = new ulong[ (1u  <<  (int)ituContext.PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)][][][][];
+				this.res_coeff_r = new ulong[ (1u  <<  (int)ituContext.PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)][][][][];
+				this.res_coeff_s = new byte[ (1u  <<  (int)ituContext.PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)][][][][];
+				for ( i = 0; i < (1u  <<  (int)ituContext.PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2); i++ )
 				{
-					idxShiftY= idxY + ( i << (int) ( ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmOctantDepth - inpDepth ) );
+					idxShiftY= idxY + ( i << (int) ( ituContext.PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmOctantDepth - inpDepth ) );
 
 					this.coded_res_flag[ i ] = new byte[ 4][][];
 					this.res_coeff_q[ i ] = new ulong[ 4][][][];
@@ -12395,6 +12952,9 @@ colour_mapping_octants( inpDepth, idxY, idxCb, idxCr, inpLength ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint k = 0;
@@ -12405,7 +12965,7 @@ colour_mapping_octants( inpDepth, idxY, idxCb, idxCr, inpLength ) {
 			uint j = 0;
 			uint c = 0;
 
-			if ( inpDepth < ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmOctantDepth )
+			if ( inpDepth < ituContext.PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmOctantDepth )
 			{
 				size += stream.WriteUnsignedInt(1, this.split_octant_flag, "split_octant_flag"); 
 			}
@@ -12429,9 +12989,9 @@ colour_mapping_octants( inpDepth, idxY, idxCb, idxCr, inpLength ) {
 			else 
 			{
 
-				for ( i = 0; i < (1u  <<  (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2); i++ )
+				for ( i = 0; i < (1u  <<  (int)ituContext.PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2); i++ )
 				{
-					idxShiftY= idxY + ( i << (int) ( ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmOctantDepth - inpDepth ) );
+					idxShiftY= idxY + ( i << (int) ( ituContext.PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmOctantDepth - inpDepth ) );
 
 					for ( j = 0; j < 4; j++ )
 					{
@@ -12489,13 +13049,17 @@ layers_not_present( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
 			size += stream.ReadUnsignedInt(size, 4, out this.lnp_sei_active_vps_id, "lnp_sei_active_vps_id"); 
 
-			this.layer_not_present_flag = new byte[ Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
-			for ( i = 0; i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+			this.layer_not_present_flag = new byte[ Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1)];
+			for ( i = 0; i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 			{
 				size += stream.ReadUnsignedInt(size, 1, out this.layer_not_present_flag[ i ], "layer_not_present_flag"); 
 			}
@@ -12505,12 +13069,15 @@ layers_not_present( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
 			size += stream.WriteUnsignedInt(4, this.lnp_sei_active_vps_id, "lnp_sei_active_vps_id"); 
 
-			for ( i = 0; i <= Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
+			for ( i = 0; i <= Math.Min( 62, ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1); i++ )
 			{
 				size += stream.WriteUnsignedInt(1, this.layer_not_present_flag[ i ], "layer_not_present_flag"); 
 			}
@@ -12583,6 +13150,10 @@ inter_layer_constrained_tile_sets( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			ulong numSignificantSets = 0;
@@ -12637,6 +13208,9 @@ inter_layer_constrained_tile_sets( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			ulong numSignificantSets = 0;
@@ -12724,6 +13298,10 @@ bsp_nesting( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			int whileIndex = -1;
@@ -12752,6 +13330,9 @@ bsp_nesting( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			int whileIndex = -1;
@@ -12810,27 +13391,31 @@ bsp_initial_arrival_time( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			ulong psIdx = 0;
 			uint i = 0;
-			psIdx= ((H265Context)context).SeiPayload.BspNesting.SeiPartitioningSchemeIdx;
+			psIdx= ituContext.SeiPayload.BspNesting.SeiPartitioningSchemeIdx;
 
-			if ( ((H265Context)context).NalInitialArrivalDelayPresent != 0 )
+			if ( ituContext.NalInitialArrivalDelayPresent != 0 )
 			{
 
-				this.nal_initial_arrival_delay = new ulong[ ((H265Context)context).BspSchedCnt[ ((H265Context)context).SeiPayload.BspNesting.SeiOlsIdx ][ psIdx ][ ((H265Context)context).MaxTemporalId[ 0 ] ]];
-				for ( i = 0; i < ((H265Context)context).BspSchedCnt[ ((H265Context)context).SeiPayload.BspNesting.SeiOlsIdx ][ psIdx ][ ((H265Context)context).MaxTemporalId[ 0 ] ]; i++ )
+				this.nal_initial_arrival_delay = new ulong[ ituContext.BspSchedCnt[ ituContext.SeiPayload.BspNesting.SeiOlsIdx ][ psIdx ][ ituContext.MaxTemporalId[ 0 ] ]];
+				for ( i = 0; i < ituContext.BspSchedCnt[ ituContext.SeiPayload.BspNesting.SeiOlsIdx ][ psIdx ][ ituContext.MaxTemporalId[ 0 ] ]; i++ )
 				{
 					size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).VideoParameterSetRbsp.HrdParameters[i].InitialCpbRemovalDelayLengthMinus1 + 1), out this.nal_initial_arrival_delay[ i ], "nal_initial_arrival_delay"); 
 				}
 			}
 
-			if ( ((H265Context)context).VclInitialArrivalDelayPresent != 0 )
+			if ( ituContext.VclInitialArrivalDelayPresent != 0 )
 			{
 
-				this.vcl_initial_arrival_delay = new ulong[ ((H265Context)context).BspSchedCnt[ ((H265Context)context).SeiPayload.BspNesting.SeiOlsIdx ][ psIdx ][ ((H265Context)context).MaxTemporalId[ 0 ] ]];
-				for ( i = 0; i < ((H265Context)context).BspSchedCnt[ ((H265Context)context).SeiPayload.BspNesting.SeiOlsIdx ][ psIdx ][ ((H265Context)context).MaxTemporalId[ 0 ] ]; i++ )
+				this.vcl_initial_arrival_delay = new ulong[ ituContext.BspSchedCnt[ ituContext.SeiPayload.BspNesting.SeiOlsIdx ][ psIdx ][ ituContext.MaxTemporalId[ 0 ] ]];
+				for ( i = 0; i < ituContext.BspSchedCnt[ ituContext.SeiPayload.BspNesting.SeiOlsIdx ][ psIdx ][ ituContext.MaxTemporalId[ 0 ] ]; i++ )
 				{
 					size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.vcl_initial_arrival_delay[ i ], "vcl_initial_arrival_delay"); 
 				}
@@ -12841,25 +13426,28 @@ bsp_initial_arrival_time( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			ulong psIdx = 0;
 			uint i = 0;
-			psIdx= ((H265Context)context).SeiPayload.BspNesting.SeiPartitioningSchemeIdx;
+			psIdx= ituContext.SeiPayload.BspNesting.SeiPartitioningSchemeIdx;
 
-			if ( ((H265Context)context).NalInitialArrivalDelayPresent != 0 )
+			if ( ituContext.NalInitialArrivalDelayPresent != 0 )
 			{
 
-				for ( i = 0; i < ((H265Context)context).BspSchedCnt[ ((H265Context)context).SeiPayload.BspNesting.SeiOlsIdx ][ psIdx ][ ((H265Context)context).MaxTemporalId[ 0 ] ]; i++ )
+				for ( i = 0; i < ituContext.BspSchedCnt[ ituContext.SeiPayload.BspNesting.SeiOlsIdx ][ psIdx ][ ituContext.MaxTemporalId[ 0 ] ]; i++ )
 				{
 					size += stream.WriteUnsignedIntVariable((((H265Context)context).VideoParameterSetRbsp.HrdParameters[i].InitialCpbRemovalDelayLengthMinus1 + 1), this.nal_initial_arrival_delay[ i ], "nal_initial_arrival_delay"); 
 				}
 			}
 
-			if ( ((H265Context)context).VclInitialArrivalDelayPresent != 0 )
+			if ( ituContext.VclInitialArrivalDelayPresent != 0 )
 			{
 
-				for ( i = 0; i < ((H265Context)context).BspSchedCnt[ ((H265Context)context).SeiPayload.BspNesting.SeiOlsIdx ][ psIdx ][ ((H265Context)context).MaxTemporalId[ 0 ] ]; i++ )
+				for ( i = 0; i < ituContext.BspSchedCnt[ ituContext.SeiPayload.BspNesting.SeiOlsIdx ][ psIdx ][ ituContext.MaxTemporalId[ 0 ] ]; i++ )
 				{
 					size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.vcl_initial_arrival_delay[ i ], "vcl_initial_arrival_delay"); 
 				}
@@ -12914,6 +13502,10 @@ sub_bitstream_property( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -12939,6 +13531,9 @@ sub_bitstream_property( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -13010,6 +13605,10 @@ alpha_channel_clip_type_flag u(1)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 1, out this.alpha_channel_cancel_flag, "alpha_channel_cancel_flag"); 
@@ -13034,6 +13633,9 @@ alpha_channel_clip_type_flag u(1)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(1, this.alpha_channel_cancel_flag, "alpha_channel_cancel_flag"); 
@@ -13158,6 +13760,10 @@ overlay_info( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -13252,6 +13858,9 @@ overlay_info( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -13357,6 +13966,10 @@ no_intra_layer_col_pic_flag u(1)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 1, out this.prev_pics_not_used_flag, "prev_pics_not_used_flag"); 
@@ -13367,6 +13980,9 @@ no_intra_layer_col_pic_flag u(1)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(1, this.prev_pics_not_used_flag, "prev_pics_not_used_flag"); 
@@ -13407,6 +14023,10 @@ ffinfo_duplicate_flag u(1)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 4, out this.ffinfo_pic_struct, "ffinfo_pic_struct"); 
@@ -13418,6 +14038,9 @@ ffinfo_duplicate_flag u(1)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(4, this.ffinfo_pic_struct, "ffinfo_pic_struct"); 
@@ -13499,6 +14122,10 @@ three_dimensional_reference_displays_extension_flag u(1)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -13545,6 +14172,9 @@ three_dimensional_reference_displays_extension_flag u(1)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -13648,6 +14278,10 @@ depth_representation_info( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -13702,6 +14336,9 @@ depth_representation_info( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -13782,6 +14419,10 @@ depth_rep_info_element( OutSign, OutExp, OutMantissa, OutManLen ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 1, out this.da_sign_flag, "da_sign_flag"); 
@@ -13794,6 +14435,9 @@ depth_rep_info_element( OutSign, OutExp, OutMantissa, OutManLen ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(1, this.da_sign_flag, "da_sign_flag"); 
@@ -13833,6 +14477,10 @@ multiview_scene_info( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadSignedIntGolomb(size, out this.min_disparity, "min_disparity"); 
@@ -13843,6 +14491,9 @@ multiview_scene_info( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteSignedIntGolomb( this.min_disparity, "min_disparity"); 
@@ -13972,6 +14623,10 @@ multiview_acquisition_info( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -13987,22 +14642,22 @@ multiview_acquisition_info( payloadSize ) {
 				size += stream.ReadUnsignedIntGolomb(size, out this.prec_principal_point, "prec_principal_point"); 
 				size += stream.ReadUnsignedIntGolomb(size, out this.prec_skew_factor, "prec_skew_factor"); 
 
-				this.sign_focal_length_x = new byte[ (intrinsic_params_equal_flag != 0 ? 0 : (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
-				this.exponent_focal_length_x = new uint[ (intrinsic_params_equal_flag != 0 ? 0 : (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
-				this.mantissa_focal_length_x = new ulong[ (intrinsic_params_equal_flag != 0 ? 0 : (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
-				this.sign_focal_length_y = new byte[ (intrinsic_params_equal_flag != 0 ? 0 : (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
-				this.exponent_focal_length_y = new uint[ (intrinsic_params_equal_flag != 0 ? 0 : (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
-				this.mantissa_focal_length_y = new ulong[ (intrinsic_params_equal_flag != 0 ? 0 : (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
-				this.sign_principal_point_x = new byte[ (intrinsic_params_equal_flag != 0 ? 0 : (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
-				this.exponent_principal_point_x = new uint[ (intrinsic_params_equal_flag != 0 ? 0 : (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
-				this.mantissa_principal_point_x = new ulong[ (intrinsic_params_equal_flag != 0 ? 0 : (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
-				this.sign_principal_point_y = new byte[ (intrinsic_params_equal_flag != 0 ? 0 : (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
-				this.exponent_principal_point_y = new uint[ (intrinsic_params_equal_flag != 0 ? 0 : (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
-				this.mantissa_principal_point_y = new ulong[ (intrinsic_params_equal_flag != 0 ? 0 : (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
-				this.sign_skew_factor = new byte[ (intrinsic_params_equal_flag != 0 ? 0 : (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
-				this.exponent_skew_factor = new uint[ (intrinsic_params_equal_flag != 0 ? 0 : (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
-				this.mantissa_skew_factor = new ulong[ (intrinsic_params_equal_flag != 0 ? 0 : (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
-				for ( i = 0; i <= (intrinsic_params_equal_flag != 0 ? 0 : (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 : 0)); i++ )
+				this.sign_focal_length_x = new byte[ (intrinsic_params_equal_flag != 0 ? 0 : (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
+				this.exponent_focal_length_x = new uint[ (intrinsic_params_equal_flag != 0 ? 0 : (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
+				this.mantissa_focal_length_x = new ulong[ (intrinsic_params_equal_flag != 0 ? 0 : (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
+				this.sign_focal_length_y = new byte[ (intrinsic_params_equal_flag != 0 ? 0 : (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
+				this.exponent_focal_length_y = new uint[ (intrinsic_params_equal_flag != 0 ? 0 : (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
+				this.mantissa_focal_length_y = new ulong[ (intrinsic_params_equal_flag != 0 ? 0 : (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
+				this.sign_principal_point_x = new byte[ (intrinsic_params_equal_flag != 0 ? 0 : (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
+				this.exponent_principal_point_x = new uint[ (intrinsic_params_equal_flag != 0 ? 0 : (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
+				this.mantissa_principal_point_x = new ulong[ (intrinsic_params_equal_flag != 0 ? 0 : (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
+				this.sign_principal_point_y = new byte[ (intrinsic_params_equal_flag != 0 ? 0 : (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
+				this.exponent_principal_point_y = new uint[ (intrinsic_params_equal_flag != 0 ? 0 : (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
+				this.mantissa_principal_point_y = new ulong[ (intrinsic_params_equal_flag != 0 ? 0 : (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
+				this.sign_skew_factor = new byte[ (intrinsic_params_equal_flag != 0 ? 0 : (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
+				this.exponent_skew_factor = new uint[ (intrinsic_params_equal_flag != 0 ? 0 : (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
+				this.mantissa_skew_factor = new ulong[ (intrinsic_params_equal_flag != 0 ? 0 : (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0))];
+				for ( i = 0; i <= (intrinsic_params_equal_flag != 0 ? 0 : (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 : 0)); i++ )
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.sign_focal_length_x[ i ], "sign_focal_length_x"); 
 					size += stream.ReadUnsignedInt(size, 6, out this.exponent_focal_length_x[ i ], "exponent_focal_length_x"); 
@@ -14027,13 +14682,13 @@ multiview_acquisition_info( payloadSize ) {
 				size += stream.ReadUnsignedIntGolomb(size, out this.prec_rotation_param, "prec_rotation_param"); 
 				size += stream.ReadUnsignedIntGolomb(size, out this.prec_translation_param, "prec_translation_param"); 
 
-				this.sign_r = new byte[ (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0)][][];
-				this.exponent_r = new uint[ (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0)][][];
-				this.mantissa_r = new ulong[ (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0)][][];
-				this.sign_t = new byte[ (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0)][];
-				this.exponent_t = new uint[ (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0)][];
-				this.mantissa_t = new ulong[ (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0)][];
-				for ( i = 0; i <= (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 : 0); i++ )
+				this.sign_r = new byte[ (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0)][][];
+				this.exponent_r = new uint[ (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0)][][];
+				this.mantissa_r = new ulong[ (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0)][][];
+				this.sign_t = new byte[ (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0)][];
+				this.exponent_t = new uint[ (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0)][];
+				this.mantissa_t = new ulong[ (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 + 1 : 0)][];
+				for ( i = 0; i <= (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 : 0); i++ )
 				{
 
 					this.sign_r[ i ] = new byte[ 3][];
@@ -14070,6 +14725,9 @@ multiview_acquisition_info( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -14085,7 +14743,7 @@ multiview_acquisition_info( payloadSize ) {
 				size += stream.WriteUnsignedIntGolomb( this.prec_principal_point, "prec_principal_point"); 
 				size += stream.WriteUnsignedIntGolomb( this.prec_skew_factor, "prec_skew_factor"); 
 
-				for ( i = 0; i <= (intrinsic_params_equal_flag != 0 ? 0 : (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 : 0)); i++ )
+				for ( i = 0; i <= (intrinsic_params_equal_flag != 0 ? 0 : (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 : 0)); i++ )
 				{
 					size += stream.WriteUnsignedInt(1, this.sign_focal_length_x[ i ], "sign_focal_length_x"); 
 					size += stream.WriteUnsignedInt(6, this.exponent_focal_length_x[ i ], "exponent_focal_length_x"); 
@@ -14110,7 +14768,7 @@ multiview_acquisition_info( payloadSize ) {
 				size += stream.WriteUnsignedIntGolomb( this.prec_rotation_param, "prec_rotation_param"); 
 				size += stream.WriteUnsignedIntGolomb( this.prec_translation_param, "prec_translation_param"); 
 
-				for ( i = 0; i <= (((H265Context)context).SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiPayload.ScalableNesting.NestingNumLayersMinus1 : 0); i++ )
+				for ( i = 0; i <= (ituContext.SeiPayload.MultiviewAcquisitionInfo != null ? ituContext.SeiPayload.ScalableNesting.NestingNumLayersMinus1 : 0); i++ )
 				{
 
 					for ( j = 0; j < 3; j++ )
@@ -14166,6 +14824,10 @@ view_position[ i ] ue(v)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -14182,6 +14844,9 @@ view_position[ i ] ue(v)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -14338,6 +15003,10 @@ layer_id_included_flag[ i ][ j ] u(1)
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -14347,11 +15016,11 @@ layer_id_included_flag[ i ][ j ] u(1)
 			size += stream.ReadUnsignedInt(size, 1, out this.vps_base_layer_internal_flag, "vps_base_layer_internal_flag"); 
 			size += stream.ReadUnsignedInt(size, 1, out this.vps_base_layer_available_flag, "vps_base_layer_available_flag"); 
 			size += stream.ReadUnsignedInt(size, 6, out this.vps_max_layers_minus1, "vps_max_layers_minus1"); 
-			((H265Context)context).OnVpsMaxLayersMinus1();
+			ituContext.OnVpsMaxLayersMinus1();
 			size += stream.ReadUnsignedInt(size, 3, out this.vps_max_sub_layers_minus1, "vps_max_sub_layers_minus1"); 
 			size += stream.ReadUnsignedInt(size, 1, out this.vps_temporal_id_nesting_flag, "vps_temporal_id_nesting_flag"); 
 			size += stream.ReadUnsignedInt(size, 16, out this.vps_reserved_0xffff_16bits, "vps_reserved_0xffff_16bits"); 
-			this.profile_tier_level =  new ProfileTierLevel( 1,  ((H265Context)context).VideoParameterSetRbsp.VpsMaxSubLayersMinus1 ) ;
+			this.profile_tier_level =  new ProfileTierLevel( 1,  ituContext.VideoParameterSetRbsp.VpsMaxSubLayersMinus1 ) ;
 			size +=  stream.ReadClass<ProfileTierLevel>(size, context, this.profile_tier_level, "profile_tier_level"); 
 			size += stream.ReadUnsignedInt(size, 1, out this.vps_sub_layer_ordering_info_present_flag, "vps_sub_layer_ordering_info_present_flag"); 
 
@@ -14375,7 +15044,7 @@ layer_id_included_flag[ i ][ j ] u(1)
 				for ( j = 0; j <= vps_max_layer_id; j++ )
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.layer_id_included_flag[ i ][ j ], "layer_id_included_flag"); 
-					((H265Context)context).OnLayerIDIncludedFlag(i, j);
+					ituContext.OnLayerIDIncludedFlag(i, j);
 				}
 			}
 			size += stream.ReadUnsignedInt(size, 1, out this.vps_timing_info_present_flag, "vps_timing_info_present_flag"); 
@@ -14403,7 +15072,7 @@ layer_id_included_flag[ i ][ j ] u(1)
 					{
 						size += stream.ReadUnsignedInt(size, 1, out this.cprms_present_flag[ i ], "cprms_present_flag"); 
 					}
-					this.hrd_parameters[ i ] =  new HrdParameters( cprms_present_flag[ i ],  ((H265Context)context).VideoParameterSetRbsp.VpsMaxSubLayersMinus1 ) ;
+					this.hrd_parameters[ i ] =  new HrdParameters( cprms_present_flag[ i ],  ituContext.VideoParameterSetRbsp.VpsMaxSubLayersMinus1 ) ;
 					size +=  stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[ i ], "hrd_parameters"); 
 				}
 			}
@@ -14460,6 +15129,9 @@ layer_id_included_flag[ i ][ j ] u(1)
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -14469,7 +15141,7 @@ layer_id_included_flag[ i ][ j ] u(1)
 			size += stream.WriteUnsignedInt(1, this.vps_base_layer_internal_flag, "vps_base_layer_internal_flag"); 
 			size += stream.WriteUnsignedInt(1, this.vps_base_layer_available_flag, "vps_base_layer_available_flag"); 
 			size += stream.WriteUnsignedInt(6, this.vps_max_layers_minus1, "vps_max_layers_minus1"); 
-			((H265Context)context).OnVpsMaxLayersMinus1();
+			ituContext.OnVpsMaxLayersMinus1();
 			size += stream.WriteUnsignedInt(3, this.vps_max_sub_layers_minus1, "vps_max_sub_layers_minus1"); 
 			size += stream.WriteUnsignedInt(1, this.vps_temporal_id_nesting_flag, "vps_temporal_id_nesting_flag"); 
 			size += stream.WriteUnsignedInt(16, this.vps_reserved_0xffff_16bits, "vps_reserved_0xffff_16bits"); 
@@ -14491,7 +15163,7 @@ layer_id_included_flag[ i ][ j ] u(1)
 				for ( j = 0; j <= vps_max_layer_id; j++ )
 				{
 					size += stream.WriteUnsignedInt(1, this.layer_id_included_flag[ i ][ j ], "layer_id_included_flag"); 
-					((H265Context)context).OnLayerIDIncludedFlag(i, j);
+					ituContext.OnLayerIDIncludedFlag(i, j);
 				}
 			}
 			size += stream.WriteUnsignedInt(1, this.vps_timing_info_present_flag, "vps_timing_info_present_flag"); 
@@ -14622,6 +15294,10 @@ vps_3d_extension() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint n = 0;
@@ -14630,16 +15306,16 @@ vps_3d_extension() {
 			uint j = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.cp_precision, "cp_precision"); 
 
-			this.num_cp = new uint[ ((H265Context)context).NumViews];
-			this.cp_in_slice_segment_header_flag = new byte[ ((H265Context)context).NumViews];
-			this.cp_ref_voi = new ulong[ ((H265Context)context).NumViews][];
-			this.vps_cp_scale = new long[ ((H265Context)context).NumViews][][];
-			this.vps_cp_off = new long[ ((H265Context)context).NumViews][][];
-			this.vps_cp_inv_scale_plus_scale = new long[ ((H265Context)context).NumViews][][];
-			this.vps_cp_inv_off_plus_off = new long[ ((H265Context)context).NumViews][][];
-			for ( n = 1; n < ((H265Context)context).NumViews; n++ )
+			this.num_cp = new uint[ ituContext.NumViews];
+			this.cp_in_slice_segment_header_flag = new byte[ ituContext.NumViews];
+			this.cp_ref_voi = new ulong[ ituContext.NumViews][];
+			this.vps_cp_scale = new long[ ituContext.NumViews][][];
+			this.vps_cp_off = new long[ ituContext.NumViews][][];
+			this.vps_cp_inv_scale_plus_scale = new long[ ituContext.NumViews][][];
+			this.vps_cp_inv_off_plus_off = new long[ ituContext.NumViews][][];
+			for ( n = 1; n < ituContext.NumViews; n++ )
 			{
-				i= ((H265Context)context).ViewOIdxList[ n ];
+				i= ituContext.ViewOIdxList[ n ];
 				size += stream.ReadUnsignedInt(size, 6, out this.num_cp[ i ], "num_cp"); 
 
 				if ( num_cp[ i ] > 0 )
@@ -14654,7 +15330,7 @@ vps_3d_extension() {
 					for ( m = 0; m < num_cp[ i ]; m++ )
 					{
 						size += stream.ReadUnsignedIntGolomb(size, out this.cp_ref_voi[ i ][ m ], "cp_ref_voi"); 
-						((H265Context)context).OnCpRefVoi();
+						ituContext.OnCpRefVoi();
 
 						if ( cp_in_slice_segment_header_flag[ i ]== 0 )
 						{
@@ -14673,6 +15349,9 @@ vps_3d_extension() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint n = 0;
@@ -14681,9 +15360,9 @@ vps_3d_extension() {
 			uint j = 0;
 			size += stream.WriteUnsignedIntGolomb( this.cp_precision, "cp_precision"); 
 
-			for ( n = 1; n < ((H265Context)context).NumViews; n++ )
+			for ( n = 1; n < ituContext.NumViews; n++ )
 			{
-				i= ((H265Context)context).ViewOIdxList[ n ];
+				i= ituContext.ViewOIdxList[ n ];
 				size += stream.WriteUnsignedInt(6, this.num_cp[ i ], "num_cp"); 
 
 				if ( num_cp[ i ] > 0 )
@@ -14693,7 +15372,7 @@ vps_3d_extension() {
 					for ( m = 0; m < num_cp[ i ]; m++ )
 					{
 						size += stream.WriteUnsignedIntGolomb( this.cp_ref_voi[ i ][ m ], "cp_ref_voi"); 
-						((H265Context)context).OnCpRefVoi();
+						ituContext.OnCpRefVoi();
 
 						if ( cp_in_slice_segment_header_flag[ i ]== 0 )
 						{
@@ -14778,6 +15457,10 @@ sps_3d_extension() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint d = 0;
@@ -14826,6 +15509,9 @@ sps_3d_extension() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint d = 0;
@@ -14913,6 +15599,10 @@ pps_3d_extension() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -14945,8 +15635,8 @@ pps_3d_extension() {
 						if ( dlt_val_flags_present_flag[ i ] != 0 )
 						{
 
-							this.dlt_value_flag[ i ] = new byte[ (( 1  <<  ( (int)((H265Context)context).PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8 ) ) - 1)];
-							for ( j = 0; j <= (( 1  <<  ( (int)((H265Context)context).PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8 ) ) - 1); j++ )
+							this.dlt_value_flag[ i ] = new byte[ (( 1  <<  ( (int)ituContext.PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8 ) ) - 1)];
+							for ( j = 0; j <= (( 1  <<  ( (int)ituContext.PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8 ) ) - 1); j++ )
 							{
 								size += stream.ReadUnsignedInt(size, 1, out this.dlt_value_flag[ i ][ j ], "dlt_value_flag"); 
 							}
@@ -14965,6 +15655,9 @@ pps_3d_extension() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -14992,7 +15685,7 @@ pps_3d_extension() {
 						if ( dlt_val_flags_present_flag[ i ] != 0 )
 						{
 
-							for ( j = 0; j <= (( 1  <<  ( (int)((H265Context)context).PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8 ) ) - 1); j++ )
+							for ( j = 0; j <= (( 1  <<  ( (int)ituContext.PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8 ) ) - 1); j++ )
 							{
 								size += stream.WriteUnsignedInt(1, this.dlt_value_flag[ i ][ j ], "dlt_value_flag"); 
 							}
@@ -15050,6 +15743,10 @@ delta_dlt() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint k = 0;
@@ -15085,6 +15782,9 @@ delta_dlt() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint k = 0;
@@ -15317,6 +16017,10 @@ alternative_depth_info( payloadSize ) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -15476,6 +16180,9 @@ alternative_depth_info( payloadSize ) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -15664,6 +16371,10 @@ green_metadata(payloadSize) {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			size += stream.ReadUnsignedInt(size, 8, out this.green_metadata_type, "green_metadata_type"); 
@@ -15696,6 +16407,9 @@ green_metadata(payloadSize) {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteUnsignedInt(8, this.green_metadata_type, "green_metadata_type"); 
@@ -15752,6 +16466,10 @@ slice_segment_layer_rbsp() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			this.slice_segment_header =  new SliceSegmentHeader() ;
@@ -15764,6 +16482,9 @@ slice_segment_layer_rbsp() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			size += stream.WriteClass<SliceSegmentHeader>(context, this.slice_segment_header, "slice_segment_header"); //slice_segment_data()  
@@ -16085,6 +16806,10 @@ slice_segment_header() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -16093,17 +16818,17 @@ slice_segment_header() {
 			int whileIndex = -1;
 			size += stream.ReadUnsignedInt(size, 1, out this.first_slice_segment_in_pic_flag, "first_slice_segment_in_pic_flag"); 
 
-			if (((H265Context)context).NalHeader.NalUnitHeader.NalUnitType >= H265NALTypes.BLA_W_LP && ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType <= H265NALTypes.RSV_IRAP_VCL23)
+			if (ituContext.NalHeader.NalUnitHeader.NalUnitType >= H265NALTypes.BLA_W_LP && ituContext.NalHeader.NalUnitHeader.NalUnitType <= H265NALTypes.RSV_IRAP_VCL23)
 			{
 				size += stream.ReadUnsignedInt(size, 1, out this.no_output_of_prior_pics_flag, "no_output_of_prior_pics_flag"); 
 			}
 			size += stream.ReadUnsignedIntGolomb(size, out this.slice_pic_parameter_set_id, "slice_pic_parameter_set_id"); 
-			((H265Context)context).SetSlicePicParameterSetId(slice_pic_parameter_set_id);
+			ituContext.SetSlicePicParameterSetId(slice_pic_parameter_set_id);
 
 			if (first_slice_segment_in_pic_flag== 0)
 			{
 
-				if (((H265Context)context).PicParameterSetRbsp.DependentSliceSegmentsEnabledFlag != 0)
+				if (ituContext.PicParameterSetRbsp.DependentSliceSegmentsEnabledFlag != 0)
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.dependent_slice_segment_flag, "dependent_slice_segment_flag"); 
 				}
@@ -16114,62 +16839,62 @@ slice_segment_header() {
 			{
 				i= 0;
 
-				if (((H265Context)context).PicParameterSetRbsp.NumExtraSliceHeaderBits > i)
+				if (ituContext.PicParameterSetRbsp.NumExtraSliceHeaderBits > i)
 				{
 					i++;
 					size += stream.ReadUnsignedInt(size, 1, out this.discardable_flag, "discardable_flag"); 
 				}
 
-				if (((H265Context)context).PicParameterSetRbsp.NumExtraSliceHeaderBits > i)
+				if (ituContext.PicParameterSetRbsp.NumExtraSliceHeaderBits > i)
 				{
 					i++;
 					size += stream.ReadUnsignedInt(size, 1, out this.cross_layer_bla_flag, "cross_layer_bla_flag"); 
 				}
 
-				this.slice_reserved_flag = new byte[ ((H265Context)context).PicParameterSetRbsp.NumExtraSliceHeaderBits];
-				for (; i < ((H265Context)context).PicParameterSetRbsp.NumExtraSliceHeaderBits; i++)
+				this.slice_reserved_flag = new byte[ ituContext.PicParameterSetRbsp.NumExtraSliceHeaderBits];
+				for (; i < ituContext.PicParameterSetRbsp.NumExtraSliceHeaderBits; i++)
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.slice_reserved_flag[i], "slice_reserved_flag"); 
 				}
 				size += stream.ReadUnsignedIntGolomb(size, out this.slice_type, "slice_type"); 
-				((H265Context)context).OnSliceType();
+				ituContext.OnSliceType();
 
-				if (((H265Context)context).PicParameterSetRbsp.OutputFlagPresentFlag != 0)
+				if (ituContext.PicParameterSetRbsp.OutputFlagPresentFlag != 0)
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.pic_output_flag, "pic_output_flag"); 
 				}
 
-				if (((H265Context)context).SeqParameterSetRbsp.SeparateColourPlaneFlag == 1)
+				if (ituContext.SeqParameterSetRbsp.SeparateColourPlaneFlag == 1)
 				{
 					size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id, "colour_plane_id"); 
 				}
 
-				if ((((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId > 0 &&
-            ((H265Context)context).VideoParameterSetRbsp.VpsExtension.PocLsbNotPresentFlag[((H265Context)context).LayerIdxInVps[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]]== 0) ||
-            (((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_W_RADL && ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_N_LP))
+				if ((ituContext.NalHeader.NalUnitHeader.NuhLayerId > 0 &&
+            ituContext.VideoParameterSetRbsp.VpsExtension.PocLsbNotPresentFlag[ituContext.LayerIdxInVps[ituContext.NalHeader.NalUnitHeader.NuhLayerId]]== 0) ||
+            (ituContext.NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_W_RADL && ituContext.NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_N_LP))
 				{
 					size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4, out this.slice_pic_order_cnt_lsb, "slice_pic_order_cnt_lsb"); 
 				}
 
-				if (((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_W_RADL && ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_N_LP)
+				if (ituContext.NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_W_RADL && ituContext.NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_N_LP)
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.short_term_ref_pic_set_sps_flag, "short_term_ref_pic_set_sps_flag"); 
 
 					if (short_term_ref_pic_set_sps_flag== 0)
 					{
-						this.st_ref_pic_set =  new StRefPicSet(((H265Context)context).SeqParameterSetRbsp.NumShortTermRefPicSets) ;
+						this.st_ref_pic_set =  new StRefPicSet(ituContext.SeqParameterSetRbsp.NumShortTermRefPicSets) ;
 						size +=  stream.ReadClass<StRefPicSet>(size, context, this.st_ref_pic_set, "st_ref_pic_set"); 
 					}
-					else if (((H265Context)context).SeqParameterSetRbsp.NumShortTermRefPicSets > 1)
+					else if (ituContext.SeqParameterSetRbsp.NumShortTermRefPicSets > 1)
 					{
 						size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).SeqParameterSetRbsp.NumShortTermRefPicSets ) ), out this.short_term_ref_pic_set_idx, "short_term_ref_pic_set_idx"); 
-						((H265Context)context).OnShortTermRefPicSetIdx();
+						ituContext.OnShortTermRefPicSetIdx();
 					}
 
-					if (((H265Context)context).SeqParameterSetRbsp.LongTermRefPicsPresentFlag != 0)
+					if (ituContext.SeqParameterSetRbsp.LongTermRefPicsPresentFlag != 0)
 					{
 
-						if (((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps > 0)
+						if (ituContext.SeqParameterSetRbsp.NumLongTermRefPicsSps > 0)
 						{
 							size += stream.ReadUnsignedIntGolomb(size, out this.num_long_term_sps, "num_long_term_sps"); 
 						}
@@ -16186,7 +16911,7 @@ slice_segment_header() {
 							if (i < num_long_term_sps)
 							{
 
-								if (((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps > 1)
+								if (ituContext.SeqParameterSetRbsp.NumLongTermRefPicsSps > 1)
 								{
 									size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps ) ), out this.lt_idx_sps[i], "lt_idx_sps"); 
 								}
@@ -16195,7 +16920,7 @@ slice_segment_header() {
 							{
 								size += stream.ReadUnsignedIntVariable(size, ( ((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4), out this.poc_lsb_lt[i], "poc_lsb_lt"); 
 								size += stream.ReadUnsignedInt(size, 1, out this.used_by_curr_pic_lt_flag[i], "used_by_curr_pic_lt_flag"); 
-								((H265Context)context).OnUsedByCurrPicLtFlag(i);
+								ituContext.OnUsedByCurrPicLtFlag(i);
 							}
 							size += stream.ReadUnsignedInt(size, 1, out this.delta_poc_msb_present_flag[i], "delta_poc_msb_present_flag"); 
 
@@ -16206,49 +16931,49 @@ slice_segment_header() {
 						}
 					}
 
-					if (((H265Context)context).SeqParameterSetRbsp.SpsTemporalMvpEnabledFlag != 0)
+					if (ituContext.SeqParameterSetRbsp.SpsTemporalMvpEnabledFlag != 0)
 					{
 						size += stream.ReadUnsignedInt(size, 1, out this.slice_temporal_mvp_enabled_flag, "slice_temporal_mvp_enabled_flag"); 
 					}
 				}
 
-				if (((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId > 0 && ((H265Context)context).VideoParameterSetRbsp.VpsExtension.DefaultRefLayersActiveFlag== 0 &&
-            ((H265Context)context).NumRefListLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 0)
+				if (ituContext.NalHeader.NalUnitHeader.NuhLayerId > 0 && ituContext.VideoParameterSetRbsp.VpsExtension.DefaultRefLayersActiveFlag== 0 &&
+            ituContext.NumRefListLayers[ituContext.NalHeader.NalUnitHeader.NuhLayerId] > 0)
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.inter_layer_pred_enabled_flag, "inter_layer_pred_enabled_flag"); 
 
-					if (inter_layer_pred_enabled_flag != 0 && ((H265Context)context).NumRefListLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 1)
+					if (inter_layer_pred_enabled_flag != 0 && ituContext.NumRefListLayers[ituContext.NalHeader.NalUnitHeader.NuhLayerId] > 1)
 					{
 
-						if (((H265Context)context).VideoParameterSetRbsp.VpsExtension.MaxOneActiveRefLayerFlag== 0)
+						if (ituContext.VideoParameterSetRbsp.VpsExtension.MaxOneActiveRefLayerFlag== 0)
 						{
 							size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ] ) ), out this.num_inter_layer_ref_pics_minus1, "num_inter_layer_ref_pics_minus1"); 
-							((H265Context)context).OnNumInterLayerRefPicsMinus1();
+							ituContext.OnNumInterLayerRefPicsMinus1();
 						}
 
-						if (((H265Context)context).NumActiveRefLayerPics != ((H265Context)context).NumRefListLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId])
+						if (ituContext.NumActiveRefLayerPics != ituContext.NumRefListLayers[ituContext.NalHeader.NalUnitHeader.NuhLayerId])
 						{
 
-							this.inter_layer_pred_layer_idc = new ulong[ ((H265Context)context).NumActiveRefLayerPics];
-							for (i = 0; i < ((H265Context)context).NumActiveRefLayerPics; i++)
+							this.inter_layer_pred_layer_idc = new ulong[ ituContext.NumActiveRefLayerPics];
+							for (i = 0; i < ituContext.NumActiveRefLayerPics; i++)
 							{
 								size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ] ) ), out this.inter_layer_pred_layer_idc[i], "inter_layer_pred_layer_idc"); 
-								((H265Context)context).OnInterLayerPredLayerIdc();
+								ituContext.OnInterLayerPredLayerIdc();
 							}
 						}
 					}
 				}
 
-				if (((H265Context)context).inCmpPredAvailFlag != 0)
+				if (ituContext.inCmpPredAvailFlag != 0)
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.in_comp_pred_flag, "in_comp_pred_flag"); 
 				}
 
-				if (((H265Context)context).SeqParameterSetRbsp.SampleAdaptiveOffsetEnabledFlag != 0)
+				if (ituContext.SeqParameterSetRbsp.SampleAdaptiveOffsetEnabledFlag != 0)
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.slice_sao_luma_flag, "slice_sao_luma_flag"); 
 
-					if ((((H265Context)context).SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc : 0) != 0)
+					if ((ituContext.SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ituContext.SeqParameterSetRbsp.ChromaFormatIdc : 0) != 0)
 					{
 						size += stream.ReadUnsignedInt(size, 1, out this.slice_sao_chroma_flag, "slice_sao_chroma_flag"); 
 					}
@@ -16268,7 +16993,7 @@ slice_segment_header() {
 						}
 					}
 
-					if (((H265Context)context).PicParameterSetRbsp.ListsModificationPresentFlag != 0 && ((H265Context)context).NumPicTotalCurr > 1)
+					if (ituContext.PicParameterSetRbsp.ListsModificationPresentFlag != 0 && ituContext.NumPicTotalCurr > 1)
 					{
 						this.ref_pic_lists_modification =  new RefPicListsModification() ;
 						size +=  stream.ReadClass<RefPicListsModification>(size, context, this.ref_pic_lists_modification, "ref_pic_lists_modification"); 
@@ -16279,7 +17004,7 @@ slice_segment_header() {
 						size += stream.ReadUnsignedInt(size, 1, out this.mvd_l1_zero_flag, "mvd_l1_zero_flag"); 
 					}
 
-					if (((H265Context)context).PicParameterSetRbsp.CabacInitPresentFlag != 0)
+					if (ituContext.PicParameterSetRbsp.CabacInitPresentFlag != 0)
 					{
 						size += stream.ReadUnsignedInt(size, 1, out this.cabac_init_flag, "cabac_init_flag"); 
 					}
@@ -16299,13 +17024,13 @@ slice_segment_header() {
 						}
 					}
 
-					if ((((H265Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && H265FrameTypes.IsP(slice_type)) ||
-                (((H265Context)context).PicParameterSetRbsp.WeightedBipredFlag != 0 && H265FrameTypes.IsB(slice_type)))
+					if ((ituContext.PicParameterSetRbsp.WeightedPredFlag != 0 && H265FrameTypes.IsP(slice_type)) ||
+                (ituContext.PicParameterSetRbsp.WeightedBipredFlag != 0 && H265FrameTypes.IsB(slice_type)))
 					{
 						this.pred_weight_table =  new PredWeightTable() ;
 						size +=  stream.ReadClass<PredWeightTable>(size, context, this.pred_weight_table, "pred_weight_table"); 
 					}
-					else if (((H265Context)context).DepthLayerFlag[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]== 0 && ((H265Context)context).NumRefListLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 0)
+					else if (ituContext.DepthLayerFlag[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]== 0 && ituContext.NumRefListLayers[ituContext.NalHeader.NalUnitHeader.NuhLayerId] > 0)
 					{
 						size += stream.ReadUnsignedInt(size, 1, out this.slice_ic_enabled_flag, "slice_ic_enabled_flag"); 
 
@@ -16318,18 +17043,18 @@ slice_segment_header() {
 				}
 				size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta, "slice_qp_delta"); 
 
-				if (((H265Context)context).PicParameterSetRbsp.PpsSliceChromaQpOffsetsPresentFlag != 0)
+				if (ituContext.PicParameterSetRbsp.PpsSliceChromaQpOffsetsPresentFlag != 0)
 				{
 					size += stream.ReadSignedIntGolomb(size, out this.slice_cb_qp_offset, "slice_cb_qp_offset"); 
 					size += stream.ReadSignedIntGolomb(size, out this.slice_cr_qp_offset, "slice_cr_qp_offset"); 
 				}
 
-				if (((H265Context)context).PicParameterSetRbsp.PpsRangeExtension != null && ((H265Context)context).PicParameterSetRbsp.PpsRangeExtension.ChromaQpOffsetListEnabledFlag != 0)
+				if (ituContext.PicParameterSetRbsp.PpsRangeExtension != null && ituContext.PicParameterSetRbsp.PpsRangeExtension.ChromaQpOffsetListEnabledFlag != 0)
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.cu_chroma_qp_offset_enabled_flag, "cu_chroma_qp_offset_enabled_flag"); 
 				}
 
-				if (((H265Context)context).PicParameterSetRbsp.DeblockingFilterOverrideEnabledFlag != 0)
+				if (ituContext.PicParameterSetRbsp.DeblockingFilterOverrideEnabledFlag != 0)
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.deblocking_filter_override_flag, "deblocking_filter_override_flag"); 
 				}
@@ -16345,23 +17070,23 @@ slice_segment_header() {
 					}
 				}
 
-				if (((H265Context)context).PicParameterSetRbsp.PpsLoopFilterAcrossSlicesEnabledFlag != 0 &&
+				if (ituContext.PicParameterSetRbsp.PpsLoopFilterAcrossSlicesEnabledFlag != 0 &&
             (slice_sao_luma_flag != 0 || slice_sao_chroma_flag != 0 ||
                 slice_deblocking_filter_disabled_flag== 0))
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.slice_loop_filter_across_slices_enabled_flag, "slice_loop_filter_across_slices_enabled_flag"); 
 				}
 
-				if (((H265Context)context).VideoParameterSetRbsp.Vps3dExtension != null && ((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpInSliceSegmentHeaderFlag[((H265Context)context).ViewOrderIdx[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]] != 0)
+				if (ituContext.VideoParameterSetRbsp.Vps3dExtension != null && ituContext.VideoParameterSetRbsp.Vps3dExtension.CpInSliceSegmentHeaderFlag[ituContext.ViewOrderIdx[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]] != 0)
 				{
 
-					this.cp_scale = new long[ ((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[((H265Context)context).ViewOrderIdx[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]]][];
-					this.cp_off = new long[ ((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[((H265Context)context).ViewOrderIdx[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]]][];
-					this.cp_inv_scale_plus_scale = new long[ ((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[((H265Context)context).ViewOrderIdx[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]]][];
-					this.cp_inv_off_plus_off = new long[ ((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[((H265Context)context).ViewOrderIdx[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]]][];
-					for (m = 0; m < ((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[((H265Context)context).ViewOrderIdx[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]]; m++)
+					this.cp_scale = new long[ ituContext.VideoParameterSetRbsp.Vps3dExtension.NumCp[ituContext.ViewOrderIdx[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]]][];
+					this.cp_off = new long[ ituContext.VideoParameterSetRbsp.Vps3dExtension.NumCp[ituContext.ViewOrderIdx[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]]][];
+					this.cp_inv_scale_plus_scale = new long[ ituContext.VideoParameterSetRbsp.Vps3dExtension.NumCp[ituContext.ViewOrderIdx[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]]][];
+					this.cp_inv_off_plus_off = new long[ ituContext.VideoParameterSetRbsp.Vps3dExtension.NumCp[ituContext.ViewOrderIdx[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]]][];
+					for (m = 0; m < ituContext.VideoParameterSetRbsp.Vps3dExtension.NumCp[ituContext.ViewOrderIdx[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]]; m++)
 					{
-						j= (uint)((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpRefVoi[((H265Context)context).ViewOrderIdx[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]][m];
+						j= (uint)ituContext.VideoParameterSetRbsp.Vps3dExtension.CpRefVoi[ituContext.ViewOrderIdx[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]][m];
 						size += stream.ReadSignedIntGolomb(size, out this.cp_scale[j][m ], "cp_scale"); 
 						size += stream.ReadSignedIntGolomb(size, out this.cp_off[j][m ], "cp_off"); 
 						size += stream.ReadSignedIntGolomb(size, out this.cp_inv_scale_plus_scale[j][m ], "cp_inv_scale_plus_scale"); 
@@ -16370,7 +17095,7 @@ slice_segment_header() {
 				}
 			}
 
-			if (((H265Context)context).PicParameterSetRbsp.TilesEnabledFlag != 0 || ((H265Context)context).PicParameterSetRbsp.EntropyCodingSyncEnabledFlag != 0)
+			if (ituContext.PicParameterSetRbsp.TilesEnabledFlag != 0 || ituContext.PicParameterSetRbsp.EntropyCodingSyncEnabledFlag != 0)
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.num_entry_point_offsets, "num_entry_point_offsets"); 
 
@@ -16386,12 +17111,12 @@ slice_segment_header() {
 				}
 			}
 
-			if (((H265Context)context).PicParameterSetRbsp.SliceSegmentHeaderExtensionPresentFlag != 0)
+			if (ituContext.PicParameterSetRbsp.SliceSegmentHeaderExtensionPresentFlag != 0)
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.slice_segment_header_extension_length, "slice_segment_header_extension_length"); 
 				stream.MarkCurrentBitsPosition();
 
-				if (((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.PocResetInfoPresentFlag != 0)
+				if (ituContext.PicParameterSetRbsp.PpsMultilayerExtension.PocResetInfoPresentFlag != 0)
 				{
 					size += stream.ReadUnsignedInt(size, 2, out this.poc_reset_idc, "poc_reset_idc"); 
 				}
@@ -16407,7 +17132,7 @@ slice_segment_header() {
 					size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4, out this.poc_lsb_val, "poc_lsb_val"); 
 				}
 
-				if (((((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_N_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_RADL || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT)  &&  ( ((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag == 0  || ( ((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0  && ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]  ==  0 ) ) ? 1 : 0)== 0 && ((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0)
+				if (((ituContext.NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_LP || ituContext.NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_N_LP || ituContext.NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_RADL || ituContext.NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT)  &&  ( ituContext.VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag == 0  || ( ituContext.VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0  && ituContext.NumDirectRefLayers[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]  ==  0 ) ) ? 1 : 0)== 0 && ituContext.VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0)
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.poc_msb_cycle_val_present_flag, "poc_msb_cycle_val_present_flag"); 
 				}
@@ -16432,6 +17157,9 @@ slice_segment_header() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -16440,17 +17168,17 @@ slice_segment_header() {
 			int whileIndex = -1;
 			size += stream.WriteUnsignedInt(1, this.first_slice_segment_in_pic_flag, "first_slice_segment_in_pic_flag"); 
 
-			if (((H265Context)context).NalHeader.NalUnitHeader.NalUnitType >= H265NALTypes.BLA_W_LP && ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType <= H265NALTypes.RSV_IRAP_VCL23)
+			if (ituContext.NalHeader.NalUnitHeader.NalUnitType >= H265NALTypes.BLA_W_LP && ituContext.NalHeader.NalUnitHeader.NalUnitType <= H265NALTypes.RSV_IRAP_VCL23)
 			{
 				size += stream.WriteUnsignedInt(1, this.no_output_of_prior_pics_flag, "no_output_of_prior_pics_flag"); 
 			}
 			size += stream.WriteUnsignedIntGolomb( this.slice_pic_parameter_set_id, "slice_pic_parameter_set_id"); 
-			((H265Context)context).SetSlicePicParameterSetId(slice_pic_parameter_set_id);
+			ituContext.SetSlicePicParameterSetId(slice_pic_parameter_set_id);
 
 			if (first_slice_segment_in_pic_flag== 0)
 			{
 
-				if (((H265Context)context).PicParameterSetRbsp.DependentSliceSegmentsEnabledFlag != 0)
+				if (ituContext.PicParameterSetRbsp.DependentSliceSegmentsEnabledFlag != 0)
 				{
 					size += stream.WriteUnsignedInt(1, this.dependent_slice_segment_flag, "dependent_slice_segment_flag"); 
 				}
@@ -16461,43 +17189,43 @@ slice_segment_header() {
 			{
 				i= 0;
 
-				if (((H265Context)context).PicParameterSetRbsp.NumExtraSliceHeaderBits > i)
+				if (ituContext.PicParameterSetRbsp.NumExtraSliceHeaderBits > i)
 				{
 					i++;
 					size += stream.WriteUnsignedInt(1, this.discardable_flag, "discardable_flag"); 
 				}
 
-				if (((H265Context)context).PicParameterSetRbsp.NumExtraSliceHeaderBits > i)
+				if (ituContext.PicParameterSetRbsp.NumExtraSliceHeaderBits > i)
 				{
 					i++;
 					size += stream.WriteUnsignedInt(1, this.cross_layer_bla_flag, "cross_layer_bla_flag"); 
 				}
 
-				for (; i < ((H265Context)context).PicParameterSetRbsp.NumExtraSliceHeaderBits; i++)
+				for (; i < ituContext.PicParameterSetRbsp.NumExtraSliceHeaderBits; i++)
 				{
 					size += stream.WriteUnsignedInt(1, this.slice_reserved_flag[i], "slice_reserved_flag"); 
 				}
 				size += stream.WriteUnsignedIntGolomb( this.slice_type, "slice_type"); 
-				((H265Context)context).OnSliceType();
+				ituContext.OnSliceType();
 
-				if (((H265Context)context).PicParameterSetRbsp.OutputFlagPresentFlag != 0)
+				if (ituContext.PicParameterSetRbsp.OutputFlagPresentFlag != 0)
 				{
 					size += stream.WriteUnsignedInt(1, this.pic_output_flag, "pic_output_flag"); 
 				}
 
-				if (((H265Context)context).SeqParameterSetRbsp.SeparateColourPlaneFlag == 1)
+				if (ituContext.SeqParameterSetRbsp.SeparateColourPlaneFlag == 1)
 				{
 					size += stream.WriteUnsignedInt(2, this.colour_plane_id, "colour_plane_id"); 
 				}
 
-				if ((((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId > 0 &&
-            ((H265Context)context).VideoParameterSetRbsp.VpsExtension.PocLsbNotPresentFlag[((H265Context)context).LayerIdxInVps[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]]== 0) ||
-            (((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_W_RADL && ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_N_LP))
+				if ((ituContext.NalHeader.NalUnitHeader.NuhLayerId > 0 &&
+            ituContext.VideoParameterSetRbsp.VpsExtension.PocLsbNotPresentFlag[ituContext.LayerIdxInVps[ituContext.NalHeader.NalUnitHeader.NuhLayerId]]== 0) ||
+            (ituContext.NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_W_RADL && ituContext.NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_N_LP))
 				{
 					size += stream.WriteUnsignedIntVariable(((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4, this.slice_pic_order_cnt_lsb, "slice_pic_order_cnt_lsb"); 
 				}
 
-				if (((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_W_RADL && ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_N_LP)
+				if (ituContext.NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_W_RADL && ituContext.NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_N_LP)
 				{
 					size += stream.WriteUnsignedInt(1, this.short_term_ref_pic_set_sps_flag, "short_term_ref_pic_set_sps_flag"); 
 
@@ -16505,16 +17233,16 @@ slice_segment_header() {
 					{
 						size += stream.WriteClass<StRefPicSet>(context, this.st_ref_pic_set, "st_ref_pic_set"); 
 					}
-					else if (((H265Context)context).SeqParameterSetRbsp.NumShortTermRefPicSets > 1)
+					else if (ituContext.SeqParameterSetRbsp.NumShortTermRefPicSets > 1)
 					{
 						size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).SeqParameterSetRbsp.NumShortTermRefPicSets ) ), this.short_term_ref_pic_set_idx, "short_term_ref_pic_set_idx"); 
-						((H265Context)context).OnShortTermRefPicSetIdx();
+						ituContext.OnShortTermRefPicSetIdx();
 					}
 
-					if (((H265Context)context).SeqParameterSetRbsp.LongTermRefPicsPresentFlag != 0)
+					if (ituContext.SeqParameterSetRbsp.LongTermRefPicsPresentFlag != 0)
 					{
 
-						if (((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps > 0)
+						if (ituContext.SeqParameterSetRbsp.NumLongTermRefPicsSps > 0)
 						{
 							size += stream.WriteUnsignedIntGolomb( this.num_long_term_sps, "num_long_term_sps"); 
 						}
@@ -16526,7 +17254,7 @@ slice_segment_header() {
 							if (i < num_long_term_sps)
 							{
 
-								if (((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps > 1)
+								if (ituContext.SeqParameterSetRbsp.NumLongTermRefPicsSps > 1)
 								{
 									size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps ) ), this.lt_idx_sps[i], "lt_idx_sps"); 
 								}
@@ -16535,7 +17263,7 @@ slice_segment_header() {
 							{
 								size += stream.WriteUnsignedIntVariable(( ((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4), this.poc_lsb_lt[i], "poc_lsb_lt"); 
 								size += stream.WriteUnsignedInt(1, this.used_by_curr_pic_lt_flag[i], "used_by_curr_pic_lt_flag"); 
-								((H265Context)context).OnUsedByCurrPicLtFlag(i);
+								ituContext.OnUsedByCurrPicLtFlag(i);
 							}
 							size += stream.WriteUnsignedInt(1, this.delta_poc_msb_present_flag[i], "delta_poc_msb_present_flag"); 
 
@@ -16546,48 +17274,48 @@ slice_segment_header() {
 						}
 					}
 
-					if (((H265Context)context).SeqParameterSetRbsp.SpsTemporalMvpEnabledFlag != 0)
+					if (ituContext.SeqParameterSetRbsp.SpsTemporalMvpEnabledFlag != 0)
 					{
 						size += stream.WriteUnsignedInt(1, this.slice_temporal_mvp_enabled_flag, "slice_temporal_mvp_enabled_flag"); 
 					}
 				}
 
-				if (((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId > 0 && ((H265Context)context).VideoParameterSetRbsp.VpsExtension.DefaultRefLayersActiveFlag== 0 &&
-            ((H265Context)context).NumRefListLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 0)
+				if (ituContext.NalHeader.NalUnitHeader.NuhLayerId > 0 && ituContext.VideoParameterSetRbsp.VpsExtension.DefaultRefLayersActiveFlag== 0 &&
+            ituContext.NumRefListLayers[ituContext.NalHeader.NalUnitHeader.NuhLayerId] > 0)
 				{
 					size += stream.WriteUnsignedInt(1, this.inter_layer_pred_enabled_flag, "inter_layer_pred_enabled_flag"); 
 
-					if (inter_layer_pred_enabled_flag != 0 && ((H265Context)context).NumRefListLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 1)
+					if (inter_layer_pred_enabled_flag != 0 && ituContext.NumRefListLayers[ituContext.NalHeader.NalUnitHeader.NuhLayerId] > 1)
 					{
 
-						if (((H265Context)context).VideoParameterSetRbsp.VpsExtension.MaxOneActiveRefLayerFlag== 0)
+						if (ituContext.VideoParameterSetRbsp.VpsExtension.MaxOneActiveRefLayerFlag== 0)
 						{
 							size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ] ) ), this.num_inter_layer_ref_pics_minus1, "num_inter_layer_ref_pics_minus1"); 
-							((H265Context)context).OnNumInterLayerRefPicsMinus1();
+							ituContext.OnNumInterLayerRefPicsMinus1();
 						}
 
-						if (((H265Context)context).NumActiveRefLayerPics != ((H265Context)context).NumRefListLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId])
+						if (ituContext.NumActiveRefLayerPics != ituContext.NumRefListLayers[ituContext.NalHeader.NalUnitHeader.NuhLayerId])
 						{
 
-							for (i = 0; i < ((H265Context)context).NumActiveRefLayerPics; i++)
+							for (i = 0; i < ituContext.NumActiveRefLayerPics; i++)
 							{
 								size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ] ) ), this.inter_layer_pred_layer_idc[i], "inter_layer_pred_layer_idc"); 
-								((H265Context)context).OnInterLayerPredLayerIdc();
+								ituContext.OnInterLayerPredLayerIdc();
 							}
 						}
 					}
 				}
 
-				if (((H265Context)context).inCmpPredAvailFlag != 0)
+				if (ituContext.inCmpPredAvailFlag != 0)
 				{
 					size += stream.WriteUnsignedInt(1, this.in_comp_pred_flag, "in_comp_pred_flag"); 
 				}
 
-				if (((H265Context)context).SeqParameterSetRbsp.SampleAdaptiveOffsetEnabledFlag != 0)
+				if (ituContext.SeqParameterSetRbsp.SampleAdaptiveOffsetEnabledFlag != 0)
 				{
 					size += stream.WriteUnsignedInt(1, this.slice_sao_luma_flag, "slice_sao_luma_flag"); 
 
-					if ((((H265Context)context).SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc : 0) != 0)
+					if ((ituContext.SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ituContext.SeqParameterSetRbsp.ChromaFormatIdc : 0) != 0)
 					{
 						size += stream.WriteUnsignedInt(1, this.slice_sao_chroma_flag, "slice_sao_chroma_flag"); 
 					}
@@ -16607,7 +17335,7 @@ slice_segment_header() {
 						}
 					}
 
-					if (((H265Context)context).PicParameterSetRbsp.ListsModificationPresentFlag != 0 && ((H265Context)context).NumPicTotalCurr > 1)
+					if (ituContext.PicParameterSetRbsp.ListsModificationPresentFlag != 0 && ituContext.NumPicTotalCurr > 1)
 					{
 						size += stream.WriteClass<RefPicListsModification>(context, this.ref_pic_lists_modification, "ref_pic_lists_modification"); 
 					}
@@ -16617,7 +17345,7 @@ slice_segment_header() {
 						size += stream.WriteUnsignedInt(1, this.mvd_l1_zero_flag, "mvd_l1_zero_flag"); 
 					}
 
-					if (((H265Context)context).PicParameterSetRbsp.CabacInitPresentFlag != 0)
+					if (ituContext.PicParameterSetRbsp.CabacInitPresentFlag != 0)
 					{
 						size += stream.WriteUnsignedInt(1, this.cabac_init_flag, "cabac_init_flag"); 
 					}
@@ -16637,12 +17365,12 @@ slice_segment_header() {
 						}
 					}
 
-					if ((((H265Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && H265FrameTypes.IsP(slice_type)) ||
-                (((H265Context)context).PicParameterSetRbsp.WeightedBipredFlag != 0 && H265FrameTypes.IsB(slice_type)))
+					if ((ituContext.PicParameterSetRbsp.WeightedPredFlag != 0 && H265FrameTypes.IsP(slice_type)) ||
+                (ituContext.PicParameterSetRbsp.WeightedBipredFlag != 0 && H265FrameTypes.IsB(slice_type)))
 					{
 						size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table, "pred_weight_table"); 
 					}
-					else if (((H265Context)context).DepthLayerFlag[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]== 0 && ((H265Context)context).NumRefListLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 0)
+					else if (ituContext.DepthLayerFlag[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]== 0 && ituContext.NumRefListLayers[ituContext.NalHeader.NalUnitHeader.NuhLayerId] > 0)
 					{
 						size += stream.WriteUnsignedInt(1, this.slice_ic_enabled_flag, "slice_ic_enabled_flag"); 
 
@@ -16655,18 +17383,18 @@ slice_segment_header() {
 				}
 				size += stream.WriteSignedIntGolomb( this.slice_qp_delta, "slice_qp_delta"); 
 
-				if (((H265Context)context).PicParameterSetRbsp.PpsSliceChromaQpOffsetsPresentFlag != 0)
+				if (ituContext.PicParameterSetRbsp.PpsSliceChromaQpOffsetsPresentFlag != 0)
 				{
 					size += stream.WriteSignedIntGolomb( this.slice_cb_qp_offset, "slice_cb_qp_offset"); 
 					size += stream.WriteSignedIntGolomb( this.slice_cr_qp_offset, "slice_cr_qp_offset"); 
 				}
 
-				if (((H265Context)context).PicParameterSetRbsp.PpsRangeExtension != null && ((H265Context)context).PicParameterSetRbsp.PpsRangeExtension.ChromaQpOffsetListEnabledFlag != 0)
+				if (ituContext.PicParameterSetRbsp.PpsRangeExtension != null && ituContext.PicParameterSetRbsp.PpsRangeExtension.ChromaQpOffsetListEnabledFlag != 0)
 				{
 					size += stream.WriteUnsignedInt(1, this.cu_chroma_qp_offset_enabled_flag, "cu_chroma_qp_offset_enabled_flag"); 
 				}
 
-				if (((H265Context)context).PicParameterSetRbsp.DeblockingFilterOverrideEnabledFlag != 0)
+				if (ituContext.PicParameterSetRbsp.DeblockingFilterOverrideEnabledFlag != 0)
 				{
 					size += stream.WriteUnsignedInt(1, this.deblocking_filter_override_flag, "deblocking_filter_override_flag"); 
 				}
@@ -16682,19 +17410,19 @@ slice_segment_header() {
 					}
 				}
 
-				if (((H265Context)context).PicParameterSetRbsp.PpsLoopFilterAcrossSlicesEnabledFlag != 0 &&
+				if (ituContext.PicParameterSetRbsp.PpsLoopFilterAcrossSlicesEnabledFlag != 0 &&
             (slice_sao_luma_flag != 0 || slice_sao_chroma_flag != 0 ||
                 slice_deblocking_filter_disabled_flag== 0))
 				{
 					size += stream.WriteUnsignedInt(1, this.slice_loop_filter_across_slices_enabled_flag, "slice_loop_filter_across_slices_enabled_flag"); 
 				}
 
-				if (((H265Context)context).VideoParameterSetRbsp.Vps3dExtension != null && ((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpInSliceSegmentHeaderFlag[((H265Context)context).ViewOrderIdx[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]] != 0)
+				if (ituContext.VideoParameterSetRbsp.Vps3dExtension != null && ituContext.VideoParameterSetRbsp.Vps3dExtension.CpInSliceSegmentHeaderFlag[ituContext.ViewOrderIdx[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]] != 0)
 				{
 
-					for (m = 0; m < ((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[((H265Context)context).ViewOrderIdx[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]]; m++)
+					for (m = 0; m < ituContext.VideoParameterSetRbsp.Vps3dExtension.NumCp[ituContext.ViewOrderIdx[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]]; m++)
 					{
-						j= (uint)((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpRefVoi[((H265Context)context).ViewOrderIdx[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]][m];
+						j= (uint)ituContext.VideoParameterSetRbsp.Vps3dExtension.CpRefVoi[ituContext.ViewOrderIdx[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]][m];
 						size += stream.WriteSignedIntGolomb( this.cp_scale[j][m ], "cp_scale"); 
 						size += stream.WriteSignedIntGolomb( this.cp_off[j][m ], "cp_off"); 
 						size += stream.WriteSignedIntGolomb( this.cp_inv_scale_plus_scale[j][m ], "cp_inv_scale_plus_scale"); 
@@ -16703,7 +17431,7 @@ slice_segment_header() {
 				}
 			}
 
-			if (((H265Context)context).PicParameterSetRbsp.TilesEnabledFlag != 0 || ((H265Context)context).PicParameterSetRbsp.EntropyCodingSyncEnabledFlag != 0)
+			if (ituContext.PicParameterSetRbsp.TilesEnabledFlag != 0 || ituContext.PicParameterSetRbsp.EntropyCodingSyncEnabledFlag != 0)
 			{
 				size += stream.WriteUnsignedIntGolomb( this.num_entry_point_offsets, "num_entry_point_offsets"); 
 
@@ -16718,12 +17446,12 @@ slice_segment_header() {
 				}
 			}
 
-			if (((H265Context)context).PicParameterSetRbsp.SliceSegmentHeaderExtensionPresentFlag != 0)
+			if (ituContext.PicParameterSetRbsp.SliceSegmentHeaderExtensionPresentFlag != 0)
 			{
 				size += stream.WriteUnsignedIntGolomb( this.slice_segment_header_extension_length, "slice_segment_header_extension_length"); 
 				stream.MarkCurrentBitsPosition();
 
-				if (((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.PocResetInfoPresentFlag != 0)
+				if (ituContext.PicParameterSetRbsp.PpsMultilayerExtension.PocResetInfoPresentFlag != 0)
 				{
 					size += stream.WriteUnsignedInt(2, this.poc_reset_idc, "poc_reset_idc"); 
 				}
@@ -16739,7 +17467,7 @@ slice_segment_header() {
 					size += stream.WriteUnsignedIntVariable(((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4, this.poc_lsb_val, "poc_lsb_val"); 
 				}
 
-				if (((((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_N_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_RADL || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT)  &&  ( ((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag == 0  || ( ((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0  && ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]  ==  0 ) ) ? 1 : 0)== 0 && ((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0)
+				if (((ituContext.NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_LP || ituContext.NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_N_LP || ituContext.NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_RADL || ituContext.NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT)  &&  ( ituContext.VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag == 0  || ( ituContext.VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0  && ituContext.NumDirectRefLayers[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]  ==  0 ) ) ? 1 : 0)== 0 && ituContext.VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0)
 				{
 					size += stream.WriteUnsignedInt(1, this.poc_msb_cycle_val_present_flag, "poc_msb_cycle_val_present_flag"); 
 				}
@@ -16847,38 +17575,42 @@ pred_weight_table() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
 			uint j = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.luma_log2_weight_denom, "luma_log2_weight_denom"); 
 
-			if ((((H265Context)context).SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc : 0) != 0)
+			if ((ituContext.SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ituContext.SeqParameterSetRbsp.ChromaFormatIdc : 0) != 0)
 			{
 				size += stream.ReadSignedIntGolomb(size, out this.delta_chroma_log2_weight_denom, "delta_chroma_log2_weight_denom"); 
 			}
 
-			this.luma_weight_l0_flag = new byte[ ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1 + 1];
-			for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
+			this.luma_weight_l0_flag = new byte[ ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1 + 1];
+			for (i = 0; i <= ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
 			{
 				size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l0_flag[i], "luma_weight_l0_flag"); 
 			}
 
-			if ((((H265Context)context).SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc : 0) != 0)
+			if ((ituContext.SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ituContext.SeqParameterSetRbsp.ChromaFormatIdc : 0) != 0)
 			{
 
-				this.chroma_weight_l0_flag = new byte[ ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1 + 1];
-				for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
+				this.chroma_weight_l0_flag = new byte[ ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1 + 1];
+				for (i = 0; i <= ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.chroma_weight_l0_flag[i], "chroma_weight_l0_flag"); 
 				}
 			}
 
-			this.delta_luma_weight_l0 = new long[ ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1 + 1];
-			this.luma_offset_l0 = new long[ ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1 + 1];
-			this.delta_chroma_weight_l0 = new long[ ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1 + 1][];
-			this.delta_chroma_offset_l0 = new long[ ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1 + 1][];
-			for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
+			this.delta_luma_weight_l0 = new long[ ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1 + 1];
+			this.luma_offset_l0 = new long[ ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1 + 1];
+			this.delta_chroma_weight_l0 = new long[ ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1 + 1][];
+			this.delta_chroma_offset_l0 = new long[ ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1 + 1][];
+			for (i = 0; i <= ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
 			{
 
 				if (luma_weight_l0_flag[i] != 0)
@@ -16900,30 +17632,30 @@ pred_weight_table() {
 				}
 			}
 
-			if (H265FrameTypes.IsB(((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.SliceType))
+			if (H265FrameTypes.IsB(ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.SliceType))
 			{
 
-				this.luma_weight_l1_flag = new byte[ ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1 + 1];
-				for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
+				this.luma_weight_l1_flag = new byte[ ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1 + 1];
+				for (i = 0; i <= ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l1_flag[i], "luma_weight_l1_flag"); 
 				}
 
-				if ((((H265Context)context).SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc : 0) != 0)
+				if ((ituContext.SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ituContext.SeqParameterSetRbsp.ChromaFormatIdc : 0) != 0)
 				{
 
-					this.chroma_weight_l1_flag = new byte[ ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1 + 1];
-					for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
+					this.chroma_weight_l1_flag = new byte[ ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1 + 1];
+					for (i = 0; i <= ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
 					{
 						size += stream.ReadUnsignedInt(size, 1, out this.chroma_weight_l1_flag[i], "chroma_weight_l1_flag"); 
 					}
 				}
 
-				this.delta_luma_weight_l1 = new long[ ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1 + 1];
-				this.luma_offset_l1 = new long[ ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1 + 1];
-				this.delta_chroma_weight_l1 = new long[ ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1 + 1][];
-				this.delta_chroma_offset_l1 = new long[ ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1 + 1][];
-				for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
+				this.delta_luma_weight_l1 = new long[ ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1 + 1];
+				this.luma_offset_l1 = new long[ ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1 + 1];
+				this.delta_chroma_weight_l1 = new long[ ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1 + 1][];
+				this.delta_chroma_offset_l1 = new long[ ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1 + 1][];
+				for (i = 0; i <= ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
 				{
 
 					if (luma_weight_l1_flag[i] != 0)
@@ -16951,32 +17683,35 @@ pred_weight_table() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
 			uint j = 0;
 			size += stream.WriteUnsignedIntGolomb( this.luma_log2_weight_denom, "luma_log2_weight_denom"); 
 
-			if ((((H265Context)context).SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc : 0) != 0)
+			if ((ituContext.SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ituContext.SeqParameterSetRbsp.ChromaFormatIdc : 0) != 0)
 			{
 				size += stream.WriteSignedIntGolomb( this.delta_chroma_log2_weight_denom, "delta_chroma_log2_weight_denom"); 
 			}
 
-			for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
+			for (i = 0; i <= ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
 			{
 				size += stream.WriteUnsignedInt(1, this.luma_weight_l0_flag[i], "luma_weight_l0_flag"); 
 			}
 
-			if ((((H265Context)context).SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc : 0) != 0)
+			if ((ituContext.SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ituContext.SeqParameterSetRbsp.ChromaFormatIdc : 0) != 0)
 			{
 
-				for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
+				for (i = 0; i <= ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
 				{
 					size += stream.WriteUnsignedInt(1, this.chroma_weight_l0_flag[i], "chroma_weight_l0_flag"); 
 				}
 			}
 
-			for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
+			for (i = 0; i <= ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
 			{
 
 				if (luma_weight_l0_flag[i] != 0)
@@ -16996,24 +17731,24 @@ pred_weight_table() {
 				}
 			}
 
-			if (H265FrameTypes.IsB(((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.SliceType))
+			if (H265FrameTypes.IsB(ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.SliceType))
 			{
 
-				for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
+				for (i = 0; i <= ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
 				{
 					size += stream.WriteUnsignedInt(1, this.luma_weight_l1_flag[i], "luma_weight_l1_flag"); 
 				}
 
-				if ((((H265Context)context).SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc : 0) != 0)
+				if ((ituContext.SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ituContext.SeqParameterSetRbsp.ChromaFormatIdc : 0) != 0)
 				{
 
-					for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
+					for (i = 0; i <= ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
 					{
 						size += stream.WriteUnsignedInt(1, this.chroma_weight_l1_flag[i], "chroma_weight_l1_flag"); 
 					}
 				}
 
-				for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
+				for (i = 0; i <= ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
 				{
 
 					if (luma_weight_l1_flag[i] != 0)
@@ -17076,6 +17811,10 @@ ref_pic_lists_modification() {
 
          public ulong Read(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
+
             ulong size = 0;
 
 			uint i = 0;
@@ -17084,23 +17823,23 @@ ref_pic_lists_modification() {
 			if (ref_pic_list_modification_flag_l0 != 0)
 			{
 
-				this.list_entry_l0 = new ulong[ ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1 + 1];
-				for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
+				this.list_entry_l0 = new ulong[ ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1 + 1];
+				for (i = 0; i <= ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
 				{
 					size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumPicTotalCurr ) ) , out this.list_entry_l0[i], "list_entry_l0"); 
-					((H265Context)context).OnListEntryL0();
+					ituContext.OnListEntryL0();
 				}
 			}
 
-			if (H265FrameTypes.IsB(((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.SliceType))
+			if (H265FrameTypes.IsB(ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.SliceType))
 			{
 				size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l1, "ref_pic_list_modification_flag_l1"); 
 
 				if (ref_pic_list_modification_flag_l1 != 0)
 				{
 
-					this.list_entry_l1 = new ulong[ ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1 + 1];
-					for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
+					this.list_entry_l1 = new ulong[ ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1 + 1];
+					for (i = 0; i <= ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
 					{
 						size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumPicTotalCurr ) ) , out this.list_entry_l1[i], "list_entry_l1"); 
 					}
@@ -17112,6 +17851,9 @@ ref_pic_lists_modification() {
 
          public ulong Write(IItuContext context, ItuStream stream)
          {
+            H265Context ituContext = context as H265Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H265Context");
             ulong size = 0;
 
 			uint i = 0;
@@ -17120,21 +17862,21 @@ ref_pic_lists_modification() {
 			if (ref_pic_list_modification_flag_l0 != 0)
 			{
 
-				for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
+				for (i = 0; i <= ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
 				{
 					size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumPicTotalCurr ) ) , this.list_entry_l0[i], "list_entry_l0"); 
-					((H265Context)context).OnListEntryL0();
+					ituContext.OnListEntryL0();
 				}
 			}
 
-			if (H265FrameTypes.IsB(((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.SliceType))
+			if (H265FrameTypes.IsB(ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.SliceType))
 			{
 				size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l1, "ref_pic_list_modification_flag_l1"); 
 
 				if (ref_pic_list_modification_flag_l1 != 0)
 				{
 
-					for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
+					for (i = 0; i <= ituContext.SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
 					{
 						size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumPicTotalCurr ) ) , this.list_entry_l1[i], "list_entry_l1"); 
 					}
