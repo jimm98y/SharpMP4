@@ -7,7 +7,6 @@ using SharpH26X;
 using SharpISOBMFF;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,10 +14,11 @@ using System.Text;
 // .\ffmpeg.exe -i "002.mp4" -c:v copy -bsf:v trace_headers -f null - > log.txt 2>&1
 
 var logger = new FileLogger("debug.txt");
-var isobmffLogger = new IsoBmffLogger();
-var h26xLogger = new H26XLogger();
+var isobmffLogger = new IsoBmffLogger(logger);
+var h26xLogger = new H26XLogger(logger);
 
 var files = new string[] { "bunny.mp4" };
+//var files = File.ReadLines("C:\\Temp\\testFiles.txt");
 
 foreach (var file in files)
 {

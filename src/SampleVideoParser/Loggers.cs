@@ -10,35 +10,22 @@ namespace SampleVideoParser;
 /// </summary>
 internal class IsoBmffLogger : IMp4Logger
 {
-    public bool IsErrorEnabled
+    private FileLogger logger;
+
+    public IsoBmffLogger(FileLogger logger)
     {
-        get => true;
-        set { }
+        this.logger = logger;
     }
 
-    public bool IsWarningEnabled
-    {
-        get => false;
-        set { }
-    }
+    public bool IsErrorEnabled { get; set; } = true;
 
-    public bool IsInfoEnabled
-    {
-        get => true;
-        set { }
-    }
+    public bool IsWarningEnabled { get; set; } = true;
 
-    public bool IsDebugEnabled
-    {
-        get => true;
-        set { }
-    }
+    public bool IsInfoEnabled { get; set; } = true;
 
-    public bool IsTraceEnabled
-    {
-        get => false;
-        set { }
-    }
+    public bool IsDebugEnabled { get; set; } = true;
+
+    public bool IsTraceEnabled { get; set; } = true;
 
     public void LogDebug(string debug)
     {
@@ -47,7 +34,8 @@ internal class IsoBmffLogger : IMp4Logger
 
     public void LogError(string error)
     {
-        Debug.WriteLine(error);
+        Console.WriteLine(error);
+        this.logger.Log(error);
     }
 
     public void LogInfo(string info)
@@ -69,15 +57,22 @@ internal class IsoBmffLogger : IMp4Logger
 /// </summary>
 internal class H26XLogger : IMp4Logger
 {
-    public bool IsErrorEnabled { get; set; } = false;
+    private FileLogger logger;
+
+    public H26XLogger(FileLogger logger)
+    {
+        this.logger = logger;
+    }
+
+    public bool IsErrorEnabled { get; set; } = true;
 
     public bool IsWarningEnabled { get; set; } = true;
 
     public bool IsInfoEnabled { get; set; } = true;
 
-    public bool IsDebugEnabled { get; set; } = false;
+    public bool IsDebugEnabled { get; set; } = true;
 
-    public bool IsTraceEnabled { get; set; } = false;
+    public bool IsTraceEnabled { get; set; } = true;
 
     public void LogDebug(string debug)
     {
@@ -85,6 +80,7 @@ internal class H26XLogger : IMp4Logger
 
     public void LogError(string error)
     {
+        this.logger.Log(error);
     }
 
     public void LogInfo(string info)
