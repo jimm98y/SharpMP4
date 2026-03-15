@@ -35,7 +35,7 @@ internal class IsoBmffLogger : IMp4Logger
     public void LogError(string error)
     {
         Console.WriteLine(error);
-        this.logger.Log(error);
+        this.logger.Log(error + "\r\n");
     }
 
     public void LogInfo(string info)
@@ -80,7 +80,7 @@ internal class H26XLogger : IMp4Logger
 
     public void LogError(string error)
     {
-        this.logger.Log(error);
+        this.logger.Log(error + "\r\n");
     }
 
     public void LogInfo(string info)
