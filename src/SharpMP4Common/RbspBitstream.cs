@@ -126,7 +126,7 @@ namespace SharpMP4.Common
                     return;
                 }
 
-                if (_skipStartCodes)
+                if (_insertStartCodes)
                 {
                     if (_prevByte == 0x00 &&
                         _prevPrevByte == 0x00 &&
