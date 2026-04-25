@@ -9,9 +9,7 @@ namespace SharpISOBMFF
     public class IsoStream : IDisposable
     {
         protected readonly IStorage _stream;
-        protected int _bitsPosition;
-        protected int _currentBytePosition = -1;
-        protected byte _currentByte = 0;
+        private readonly Bitstream bitstream;
         private bool _disposedValue;
         private ITemporaryStorageFactory _storageFactory;
         private IsoStream _temp;
@@ -28,6 +26,7 @@ namespace SharpISOBMFF
             _storageFactory = storageFactory ?? new TemporaryFileStorageFactory();
 
             this.Logger = logger ?? new DefaultMp4Logger();
+            this.bitstream = new(new StorageStream(stream));
         }
 
         // In case users would like to change it later, for example to use memory storage instead of file storage
@@ -123,41 +122,9 @@ namespace SharpISOBMFF
 
         #region Basic read/write operations
 
-        private int ReadBitInternal()
-        {
-            int bytePos = _bitsPosition >> 3;
+        private int ReadBitInternal() => this.bitstream.ReadBit();
 
-            if (_currentBytePosition != bytePos)
-            {
-                byte b = ReadByte();
-                _currentByte = b;
-                _currentBytePosition = bytePos;
-            }
-
-            int posInByte = 7 - _bitsPosition % 8;
-            int bit = _currentByte >> posInByte & 1;
-            ++_bitsPosition;
-            return bit;
-        }
-
-        private void WriteBitInternal(int value)
-        {
-            int posInByte = 7 - _bitsPosition % 8;
-            int bit = (value & 1) << posInByte;
-            _currentByte = (byte)(_currentByte | bit);
-            ++_bitsPosition;
-
-            int bytePos = _bitsPosition >> 3;
-            if (_currentBytePosition != bytePos)
-            {
-                if (_currentBytePosition != -1) // special case for the first bit
-                {
-                    WriteByte(_currentByte);
-                    _currentByte = 0;
-                }
-                _currentBytePosition = bytePos;
-            }
-        }
+        private void WriteBitInternal(int value) => this.bitstream.WriteBit(value);
 
         public int ReadByteInternal()
         {
@@ -453,17 +420,17 @@ namespace SharpISOBMFF
 
         public ulong ReadByteAlignment(ulong boxSize, ulong readSize, out byte value, string name)
         {
-            int bytePos = _bitsPosition >> 3;
-            int currentBytePos = bytePos << 3;
-            uint bitsToRead = (uint)(8 - (_bitsPosition - currentBytePos));
+            long bytePos = this.bitstream.BitsPosition >> 3;
+            long currentBytePos = bytePos << 3;
+            uint bitsToRead = (uint)(8 - (this.bitstream.BitsPosition - currentBytePos));
             return ReadBits(boxSize, readSize, bitsToRead, out value, name);
         }
 
         public ulong WriteByteAlignment(byte value, string name)
         {
-            int bytePos = _bitsPosition >> 3;
-            int currentBytePos = bytePos << 3;
-            uint bitsToWrite = (uint)(8 - (_bitsPosition - currentBytePos));
+            long bytePos = this.bitstream.BitsPosition >> 3;
+            long currentBytePos = bytePos << 3;
+            uint bitsToWrite = (uint)(8 - (this.bitstream.BitsPosition - currentBytePos));
             return WriteBits(bitsToWrite, value, name);
         }
 
