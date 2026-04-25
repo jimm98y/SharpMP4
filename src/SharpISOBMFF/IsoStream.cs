@@ -9,7 +9,7 @@ namespace SharpISOBMFF
     public class IsoStream : IDisposable
     {
         protected readonly IStorage _stream;
-        private readonly Bitstream bitstream;
+        private Bitstream bitstream;
         private bool _disposedValue;
         private ITemporaryStorageFactory _storageFactory;
         private IsoStream _temp;
@@ -27,6 +27,12 @@ namespace SharpISOBMFF
 
             this.Logger = logger ?? new DefaultMp4Logger();
             this.bitstream = new(new StorageStream(stream));
+        }
+
+        public Bitstream Bitstream
+        {
+            get => this.bitstream;
+            set => this.bitstream = value;
         }
 
         // In case users would like to change it later, for example to use memory storage instead of file storage

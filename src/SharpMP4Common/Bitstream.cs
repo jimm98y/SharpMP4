@@ -5,11 +5,11 @@ namespace SharpMP4.Common
 {
     public class Bitstream
     {
-        private long _bitsPosition;
-        private long _currentBytePosition = -1;
-        private byte _currentByte;
+        protected long _bitsPosition;
+        protected long _currentBytePosition = -1;
+        protected byte _currentByte;
 
-        private readonly Stream _stream;
+        protected Stream _stream;
 
         public Bitstream(Stream stream)
         {
@@ -20,6 +20,17 @@ namespace SharpMP4.Common
         {
             get => _bitsPosition;
             set => _bitsPosition = value;
+        }
+
+        public byte CurrentByte
+        {
+            get => _currentByte;
+            set => _currentByte = value;
+        }
+
+        public Stream BaseStream
+        {
+            get => _stream;
         }
 
         private int ReadBitInternal()
@@ -58,28 +69,28 @@ namespace SharpMP4.Common
             }
         }
 
-        public int ReadBit() => ReadBitInternal();
-        public void WriteBit(int bit) => WriteBitInternal(bit);
+        public virtual int ReadBit() => ReadBitInternal();
+        public virtual void WriteBit(int bit) => WriteBitInternal(bit);
 
         private int ReadByteInternal()
         {
             return _stream.ReadByte();
         }
 
-        public byte ReadByte()
+        public virtual byte ReadByte()
         {
             int read = ReadByteInternal();
             if (read == -1) throw new EndOfStreamException();
             return (byte)(read & 0xff);
         }
 
-        public ulong WriteByte(byte value)
+        public virtual ulong WriteByte(byte value)
         {
             _stream.WriteByte(value);
             return 8;
         }
 
-        public ulong ReadBits(uint count, out uint value)
+        public virtual ulong ReadBits(uint count, out uint value)
         {
             if (count > 32)
                 throw new ArgumentException("'count' cannot be greater than 32", nameof(count));
@@ -105,13 +116,13 @@ namespace SharpMP4.Common
             return originalCount;
         }
 
-        public uint ReadBits(uint count)
+        public virtual uint ReadBits(uint count)
         {
             ReadBits(count, out uint value);
             return value;
         }
 
-        public ulong ReadBits(uint count, out ulong value)
+        public virtual ulong ReadBits(uint count, out ulong value)
         {
             if (count > 64)
                 throw new ArgumentException("'count' cannot be greater than 64", nameof(count));
@@ -136,13 +147,13 @@ namespace SharpMP4.Common
             return originalCount;
         }
 
-        public ulong ReadBits(ulong count)
+        public virtual ulong ReadBits(ulong count)
         {
             ReadBits((uint)count, out ulong value);
             return value;
         }
 
-        public ulong WriteBits(uint count, ulong value)
+        public virtual ulong WriteBits(uint count, ulong value)
         {
             if (count > 64)
                 throw new ArgumentException("'count' cannot be greater than 64", nameof(count));
@@ -159,7 +170,7 @@ namespace SharpMP4.Common
             return originalCount;
         }
 
-        public uint WriteBits(uint count, uint value)
+        public virtual uint WriteBits(uint count, uint value)
         {
             if (count > 32)
                 throw new ArgumentException("'count' cannot be greater than 32", nameof(count));

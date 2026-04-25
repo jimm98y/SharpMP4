@@ -10,13 +10,6 @@ namespace SharpH26X
 {
     public class ItuStream : IDisposable
     {
-        private readonly bool _shouldEscapeNals = true;
-        private int _bitsPosition;
-        private int _currentBytePosition = -1;
-        private byte _currentByte = 0;
-        private int _prevByte = -1;
-        private int _prevPrevByte = -1;
-
         private readonly Stream _stream;
 
         private int _rbspDataCounter = -1;
@@ -24,28 +17,25 @@ namespace SharpH26X
         private int _readNextBitsIndex = 0;
 
         private bool _disposedValue;
-        private int _lastMarkBeginPosition;
 
         public IMp4Logger Logger { get; set; }
+        public RbspBitstream Bitstream { get; set; }
+
+        public ItuStream(RbspBitstream bitstream, IMp4Logger logger)
+        {
+            this._stream = bitstream.BaseStream;
+            this.Logger = logger;
+            this.Bitstream = bitstream;
+        }
 
         public ItuStream(Stream stream, IMp4Logger logger)
+            : this(new RbspBitstream(stream), logger)
         {
-            this._stream = stream;
-            this.Logger = logger;
         }
 
         public ItuStream(Stream stream)
             : this(stream, new DefaultMp4Logger())
         {
-        }
-
-        public ItuStream(Stream stream, int bitsPosition, int currentBytePosition, byte currentByte, int prevByte, int prevPrevByte) : this(stream)
-        {
-            this._bitsPosition = bitsPosition;
-            this._currentBytePosition = currentBytePosition;
-            this._currentByte = currentByte;
-            this._prevByte = prevByte;
-            this._prevPrevByte = prevPrevByte;
         }
 
         #region Bit read/write
@@ -62,48 +52,7 @@ namespace SharpH26X
             return 8;
         }
 
-        private int ReadBit()
-        {
-            int bytePos = _bitsPosition / 8;
-
-            if (_currentBytePosition != bytePos)
-            {
-                int bb = ReadByte();
-                if (bb == -1)
-                {
-                    return -1;
-                }
-
-                byte b = (byte)bb;
-
-                // remove emulation prevention byte
-                if (_shouldEscapeNals && _prevByte == 0 && _currentByte == 0 && b == 0x03)
-                {
-                    _prevByte = b;
-                    bb = ReadByte();
-                    if (bb == -1)
-                    {
-                        return -1;
-                    }
-                    b = (byte)bb;
-                    _bitsPosition += 8;
-                    _lastMarkBeginPosition += 8; // compensate for emulation prevention bytes
-                    bytePos++;
-                }
-                else
-                {
-                    _prevByte = _currentByte;
-                }
-
-                _currentByte = b;
-                _currentBytePosition = bytePos;
-            }
-
-            int posInByte = 7 - _bitsPosition % 8;
-            int bit = _currentByte >> posInByte & 1;
-            ++_bitsPosition;
-            return bit;
-        }
+        private int ReadBit() => this.Bitstream.ReadBit();
 
         private long ReadBits(int count)
         {
@@ -126,44 +75,7 @@ namespace SharpH26X
             return res;
         }
 
-        public void WriteBit(int value)
-        {
-            int posInByte = 7 - (int)_bitsPosition % 8;
-            int bit = (value & 1) << posInByte;
-            _currentByte = (byte)(_currentByte | bit);
-            ++_bitsPosition;
-
-            int bytePos = _bitsPosition / 8;
-            if (_currentBytePosition != bytePos)
-            {
-                if (_currentBytePosition < 0)
-                {
-                    _currentBytePosition = bytePos;
-                    return;
-                }
-
-                if (_shouldEscapeNals)
-                {
-                    // write emulation prevention byte to properly escape sequences of 0x000000, 0x000001, 0x000002, 0x000003 into 0x00000300, 0x00000301, 0x00000302 and 0x00000303 respectively
-                    if (_prevByte == 0x00 && _prevPrevByte == 0x00 && (_currentByte == 0x00 || _currentByte == 0x01 || _currentByte == 0x02 || _currentByte == 0x03))
-                    {
-                        WriteByte(0x03);
-                        bytePos++;
-                        _bitsPosition += 8;
-                        _lastMarkBeginPosition += 8; // compensate for emulation prevention
-                        _prevByte = 0x03;
-                    }
-                }
-
-                WriteByte(_currentByte);
-                _currentBytePosition = bytePos;
-
-                _prevPrevByte = _prevByte;
-                _prevByte = _currentByte;
-
-                _currentByte = 0;
-            }
-        }
+        public void WriteBit(int value) => this.Bitstream.WriteBit(value);
 
         private void WriteBits(int count, ulong value)
         {
@@ -181,19 +93,13 @@ namespace SharpH26X
 
         #endregion // Bit read/write
 
-        public void MarkCurrentBitsPosition()
-        {
-            _lastMarkBeginPosition = _bitsPosition;
-        }
+        public void MarkCurrentBitsPosition() => this.Bitstream.Mark();
 
-        public ulong GetBitsPositionSinceLastMark()
-        {
-            return (ulong)(_bitsPosition - _lastMarkBeginPosition);
-        }
+        public ulong GetBitsPositionSinceLastMark() => (ulong)this.Bitstream.GetBitsSinceMark();
 
         public bool ByteAligned()
         {
-            return _bitsPosition % 8 == 0;
+            return this.Bitstream.BitsPosition % 8 == 0;
         }
 
         // H265
@@ -391,14 +297,19 @@ namespace SharpH26X
 
         public bool ReadMoreRbspData(IItuSerializable serializable, ulong maxPayloadSize = ulong.MaxValue)
         {
-            if (_stream.Position == _stream.Length && _bitsPosition % 8 == 0)
+            if (_stream.Position == _stream.Length && this.Bitstream.BitsPosition % 8 == 0)
                 return false;
 
             // now we have to look ahead - TODO
             var bytes = (_stream as MemoryStream).ToArray();
+
             var msstream = new MemoryStream(bytes);
             msstream.Seek(_stream.Position, SeekOrigin.Begin);
-            using (var ituStream = new ItuStream(msstream, _bitsPosition, _currentBytePosition, _currentByte, _prevByte, _prevPrevByte))
+
+            var newBitstream = new RbspBitstream(msstream);
+            newBitstream.CopyState(this.Bitstream);
+
+            using (var ituStream = new ItuStream(newBitstream, new DefaultMp4Logger()))
             {
                 int one = ituStream.ReadBit();
                 if (one == -1)
@@ -462,7 +373,11 @@ namespace SharpH26X
             var bytes = (_stream as MemoryStream).ToArray();
             var msstream = new MemoryStream(bytes);
             msstream.Seek(_stream.Position, SeekOrigin.Begin);
-            using (var ituStream = new ItuStream(msstream, _bitsPosition, _currentBytePosition, _currentByte, _prevByte, _prevPrevByte))
+
+            var newBitstream = new RbspBitstream(msstream);
+            newBitstream.CopyState(this.Bitstream);
+
+            using (var ituStream = new ItuStream(newBitstream, new DefaultMp4Logger()))
             {
                 if (serializable.ReadNextBits == null)
                 {
