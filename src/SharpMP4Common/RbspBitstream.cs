@@ -4,8 +4,8 @@ namespace SharpMP4.Common
 {
     public class RbspBitstream
     {
-        private bool _skipStartCodes = true;
-        private bool _insertStartCodes = true;
+        private bool _skipPreventionBytes = true;
+        private bool _insertPreventionBytes = true;
         private int _prevByte = -1;
         private int _prevPrevByte = -1;
         private long _lastMarkPos;
@@ -38,16 +38,16 @@ namespace SharpMP4.Common
             set => _currentByte = value;
         }
 
-        public bool SkipStartCodes
+        public bool SkipPreventionBytes
         {
-            get => _skipStartCodes;
-            set => _skipStartCodes = value;
+            get => _skipPreventionBytes;
+            set => _skipPreventionBytes = value;
         }
 
-        public bool InsertStartCodes
+        public bool InsertPreventionBytes
         {
-            get => _insertStartCodes;
-            set => _insertStartCodes = value;
+            get => _insertPreventionBytes;
+            set => _insertPreventionBytes = value;
         }
 
         public virtual void CopyState(RbspBitstream bitstream)
@@ -55,8 +55,8 @@ namespace SharpMP4.Common
             this._prevByte = bitstream._prevByte;
             this._prevPrevByte = bitstream._prevPrevByte;
             this._currentByte = bitstream._currentByte;
-            this.InsertStartCodes = bitstream.InsertStartCodes;
-            this.SkipStartCodes = bitstream.SkipStartCodes;
+            this.InsertPreventionBytes = bitstream.InsertPreventionBytes;
+            this.SkipPreventionBytes = bitstream.SkipPreventionBytes;
             this._bitsPosition = bitstream._bitsPosition;
             this._currentBytePosition = bitstream._currentBytePosition;
             this._lastMarkPos = bitstream._lastMarkPos;
@@ -79,7 +79,7 @@ namespace SharpMP4.Common
 
                 byte b = (byte)bb;
 
-                if (_skipStartCodes && _prevByte == 0 && _currentByte == 0 && b == 0x03)
+                if (_skipPreventionBytes && _prevByte == 0 && _currentByte == 0 && b == 0x03)
                 {
                     _prevByte = b;
                     bb = _stream.ReadByte();
@@ -126,7 +126,7 @@ namespace SharpMP4.Common
                     return;
                 }
 
-                if (_insertStartCodes)
+                if (_insertPreventionBytes)
                 {
                     if (_prevByte == 0x00 &&
                         _prevPrevByte == 0x00 &&
