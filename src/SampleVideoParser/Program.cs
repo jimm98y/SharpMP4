@@ -31,7 +31,7 @@ foreach (var file in files)
             var inputMp4 = new Container();
             try
             {
-                inputMp4.Read(new IsoStream(inputFileStream));
+                inputMp4.Read(new IsoStream(new StreamWrapper(inputFileStream), null, isobmffLogger));
             }
             catch (IsoEndOfStreamException)
             {
@@ -594,7 +594,13 @@ ulong ReadH26XSample(int nalLengthSize, IItuContext context, VideoFormat format,
 
 void ParseNALU(IItuContext ctx, VideoFormat format, byte[] sampleData)
 {
-    if(format == VideoFormat.H264)
+    if (sampleData.Length <= 1)
+    {
+        h26xLogger.LogError($"NALU too short: {sampleData.Length} bytes");
+        return;
+    }
+
+    if (format == VideoFormat.H264)
     {
         ParseH264NALU((H264Context)ctx, sampleData);
     }
