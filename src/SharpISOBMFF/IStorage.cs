@@ -113,4 +113,50 @@ namespace SharpISOBMFF
             return _stream.Read(buffer, offset, length);
         }
     }
+
+    internal class StorageStream(IStorage storage) : Stream
+    {
+        public override bool CanRead => true;
+
+        public override bool CanSeek => storage.CanStreamSeek();
+
+        public override bool CanWrite => true;
+
+        public override long Length => storage.GetLength();
+
+        public override long Position
+        {
+            get => storage.GetPosition();
+            set => storage.SeekFromBeginning(value);
+        }
+
+        public override void Flush()
+        {
+            storage.Flush();
+        }
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            return storage.Read(buffer, offset, count);
+        }
+
+        public override long Seek(long offset, SeekOrigin origin) =>
+            origin switch
+            {
+                SeekOrigin.Begin => storage.SeekFromBeginning(offset),
+                SeekOrigin.Current => storage.SeekFromCurrent(offset),
+                SeekOrigin.End => storage.SeekFromEnd(offset),
+                _ => throw new ArgumentOutOfRangeException(nameof(origin))
+            };
+
+        public override void SetLength(long value)
+        {
+            throw new NotSupportedException("IStorage does not support modifying lengths");
+        }
+
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            storage.Write(buffer, offset, count);
+        }
+    }
 }

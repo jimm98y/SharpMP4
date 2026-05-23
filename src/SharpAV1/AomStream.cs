@@ -8,20 +8,20 @@ namespace SharpAV1
 {
     public class AomStream : IDisposable
     {
-        private int _bitsPosition;
-        private int _currentBytePosition = -1;
-        private byte _currentByte = 0;
-
-        private readonly Stream _stream;
-
         private bool _disposedValue;
 
         public IMp4Logger Logger { get; set; }
+        public Bitstream Bitstream { get; set; }
+
+        public AomStream(Bitstream bitstream, IMp4Logger logger)
+        {
+            this.Bitstream = bitstream;
+            this.Logger = logger ?? new DefaultMp4Logger();
+        }
 
         public AomStream(Stream stream, IMp4Logger logger)
+            : this(new Bitstream(stream), logger)
         {
-            this._stream = stream ?? new MemoryStream();
-            this.Logger = logger ?? new DefaultMp4Logger();
         }
 
         public AomStream(Stream stream)
@@ -29,56 +29,31 @@ namespace SharpAV1
         {
         }
 
+        // TODO: support long for GetPosition()?
         public int GetPosition()
         {
-            return _bitsPosition;
+            return (int)this.Bitstream.BitsPosition;
         }
 
         public void Skip(long bits)
         {
-            while (_bitsPosition % 8 != 0)
+            while (this.Bitstream.BitsPosition % 8 != 0)
             {
                 ReadBit();
                 bits--;
             }
 
-            _bitsPosition += (int)bits;
+            this.Bitstream.BitsPosition += bits;
 
             long bytes = (bits >> 3);
-            _stream.Seek(bytes, SeekOrigin.Current);
+            this.Bitstream.BaseStream.Seek(bytes, SeekOrigin.Current);
         }
 
         #region Bit read/write
 
-        private int ReadByte()
-        {
-            int ret = _stream.ReadByte();
-            return ret;
-        }
+        private int ReadByte() => this.Bitstream.BaseStream.ReadByte();
 
-        private int ReadBit()
-        {
-            int bytePos = _bitsPosition / 8;
-
-            if (_currentBytePosition != bytePos)
-            {
-                int bb = ReadByte();
-                if (bb == -1)
-                {
-                    return -1;
-                }
-
-                byte b = (byte)bb;
-
-                _currentByte = b;
-                _currentBytePosition = bytePos;
-            }
-
-            int posInByte = 7 - _bitsPosition % 8;
-            int bit = _currentByte >> posInByte & 1;
-            ++_bitsPosition;
-            return bit;
-        }
+        private int ReadBit() => this.Bitstream.ReadBit();
 
         private long ReadBits(int count)
         {
@@ -88,7 +63,7 @@ namespace SharpAV1
             long res = 0;
             while (count > 0)
             {
-                res = res << 1;
+                res <<= 1;
                 int u1 = ReadBit();
 
                 if (u1 == -1)
@@ -277,10 +252,7 @@ namespace SharpAV1
             {
                 if (disposing)
                 {
-                    if (_stream != null)
-                    {
-                        _stream.Dispose();
-                    }
+                    this.Bitstream.BaseStream.Dispose();
                 }
 
                 _disposedValue = true;
