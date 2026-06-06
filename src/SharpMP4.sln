@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMP4Common", "SharpMP4C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAV2", "SharpAV2\SharpAV2.csproj", "{6F80DBD3-6644-42D8-8854-B80C618E6607}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAVX", "SharpAVX\SharpAVX.csproj", "{284E45E0-AC58-42C0-94E6-BBD931C3604B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,6 +141,10 @@ Global
 		{6F80DBD3-6644-42D8-8854-B80C618E6607}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F80DBD3-6644-42D8-8854-B80C618E6607}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F80DBD3-6644-42D8-8854-B80C618E6607}.Release|Any CPU.Build.0 = Release|Any CPU
+		{284E45E0-AC58-42C0-94E6-BBD931C3604B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{284E45E0-AC58-42C0-94E6-BBD931C3604B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{284E45E0-AC58-42C0-94E6-BBD931C3604B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{284E45E0-AC58-42C0-94E6-BBD931C3604B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

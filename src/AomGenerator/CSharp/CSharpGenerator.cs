@@ -34,6 +34,7 @@ namespace AomGenerator.CSharp
             $@"using System;
 using System.Collections.Generic;
 using System.Numerics;
+using SharpAVX;
 
 namespace Sharp{type}
 {{

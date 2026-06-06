@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpAVX;
+using System;
 using System.IO;
 
 namespace SharpAV1
