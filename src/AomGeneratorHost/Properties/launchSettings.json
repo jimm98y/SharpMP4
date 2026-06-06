@@ -2,7 +2,7 @@
   "profiles": {
     "AomGeneratorHost": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\Git\\SharpMP4BoxGenerator\\src\\SharpAV1\\AV1.js"
+      "commandLineArgs": "C:\\Git\\SharpMP4\\src\\SharpAV2\\AV2.js"
     }
   }
 }

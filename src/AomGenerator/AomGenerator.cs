@@ -17,6 +17,10 @@ namespace AomGenerator
             {
                 customGenerator = new CSharpGeneratorAV1();
             }
+            else if (path.Contains("AV2"))
+            {
+                customGenerator = new CSharpGeneratorAV2();
+            }
             else
             {
                 throw new NotSupportedException();
