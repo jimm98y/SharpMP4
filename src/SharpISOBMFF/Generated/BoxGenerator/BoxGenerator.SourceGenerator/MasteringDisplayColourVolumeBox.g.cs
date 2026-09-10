@@ -49,8 +49,8 @@ public partial class MasteringDisplayColourVolumeBox : Box
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
 
-		this.display_primaries_x = new ushort[IsoStream.GetInt(3)];
-		this.display_primaries_y = new ushort[IsoStream.GetInt(3)];
+		this.display_primaries_x = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(3), "display_primaries_x");
+		this.display_primaries_y = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(3), "display_primaries_y");
 		for (int c = 0; c<3; c++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.display_primaries_x[c], "display_primaries_x"); 

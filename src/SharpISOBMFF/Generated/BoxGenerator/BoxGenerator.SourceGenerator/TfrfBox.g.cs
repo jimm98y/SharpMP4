@@ -42,8 +42,8 @@ public partial class TfrfBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.fragmentCount, "fragmentCount"); 
 
-		this.fragmentAbsoluteTime = new ulong[IsoStream.GetInt( fragmentCount)];
-		this.fragmentAbsoluteDuration = new ulong[IsoStream.GetInt( fragmentCount)];
+		this.fragmentAbsoluteTime = stream.SafeAllocate<ulong>(boxSize, readSize, IsoStream.GetInt( fragmentCount), "fragmentAbsoluteTime");
+		this.fragmentAbsoluteDuration = stream.SafeAllocate<ulong>(boxSize, readSize, IsoStream.GetInt( fragmentCount), "fragmentAbsoluteDuration");
 		for (int i = 0; i < fragmentCount; i++)
 		{
 

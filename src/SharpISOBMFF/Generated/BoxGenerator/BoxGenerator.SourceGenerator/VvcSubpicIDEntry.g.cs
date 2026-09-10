@@ -56,8 +56,8 @@ public partial class VvcSubpicIDEntry : VisualSampleGroupEntry
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.continuous_id_flag, "continuous_id_flag"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 12,  out this.num_subpics_minus1, "num_subpics_minus1"); 
 
-		this.subpic_id = new ushort[IsoStream.GetInt( num_subpics_minus1 + 1)];
-		this.groupID = new ushort[IsoStream.GetInt( num_subpics_minus1 + 1)];
+		this.subpic_id = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( num_subpics_minus1 + 1), "subpic_id");
+		this.groupID = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( num_subpics_minus1 + 1), "groupID");
 		for (int i = 0; i <= num_subpics_minus1; i++)
 		{
 

@@ -46,10 +46,10 @@ public partial class SVCPriorityLayerInfoBox : Box
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.pr_layer_num, "pr_layer_num"); 
 
-		this.pr_layer = new byte[IsoStream.GetInt( pr_layer_num)];
-		this.profile_level_idc = new uint[IsoStream.GetInt( pr_layer_num)];
-		this.max_bitrate = new uint[IsoStream.GetInt( pr_layer_num)];
-		this.avg_bitrate = new uint[IsoStream.GetInt( pr_layer_num)];
+		this.pr_layer = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( pr_layer_num), "pr_layer");
+		this.profile_level_idc = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( pr_layer_num), "profile_level_idc");
+		this.max_bitrate = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( pr_layer_num), "max_bitrate");
+		this.avg_bitrate = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( pr_layer_num), "avg_bitrate");
 		for (int j=0; j< pr_layer_num; j++)
 		{
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.pr_layer[j], "pr_layer"); 

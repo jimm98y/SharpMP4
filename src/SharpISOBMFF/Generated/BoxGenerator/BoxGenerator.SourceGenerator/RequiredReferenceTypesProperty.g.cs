@@ -35,7 +35,7 @@ public partial class RequiredReferenceTypesProperty : ItemFullProperty
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.reference_type_count, "reference_type_count"); 
 
-		this.reference_type = new uint[IsoStream.GetInt( reference_type_count)];
+		this.reference_type = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( reference_type_count), "reference_type");
 		for (int i=0; i< reference_type_count; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.reference_type[i], "reference_type"); 

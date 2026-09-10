@@ -57,8 +57,8 @@ public partial class SVCMetadataSampleConfigBox : FullBox
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.default_statement_length, "default_statement_length"); 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.entry_count, "entry_count"); 
 
-		this.statement_type = new byte[IsoStream.GetInt(entry_count)];
-		this.statement_namespace = new BinaryUTF8String[IsoStream.GetInt(entry_count)];
+		this.statement_type = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(entry_count), "statement_type");
+		this.statement_namespace = stream.SafeAllocate<BinaryUTF8String>(boxSize, readSize, IsoStream.GetInt(entry_count), "statement_namespace");
 		for (int i=0; i<entry_count; i++)
 		{
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.statement_type[i], "statement_type"); // from the user extension ranges

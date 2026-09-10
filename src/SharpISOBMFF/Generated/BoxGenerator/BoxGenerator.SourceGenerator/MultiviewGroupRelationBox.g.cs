@@ -35,7 +35,7 @@ public partial class MultiviewGroupRelationBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.num_entries, "num_entries"); 
 
-		this.multiview_group_id = new uint[IsoStream.GetInt(num_entries)];
+		this.multiview_group_id = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt(num_entries), "multiview_group_id");
 		for (int i=0; i<num_entries; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.multiview_group_id[i], "multiview_group_id"); 

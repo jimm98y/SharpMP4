@@ -83,10 +83,10 @@ public partial class LoudnessBaseBox : FullBox
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.measurement_count, "measurement_count"); 
 		
 
-		this.method_definition = new byte[IsoStream.GetInt( measurement_count)];
-		this.method_value = new byte[IsoStream.GetInt( measurement_count)];
-		this.measurement_system = new byte[IsoStream.GetInt( measurement_count)];
-		this.reliability = new byte[IsoStream.GetInt( measurement_count)];
+		this.method_definition = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( measurement_count), "method_definition");
+		this.method_value = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( measurement_count), "method_value");
+		this.measurement_system = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( measurement_count), "measurement_system");
+		this.reliability = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( measurement_count), "reliability");
 		for (int i = 0 ; i < measurement_count; i++)
 		{
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.method_definition[i], "method_definition"); 

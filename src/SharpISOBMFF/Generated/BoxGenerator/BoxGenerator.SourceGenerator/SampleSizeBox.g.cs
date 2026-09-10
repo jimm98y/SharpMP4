@@ -44,7 +44,7 @@ public partial class SampleSizeBox : FullBox
 		if (sample_size==0)
 		{
 
-			this.entry_size = new uint[IsoStream.GetInt( sample_count)];
+			this.entry_size = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( sample_count), "entry_size");
 			for (int i=0; i < sample_count; i++)
 			{
 				boxSize += stream.ReadUInt32(boxSize, readSize,  out this.entry_size[i], "entry_size"); 

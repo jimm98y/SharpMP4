@@ -50,8 +50,8 @@ public partial class DefaultHevcExtractorConstructorBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.num_entries, "num_entries"); 
 
-		this.constructor_type = new byte[IsoStream.GetInt( num_entries)];
-		this.constructor_flags = new byte[IsoStream.GetInt( num_entries)];
+		this.constructor_type = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( num_entries), "constructor_type");
+		this.constructor_flags = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( num_entries), "constructor_flags");
 		for (int i=0; i< num_entries; i++)
 		{
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.constructor_type[i], "constructor_type"); 

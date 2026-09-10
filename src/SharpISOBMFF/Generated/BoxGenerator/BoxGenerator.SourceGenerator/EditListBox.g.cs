@@ -51,10 +51,10 @@ public partial class EditListBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.entry_count, "entry_count"); 
 
-		this.edit_duration = new ulong[IsoStream.GetInt( entry_count)];
-		this.media_time = new long[IsoStream.GetInt( entry_count)];
-		this.media_rate_integer = new short[IsoStream.GetInt( entry_count)];
-		this.media_rate_fraction = new short[IsoStream.GetInt( entry_count)];
+		this.edit_duration = stream.SafeAllocate<ulong>(boxSize, readSize, IsoStream.GetInt( entry_count), "edit_duration");
+		this.media_time = stream.SafeAllocate<long>(boxSize, readSize, IsoStream.GetInt( entry_count), "media_time");
+		this.media_rate_integer = stream.SafeAllocate<short>(boxSize, readSize, IsoStream.GetInt( entry_count), "media_rate_integer");
+		this.media_rate_fraction = stream.SafeAllocate<short>(boxSize, readSize, IsoStream.GetInt( entry_count), "media_rate_fraction");
 		for (int i=0; i < entry_count; i++)
 		{
 

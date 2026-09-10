@@ -35,7 +35,7 @@ public partial class PixelInformationProperty : ItemFullProperty
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.num_channels, "num_channels"); 
 
-		this.bits_per_channel = new byte[IsoStream.GetInt(num_channels)];
+		this.bits_per_channel = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_channels), "bits_per_channel");
 		for (int i=0; i<num_channels; i++)
 		{
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.bits_per_channel[i], "bits_per_channel"); 

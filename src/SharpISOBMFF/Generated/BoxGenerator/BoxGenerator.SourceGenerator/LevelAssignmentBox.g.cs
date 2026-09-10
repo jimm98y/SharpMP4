@@ -67,12 +67,12 @@ public partial class LevelAssignmentBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.level_count, "level_count"); 
 
-		this.track_ID = new uint[IsoStream.GetInt( level_count)];
-		this.padding_flag = new bool[IsoStream.GetInt( level_count)];
-		this.assignment_type = new byte[IsoStream.GetInt( level_count)];
-		this.grouping_type = new uint[IsoStream.GetInt( level_count)];
-		this.grouping_type_parameter = new uint[IsoStream.GetInt( level_count)];
-		this.sub_track_ID = new uint[IsoStream.GetInt( level_count)];
+		this.track_ID = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( level_count), "track_ID");
+		this.padding_flag = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( level_count), "padding_flag");
+		this.assignment_type = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( level_count), "assignment_type");
+		this.grouping_type = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( level_count), "grouping_type");
+		this.grouping_type_parameter = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( level_count), "grouping_type_parameter");
+		this.sub_track_ID = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( level_count), "sub_track_ID");
 		for (int j=0; j < level_count; j++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.track_ID[j], "track_ID"); 

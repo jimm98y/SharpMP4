@@ -66,8 +66,8 @@ public partial class RateShareEntry : SampleGroupDescriptionEntry
 		else 
 		{
 
-			this.available_bitrate = new uint[IsoStream.GetInt( operation_point_count)];
-			this.target_rate_share0 = new ushort[IsoStream.GetInt( operation_point_count)];
+			this.available_bitrate = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( operation_point_count), "available_bitrate");
+			this.target_rate_share0 = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( operation_point_count), "target_rate_share0");
 			for (int i=0; i < operation_point_count; i++)
 			{
 				boxSize += stream.ReadUInt32(boxSize, readSize,  out this.available_bitrate[i], "available_bitrate"); 

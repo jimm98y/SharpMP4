@@ -159,8 +159,8 @@ public partial class VvcOperatingPointsRecord : IMp4Serializable
 		ulong boxSize = 0;
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.num_profile_tier_level_minus1, "num_profile_tier_level_minus1"); 
 
-		this.ptl_max_temporal_id = new byte[IsoStream.GetInt(num_profile_tier_level_minus1 + 1)];
-		this.ptl = new VvcPTLRecord[IsoStream.GetInt(num_profile_tier_level_minus1 + 1)];
+		this.ptl_max_temporal_id = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_profile_tier_level_minus1 + 1), "ptl_max_temporal_id");
+		this.ptl = stream.SafeAllocate<VvcPTLRecord>(boxSize, readSize, IsoStream.GetInt(num_profile_tier_level_minus1 + 1), "ptl");
 		for (int i=0; i<=num_profile_tier_level_minus1; i++)
 		{
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.ptl_max_temporal_id[i], "ptl_max_temporal_id"); 
@@ -181,21 +181,21 @@ public partial class VvcOperatingPointsRecord : IMp4Serializable
 		}
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.num_operating_points, "num_operating_points"); 
 
-		this.output_layer_set_idx = new ushort[IsoStream.GetInt(num_operating_points)];
-		this.ptl_idx = new byte[IsoStream.GetInt(num_operating_points)];
-		this.max_temporal_id = new byte[IsoStream.GetInt(num_operating_points)];
-		this.layer_count = new byte[IsoStream.GetInt(num_operating_points)];
-		this.layer_id = new byte[IsoStream.GetInt(num_operating_points)][];
-		this.is_outputlayer = new bool[IsoStream.GetInt(num_operating_points)][];
-		this.reserved1 = new bool[IsoStream.GetInt(num_operating_points)][];
-		this.reserved00 = new byte[IsoStream.GetInt(num_operating_points)];
-		this.frame_rate_info_flag = new bool[IsoStream.GetInt(num_operating_points)];
-		this.bit_rate_info_flag = new bool[IsoStream.GetInt(num_operating_points)];
-		this.avgFrameRate = new ushort[IsoStream.GetInt(num_operating_points)];
-		this.reserved10 = new byte[IsoStream.GetInt(num_operating_points)];
-		this.constantFrameRate = new byte[IsoStream.GetInt(num_operating_points)];
-		this.maxBitRate = new uint[IsoStream.GetInt(num_operating_points)];
-		this.avgBitRate = new uint[IsoStream.GetInt(num_operating_points)];
+		this.output_layer_set_idx = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "output_layer_set_idx");
+		this.ptl_idx = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "ptl_idx");
+		this.max_temporal_id = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "max_temporal_id");
+		this.layer_count = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "layer_count");
+		this.layer_id = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "layer_id");
+		this.is_outputlayer = stream.SafeAllocate<bool[]>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "is_outputlayer");
+		this.reserved1 = stream.SafeAllocate<bool[]>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "reserved1");
+		this.reserved00 = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "reserved00");
+		this.frame_rate_info_flag = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "frame_rate_info_flag");
+		this.bit_rate_info_flag = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "bit_rate_info_flag");
+		this.avgFrameRate = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "avgFrameRate");
+		this.reserved10 = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "reserved10");
+		this.constantFrameRate = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "constantFrameRate");
+		this.maxBitRate = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "maxBitRate");
+		this.avgBitRate = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "avgBitRate");
 		for (int i=0; i<num_operating_points; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.output_layer_set_idx[i], "output_layer_set_idx"); 
@@ -203,9 +203,9 @@ public partial class VvcOperatingPointsRecord : IMp4Serializable
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.max_temporal_id[i], "max_temporal_id"); 
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.layer_count[i], "layer_count"); 
 
-			this.layer_id[i] = new byte[IsoStream.GetInt(layer_count[i])];
-			this.is_outputlayer[i] = new bool[IsoStream.GetInt(layer_count[i])];
-			this.reserved1[i] = new bool[IsoStream.GetInt(layer_count[i])];
+			this.layer_id[i] = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(layer_count[i]), "layer_id[i]");
+			this.is_outputlayer[i] = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(layer_count[i]), "is_outputlayer[i]");
+			this.reserved1[i] = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(layer_count[i]), "reserved1[i]");
 			for (int j=0; j<layer_count[i]; j++)
 			{
 				boxSize += stream.ReadBits(boxSize, readSize, 6,  out this.layer_id[i][j], "layer_id"); 
@@ -231,16 +231,16 @@ public partial class VvcOperatingPointsRecord : IMp4Serializable
 		}
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.max_layer_count, "max_layer_count"); 
 
-		this.layerID = new byte[IsoStream.GetInt(max_layer_count)];
-		this.num_direct_ref_layers = new byte[IsoStream.GetInt(max_layer_count)];
-		this.direct_ref_layerID = new byte[IsoStream.GetInt(max_layer_count)][];
-		this.max_tid_il_ref_pics_plus1 = new byte[IsoStream.GetInt(max_layer_count)];
+		this.layerID = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(max_layer_count), "layerID");
+		this.num_direct_ref_layers = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(max_layer_count), "num_direct_ref_layers");
+		this.direct_ref_layerID = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt(max_layer_count), "direct_ref_layerID");
+		this.max_tid_il_ref_pics_plus1 = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(max_layer_count), "max_tid_il_ref_pics_plus1");
 		for (int i=0; i<max_layer_count; i++)
 		{
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.layerID[i], "layerID"); 
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.num_direct_ref_layers[i], "num_direct_ref_layers"); 
 
-			this.direct_ref_layerID[i] = new byte[IsoStream.GetInt(num_direct_ref_layers[i])];
+			this.direct_ref_layerID[i] = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_direct_ref_layers[i]), "direct_ref_layerID[i]");
 			for (int j=0; j<num_direct_ref_layers[i]; j++)
 			{
 				boxSize += stream.ReadUInt8(boxSize, readSize,  out this.direct_ref_layerID[i][j], "direct_ref_layerID"); 

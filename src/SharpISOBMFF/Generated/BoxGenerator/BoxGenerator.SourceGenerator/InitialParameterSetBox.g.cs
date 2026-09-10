@@ -42,14 +42,14 @@ public partial class InitialParameterSetBox : Box
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.sps_id_count, "sps_id_count"); 
 
-		this.SPS_index = new byte[IsoStream.GetInt( sps_id_count)];
+		this.SPS_index = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( sps_id_count), "SPS_index");
 		for (int i=0; i< sps_id_count; i++)
 		{
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.SPS_index[i], "SPS_index"); 
 		}
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.pps_id_count, "pps_id_count"); 
 
-		this.PPS_index = new byte[IsoStream.GetInt( pps_id_count)];
+		this.PPS_index = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( pps_id_count), "PPS_index");
 		for (int i=0; i< pps_id_count; i++)
 		{
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.PPS_index[i], "PPS_index"); 

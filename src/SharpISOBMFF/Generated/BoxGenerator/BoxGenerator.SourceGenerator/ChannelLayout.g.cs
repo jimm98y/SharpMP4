@@ -123,9 +123,9 @@ public partial class ChannelLayout : FullBox
 				if (definedLayout==0)
 				{
 
-					this.speaker_position = new byte[IsoStream.GetInt( layout_channel_count )];
-					this.azimuth = new short[IsoStream.GetInt( layout_channel_count )];
-					this.elevation = new sbyte[IsoStream.GetInt( layout_channel_count )];
+					this.speaker_position = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( layout_channel_count ), "speaker_position");
+					this.azimuth = stream.SafeAllocate<short>(boxSize, readSize, IsoStream.GetInt( layout_channel_count ), "azimuth");
+					this.elevation = stream.SafeAllocate<sbyte>(boxSize, readSize, IsoStream.GetInt( layout_channel_count ), "elevation");
 					for (int i = 0 ; i < layout_channel_count ; i++)
 					{
 						/*   layout_channel_count comes from the sample entry */

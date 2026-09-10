@@ -79,10 +79,10 @@ public partial class MVDDepthResolutionBox : Box
 		if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.depth_ver_rsh, "depth_ver_rsh"); // optional
 		if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt16(boxSize, readSize,  out this.grid_pos_num_views, "grid_pos_num_views"); // optional
 
-		this.reserved = new byte[IsoStream.GetInt( grid_pos_num_views)];
-		this.grid_pos_view_id = new ushort[IsoStream.GetInt( grid_pos_num_views)];
-		this.grid_pos_x = new short[IsoStream.GetInt( grid_pos_num_views)];
-		this.grid_pos_y = new short[IsoStream.GetInt( grid_pos_num_views)];
+		this.reserved = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( grid_pos_num_views), "reserved");
+		this.grid_pos_view_id = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( grid_pos_num_views), "grid_pos_view_id");
+		this.grid_pos_x = stream.SafeAllocate<short>(boxSize, readSize, IsoStream.GetInt( grid_pos_num_views), "grid_pos_x");
+		this.grid_pos_y = stream.SafeAllocate<short>(boxSize, readSize, IsoStream.GetInt( grid_pos_num_views), "grid_pos_y");
 		for (int i = 0; i < grid_pos_num_views; i++)
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, 6,  out this.reserved[i], "reserved"); 

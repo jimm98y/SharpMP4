@@ -44,14 +44,14 @@ public partial class SeiInformationBox : Box
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.numRequiredSEIs, "numRequiredSEIs"); 
 
-		this.requiredSEI_ID = new ushort[IsoStream.GetInt( numRequiredSEIs)];
+		this.requiredSEI_ID = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( numRequiredSEIs), "requiredSEI_ID");
 		for (int i = 0; i < numRequiredSEIs; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.requiredSEI_ID[i], "requiredSEI_ID"); 
 		}
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.numNotRequiredSEIs, "numNotRequiredSEIs"); 
 
-		this.notrequiredSEI_ID = new ushort[IsoStream.GetInt( numNotRequiredSEIs)];
+		this.notrequiredSEI_ID = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( numNotRequiredSEIs), "notrequiredSEI_ID");
 		for (int i = 0; i < numNotRequiredSEIs; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.notrequiredSEI_ID[i], "notrequiredSEI_ID"); 

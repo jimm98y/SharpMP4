@@ -63,14 +63,14 @@ public partial class SVCSubTrackLayerBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.item_count, "item_count"); 
 
-		this.dependency_id = new byte[IsoStream.GetInt( item_count)];
-		this.quality_id = new byte[IsoStream.GetInt( item_count)];
-		this.temporal_id = new byte[IsoStream.GetInt( item_count)];
-		this.priority_id = new byte[IsoStream.GetInt( item_count)];
-		this.dependency_id_range = new byte[IsoStream.GetInt( item_count)];
-		this.quality_id_range = new byte[IsoStream.GetInt( item_count)];
-		this.temporal_id_range = new byte[IsoStream.GetInt( item_count)];
-		this.priority_id_range = new byte[IsoStream.GetInt( item_count)];
+		this.dependency_id = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( item_count), "dependency_id");
+		this.quality_id = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( item_count), "quality_id");
+		this.temporal_id = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( item_count), "temporal_id");
+		this.priority_id = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( item_count), "priority_id");
+		this.dependency_id_range = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( item_count), "dependency_id_range");
+		this.quality_id_range = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( item_count), "quality_id_range");
+		this.temporal_id_range = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( item_count), "temporal_id_range");
+		this.priority_id_range = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( item_count), "priority_id_range");
 		for (int i = 0; i< item_count; i++)
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, 3,  out this.dependency_id[i], "dependency_id"); 

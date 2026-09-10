@@ -110,7 +110,7 @@ public partial class MeshBox : Box
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.reserved, "reserved"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 31,  out this.coordinate_count, "coordinate_count"); 
 
-		this.coordinate = new double[IsoStream.GetInt( coordinate_count)];
+		this.coordinate = stream.SafeAllocate<double>(boxSize, readSize, IsoStream.GetInt( coordinate_count), "coordinate");
 		for (int i = 0; i < coordinate_count; i++)
 		{
 			boxSize += stream.ReadDouble32(boxSize, readSize,  out this.coordinate[i], "coordinate"); 
@@ -118,11 +118,11 @@ public partial class MeshBox : Box
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.reserved0, "reserved0"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 31,  out this.vertex_count, "vertex_count"); 
 
-		this.x_index_delta = new byte[IsoStream.GetInt( vertex_count)][];
-		this.y_index_delta = new byte[IsoStream.GetInt( vertex_count)][];
-		this.z_index_delta = new byte[IsoStream.GetInt( vertex_count)][];
-		this.u_index_delta = new byte[IsoStream.GetInt( vertex_count)][];
-		this.v_index_delta = new byte[IsoStream.GetInt( vertex_count)][];
+		this.x_index_delta = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( vertex_count), "x_index_delta");
+		this.y_index_delta = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( vertex_count), "y_index_delta");
+		this.z_index_delta = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( vertex_count), "z_index_delta");
+		this.u_index_delta = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( vertex_count), "u_index_delta");
+		this.v_index_delta = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( vertex_count), "v_index_delta");
 		for (int i = 0; i < vertex_count; i++)
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ),  out this.x_index_delta[i], "x_index_delta"); 
@@ -135,12 +135,12 @@ public partial class MeshBox : Box
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.reserved1, "reserved1"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 31,  out this.vertex_list_count, "vertex_list_count"); 
 
-		this.texture_id = new byte[IsoStream.GetInt( vertex_list_count)];
-		this.index_type = new byte[IsoStream.GetInt( vertex_list_count)];
-		this.reserved2 = new bool[IsoStream.GetInt( vertex_list_count)];
-		this.index_count = new uint[IsoStream.GetInt( vertex_list_count)];
-		this.index_as_delta = new byte[IsoStream.GetInt( vertex_list_count)][][];
-		this.mesh_padding2 = new bool[IsoStream.GetInt( vertex_list_count)];
+		this.texture_id = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( vertex_list_count), "texture_id");
+		this.index_type = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( vertex_list_count), "index_type");
+		this.reserved2 = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( vertex_list_count), "reserved2");
+		this.index_count = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( vertex_list_count), "index_count");
+		this.index_as_delta = stream.SafeAllocate<byte[][]>(boxSize, readSize, IsoStream.GetInt( vertex_list_count), "index_as_delta");
+		this.mesh_padding2 = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( vertex_list_count), "mesh_padding2");
 		for (int i = 0; i < vertex_list_count; i++)
 		{
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.texture_id[i], "texture_id"); 
@@ -148,7 +148,7 @@ public partial class MeshBox : Box
 			boxSize += stream.ReadBit(boxSize, readSize,  out this.reserved2[i], "reserved2"); 
 			boxSize += stream.ReadBits(boxSize, readSize, 31,  out this.index_count[i], "index_count"); 
 
-			this.index_as_delta[i] = new byte[IsoStream.GetInt( index_count[i])][];
+			this.index_as_delta[i] = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( index_count[i]), "index_as_delta[i]");
 			for (int j = 0; j < index_count[i]; j++)
 			{
 				boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(MathEx.Log2(vertex_count * 2)) ),  out this.index_as_delta[i][j], "index_as_delta"); 

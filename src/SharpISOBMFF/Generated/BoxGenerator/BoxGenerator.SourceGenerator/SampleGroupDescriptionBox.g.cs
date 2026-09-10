@@ -72,8 +72,8 @@ public partial class SampleGroupDescriptionBox : FullBox
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.entry_count, "entry_count"); 
 		
 
-		this.description_length = new uint[IsoStream.GetInt( entry_count )];
-		this.SampleGroupDescriptionEntry = new SampleGroupDescriptionEntry[IsoStream.GetInt( entry_count )];
+		this.description_length = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count ), "description_length");
+		this.SampleGroupDescriptionEntry = stream.SafeAllocate<SampleGroupDescriptionEntry>(boxSize, readSize, IsoStream.GetInt( entry_count ), "SampleGroupDescriptionEntry");
 		for (int i = 0 ; i < entry_count ; i++)
 		{
 

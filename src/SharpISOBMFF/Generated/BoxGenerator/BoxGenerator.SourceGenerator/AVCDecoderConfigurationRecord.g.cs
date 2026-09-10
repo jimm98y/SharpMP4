@@ -132,8 +132,8 @@ public bool HasExtensions { get; set; } = false;
 		boxSize += stream.ReadBits(boxSize, readSize, 3,  out this.reserved0, "reserved0"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 5,  out this.numOfSequenceParameterSets, "numOfSequenceParameterSets"); 
 
-		this.sequenceParameterSetLength = new ushort[IsoStream.GetInt( numOfSequenceParameterSets)];
-		this.sequenceParameterSetNALUnit = new byte[IsoStream.GetInt( numOfSequenceParameterSets)][];
+		this.sequenceParameterSetLength = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( numOfSequenceParameterSets), "sequenceParameterSetLength");
+		this.sequenceParameterSetNALUnit = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( numOfSequenceParameterSets), "sequenceParameterSetNALUnit");
 		for (int i=0; i< numOfSequenceParameterSets;  i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.sequenceParameterSetLength[i], "sequenceParameterSetLength"); 
@@ -141,8 +141,8 @@ public bool HasExtensions { get; set; } = false;
 		}
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.numOfPictureParameterSets, "numOfPictureParameterSets"); 
 
-		this.pictureParameterSetLength = new ushort[IsoStream.GetInt( numOfPictureParameterSets)];
-		this.pictureParameterSetNALUnit = new byte[IsoStream.GetInt( numOfPictureParameterSets)][];
+		this.pictureParameterSetLength = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( numOfPictureParameterSets), "pictureParameterSetLength");
+		this.pictureParameterSetNALUnit = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( numOfPictureParameterSets), "pictureParameterSetNALUnit");
 		for (int i=0; i< numOfPictureParameterSets;  i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.pictureParameterSetLength[i], "pictureParameterSetLength"); 
@@ -161,8 +161,8 @@ public bool HasExtensions { get; set; } = false;
 			boxSize += stream.ReadBits(boxSize, readSize, 3,  out this.bit_depth_chroma_minus8, "bit_depth_chroma_minus8"); 
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.numOfSequenceParameterSetExt, "numOfSequenceParameterSetExt"); 
 
-			this.sequenceParameterSetExtLength = new ushort[IsoStream.GetInt( numOfSequenceParameterSetExt)];
-			this.sequenceParameterSetExtNALUnit = new byte[IsoStream.GetInt( numOfSequenceParameterSetExt)][];
+			this.sequenceParameterSetExtLength = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( numOfSequenceParameterSetExt), "sequenceParameterSetExtLength");
+			this.sequenceParameterSetExtNALUnit = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( numOfSequenceParameterSetExt), "sequenceParameterSetExtNALUnit");
 			for (int i=0; i< numOfSequenceParameterSetExt; i++)
 			{
 				boxSize += stream.ReadUInt16(boxSize, readSize,  out this.sequenceParameterSetExtLength[i], "sequenceParameterSetExtLength"); 

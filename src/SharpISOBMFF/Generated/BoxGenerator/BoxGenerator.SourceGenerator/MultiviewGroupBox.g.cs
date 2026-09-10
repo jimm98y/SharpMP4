@@ -90,14 +90,14 @@ public partial class MultiviewGroupBox : FullBox
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.num_entries, "num_entries"); 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.reserved, "reserved"); 
 
-		this.entry_type = new byte[IsoStream.GetInt(num_entries)];
-		this.track_id = new uint[IsoStream.GetInt(num_entries)];
-		this.tier_id = new ushort[IsoStream.GetInt(num_entries)];
-		this.reserved1 = new byte[IsoStream.GetInt(num_entries)];
-		this.output_view_id = new ushort[IsoStream.GetInt(num_entries)];
-		this.reserved2 = new byte[IsoStream.GetInt(num_entries)];
-		this.start_view_id = new ushort[IsoStream.GetInt(num_entries)];
-		this.view_count = new ushort[IsoStream.GetInt(num_entries)];
+		this.entry_type = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_entries), "entry_type");
+		this.track_id = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt(num_entries), "track_id");
+		this.tier_id = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(num_entries), "tier_id");
+		this.reserved1 = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_entries), "reserved1");
+		this.output_view_id = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(num_entries), "output_view_id");
+		this.reserved2 = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_entries), "reserved2");
+		this.start_view_id = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(num_entries), "start_view_id");
+		this.view_count = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(num_entries), "view_count");
 		for (int i=0; i<num_entries; i++)
 		{
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.entry_type[i], "entry_type"); 

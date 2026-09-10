@@ -74,19 +74,19 @@ public partial class CompactSampleToGroupBox : FullBox
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.pattern_count, "pattern_count"); 
 		
 
-		this.pattern_length = new byte[IsoStream.GetInt( pattern_count)][];
-		this.sample_count = new byte[IsoStream.GetInt( pattern_count)][];
+		this.pattern_length = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( pattern_count), "pattern_length");
+		this.sample_count = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( pattern_count), "sample_count");
 		for (int i=0; i < pattern_count; i++)
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, (uint)(pattern_size_code ),  out this.pattern_length[i], "pattern_length"); 
 			boxSize += stream.ReadBits(boxSize, readSize, (uint)(count_size_code ),  out this.sample_count[i], "sample_count"); 
 		}
 
-		this.sample_group_description_index = new byte[IsoStream.GetInt( pattern_count)][][];
+		this.sample_group_description_index = stream.SafeAllocate<byte[][]>(boxSize, readSize, IsoStream.GetInt( pattern_count), "sample_group_description_index");
 		for (int j=0; j < pattern_count; j++)
 		{
 
-			this.sample_group_description_index[j] = new byte[IsoStream.GetInt( IsoStream.GetInt(pattern_length[j]))][];
+			this.sample_group_description_index[j] = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( IsoStream.GetInt(pattern_length[j])), "sample_group_description_index[j]");
 			for (int k=0; k < IsoStream.GetInt(pattern_length[j]); k++)
 			{
 				boxSize += stream.ReadBits(boxSize, readSize, (uint)(index_size_code ),  out this.sample_group_description_index[j][k], "sample_group_description_index"); // whose msb might indicate fragment_local or global

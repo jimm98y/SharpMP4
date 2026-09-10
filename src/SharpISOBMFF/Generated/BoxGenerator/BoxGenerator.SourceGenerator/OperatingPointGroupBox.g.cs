@@ -174,7 +174,7 @@ public partial class OperatingPointGroupBox : EntityToGroupBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.num_profile_tier_level_minus1, "num_profile_tier_level_minus1"); 
 
-		this.opeg_ptl = new VvcPTLRecord[IsoStream.GetInt(num_profile_tier_level_minus1 + 1)];
+		this.opeg_ptl = stream.SafeAllocate<VvcPTLRecord>(boxSize, readSize, IsoStream.GetInt(num_profile_tier_level_minus1 + 1), "opeg_ptl");
 		for (int i=0; i<=num_profile_tier_level_minus1; i++)
 		{
 			boxSize += stream.ReadClass(boxSize, readSize, this, () => new VvcPTLRecord(0),  out this.opeg_ptl[i], "opeg_ptl"); 
@@ -183,14 +183,14 @@ public partial class OperatingPointGroupBox : EntityToGroupBox
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.incomplete_operating_points_flag, "incomplete_operating_points_flag"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 9,  out this.num_olss, "num_olss"); 
 
-		this.ptl_idx = new byte[IsoStream.GetInt(num_olss)];
-		this.ols_idx = new ushort[IsoStream.GetInt(num_olss)];
-		this.layer_count = new byte[IsoStream.GetInt(num_olss)];
-		this.reserved0 = new bool[IsoStream.GetInt(num_olss)];
-		this.layer_info_present_flag = new bool[IsoStream.GetInt(num_olss)];
-		this.layer_id = new byte[IsoStream.GetInt(num_olss)][];
-		this.is_output_layer = new bool[IsoStream.GetInt(num_olss)][];
-		this.reserved00 = new bool[IsoStream.GetInt(num_olss)][];
+		this.ptl_idx = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_olss), "ptl_idx");
+		this.ols_idx = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(num_olss), "ols_idx");
+		this.layer_count = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_olss), "layer_count");
+		this.reserved0 = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(num_olss), "reserved0");
+		this.layer_info_present_flag = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(num_olss), "layer_info_present_flag");
+		this.layer_id = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt(num_olss), "layer_id");
+		this.is_output_layer = stream.SafeAllocate<bool[]>(boxSize, readSize, IsoStream.GetInt(num_olss), "is_output_layer");
+		this.reserved00 = stream.SafeAllocate<bool[]>(boxSize, readSize, IsoStream.GetInt(num_olss), "reserved00");
 		for (int i=0; i<num_olss; i++)
 		{
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.ptl_idx[i], "ptl_idx"); 
@@ -202,9 +202,9 @@ public partial class OperatingPointGroupBox : EntityToGroupBox
 			if (layer_info_present_flag[i])
 			{
 
-				this.layer_id[i] = new byte[IsoStream.GetInt(layer_count[i])];
-				this.is_output_layer[i] = new bool[IsoStream.GetInt(layer_count[i])];
-				this.reserved00[i] = new bool[IsoStream.GetInt(layer_count[i])];
+				this.layer_id[i] = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(layer_count[i]), "layer_id[i]");
+				this.is_output_layer[i] = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(layer_count[i]), "is_output_layer[i]");
+				this.reserved00[i] = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(layer_count[i]), "reserved00[i]");
 				for (int j=0; j<layer_count[i]; j++)
 				{
 					boxSize += stream.ReadBits(boxSize, readSize, 6,  out this.layer_id[i][j], "layer_id"); 
@@ -216,24 +216,24 @@ public partial class OperatingPointGroupBox : EntityToGroupBox
 		boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.reserved1, "reserved1"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 12,  out this.num_operating_points, "num_operating_points"); 
 
-		this.ols_loop_entry_idx = new ushort[IsoStream.GetInt(num_operating_points)];
-		this.max_temporal_id = new byte[IsoStream.GetInt(num_operating_points)];
-		this.frame_rate_info_flag = new bool[IsoStream.GetInt(num_operating_points)];
-		this.bit_rate_info_flag = new bool[IsoStream.GetInt(num_operating_points)];
-		this.op_availability_idc = new byte[IsoStream.GetInt(num_operating_points)];
-		this.reserved2 = new byte[IsoStream.GetInt(num_operating_points)];
-		this.reserved01 = new byte[IsoStream.GetInt(num_operating_points)];
-		this.chroma_format_idc = new byte[IsoStream.GetInt(num_operating_points)];
-		this.bit_depth_minus8 = new byte[IsoStream.GetInt(num_operating_points)];
-		this.max_picture_width = new ushort[IsoStream.GetInt(num_operating_points)];
-		this.max_picture_height = new ushort[IsoStream.GetInt(num_operating_points)];
-		this.avg_frame_rate = new ushort[IsoStream.GetInt(num_operating_points)];
-		this.reserved10 = new byte[IsoStream.GetInt(num_operating_points)];
-		this.constant_frame_rate = new byte[IsoStream.GetInt(num_operating_points)];
-		this.max_bit_rate = new uint[IsoStream.GetInt(num_operating_points)];
-		this.avg_bit_rate = new uint[IsoStream.GetInt(num_operating_points)];
-		this.entity_count = new byte[IsoStream.GetInt(num_operating_points)];
-		this.entity_idx = new byte[IsoStream.GetInt(num_operating_points)][];
+		this.ols_loop_entry_idx = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "ols_loop_entry_idx");
+		this.max_temporal_id = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "max_temporal_id");
+		this.frame_rate_info_flag = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "frame_rate_info_flag");
+		this.bit_rate_info_flag = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "bit_rate_info_flag");
+		this.op_availability_idc = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "op_availability_idc");
+		this.reserved2 = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "reserved2");
+		this.reserved01 = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "reserved01");
+		this.chroma_format_idc = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "chroma_format_idc");
+		this.bit_depth_minus8 = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "bit_depth_minus8");
+		this.max_picture_width = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "max_picture_width");
+		this.max_picture_height = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "max_picture_height");
+		this.avg_frame_rate = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "avg_frame_rate");
+		this.reserved10 = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "reserved10");
+		this.constant_frame_rate = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "constant_frame_rate");
+		this.max_bit_rate = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "max_bit_rate");
+		this.avg_bit_rate = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "avg_bit_rate");
+		this.entity_count = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "entity_count");
+		this.entity_idx = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt(num_operating_points), "entity_idx");
 		for (int i=0; i<num_operating_points; i++)
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, 9,  out this.ols_loop_entry_idx[i], "ols_loop_entry_idx"); 
@@ -270,7 +270,7 @@ public partial class OperatingPointGroupBox : EntityToGroupBox
 			}
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.entity_count[i], "entity_count"); 
 
-			this.entity_idx[i] = new byte[IsoStream.GetInt(entity_count[i])];
+			this.entity_idx[i] = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(entity_count[i]), "entity_idx[i]");
 			for (int j=0; j<entity_count[i]; j++)
 			{
 				boxSize += stream.ReadUInt8(boxSize, readSize,  out this.entity_idx[i][j], "entity_idx"); 

@@ -73,9 +73,9 @@ public partial class IroiInfoBox : Box
 		{
 			boxSize += stream.ReadUInt24(boxSize, readSize,  out this.num_roi, "num_roi"); 
 
-			this.top_left_mb = new uint[IsoStream.GetInt( num_roi)];
-			this.roi_mb_width = new byte[IsoStream.GetInt( num_roi)];
-			this.roi_mb_height = new byte[IsoStream.GetInt( num_roi)];
+			this.top_left_mb = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( num_roi), "top_left_mb");
+			this.roi_mb_width = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( num_roi), "roi_mb_width");
+			this.roi_mb_height = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( num_roi), "roi_mb_height");
 			for (int i=0; i< num_roi; i++)
 			{
 				boxSize += stream.ReadUInt32(boxSize, readSize,  out this.top_left_mb[i], "top_left_mb"); 

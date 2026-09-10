@@ -96,12 +96,12 @@ public partial class SegmentIndexBox : FullBox
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.reserved, "reserved"); 
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.reference_count, "reference_count"); 
 
-		this.reference_type = new bool[IsoStream.GetInt( reference_count)];
-		this.referenced_size = new uint[IsoStream.GetInt( reference_count)];
-		this.subsegment_duration = new uint[IsoStream.GetInt( reference_count)];
-		this.starts_with_SAP = new bool[IsoStream.GetInt( reference_count)];
-		this.SAP_type = new byte[IsoStream.GetInt( reference_count)];
-		this.SAP_delta_time = new uint[IsoStream.GetInt( reference_count)];
+		this.reference_type = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( reference_count), "reference_type");
+		this.referenced_size = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( reference_count), "referenced_size");
+		this.subsegment_duration = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( reference_count), "subsegment_duration");
+		this.starts_with_SAP = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( reference_count), "starts_with_SAP");
+		this.SAP_type = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( reference_count), "SAP_type");
+		this.SAP_delta_time = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( reference_count), "SAP_delta_time");
 		for (int i=0; i < reference_count; i++)
 		{
 			boxSize += stream.ReadBit(boxSize, readSize,  out this.reference_type[i], "reference_type"); 

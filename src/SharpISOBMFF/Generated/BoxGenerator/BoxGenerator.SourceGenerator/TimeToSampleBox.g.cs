@@ -41,8 +41,8 @@ public partial class TimeToSampleBox : FullBox
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.entry_count, "entry_count"); 
 		
 
-		this.sample_count = new uint[IsoStream.GetInt( entry_count)];
-		this.sample_delta = new uint[IsoStream.GetInt( entry_count)];
+		this.sample_count = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count), "sample_count");
+		this.sample_delta = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count), "sample_delta");
 		for (int i=0; i < entry_count; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.sample_count[i], "sample_count"); 

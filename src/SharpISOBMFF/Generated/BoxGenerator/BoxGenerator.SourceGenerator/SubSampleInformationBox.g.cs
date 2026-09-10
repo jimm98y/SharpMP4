@@ -68,12 +68,12 @@ public partial class SubSampleInformationBox : FullBox
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.entry_count, "entry_count"); 
 		
 
-		this.sample_delta = new uint[IsoStream.GetInt( entry_count)];
-		this.subsample_count = new ushort[IsoStream.GetInt( entry_count)];
-		this.subsample_size = new uint[IsoStream.GetInt( entry_count)][];
-		this.subsample_priority = new byte[IsoStream.GetInt( entry_count)][];
-		this.discardable = new byte[IsoStream.GetInt( entry_count)][];
-		this.codec_specific_parameters = new uint[IsoStream.GetInt( entry_count)][];
+		this.sample_delta = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count), "sample_delta");
+		this.subsample_count = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( entry_count), "subsample_count");
+		this.subsample_size = stream.SafeAllocate<uint[]>(boxSize, readSize, IsoStream.GetInt( entry_count), "subsample_size");
+		this.subsample_priority = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( entry_count), "subsample_priority");
+		this.discardable = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( entry_count), "discardable");
+		this.codec_specific_parameters = stream.SafeAllocate<uint[]>(boxSize, readSize, IsoStream.GetInt( entry_count), "codec_specific_parameters");
 		for (int i=0; i < entry_count; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.sample_delta[i], "sample_delta"); 
@@ -82,10 +82,10 @@ public partial class SubSampleInformationBox : FullBox
 			if (subsample_count[i] > 0)
 			{
 
-				this.subsample_size[i] = new uint[IsoStream.GetInt( subsample_count[i])];
-				this.subsample_priority[i] = new byte[IsoStream.GetInt( subsample_count[i])];
-				this.discardable[i] = new byte[IsoStream.GetInt( subsample_count[i])];
-				this.codec_specific_parameters[i] = new uint[IsoStream.GetInt( subsample_count[i])];
+				this.subsample_size[i] = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( subsample_count[i]), "subsample_size[i]");
+				this.subsample_priority[i] = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( subsample_count[i]), "subsample_priority[i]");
+				this.discardable[i] = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( subsample_count[i]), "discardable[i]");
+				this.codec_specific_parameters[i] = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( subsample_count[i]), "codec_specific_parameters[i]");
 				for (int j=0; j < subsample_count[i]; j++)
 				{
 

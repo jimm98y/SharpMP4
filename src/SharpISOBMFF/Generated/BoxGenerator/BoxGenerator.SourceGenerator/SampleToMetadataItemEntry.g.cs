@@ -40,7 +40,7 @@ public partial class SampleToMetadataItemEntry : SampleGroupDescriptionEntry
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.meta_box_handler_type, "meta_box_handler_type"); 
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.num_items, "num_items"); 
 
-		this.item_id = new uint[IsoStream.GetInt( num_items)];
+		this.item_id = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( num_items), "item_id");
 		for (int i = 0; i < num_items; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.item_id[i], "item_id"); 

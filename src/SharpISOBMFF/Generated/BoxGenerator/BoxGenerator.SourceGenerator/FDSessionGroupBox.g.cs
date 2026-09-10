@@ -50,22 +50,22 @@ public partial class FDSessionGroupBox : Box
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.num_session_groups, "num_session_groups"); 
 
-		this.entry_count = new byte[IsoStream.GetInt( num_session_groups)];
-		this.group_ID = new uint[IsoStream.GetInt( num_session_groups)][];
-		this.num_channels_in_session_group = new ushort[IsoStream.GetInt( num_session_groups)];
-		this.hint_track_ID = new uint[IsoStream.GetInt( num_session_groups)][];
+		this.entry_count = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( num_session_groups), "entry_count");
+		this.group_ID = stream.SafeAllocate<uint[]>(boxSize, readSize, IsoStream.GetInt( num_session_groups), "group_ID");
+		this.num_channels_in_session_group = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( num_session_groups), "num_channels_in_session_group");
+		this.hint_track_ID = stream.SafeAllocate<uint[]>(boxSize, readSize, IsoStream.GetInt( num_session_groups), "hint_track_ID");
 		for (int i=0; i < num_session_groups; i++)
 		{
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.entry_count[i], "entry_count"); 
 
-			this.group_ID[i] = new uint[IsoStream.GetInt( entry_count[i])];
+			this.group_ID[i] = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count[i]), "group_ID[i]");
 			for (int j=0; j < entry_count[i]; j++)
 			{
 				boxSize += stream.ReadUInt32(boxSize, readSize,  out this.group_ID[i][j], "group_ID"); 
 			}
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.num_channels_in_session_group[i], "num_channels_in_session_group"); 
 
-			this.hint_track_ID[i] = new uint[IsoStream.GetInt( num_channels_in_session_group[i])];
+			this.hint_track_ID[i] = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( num_channels_in_session_group[i]), "hint_track_ID[i]");
 			for (int k=0; k < num_channels_in_session_group[i]; k++)
 			{
 				boxSize += stream.ReadUInt32(boxSize, readSize,  out this.hint_track_ID[i][k], "hint_track_ID"); 

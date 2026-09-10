@@ -95,19 +95,19 @@ public partial class VvcPTLRecord : IMp4Serializable
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.ptl_multi_layer_enabled_flag, "ptl_multi_layer_enabled_flag"); 
 		boxSize += stream.ReadBits(boxSize, readSize, (uint)(8*num_bytes_constraint_info - 2 ),  out this.general_constraint_info, "general_constraint_info"); 
 
-		this.ptl_sublayer_level_present_flag = new bool[IsoStream.GetInt(num_sublayers - 1)];
+		this.ptl_sublayer_level_present_flag = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(num_sublayers - 1), "ptl_sublayer_level_present_flag");
 		for (int i=num_sublayers - 2; i >= 0; i--)
 		{
 			boxSize += stream.ReadBit(boxSize, readSize,  out this.ptl_sublayer_level_present_flag[i], "ptl_sublayer_level_present_flag"); 
 		}
 
-		this.ptl_reserved_zero_bit = new bool[IsoStream.GetInt(9)];
+		this.ptl_reserved_zero_bit = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(9), "ptl_reserved_zero_bit");
 		for (int j=num_sublayers; j<=8 && num_sublayers > 1; j++)
 		{
 			boxSize += stream.ReadBit(boxSize, readSize,  out this.ptl_reserved_zero_bit[j], "ptl_reserved_zero_bit"); 
 		}
 
-		this.sublayer_level_idc = new byte[IsoStream.GetInt(num_sublayers - 1)];
+		this.sublayer_level_idc = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_sublayers - 1), "sublayer_level_idc");
 		for (int i=num_sublayers-2; i >= 0; i--)
 		{
 
@@ -118,7 +118,7 @@ public partial class VvcPTLRecord : IMp4Serializable
 		}
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.ptl_num_sub_profiles, "ptl_num_sub_profiles"); 
 
-		this.general_sub_profile_idc = new uint[IsoStream.GetInt( ptl_num_sub_profiles)];
+		this.general_sub_profile_idc = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( ptl_num_sub_profiles), "general_sub_profile_idc");
 		for (int j=0; j < ptl_num_sub_profiles; j++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.general_sub_profile_idc[j], "general_sub_profile_idc"); 

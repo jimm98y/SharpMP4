@@ -1118,26 +1118,17 @@ namespace SharpISOBMFF
                                     }
                                 }
 
-                                string variableType = GetCSharpType(req);
-                                int indexesTypeDef = parserDocument.GetFieldTypeDef(req).Count(x => x == '[');
-                                int indexesType = variableType.Count(x => x == '[');
                                 string variableName = parserDocument.GetFieldName(req) + suffix;
-                                if (variableType.Contains("[]"))
+                                string elementType = GetCSharpType(req);
+                                if (elementType.Contains("[]"))
                                 {
-                                    int diff = indexesType - indexesTypeDef;
-                                    variableType = variableType.Replace("[]", "");
-                                    variableType = $"{variableType}[IsoStream.GetInt({variable})]";
-                                    for (int i = 0; i < diff; i++)
-                                    {
-                                        variableType += "[]";
-                                    }
+                                    int diff = elementType.Count(x => x == '[') - parserDocument.GetFieldTypeDef(req).Count(x => x == '[');
+                                    elementType = elementType.Replace("[]", "") + string.Concat(Enumerable.Repeat("[]", Math.Max(diff, 0)));
                                 }
-                                else
-                                {
-                                    variableType += $"[IsoStream.GetInt({variable})]";
-                                }
+                                elementType += appendType;
 
-                                ret.Append($"\r\n{spacing}this.{variableName} = new {variableType}{appendType};");
+                                // the allocation is checked against the remaining data to protect against malformed counts
+                                ret.Append($"\r\n{spacing}this.{variableName} = stream.SafeAllocate<{elementType}>(boxSize, readSize, IsoStream.GetInt({variable}), \"{variableName}\");");
                             }
                         }
                     }

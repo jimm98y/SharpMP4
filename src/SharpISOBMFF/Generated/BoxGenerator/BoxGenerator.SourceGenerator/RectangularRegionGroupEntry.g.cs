@@ -115,7 +115,7 @@ public partial class RectangularRegionGroupEntry : VisualSampleGroupEntry
 			{
 				boxSize += stream.ReadUInt16(boxSize, readSize,  out this.dependency_rect_region_count, "dependency_rect_region_count"); 
 
-				this.dependencyRectRegionGroupID = new ushort[IsoStream.GetInt( dependency_rect_region_count)];
+				this.dependencyRectRegionGroupID = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( dependency_rect_region_count), "dependencyRectRegionGroupID");
 				for (int i=0; i< dependency_rect_region_count; i++)
 				{
 					boxSize += stream.ReadUInt16(boxSize, readSize,  out this.dependencyRectRegionGroupID[i], "dependencyRectRegionGroupID"); 

@@ -34,7 +34,7 @@ public partial class TileSubTrackGroupBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.item_count, "item_count"); 
 
-		this.tileGroupID = new ushort[IsoStream.GetInt( item_count)];
+		this.tileGroupID = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( item_count), "tileGroupID");
 		for (int i = 0; i< item_count; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.tileGroupID[i], "tileGroupID"); 

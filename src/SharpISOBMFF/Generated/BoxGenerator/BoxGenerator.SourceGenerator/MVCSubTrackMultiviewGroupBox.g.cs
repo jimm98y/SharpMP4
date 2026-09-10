@@ -35,7 +35,7 @@ public partial class MVCSubTrackMultiviewGroupBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.item_count, "item_count"); 
 
-		this.MultiviewGroupId = new uint[IsoStream.GetInt( item_count)];
+		this.MultiviewGroupId = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( item_count), "MultiviewGroupId");
 		for (int i = 0; i< item_count; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.MultiviewGroupId[i], "MultiviewGroupId"); 

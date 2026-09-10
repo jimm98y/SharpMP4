@@ -29,7 +29,7 @@ public partial class SwitchableTracksGroupBox : EntityToGroupBox
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
 
-		this.track_switch_hierarchy_id = new ushort[IsoStream.GetInt( num_entities_in_group)];
+		this.track_switch_hierarchy_id = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( num_entities_in_group), "track_switch_hierarchy_id");
 		for (int i = 0; i < num_entities_in_group; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.track_switch_hierarchy_id[i], "track_switch_hierarchy_id"); 

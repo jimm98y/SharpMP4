@@ -45,7 +45,7 @@ public partial class AlternativeStartupEntry : VisualSampleGroupEntry
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.roll_count, "roll_count"); 
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.first_output_sample, "first_output_sample"); 
 
-		this.sample_offset = new uint[IsoStream.GetInt( roll_count)];
+		this.sample_offset = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( roll_count), "sample_offset");
 		for (int i=0; i < roll_count; i++)
 		{
 			if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt32(boxSize, readSize,  out this.sample_offset[i], "sample_offset"); // optional, until the end of the structure

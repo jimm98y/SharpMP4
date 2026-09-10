@@ -39,7 +39,7 @@ public partial class SubTrackSampleGroupBox : FullBox
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.grouping_type, "grouping_type"); 
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.item_count, "item_count"); 
 
-		this.group_description_index = new uint[IsoStream.GetInt( item_count)];
+		this.group_description_index = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( item_count), "group_description_index");
 		for (int i = 0; i< item_count; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.group_description_index[i], "group_description_index"); 

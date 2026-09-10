@@ -86,8 +86,8 @@ public partial class SampleEncryptionSample : IMp4Serializable
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.multi_IV_count, "multi_IV_count"); 
 
-			this.multi_subindex_IV = new byte[IsoStream.GetInt( multi_IV_count)];
-			this.IV = new byte[IsoStream.GetInt( multi_IV_count)][];
+			this.multi_subindex_IV = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( multi_IV_count), "multi_subindex_IV");
+			this.IV = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( multi_IV_count), "IV");
 			for (int i=0; i < multi_IV_count; i++)
 			{
 				boxSize += stream.ReadUInt8(boxSize, readSize,  out this.multi_subindex_IV[i], "multi_subindex_IV"); 

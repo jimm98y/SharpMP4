@@ -34,7 +34,7 @@ public partial class DegradationPriorityBox : FullBox
 
 		
 
-		this.priority = new ushort[IsoStream.GetInt( sample_count)];
+		this.priority = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( sample_count), "priority");
 		for (int i=0; i < sample_count; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.priority[i], "priority"); 

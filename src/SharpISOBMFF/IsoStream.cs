@@ -1537,9 +1537,78 @@ namespace SharpISOBMFF
             return consumed;
         }
 
+        /// <summary>
+        /// Allocates an array of <paramref name="count"/> entries of type <typeparamref name="T"/> after verifying that
+        /// the entries can fit into the remaining data. Protects against malformed files that declare huge counts
+        /// and would otherwise trigger a large allocation before the read fails.
+        /// </summary>
+        public T[] SafeAllocate<T>(ulong boxSize, ulong readSize, long count, string name)
+        {
+            if (count < 0)
+            {
+                throw new IsoEndOfStreamException(new StreamMarker(GetCurrentOffset(), GetStreamLength(), this));
+            }
+
+            CheckArrayAllocation(boxSize, readSize, (ulong)count, GetMinimumBitsPerEntry(typeof(T)), name);
+            return new T[count];
+        }
+
+        /// <summary>
+        /// The smallest number of bits a value stored in the given type can occupy in the stream. Values are stored in
+        /// the smallest type that can hold them, so the storage type implies a lower bound on the wire size. The bounds
+        /// are deliberately loose (roughly half of the smallest size currently stored in the type), so a valid file
+        /// can never be rejected. Boxes always carry at least the size and the type; other classes and arrays are
+        /// assumed to consume at least a single bit.
+        /// </summary>
+        private static ulong GetMinimumBitsPerEntry(Type type)
+        {
+            if (type == typeof(bool) || type == typeof(byte) || type == typeof(sbyte))
+                return 1;
+            if (type == typeof(ushort) || type == typeof(short))
+                return 4;
+            if (type == typeof(uint) || type == typeof(int))
+                return 8;
+            if (type == typeof(ulong) || type == typeof(long) || type == typeof(double) || type == typeof(float))
+                return 16;
+            if (type == typeof(BinaryUTF8String))
+                return 8; // at least the terminating zero
+            if (typeof(Box).IsAssignableFrom(type))
+                return 64; // at least the size and the type
+            return 1; // classes, records and arrays of values
+        }
+
+        /// <summary>
+        /// Verifies that an array of <paramref name="count"/> entries, each consuming at least <paramref name="minBitsPerEntry"/> bits,
+        /// can fit into the remaining data before the array is allocated.
+        /// </summary>
+        private void CheckArrayAllocation(ulong boxSize, ulong readSize, ulong count, ulong minBitsPerEntry, string name)
+        {
+            ulong remaining;
+            if (readSize != ulong.MaxValue)
+            {
+                remaining = readSize - boxSize;
+            }
+            else if (CanStreamSeek())
+            {
+                remaining = (ulong)(GetStreamLength() - GetCurrentOffset()) << 3;
+            }
+            else
+            {
+                return; // unbounded, non-seekable: nothing to check against
+            }
+
+            // division instead of multiplication to avoid the overflow
+            if (minBitsPerEntry > 0 && count > remaining / minBitsPerEntry)
+            {
+                this.Logger.LogDebug($"Invalid count of '{name}': {count} entries do not fit into the remaining {remaining >> 3} bytes");
+                throw new IsoEndOfStreamException(new StreamMarker(GetCurrentOffset(), GetStreamLength(), this));
+            }
+        }
+
         public ulong ReadUInt16Array(ulong boxSize, ulong readSize, uint count, out ushort[] value, string name)
         {
             ulong size = 0;
+            CheckArrayAllocation(boxSize, readSize, count, 16, name);
             value = new ushort[count];
             for (uint i = 0; i < count; i++)
             {
@@ -1565,6 +1634,7 @@ namespace SharpISOBMFF
         public ulong ReadUInt16Array(ulong boxSize, ulong readSize, uint count, out uint[] value, string name)
         {
             ulong size = 0;
+            CheckArrayAllocation(boxSize, readSize, count, 16, name);
             value = new uint[count];
             for (uint i = 0; i < count; i++)
             {
@@ -1590,6 +1660,7 @@ namespace SharpISOBMFF
         public ulong ReadUInt32Array(ulong boxSize, ulong readSize, uint count, out uint[] value, string name)
         {
             ulong size = 0;
+            CheckArrayAllocation(boxSize, readSize, count, 32, name);
             value = new uint[count];
             for (uint i = 0; i < count; i++)
             {
@@ -1603,6 +1674,7 @@ namespace SharpISOBMFF
         public ulong ReadInt32Array(ulong boxSize, ulong readSize, uint count, out int[] value, string name)
         {
             ulong size = 0;
+            CheckArrayAllocation(boxSize, readSize, count, 32, name);
             value = new int[count];
             for (uint i = 0; i < count; i++)
             {
@@ -1648,6 +1720,7 @@ namespace SharpISOBMFF
         public ulong ReadUInt32Array(ulong boxSize, ulong readSize, uint count, out ulong[] value, string name)
         {
             ulong size = 0;
+            CheckArrayAllocation(boxSize, readSize, count, 32, name);
             value = new ulong[count];
             for (uint i = 0; i < count; i++)
             {
@@ -1673,6 +1746,7 @@ namespace SharpISOBMFF
         public ulong ReadUInt64Array(ulong boxSize, ulong readSize, uint count, out ulong[] value, string name)
         {
             ulong size = 0;
+            CheckArrayAllocation(boxSize, readSize, count, 64, name);
             value = new ulong[count];
             for (uint i = 0; i < count; i++)
             {

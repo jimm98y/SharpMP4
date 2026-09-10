@@ -53,7 +53,7 @@ public partial class FDItemInfoExtension : ItemInfoExtension
 		boxSize += stream.ReadUInt64(boxSize, readSize,  out this.transfer_length, "transfer_length"); 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.entry_count, "entry_count"); 
 
-		this.group_id = new uint[IsoStream.GetInt( entry_count)];
+		this.group_id = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count), "group_id");
 		for (int i=0; i < entry_count; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.group_id[i], "group_id"); 

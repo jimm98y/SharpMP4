@@ -88,7 +88,7 @@ public partial class ld_sbr_header : IMp4Serializable
 
 		}
 
-		this.sbr_header = new sbr_header[IsoStream.GetInt( numSbrHeader)];
+		this.sbr_header = stream.SafeAllocate<sbr_header>(boxSize, readSize, IsoStream.GetInt( numSbrHeader), "sbr_header");
 		for (int el = 0; el < numSbrHeader; el++)
 		{
 			boxSize += stream.ReadClass(boxSize, readSize, this, () => new sbr_header(),  out this.sbr_header[el], "sbr_header"); 
