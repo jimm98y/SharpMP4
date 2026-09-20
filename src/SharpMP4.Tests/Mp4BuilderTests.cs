@@ -6,41 +6,42 @@ using SharpMP4.Tracks;
 namespace SharpMP4.Tests;
 
 /// <summary>Tests against <see cref="Mp4Builder"/> and the sample tables it writes.</summary>
+[TestClass]
 public class Mp4BuilderTests
 {
     /// <summary>
     /// Durations used to be averaged into a single stts entry, which only holds at constant frame
     /// rate; a track whose samples differ in length came out with the wrong duration.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public void WritesEveryDistinctSampleDuration()
     {
         var durations = new[] { 20, 20, 20, 21, 20, 20 };
         var file = BuildFile(durations.Length, i => durations[i], i => 0);
 
         var stts = Boxes.Find<TimeToSampleBox>(file);
-        Assert.Equal(3u, stts.EntryCount);
-        Assert.Equal([3u, 1u, 2u], stts.SampleCount);
-        Assert.Equal([20u, 21u, 20u], stts.SampleDelta);
+        Assert.AreEqual(3u, stts.EntryCount);
+        CollectionAssert.AreEqual(new uint[] { 3, 1, 2 }, stts.SampleCount);
+        CollectionAssert.AreEqual(new uint[] { 20, 21, 20 }, stts.SampleDelta);
 
         // The track duration is the sum, not the count times an average.
         long total = stts.SampleCount.Zip(stts.SampleDelta, (c, d) => (long)c * d).Sum();
-        Assert.Equal(durations.Sum(), total);
+        Assert.AreEqual(durations.Sum(), total);
     }
 
-    [Fact]
+    [TestMethod]
     public void WritesNoCompositionOffsetsWhenNothingIsReordered()
     {
         var file = BuildFile(4, _ => 20, _ => 0);
 
-        Assert.Null(Boxes.FindOrNull<CompositionOffsetBox>(file));
+        Assert.IsNull(Boxes.FindOrNull<CompositionOffsetBox>(file));
     }
 
     /// <summary>
     /// Pictures coded out of presentation order need the gap between composition and decode time
     /// recorded, or a player shows them in decode order.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public void WritesCompositionOffsetsWhenSamplesAreReordered()
     {
         // Decode order 0, 3, 1, 2 against a presentation order of 0, 1, 2, 3.
@@ -48,37 +49,38 @@ public class Mp4BuilderTests
         var file = BuildFile(4, _ => 20, i => (presentation[i] - i) * 20);
 
         var ctts = Boxes.Find<CompositionOffsetBox>(file);
-        Assert.Equal(0, ctts.Version);   // version 0 carries the offsets biased to be non-negative
+        Assert.AreEqual<byte>(0, ctts.Version);   // version 0 biases the offsets to be non-negative
 
         var offsets = Expand(ctts.SampleCount, ctts.SampleOffset);
-        Assert.Equal(4, offsets.Length);
+        Assert.AreEqual(4, offsets.Length);
 
         // The bias is uniform, so the spacing between samples is what has to survive.
         long bias = offsets[0];
-        Assert.Equal([0, 40, -20, -20], offsets.Select(o => o - bias).ToArray());
+        CollectionAssert.AreEqual(new[] { 0L, 40, -20, -20 }, offsets.Select(o => o - bias).ToArray());
     }
 
     /// <summary>
     /// Sample positions used to be truncated to 32 bits, so past 4 GB of media data the offsets
     /// wrapped and the file pointed at the wrong bytes with nothing reported.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public void WritesSixtyFourBitOffsetsWhenTheMediaIsLargerThanFourGigabytes()
     {
         var file = BuildFile(4, _ => 20, _ => 0, new HugeStorage(5_000_000_000));
 
-        Assert.Null(Boxes.FindOrNull<ChunkOffsetBox>(file));
+        Assert.IsNull(Boxes.FindOrNull<ChunkOffsetBox>(file));
         var co64 = Boxes.Find<ChunkLargeOffsetBox>(file);
-        Assert.All(co64.ChunkOffset, offset => Assert.True(offset > uint.MaxValue));
+        Assert.IsTrue(co64.ChunkOffset.All(offset => offset > uint.MaxValue),
+            "every chunk offset should sit past the 32-bit range");
     }
 
-    [Fact]
+    [TestMethod]
     public void WritesThirtyTwoBitOffsetsForOrdinaryFiles()
     {
         var file = BuildFile(4, _ => 20, _ => 0);
 
-        Assert.Null(Boxes.FindOrNull<ChunkLargeOffsetBox>(file));
-        Assert.NotNull(Boxes.FindOrNull<ChunkOffsetBox>(file));
+        Assert.IsNull(Boxes.FindOrNull<ChunkLargeOffsetBox>(file));
+        Assert.IsNotNull(Boxes.FindOrNull<ChunkOffsetBox>(file));
     }
 
     private static int[] Expand(uint[] counts, uint[] offsets)

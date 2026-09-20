@@ -1,4 +1,4 @@
-﻿using SharpISOBMFF;
+using SharpISOBMFF;
 
 namespace SharpMP4.Tests;
 
@@ -6,6 +6,7 @@ namespace SharpMP4.Tests;
 /// Tests against <see cref="CompositionOffsetBox"/>, the box that records how far a sample's
 /// composition time sits from its decode time.
 /// </summary>
+[TestClass]
 public class CompositionOffsetBoxTests
 {
     /// <summary>
@@ -13,31 +14,31 @@ public class CompositionOffsetBoxTests
     /// were allocated and not the counts beside them, so any file carrying a version 1 ctts - what
     /// ffmpeg writes with -movflags +negative_cts_offsets - could not be opened at all.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public void ReadsVersion1WithNegativeOffsets()
     {
         var box = ReadBox(BuildCtts(version: 1, entries: [(3u, 0), (1u, -40), (2u, 120)]));
 
-        Assert.Equal(1, box.Version);
-        Assert.Equal(3u, box.EntryCount);
-        Assert.Equal([3u, 1u, 2u], box.SampleCount);
-        Assert.Equal([0, -40, 120], box.SampleOffset0);
+        Assert.AreEqual<byte>(1, box.Version);
+        Assert.AreEqual(3u, box.EntryCount);
+        CollectionAssert.AreEqual(new uint[] { 3, 1, 2 }, box.SampleCount);
+        CollectionAssert.AreEqual(new[] { 0, -40, 120 }, box.SampleOffset0);
     }
 
     /// <summary>Version 0 stores the offsets unsigned, and was always readable.</summary>
-    [Fact]
+    [TestMethod]
     public void ReadsVersion0()
     {
         var box = ReadBox(BuildCtts(version: 0, entries: [(5u, 0), (2u, 60)]));
 
-        Assert.Equal(0, box.Version);
-        Assert.Equal([5u, 2u], box.SampleCount);
-        Assert.Equal([0u, 60u], box.SampleOffset);
+        Assert.AreEqual<byte>(0, box.Version);
+        CollectionAssert.AreEqual(new uint[] { 5, 2 }, box.SampleCount);
+        CollectionAssert.AreEqual(new uint[] { 0, 60 }, box.SampleOffset);
     }
 
-    [Theory]
-    [InlineData(0)]
-    [InlineData(1)]
+    [TestMethod]
+    [DataRow((byte)0)]
+    [DataRow((byte)1)]
     public void RoundTripsThroughWrite(byte version)
     {
         var original = BuildCtts(version, entries: [(4u, 0), (1u, version == 1 ? -20 : 20)]);
@@ -47,7 +48,7 @@ public class CompositionOffsetBoxTests
         box.Write(new IsoStream(new StreamWrapper(written)));
 
         // The box is read from just past its header, so writing it back produces the body alone.
-        Assert.Equal(original.Skip(8), written.ToArray());
+        CollectionAssert.AreEqual(original.Skip(8).ToArray(), written.ToArray());
     }
 
     private static CompositionOffsetBox ReadBox(byte[] bytes)

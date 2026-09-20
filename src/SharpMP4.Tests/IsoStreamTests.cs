@@ -3,6 +3,7 @@ using SharpISOBMFF;
 namespace SharpMP4.Tests;
 
 /// <summary>Tests against <see cref="IsoStream"/> and the sizes it is willing to allocate.</summary>
+[TestClass]
 public class IsoStreamTests
 {
     /// <summary>
@@ -10,7 +11,7 @@ public class IsoStreamTests
     /// box header is part of the file, so on its own it bounds nothing: a box declaring 256 MB in a
     /// 1 MB file had 256 MB allocated for it before a single entry was read.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public void RejectsAnArrayLongerThanWhatIsLeftOfTheStream()
     {
         using var memory = new MemoryStream(new byte[64]);
@@ -22,14 +23,14 @@ public class IsoStreamTests
         // Reading past the end throws either way, so what matters is that it throws before the
         // array is allocated rather than after.
         long before = GC.GetAllocatedBytesForCurrentThread();
-        Assert.Throws<IsoEndOfStreamException>(
+        Assert.ThrowsExactly<IsoEndOfStreamException>(
             () => stream.ReadUInt32ArrayTillEnd(0, declared, out uint[] _, "compatible_brands"));
         long allocated = GC.GetAllocatedBytesForCurrentThread() - before;
 
-        Assert.True(allocated < 1024 * 1024, $"rejecting the count allocated {allocated} bytes");
+        Assert.IsTrue(allocated < 1024 * 1024, $"rejecting the count allocated {allocated} bytes");
     }
 
-    [Fact]
+    [TestMethod]
     public void ReadsAnArrayThatFitsInTheStream()
     {
         using var memory = new MemoryStream(new byte[64]);
@@ -37,14 +38,14 @@ public class IsoStreamTests
 
         stream.ReadUInt32ArrayTillEnd(0, 64 * 8, out uint[] value, "compatible_brands");
 
-        Assert.Equal(16, value.Length);
+        Assert.AreEqual(16, value.Length);
     }
 
     /// <summary>
     /// The same thing through the door a file comes in by: four bytes of the ftyp header are enough
     /// to ask for a very large allocation out of a very small file.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public void DoesNotAllocateFromABoxLargerThanTheFile()
     {
         var file = BuildFtyp(declaredSize: 0x10000020);   // 256 MB, from a 20 byte file
@@ -54,7 +55,7 @@ public class IsoStreamTests
         container.Read(new IsoStream(new StreamWrapper(new MemoryStream(file))));
         long allocated = GC.GetAllocatedBytesForCurrentThread() - before;
 
-        Assert.True(allocated < 1024 * 1024, $"parsing a {file.Length} byte file allocated {allocated} bytes");
+        Assert.IsTrue(allocated < 1024 * 1024, $"parsing a {file.Length} byte file allocated {allocated} bytes");
     }
 
     private static byte[] BuildFtyp(uint declaredSize)

@@ -1,8 +1,9 @@
-using SharpH265;
+﻿using SharpH265;
 
 namespace SharpMP4.Tests;
 
 /// <summary>Tests against <see cref="H265Extensions"/>.</summary>
+[TestClass]
 public class H265ExtensionsTests
 {
     /// <summary>
@@ -10,7 +11,7 @@ public class H265ExtensionsTests
     /// the conformance window says to drop the 8 lines. Reporting the coded size put those lines
     /// on screen and made the picture the wrong shape.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public void AppliesTheConformanceWindowToTheCodedSize()
     {
         var sps = new SeqParameterSetRbsp
@@ -22,11 +23,11 @@ public class H265ExtensionsTests
             ConfWinBottomOffset = 4,        // 4 chroma rows = 8 luma lines
         };
 
-        Assert.Equal((1920u, 1080u), sps.CalculateDimensions());
+        Assert.AreEqual((1920u, 1080u), sps.CalculateDimensions());
     }
 
     /// <summary>Without a window the coded size is what is displayed.</summary>
-    [Fact]
+    [TestMethod]
     public void ReportsTheCodedSizeWhenThereIsNoConformanceWindow()
     {
         var sps = new SeqParameterSetRbsp
@@ -38,14 +39,14 @@ public class H265ExtensionsTests
             ConfWinBottomOffset = 4,        // ignored while the flag is clear
         };
 
-        Assert.Equal((1280u, 720u), sps.CalculateDimensions());
+        Assert.AreEqual((1280u, 720u), sps.CalculateDimensions());
     }
 
     /// <summary>
     /// 4:4:4 has no chroma subsampling, so the same offset crops half as many lines as it does in
     /// 4:2:0; the units are chroma samples, not luma.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public void CountsTheOffsetsInChromaSamples()
     {
         var sps = new SeqParameterSetRbsp
@@ -58,6 +59,6 @@ public class H265ExtensionsTests
             ConfWinBottomOffset = 4,
         };
 
-        Assert.Equal((1912u, 1084u), sps.CalculateDimensions());
+        Assert.AreEqual((1912u, 1084u), sps.CalculateDimensions());
     }
 }

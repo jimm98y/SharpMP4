@@ -1,9 +1,10 @@
-﻿using SharpH26X;
+using SharpH26X;
 using SharpMP4.Common;
 
 namespace SharpMP4.Tests;
 
 /// <summary>Tests against <see cref="ItuStream"/>.</summary>
+[TestClass]
 public class ItuStreamTests
 {
     /// <summary>
@@ -11,17 +12,17 @@ public class ItuStreamTests
     /// coded, so a corrupt stream can put an enormous value there. Allocating from one unchecked
     /// let a NAL unit of a few kilobytes ask for gigabytes.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public void RejectsACountThatCannotFitInWhatIsLeft()
     {
         using var stream = new ItuStream(new MemoryStream(new byte[64]));
 
         // Every entry occupies at least one bit, so 64 bytes can never hold 125 million of them.
-        Assert.Throws<ItuEndOfStreamException>(
+        Assert.ThrowsExactly<ItuEndOfStreamException>(
             () => stream.CheckArrayAllocation(125_898_939, "num_negative_pics"));
     }
 
-    [Fact]
+    [TestMethod]
     public void AllowsACountThatFits()
     {
         using var stream = new ItuStream(new MemoryStream(new byte[64]));
@@ -34,7 +35,7 @@ public class ItuStreamTests
     /// while bits are still to be handed out. A small array at the very end of a valid parameter
     /// set must not be rejected.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public void AllowsASmallCountAtTheEndOfTheStream()
     {
         var memory = new MemoryStream(new byte[4]);
@@ -49,7 +50,7 @@ public class ItuStreamTests
     /// which dominated the cost of reading a bitstream. Reading with logging off should not
     /// allocate per element.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public void ReadingDoesNotAllocateWhenLoggingIsOff()
     {
         var logger = new DefaultMp4Logger();   // logging disabled by default
@@ -64,11 +65,11 @@ public class ItuStreamTests
             size += stream.ReadUnsignedInt(size, 8, out byte _, "sample_element");
         long allocated = GC.GetAllocatedBytesForCurrentThread() - before;
 
-        Assert.Equal(4096ul * 8, size);
-        Assert.True(allocated < 4096, $"reading 4096 elements allocated {allocated} bytes");
+        Assert.AreEqual(4096ul * 8, size);
+        Assert.IsTrue(allocated < 4096, $"reading 4096 elements allocated {allocated} bytes");
     }
 
-    [Fact]
+    [TestMethod]
     public void RoundTripsBitsThroughWriteAndRead()
     {
         using var memory = new MemoryStream();
@@ -82,7 +83,7 @@ public class ItuStreamTests
         ulong size = reader.ReadUnsignedInt(0, 8, out byte first, "first");
         reader.ReadUnsignedInt(size, 16, out uint second, "second");
 
-        Assert.Equal(120, first);
-        Assert.Equal(4242u, second);
+        Assert.AreEqual<byte>(120, first);
+        Assert.AreEqual(4242u, second);
     }
 }

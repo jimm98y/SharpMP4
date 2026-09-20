@@ -1,10 +1,11 @@
-using SharpISOBMFF;
+﻿using SharpISOBMFF;
 using SharpMP4.Builders;
 using SharpMP4.Tracks;
 
 namespace SharpMP4.Tests;
 
 /// <summary>Tests against <see cref="FragmentedMp4Builder"/> and the track runs it writes.</summary>
+[TestClass]
 public class FragmentedMp4BuilderTests
 {
     /// <summary>
@@ -12,28 +13,35 @@ public class FragmentedMp4BuilderTests
     /// need the composition time offset recorded there; without it a player shows the samples in
     /// decode order.
     /// </summary>
-    [Fact]
+    [TestMethod]
     public void WritesCompositionOffsetsIntoTheTrackRun()
     {
         // Decode order 0, 3, 1, 2 against a presentation order of 0, 1, 2, 3.
         var presentation = new[] { 0, 3, 1, 2 };
         var file = BuildFile(4, i => (presentation[i] - i) * 20);
 
-        var trun = Assert.Single(Boxes.FindAll<TrackRunBox>(file));
-        Assert.Equal(1, trun.Version);
-        Assert.Equal(0x800u, trun.Flags & 0x800);   // sample_composition_time_offset present
-        Assert.Equal([0, 40, -20, -20], trun._TrunEntry.Select(e => e.SampleCompositionTimeOffset0).ToArray());
+        var truns = Boxes.FindAll<TrackRunBox>(file);
+        Assert.AreEqual(1, truns.Count);
+
+        var trun = truns[0];
+        Assert.AreEqual<byte>(1, trun.Version);
+        Assert.AreEqual(0x800u, trun.Flags & 0x800);   // sample_composition_time_offset present
+        CollectionAssert.AreEqual(new[] { 0, 40, -20, -20 },
+            trun._TrunEntry.Select(e => e.SampleCompositionTimeOffset0).ToArray());
     }
 
     /// <summary>A stream that is not reordered should not pay for the extra field per sample.</summary>
-    [Fact]
+    [TestMethod]
     public void WritesNoCompositionOffsetsWhenNothingIsReordered()
     {
         var file = BuildFile(4, _ => 0);
 
-        var trun = Assert.Single(Boxes.FindAll<TrackRunBox>(file));
-        Assert.Equal(0, trun.Version);
-        Assert.Equal(0u, trun.Flags & 0x800);
+        var truns = Boxes.FindAll<TrackRunBox>(file);
+        Assert.AreEqual(1, truns.Count);
+
+        var trun = truns[0];
+        Assert.AreEqual<byte>(0, trun.Version);
+        Assert.AreEqual(0u, trun.Flags & 0x800);
     }
 
     /// <summary>
