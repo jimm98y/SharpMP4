@@ -166,6 +166,7 @@ public partial class ChannelLayout : FullBox
 				{
 					boxSize += stream.ReadUInt8(boxSize, readSize,  out this.layout_channel_count, "layout_channel_count"); 
 
+					this.speaker_position = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( layout_channel_count ), "speaker_position");
 					for (int i = 0 ; i < layout_channel_count ; i++)
 					{
 						boxSize += stream.ReadUInt8(boxSize, readSize,  out this.speaker_position[i], "speaker_position"); 

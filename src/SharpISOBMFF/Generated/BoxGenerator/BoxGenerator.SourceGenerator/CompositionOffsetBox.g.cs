@@ -68,6 +68,7 @@ public partial class CompositionOffsetBox : FullBox
 		{
 
 			this.sample_offset0 = stream.SafeAllocate<int>(boxSize, readSize, IsoStream.GetInt( entry_count), "sample_offset0");
+			this.sample_count = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count), "sample_count");
 			for (int i=0; i < entry_count; i++)
 			{
 				boxSize += stream.ReadUInt32(boxSize, readSize,  out this.sample_count[i], "sample_count"); 

@@ -1068,7 +1068,15 @@ namespace SharpISOBMFF
 
             if (methodType == MethodType.Read)
             {
-                if (block.RequiresAllocation.Count > 0)
+                // A field declared in more than one branch - sample_count appears in both the
+                // version 0 and the version 1 body of ctts - becomes a single property, and it is
+                // only registered for allocation under the branch that declared it first. The
+                // other branch then reads into a null array. Collect what this block fills too,
+                // so each branch allocates the arrays it is about to write.
+                var requiresAllocation = block.Type == "for"
+                    ? CollectBlockAllocations(b, block)
+                    : block.RequiresAllocation;
+                if (requiresAllocation.Count > 0)
                 {
                     if (block.Type == "for")
                     {
@@ -1097,7 +1105,7 @@ namespace SharpISOBMFF
 
                         if (!string.IsNullOrWhiteSpace(variable))
                         {
-                            foreach (var req in block.RequiresAllocation)
+                            foreach (var req in requiresAllocation)
                             {
                                 bool hasBoxes = GetReadMethod(req).Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "SampleGroupDescriptionBox";
                                 if (hasBoxes)
@@ -1149,6 +1157,47 @@ namespace SharpISOBMFF
             ret.Append($"\r\n{spacing}}}");
 
             return ret.ToString();
+        }
+
+        /// <summary>
+        /// The array fields a loop body fills: those registered for the block, plus any the class
+        /// declares as an array and this block also reads into.
+        /// </summary>
+        /// <remarks>
+        /// A field declared in more than one branch becomes a single property, and it is only
+        /// registered for allocation under the branch that declared it first - sample_count
+        /// appears in both the version 0 and the version 1 body of ctts, so reading a version 1
+        /// box indexed into a null array. Only names the class already treats as arrays are
+        /// added, so nothing that is a plain value inside a loop gets allocated by mistake.
+        /// </remarks>
+        private List<PseudoField> CollectBlockAllocations(PseudoClass box, PseudoBlock block)
+        {
+            var result = new List<PseudoField>(block.RequiresAllocation);
+            if (block.Content == null || box.FlattenedFields == null)
+                return result;
+
+            var seen = new HashSet<string>();
+            foreach (var existing in result)
+                seen.Add(parserDocument.GetFieldName(existing));
+
+            var arrayFields = new HashSet<string>();
+            foreach (var declared in box.FlattenedFields)
+            {
+                if (parserDocument.GetLoopNestingLevel(declared) > 0)
+                    arrayFields.Add(parserDocument.GetFieldName(declared));
+            }
+
+            foreach (var item in block.Content)
+            {
+                if (item is PseudoField field)
+                {
+                    string name = parserDocument.GetFieldName(field);
+                    if (arrayFields.Contains(name) && seen.Add(name))
+                        result.Add(field);
+                }
+            }
+
+            return result;
         }
 
         private string BuildSwitchCase(PseudoClass b, PseudoCase swcase, int level, MethodType methodType)
