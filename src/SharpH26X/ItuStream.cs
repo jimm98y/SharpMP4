@@ -687,6 +687,12 @@ namespace SharpH26X
 
         private void LogBegin(string name)
         {
+            // Checked before the message is built. These run on every syntax element read, so
+            // formatting first and discarding inside the logger costs the allocations and the
+            // string work on the hottest path in the parser even when nothing is being logged.
+            if (this.Logger == null || !this.Logger.IsInfoEnabled)
+                return;
+
             var padding = new StringBuilder();
             for (int i = 0; i < _logLevel; i++)
             {
@@ -699,6 +705,9 @@ namespace SharpH26X
         private void LogEnd<T>(string name, ulong size, T value)
         {
             if (string.IsNullOrEmpty(name))
+                return;
+
+            if (this.Logger == null || !this.Logger.IsInfoEnabled)
                 return;
 
             var padding = new StringBuilder();
