@@ -1527,7 +1527,12 @@ namespace SharpISOBMFF
 
             ulong remaining = readSize - boxSize;
             uint count = (uint)(remaining >> 5);
-            value = new uint[count];
+
+            // The count comes straight out of the declared box size, so it is only as trustworthy
+            // as the file: a box claiming to be larger than the stream would otherwise allocate
+            // whatever it claims before a single entry is read.
+            value = SafeAllocate<uint>(boxSize, readSize, count, name);
+
             for (uint i = 0; i < count; i++)
             {
                 consumed += ReadUInt32(boxSize + consumed, readSize, out value[i], "");
@@ -1583,16 +1588,27 @@ namespace SharpISOBMFF
         /// </summary>
         private void CheckArrayAllocation(ulong boxSize, ulong readSize, ulong count, ulong minBitsPerEntry, string name)
         {
-            ulong remaining;
+            // What is left of the box, and what is left of the stream. The first comes out of the
+            // box header, which is part of the file, so on its own it bounds nothing - a box that
+            // declares a size larger than the whole file gets to allocate that size. The smaller
+            // of the two is what the array can actually occupy.
+            ulong remaining = ulong.MaxValue;
             if (readSize != ulong.MaxValue)
             {
                 remaining = readSize - boxSize;
             }
-            else if (CanStreamSeek())
+
+            if (CanStreamSeek())
             {
-                remaining = (ulong)(GetStreamLength() - GetCurrentOffset()) << 3;
+                long offset = GetCurrentOffset();
+                if (offset >= 0)
+                {
+                    ulong inStream = (ulong)Math.Max(0, GetStreamLength() - offset) << 3;
+                    remaining = Math.Min(remaining, inStream);
+                }
             }
-            else
+
+            if (remaining == ulong.MaxValue)
             {
                 return; // unbounded, non-seekable: nothing to check against
             }
