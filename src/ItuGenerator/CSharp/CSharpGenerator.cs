@@ -70,6 +70,40 @@ namespace Sharp{type}
             return resultCode.ToString();
         }
 
+        /// <summary>
+        /// The outer element count of an array allocation such as "ulong[ num_negative_pics]", or
+        /// null when there is nothing checkable. Only the outermost dimension is taken: the inner
+        /// ones are emitted as their own allocations and get checked in turn.
+        /// </summary>
+        private static string OuterArrayCount(string variableType)
+        {
+            if (string.IsNullOrEmpty(variableType))
+                return null;
+
+            int open = variableType.IndexOf('[');
+            if (open < 0)
+                return null;
+
+            int depth = 0;
+            for (int i = open; i < variableType.Length; i++)
+            {
+                if (variableType[i] == '[') depth++;
+                else if (variableType[i] == ']')
+                {
+                    depth--;
+                    if (depth == 0)
+                    {
+                        string inner = variableType.Substring(open + 1, i - open - 1);
+                        if (string.IsNullOrWhiteSpace(inner) || inner.Contains(",") || inner.Contains("["))
+                            return null;
+                        return inner;
+                    }
+                }
+            }
+
+            return null;
+        }
+
         private string GenerateContext(string type, IEnumerable<ItuClass> ituClasses)
         {
             var ret = new StringBuilder(@$"
@@ -810,6 +844,15 @@ namespace Sharp{type}
 
                                         if (fixedAllocations == "") // when null, don't append anything
                                         {
+                                            // Array lengths come from the stream, and several of them are
+                                            // Exp-Golomb coded, so a corrupt stream can ask for an array far
+                                            // larger than the data it came from. Check before allocating.
+                                            string elementCount = OuterArrayCount(variableType);
+                                            if (elementCount != null)
+                                            {
+                                                ret.Append($"\r\n{spacing}stream.CheckArrayAllocation((ulong)({elementCount}), \"{variableName}\");");
+                                            }
+
                                             ret.Append($"\r\n{spacing}this.{variableName} = new {variableType}{appendType};");
                                         }
                                     }

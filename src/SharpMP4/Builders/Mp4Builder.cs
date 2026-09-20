@@ -18,7 +18,7 @@ namespace SharpMP4.Builders
             public ITrack Track { get; set; }
             public ulong EndTime { get; set; }
             public List<uint> SampleSizes { get; set; } = new List<uint>();
-            public List<uint> SampleOffsets { get; set; } = new List<uint>();
+            public List<long> SampleOffsets { get; set; } = new List<long>();
             public List<uint> RandomAccessPoints { get; set; } = new List<uint>();
 
             /// <summary>
@@ -92,7 +92,7 @@ namespace SharpMP4.Builders
 
             uint currentSampleDuration = sampleDuration <= 0 ? (uint)_trackContexts[trackID].Track.DefaultSampleDuration : (uint)sampleDuration;
             var track = _trackContexts[trackID];
-            track.SampleOffsets.Add((uint)_storage.GetPosition());
+            track.SampleOffsets.Add(_storage.GetPosition());
             _storage.Write(sample, 0, sample.Length);
             track.SampleSizes.Add((uint)sample.Length);
             track.CompositionOffsets.Add(compositionOffset);
@@ -105,7 +105,7 @@ namespace SharpMP4.Builders
             }
         }
 
-        private MovieBox BuildMoov()
+        private MovieBox BuildMoov(bool largeOffsets)
         {
             var moov = new MovieBox();
 
@@ -320,11 +320,27 @@ namespace SharpMP4.Builders
                 stsz.EntrySize = track.SampleSizes.ToArray();
                 stsz.SampleCount = (uint)track.SampleSizes.Count;
 
-                var stco = new ChunkOffsetBox();
-                stco.SetParent(stbl);
-                stbl.Children.Add(stco);
-                stco.ChunkOffset = track.SampleOffsets.ToArray(); // Temporary offset from the beginning of raw data, we have to add mdat offset later
-                stco.EntryCount = (uint)track.SampleOffsets.Count;
+                // Offsets are still relative to the start of the media data here; the header size
+                // is added once it is known. Past 4 GB they no longer fit in a 32-bit stco, and
+                // truncating them would silently produce a file that cannot be played, so switch
+                // to the 64-bit co64 instead. largeOffsets is decided in FinalizeMedia, which is
+                // the first point at which the header size is known.
+                if (largeOffsets)
+                {
+                    var co64 = new ChunkLargeOffsetBox();
+                    co64.SetParent(stbl);
+                    stbl.Children.Add(co64);
+                    co64.ChunkOffset = track.SampleOffsets.Select(offset => (ulong)offset).ToArray();
+                    co64.EntryCount = (uint)track.SampleOffsets.Count;
+                }
+                else
+                {
+                    var stco = new ChunkOffsetBox();
+                    stco.SetParent(stbl);
+                    stbl.Children.Add(stco);
+                    stco.ChunkOffset = track.SampleOffsets.Select(offset => (uint)offset).ToArray();
+                    stco.EntryCount = (uint)track.SampleOffsets.Count;
+                }
             }
 
             return moov;
@@ -387,16 +403,35 @@ namespace SharpMP4.Builders
             ftyp.CompatibleBrands = compatibleBrands.Distinct().Select(IsoStream.FromFourCC).ToArray();
 
             // create moov at the beginning of the file (faststart, allowing to play video early while still streaming)
-            var moov = BuildMoov();
-            moov.SetParent(mp4);
-            mp4.Children.Add(moov);
-
             var mdat = new MediaDataBox();
-            mp4.Children.Add(mdat);
             mdat.Data = new StreamMarker(0, _storage.GetLength(), new IsoStream(_storage));
 
-            // we know the final size of the moov box, we can now adjust the stco offsets
-            long mdatOffset = ((int)(ftyp.CalculateSize() + moov.CalculateSize()) >> 3) + 4 + (mdat.HasLargeSize ? 8 : 4);
+            // The offsets are relative to the media data until the header size is known, and the
+            // header size depends on which offset box is used. Size it with 32-bit offsets first,
+            // then redo it with 64-bit ones if the real offsets would not fit.
+            bool largeOffsets = false;
+            MovieBox moov;
+            long mdatOffset;
+            while (true)
+            {
+                moov = BuildMoov(largeOffsets);
+                mdatOffset = ((long)(ftyp.CalculateSize() + moov.CalculateSize()) >> 3) + 4 + (mdat.HasLargeSize ? 8 : 4);
+
+                long highestOffset = 0;
+                foreach (var track in _trackContexts.Values)
+                    if (track.SampleOffsets.Count > 0)
+                        highestOffset = Math.Max(highestOffset, track.SampleOffsets[track.SampleOffsets.Count - 1]);
+
+                if (largeOffsets || highestOffset + mdatOffset <= uint.MaxValue)
+                    break;
+
+                largeOffsets = true;
+            }
+
+            moov.SetParent(mp4);
+            mp4.Children.Add(moov);
+            mp4.Children.Add(mdat);
+
             moov.ModifyChunkOffsets(mdatOffset);
 
             var stream = _output.GetStream(0);

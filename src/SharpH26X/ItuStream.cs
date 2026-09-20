@@ -38,6 +38,44 @@ namespace SharpH26X
         {
         }
 
+        /// <summary>
+        /// Verifies that an array of <paramref name="count"/> entries could actually be read from
+        /// what is left of the stream, before the array is allocated.
+        /// </summary>
+        /// <remarks>
+        /// Several array lengths in the H.26x syntax - num_negative_pics, num_entry_point_offsets
+        /// and their neighbours - are Exp-Golomb coded, so a corrupt or hostile stream can put an
+        /// enormous value there. Allocating straight from one lets a NAL unit of a few kilobytes
+        /// ask for gigabytes. Every entry occupies at least one bit, so a count can never exceed
+        /// the number of bits left; that bound rejects nothing a conforming stream produces.
+        /// </remarks>
+        public void CheckArrayAllocation(ulong count, string name)
+        {
+            long length;
+            long position;
+            try
+            {
+                length = _stream.Length;
+                position = _stream.Position;
+            }
+            catch (NotSupportedException)
+            {
+                return; // not seekable, so there is nothing to bound against
+            }
+
+            // The bit reader buffers a byte ahead, so the stream position can already sit at the
+            // end while bits are still to be handed out. Allow for that, plus a byte for the one
+            // an emulation prevention scan may have pulled in; the bound is there to stop counts
+            // in the millions, and a couple of bytes of slack costs nothing.
+            ulong remainingBits = (ulong)Math.Max(0, length - position) * 8 + 16;
+            if (count > remainingBits)
+            {
+                string message = $"Invalid count of '{name}': {count} entries do not fit into the remaining {Math.Max(0, length - position)} bytes";
+                Logger?.LogDebug(message);
+                throw new ItuEndOfStreamException(message);
+            }
+        }
+
         #region Bit read/write
 
         private int ReadByte()
@@ -653,6 +691,12 @@ namespace SharpH26X
 
         private void LogBegin(string name)
         {
+            // Checked before the message is built. These run on every syntax element read, so
+            // formatting first and discarding inside the logger costs the allocations and the
+            // string work on the hottest path in the parser even when nothing is being logged.
+            if (this.Logger == null || !this.Logger.IsInfoEnabled)
+                return;
+
             var padding = new StringBuilder();
             for (int i = 0; i < _logLevel; i++)
             {
@@ -665,6 +709,9 @@ namespace SharpH26X
         private void LogEnd<T>(string name, ulong size, T value)
         {
             if (string.IsNullOrEmpty(name))
+                return;
+
+            if (this.Logger == null || !this.Logger.IsInfoEnabled)
                 return;
 
             var padding = new StringBuilder();
