@@ -63,7 +63,11 @@ namespace SharpH26X
                 return; // not seekable, so there is nothing to bound against
             }
 
-            ulong remainingBits = (ulong)Math.Max(0, length - position) * 8;
+            // The bit reader buffers a byte ahead, so the stream position can already sit at the
+            // end while bits are still to be handed out. Allow for that, plus a byte for the one
+            // an emulation prevention scan may have pulled in; the bound is there to stop counts
+            // in the millions, and a couple of bytes of slack costs nothing.
+            ulong remainingBits = (ulong)Math.Max(0, length - position) * 8 + 16;
             if (count > remainingBits)
             {
                 string message = $"Invalid count of '{name}': {count} entries do not fit into the remaining {Math.Max(0, length - position)} bytes";
