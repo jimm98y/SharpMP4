@@ -14,19 +14,24 @@ namespace SharpMP4.Builders
     {
         private class MediaFragment
         {
-            public MediaFragment(IStorage storage, ulong startTime, ulong endTime, uint[] sampleSizes, uint[] sampleDurations)
+            public MediaFragment(IStorage storage, ulong startTime, ulong endTime, uint[] sampleSizes, uint[] sampleDurations, int[] compositionOffsets)
             {
                 this.Storage = storage;
                 this.StartTime = startTime;
                 this.EndTime = endTime;
                 this.SampleSizes = sampleSizes;
                 this.SampleDurations = sampleDurations;
+                this.CompositionOffsets = compositionOffsets;
             }
 
             public ulong StartTime { get; set; }
             public ulong EndTime { get; set; }
             public uint[] SampleSizes { get; set; }
             public uint[] SampleDurations { get; set; }
+
+            /// <summary>Composition time minus decode time, per sample.</summary>
+            public int[] CompositionOffsets { get; set; }
+
             public IStorage Storage { get; set; }
         }
 
@@ -55,6 +60,9 @@ namespace SharpMP4.Builders
             public ulong EndTime { get; set; }
             public List<uint> SampleSizes { get; set; } = new List<uint>();
             public List<uint> SampleDurations { get; set; } = new List<uint>();
+
+            /// <summary>Composition time minus decode time, per sample. Non-zero for B pictures.</summary>
+            public List<int> CompositionOffsets { get; set; } = new List<int>();
             public uint FragmentCounts { get; set; }
 
             public IStorage CurrentFragments { get; set; }
@@ -113,11 +121,24 @@ namespace SharpMP4.Builders
 
         public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration = -1)
         {
+            ProcessTrackSample(trackID, sample, sampleDuration, 0);
+        }
+
+        /// <summary>
+        /// Appends a sample, recording how far its composition time sits from its decode time.
+        /// </summary>
+        /// <param name="compositionOffset">
+        /// Composition time minus decode time, in track timescale units. Needed whenever pictures
+        /// are coded out of presentation order; leave at 0 for streams that are not reordered.
+        /// </param>
+        public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration, int compositionOffset)
+        {
             _trackContexts[trackID].Track.ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
 
             if (processedSample != null)
             {
-                ProcessRawSample(trackID, processedSample, sampleDuration, isRandomAccessPoint);
+                ProcessRawSample(trackID, processedSample, sampleDuration, isRandomAccessPoint,
+                    new TemporaryFileStorageFactory(), compositionOffset);
             }
         }
 
@@ -131,7 +152,17 @@ namespace SharpMP4.Builders
             ProcessRawSample(trackID, sample, sampleDuration, isRandomAccessPoint, temporaryStorageFactory.Create());
         }
 
+        public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint, ITemporaryStorageFactory temporaryStorageFactory, int compositionOffset)
+        {
+            ProcessRawSample(trackID, sample, sampleDuration, isRandomAccessPoint, temporaryStorageFactory.Create(), compositionOffset);
+        }
+
         public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint, IStorage storage)
+        {
+            ProcessRawSample(trackID, sample, sampleDuration, isRandomAccessPoint, storage, 0);
+        }
+
+        public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint, IStorage storage, int compositionOffset)
         {
             TrackContext track = _trackContexts[trackID];
             uint currentSampleDuration = sampleDuration < 0 ? (uint)track.Track.DefaultSampleDuration : (uint)sampleDuration;
@@ -147,12 +178,14 @@ namespace SharpMP4.Builders
                 track.StartTime = _trackContexts[trackID].EndTime;
                 track.SampleSizes.Clear();
                 track.SampleDurations.Clear();
+                track.CompositionOffsets.Clear();
                 track.FragmentCounts++;
             }
 
             track.CurrentFragments.Write(sample, 0, sample.Length);
             track.SampleSizes.Add((uint)sample.Length);
             track.SampleDurations.Add(currentSampleDuration);
+            track.CompositionOffsets.Add(compositionOffset);
             track.EndTime += currentSampleDuration;
 
             bool isFragmentReady = true;
@@ -173,7 +206,7 @@ namespace SharpMP4.Builders
 
         private MediaFragment CreateNewFragment(TrackContext track)
         {
-            var ret = new MediaFragment(track.CurrentFragments, track.StartTime, track.EndTime, track.SampleSizes.ToArray(), track.SampleDurations.ToArray());
+            var ret = new MediaFragment(track.CurrentFragments, track.StartTime, track.EndTime, track.SampleSizes.ToArray(), track.SampleDurations.ToArray(), track.CompositionOffsets.ToArray());
             track.SampleSizes.Clear();
             return ret;
         }
@@ -496,16 +529,29 @@ namespace SharpMP4.Builders
             else
             {
                 trun.Flags = 0x301;
-            }                
+            }
+
+            // Pictures coded out of presentation order need the difference between composition and
+            // decode time recorded, the same way the non fragmented builder writes ctts. Version 1
+            // of the box carries it signed, so the offsets do not have to be biased.
+            bool hasCompositionOffsets = fragment.CompositionOffsets != null &&
+                fragment.CompositionOffsets.Any(offset => offset != 0);
+            if (hasCompositionOffsets)
+            {
+                trun.Flags |= 0x800;
+                trun.Version = 1;
+            }
+
             trun.DataOffset = 0;
             trun._TrunEntry = new TrunEntry[fragment.SampleSizes.Length];
             for (int k = 0; k < fragment.SampleSizes.Length; k++)
             {
-                trun._TrunEntry[k] = new TrunEntry(0, 0)
+                trun._TrunEntry[k] = new TrunEntry(trun.Version, trun.Flags)
                 {
                     Flags = trun.Flags,
                     SampleDuration = fragment.SampleDurations[k],
-                    SampleSize = fragment.SampleSizes[k]
+                    SampleSize = fragment.SampleSizes[k],
+                    SampleCompositionTimeOffset0 = hasCompositionOffsets ? fragment.CompositionOffsets[k] : 0
                 };
             }
             trun.SampleCount = (uint)trun._TrunEntry.Length;
