@@ -226,7 +226,13 @@ namespace ItuGenerator.CSharp
                 case "ViewIdx":
                     return "ituContext.ViewOrderIdx[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]";
                 case "DepthFlag":
-                    return "ituContext.DepthLayerFlag[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]";
+                    // DepthFlag is referenced by exactly one syntax element, slice_ic_enabled_flag,
+                    // which belongs to the 3D-HEVC slice segment header (I.7.3.6.1). H265.js carries
+                    // that table merged into 7.3.6.1, so the Annex I gate has to be applied here.
+                    // Outside 3D-HEVC, report a depth layer so the Annex I branch is never taken -
+                    // otherwise MV-HEVC streams (Apple spatial video) read one bit too many and the
+                    // rest of the slice segment header is parsed at the wrong bit offset.
+                    return "(ituContext.Is3dExtension != 0 ? ituContext.DepthLayerFlag[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ] : 1)";
                 case "defaultOutputLayerIdc":
                     return "Math.Min( ituContext.VideoParameterSetRbsp.VpsExtension.DefaultOutputLayerIdc, 2 )";
                 case "PartNumY":

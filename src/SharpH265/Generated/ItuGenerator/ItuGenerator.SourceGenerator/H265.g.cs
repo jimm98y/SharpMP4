@@ -17030,7 +17030,7 @@ slice_segment_header() {
 						this.pred_weight_table =  new PredWeightTable() ;
 						size +=  stream.ReadClass<PredWeightTable>(size, context, this.pred_weight_table, "pred_weight_table"); 
 					}
-					else if (ituContext.DepthLayerFlag[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]== 0 && ituContext.NumRefListLayers[ituContext.NalHeader.NalUnitHeader.NuhLayerId] > 0)
+					else if ((ituContext.Is3dExtension != 0 ? ituContext.DepthLayerFlag[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ] : 1)== 0 && ituContext.NumRefListLayers[ituContext.NalHeader.NalUnitHeader.NuhLayerId] > 0)
 					{
 						size += stream.ReadUnsignedInt(size, 1, out this.slice_ic_enabled_flag, "slice_ic_enabled_flag"); 
 
@@ -17370,7 +17370,7 @@ slice_segment_header() {
 					{
 						size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table, "pred_weight_table"); 
 					}
-					else if (ituContext.DepthLayerFlag[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]== 0 && ituContext.NumRefListLayers[ituContext.NalHeader.NalUnitHeader.NuhLayerId] > 0)
+					else if ((ituContext.Is3dExtension != 0 ? ituContext.DepthLayerFlag[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ] : 1)== 0 && ituContext.NumRefListLayers[ituContext.NalHeader.NalUnitHeader.NuhLayerId] > 0)
 					{
 						size += stream.WriteUnsignedInt(1, this.slice_ic_enabled_flag, "slice_ic_enabled_flag"); 
 

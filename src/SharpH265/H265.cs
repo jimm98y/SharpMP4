@@ -168,10 +168,114 @@ namespace SharpH265
         public ulong NumActiveRefLayerPics { get; set; }
         public uint[] refLayerPicIdc { get; set; }
         public uint TemporalId { get; set; }
-        public uint NumPicTotalCurr { get; set; }
+
+        /// <summary>
+        /// NumPicTotalCurr (ITU-T H.265 equation 7-57, extended by F.7.4.7.2).
+        /// </summary>
+        /// <remarks>
+        /// Computed on demand rather than cached. The slice segment header consults it to decide
+        /// whether ref_pic_lists_modification() is present, and that test happens *before*
+        /// ref_pic_lists_modification() is parsed - which is the only place the old cached value
+        /// was ever assigned. So the test used to read a stale value (0 on the first slice) and
+        /// silently skipped ref_pic_lists_modification(), desynchronising the rest of the header.
+        /// </remarks>
+        public uint NumPicTotalCurr
+        {
+            get
+            {
+                uint count = 0;
+                var header = SliceSegmentLayerRbsp?.SliceSegmentHeader;
+
+                // Prefer the current picture's own st_ref_pic_set over the NumNegativePics /
+                // NumPositivePics context arrays. Those are only refreshed from inside the
+                // per-entry loops, so a set with zero entries in one direction leaves the
+                // previous picture's count in place.
+                var rps = ActiveStRefPicSet();
+                if (rps != null && rps.InterRefPicSetPredictionFlag == 0)
+                {
+                    for (int i = 0; i < (int)rps.NumNegativePics; i++)
+                        if (rps.UsedByCurrPicS0Flag[i] != 0)
+                            count++;
+                    for (int i = 0; i < (int)rps.NumPositivePics; i++)
+                        if (rps.UsedByCurrPicS1Flag[i] != 0)
+                            count++;
+                }
+                else
+                {
+                    if (NumNegativePics != null && UsedByCurrPicS0 != null &&
+                        CurrRpsIdx < (ulong)NumNegativePics.Length && UsedByCurrPicS0[CurrRpsIdx] != null)
+                    {
+                        for (int i = 0; i < (int)NumNegativePics[CurrRpsIdx] && i < UsedByCurrPicS0[CurrRpsIdx].Length; i++)
+                            if (UsedByCurrPicS0[CurrRpsIdx][i] != 0)
+                                count++;
+                    }
+
+                    if (NumPositivePics != null && UsedByCurrPicS1 != null &&
+                        CurrRpsIdx < (ulong)NumPositivePics.Length && UsedByCurrPicS1[CurrRpsIdx] != null)
+                    {
+                        for (int i = 0; i < (int)NumPositivePics[CurrRpsIdx] && i < UsedByCurrPicS1[CurrRpsIdx].Length; i++)
+                            if (UsedByCurrPicS1[CurrRpsIdx][i] != 0)
+                                count++;
+                    }
+                }
+
+                if (header != null && UsedByCurrPicLt != null)
+                {
+                    int numLt = (int)(header.NumLongTermSps + header.NumLongTermPics);
+                    for (int i = 0; i < numLt && i < UsedByCurrPicLt.Length; i++)
+                        if (UsedByCurrPicLt[i] != 0)
+                            count++;
+                }
+
+                if (PicParameterSetRbsp?.PpsSccExtension != null &&
+                    PicParameterSetRbsp.PpsSccExtension.PpsCurrPicRefEnabledFlag != 0)
+                {
+                    count++;
+                }
+
+                // F.7.4.7.2: multi-layer streams add the active inter-layer reference pictures.
+                DeriveNumActiveRefLayerPics();
+                count += (uint)NumActiveRefLayerPics;
+
+                return count;
+            }
+        }
+
+        /// <summary>
+        /// The short-term reference picture set in force for the current slice, whether it was
+        /// signalled inline or selected from the active SPS.
+        /// </summary>
+        private StRefPicSet ActiveStRefPicSet()
+        {
+            var header = SliceSegmentLayerRbsp?.SliceSegmentHeader;
+            if (header == null)
+                return null;
+
+            if (header.ShortTermRefPicSetSpsFlag == 0)
+                return header.StRefPicSet;
+
+            var sets = SeqParameterSetRbsp?.StRefPicSet;
+            if (sets == null || header.ShortTermRefPicSetIdx >= (ulong)sets.Length)
+                return null;
+
+            return sets[header.ShortTermRefPicSetIdx];
+        }
+
         public ulong[] PocLsbLt { get; private set; }
         public uint[] UsedByCurrPicLt { get; set; }
         public ulong CurrRpsIdx { get; set; }
+
+        /// <summary>
+        /// True when the bitstream carries the 3D-HEVC (Annex I) extensions.
+        /// </summary>
+        /// <remarks>
+        /// slice_ic_enabled_flag is an Annex I element. Plain MV-HEVC (Annex F) streams, such as
+        /// Apple spatial video, must not have it parsed - reading it costs one bit and corrupts
+        /// the remainder of the slice segment header.
+        /// </remarks>
+        public int Is3dExtension =>
+            VideoParameterSetRbsp?.Vps3dExtension != null ? 1 : 0;
+
         public int inCmpPredAvailFlag { get; set; }
         public int DepthFlag { get; set; }
         public int ViewIdx { get; set; }
@@ -977,24 +1081,61 @@ namespace SharpH265
 
         public void OnNumInterLayerRefPicsMinus1()
         {
+            DeriveNumActiveRefLayerPics();
+        }
+
+        /// <summary>
+        /// Derives NumActiveRefLayerPics (ITU-T H.265 F.7.4.7.1).
+        /// </summary>
+        /// <remarks>
+        /// This used to run only from <see cref="OnNumInterLayerRefPicsMinus1"/>, i.e. only when
+        /// num_inter_layer_ref_pics_minus1 is actually present in the slice header. When
+        /// default_ref_layers_active_flag is 1 the whole inter-layer block is absent from the
+        /// slice header, so the derivation never ran and NumActiveRefLayerPics stayed 0.
+        /// Apple MV-HEVC (spatial video) encodes exactly that way, which then made
+        /// NumPicTotalCurr too small and dropped ref_pic_lists_modification() from the parse.
+        /// </remarks>
+        public void DeriveNumActiveRefLayerPics()
+        {
+            if (NalHeader?.NalUnitHeader == null || VideoParameterSetRbsp?.VpsExtension == null)
+            {
+                NumActiveRefLayerPics = 0;
+                return;
+            }
+
             var nuh_layer_id = NalHeader.NalUnitHeader.NuhLayerId;
             var sub_layers_vps_max_minus1 = VideoParameterSetRbsp.VpsExtension.SubLayersVpsMaxMinus1;
             var max_tid_il_ref_pics_plus1 = VideoParameterSetRbsp.VpsExtension.MaxTidIlRefPicsPlus1;
             var default_ref_layers_active_flag = VideoParameterSetRbsp.VpsExtension.DefaultRefLayersActiveFlag;
-            var inter_layer_pred_enabled_flag = SliceSegmentLayerRbsp.SliceSegmentHeader.InterLayerPredEnabledFlag;
+            var inter_layer_pred_enabled_flag = SliceSegmentLayerRbsp?.SliceSegmentHeader == null ? (byte)0 : SliceSegmentLayerRbsp.SliceSegmentHeader.InterLayerPredEnabledFlag;
             var max_one_active_ref_layer_flag = VideoParameterSetRbsp.VpsExtension.MaxOneActiveRefLayerFlag;
-            var num_inter_layer_ref_pics_minus1 = SliceSegmentLayerRbsp.SliceSegmentHeader.NumInterLayerRefPicsMinus1;
+            var num_inter_layer_ref_pics_minus1 = SliceSegmentLayerRbsp?.SliceSegmentHeader == null ? 0 : SliceSegmentLayerRbsp.SliceSegmentHeader.NumInterLayerRefPicsMinus1;
 
             if (refLayerPicIdc == null || refLayerPicIdc.Length < MaxLayersMinus1 + 1)
             {
                 refLayerPicIdc = new uint[MaxLayersMinus1 + 1];
             }
 
+            // F.7.4.3.1.1: when vps_sub_layers_max_minus1_present_flag is 0, sub_layers_vps_max_minus1[i]
+            // is inferred to be vps_max_sub_layers_minus1; when max_tid_ref_present_flag is 0,
+            // max_tid_il_ref_pics_plus1[i][j] is inferred to be 7. Both arrays are then absent.
+            uint SubLayersVpsMaxMinus1(uint i) =>
+                sub_layers_vps_max_minus1 != null && i < sub_layers_vps_max_minus1.Length
+                    ? sub_layers_vps_max_minus1[i]
+                    : VideoParameterSetRbsp.VpsMaxSubLayersMinus1;
+
+            uint MaxTidIlRefPicsPlus1(uint i, uint k) =>
+                max_tid_il_ref_pics_plus1 != null && i < max_tid_il_ref_pics_plus1.Length &&
+                max_tid_il_ref_pics_plus1[i] != null && k < max_tid_il_ref_pics_plus1[i].Length
+                    ? max_tid_il_ref_pics_plus1[i][k]
+                    : 7u;
+
             uint j = 0;
             for (uint i = 0; i < NumDirectRefLayers[nuh_layer_id]; i++)
             {
                 uint refLayerIdx = LayerIdxInVps[IdDirectRefLayer[nuh_layer_id][i]];
-                if (sub_layers_vps_max_minus1[refLayerIdx] >= TemporalId && (TemporalId == 0 || max_tid_il_ref_pics_plus1[refLayerIdx][LayerIdxInVps[nuh_layer_id]] > TemporalId))
+                if (SubLayersVpsMaxMinus1(refLayerIdx) >= TemporalId &&
+                    (TemporalId == 0 || MaxTidIlRefPicsPlus1(refLayerIdx, LayerIdxInVps[nuh_layer_id]) > TemporalId))
                     refLayerPicIdc[j++] = i;
             }
             uint numRefLayerPics = j;
@@ -1019,22 +1160,7 @@ namespace SharpH265
 
         public void OnListEntryL0()
         {
-            var pps_curr_pic_ref_enabled_flag = PicParameterSetRbsp.PpsSccExtension.PpsCurrPicRefEnabledFlag;
-            var num_long_term_sps = SliceSegmentLayerRbsp.SliceSegmentHeader.NumLongTermSps;
-            var num_long_term_pics = SliceSegmentLayerRbsp.SliceSegmentHeader.NumLongTermPics;
-
-            NumPicTotalCurr = 0;
-            for (int i = 0; i < (int)NumNegativePics[CurrRpsIdx]; i++)
-                if (UsedByCurrPicS0[CurrRpsIdx][i] != 0)
-                    NumPicTotalCurr++;
-            for (int i = 0; i < (int)NumPositivePics[CurrRpsIdx]; i++)
-                if (UsedByCurrPicS1[CurrRpsIdx][i] != 0)
-                    NumPicTotalCurr++;
-            for (int i = 0; i < (int)(num_long_term_sps + num_long_term_pics); i++)
-                if (UsedByCurrPicLt[i] != 0)
-                    NumPicTotalCurr++;
-            if (pps_curr_pic_ref_enabled_flag != 0)
-                NumPicTotalCurr++;
+            // NumPicTotalCurr is now derived on demand, see the property.
         }
 
         public void OnUsedByCurrPicLtFlag(uint i)
@@ -1193,6 +1319,60 @@ namespace SharpH265
                     throw new Exception($"SeqParameterSet with id {pps_seq_parameter_set_id} not found.");
                 }
             }
+
+            ResolveMultiLayerRepFormat(SeqParameterSetRbsp);
+        }
+
+        /// <summary>
+        /// Copies the VPS rep_format() into an SPS that did not code the picture format itself
+        /// (ITU-T H.265 F.7.4.3.2.1, MultiLayerExtSpsFlag equal to 1).
+        /// </summary>
+        /// <remarks>
+        /// Such an SPS omits chroma_format_idc, the picture size, the bit depths and the
+        /// conformance window, inheriting them from the VPS instead. Without this the fields stay
+        /// zero, so ChromaArrayType reads as 0 and slice_sao_chroma_flag is dropped from the
+        /// slice header parse - one bit short, corrupting everything after it.
+        /// </remarks>
+        public void ResolveMultiLayerRepFormat(SeqParameterSetRbsp sps)
+        {
+            // A conforming SPS that codes its own format always has a non-zero width.
+            if (sps == null || sps.PicWidthInLumaSamples != 0)
+                return;
+
+            var ext = VideoParameterSetRbsp?.VpsExtension;
+            var repFormats = ext?.RepFormat;
+            if (repFormats == null || repFormats.Length == 0)
+                return;
+
+            ulong idx = 0;
+            if (sps.UpdateRepFormatFlag != 0)
+            {
+                idx = sps.SpsRepFormatIdx;
+            }
+            else if (ext.VpsRepFormatIdx != null && NalHeader?.NalUnitHeader != null)
+            {
+                var layerIdx = LayerIdxInVps == null ? 0 : LayerIdxInVps[NalHeader.NalUnitHeader.NuhLayerId];
+                if (layerIdx < ext.VpsRepFormatIdx.Length)
+                    idx = ext.VpsRepFormatIdx[layerIdx];
+            }
+
+            if (idx >= (ulong)repFormats.Length || repFormats[idx] == null)
+                idx = 0;
+            var rep = repFormats[idx];
+            if (rep == null)
+                return;
+
+            sps.ChromaFormatIdc = rep.ChromaFormatVpsIdc;
+            sps.SeparateColourPlaneFlag = rep.SeparateColourPlaneVpsFlag;
+            sps.PicWidthInLumaSamples = rep.PicWidthVpsInLumaSamples;
+            sps.PicHeightInLumaSamples = rep.PicHeightVpsInLumaSamples;
+            sps.BitDepthLumaMinus8 = rep.BitDepthVpsLumaMinus8;
+            sps.BitDepthChromaMinus8 = rep.BitDepthVpsChromaMinus8;
+            sps.ConformanceWindowFlag = rep.ConformanceWindowVpsFlag;
+            sps.ConfWinLeftOffset = rep.ConfWinVpsLeftOffset;
+            sps.ConfWinRightOffset = rep.ConfWinVpsRightOffset;
+            sps.ConfWinTopOffset = rep.ConfWinVpsTopOffset;
+            sps.ConfWinBottomOffset = rep.ConfWinVpsBottomOffset;
         }
 
         public void SetPpsPicParameterSetId(ulong pps_pic_parameter_set_id)
