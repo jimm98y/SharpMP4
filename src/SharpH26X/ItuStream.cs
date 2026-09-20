@@ -38,6 +38,40 @@ namespace SharpH26X
         {
         }
 
+        /// <summary>
+        /// Verifies that an array of <paramref name="count"/> entries could actually be read from
+        /// what is left of the stream, before the array is allocated.
+        /// </summary>
+        /// <remarks>
+        /// Several array lengths in the H.26x syntax - num_negative_pics, num_entry_point_offsets
+        /// and their neighbours - are Exp-Golomb coded, so a corrupt or hostile stream can put an
+        /// enormous value there. Allocating straight from one lets a NAL unit of a few kilobytes
+        /// ask for gigabytes. Every entry occupies at least one bit, so a count can never exceed
+        /// the number of bits left; that bound rejects nothing a conforming stream produces.
+        /// </remarks>
+        public void CheckArrayAllocation(ulong count, string name)
+        {
+            long length;
+            long position;
+            try
+            {
+                length = _stream.Length;
+                position = _stream.Position;
+            }
+            catch (NotSupportedException)
+            {
+                return; // not seekable, so there is nothing to bound against
+            }
+
+            ulong remainingBits = (ulong)Math.Max(0, length - position) * 8;
+            if (count > remainingBits)
+            {
+                string message = $"Invalid count of '{name}': {count} entries do not fit into the remaining {Math.Max(0, length - position)} bytes";
+                Logger?.LogDebug(message);
+                throw new ItuEndOfStreamException(message);
+            }
+        }
+
         #region Bit read/write
 
         private int ReadByte()

@@ -484,8 +484,11 @@ seq_parameter_set_data() {
 				if ( seq_scaling_matrix_present_flag != 0 )
 				{
 
+					stream.CheckArrayAllocation((ulong)( ( ( chroma_format_idc  !=  3 ) ? 8 : 12 )), "seq_scaling_list_present_flag");
 					this.seq_scaling_list_present_flag = new byte[ ( ( chroma_format_idc  !=  3 ) ? 8 : 12 )];
+					stream.CheckArrayAllocation((ulong)( ( ( chroma_format_idc  !=  3 ) ? 8 : 12 )), "scaling_list");
 					this.scaling_list = new ScalingList[ ( ( chroma_format_idc  !=  3 ) ? 8 : 12 )];
+					stream.CheckArrayAllocation((ulong)( ( ( chroma_format_idc  !=  3 ) ? 8 : 12 )), "scaling_list0");
 					this.scaling_list0 = new ScalingList[ ( ( chroma_format_idc  !=  3 ) ? 8 : 12 )];
 					for ( i = 0; i < ( ( chroma_format_idc  !=  3 ) ? 8 : 12 ); i++ )
 					{
@@ -522,6 +525,7 @@ seq_parameter_set_data() {
 				size += stream.ReadSignedIntGolomb(size, out this.offset_for_top_to_bottom_field, "offset_for_top_to_bottom_field"); 
 				size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_frames_in_pic_order_cnt_cycle, "num_ref_frames_in_pic_order_cnt_cycle"); 
 
+				stream.CheckArrayAllocation((ulong)( num_ref_frames_in_pic_order_cnt_cycle), "offset_for_ref_frame");
 				this.offset_for_ref_frame = new long[ num_ref_frames_in_pic_order_cnt_cycle];
 				for ( i = 0; i < num_ref_frames_in_pic_order_cnt_cycle; i++ )
 				{
@@ -727,6 +731,7 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
 			lastScale= 8;
 			nextScale= 8;
 
+			stream.CheckArrayAllocation((ulong)( sizeOfScalingList), "delta_scale");
 			this.delta_scale = new long[ sizeOfScalingList];
 			for ( j = 0; j < sizeOfScalingList; j++ )
 			{
@@ -1229,6 +1234,7 @@ pic_parameter_set_rbsp() {
 				if ( slice_group_map_type  ==  0 )
 				{
 
+					stream.CheckArrayAllocation((ulong)( num_slice_groups_minus1 + 1), "run_length_minus1");
 					this.run_length_minus1 = new ulong[ num_slice_groups_minus1 + 1];
 					for ( iGroup = 0; iGroup <= num_slice_groups_minus1; iGroup++ )
 					{
@@ -1238,7 +1244,9 @@ pic_parameter_set_rbsp() {
 				else if ( slice_group_map_type  ==  2 )
 				{
 
+					stream.CheckArrayAllocation((ulong)( num_slice_groups_minus1 + 1), "top_left");
 					this.top_left = new ulong[ num_slice_groups_minus1 + 1];
+					stream.CheckArrayAllocation((ulong)( num_slice_groups_minus1 + 1), "bottom_right");
 					this.bottom_right = new ulong[ num_slice_groups_minus1 + 1];
 					for ( iGroup = 0; iGroup < num_slice_groups_minus1; iGroup++ )
 					{
@@ -1257,6 +1265,7 @@ pic_parameter_set_rbsp() {
 				{
 					size += stream.ReadUnsignedIntGolomb(size, out this.pic_size_in_map_units_minus1, "pic_size_in_map_units_minus1"); 
 
+					stream.CheckArrayAllocation((ulong)( pic_size_in_map_units_minus1 + 1), "slice_group_id");
 					this.slice_group_id = new ulong[ pic_size_in_map_units_minus1 + 1];
 					for ( i = 0; i <= pic_size_in_map_units_minus1; i++ )
 					{
@@ -1283,10 +1292,16 @@ pic_parameter_set_rbsp() {
 				if ( pic_scaling_matrix_present_flag != 0 )
 				{
 
+					stream.CheckArrayAllocation((ulong)( 6 + 
+     ( ( ituContext.SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc  !=  3 ) ? 2 : 6 ) * transform_8x8_mode_flag), "pic_scaling_list_present_flag");
 					this.pic_scaling_list_present_flag = new byte[ 6 + 
      ( ( ituContext.SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc  !=  3 ) ? 2 : 6 ) * transform_8x8_mode_flag];
+					stream.CheckArrayAllocation((ulong)( 6 + 
+     ( ( ituContext.SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc  !=  3 ) ? 2 : 6 ) * transform_8x8_mode_flag), "scaling_list");
 					this.scaling_list = new ScalingList[ 6 + 
      ( ( ituContext.SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc  !=  3 ) ? 2 : 6 ) * transform_8x8_mode_flag];
+					stream.CheckArrayAllocation((ulong)( 6 + 
+     ( ( ituContext.SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc  !=  3 ) ? 2 : 6 ) * transform_8x8_mode_flag), "scaling_list0");
 					this.scaling_list0 = new ScalingList[ 6 + 
      ( ( ituContext.SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc  !=  3 ) ? 2 : 6 ) * transform_8x8_mode_flag];
 					for ( i = 0; i < 6 + 
@@ -3083,11 +3098,17 @@ pred_weight_table() {
 				size += stream.ReadUnsignedIntGolomb(size, out this.chroma_log2_weight_denom, "chroma_log2_weight_denom"); 
 			}
 
+			stream.CheckArrayAllocation((ulong)( ituContext.NumRefIdxL0ActiveMinus1 + 1), "luma_weight_l0_flag");
 			this.luma_weight_l0_flag = new byte[ ituContext.NumRefIdxL0ActiveMinus1 + 1];
+			stream.CheckArrayAllocation((ulong)( ituContext.NumRefIdxL0ActiveMinus1 + 1), "luma_weight_l0");
 			this.luma_weight_l0 = new long[ ituContext.NumRefIdxL0ActiveMinus1 + 1];
+			stream.CheckArrayAllocation((ulong)( ituContext.NumRefIdxL0ActiveMinus1 + 1), "luma_offset_l0");
 			this.luma_offset_l0 = new long[ ituContext.NumRefIdxL0ActiveMinus1 + 1];
+			stream.CheckArrayAllocation((ulong)( ituContext.NumRefIdxL0ActiveMinus1 + 1), "chroma_weight_l0_flag");
 			this.chroma_weight_l0_flag = new byte[ ituContext.NumRefIdxL0ActiveMinus1 + 1];
+			stream.CheckArrayAllocation((ulong)( ituContext.NumRefIdxL0ActiveMinus1 + 1), "chroma_weight_l0");
 			this.chroma_weight_l0 = new long[ ituContext.NumRefIdxL0ActiveMinus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( ituContext.NumRefIdxL0ActiveMinus1 + 1), "chroma_offset_l0");
 			this.chroma_offset_l0 = new long[ ituContext.NumRefIdxL0ActiveMinus1 + 1][];
 			for (i = 0; i <= ituContext.NumRefIdxL0ActiveMinus1; i++)
 			{
@@ -3106,7 +3127,9 @@ pred_weight_table() {
 					if (chroma_weight_l0_flag[i] != 0)
 					{
 
+						stream.CheckArrayAllocation((ulong)( 2), "chroma_weight_l0[i ]");
 						this.chroma_weight_l0[i ] = new long[ 2];
+						stream.CheckArrayAllocation((ulong)( 2), "chroma_offset_l0[i ]");
 						this.chroma_offset_l0[i ] = new long[ 2];
 						for (j = 0; j < 2; j++)
 						{
@@ -3120,11 +3143,17 @@ pred_weight_table() {
 			if (ituContext.SliceType % 5 == 1)
 			{
 
+				stream.CheckArrayAllocation((ulong)( ituContext.NumRefIdxL1ActiveMinus1 + 1), "luma_weight_l1_flag");
 				this.luma_weight_l1_flag = new byte[ ituContext.NumRefIdxL1ActiveMinus1 + 1];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumRefIdxL1ActiveMinus1 + 1), "luma_weight_l1");
 				this.luma_weight_l1 = new long[ ituContext.NumRefIdxL1ActiveMinus1 + 1];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumRefIdxL1ActiveMinus1 + 1), "luma_offset_l1");
 				this.luma_offset_l1 = new long[ ituContext.NumRefIdxL1ActiveMinus1 + 1];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumRefIdxL1ActiveMinus1 + 1), "chroma_weight_l1_flag");
 				this.chroma_weight_l1_flag = new byte[ ituContext.NumRefIdxL1ActiveMinus1 + 1];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumRefIdxL1ActiveMinus1 + 1), "chroma_weight_l1");
 				this.chroma_weight_l1 = new long[ ituContext.NumRefIdxL1ActiveMinus1 + 1][];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumRefIdxL1ActiveMinus1 + 1), "chroma_offset_l1");
 				this.chroma_offset_l1 = new long[ ituContext.NumRefIdxL1ActiveMinus1 + 1][];
 				for (i = 0; i <= ituContext.NumRefIdxL1ActiveMinus1; i++)
 				{
@@ -3143,7 +3172,9 @@ pred_weight_table() {
 						if (chroma_weight_l1_flag[i] != 0)
 						{
 
+							stream.CheckArrayAllocation((ulong)( 2), "chroma_weight_l1[i ]");
 							this.chroma_weight_l1[i ] = new long[ 2];
+							stream.CheckArrayAllocation((ulong)( 2), "chroma_offset_l1[i ]");
 							this.chroma_offset_l1[i ] = new long[ 2];
 							for (j = 0; j < 2; j++)
 							{
@@ -4492,7 +4523,9 @@ buffering_period( payloadSize ) {
 			if ( ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag != 0 )
 			{
 
+				stream.CheckArrayAllocation((ulong)( ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1 + 1), "initial_cpb_removal_delay");
 				this.initial_cpb_removal_delay = new ulong[ ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1 + 1];
+				stream.CheckArrayAllocation((ulong)( ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1 + 1), "initial_cpb_removal_delay_offset");
 				this.initial_cpb_removal_delay_offset = new ulong[ ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1 + 1];
 				for ( SchedSelIdx = 0; SchedSelIdx <= ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++ )
 				{
@@ -4504,7 +4537,9 @@ buffering_period( payloadSize ) {
 			if ( ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag != 0 )
 			{
 
+				stream.CheckArrayAllocation((ulong)( ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1 + 1), "initial_cpb_removal_delay0");
 				this.initial_cpb_removal_delay0 = new ulong[ ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1 + 1];
+				stream.CheckArrayAllocation((ulong)( ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1 + 1), "initial_cpb_removal_delay_offset0");
 				this.initial_cpb_removal_delay_offset0 = new ulong[ ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1 + 1];
 				for ( SchedSelIdx = 0; SchedSelIdx <= ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++ )
 				{
@@ -4666,20 +4701,35 @@ pic_timing( payloadSize ) {
 				size += stream.ReadUnsignedInt(size, 4, out this.pic_struct, "pic_struct"); 
 				ituContext.OnPicStruct(pic_struct);
 
+				stream.CheckArrayAllocation((ulong)( ituContext.NumClockTS), "clock_timestamp_flag");
 				this.clock_timestamp_flag = new byte[ ituContext.NumClockTS];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumClockTS), "ct_type");
 				this.ct_type = new uint[ ituContext.NumClockTS];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumClockTS), "nuit_field_based_flag");
 				this.nuit_field_based_flag = new byte[ ituContext.NumClockTS];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumClockTS), "counting_type");
 				this.counting_type = new uint[ ituContext.NumClockTS];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumClockTS), "full_timestamp_flag");
 				this.full_timestamp_flag = new byte[ ituContext.NumClockTS];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumClockTS), "discontinuity_flag");
 				this.discontinuity_flag = new byte[ ituContext.NumClockTS];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumClockTS), "cnt_dropped_flag");
 				this.cnt_dropped_flag = new byte[ ituContext.NumClockTS];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumClockTS), "n_frames");
 				this.n_frames = new uint[ ituContext.NumClockTS];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumClockTS), "seconds_value");
 				this.seconds_value = new uint[ ituContext.NumClockTS];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumClockTS), "minutes_value");
 				this.minutes_value = new uint[ ituContext.NumClockTS];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumClockTS), "hours_value");
 				this.hours_value = new uint[ ituContext.NumClockTS];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumClockTS), "seconds_flag");
 				this.seconds_flag = new byte[ ituContext.NumClockTS];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumClockTS), "minutes_flag");
 				this.minutes_flag = new byte[ ituContext.NumClockTS];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumClockTS), "hours_flag");
 				this.hours_flag = new byte[ ituContext.NumClockTS];
+				stream.CheckArrayAllocation((ulong)( ituContext.NumClockTS), "time_offset");
 				this.time_offset = new int[ ituContext.NumClockTS];
 				for ( i = 0; i < ituContext.NumClockTS; i++ )
 				{
@@ -4872,9 +4922,13 @@ if( !pan_scan_rect_cancel_flag ) {
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.pan_scan_cnt_minus1, "pan_scan_cnt_minus1"); 
 
+				stream.CheckArrayAllocation((ulong)( pan_scan_cnt_minus1 + 1), "pan_scan_rect_left_offset");
 				this.pan_scan_rect_left_offset = new long[ pan_scan_cnt_minus1 + 1];
+				stream.CheckArrayAllocation((ulong)( pan_scan_cnt_minus1 + 1), "pan_scan_rect_right_offset");
 				this.pan_scan_rect_right_offset = new long[ pan_scan_cnt_minus1 + 1];
+				stream.CheckArrayAllocation((ulong)( pan_scan_cnt_minus1 + 1), "pan_scan_rect_top_offset");
 				this.pan_scan_rect_top_offset = new long[ pan_scan_cnt_minus1 + 1];
+				stream.CheckArrayAllocation((ulong)( pan_scan_cnt_minus1 + 1), "pan_scan_rect_bottom_offset");
 				this.pan_scan_rect_bottom_offset = new long[ pan_scan_cnt_minus1 + 1];
 				for ( i = 0; i <= pan_scan_cnt_minus1; i++ )
 				{
@@ -4952,6 +5006,7 @@ filler_payload( payloadSize ) {
 
 			uint k = 0;
 
+			stream.CheckArrayAllocation((ulong)( payloadSize), "ff_byte");
 			this.ff_byte = new uint[ payloadSize];
 			for ( k = 0; k < payloadSize; k++ )
 			{
@@ -5120,6 +5175,7 @@ user_data_unregistered( payloadSize ) {
 			uint i = 0;
 			size += stream.ReadUnsignedInt(size, 128, out this.uuid_iso_iec_11578, "uuid_iso_iec_11578"); 
 
+			stream.CheckArrayAllocation((ulong)( payloadSize), "user_data_payload_byte");
 			this.user_data_payload_byte = new byte[ payloadSize];
 			for ( i = 16; i < payloadSize; i++ )
 			{
@@ -5380,10 +5436,15 @@ spare_pic( payloadSize ) {
 			}
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_spare_pics_minus1, "num_spare_pics_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( num_spare_pics_minus1 + 1 + 1), "delta_spare_frame_num");
 			this.delta_spare_frame_num = new ulong[ num_spare_pics_minus1 + 1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_spare_pics_minus1 + 1 + 1), "spare_bottom_field_flag");
 			this.spare_bottom_field_flag = new byte[ num_spare_pics_minus1 + 1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_spare_pics_minus1 + 1 + 1), "spare_area_idc");
 			this.spare_area_idc = new ulong[ num_spare_pics_minus1 + 1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_spare_pics_minus1 + 1 + 1), "spare_unit_flag");
 			this.spare_unit_flag = new byte[ num_spare_pics_minus1 + 1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_spare_pics_minus1 + 1 + 1), "zero_run_length");
 			this.zero_run_length = new ulong[ num_spare_pics_minus1 + 1 + 1][];
 			for ( i = 0; i < num_spare_pics_minus1 + 1; i++ )
 			{
@@ -5398,6 +5459,7 @@ spare_pic( payloadSize ) {
 				if ( spare_area_idc[ i ]  ==  1 )
 				{
 
+					stream.CheckArrayAllocation((ulong)( ituContext.PicSizeInMapUnits), "spare_unit_flag[ i ]");
 					this.spare_unit_flag[ i ] = new byte[ ituContext.PicSizeInMapUnits];
 					for ( j = 0; j < ituContext.PicSizeInMapUnits; j++ )
 					{
@@ -5408,6 +5470,7 @@ spare_pic( payloadSize ) {
 				{
 					mapUnitCnt= 0;
 
+					stream.CheckArrayAllocation((ulong)( ituContext.PicSizeInMapUnits), "zero_run_length[ i ]");
 					this.zero_run_length[ i ] = new ulong[ ituContext.PicSizeInMapUnits];
 					for ( j=0; mapUnitCnt < ituContext.PicSizeInMapUnits; j++ )
 					{
@@ -5689,8 +5752,11 @@ sub_seq_layer_characteristics( payloadSize ) {
 			uint layer = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_sub_seq_layers_minus1, "num_sub_seq_layers_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( num_sub_seq_layers_minus1 + 1), "accurate_statistics_flag");
 			this.accurate_statistics_flag = new byte[ num_sub_seq_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_sub_seq_layers_minus1 + 1), "average_bit_rate");
 			this.average_bit_rate = new uint[ num_sub_seq_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_sub_seq_layers_minus1 + 1), "average_frame_rate");
 			this.average_frame_rate = new uint[ num_sub_seq_layers_minus1 + 1];
 			for ( layer = 0; layer <= num_sub_seq_layers_minus1; layer++ )
 			{
@@ -5811,8 +5877,11 @@ sub_seq_characteristics( payloadSize ) {
 			}
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_referenced_subseqs, "num_referenced_subseqs"); 
 
+			stream.CheckArrayAllocation((ulong)( num_referenced_subseqs), "ref_sub_seq_layer_num");
 			this.ref_sub_seq_layer_num = new ulong[ num_referenced_subseqs];
+			stream.CheckArrayAllocation((ulong)( num_referenced_subseqs), "ref_sub_seq_id");
 			this.ref_sub_seq_id = new ulong[ num_referenced_subseqs];
+			stream.CheckArrayAllocation((ulong)( num_referenced_subseqs), "ref_sub_seq_direction");
 			this.ref_sub_seq_direction = new byte[ num_referenced_subseqs];
 			for ( n = 0; n < num_referenced_subseqs; n++ )
 			{
@@ -6159,6 +6228,7 @@ motion_constrained_slice_group_set( payloadSize ) {
 			if ( ituContext.PicParameterSetRbsp.NumSliceGroupsMinus1 > 0 )
 			{
 
+				stream.CheckArrayAllocation((ulong)( num_slice_groups_in_set_minus1 + 1), "slice_group_id");
 				this.slice_group_id = new ulong[ num_slice_groups_in_set_minus1 + 1];
 				for ( i = 0; i <= num_slice_groups_in_set_minus1; i++ )
 				{
@@ -6321,16 +6391,22 @@ film_grain_characteristics( payloadSize ) {
 				size += stream.ReadUnsignedInt(size, 2, out this.blending_mode_id, "blending_mode_id"); 
 				size += stream.ReadUnsignedInt(size, 4, out this.log2_scale_factor, "log2_scale_factor"); 
 
+				stream.CheckArrayAllocation((ulong)( 3), "comp_model_present_flag");
 				this.comp_model_present_flag = new byte[ 3];
 				for ( c = 0; c < 3; c++ )
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.comp_model_present_flag[ c ], "comp_model_present_flag"); 
 				}
 
+				stream.CheckArrayAllocation((ulong)( 3), "num_intensity_intervals_minus1");
 				this.num_intensity_intervals_minus1 = new uint[ 3];
+				stream.CheckArrayAllocation((ulong)( 3), "num_model_values_minus1");
 				this.num_model_values_minus1 = new uint[ 3];
+				stream.CheckArrayAllocation((ulong)( 3), "intensity_interval_lower_bound");
 				this.intensity_interval_lower_bound = new uint[ 3][];
+				stream.CheckArrayAllocation((ulong)( 3), "intensity_interval_upper_bound");
 				this.intensity_interval_upper_bound = new uint[ 3][];
+				stream.CheckArrayAllocation((ulong)( 3), "comp_model_value");
 				this.comp_model_value = new long[ 3][][];
 				for ( c = 0; c < 3; c++ )
 				{
@@ -6641,14 +6717,17 @@ post_filter_hint( payloadSize ) {
 			size += stream.ReadUnsignedIntGolomb(size, out this.filter_hint_size_x, "filter_hint_size_x"); 
 			size += stream.ReadUnsignedInt(size, 2, out this.filter_hint_type, "filter_hint_type"); 
 
+			stream.CheckArrayAllocation((ulong)( 3), "filter_hint");
 			this.filter_hint = new long[ 3][][];
 			for ( colour_component = 0; colour_component < 3; colour_component ++ )
 			{
 
+				stream.CheckArrayAllocation((ulong)( filter_hint_size_y), "filter_hint[ colour_component ]");
 				this.filter_hint[ colour_component ] = new long[ filter_hint_size_y][];
 				for ( cy = 0; cy < filter_hint_size_y; cy ++ )
 				{
 
+					stream.CheckArrayAllocation((ulong)( filter_hint_size_x), "filter_hint[ colour_component ][ cy ]");
 					this.filter_hint[ colour_component ][ cy ] = new long[ filter_hint_size_x];
 					for ( cx = 0; cx < filter_hint_size_x; cx ++ )
 					{
@@ -6841,6 +6920,7 @@ tone_mapping_info( payloadSize ) {
 				if ( tone_map_model_id  ==  2 )
 				{
 
+					stream.CheckArrayAllocation((ulong)( ( 1 << (int) target_bit_depth )), "start_of_coded_interval");
 					this.start_of_coded_interval = new ulong[ ( 1 << (int) target_bit_depth )];
 					for ( i = 0; i < ( 1 << (int) target_bit_depth ); i++ )
 					{
@@ -6852,7 +6932,9 @@ tone_mapping_info( payloadSize ) {
 				{
 					size += stream.ReadUnsignedInt(size, 16, out this.num_pivots, "num_pivots"); 
 
+					stream.CheckArrayAllocation((ulong)( num_pivots), "coded_pivot_value");
 					this.coded_pivot_value = new ulong[ num_pivots];
+					stream.CheckArrayAllocation((ulong)( num_pivots), "target_pivot_value");
 					this.target_pivot_value = new ulong[ num_pivots];
 					for ( i=0; i < num_pivots; i++ )
 					{
@@ -7261,7 +7343,9 @@ display_orientation( payloadSize ) {
 
 			uint c = 0;
 
+			stream.CheckArrayAllocation((ulong)( 3), "display_primaries_x");
 			this.display_primaries_x = new uint[ 3];
+			stream.CheckArrayAllocation((ulong)( 3), "display_primaries_y");
 			this.display_primaries_y = new uint[ 3];
 			for ( c = 0; c < 3; c++ )
 			{
@@ -7422,8 +7506,11 @@ colour_remapping_info( payloadSize ) {
 				size += stream.ReadUnsignedInt(size, 8, out this.colour_remap_input_bit_depth, "colour_remap_input_bit_depth"); 
 				size += stream.ReadUnsignedInt(size, 8, out this.colour_remap_output_bit_depth, "colour_remap_output_bit_depth"); 
 
+				stream.CheckArrayAllocation((ulong)( 3), "pre_lut_num_val_minus1");
 				this.pre_lut_num_val_minus1 = new uint[ 3];
+				stream.CheckArrayAllocation((ulong)( 3), "pre_lut_coded_value");
 				this.pre_lut_coded_value = new ulong[ 3][];
+				stream.CheckArrayAllocation((ulong)( 3), "pre_lut_target_value");
 				this.pre_lut_target_value = new ulong[ 3][];
 				for ( c = 0; c < 3; c++ )
 				{
@@ -7447,10 +7534,12 @@ colour_remapping_info( payloadSize ) {
 				{
 					size += stream.ReadUnsignedInt(size, 4, out this.log2_matrix_denom, "log2_matrix_denom"); 
 
+					stream.CheckArrayAllocation((ulong)( 3), "colour_remap_coeffs");
 					this.colour_remap_coeffs = new long[ 3][];
 					for ( c = 0; c < 3; c++ )
 					{
 
+						stream.CheckArrayAllocation((ulong)( 3), "colour_remap_coeffs[ c ]");
 						this.colour_remap_coeffs[ c ] = new long[ 3];
 						for ( i = 0; i < 3; i++ )
 						{
@@ -7459,8 +7548,11 @@ colour_remapping_info( payloadSize ) {
 					}
 				}
 
+				stream.CheckArrayAllocation((ulong)( 3), "post_lut_num_val_minus1");
 				this.post_lut_num_val_minus1 = new uint[ 3];
+				stream.CheckArrayAllocation((ulong)( 3), "post_lut_coded_value");
 				this.post_lut_coded_value = new ulong[ 3][];
+				stream.CheckArrayAllocation((ulong)( 3), "post_lut_target_value");
 				this.post_lut_target_value = new ulong[ 3][];
 				for ( c = 0; c < 3; c++ )
 				{
@@ -7750,7 +7842,9 @@ content_colour_volume( payloadSize ) {
 				if ( ccv_primaries_present_flag != 0 )
 				{
 
+					stream.CheckArrayAllocation((ulong)( 3), "ccv_primaries_x");
 					this.ccv_primaries_x = new int[ 3];
+					stream.CheckArrayAllocation((ulong)( 3), "ccv_primaries_y");
 					this.ccv_primaries_y = new int[ 3];
 					for ( c = 0; c < 3; c++ )
 					{
@@ -8263,23 +8357,41 @@ regionwise_packing( payloadSize ) {
 				size += stream.ReadUnsignedInt(size, 16, out this.packed_picture_width, "packed_picture_width"); 
 				size += stream.ReadUnsignedInt(size, 16, out this.packed_picture_height, "packed_picture_height"); 
 
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "rwp_reserved_zero_4bits");
 				this.rwp_reserved_zero_4bits = new uint[ num_packed_regions];
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "transform_type");
 				this.transform_type = new uint[ num_packed_regions];
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "guard_band_flag");
 				this.guard_band_flag = new byte[ num_packed_regions];
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "proj_region_width");
 				this.proj_region_width = new uint[ num_packed_regions];
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "proj_region_height");
 				this.proj_region_height = new uint[ num_packed_regions];
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "proj_region_top");
 				this.proj_region_top = new uint[ num_packed_regions];
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "proj_region_left");
 				this.proj_region_left = new uint[ num_packed_regions];
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "packed_region_width");
 				this.packed_region_width = new uint[ num_packed_regions];
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "packed_region_height");
 				this.packed_region_height = new uint[ num_packed_regions];
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "packed_region_top");
 				this.packed_region_top = new uint[ num_packed_regions];
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "packed_region_left");
 				this.packed_region_left = new uint[ num_packed_regions];
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "left_gb_width");
 				this.left_gb_width = new uint[ num_packed_regions];
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "right_gb_width");
 				this.right_gb_width = new uint[ num_packed_regions];
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "top_gb_height");
 				this.top_gb_height = new uint[ num_packed_regions];
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "bottom_gb_height");
 				this.bottom_gb_height = new uint[ num_packed_regions];
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "gb_not_used_for_pred_flag");
 				this.gb_not_used_for_pred_flag = new byte[ num_packed_regions];
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "gb_type");
 				this.gb_type = new uint[ num_packed_regions][];
+				stream.CheckArrayAllocation((ulong)( num_packed_regions), "rwp_gb_reserved_zero_3bits");
 				this.rwp_gb_reserved_zero_3bits = new uint[ num_packed_regions];
 				for ( i = 0; i < num_packed_regions; i++ )
 				{
@@ -8303,6 +8415,7 @@ regionwise_packing( payloadSize ) {
 						size += stream.ReadUnsignedInt(size, 8, out this.bottom_gb_height[ i ], "bottom_gb_height"); 
 						size += stream.ReadUnsignedInt(size, 1, out this.gb_not_used_for_pred_flag[ i ], "gb_not_used_for_pred_flag"); 
 
+						stream.CheckArrayAllocation((ulong)( 4), "gb_type[ i ]");
 						this.gb_type[ i ] = new uint[ 4];
 						for ( j = 0; j < 4; j++ )
 						{
@@ -8441,10 +8554,15 @@ omni_viewport( payloadSize ) {
 				size += stream.ReadUnsignedInt(size, 1, out this.omni_viewport_persistence_flag, "omni_viewport_persistence_flag"); 
 				size += stream.ReadUnsignedInt(size, 4, out this.omni_viewport_cnt_minus1, "omni_viewport_cnt_minus1"); 
 
+				stream.CheckArrayAllocation((ulong)(  omni_viewport_cnt_minus1 + 1), "omni_viewport_azimuth_centre");
 				this.omni_viewport_azimuth_centre = new int[  omni_viewport_cnt_minus1 + 1];
+				stream.CheckArrayAllocation((ulong)(  omni_viewport_cnt_minus1 + 1), "omni_viewport_elevation_centre");
 				this.omni_viewport_elevation_centre = new int[  omni_viewport_cnt_minus1 + 1];
+				stream.CheckArrayAllocation((ulong)(  omni_viewport_cnt_minus1 + 1), "omni_viewport_tilt_centre");
 				this.omni_viewport_tilt_centre = new int[  omni_viewport_cnt_minus1 + 1];
+				stream.CheckArrayAllocation((ulong)(  omni_viewport_cnt_minus1 + 1), "omni_viewport_hor_range");
 				this.omni_viewport_hor_range = new uint[  omni_viewport_cnt_minus1 + 1];
+				stream.CheckArrayAllocation((ulong)(  omni_viewport_cnt_minus1 + 1), "omni_viewport_ver_range");
 				this.omni_viewport_ver_range = new uint[  omni_viewport_cnt_minus1 + 1];
 				for ( i = 0; i  <=  omni_viewport_cnt_minus1; i++ )
 				{
@@ -8531,7 +8649,9 @@ sei_manifest( payloadSize ) {
 			uint i = 0;
 			size += stream.ReadUnsignedInt(size, 16, out this.manifest_num_sei_msg_types, "manifest_num_sei_msg_types"); 
 
+			stream.CheckArrayAllocation((ulong)( manifest_num_sei_msg_types), "manifest_sei_payload_type");
 			this.manifest_sei_payload_type = new uint[ manifest_num_sei_msg_types];
+			stream.CheckArrayAllocation((ulong)( manifest_num_sei_msg_types), "manifest_sei_description");
 			this.manifest_sei_description = new uint[ manifest_num_sei_msg_types];
 			for ( i = 0; i < manifest_num_sei_msg_types; i++ )
 			{
@@ -8615,7 +8735,9 @@ sei_prefix_indication( payloadSize ) {
 			size += stream.ReadUnsignedInt(size, 16, out this.prefix_sei_payload_type, "prefix_sei_payload_type"); 
 			size += stream.ReadUnsignedInt(size, 8, out this.num_sei_prefix_indications_minus1, "num_sei_prefix_indications_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)(  num_sei_prefix_indications_minus1 + 1), "num_bits_in_prefix_indication_minus1");
 			this.num_bits_in_prefix_indication_minus1 = new uint[  num_sei_prefix_indications_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)(  num_sei_prefix_indications_minus1 + 1), "sei_prefix_data_bit");
 			this.sei_prefix_data_bit = new byte[  num_sei_prefix_indications_minus1 + 1][];
 			for ( i = 0; i  <=  num_sei_prefix_indications_minus1; i++ )
 			{
@@ -8853,8 +8975,11 @@ annotated_regions( payloadSize ) {
 					}
 					size += stream.ReadUnsignedIntGolomb(size, out this.ar_num_label_updates, "ar_num_label_updates"); 
 
+					stream.CheckArrayAllocation((ulong)( ar_num_label_updates), "ar_label_idx");
 					this.ar_label_idx = new ulong[ ar_num_label_updates];
+					stream.CheckArrayAllocation((ulong)( ar_num_label_updates), "ar_label_cancel_flag");
 					this.ar_label_cancel_flag = new byte[ ar_num_label_updates];
+					stream.CheckArrayAllocation((ulong)( ar_num_label_updates), "ar_label");
 					this.ar_label = new byte[ ar_num_label_updates][];
 					for ( i = 0; i < ar_num_label_updates; i++ )
 					{
@@ -8877,17 +9002,29 @@ annotated_regions( payloadSize ) {
 				}
 				size += stream.ReadUnsignedIntGolomb(size, out this.ar_num_object_updates, "ar_num_object_updates"); 
 
+				stream.CheckArrayAllocation((ulong)( ar_num_object_updates), "ar_object_idx");
 				this.ar_object_idx = new ulong[ ar_num_object_updates];
+				stream.CheckArrayAllocation((ulong)( ar_num_object_updates), "ar_object_cancel_flag");
 				this.ar_object_cancel_flag = new byte[ ar_num_object_updates];
+				stream.CheckArrayAllocation((ulong)( ar_num_object_updates), "ar_object_label_update_flag");
 				this.ar_object_label_update_flag = new byte[ ar_num_object_updates];
+				stream.CheckArrayAllocation((ulong)( ar_num_object_updates), "ar_object_label_idx");
 				this.ar_object_label_idx = new ulong[ ar_num_object_updates];
+				stream.CheckArrayAllocation((ulong)( ar_num_object_updates), "ar_bounding_box_update_flag");
 				this.ar_bounding_box_update_flag = new byte[ ar_num_object_updates];
+				stream.CheckArrayAllocation((ulong)( ar_num_object_updates), "ar_bounding_box_cancel_flag");
 				this.ar_bounding_box_cancel_flag = new byte[ ar_num_object_updates];
+				stream.CheckArrayAllocation((ulong)( ar_num_object_updates), "ar_bounding_box_top");
 				this.ar_bounding_box_top = new uint[ ar_num_object_updates];
+				stream.CheckArrayAllocation((ulong)( ar_num_object_updates), "ar_bounding_box_left");
 				this.ar_bounding_box_left = new uint[ ar_num_object_updates];
+				stream.CheckArrayAllocation((ulong)( ar_num_object_updates), "ar_bounding_box_width");
 				this.ar_bounding_box_width = new uint[ ar_num_object_updates];
+				stream.CheckArrayAllocation((ulong)( ar_num_object_updates), "ar_bounding_box_height");
 				this.ar_bounding_box_height = new uint[ ar_num_object_updates];
+				stream.CheckArrayAllocation((ulong)( ar_num_object_updates), "ar_partial_object_flag");
 				this.ar_partial_object_flag = new byte[ ar_num_object_updates];
+				stream.CheckArrayAllocation((ulong)( ar_num_object_updates), "ar_object_confidence");
 				this.ar_object_confidence = new ulong[ ar_num_object_updates];
 				for ( i = 0; i < ar_num_object_updates; i++ )
 				{
@@ -9134,6 +9271,7 @@ shutter_interval_info( payloadSize ) {
 					{
 						size += stream.ReadUnsignedInt(size, 3, out this.sii_max_sub_layers_minus1, "sii_max_sub_layers_minus1"); 
 
+						stream.CheckArrayAllocation((ulong)(  sii_max_sub_layers_minus1 + 1), "sub_layer_num_units_in_shutter_interval");
 						this.sub_layer_num_units_in_shutter_interval = new uint[  sii_max_sub_layers_minus1 + 1];
 						for ( i = 0; i  <=  sii_max_sub_layers_minus1; i++ )
 						{
@@ -9219,6 +9357,7 @@ reserved_sei_message( payloadSize ) {
 
 			uint i = 0;
 
+			stream.CheckArrayAllocation((ulong)( payloadSize), "reserved_sei_message_payload_byte");
 			this.reserved_sei_message_payload_byte = new byte[ payloadSize];
 			for ( i = 0; i < payloadSize; i++ )
 			{
@@ -9633,8 +9772,11 @@ hrd_parameters() {
 			size += stream.ReadUnsignedInt(size, 4, out this.bit_rate_scale, "bit_rate_scale"); 
 			size += stream.ReadUnsignedInt(size, 4, out this.cpb_size_scale, "cpb_size_scale"); 
 
+			stream.CheckArrayAllocation((ulong)( cpb_cnt_minus1 + 1), "bit_rate_value_minus1");
 			this.bit_rate_value_minus1 = new ulong[ cpb_cnt_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( cpb_cnt_minus1 + 1), "cpb_size_value_minus1");
 			this.cpb_size_value_minus1 = new ulong[ cpb_cnt_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( cpb_cnt_minus1 + 1), "cbr_flag");
 			this.cbr_flag = new byte[ cpb_cnt_minus1 + 1];
 			for (SchedSelIdx = 0; SchedSelIdx <= cpb_cnt_minus1; SchedSelIdx++)
 			{
@@ -11166,70 +11308,135 @@ scalability_info( payloadSize ) {
 			size += stream.ReadUnsignedInt(size, 1, out this.priority_id_setting_flag, "priority_id_setting_flag"); 
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_layers_minus1, "num_layers_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "layer_id");
 			this.layer_id = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "priority_id");
 			this.priority_id = new uint[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "discardable_flag");
 			this.discardable_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "dependency_id");
 			this.dependency_id = new uint[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "quality_id");
 			this.quality_id = new uint[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "temporal_id");
 			this.temporal_id = new uint[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "sub_pic_layer_flag");
 			this.sub_pic_layer_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "sub_region_layer_flag");
 			this.sub_region_layer_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "iroi_division_info_present_flag");
 			this.iroi_division_info_present_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "profile_level_info_present_flag");
 			this.profile_level_info_present_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "bitrate_info_present_flag");
 			this.bitrate_info_present_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "frm_rate_info_present_flag");
 			this.frm_rate_info_present_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "frm_size_info_present_flag");
 			this.frm_size_info_present_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "layer_dependency_info_present_flag");
 			this.layer_dependency_info_present_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "parameter_sets_info_present_flag");
 			this.parameter_sets_info_present_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "bitstream_restriction_info_present_flag");
 			this.bitstream_restriction_info_present_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "exact_inter_layer_pred_flag");
 			this.exact_inter_layer_pred_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "exact_sample_value_match_flag");
 			this.exact_sample_value_match_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "layer_conversion_flag");
 			this.layer_conversion_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "layer_output_flag");
 			this.layer_output_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "layer_profile_level_idc");
 			this.layer_profile_level_idc = new uint[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "avg_bitrate");
 			this.avg_bitrate = new uint[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "max_bitrate_layer");
 			this.max_bitrate_layer = new uint[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "max_bitrate_layer_representation");
 			this.max_bitrate_layer_representation = new uint[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "max_bitrate_calc_window");
 			this.max_bitrate_calc_window = new uint[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "constant_frm_rate_idc");
 			this.constant_frm_rate_idc = new uint[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "avg_frm_rate");
 			this.avg_frm_rate = new uint[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "frm_width_in_mbs_minus1");
 			this.frm_width_in_mbs_minus1 = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "frm_height_in_mbs_minus1");
 			this.frm_height_in_mbs_minus1 = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "base_region_layer_id");
 			this.base_region_layer_id = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "dynamic_rect_flag");
 			this.dynamic_rect_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "horizontal_offset");
 			this.horizontal_offset = new uint[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "vertical_offset");
 			this.vertical_offset = new uint[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "region_width");
 			this.region_width = new uint[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "region_height");
 			this.region_height = new uint[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "roi_id");
 			this.roi_id = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "iroi_grid_flag");
 			this.iroi_grid_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "grid_width_in_mbs_minus1");
 			this.grid_width_in_mbs_minus1 = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "grid_height_in_mbs_minus1");
 			this.grid_height_in_mbs_minus1 = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "num_rois_minus1");
 			this.num_rois_minus1 = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "first_mb_in_roi");
 			this.first_mb_in_roi = new ulong[ num_layers_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "roi_width_in_mbs_minus1");
 			this.roi_width_in_mbs_minus1 = new ulong[ num_layers_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "roi_height_in_mbs_minus1");
 			this.roi_height_in_mbs_minus1 = new ulong[ num_layers_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "num_directly_dependent_layers");
 			this.num_directly_dependent_layers = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "directly_dependent_layer_id_delta_minus1");
 			this.directly_dependent_layer_id_delta_minus1 = new ulong[ num_layers_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "layer_dependency_info_src_layer_id_delta");
 			this.layer_dependency_info_src_layer_id_delta = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "num_seq_parameter_sets");
 			this.num_seq_parameter_sets = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "seq_parameter_set_id_delta");
 			this.seq_parameter_set_id_delta = new ulong[ num_layers_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "num_subset_seq_parameter_sets");
 			this.num_subset_seq_parameter_sets = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "subset_seq_parameter_set_id_delta");
 			this.subset_seq_parameter_set_id_delta = new ulong[ num_layers_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "num_pic_parameter_sets_minus1");
 			this.num_pic_parameter_sets_minus1 = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "pic_parameter_set_id_delta");
 			this.pic_parameter_set_id_delta = new ulong[ num_layers_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "parameter_sets_info_src_layer_id_delta");
 			this.parameter_sets_info_src_layer_id_delta = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "motion_vectors_over_pic_boundaries_flag");
 			this.motion_vectors_over_pic_boundaries_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "max_bytes_per_pic_denom");
 			this.max_bytes_per_pic_denom = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "max_bits_per_mb_denom");
 			this.max_bits_per_mb_denom = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "log2_max_mv_length_horizontal");
 			this.log2_max_mv_length_horizontal = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "log2_max_mv_length_vertical");
 			this.log2_max_mv_length_vertical = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "max_num_reorder_frames");
 			this.max_num_reorder_frames = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "max_dec_frame_buffering");
 			this.max_dec_frame_buffering = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "conversion_type_idc");
 			this.conversion_type_idc = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "rewriting_info_flag");
 			this.rewriting_info_flag = new byte[ num_layers_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "rewriting_profile_level_idc");
 			this.rewriting_profile_level_idc = new uint[ num_layers_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "rewriting_avg_bitrate");
 			this.rewriting_avg_bitrate = new uint[ num_layers_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "rewriting_max_bitrate");
 			this.rewriting_max_bitrate = new uint[ num_layers_minus1 + 1][];
 			for ( i = 0; i <= num_layers_minus1; i++ )
 			{
@@ -11387,9 +11594,13 @@ scalability_info( payloadSize ) {
 				{
 					size += stream.ReadUnsignedIntGolomb(size, out this.conversion_type_idc[ i ], "conversion_type_idc"); 
 
+					stream.CheckArrayAllocation((ulong)( 2), "rewriting_info_flag[ i ]");
 					this.rewriting_info_flag[ i ] = new byte[ 2];
+					stream.CheckArrayAllocation((ulong)( 2), "rewriting_profile_level_idc[ i ]");
 					this.rewriting_profile_level_idc[ i ] = new uint[ 2];
+					stream.CheckArrayAllocation((ulong)( 2), "rewriting_avg_bitrate[ i ]");
 					this.rewriting_avg_bitrate[ i ] = new uint[ 2];
+					stream.CheckArrayAllocation((ulong)( 2), "rewriting_max_bitrate[ i ]");
 					this.rewriting_max_bitrate[ i ] = new uint[ 2];
 					for ( j=0; j < 2; j++ )
 					{
@@ -11409,11 +11620,17 @@ scalability_info( payloadSize ) {
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.pr_num_dIds_minus1, "pr_num_dIds_minus1"); 
 
+				stream.CheckArrayAllocation((ulong)( pr_num_dIds_minus1 + 1), "pr_dependency_id");
 				this.pr_dependency_id = new uint[ pr_num_dIds_minus1 + 1];
+				stream.CheckArrayAllocation((ulong)( pr_num_dIds_minus1 + 1), "pr_num_minus1");
 				this.pr_num_minus1 = new ulong[ pr_num_dIds_minus1 + 1];
+				stream.CheckArrayAllocation((ulong)( pr_num_dIds_minus1 + 1), "pr_id");
 				this.pr_id = new ulong[ pr_num_dIds_minus1 + 1][];
+				stream.CheckArrayAllocation((ulong)( pr_num_dIds_minus1 + 1), "pr_profile_level_idc");
 				this.pr_profile_level_idc = new uint[ pr_num_dIds_minus1 + 1][];
+				stream.CheckArrayAllocation((ulong)( pr_num_dIds_minus1 + 1), "pr_avg_bitrate");
 				this.pr_avg_bitrate = new uint[ pr_num_dIds_minus1 + 1][];
+				stream.CheckArrayAllocation((ulong)( pr_num_dIds_minus1 + 1), "pr_max_bitrate");
 				this.pr_max_bitrate = new uint[ pr_num_dIds_minus1 + 1][];
 				for ( i = 0; i <= pr_num_dIds_minus1; i++ )
 				{
@@ -11760,9 +11977,13 @@ non_required_layer_rep( payloadSize ) {
 			uint j = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_info_entries_minus1, "num_info_entries_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( num_info_entries_minus1 + 1), "entry_dependency_id");
 			this.entry_dependency_id = new uint[ num_info_entries_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_info_entries_minus1 + 1), "num_non_required_layer_reps_minus1");
 			this.num_non_required_layer_reps_minus1 = new ulong[ num_info_entries_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_info_entries_minus1 + 1), "non_required_layer_rep_dependency_id");
 			this.non_required_layer_rep_dependency_id = new uint[ num_info_entries_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_info_entries_minus1 + 1), "non_required_layer_rep_quality_id");
 			this.non_required_layer_rep_quality_id = new uint[ num_info_entries_minus1 + 1][];
 			for ( i = 0; i <= num_info_entries_minus1; i++ )
 			{
@@ -11851,6 +12072,7 @@ priority_layer_info( payloadSize ) {
 			size += stream.ReadUnsignedInt(size, 3, out this.pr_dependency_id, "pr_dependency_id"); 
 			size += stream.ReadUnsignedInt(size, 4, out this.num_priority_ids, "num_priority_ids"); 
 
+			stream.CheckArrayAllocation((ulong)( num_priority_ids), "alt_priority_id");
 			this.alt_priority_id = new uint[ num_priority_ids];
 			for ( i = 0; i < num_priority_ids; i++ )
 			{
@@ -11919,6 +12141,7 @@ layers_not_present( payloadSize ) {
 			uint i = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_layers, "num_layers"); 
 
+			stream.CheckArrayAllocation((ulong)( num_layers), "layer_id");
 			this.layer_id = new ulong[ num_layers];
 			for ( i = 0; i < num_layers; i++ )
 			{
@@ -12003,10 +12226,15 @@ layer_dependency_change( payloadSize ) {
 			uint j = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_layers_minus1, "num_layers_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "layer_id");
 			this.layer_id = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "layer_dependency_info_present_flag");
 			this.layer_dependency_info_present_flag = new byte[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "num_directly_dependent_layers");
 			this.num_directly_dependent_layers = new ulong[ num_layers_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "directly_dependent_layer_id_delta_minus1");
 			this.directly_dependent_layer_id_delta_minus1 = new ulong[ num_layers_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_layers_minus1 + 1), "layer_dependency_info_src_layer_id_delta_minus1");
 			this.layer_dependency_info_src_layer_id_delta_minus1 = new ulong[ num_layers_minus1 + 1];
 			for ( i = 0; i <= num_layers_minus1; i++ )
 			{
@@ -12131,7 +12359,9 @@ scalable_nesting( payloadSize ) {
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.num_layer_representations_minus1, "num_layer_representations_minus1"); 
 
+				stream.CheckArrayAllocation((ulong)( num_layer_representations_minus1 + 1), "sei_dependency_id");
 				this.sei_dependency_id = new uint[ num_layer_representations_minus1 + 1];
+				stream.CheckArrayAllocation((ulong)( num_layer_representations_minus1 + 1), "sei_quality_id");
 				this.sei_quality_id = new uint[ num_layer_representations_minus1 + 1];
 				for ( i = 0; i <= num_layer_representations_minus1; i++ )
 				{
@@ -12276,16 +12506,27 @@ base_layer_temporal_hrd( payloadSize ) {
 			uint i = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_of_temporal_layers_in_base_layer_minus1, "num_of_temporal_layers_in_base_layer_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_layer_minus1 + 1), "sei_temporal_id");
 			this.sei_temporal_id = new uint[ num_of_temporal_layers_in_base_layer_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_layer_minus1 + 1), "sei_timing_info_present_flag");
 			this.sei_timing_info_present_flag = new byte[ num_of_temporal_layers_in_base_layer_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_layer_minus1 + 1), "sei_num_units_in_tick");
 			this.sei_num_units_in_tick = new uint[ num_of_temporal_layers_in_base_layer_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_layer_minus1 + 1), "sei_time_scale");
 			this.sei_time_scale = new uint[ num_of_temporal_layers_in_base_layer_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_layer_minus1 + 1), "sei_fixed_frame_rate_flag");
 			this.sei_fixed_frame_rate_flag = new byte[ num_of_temporal_layers_in_base_layer_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_layer_minus1 + 1), "sei_nal_hrd_parameters_present_flag");
 			this.sei_nal_hrd_parameters_present_flag = new byte[ num_of_temporal_layers_in_base_layer_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_layer_minus1 + 1), "hrd_parameters");
 			this.hrd_parameters = new HrdParameters[ num_of_temporal_layers_in_base_layer_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_layer_minus1 + 1), "sei_vcl_hrd_parameters_present_flag");
 			this.sei_vcl_hrd_parameters_present_flag = new byte[ num_of_temporal_layers_in_base_layer_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_layer_minus1 + 1), "hrd_parameters0");
 			this.hrd_parameters0 = new HrdParameters[ num_of_temporal_layers_in_base_layer_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_layer_minus1 + 1), "sei_low_delay_hrd_flag");
 			this.sei_low_delay_hrd_flag = new byte[ num_of_temporal_layers_in_base_layer_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_layer_minus1 + 1), "sei_pic_struct_present_flag");
 			this.sei_pic_struct_present_flag = new byte[ num_of_temporal_layers_in_base_layer_minus1 + 1];
 			for ( i = 0; i <= num_of_temporal_layers_in_base_layer_minus1; i++ )
 			{
@@ -12412,7 +12653,9 @@ quality_layer_integrity_check( payloadSize ) {
 			uint i = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_info_entries_minus1, "num_info_entries_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( num_info_entries_minus1 + 1), "entry_dependency_id");
 			this.entry_dependency_id = new uint[ num_info_entries_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_info_entries_minus1 + 1), "quality_layer_crc");
 			this.quality_layer_crc = new uint[ num_info_entries_minus1 + 1];
 			for ( i = 0; i <= num_info_entries_minus1; i++ )
 			{
@@ -12517,15 +12760,25 @@ redundant_pic_property( payloadSize ) {
 			uint k = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_dIds_minus1, "num_dIds_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( num_dIds_minus1 + 1), "dependency_id");
 			this.dependency_id = new uint[ num_dIds_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_dIds_minus1 + 1), "num_qIds_minus1");
 			this.num_qIds_minus1 = new ulong[ num_dIds_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_dIds_minus1 + 1), "quality_id");
 			this.quality_id = new uint[ num_dIds_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_dIds_minus1 + 1), "num_redundant_pics_minus1");
 			this.num_redundant_pics_minus1 = new ulong[ num_dIds_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_dIds_minus1 + 1), "redundant_pic_cnt_minus1");
 			this.redundant_pic_cnt_minus1 = new ulong[ num_dIds_minus1 + 1][][];
+			stream.CheckArrayAllocation((ulong)( num_dIds_minus1 + 1), "pic_match_flag");
 			this.pic_match_flag = new byte[ num_dIds_minus1 + 1][][];
+			stream.CheckArrayAllocation((ulong)( num_dIds_minus1 + 1), "mb_type_match_flag");
 			this.mb_type_match_flag = new byte[ num_dIds_minus1 + 1][][];
+			stream.CheckArrayAllocation((ulong)( num_dIds_minus1 + 1), "motion_match_flag");
 			this.motion_match_flag = new byte[ num_dIds_minus1 + 1][][];
+			stream.CheckArrayAllocation((ulong)( num_dIds_minus1 + 1), "residual_match_flag");
 			this.residual_match_flag = new byte[ num_dIds_minus1 + 1][][];
+			stream.CheckArrayAllocation((ulong)( num_dIds_minus1 + 1), "intra_samples_match_flag");
 			this.intra_samples_match_flag = new byte[ num_dIds_minus1 + 1][][];
 			for ( i = 0; i <= num_dIds_minus1; i++ )
 			{
@@ -12795,18 +13048,31 @@ svc_vui_parameters_extension() {
 			uint i = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.vui_ext_num_entries_minus1, "vui_ext_num_entries_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( vui_ext_num_entries_minus1 + 1), "vui_ext_dependency_id");
 			this.vui_ext_dependency_id = new uint[ vui_ext_num_entries_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_ext_num_entries_minus1 + 1), "vui_ext_quality_id");
 			this.vui_ext_quality_id = new uint[ vui_ext_num_entries_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_ext_num_entries_minus1 + 1), "vui_ext_temporal_id");
 			this.vui_ext_temporal_id = new uint[ vui_ext_num_entries_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_ext_num_entries_minus1 + 1), "vui_ext_timing_info_present_flag");
 			this.vui_ext_timing_info_present_flag = new byte[ vui_ext_num_entries_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_ext_num_entries_minus1 + 1), "vui_ext_num_units_in_tick");
 			this.vui_ext_num_units_in_tick = new uint[ vui_ext_num_entries_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_ext_num_entries_minus1 + 1), "vui_ext_time_scale");
 			this.vui_ext_time_scale = new uint[ vui_ext_num_entries_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_ext_num_entries_minus1 + 1), "vui_ext_fixed_frame_rate_flag");
 			this.vui_ext_fixed_frame_rate_flag = new byte[ vui_ext_num_entries_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_ext_num_entries_minus1 + 1), "vui_ext_nal_hrd_parameters_present_flag");
 			this.vui_ext_nal_hrd_parameters_present_flag = new byte[ vui_ext_num_entries_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_ext_num_entries_minus1 + 1), "hrd_parameters");
 			this.hrd_parameters = new HrdParameters[ vui_ext_num_entries_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_ext_num_entries_minus1 + 1), "vui_ext_vcl_hrd_parameters_present_flag");
 			this.vui_ext_vcl_hrd_parameters_present_flag = new byte[ vui_ext_num_entries_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_ext_num_entries_minus1 + 1), "hrd_parameters0");
 			this.hrd_parameters0 = new HrdParameters[ vui_ext_num_entries_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_ext_num_entries_minus1 + 1), "vui_ext_low_delay_hrd_flag");
 			this.vui_ext_low_delay_hrd_flag = new byte[ vui_ext_num_entries_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_ext_num_entries_minus1 + 1), "vui_ext_pic_struct_present_flag");
 			this.vui_ext_pic_struct_present_flag = new byte[ vui_ext_num_entries_minus1 + 1];
 			for ( i = 0; i <= vui_ext_num_entries_minus1; i++ )
 			{
@@ -13099,15 +13365,20 @@ seq_parameter_set_mvc_extension() {
 			uint k = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1, "num_views_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "view_id");
 			this.view_id = new ulong[ num_views_minus1 + 1];
 			for ( i = 0; i <= num_views_minus1; i++ )
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.view_id[ i ], "view_id"); 
 			}
 
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "num_anchor_refs_l0");
 			this.num_anchor_refs_l0 = new ulong[ num_views_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "anchor_ref_l0");
 			this.anchor_ref_l0 = new ulong[ num_views_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "num_anchor_refs_l1");
 			this.num_anchor_refs_l1 = new ulong[ num_views_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "anchor_ref_l1");
 			this.anchor_ref_l1 = new ulong[ num_views_minus1 + 1][];
 			for ( i = 1; i <= num_views_minus1; i++ )
 			{
@@ -13127,9 +13398,13 @@ seq_parameter_set_mvc_extension() {
 				}
 			}
 
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "num_non_anchor_refs_l0");
 			this.num_non_anchor_refs_l0 = new ulong[ num_views_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "non_anchor_ref_l0");
 			this.non_anchor_ref_l0 = new ulong[ num_views_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "num_non_anchor_refs_l1");
 			this.num_non_anchor_refs_l1 = new ulong[ num_views_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "non_anchor_ref_l1");
 			this.non_anchor_ref_l1 = new ulong[ num_views_minus1 + 1][];
 			for ( i = 1; i <= num_views_minus1; i++ )
 			{
@@ -13150,11 +13425,17 @@ seq_parameter_set_mvc_extension() {
 			}
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_level_values_signalled_minus1, "num_level_values_signalled_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( num_level_values_signalled_minus1 + 1), "level_idc");
 			this.level_idc = new uint[ num_level_values_signalled_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_level_values_signalled_minus1 + 1), "num_applicable_ops_minus1");
 			this.num_applicable_ops_minus1 = new ulong[ num_level_values_signalled_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_level_values_signalled_minus1 + 1), "applicable_op_temporal_id");
 			this.applicable_op_temporal_id = new uint[ num_level_values_signalled_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_level_values_signalled_minus1 + 1), "applicable_op_num_target_views_minus1");
 			this.applicable_op_num_target_views_minus1 = new ulong[ num_level_values_signalled_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_level_values_signalled_minus1 + 1), "applicable_op_target_view_id");
 			this.applicable_op_target_view_id = new ulong[ num_level_values_signalled_minus1 + 1][][];
+			stream.CheckArrayAllocation((ulong)( num_level_values_signalled_minus1 + 1), "applicable_op_num_views_minus1");
 			this.applicable_op_num_views_minus1 = new ulong[ num_level_values_signalled_minus1 + 1][];
 			for ( i = 0; i <= num_level_values_signalled_minus1; i++ )
 			{
@@ -13565,9 +13846,13 @@ parallel_decoding_info( payloadSize ) {
 			size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id, "seq_parameter_set_id"); 
 			ituContext.SetSeqParameterSetId(seq_parameter_set_id);
 
+			stream.CheckArrayAllocation((ulong)( (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1), "pdi_init_delay_anchor_minus2_l0");
 			this.pdi_init_delay_anchor_minus2_l0 = new ulong[ (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1), "pdi_init_delay_anchor_minus2_l1");
 			this.pdi_init_delay_anchor_minus2_l1 = new ulong[ (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1), "pdi_init_delay_non_anchor_minus2_l0");
 			this.pdi_init_delay_non_anchor_minus2_l0 = new ulong[ (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1), "pdi_init_delay_non_anchor_minus2_l1");
 			this.pdi_init_delay_non_anchor_minus2_l1 = new ulong[ (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
 			for ( i = 1; i <= (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++ )
 			{
@@ -13729,6 +14014,7 @@ mvc_scalable_nesting( payloadSize ) {
 				{
 					size += stream.ReadUnsignedIntGolomb(size, out this.num_view_components_minus1, "num_view_components_minus1"); 
 
+					stream.CheckArrayAllocation((ulong)( num_view_components_minus1 + 1), "sei_view_id");
 					this.sei_view_id = new uint[ num_view_components_minus1 + 1];
 					for ( i = 0; i <= num_view_components_minus1; i++ )
 					{
@@ -13740,6 +14026,7 @@ mvc_scalable_nesting( payloadSize ) {
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.num_view_components_op_minus1, "num_view_components_op_minus1"); 
 
+				stream.CheckArrayAllocation((ulong)( num_view_components_op_minus1 + 1), "sei_op_view_id");
 				this.sei_op_view_id = new uint[ num_view_components_op_minus1 + 1];
 				for ( i = 0; i <= num_view_components_op_minus1; i++ )
 				{
@@ -13965,39 +14252,73 @@ view_scalability_info( payloadSize ) {
 			uint j = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_operation_points_minus1, "num_operation_points_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "operation_point_id");
 			this.operation_point_id = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "priority_id");
 			this.priority_id = new uint[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "temporal_id");
 			this.temporal_id = new uint[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "num_target_output_views_minus1");
 			this.num_target_output_views_minus1 = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "view_id");
 			this.view_id = new ulong[ num_operation_points_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "profile_level_info_present_flag");
 			this.profile_level_info_present_flag = new byte[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "bitrate_info_present_flag");
 			this.bitrate_info_present_flag = new byte[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "frm_rate_info_present_flag");
 			this.frm_rate_info_present_flag = new byte[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "view_dependency_info_present_flag");
 			this.view_dependency_info_present_flag = new byte[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "parameter_sets_info_present_flag");
 			this.parameter_sets_info_present_flag = new byte[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "bitstream_restriction_info_present_flag");
 			this.bitstream_restriction_info_present_flag = new byte[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "op_profile_level_idc");
 			this.op_profile_level_idc = new uint[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "avg_bitrate");
 			this.avg_bitrate = new uint[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "max_bitrate");
 			this.max_bitrate = new uint[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "max_bitrate_calc_window");
 			this.max_bitrate_calc_window = new uint[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "constant_frm_rate_idc");
 			this.constant_frm_rate_idc = new uint[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "avg_frm_rate");
 			this.avg_frm_rate = new uint[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "num_directly_dependent_views");
 			this.num_directly_dependent_views = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "directly_dependent_view_id");
 			this.directly_dependent_view_id = new ulong[ num_operation_points_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "view_dependency_info_src_op_id");
 			this.view_dependency_info_src_op_id = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "num_seq_parameter_sets");
 			this.num_seq_parameter_sets = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "seq_parameter_set_id_delta");
 			this.seq_parameter_set_id_delta = new ulong[ num_operation_points_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "num_subset_seq_parameter_sets");
 			this.num_subset_seq_parameter_sets = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "subset_seq_parameter_set_id_delta");
 			this.subset_seq_parameter_set_id_delta = new ulong[ num_operation_points_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "num_pic_parameter_sets_minus1");
 			this.num_pic_parameter_sets_minus1 = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "pic_parameter_set_id_delta");
 			this.pic_parameter_set_id_delta = new ulong[ num_operation_points_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "parameter_sets_info_src_op_id");
 			this.parameter_sets_info_src_op_id = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "motion_vectors_over_pic_boundaries_flag");
 			this.motion_vectors_over_pic_boundaries_flag = new byte[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "max_bytes_per_pic_denom");
 			this.max_bytes_per_pic_denom = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "max_bits_per_mb_denom");
 			this.max_bits_per_mb_denom = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "log2_max_mv_length_horizontal");
 			this.log2_max_mv_length_horizontal = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "log2_max_mv_length_vertical");
 			this.log2_max_mv_length_vertical = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "max_num_reorder_frames");
 			this.max_num_reorder_frames = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "max_dec_frame_buffering");
 			this.max_dec_frame_buffering = new ulong[ num_operation_points_minus1 + 1];
 			for ( i = 0; i <= num_operation_points_minus1; i++ )
 			{
@@ -14401,20 +14722,35 @@ if (intrinsic_param_flag ) {
 				size += stream.ReadUnsignedIntGolomb(size, out this.prec_principal_point, "prec_principal_point"); 
 				size += stream.ReadUnsignedIntGolomb(size, out this.prec_skew_factor, "prec_skew_factor"); 
 
+				stream.CheckArrayAllocation((ulong)( (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)), "sign_focal_length_x");
 				this.sign_focal_length_x = new byte[ (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+				stream.CheckArrayAllocation((ulong)( (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)), "exponent_focal_length_x");
 				this.exponent_focal_length_x = new uint[ (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+				stream.CheckArrayAllocation((ulong)( (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)), "mantissa_focal_length_x");
 				this.mantissa_focal_length_x = new ulong[ (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+				stream.CheckArrayAllocation((ulong)( (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)), "sign_focal_length_y");
 				this.sign_focal_length_y = new byte[ (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+				stream.CheckArrayAllocation((ulong)( (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)), "exponent_focal_length_y");
 				this.exponent_focal_length_y = new uint[ (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+				stream.CheckArrayAllocation((ulong)( (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)), "mantissa_focal_length_y");
 				this.mantissa_focal_length_y = new ulong[ (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+				stream.CheckArrayAllocation((ulong)( (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)), "sign_principal_point_x");
 				this.sign_principal_point_x = new byte[ (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+				stream.CheckArrayAllocation((ulong)( (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)), "exponent_principal_point_x");
 				this.exponent_principal_point_x = new uint[ (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+				stream.CheckArrayAllocation((ulong)( (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)), "mantissa_principal_point_x");
 				this.mantissa_principal_point_x = new ulong[ (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+				stream.CheckArrayAllocation((ulong)( (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)), "sign_principal_point_y");
 				this.sign_principal_point_y = new byte[ (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+				stream.CheckArrayAllocation((ulong)( (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)), "exponent_principal_point_y");
 				this.exponent_principal_point_y = new uint[ (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+				stream.CheckArrayAllocation((ulong)( (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)), "mantissa_principal_point_y");
 				this.mantissa_principal_point_y = new ulong[ (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+				stream.CheckArrayAllocation((ulong)( (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)), "sign_skew_factor");
 				this.sign_skew_factor = new byte[ (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+				stream.CheckArrayAllocation((ulong)( (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)), "exponent_skew_factor");
 				this.exponent_skew_factor = new uint[ (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+				stream.CheckArrayAllocation((ulong)( (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)), "mantissa_skew_factor");
 				this.mantissa_skew_factor = new ulong[ (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
 				for ( i = 0; i <= (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1); 
    i++ )
@@ -14442,28 +14778,43 @@ if (intrinsic_param_flag ) {
 				size += stream.ReadUnsignedIntGolomb(size, out this.prec_rotation_param, "prec_rotation_param"); 
 				size += stream.ReadUnsignedIntGolomb(size, out this.prec_translation_param, "prec_translation_param"); 
 
+				stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "sign_r");
 				this.sign_r = new byte[ num_views_minus1 + 1][][];
+				stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "exponent_r");
 				this.exponent_r = new uint[ num_views_minus1 + 1][][];
+				stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "mantissa_r");
 				this.mantissa_r = new ulong[ num_views_minus1 + 1][][];
+				stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "sign_t");
 				this.sign_t = new byte[ num_views_minus1 + 1][];
+				stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "exponent_t");
 				this.exponent_t = new uint[ num_views_minus1 + 1][];
+				stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "mantissa_t");
 				this.mantissa_t = new ulong[ num_views_minus1 + 1][];
 				for ( i = 0; i <= num_views_minus1; i++ )
 				{
 
+					stream.CheckArrayAllocation((ulong)( 3), "sign_r[ i ]");
 					this.sign_r[ i ] = new byte[ 3][];
+					stream.CheckArrayAllocation((ulong)( 3), "exponent_r[ i ]");
 					this.exponent_r[ i ] = new uint[ 3][];
+					stream.CheckArrayAllocation((ulong)( 3), "mantissa_r[ i ]");
 					this.mantissa_r[ i ] = new ulong[ 3][];
+					stream.CheckArrayAllocation((ulong)( 3), "sign_t[ i ]");
 					this.sign_t[ i ] = new byte[ 3];
+					stream.CheckArrayAllocation((ulong)( 3), "exponent_t[ i ]");
 					this.exponent_t[ i ] = new uint[ 3];
+					stream.CheckArrayAllocation((ulong)( 3), "mantissa_t[ i ]");
 					this.mantissa_t[ i ] = new ulong[ 3];
 					for ( j = 1; j <= 3; j++ )
 					{
 /*  row  */
 
 
+						stream.CheckArrayAllocation((ulong)( 3), "sign_r[ i ][ j ]");
 						this.sign_r[ i ][ j ] = new byte[ 3];
+						stream.CheckArrayAllocation((ulong)( 3), "exponent_r[ i ][ j ]");
 						this.exponent_r[ i ][ j ] = new uint[ 3];
+						stream.CheckArrayAllocation((ulong)( 3), "mantissa_r[ i ][ j ]");
 						this.mantissa_r[ i ][ j ] = new ulong[ 3];
 						for ( k = 1; k <= 3; k++ )
 						{
@@ -14604,8 +14955,11 @@ non_required_view_component( payloadSize ) {
 			uint j = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_info_entries_minus1, "num_info_entries_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( num_info_entries_minus1 + 1), "view_order_index");
 			this.view_order_index = new ulong[ num_info_entries_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_info_entries_minus1 + 1), "num_non_required_view_components_minus1");
 			this.num_non_required_view_components_minus1 = new ulong[ num_info_entries_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_info_entries_minus1 + 1), "index_delta_minus1");
 			this.index_delta_minus1 = new ulong[ num_info_entries_minus1 + 1][];
 			for ( i = 0; i <= num_info_entries_minus1; i++ )
 			{
@@ -14717,7 +15071,9 @@ view_dependency_change( payloadSize ) {
 			if ( anchor_update_flag != 0 )
 			{
 
+				stream.CheckArrayAllocation((ulong)( (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1), "anchor_ref_l0_flag");
 				this.anchor_ref_l0_flag = new byte[ (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+				stream.CheckArrayAllocation((ulong)( (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1), "anchor_ref_l1_flag");
 				this.anchor_ref_l1_flag = new byte[ (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
 				for ( i = 1; i <= (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++ )
 				{
@@ -14739,7 +15095,9 @@ view_dependency_change( payloadSize ) {
 			if ( non_anchor_update_flag != 0 )
 			{
 
+				stream.CheckArrayAllocation((ulong)( (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1), "non_anchor_ref_l0_flag");
 				this.non_anchor_ref_l0_flag = new byte[ (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+				stream.CheckArrayAllocation((ulong)( (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1), "non_anchor_ref_l1_flag");
 				this.non_anchor_ref_l1_flag = new byte[ (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
 				for ( i = 1; i <= (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++ )
 				{
@@ -14853,6 +15211,7 @@ operation_point_not_present( payloadSize ) {
 			uint k = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_operation_points, "num_operation_points"); 
 
+			stream.CheckArrayAllocation((ulong)( num_operation_points), "operation_point_not_present_id");
 			this.operation_point_not_present_id = new ulong[ num_operation_points];
 			for ( k = 0; k < num_operation_points; k++ )
 			{
@@ -14956,16 +15315,27 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
 			uint i = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_of_temporal_layers_in_base_view_minus1, "num_of_temporal_layers_in_base_view_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_view_minus1 + 1), "sei_mvc_temporal_id");
 			this.sei_mvc_temporal_id = new uint[ num_of_temporal_layers_in_base_view_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_view_minus1 + 1), "sei_mvc_timing_info_present_flag");
 			this.sei_mvc_timing_info_present_flag = new byte[ num_of_temporal_layers_in_base_view_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_view_minus1 + 1), "sei_mvc_num_units_in_tick");
 			this.sei_mvc_num_units_in_tick = new uint[ num_of_temporal_layers_in_base_view_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_view_minus1 + 1), "sei_mvc_time_scale");
 			this.sei_mvc_time_scale = new uint[ num_of_temporal_layers_in_base_view_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_view_minus1 + 1), "sei_mvc_fixed_frame_rate_flag");
 			this.sei_mvc_fixed_frame_rate_flag = new byte[ num_of_temporal_layers_in_base_view_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_view_minus1 + 1), "sei_mvc_nal_hrd_parameters_present_flag");
 			this.sei_mvc_nal_hrd_parameters_present_flag = new byte[ num_of_temporal_layers_in_base_view_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_view_minus1 + 1), "hrd_parameters");
 			this.hrd_parameters = new HrdParameters[ num_of_temporal_layers_in_base_view_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_view_minus1 + 1), "sei_mvc_vcl_hrd_parameters_present_flag");
 			this.sei_mvc_vcl_hrd_parameters_present_flag = new byte[ num_of_temporal_layers_in_base_view_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_view_minus1 + 1), "hrd_parameters0");
 			this.hrd_parameters0 = new HrdParameters[ num_of_temporal_layers_in_base_view_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_view_minus1 + 1), "sei_mvc_low_delay_hrd_flag");
 			this.sei_mvc_low_delay_hrd_flag = new byte[ num_of_temporal_layers_in_base_view_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_of_temporal_layers_in_base_view_minus1 + 1), "sei_mvc_pic_struct_present_flag");
 			this.sei_mvc_pic_struct_present_flag = new byte[ num_of_temporal_layers_in_base_view_minus1 + 1];
 			for ( i = 0; i <= num_of_temporal_layers_in_base_view_minus1; i++ )
 			{
@@ -15091,6 +15461,7 @@ multiview_view_position_extension_flag 5 u(1)
 			uint i = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1, "num_views_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "view_position");
 			this.view_position = new ulong[ num_views_minus1 + 1];
 			for ( i = 0; i <= num_views_minus1; i++ )
 			{
@@ -15203,18 +15574,31 @@ mvc_vui_parameters_extension() {
 			uint j = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvc_num_ops_minus1, "vui_mvc_num_ops_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( vui_mvc_num_ops_minus1 + 1), "vui_mvc_temporal_id");
 			this.vui_mvc_temporal_id = new uint[ vui_mvc_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvc_num_ops_minus1 + 1), "vui_mvc_num_target_output_views_minus1");
 			this.vui_mvc_num_target_output_views_minus1 = new ulong[ vui_mvc_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvc_num_ops_minus1 + 1), "vui_mvc_view_id");
 			this.vui_mvc_view_id = new ulong[ vui_mvc_num_ops_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( vui_mvc_num_ops_minus1 + 1), "vui_mvc_timing_info_present_flag");
 			this.vui_mvc_timing_info_present_flag = new byte[ vui_mvc_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvc_num_ops_minus1 + 1), "vui_mvc_num_units_in_tick");
 			this.vui_mvc_num_units_in_tick = new uint[ vui_mvc_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvc_num_ops_minus1 + 1), "vui_mvc_time_scale");
 			this.vui_mvc_time_scale = new uint[ vui_mvc_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvc_num_ops_minus1 + 1), "vui_mvc_fixed_frame_rate_flag");
 			this.vui_mvc_fixed_frame_rate_flag = new byte[ vui_mvc_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvc_num_ops_minus1 + 1), "vui_mvc_nal_hrd_parameters_present_flag");
 			this.vui_mvc_nal_hrd_parameters_present_flag = new byte[ vui_mvc_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvc_num_ops_minus1 + 1), "hrd_parameters");
 			this.hrd_parameters = new HrdParameters[ vui_mvc_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvc_num_ops_minus1 + 1), "vui_mvc_vcl_hrd_parameters_present_flag");
 			this.vui_mvc_vcl_hrd_parameters_present_flag = new byte[ vui_mvc_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvc_num_ops_minus1 + 1), "hrd_parameters0");
 			this.hrd_parameters0 = new HrdParameters[ vui_mvc_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvc_num_ops_minus1 + 1), "vui_mvc_low_delay_hrd_flag");
 			this.vui_mvc_low_delay_hrd_flag = new byte[ vui_mvc_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvc_num_ops_minus1 + 1), "vui_mvc_pic_struct_present_flag");
 			this.vui_mvc_pic_struct_present_flag = new byte[ vui_mvc_num_ops_minus1 + 1];
 			for ( i = 0; i <= vui_mvc_num_ops_minus1; i++ )
 			{
@@ -15449,8 +15833,11 @@ seq_parameter_set_mvcd_extension() {
 			uint k = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1, "num_views_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "view_id");
 			this.view_id = new ulong[ num_views_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "depth_view_present_flag");
 			this.depth_view_present_flag = new byte[ num_views_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "texture_view_present_flag");
 			this.texture_view_present_flag = new byte[ num_views_minus1 + 1];
 			for ( i = 0, NumDepthViews = 0; i <= num_views_minus1; i++ )
 			{
@@ -15461,9 +15848,13 @@ seq_parameter_set_mvcd_extension() {
 				size += stream.ReadUnsignedInt(size, 1, out this.texture_view_present_flag[ i ], "texture_view_present_flag"); 
 			}
 
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "num_anchor_refs_l0");
 			this.num_anchor_refs_l0 = new ulong[ num_views_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "anchor_ref_l0");
 			this.anchor_ref_l0 = new ulong[ num_views_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "num_anchor_refs_l1");
 			this.num_anchor_refs_l1 = new ulong[ num_views_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "anchor_ref_l1");
 			this.anchor_ref_l1 = new ulong[ num_views_minus1 + 1][];
 			for ( i = 1; i <= num_views_minus1; i++ )
 			{
@@ -15487,9 +15878,13 @@ seq_parameter_set_mvcd_extension() {
 				}
 			}
 
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "num_non_anchor_refs_l0");
 			this.num_non_anchor_refs_l0 = new ulong[ num_views_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "non_anchor_ref_l0");
 			this.non_anchor_ref_l0 = new ulong[ num_views_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "num_non_anchor_refs_l1");
 			this.num_non_anchor_refs_l1 = new ulong[ num_views_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_views_minus1 + 1), "non_anchor_ref_l1");
 			this.non_anchor_ref_l1 = new ulong[ num_views_minus1 + 1][];
 			for ( i = 1; i <= num_views_minus1; i++ )
 			{
@@ -15514,14 +15909,23 @@ seq_parameter_set_mvcd_extension() {
 			}
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_level_values_signalled_minus1, "num_level_values_signalled_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( num_level_values_signalled_minus1 + 1), "level_idc");
 			this.level_idc = new uint[ num_level_values_signalled_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_level_values_signalled_minus1 + 1), "num_applicable_ops_minus1");
 			this.num_applicable_ops_minus1 = new ulong[ num_level_values_signalled_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_level_values_signalled_minus1 + 1), "applicable_op_temporal_id");
 			this.applicable_op_temporal_id = new uint[ num_level_values_signalled_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_level_values_signalled_minus1 + 1), "applicable_op_num_target_views_minus1");
 			this.applicable_op_num_target_views_minus1 = new ulong[ num_level_values_signalled_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_level_values_signalled_minus1 + 1), "applicable_op_target_view_id");
 			this.applicable_op_target_view_id = new ulong[ num_level_values_signalled_minus1 + 1][][];
+			stream.CheckArrayAllocation((ulong)( num_level_values_signalled_minus1 + 1), "applicable_op_depth_flag");
 			this.applicable_op_depth_flag = new byte[ num_level_values_signalled_minus1 + 1][][];
+			stream.CheckArrayAllocation((ulong)( num_level_values_signalled_minus1 + 1), "applicable_op_texture_flag");
 			this.applicable_op_texture_flag = new byte[ num_level_values_signalled_minus1 + 1][][];
+			stream.CheckArrayAllocation((ulong)( num_level_values_signalled_minus1 + 1), "applicable_op_num_texture_views_minus1");
 			this.applicable_op_num_texture_views_minus1 = new ulong[ num_level_values_signalled_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_level_values_signalled_minus1 + 1), "applicable_op_num_depth_views");
 			this.applicable_op_num_depth_views = new ulong[ num_level_values_signalled_minus1 + 1][];
 			for ( i = 0; i <= num_level_values_signalled_minus1; i++ )
 			{
@@ -15835,40 +16239,75 @@ priority_id[ i ] 5 u(5)
 			uint j = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_operation_points_minus1, "num_operation_points_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "operation_point_id");
 			this.operation_point_id = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "priority_id");
 			this.priority_id = new uint[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "temporal_id");
 			this.temporal_id = new uint[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "num_target_output_views_minus1");
 			this.num_target_output_views_minus1 = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "view_id");
 			this.view_id = new ulong[ num_operation_points_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "mvcd_op_view_info");
 			this.mvcd_op_view_info = new MvcdOpViewInfo[ num_operation_points_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "profile_level_info_present_flag");
 			this.profile_level_info_present_flag = new byte[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "bitrate_info_present_flag");
 			this.bitrate_info_present_flag = new byte[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "frm_rate_info_present_flag");
 			this.frm_rate_info_present_flag = new byte[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "view_dependency_info_present_flag");
 			this.view_dependency_info_present_flag = new byte[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "parameter_sets_info_present_flag");
 			this.parameter_sets_info_present_flag = new byte[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "bitstream_restriction_info_present_flag");
 			this.bitstream_restriction_info_present_flag = new byte[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "op_profile_level_idc");
 			this.op_profile_level_idc = new uint[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "avg_bitrate");
 			this.avg_bitrate = new uint[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "max_bitrate");
 			this.max_bitrate = new uint[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "max_bitrate_calc_window");
 			this.max_bitrate_calc_window = new uint[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "constant_frm_rate_idc");
 			this.constant_frm_rate_idc = new uint[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "avg_frm_rate");
 			this.avg_frm_rate = new uint[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "num_directly_dependent_views");
 			this.num_directly_dependent_views = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "directly_dependent_view_id");
 			this.directly_dependent_view_id = new ulong[ num_operation_points_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "view_dependency_info_src_op_id");
 			this.view_dependency_info_src_op_id = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "num_seq_parameter_set_minus1");
 			this.num_seq_parameter_set_minus1 = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "seq_parameter_set_id_delta");
 			this.seq_parameter_set_id_delta = new ulong[ num_operation_points_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "num_subset_seq_parameter_set_minus1");
 			this.num_subset_seq_parameter_set_minus1 = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "subset_seq_parameter_set_id_delta");
 			this.subset_seq_parameter_set_id_delta = new ulong[ num_operation_points_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "num_pic_parameter_set_minus1");
 			this.num_pic_parameter_set_minus1 = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "pic_parameter_set_id_delta");
 			this.pic_parameter_set_id_delta = new ulong[ num_operation_points_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "parameter_sets_info_src_op_id");
 			this.parameter_sets_info_src_op_id = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "motion_vectors_over_pic_boundaries_flag");
 			this.motion_vectors_over_pic_boundaries_flag = new byte[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "max_bytes_per_pic_denom");
 			this.max_bytes_per_pic_denom = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "max_bits_per_mb_denom");
 			this.max_bits_per_mb_denom = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "log2_max_mv_length_horizontal");
 			this.log2_max_mv_length_horizontal = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "log2_max_mv_length_vertical");
 			this.log2_max_mv_length_vertical = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "num_reorder_frames");
 			this.num_reorder_frames = new ulong[ num_operation_points_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( num_operation_points_minus1 + 1), "max_dec_frame_buffering");
 			this.max_dec_frame_buffering = new ulong[ num_operation_points_minus1 + 1];
 			for ( i = 0; i <= num_operation_points_minus1; i++ )
 			{
@@ -16255,7 +16694,9 @@ mvcd_scalable_nesting( payloadSize ) {
 				{
 					size += stream.ReadUnsignedIntGolomb(size, out this.num_view_components_minus1, "num_view_components_minus1"); 
 
+					stream.CheckArrayAllocation((ulong)( num_view_components_minus1 + 1), "sei_view_id");
 					this.sei_view_id = new uint[ num_view_components_minus1 + 1];
+					stream.CheckArrayAllocation((ulong)( num_view_components_minus1 + 1), "sei_view_applicability_flag");
 					this.sei_view_applicability_flag = new byte[ num_view_components_minus1 + 1];
 					for ( i = 0; i <= num_view_components_minus1; i++ )
 					{
@@ -16269,8 +16710,11 @@ mvcd_scalable_nesting( payloadSize ) {
 				size += stream.ReadUnsignedInt(size, 1, out this.sei_op_texture_only_flag, "sei_op_texture_only_flag"); 
 				size += stream.ReadUnsignedIntGolomb(size, out this.num_view_components_op_minus1, "num_view_components_op_minus1"); 
 
+				stream.CheckArrayAllocation((ulong)( num_view_components_op_minus1 + 1), "sei_op_view_id");
 				this.sei_op_view_id = new uint[ num_view_components_op_minus1 + 1];
+				stream.CheckArrayAllocation((ulong)( num_view_components_op_minus1 + 1), "sei_op_depth_flag");
 				this.sei_op_depth_flag = new byte[ num_view_components_op_minus1 + 1];
+				stream.CheckArrayAllocation((ulong)( num_view_components_op_minus1 + 1), "sei_op_texture_flag");
 				this.sei_op_texture_flag = new byte[ num_view_components_op_minus1 + 1];
 				for ( i = 0; i <= num_view_components_op_minus1; i++ )
 				{
@@ -16486,12 +16930,19 @@ depth_representation_info( payloadSize ) {
 			size += stream.ReadUnsignedInt(size, 1, out this.d_max_flag, "d_max_flag"); 
 			size += stream.ReadUnsignedIntGolomb(size, out this.depth_representation_type, "depth_representation_type"); 
 
+			stream.CheckArrayAllocation((ulong)( numViews), "depth_info_view_id");
 			this.depth_info_view_id = new ulong[ numViews];
+			stream.CheckArrayAllocation((ulong)( numViews), "z_axis_reference_view");
 			this.z_axis_reference_view = new ulong[ numViews];
+			stream.CheckArrayAllocation((ulong)( numViews), "disparity_reference_view");
 			this.disparity_reference_view = new ulong[ numViews];
+			stream.CheckArrayAllocation((ulong)( numViews), "depth_representation_sei_element");
 			this.depth_representation_sei_element = new DepthRepresentationSeiElement[ numViews];
+			stream.CheckArrayAllocation((ulong)( numViews), "depth_representation_sei_element0");
 			this.depth_representation_sei_element0 = new DepthRepresentationSeiElement[ numViews];
+			stream.CheckArrayAllocation((ulong)( numViews), "depth_representation_sei_element1");
 			this.depth_representation_sei_element1 = new DepthRepresentationSeiElement[ numViews];
+			stream.CheckArrayAllocation((ulong)( numViews), "depth_representation_sei_element2");
 			this.depth_representation_sei_element2 = new DepthRepresentationSeiElement[ numViews];
 			for ( i = 0; i < numViews; i++ )
 			{
@@ -16536,6 +16987,7 @@ depth_representation_info( payloadSize ) {
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.depth_nonlinear_representation_num_minus1, "depth_nonlinear_representation_num_minus1"); 
 
+				stream.CheckArrayAllocation((ulong)( depth_nonlinear_representation_num_minus1 + 1 + 1), "depth_nonlinear_representation_model");
 				this.depth_nonlinear_representation_model = new ulong[ depth_nonlinear_representation_num_minus1 + 1 + 1];
 				for ( i = 1; i <= depth_nonlinear_representation_num_minus1 + 1; i++ )
 				{
@@ -16783,13 +17235,21 @@ three_dimensional_reference_displays_info( payloadSize ) {
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_displays_minus1, "num_ref_displays_minus1"); 
 			numRefDisplays= num_ref_displays_minus1 + 1;
 
+			stream.CheckArrayAllocation((ulong)( numRefDisplays), "exponent_ref_baseline");
 			this.exponent_ref_baseline = new uint[ numRefDisplays];
+			stream.CheckArrayAllocation((ulong)( numRefDisplays), "mantissa_ref_baseline");
 			this.mantissa_ref_baseline = new ulong[ numRefDisplays];
+			stream.CheckArrayAllocation((ulong)( numRefDisplays), "exponent_ref_display_width");
 			this.exponent_ref_display_width = new uint[ numRefDisplays];
+			stream.CheckArrayAllocation((ulong)( numRefDisplays), "mantissa_ref_display_width");
 			this.mantissa_ref_display_width = new ulong[ numRefDisplays];
+			stream.CheckArrayAllocation((ulong)( numRefDisplays), "exponent_ref_viewing_distance");
 			this.exponent_ref_viewing_distance = new uint[ numRefDisplays];
+			stream.CheckArrayAllocation((ulong)( numRefDisplays), "mantissa_ref_viewing_distance");
 			this.mantissa_ref_viewing_distance = new ulong[ numRefDisplays];
+			stream.CheckArrayAllocation((ulong)( numRefDisplays), "additional_shift_present_flag");
 			this.additional_shift_present_flag = new byte[ numRefDisplays];
+			stream.CheckArrayAllocation((ulong)( numRefDisplays), "num_sample_shift_plus512");
 			this.num_sample_shift_plus512 = new uint[ numRefDisplays];
 			for ( i = 0; i < numRefDisplays; i++ )
 			{
@@ -16904,6 +17364,7 @@ depth_timing( payloadSize ) {
 			if ( per_view_depth_timing_flag != 0 )
 			{
 
+				stream.CheckArrayAllocation((ulong)( ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews), "depth_timing_offset");
 				this.depth_timing_offset = new DepthTimingOffset[ ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews];
 				for ( i = 0; i < ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews; i++ )
 				{
@@ -17180,13 +17641,21 @@ alternative_depth_info( payloadSize ) {
 				if ( z_gvd_flag != 0 )
 				{
 
+					stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "sign_gvd_z_near_flag");
 					this.sign_gvd_z_near_flag = new byte[  num_constituent_views_gvd_minus1 + 1 + 1];
+					stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "exp_gvd_z_near");
 					this.exp_gvd_z_near = new uint[  num_constituent_views_gvd_minus1 + 1 + 1];
+					stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "man_len_gvd_z_near_minus1");
 					this.man_len_gvd_z_near_minus1 = new uint[  num_constituent_views_gvd_minus1 + 1 + 1];
+					stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "man_gvd_z_near");
 					this.man_gvd_z_near = new ulong[  num_constituent_views_gvd_minus1 + 1 + 1];
+					stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "sign_gvd_z_far_flag");
 					this.sign_gvd_z_far_flag = new byte[  num_constituent_views_gvd_minus1 + 1 + 1];
+					stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "exp_gvd_z_far");
 					this.exp_gvd_z_far = new uint[  num_constituent_views_gvd_minus1 + 1 + 1];
+					stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "man_len_gvd_z_far_minus1");
 					this.man_len_gvd_z_far_minus1 = new uint[  num_constituent_views_gvd_minus1 + 1 + 1];
+					stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "man_gvd_z_far");
 					this.man_gvd_z_far = new ulong[  num_constituent_views_gvd_minus1 + 1 + 1];
 					for ( i = 0; i  <=  num_constituent_views_gvd_minus1 + 1; i++ )
 					{
@@ -17217,23 +17686,41 @@ alternative_depth_info( payloadSize ) {
 					size += stream.ReadUnsignedIntGolomb(size, out this.prec_gvd_translation_param, "prec_gvd_translation_param"); 
 				}
 
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "sign_gvd_focal_length_x");
 				this.sign_gvd_focal_length_x = new byte[  num_constituent_views_gvd_minus1 + 1 + 1];
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "exp_gvd_focal_length_x");
 				this.exp_gvd_focal_length_x = new uint[  num_constituent_views_gvd_minus1 + 1 + 1];
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "man_gvd_focal_length_x");
 				this.man_gvd_focal_length_x = new ulong[  num_constituent_views_gvd_minus1 + 1 + 1];
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "sign_gvd_focal_length_y");
 				this.sign_gvd_focal_length_y = new byte[  num_constituent_views_gvd_minus1 + 1 + 1];
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "exp_gvd_focal_length_y");
 				this.exp_gvd_focal_length_y = new uint[  num_constituent_views_gvd_minus1 + 1 + 1];
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "man_gvd_focal_length_y");
 				this.man_gvd_focal_length_y = new ulong[  num_constituent_views_gvd_minus1 + 1 + 1];
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "sign_gvd_principal_point_x");
 				this.sign_gvd_principal_point_x = new byte[  num_constituent_views_gvd_minus1 + 1 + 1];
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "exp_gvd_principal_point_x");
 				this.exp_gvd_principal_point_x = new uint[  num_constituent_views_gvd_minus1 + 1 + 1];
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "man_gvd_principal_point_x");
 				this.man_gvd_principal_point_x = new ulong[  num_constituent_views_gvd_minus1 + 1 + 1];
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "sign_gvd_principal_point_y");
 				this.sign_gvd_principal_point_y = new byte[  num_constituent_views_gvd_minus1 + 1 + 1];
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "exp_gvd_principal_point_y");
 				this.exp_gvd_principal_point_y = new uint[  num_constituent_views_gvd_minus1 + 1 + 1];
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "man_gvd_principal_point_y");
 				this.man_gvd_principal_point_y = new ulong[  num_constituent_views_gvd_minus1 + 1 + 1];
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "sign_gvd_r");
 				this.sign_gvd_r = new byte[  num_constituent_views_gvd_minus1 + 1 + 1][][];
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "exp_gvd_r");
 				this.exp_gvd_r = new uint[  num_constituent_views_gvd_minus1 + 1 + 1][][];
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "man_gvd_r");
 				this.man_gvd_r = new ulong[  num_constituent_views_gvd_minus1 + 1 + 1][][];
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "sign_gvd_t_x");
 				this.sign_gvd_t_x = new byte[  num_constituent_views_gvd_minus1 + 1 + 1];
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "exp_gvd_t_x");
 				this.exp_gvd_t_x = new uint[  num_constituent_views_gvd_minus1 + 1 + 1];
+				stream.CheckArrayAllocation((ulong)(  num_constituent_views_gvd_minus1 + 1 + 1), "man_gvd_t_x");
 				this.man_gvd_t_x = new ulong[  num_constituent_views_gvd_minus1 + 1 + 1];
 				for ( i = 0; i  <=  num_constituent_views_gvd_minus1 + 1; i++ )
 				{
@@ -17257,14 +17744,20 @@ alternative_depth_info( payloadSize ) {
 					if ( rotation_gvd_flag != 0 )
 					{
 
+						stream.CheckArrayAllocation((ulong)( 3), "sign_gvd_r[ i ]");
 						this.sign_gvd_r[ i ] = new byte[ 3][];
+						stream.CheckArrayAllocation((ulong)( 3), "exp_gvd_r[ i ]");
 						this.exp_gvd_r[ i ] = new uint[ 3][];
+						stream.CheckArrayAllocation((ulong)( 3), "man_gvd_r[ i ]");
 						this.man_gvd_r[ i ] = new ulong[ 3][];
 						for ( j = 0; j < 3; j++ )
 						{
 
+							stream.CheckArrayAllocation((ulong)( 3), "sign_gvd_r[ i ][ j ]");
 							this.sign_gvd_r[ i ][ j ] = new byte[ 3];
+							stream.CheckArrayAllocation((ulong)( 3), "exp_gvd_r[ i ][ j ]");
 							this.exp_gvd_r[ i ][ j ] = new uint[ 3];
+							stream.CheckArrayAllocation((ulong)( 3), "man_gvd_r[ i ][ j ]");
 							this.man_gvd_r[ i ][ j ] = new ulong[ 3];
 							for ( k = 0; k < 3; k++ )
 							{
@@ -17459,7 +17952,9 @@ depth_sampling_info( payloadSize ) {
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.num_video_plus_depth_views_minus1, "num_video_plus_depth_views_minus1"); 
 
+				stream.CheckArrayAllocation((ulong)( num_video_plus_depth_views_minus1 + 1), "depth_grid_view_id");
 				this.depth_grid_view_id = new ulong[ num_video_plus_depth_views_minus1 + 1];
+				stream.CheckArrayAllocation((ulong)( num_video_plus_depth_views_minus1 + 1), "depth_grid_position");
 				this.depth_grid_position = new DepthGridPosition[ num_video_plus_depth_views_minus1 + 1];
 				for ( i = 0; i <= num_video_plus_depth_views_minus1; i++ )
 				{
@@ -17726,20 +18221,35 @@ mvcd_vui_parameters_extension() {
 			uint j = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvcd_num_ops_minus1, "vui_mvcd_num_ops_minus1"); 
 
+			stream.CheckArrayAllocation((ulong)( vui_mvcd_num_ops_minus1 + 1), "vui_mvcd_temporal_id");
 			this.vui_mvcd_temporal_id = new uint[ vui_mvcd_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvcd_num_ops_minus1 + 1), "vui_mvcd_num_target_output_views_minus1");
 			this.vui_mvcd_num_target_output_views_minus1 = new ulong[ vui_mvcd_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvcd_num_ops_minus1 + 1), "vui_mvcd_view_id");
 			this.vui_mvcd_view_id = new ulong[ vui_mvcd_num_ops_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( vui_mvcd_num_ops_minus1 + 1), "vui_mvcd_depth_flag");
 			this.vui_mvcd_depth_flag = new byte[ vui_mvcd_num_ops_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( vui_mvcd_num_ops_minus1 + 1), "vui_mvcd_texture_flag");
 			this.vui_mvcd_texture_flag = new byte[ vui_mvcd_num_ops_minus1 + 1][];
+			stream.CheckArrayAllocation((ulong)( vui_mvcd_num_ops_minus1 + 1), "vui_mvcd_timing_info_present_flag");
 			this.vui_mvcd_timing_info_present_flag = new byte[ vui_mvcd_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvcd_num_ops_minus1 + 1), "vui_mvcd_num_units_in_tick");
 			this.vui_mvcd_num_units_in_tick = new uint[ vui_mvcd_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvcd_num_ops_minus1 + 1), "vui_mvcd_time_scale");
 			this.vui_mvcd_time_scale = new uint[ vui_mvcd_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvcd_num_ops_minus1 + 1), "vui_mvcd_fixed_frame_rate_flag");
 			this.vui_mvcd_fixed_frame_rate_flag = new byte[ vui_mvcd_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvcd_num_ops_minus1 + 1), "vui_mvcd_nal_hrd_parameters_present_flag");
 			this.vui_mvcd_nal_hrd_parameters_present_flag = new byte[ vui_mvcd_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvcd_num_ops_minus1 + 1), "hrd_parameters");
 			this.hrd_parameters = new HrdParameters[ vui_mvcd_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvcd_num_ops_minus1 + 1), "vui_mvcd_vcl_hrd_parameters_present_flag");
 			this.vui_mvcd_vcl_hrd_parameters_present_flag = new byte[ vui_mvcd_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvcd_num_ops_minus1 + 1), "hrd_parameters0");
 			this.hrd_parameters0 = new HrdParameters[ vui_mvcd_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvcd_num_ops_minus1 + 1), "vui_mvcd_low_delay_hrd_flag");
 			this.vui_mvcd_low_delay_hrd_flag = new byte[ vui_mvcd_num_ops_minus1 + 1];
+			stream.CheckArrayAllocation((ulong)( vui_mvcd_num_ops_minus1 + 1), "vui_mvcd_pic_struct_present_flag");
 			this.vui_mvcd_pic_struct_present_flag = new byte[ vui_mvcd_num_ops_minus1 + 1];
 			for ( i = 0; i <= vui_mvcd_num_ops_minus1; i++ )
 			{
@@ -18068,6 +18578,7 @@ seq_parameter_set_3davc_extension() {
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.three_dv_acquisition_idc, "three_dv_acquisition_idc"); 
 
+				stream.CheckArrayAllocation((ulong)( ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews), "view_id_3dv");
 				this.view_id_3dv = new ulong[ ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews];
 				for ( i = 0; i < ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews; i++ )
 				{
@@ -18103,8 +18614,11 @@ seq_parameter_set_3davc_extension() {
 				}
 				size += stream.ReadUnsignedIntGolomb(size, out this.grid_pos_num_views, "grid_pos_num_views"); 
 
+				stream.CheckArrayAllocation((ulong)( grid_pos_num_views), "grid_pos_view_id");
 				this.grid_pos_view_id = new ulong[ grid_pos_num_views];
+				stream.CheckArrayAllocation((ulong)( grid_pos_num_views), "grid_pos_x");
 				this.grid_pos_x = new long[ grid_pos_num_views];
+				stream.CheckArrayAllocation((ulong)( grid_pos_num_views), "grid_pos_y");
 				this.grid_pos_y = new long[ grid_pos_num_views];
 				for ( i = 0; i < grid_pos_num_views; i++ )
 				{
@@ -18122,9 +18636,13 @@ seq_parameter_set_3davc_extension() {
 			if ( ituContext.AllViewsPairedFlag== 0 )
 			{
 
+				stream.CheckArrayAllocation((ulong)( (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1), "num_anchor_refs_l0");
 				this.num_anchor_refs_l0 = new ulong[ (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
+				stream.CheckArrayAllocation((ulong)( (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1), "anchor_ref_l0");
 				this.anchor_ref_l0 = new ulong[ (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+				stream.CheckArrayAllocation((ulong)( (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1), "num_anchor_refs_l1");
 				this.num_anchor_refs_l1 = new ulong[ (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
+				stream.CheckArrayAllocation((ulong)( (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1), "anchor_ref_l1");
 				this.anchor_ref_l1 = new ulong[ (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
 				for ( i = 1; i <= (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++ )
 				{
@@ -18148,9 +18666,13 @@ seq_parameter_set_3davc_extension() {
 					}
 				}
 
+				stream.CheckArrayAllocation((ulong)( (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1), "num_non_anchor_refs_l0");
 				this.num_non_anchor_refs_l0 = new ulong[ (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
+				stream.CheckArrayAllocation((ulong)( (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1), "non_anchor_ref_l0");
 				this.non_anchor_ref_l0 = new ulong[ (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+				stream.CheckArrayAllocation((ulong)( (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1), "num_non_anchor_refs_l1");
 				this.num_non_anchor_refs_l1 = new ulong[ (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
+				stream.CheckArrayAllocation((ulong)( (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1), "non_anchor_ref_l1");
 				this.non_anchor_ref_l1 = new ulong[ (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
 				for ( i = 1; i <= (int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++ )
 				{
@@ -18398,6 +18920,7 @@ depth_parameter_set_rbsp() {
 			size += stream.ReadUnsignedInt(size, 1, out this.depth_param_additional_extension_flag, "depth_param_additional_extension_flag"); 
 			size += stream.ReadUnsignedIntGolomb(size, out this.nonlinear_depth_representation_num, "nonlinear_depth_representation_num"); 
 
+			stream.CheckArrayAllocation((ulong)( nonlinear_depth_representation_num), "nonlinear_depth_representation_model");
 			this.nonlinear_depth_representation_model = new ulong[ nonlinear_depth_representation_num];
 			for ( i = 1; i <= nonlinear_depth_representation_num; i++ )
 			{
@@ -18709,14 +19232,23 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
 				numValues= 1;
 			}
 
+			stream.CheckArrayAllocation((ulong)( numValues), "mantissa_len_minus1");
 			this.mantissa_len_minus1 = new uint[ numValues];
+			stream.CheckArrayAllocation((ulong)( numValues), "sign0");
 			this.sign0 = new byte[ numValues];
+			stream.CheckArrayAllocation((ulong)( numValues), "exponent0");
 			this.exponent0 = new ulong[ numValues];
+			stream.CheckArrayAllocation((ulong)( numValues), "mantissa0");
 			this.mantissa0 = new ulong[ numValues];
+			stream.CheckArrayAllocation((ulong)( numValues), "skip_flag");
 			this.skip_flag = new byte[ numValues];
+			stream.CheckArrayAllocation((ulong)( numValues), "sign1");
 			this.sign1 = new byte[ numValues];
+			stream.CheckArrayAllocation((ulong)( numValues), "exponent_skip_flag");
 			this.exponent_skip_flag = new byte[ numValues];
+			stream.CheckArrayAllocation((ulong)( numValues), "exponent1");
 			this.exponent1 = new ulong[ numValues];
+			stream.CheckArrayAllocation((ulong)( numValues), "mantissa_diff");
 			this.mantissa_diff = new long[ numValues];
 			for ( i = 0; i < numValues; i++ )
 			{
@@ -18946,16 +19478,24 @@ vsp_param( numViews, predDirection, index ) {
 			uint i = 0;
 			uint j = 0;
 
+			stream.CheckArrayAllocation((ulong)( numViews), "disparity_diff_wji");
 			this.disparity_diff_wji = new ulong[ numViews][];
+			stream.CheckArrayAllocation((ulong)( numViews), "disparity_diff_oji");
 			this.disparity_diff_oji = new ulong[ numViews][];
+			stream.CheckArrayAllocation((ulong)( numViews), "disparity_diff_wij");
 			this.disparity_diff_wij = new ulong[ numViews][];
+			stream.CheckArrayAllocation((ulong)( numViews), "disparity_diff_oij");
 			this.disparity_diff_oij = new ulong[ numViews][];
 			for ( i = 0; i < numViews; i++ )
 			{
 
+				stream.CheckArrayAllocation((ulong)( i), "disparity_diff_wji[ i ]");
 				this.disparity_diff_wji[ i ] = new ulong[ i];
+				stream.CheckArrayAllocation((ulong)( i), "disparity_diff_oji[ i ]");
 				this.disparity_diff_oji[ i ] = new ulong[ i];
+				stream.CheckArrayAllocation((ulong)( i), "disparity_diff_wij[ i ]");
 				this.disparity_diff_wij[ i ] = new ulong[ i];
+				stream.CheckArrayAllocation((ulong)( i), "disparity_diff_oij[ i ]");
 				this.disparity_diff_oij[ i ] = new ulong[ i];
 				for ( j = 0; j < i; j++ )
 				{
