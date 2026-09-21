@@ -6,6 +6,13 @@ namespace SharpMP4.Tests;
 /// <summary>
 /// Tests against the multi-layer video parameter set extension, using the one an iPhone writes
 /// into its spatial video: two layers, one per eye, the second predicting from the first.
+///
+/// Reading a set back and writing it out again is no check on its own here. Read and write are
+/// generated from the same syntax, so a field read in the wrong place is written back in the same
+/// wrong place, and every misread in this file round-tripped byte for byte. The expectations below
+/// come from outside the parser instead: the video is 1920x1080, coded 1920x1088, so the
+/// representation format has to say so; and ffmpeg's trace_headers places the end of the payload
+/// at bit 448.
 /// </summary>
 [TestClass]
 public class H265VpsExtensionTests
@@ -16,26 +23,58 @@ public class H265VpsExtensionTests
         "0007b8d07800440a01e5c52bf708500808080080");
 
     /// <summary>
-    /// sub_layer_dpb_info_present_flag is only coded for sub-layers above the first, and for the
-    /// first it is inferred to be 1. Left at 0, the DPB sizes of every output layer set were
-    /// skipped, and everything after dpb_size() was read from the wrong position - which still
-    /// wrote back byte for byte, because the writer skipped exactly the same fields.
+    /// The representation format comes late in the extension, after everything the tests below
+    /// cover, so reading the picture size right is the check that everything before it was read
+    /// in step. Each of the misreads fixed here left it reading 16864x272.
     /// </summary>
     [TestMethod]
-    public void ReadsTheBufferSizesOfEveryOutputLayerSet()
+    public void ReadsThePictureSizeOfTheVideo()
+    {
+        var (vps, _) = Read(AppleVps);
+
+        var format = vps.VpsExtension.RepFormat[0];
+        Assert.AreEqual(1920u, (uint)format.PicWidthVpsInLumaSamples);
+        Assert.AreEqual(1088u, (uint)format.PicHeightVpsInLumaSamples);
+        Assert.AreEqual<byte>(1, format.ConformanceWindowVpsFlag);
+    }
+
+    /// <summary>
+    /// output_layer_flag is only coded when default_output_layer_idc is 2 or the output layer set
+    /// is an additional one; otherwise every layer of the set is an output layer, and every output
+    /// layer is necessary. Two misderivations left only the first layer necessary: the inference
+    /// loop stopped one layer short, and the count of necessary layers reused the marking loop's
+    /// variable and ran it to the end.
+    /// </summary>
+    [TestMethod]
+    public void MarksEveryOutputLayerNecessary()
+    {
+        var (_, context) = Read(AppleVps);
+
+        CollectionAssert.AreEqual(new uint[] { 1, 1 }, context.OutputLayerFlag[1]);
+        CollectionAssert.AreEqual(new uint[] { 1, 1 }, context.NecessaryLayerFlag[1]);
+    }
+
+    /// <summary>
+    /// sub_layer_dpb_info_present_flag is only coded above the first sub-layer and is inferred to
+    /// be 1 for the first, so each output layer set carries a buffer size for every necessary
+    /// layer. Both eyes use B pictures, so both keep five.
+    /// </summary>
+    [TestMethod]
+    public void ReadsTheBufferSizeOfEveryLayer()
     {
         var (vps, _) = Read(AppleVps);
 
         var dpb = vps.VpsExtension.DpbSize;
         Assert.AreEqual<byte>(1, dpb.SubLayerDpbInfoPresentFlag[1][0]);
-        CollectionAssert.AreEqual(new ulong[] { 4, 0 }, dpb.MaxVpsDecPicBufferingMinus1[1][0]);
-        Assert.AreEqual(2ul, dpb.MaxVpsLatencyIncreasePlus1[1][0]);
+        Assert.AreEqual(4ul, dpb.MaxVpsDecPicBufferingMinus1[1][0][0]);   // [ ols ][ layer ][ sub-layer ]
+        Assert.AreEqual(4ul, dpb.MaxVpsDecPicBufferingMinus1[1][1][0]);
+        Assert.AreEqual(2ul, dpb.MaxVpsNumReorderPics[1][0]);
     }
 
     /// <summary>
-    /// The reference layer lists were derived when a dependency type was read for each pair of
-    /// layers. A set that codes one type for all layers never reads those, so the lists were never
-    /// built and writing any slice above layer 0 failed.
+    /// The reference layer lists were derived only when a dependency type was read for each pair
+    /// of layers. This set codes one type for all layers, so the lists stayed empty and writing any
+    /// slice above layer 0 threw.
     /// </summary>
     [TestMethod]
     public void DerivesReferenceLayersWhenOneTypeCoversAllLayers()
@@ -47,11 +86,8 @@ public class H265VpsExtensionTests
         Assert.AreEqual(1u, context.NumRefListLayers[1]);
     }
 
-    /// <summary>A correct read has to survive being written back unchanged.</summary>
+    /// <summary>Read in step, the set has to come back unchanged.</summary>
     [TestMethod]
-    [Ignore("H265.js reads output_layer_flag unconditionally - the spec condition is commented out " +
-        "- so this set is still read two bits out of step from default_output_layer_idc on, and " +
-        "ends 32 bits short with rbsp_stop_one_bit read as 0.")]
     public void RoundTripsThroughWrite()
     {
         var (vps, context) = Read(AppleVps);
@@ -63,9 +99,7 @@ public class H265VpsExtensionTests
             vps.Write(context, stream);
         }
 
-        var written = memory.ToArray();
-        CollectionAssert.AreEqual(AppleVps, written,
-            $"expected {Convert.ToHexString(AppleVps)} got {Convert.ToHexString(written)}");
+        CollectionAssert.AreEqual(AppleVps, memory.ToArray());
     }
 
     private static (VideoParameterSetRbsp Vps, H265Context Context) Read(byte[] nalu)

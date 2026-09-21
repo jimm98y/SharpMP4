@@ -638,6 +638,20 @@ namespace ItuGenerator.CSharp
             {
                 return $"\r\n{spacing}this.{variableName} = new {variableType.Replace(" i", "((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1")}{appendType};";
             }
+            else if(variableName == "max_vps_dec_pic_buffering_minus1[ i ]")
+            {
+                // The syntax element is max_vps_dec_pic_buffering_minus1[ i ][ k ][ j ] - output
+                // layer set, then layer, then sub-layer - but it sits inside the sub-layer loop, so
+                // allocating in loop order gave [ i ][ j ][ k ]. Any layer after the first then
+                // indexed past the sub-layer dimension.
+                return $"\r\n{spacing}this.{variableName} = new ulong[ ituContext.NumLayersInIdList[ currLsIdx ]][];" +
+                    $"\r\n{spacing}for (uint kk = 0; kk < ituContext.NumLayersInIdList[ currLsIdx ]; kk++)" +
+                    $"\r\n{spacing}\tthis.{variableName}[ kk ] = new ulong[ ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1];";
+            }
+            else if(variableName == "max_vps_dec_pic_buffering_minus1[ i ][ j ]")
+            {
+                return null; // allocated whole with [ i ] above
+            }
             else if(variableName == "vps_non_vui_extension_data_byte")
             {
                 // The syntax indexes these from 1 to vps_non_vui_extension_length inclusive.

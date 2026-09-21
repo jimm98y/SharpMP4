@@ -576,6 +576,16 @@ namespace SharpH265
             }
 
             OlsIdxToLsIdx[i] = (i < NumLayerSets) ? i : (layer_set_idx_for_ols_minus1[i] + 1);
+
+            // output_layer_flag is only coded for additional output layer sets, or when
+            // default_output_layer_idc is 2. Otherwise the output layers are inferred, and so is
+            // everything that follows from them - NecessaryLayerFlag first, which the
+            // profile_tier_level_idx loop right after this reads. The derivation normally runs as
+            // each flag is read, so when none are, it has to be run here.
+            var vps_num_layer_sets_minus1 = VideoParameterSetRbsp.VpsNumLayerSetsMinus1;
+            var defaultOutputLayerIdc = Math.Min(VideoParameterSetRbsp.VpsExtension.DefaultOutputLayerIdc, 2);
+            if (!(i > vps_num_layer_sets_minus1 || defaultOutputLayerIdc == 2))
+                OnOutputLayerFlag(i, 0);
         }
 
         public void OnLayerIdInNuh(uint i)
@@ -632,7 +642,10 @@ namespace SharpH265
                             nuhLayerIdA = LayerSetLayerIdList[OlsIdxToLsIdx[i]][k];
                     }
 
-                    for (int j = 0; j < NumLayersInIdList[OlsIdxToLsIdx[i]] - 1; j++)
+                    // Every layer of the set: with default_output_layer_idc 0 all of them are output
+                    // layers, with 1 only the highest - which is the last, so stopping one short left
+                    // it out in both cases, and with it everything NecessaryLayerFlag decides.
+                    for (int j = 0; j < NumLayersInIdList[OlsIdxToLsIdx[i]]; j++)
                     {
                         if (defaultOutputLayerIdc == 0 ||
                              LayerSetLayerIdList[OlsIdxToLsIdx[i]][j] == nuhLayerIdA)
@@ -645,11 +658,28 @@ namespace SharpH265
 
             for (uint i = ((defaultOutputLayerIdc == 2) ? 0 : ((uint)vps_num_layer_sets_minus1 + 1)); i <= NumOutputLayerSets - 1; i++)
             {
+                // Set 0 holds only the base layer, which is always output; its flags are never
+                // coded. Later sets' flags may not have been read yet, since this runs as each
+                // one is.
+                if (i == 0)
+                {
+                    OutputLayerFlag[0][0] = 1;
+                    continue;
+                }
+                if (output_layer_flag?[i] == null)
+                    continue;
+
                 for (int j = 0; j <= NumLayersInIdList[OlsIdxToLsIdx[i]] - 1; j++)
                 {
                     OutputLayerFlag[i][j] = output_layer_flag[i][j];
                 }
+            }
 
+            // F.7.4.3.1.1 counts the output layers of every output layer set, not only those whose
+            // flags were coded. alt_output_layer_flag is present when a set has exactly one, so an
+            // uncounted set left it out of the syntax.
+            for (uint i = 0; i <= NumOutputLayerSets - 1; i++)
+            {
                 NumOutputLayersInOutputLayerSet[i] = 0;
                 for (int j = 0; j < NumLayersInIdList[OlsIdxToLsIdx[i]]; j++)
                 {
@@ -675,10 +705,14 @@ namespace SharpH265
                             if (DependencyFlag[LayerIdxInVps[currLayerId]][LayerIdxInVps[refLayerId]] != 0)
                                 NecessaryLayerFlag[olsIdx][rLsLayerIdx] = 1;
                         }
-                        NumNecessaryLayers[olsIdx] = 0;
-                        for (lsLayerIdx = 0; lsLayerIdx < NumLayersInIdList[lsIdx]; lsLayerIdx++)
-                            NumNecessaryLayers[olsIdx] += NecessaryLayerFlag[olsIdx][lsLayerIdx];
                     }
+
+                // The count follows the marking loop rather than sitting inside it. Nested, it
+                // reused the marking loop's variable, ran it to the end after the first output
+                // layer, and so no layer after that one was ever marked necessary.
+                NumNecessaryLayers[olsIdx] = 0;
+                for (int lsLayerIdx = 0; lsLayerIdx < NumLayersInIdList[lsIdx]; lsLayerIdx++)
+                    NumNecessaryLayers[olsIdx] += NecessaryLayerFlag[olsIdx][lsLayerIdx];
             }
         }
 

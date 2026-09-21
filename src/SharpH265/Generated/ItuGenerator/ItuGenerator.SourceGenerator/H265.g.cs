@@ -10139,8 +10139,7 @@ vps_extension() {
  for( i = 1; i < NumOutputLayerSets; i++ ) {  
   if( NumLayerSets > 2  &&  i >= NumLayerSets )  
    layer_set_idx_for_ols_minus1[ i ] u(v) 
-  /* TODO: Review and fix *//*
-  /* if( i > vps_num_layer_sets_minus1  ||  defaultOutputLayerIdc == 2 ) *//*  
+  if( i > vps_num_layer_sets_minus1  ||  defaultOutputLayerIdc == 2 )  
    for( j = 0; j < NumLayersInIdList[ OlsIdxToLsIdx[ i ] ]; j++ )  
     output_layer_flag[ i ][ j ] u(1) 
   for( j = 0; j < NumLayersInIdList[ OlsIdxToLsIdx[ i ] ]; j++ )  
@@ -10469,16 +10468,16 @@ vps_extension() {
 				{
 					ituContext.OnLayerSetIdxForOlsMinus1(i, NumOutputLayerSets);
 				}
-/*  TODO: Review and fix  */
 
-/*  if( i > vps_num_layer_sets_minus1  ||  defaultOutputLayerIdc == 2 )  */
-
-
-				this.output_layer_flag[ i ] = new byte[ ituContext.NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]];
-				for ( j = 0; j < ituContext.NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]; j++ )
+				if ( i > ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1  ||  Math.Min( ituContext.VideoParameterSetRbsp.VpsExtension.DefaultOutputLayerIdc, 2 ) == 2 )
 				{
-					size += stream.ReadUnsignedInt(size, 1, out this.output_layer_flag[ i ][ j ], "output_layer_flag"); 
-					ituContext.OnOutputLayerFlag(i, j);
+
+					this.output_layer_flag[ i ] = new byte[ ituContext.NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]];
+					for ( j = 0; j < ituContext.NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]; j++ )
+					{
+						size += stream.ReadUnsignedInt(size, 1, out this.output_layer_flag[ i ][ j ], "output_layer_flag"); 
+						ituContext.OnOutputLayerFlag(i, j);
+					}
 				}
 
 				this.profile_tier_level_idx[ i ] = new ulong[ ituContext.NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]];
@@ -10736,15 +10735,15 @@ vps_extension() {
 				{
 					ituContext.OnLayerSetIdxForOlsMinus1(i, NumOutputLayerSets);
 				}
-/*  TODO: Review and fix  */
 
-/*  if( i > vps_num_layer_sets_minus1  ||  defaultOutputLayerIdc == 2 )  */
-
-
-				for ( j = 0; j < ituContext.NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]; j++ )
+				if ( i > ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1  ||  Math.Min( ituContext.VideoParameterSetRbsp.VpsExtension.DefaultOutputLayerIdc, 2 ) == 2 )
 				{
-					size += stream.WriteUnsignedInt(1, this.output_layer_flag[ i ][ j ], "output_layer_flag"); 
-					ituContext.OnOutputLayerFlag(i, j);
+
+					for ( j = 0; j < ituContext.NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]; j++ )
+					{
+						size += stream.WriteUnsignedInt(1, this.output_layer_flag[ i ][ j ], "output_layer_flag"); 
+						ituContext.OnOutputLayerFlag(i, j);
+					}
 				}
 
 				for ( j = 0; j < ituContext.NumLayersInIdList[ ((H265Context)context).OlsIdxToLsIdx[ i ] ]; j++ )
@@ -11049,7 +11048,9 @@ dpb_size() {
 
 				this.sub_layer_dpb_info_present_flag[ i ] = new byte[ ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1];
 				this.sub_layer_dpb_info_present_flag[ i ][0] = 1;
-				this.max_vps_dec_pic_buffering_minus1[ i ] = new ulong[ ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1][];
+				this.max_vps_dec_pic_buffering_minus1[ i ] = new ulong[ ituContext.NumLayersInIdList[ currLsIdx ]][];
+				for (uint kk = 0; kk < ituContext.NumLayersInIdList[ currLsIdx ]; kk++)
+					this.max_vps_dec_pic_buffering_minus1[ i ][ kk ] = new ulong[ ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1];
 				this.max_vps_num_reorder_pics[ i ] = new ulong[ ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1];
 				this.max_vps_latency_increase_plus1[ i ] = new ulong[ ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1];
 				for ( j = 0; j <= ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ]; j++ )
@@ -11063,7 +11064,6 @@ dpb_size() {
 					if ( sub_layer_dpb_info_present_flag[ i ][ j ] != 0 )
 					{
 
-						this.max_vps_dec_pic_buffering_minus1[ i ][ j ] = new ulong[ ituContext.NumLayersInIdList[ currLsIdx ]];
 						for ( k = 0; k < ituContext.NumLayersInIdList[ currLsIdx ]; k++ )
 						{
 
