@@ -10541,6 +10541,7 @@ vps_extension() {
 			if ( direct_dependency_all_layers_flag != 0 )
 			{
 				size += stream.ReadUnsignedIntVariable(size, direct_dep_type_len_minus2 + 2, out this.direct_dependency_all_layers_type, "direct_dependency_all_layers_type"); 
+				ituContext.OnDirectDependencyType();
 			}
 			else 
 			{
@@ -10564,8 +10565,7 @@ vps_extension() {
 			}
 			size += stream.ReadUnsignedIntGolomb(size, out this.vps_non_vui_extension_length, "vps_non_vui_extension_length"); 
 
-			stream.CheckArrayAllocation((ulong)( vps_non_vui_extension_length), "vps_non_vui_extension_data_byte");
-			this.vps_non_vui_extension_data_byte = new uint[ vps_non_vui_extension_length];
+			this.vps_non_vui_extension_data_byte = new uint[ vps_non_vui_extension_length + 1];
 			for ( i = 1; i <= vps_non_vui_extension_length; i++ )
 			{
 				size += stream.ReadUnsignedInt(size, 8, out this.vps_non_vui_extension_data_byte[ i ], "vps_non_vui_extension_data_byte"); 
@@ -10800,6 +10800,7 @@ vps_extension() {
 			if ( direct_dependency_all_layers_flag != 0 )
 			{
 				size += stream.WriteUnsignedIntVariable(direct_dep_type_len_minus2 + 2, this.direct_dependency_all_layers_type, "direct_dependency_all_layers_type"); 
+				ituContext.OnDirectDependencyType();
 			}
 			else 
 			{
@@ -11047,6 +11048,7 @@ dpb_size() {
 				size += stream.ReadUnsignedInt(size, 1, out this.sub_layer_flag_info_present_flag[ i ], "sub_layer_flag_info_present_flag"); 
 
 				this.sub_layer_dpb_info_present_flag[ i ] = new byte[ ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1];
+				this.sub_layer_dpb_info_present_flag[ i ][0] = 1;
 				this.max_vps_dec_pic_buffering_minus1[ i ] = new ulong[ ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1][];
 				this.max_vps_num_reorder_pics[ i ] = new ulong[ ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1];
 				this.max_vps_latency_increase_plus1[ i ] = new ulong[ ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1];

@@ -302,6 +302,12 @@ namespace ItuGenerator.CSharp
                     return "ituContext.OnVclHrdParametersPresentFlag(vcl_hrd_parameters_present_flag);";
                 case "direct_dependency_type":
                     return "ituContext.OnDirectDependencyType();";
+                case "direct_dependency_all_layers_type":
+                    // The derivations hung on direct_dependency_type (I-7 to I-9) depend on the
+                    // dependency flags, not on the types. When one type is coded for all layers the
+                    // per-pair types are never read, so without this they never run and the
+                    // reference layer lists stay empty.
+                    return "ituContext.OnDirectDependencyType();";
                 case "num_bsp_schedules_minus1":
                     return "ituContext.OnNumBspSchedulesMinus1(h, i, t);";
                 case "used_by_curr_pic_s0_flag":
@@ -631,6 +637,19 @@ namespace ItuGenerator.CSharp
             else if(variableName == "direct_dependency_flag[ i ]")
             {
                 return $"\r\n{spacing}this.{variableName} = new {variableType.Replace(" i", "((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1")}{appendType};";
+            }
+            else if(variableName == "vps_non_vui_extension_data_byte")
+            {
+                // The syntax indexes these from 1 to vps_non_vui_extension_length inclusive.
+                return $"\r\n{spacing}this.{variableName} = new {variableType.Replace("vps_non_vui_extension_length", "vps_non_vui_extension_length + 1")}{appendType};";
+            }
+            else if(variableName == "sub_layer_dpb_info_present_flag[ i ]")
+            {
+                // F.7.4.3.1.3: when not present, sub_layer_dpb_info_present_flag[ i ][ 0 ] is
+                // inferred to be 1 and the rest to be 0. The flag is only ever coded for j > 0, so
+                // left at the zero an allocation gives it, the DPB sizes of every output layer set
+                // are skipped and everything after dpb_size() is read from the wrong position.
+                return $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};\r\n{spacing}this.{variableName}[0] = 1;";
             }
 
             return "";
