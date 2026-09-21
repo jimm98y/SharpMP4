@@ -1093,7 +1093,7 @@
       "fourcc": "cmfy",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class StereoComfortBox extends FullBox('cmfy') {\r\n  unsigned int(32) baseline_value;\r\n }\r\n"
+      "syntax": "aligned(8) class StereoComfortBox extends Box('cmfy') {\r\n Box boxes[];\r\n }\r\n"
     },
     {
       "fourcc": "dadj",
