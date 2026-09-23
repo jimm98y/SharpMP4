@@ -320,14 +320,6 @@ namespace SharpMP4.Readers
         {
             var trackContext = this.Tracks[trackID];
 
-            int sttsIndex = 0;
-            uint sttsNextRun = 0;
-            uint sttsSampleDelta = 0;
-
-            int cttsIndex = 0;
-            uint cttsNextRun = 0;
-            int cttsSampleDelta = 0;
-
             uint sampleIndex = trackContext.SampleIndex;
             if (trackContext.SizesList.Length <= sampleIndex)
                 return null;
@@ -359,54 +351,45 @@ namespace SharpMP4.Readers
                 startAddress += trackContext.SizesList[firstFrameInChunk + k];
             }
 
+            // The decode time is the sum of the durations of every sample before this one, and the
+            // duration is the one given by the run this sample falls in. Both tables store runs of
+            // (count, value), so each is walked from the start until the run holding the sample.
             long dts = 0;
-            while (sampleIndex > sttsNextRun)
+            uint sttsSampleDelta = 0;
+            uint sttsRunStart = 0;
+            for (int i = 0; trackContext.Stts != null && i < trackContext.Stts.SampleCount.Length; i++)
             {
-                sttsSampleDelta = trackContext.Stts.SampleDelta[sttsIndex];
-                uint sampleCount = 0;
-                if (sttsIndex < trackContext.Stts.SampleCount.Length)
-                    sampleCount = trackContext.Stts.SampleCount[sttsIndex];
-                sttsIndex += 1;
+                uint sampleCount = trackContext.Stts.SampleCount[i];
+                sttsSampleDelta = trackContext.Stts.SampleDelta[i];
 
-                uint sttsPreviousRun = sttsNextRun;
-                sttsNextRun += sampleCount;
+                if (sampleIndex < sttsRunStart + sampleCount)
+                {
+                    dts += (sampleIndex - sttsRunStart) * sttsSampleDelta;
+                    break;
+                }
 
-                if (sampleIndex >= sttsNextRun)
-                {
-                    dts += sampleCount * sttsSampleDelta;
-                }
-                else
-                {
-                    dts += (sampleIndex - sttsPreviousRun) * sttsSampleDelta;
-                }
+                dts += sampleCount * sttsSampleDelta;
+                sttsRunStart += sampleCount;
             }
 
-            if (trackContext.Ctts != null)
+            // The composition offset says how far the sample is shown from where it is decoded. It
+            // belongs to the presentation time alone: adding it to the decode time as well leaves
+            // the decode times of a reordered stream jumping back and forth.
+            int cttsSampleDelta = 0;
+            uint cttsRunStart = 0;
+            for (int i = 0; trackContext.Ctts != null && i < trackContext.Ctts.SampleCount.Length; i++)
             {
-                while (sampleIndex >= cttsNextRun)
+                uint sampleCount = trackContext.Ctts.SampleCount[i];
+
+                if (sampleIndex < cttsRunStart + sampleCount)
                 {
-                    if (trackContext.Ctts.Version == 0)
-                        cttsSampleDelta = (int)trackContext.Ctts.SampleOffset[cttsIndex];
-                    else
-                        cttsSampleDelta = trackContext.Ctts.SampleOffset0[cttsIndex];
-
-                    uint sampleCount = 0;
-                    if (cttsIndex < trackContext.Ctts.SampleCount.Length)
-                        sampleCount = trackContext.Ctts.SampleCount[cttsIndex];
-                    cttsIndex += 1;
-
-                    var cttsPreviousRun = cttsNextRun;
-                    cttsNextRun += sampleCount;
-
-                    if (sampleIndex >= cttsNextRun)
-                    {
-                        dts += sampleCount * cttsSampleDelta;
-                    }
-                    else
-                    {
-                        dts += (sampleIndex - cttsPreviousRun) * cttsSampleDelta;
-                    }
+                    cttsSampleDelta = trackContext.Ctts.Version == 0
+                        ? (int)trackContext.Ctts.SampleOffset[i]
+                        : trackContext.Ctts.SampleOffset0[i];
+                    break;
                 }
+
+                cttsRunStart += sampleCount;
             }
 
             bool isRandomAccessPoint = true;
