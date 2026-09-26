@@ -1,4 +1,5 @@
-﻿using FragmentedMp4Recorder;
+﻿using System;
+using FragmentedMp4Recorder;
 using SharpISOBMFF;
 using SharpMP4.Builders;
 using SharpMP4.Readers;
@@ -42,7 +43,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
                 MediaSample sample = null;
                 while ((sample = inputReader.ReadSample(inputTrack.TrackID)) != null)
                 {
-                    IEnumerable<byte[]> units = inputReader.ParseSample(inputTrack.TrackID, sample.Data);
+                    IEnumerable<ArraySegment<byte>> units = inputReader.ParseSample(inputTrack.TrackID, sample.Data);
                     foreach (var unit in units)
                     {
                         outputBuilder.ProcessTrackSample(mapping[inputTrack.TrackID], unit);

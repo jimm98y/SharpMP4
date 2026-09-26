@@ -55,8 +55,9 @@ namespace SharpMP4.Bench
                 if (sample == null || sample.Data == null)
                     break;
 
+                // The bench keeps every NAL unit, so each is copied out of the reader's buffer.
                 foreach (var nalUnit in reader.ParseSample(trackId, sample.Data))
-                    nalUnits.Add(nalUnit);
+                    nalUnits.Add(nalUnit.ToArray());
             }
 
             return nalUnits;

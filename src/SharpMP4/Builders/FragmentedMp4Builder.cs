@@ -119,9 +119,17 @@ namespace SharpMP4.Builders
             return trackID;
         }
 
-        public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration = -1)
+        /// <summary>The same, for a sample that sits inside a larger buffer.</summary>
+        public void ProcessTrackSample(uint trackID, ArraySegment<byte> sample, int sampleDuration = -1, int compositionOffset = 0)
         {
-            ProcessTrackSample(trackID, sample, sampleDuration, 0);
+            _trackContexts[trackID].Track.ProcessSample(sample.Array, sample.Offset, sample.Count,
+                out var processedSample, out var isRandomAccessPoint);
+
+            if (processedSample.Array != null)
+            {
+                ProcessRawSample(trackID, processedSample, sampleDuration, isRandomAccessPoint,
+                    new TemporaryFileStorageFactory().Create(), compositionOffset);
+            }
         }
 
         /// <summary>
@@ -131,14 +139,14 @@ namespace SharpMP4.Builders
         /// Composition time minus decode time, in track timescale units. Needed whenever pictures
         /// are coded out of presentation order; leave at 0 for streams that are not reordered.
         /// </param>
-        public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration, int compositionOffset)
+        public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration = -1, int compositionOffset = 0)
         {
             _trackContexts[trackID].Track.ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
 
-            if (processedSample != null)
+            if (processedSample.Array != null)
             {
                 ProcessRawSample(trackID, processedSample, sampleDuration, isRandomAccessPoint,
-                    new TemporaryFileStorageFactory(), compositionOffset);
+                    new TemporaryFileStorageFactory().Create(), compositionOffset);
             }
         }
 
@@ -162,7 +170,10 @@ namespace SharpMP4.Builders
             ProcessRawSample(trackID, sample, sampleDuration, isRandomAccessPoint, storage, 0);
         }
 
-        public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint, IStorage storage, int compositionOffset)
+        public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint, IStorage storage, int compositionOffset) =>
+            ProcessRawSample(trackID, new ArraySegment<byte>(sample), sampleDuration, isRandomAccessPoint, storage, compositionOffset);
+
+        public void ProcessRawSample(uint trackID, ArraySegment<byte> sample, int sampleDuration, bool isRandomAccessPoint, IStorage storage, int compositionOffset)
         {
             TrackContext track = _trackContexts[trackID];
             uint currentSampleDuration = sampleDuration < 0 ? (uint)track.Track.DefaultSampleDuration : (uint)sampleDuration;
@@ -182,8 +193,8 @@ namespace SharpMP4.Builders
                 track.FragmentCounts++;
             }
 
-            track.CurrentFragments.Write(sample, 0, sample.Length);
-            track.SampleSizes.Add((uint)sample.Length);
+            track.CurrentFragments.Write(sample.Array, sample.Offset, sample.Count);
+            track.SampleSizes.Add((uint)sample.Count);
             track.SampleDurations.Add(currentSampleDuration);
             track.CompositionOffsets.Add(compositionOffset);
             track.EndTime += currentSampleDuration;

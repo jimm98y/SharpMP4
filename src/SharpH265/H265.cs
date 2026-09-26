@@ -447,6 +447,13 @@ namespace SharpH265
 
             NumNegativePics[stRpsIdx] = num_negative_pics; // 7-63
 
+            // Both counts, whichever of the two loops runs: a set with no pictures on one side
+            // never reaches the loop for that side, and 7-71 below adds the two together.
+            if (NumPositivePics == null || NumPositivePics.Length <= (int)stRpsIdx)
+                NumPositivePics = new ulong[stRpsIdx + 1];
+            NumPositivePics[stRpsIdx] = st_ref_pic_set.NumPositivePics; // 7-64
+            NumDeltaPocs[stRpsIdx] = NumNegativePics[stRpsIdx] + NumPositivePics[stRpsIdx]; // 7-71
+
             if (UsedByCurrPicS0 == null || UsedByCurrPicS0.Length <= (int)stRpsIdx)
                 UsedByCurrPicS0 = new uint[stRpsIdx + 1][];
             if (UsedByCurrPicS0[stRpsIdx] == null || UsedByCurrPicS0[stRpsIdx].Length < (int)num_negative_pics)
@@ -480,6 +487,12 @@ namespace SharpH265
                 NumDeltaPocs = new ulong[stRpsIdx + 1];
 
             NumPositivePics[stRpsIdx] = num_positive_pics; // 7-64
+
+            // The same the other way round. A first slice whose reference set looks only forwards
+            // used to throw here, because nothing had made this array yet.
+            if (NumNegativePics == null || NumNegativePics.Length <= (int)stRpsIdx)
+                NumNegativePics = new ulong[stRpsIdx + 1];
+            NumNegativePics[stRpsIdx] = st_ref_pic_set.NumNegativePics; // 7-63
 
             if (UsedByCurrPicS1 == null || UsedByCurrPicS1.Length <= (int)stRpsIdx)
                 UsedByCurrPicS1 = new uint[stRpsIdx + 1][];
@@ -718,14 +731,32 @@ namespace SharpH265
 
         public void OnLog2DiffMaxMinLumaCodingBlockSize()
         {
-            var separate_colour_plane_flag = SeqParameterSetRbsp.SeparateColourPlaneFlag;
-            var chroma_format_idc = SeqParameterSetRbsp.ChromaFormatIdc;
-            var log2_min_luma_coding_block_size_minus3 = SeqParameterSetRbsp.Log2MinLumaCodingBlockSizeMinus3;
-            var log2_diff_max_min_luma_coding_block_size = SeqParameterSetRbsp.Log2DiffMaxMinLumaCodingBlockSize;
-            var pic_width_in_luma_samples = SeqParameterSetRbsp.PicWidthInLumaSamples;
-            var pic_height_in_luma_samples = SeqParameterSetRbsp.PicHeightInLumaSamples;
+            DerivePictureSizes(SeqParameterSetRbsp);
+        }
 
-            // TODO: this shoud happen at the beginning of the decoding process
+        /// <summary>
+        /// The picture size variables (7-10 to 7-22), worked out from one sequence parameter set.
+        /// </summary>
+        /// <remarks>
+        /// They belong to the set a slice activates, not to the last one parsed, so they are worked
+        /// out again whenever a slice activates one - see <see cref="SetSlicePicParameterSetId"/>.
+        /// A stream with a set per layer, or a parser handed several, otherwise read a slice's
+        /// slice_segment_address against another picture's size: its width is Ceil(Log2(
+        /// PicSizeInCtbsY)), and a first slice has no address, so only the second slice of a
+        /// picture went wrong, and everything after it in the header with it.
+        /// </remarks>
+        private void DerivePictureSizes(SeqParameterSetRbsp sps)
+        {
+            if (sps == null)
+                return;
+
+            var separate_colour_plane_flag = sps.SeparateColourPlaneFlag;
+            var chroma_format_idc = sps.ChromaFormatIdc;
+            var log2_min_luma_coding_block_size_minus3 = sps.Log2MinLumaCodingBlockSizeMinus3;
+            var log2_diff_max_min_luma_coding_block_size = sps.Log2DiffMaxMinLumaCodingBlockSize;
+            var pic_width_in_luma_samples = sps.PicWidthInLumaSamples;
+            var pic_height_in_luma_samples = sps.PicHeightInLumaSamples;
+
             if (separate_colour_plane_flag == 0)
             {
                 if (chroma_format_idc == 0)
@@ -1420,32 +1451,27 @@ namespace SharpH265
             }
         }
         
+        /// <summary>
+        /// Activates the picture parameter set a slice names, and the sequence parameter set that
+        /// names, every time rather than only when the id changes: whatever was parsed since the
+        /// last slice - another layer's sets, or a later set under the same id - the sets in force
+        /// are the ones this slice names. Skipping it when the picture parameter set id repeated
+        /// left the last sequence parameter set parsed in force.
+        /// </summary>
         public void SetSlicePicParameterSetId(ulong slice_pic_parameter_set_id)
         {
-            if (slice_pic_parameter_set_id != PicParameterSetRbsp.PpsPicParameterSetId)
-            {
-                if (PicParameterSets.ContainsKey(slice_pic_parameter_set_id))
-                {
-                    PicParameterSetRbsp = PicParameterSets[slice_pic_parameter_set_id];
+            if (PicParameterSets.TryGetValue(slice_pic_parameter_set_id, out var pps))
+                PicParameterSetRbsp = pps;
+            else if (PicParameterSetRbsp == null || PicParameterSetRbsp.PpsPicParameterSetId != slice_pic_parameter_set_id)
+                throw new Exception($"PicParameterSet with id {slice_pic_parameter_set_id} not found.");
 
-                    // set also SPS
-                    if (PicParameterSetRbsp.PpsSeqParameterSetId != SeqParameterSetRbsp.SpsSeqParameterSetId)
-                    {
-                        if (SeqParameterSets.ContainsKey(PicParameterSetRbsp.PpsSeqParameterSetId))
-                        {
-                            SeqParameterSetRbsp = SeqParameterSets[PicParameterSetRbsp.PpsSeqParameterSetId];
-                        }
-                        else
-                        {
-                            throw new Exception($"SeqParameterSet with id {PicParameterSetRbsp.PpsSeqParameterSetId} not found.");
-                        }
-                    }
-                }
-                else
-                {
-                    throw new Exception($"PicParameterSet with id {slice_pic_parameter_set_id} not found.");
-                }
-            }
+            ulong spsId = PicParameterSetRbsp.PpsSeqParameterSetId;
+            if (SeqParameterSets.TryGetValue(spsId, out var sps))
+                SeqParameterSetRbsp = sps;
+            else if (SeqParameterSetRbsp == null || SeqParameterSetRbsp.SpsSeqParameterSetId != spsId)
+                throw new Exception($"SeqParameterSet with id {spsId} not found.");
+
+            DerivePictureSizes(SeqParameterSetRbsp);
         }
     }
 }

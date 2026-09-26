@@ -190,6 +190,20 @@ namespace SharpH26X
             return read;
         }
 
+        /// <summary>
+        /// Reads whole bytes from a byte aligned position, emulation prevention bytes dropped.
+        /// The same as reading them eight bits at a time, for the bulk of a NAL unit - see
+        /// <see cref="RbspBitstream.ReadBytes"/>.
+        /// </summary>
+        /// <returns>How many bytes were read: fewer than asked for only at the end of the stream.</returns>
+        public int ReadBytes(byte[] buffer, int offset, int count) => Bitstream.ReadBytes(buffer, offset, count);
+
+        /// <summary>
+        /// Writes whole bytes at a byte aligned position, emulation prevention bytes put in. The
+        /// same as writing them eight bits at a time - see <see cref="RbspBitstream.WriteBytes"/>.
+        /// </summary>
+        public void WriteBytes(byte[] buffer, int offset, int count) => Bitstream.WriteBytes(buffer, offset, count);
+
         public ulong WriteUnsignedInt(ulong count, byte value, string name)
         {
             if (count > 8)

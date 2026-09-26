@@ -94,6 +94,16 @@ namespace SharpMP4.Tracks
             }
         }
 
+        /// <summary>
+        /// The sample goes to the file as it arrives, so this hands back exactly what it was
+        /// given, without copying it anywhere.
+        /// </summary>
+        public override void ProcessSample(byte[] buffer, int offset, int length, out ArraySegment<byte> output, out bool isRandomAccessPoint)
+        {
+            isRandomAccessPoint = true;
+            output = buffer == null ? default : new ArraySegment<byte>(buffer, offset, length);
+        }
+
         public override Box CreateSampleEntryBox()
         {
             AudioSampleEntryV1 audioSampleEntry = new AudioSampleEntryV1(IsoStream.FromFourCC("Opus"));

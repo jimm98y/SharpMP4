@@ -83,7 +83,10 @@ namespace SharpMP4.Builders
             return trackID;
         }
 
-        private void WriteSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint, int compositionOffset = 0)
+        private void WriteSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint, int compositionOffset = 0) =>
+            WriteSample(trackID, new ArraySegment<byte>(sample), sampleDuration, isRandomAccessPoint, compositionOffset);
+
+        private void WriteSample(uint trackID, ArraySegment<byte> sample, int sampleDuration, bool isRandomAccessPoint, int compositionOffset = 0)
         {
             if (_storage == null)
             {
@@ -93,8 +96,8 @@ namespace SharpMP4.Builders
             uint currentSampleDuration = sampleDuration <= 0 ? (uint)_trackContexts[trackID].Track.DefaultSampleDuration : (uint)sampleDuration;
             var track = _trackContexts[trackID];
             track.SampleOffsets.Add(_storage.GetPosition());
-            _storage.Write(sample, 0, sample.Length);
-            track.SampleSizes.Add((uint)sample.Length);
+            _storage.Write(sample.Array, sample.Offset, sample.Count);
+            track.SampleSizes.Add((uint)sample.Count);
             track.CompositionOffsets.Add(compositionOffset);
             track.SampleDurations.Add(currentSampleDuration);
             track.EndTime += currentSampleDuration;
@@ -346,9 +349,16 @@ namespace SharpMP4.Builders
             return moov;
         }
 
-        public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration)
+        /// <summary>The same, for a sample that sits inside a larger buffer.</summary>
+        public void ProcessTrackSample(uint trackID, ArraySegment<byte> sample, int sampleDuration = -1, int compositionOffset = 0)
         {
-            ProcessTrackSample(trackID, sample, sampleDuration, 0);
+            _trackContexts[trackID].Track.ProcessSample(sample.Array, sample.Offset, sample.Count,
+                out var processedSample, out var isRandomAccessPoint);
+
+            if (processedSample.Array != null)
+            {
+                WriteSample(trackID, processedSample, sampleDuration, isRandomAccessPoint, compositionOffset);
+            }
         }
 
         /// <summary>
@@ -358,13 +368,13 @@ namespace SharpMP4.Builders
         /// Composition time minus decode time, in track timescale units. Needed whenever pictures
         /// are coded out of presentation order; leave at 0 for streams that are not reordered.
         /// </param>
-        public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration, int compositionOffset)
+        public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration = -1, int compositionOffset = 0)
         {
             _trackContexts[trackID].Track.ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
 
-            if (processedSample != null)
+            if (processedSample.Array != null)
             {
-                ProcessRawSample(trackID, processedSample, sampleDuration, isRandomAccessPoint, compositionOffset);
+                WriteSample(trackID, processedSample, sampleDuration, isRandomAccessPoint, compositionOffset);
             }
         }
 
@@ -374,6 +384,16 @@ namespace SharpMP4.Builders
         }
 
         public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint, int compositionOffset)
+        {
+            WriteSample(trackID, sample, sampleDuration, isRandomAccessPoint, compositionOffset);
+        }
+
+        /// <summary>
+        /// The same, for a sample that sits inside a larger buffer - one a caller fills again for
+        /// each sample - so it does not have to be copied out into an array of its own first.
+        /// </summary>
+        public void ProcessRawSample(uint trackID, ArraySegment<byte> sample, int sampleDuration,
+            bool isRandomAccessPoint, int compositionOffset = 0)
         {
             WriteSample(trackID, sample, sampleDuration, isRandomAccessPoint, compositionOffset);
         }

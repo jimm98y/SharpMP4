@@ -121,7 +121,7 @@ namespace SharpMP4.Readers
             return new ImageSample(extentData);
         }
 
-        public IEnumerable<byte[]> ParseSample(byte[] sample)
+        public IEnumerable<ArraySegment<byte>> ParseSample(byte[] sample)
         {
             return this.Track.ParseSample(sample);
         }

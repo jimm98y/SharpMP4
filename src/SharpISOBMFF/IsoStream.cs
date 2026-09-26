@@ -152,6 +152,16 @@ namespace SharpISOBMFF
 
         public ulong ReadBytes(ulong length, out byte[] value)
         {
+            value = new byte[length];
+            return ReadBytes(length, value, 0);
+        }
+
+        /// <summary>
+        /// Reads into a buffer the caller already has, so reading one thing after another - the
+        /// samples of a track, say - does not cost an array for each.
+        /// </summary>
+        public ulong ReadBytes(ulong length, byte[] value, int offset)
+        {
             ulong correctedLength = length;
             if (CanStreamSeek())
             {
@@ -163,8 +173,7 @@ namespace SharpISOBMFF
                 throw new IsoEndOfStreamException(new StreamMarker(GetCurrentOffset(), GetStreamLength(), this));
             }
 
-            value = new byte[correctedLength];
-            _stream.ReadExactly(value, 0, (int)correctedLength);
+            _stream.ReadExactly(value, offset, (int)correctedLength);
 
             return correctedLength << 3;
         }
@@ -732,7 +741,8 @@ namespace SharpISOBMFF
                 box = new InvalidBox(header.Type);
                 box.SetParent(parent);
                 box.Header = header;
-                LogBox(header, GetIndentation(box));
+                if (this.Logger.IsDebugEnabled)
+                    LogBox(header, GetIndentation(box));
                 size = box.Read(this, availableSize) + headerSize;
             }
             else
@@ -740,7 +750,8 @@ namespace SharpISOBMFF
                 box = factory(header);
                 box.SetParent(parent);
                 box.Header = header;
-                LogBox(header, GetIndentation(box));
+                if (this.Logger.IsDebugEnabled)
+                    LogBox(header, GetIndentation(box));
                 size = ReadBox(header, box, availableSize);
             }
 
@@ -759,6 +770,9 @@ namespace SharpISOBMFF
 
         public void LogBox(SafeBoxHeader header, string indentation = "")
         {
+            if (this.Logger == null || !this.Logger.IsDebugEnabled)
+                return;
+
             string uuid = "";
             if (header.Usertype != null)
             {
@@ -1132,12 +1146,14 @@ namespace SharpISOBMFF
             if (availableSize < sizeOfInstanceBits)
             {
                 descriptor = new InvalidDescriptor(tag) as T;
-                this.Logger.LogDebug($"DES:{GetIndentation(descriptor)}\'{descriptor.DisplayName}\'");
+                if (this.Logger.IsDebugEnabled)
+                    this.Logger.LogDebug($"DES:{GetIndentation(descriptor)}\'{descriptor.DisplayName}\'");
                 size += descriptor.Read(this, (ulong) availableSize);
                 return size;
             }
 
-            this.Logger.LogDebug($"DES:{GetIndentation(descriptor)}\'{descriptor.DisplayName}\'");
+            if (this.Logger.IsDebugEnabled)
+                this.Logger.LogDebug($"DES:{GetIndentation(descriptor)}\'{descriptor.DisplayName}\'");
 
             ulong readInstanceSizeBits = descriptor.Read(this, (ulong)sizeOfInstanceBits);
             if (readInstanceSizeBits != (ulong)sizeOfInstanceBits)
@@ -2457,6 +2473,9 @@ namespace SharpISOBMFF
 
         private void LogBegin(string name)
         {
+            if (this.Logger == null || !this.Logger.IsInfoEnabled)
+                return;
+
             var padding = new StringBuilder();
             for (int i = 0; i < _logLevel; i++)
             {
@@ -2468,7 +2487,7 @@ namespace SharpISOBMFF
 
         private void LogEnd<T>(string name, ulong size, T value)
         {
-            if (string.IsNullOrEmpty(name))
+            if (this.Logger == null || !this.Logger.IsInfoEnabled || string.IsNullOrEmpty(name))
                 return;
 
             var padding = new StringBuilder();

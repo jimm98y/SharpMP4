@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace SharpMP4.Common
 {
@@ -96,7 +97,10 @@ namespace SharpMP4.Common
                 }
                 else
                 {
-                    _prevByte = _currentByte;
+                    // Before the first byte is loaded there is no byte before it. The current
+                    // byte then holds its default zero, and shifting that in would make a stream
+                    // that opens 00 03 look like one with an emulation prevention byte in it.
+                    _prevByte = _currentBytePosition < 0 ? -1 : _currentByte;
                 }
 
                 _currentByte = b;
@@ -138,6 +142,104 @@ namespace SharpMP4.Common
                         _lastMarkPos += 8;
                         _prevByte = 0x03;
                     }
+                }
+
+                _stream.WriteByte(_currentByte);
+                _currentBytePosition = bytePos;
+
+                _prevPrevByte = _prevByte;
+                _prevByte = _currentByte;
+
+                _currentByte = 0;
+            }
+        }
+
+        /// <summary>
+        /// Reads whole bytes from a byte aligned position, dropping emulation prevention bytes
+        /// exactly as <see cref="ReadBit"/> does, and leaves the state as eight calls to it per byte
+        /// would. For the bulk of a NAL unit - the coded slice data behind a header - which would
+        /// otherwise cost eight calls a byte.
+        /// </summary>
+        /// <returns>How many bytes were read: fewer than asked for only at the end of the stream.</returns>
+        public int ReadBytes(byte[] buffer, int offset, int count)
+        {
+            if (_bitsPosition % 8 != 0)
+                throw new InvalidOperationException("Bytes can only be read from a byte aligned position.");
+
+            int read = 0;
+            while (read < count)
+            {
+                long bytePos = _bitsPosition / 8;
+
+                // The byte is loaded the way ReadBit loads it for its first bit; the other seven
+                // come out of it without touching the stream.
+                if (_currentBytePosition != bytePos)
+                {
+                    int bb = _stream.ReadByte();
+                    if (bb == -1)
+                        break;
+
+                    byte b = (byte)bb;
+
+                    if (_skipPreventionBytes && _prevByte == 0 && _currentByte == 0 && b == 0x03)
+                    {
+                        _prevByte = b;
+                        bb = _stream.ReadByte();
+
+                        if (bb == -1)
+                            break;
+
+                        b = (byte)bb;
+                        _bitsPosition += 8;
+                        _lastMarkPos += 8;
+                        bytePos++;
+                    }
+                    else
+                    {
+                        _prevByte = _currentBytePosition < 0 ? -1 : _currentByte;
+                    }
+
+                    _currentByte = b;
+                    _currentBytePosition = bytePos;
+                }
+
+                buffer[offset + read++] = _currentByte;
+                _bitsPosition += 8;
+            }
+
+            return read;
+        }
+
+        /// <summary>
+        /// Writes whole bytes at a byte aligned position, putting emulation prevention bytes in
+        /// exactly as <see cref="WriteBit"/> does, and leaves the state as eight calls to it per
+        /// byte would. The counterpart of <see cref="ReadBytes"/>.
+        /// </summary>
+        public void WriteBytes(byte[] buffer, int offset, int count)
+        {
+            if (_bitsPosition % 8 != 0)
+                throw new InvalidOperationException("Bytes can only be written at a byte aligned position.");
+
+            for (int i = 0; i < count; i++)
+            {
+                // What WriteBit does for the first bit it is ever given.
+                if (_currentBytePosition < 0)
+                    _currentBytePosition = _bitsPosition / 8;
+
+                _currentByte = (byte)(_currentByte | buffer[offset + i]);
+                _bitsPosition += 8;
+                long bytePos = _bitsPosition / 8;
+
+                if (_insertPreventionBytes &&
+                    _prevByte == 0x00 &&
+                    _prevPrevByte == 0x00 &&
+                    (_currentByte is 0x00 or 0x01 or 0x02 or 0x03))
+                {
+                    _stream.WriteByte(0x03);
+                    bytePos++;
+                    _bitsPosition += 8;
+                    _lastMarkPos += 8;
+                    _prevByte = 0x03;
                 }
 
                 _stream.WriteByte(_currentByte);

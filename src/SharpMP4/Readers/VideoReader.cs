@@ -406,11 +406,28 @@ namespace SharpMP4.Readers
                 this.Mdat.Data.Stream.SeekFromBeginning(startAddress);
             }
 
-            ulong size = this.Mdat.Data.Stream.ReadBytes(sampleSize, out byte[] sampleData);
+            // Read into the track's own buffer, which is reused from one sample to the next: a
+            // track of any length costs one buffer rather than one array per sample. The sample
+            // table says how large the largest sample is, so it is made that size at once rather
+            // than grown into.
+            if (trackContext.SampleBuffer == null || trackContext.SampleBuffer.Length < sampleSize)
+            {
+                uint capacity = sampleSize;
+                foreach (uint sampleLength in trackContext.SizesList)
+                {
+                    if (sampleLength > capacity)
+                        capacity = sampleLength;
+                }
+
+                trackContext.SampleBuffer = new byte[capacity];
+            }
+
+            ulong size = this.Mdat.Data.Stream.ReadBytes(sampleSize, trackContext.SampleBuffer, 0);
 
             trackContext.SampleIndex++;
 
-            return new MediaSample(pts, dts, (int)sttsSampleDelta, sampleData, isRandomAccessPoint);
+            return new MediaSample(pts, dts, (int)sttsSampleDelta,
+                new ArraySegment<byte>(trackContext.SampleBuffer, 0, (int)sampleSize), isRandomAccessPoint);
         }
 
         private MediaSample ReadFragmentedMp4Sample(uint trackID)
@@ -485,16 +502,27 @@ namespace SharpMP4.Readers
                 trackContext.Mdat.Data.Stream.SeekFromBeginning(startAddress);
             }
 
-            ulong size = trackContext.Mdat.Data.Stream.ReadBytes(sampleSize, out byte[] sampleData);
-                        
+            // Into the track's own buffer, as in the unfragmented case.
+            if (trackContext.SampleBuffer == null || trackContext.SampleBuffer.Length < sampleSize)
+            {
+                int capacity = trackContext.SampleBuffer == null ? 64 * 1024 : trackContext.SampleBuffer.Length;
+                while (capacity < sampleSize)
+                    capacity *= 2;
+
+                trackContext.SampleBuffer = new byte[capacity];
+            }
+
+            ulong size = trackContext.Mdat.Data.Stream.ReadBytes(sampleSize, trackContext.SampleBuffer, 0);
+
             trackContext.SampleIndex++;
-            return new MediaSample(pts, dts, (int)sampleDuration, sampleData);
+            return new MediaSample(pts, dts, (int)sampleDuration,
+                new ArraySegment<byte>(trackContext.SampleBuffer, 0, (int)sampleSize));
         }
 
-        public IEnumerable<byte[]> ParseSample(uint trackID, byte[] sample)
+        public IEnumerable<ArraySegment<byte>> ParseSample(uint trackID, ArraySegment<byte> sample)
         {
             var trackContext = this.Tracks[trackID];
-            return trackContext.Track.ParseSample(sample);
+            return trackContext.Track.ParseSample(sample.Array, sample.Offset, sample.Count);
         }
     }    
 
@@ -502,6 +530,12 @@ namespace SharpMP4.Readers
     {
         public uint SampleIndex { get; set; }
         public ITrack Track { get; set; }
+
+        /// <summary>
+        /// Where this track's samples are read, one after another. It grows to the largest sample
+        /// and is then reused, so each sample is a slice of it rather than an array of its own.
+        /// </summary>
+        public byte[] SampleBuffer { get; set; }
 
         // mp4
         public TimeToSampleBox Stts { get; set; }
