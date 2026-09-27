@@ -621,6 +621,7 @@ video_parameter_set_rbsp() {
 			uint firstSubLayer = 0;
 			size += stream.ReadUnsignedInt(size, 4, out this.vps_video_parameter_set_id, "vps_video_parameter_set_id"); 
 			size += stream.ReadUnsignedInt(size, 6, out this.vps_max_layers_minus1, "vps_max_layers_minus1"); 
+			ituContext.OnVpsMaxLayersMinus1(this);
 			size += stream.ReadUnsignedInt(size, 3, out this.vps_max_sublayers_minus1, "vps_max_sublayers_minus1"); 
 
 			if ( vps_max_layers_minus1 > 0  &&  vps_max_sublayers_minus1 > 0 )
@@ -692,10 +693,9 @@ video_parameter_set_rbsp() {
 					if ( vps_ols_mode_idc  ==  2 )
 					{
 						size += stream.ReadUnsignedInt(size, 8, out this.vps_num_output_layer_sets_minus2, "vps_num_output_layer_sets_minus2"); 
-						ituContext.OnVpsNumOutputLayerSetsMinus2();
 
-						stream.CheckArrayAllocation((ulong)(  vps_num_output_layer_sets_minus2 + 1), "vps_ols_output_layer_flag");
-						this.vps_ols_output_layer_flag = new byte[  vps_num_output_layer_sets_minus2 + 1][];
+						stream.CheckArrayAllocation((ulong)(  vps_num_output_layer_sets_minus2 + 1 + 1 ), "vps_ols_output_layer_flag");
+						this.vps_ols_output_layer_flag = new byte[  vps_num_output_layer_sets_minus2 + 1 + 1 ][];
 						for ( i = 1; i  <=  vps_num_output_layer_sets_minus2 + 1; i ++ )
 						{
 
@@ -704,7 +704,6 @@ video_parameter_set_rbsp() {
 							for ( j = 0; j  <=  vps_max_layers_minus1; j++ )
 							{
 								size += stream.ReadUnsignedInt(size, 1, out this.vps_ols_output_layer_flag[ i ][ j ], "vps_ols_output_layer_flag"); 
-								ituContext.OnVpsOlsOutputLayerFlag(j);
 							}
 						}
 					}
@@ -712,10 +711,10 @@ video_parameter_set_rbsp() {
 				size += stream.ReadUnsignedInt(size, 8, out this.vps_num_ptls_minus1, "vps_num_ptls_minus1"); 
 			}
 
-			stream.CheckArrayAllocation((ulong)(  vps_num_ptls_minus1 + 1), "vps_pt_present_flag");
 			this.vps_pt_present_flag = new byte[  vps_num_ptls_minus1 + 1];
-			stream.CheckArrayAllocation((ulong)(  vps_num_ptls_minus1 + 1), "vps_ptl_max_tid");
+			this.vps_pt_present_flag[0] = 1; // inferred (7.4.3.3)
 			this.vps_ptl_max_tid = new uint[  vps_num_ptls_minus1 + 1];
+			for (int k = 0; k < this.vps_ptl_max_tid.Length; k++) this.vps_ptl_max_tid[k] = vps_max_sublayers_minus1; // inferred (7.4.3.3)
 			for ( i = 0; i  <=  vps_num_ptls_minus1; i++ )
 			{
 
@@ -745,12 +744,12 @@ video_parameter_set_rbsp() {
 				size +=  stream.ReadClass<ProfileTierLevel>(size, context, this.profile_tier_level[ i ], "profile_tier_level"); 
 			}
 
-			stream.CheckArrayAllocation((ulong)( ituContext.TotalNumOlss), "vps_ols_ptl_idx");
-			this.vps_ols_ptl_idx = new uint[ ituContext.TotalNumOlss];
-			for ( i = 0; i < ituContext.TotalNumOlss; i++ )
+			stream.CheckArrayAllocation((ulong)( ituContext.DeriveTotalNumOlss()), "vps_ols_ptl_idx");
+			this.vps_ols_ptl_idx = new uint[ ituContext.DeriveTotalNumOlss()];
+			for ( i = 0; i < ituContext.DeriveTotalNumOlss(); i++ )
 			{
 
-				if ( vps_num_ptls_minus1 > 0  &&  vps_num_ptls_minus1 + 1  !=  ituContext.TotalNumOlss )
+				if ( vps_num_ptls_minus1 > 0  &&  vps_num_ptls_minus1 + 1  !=  ituContext.DeriveTotalNumOlss() )
 				{
 					size += stream.ReadUnsignedInt(size, 8, out this.vps_ols_ptl_idx[ i ], "vps_ols_ptl_idx"); 
 				}
@@ -766,8 +765,8 @@ video_parameter_set_rbsp() {
 					size += stream.ReadUnsignedInt(size, 1, out this.vps_sublayer_dpb_params_present_flag, "vps_sublayer_dpb_params_present_flag"); 
 				}
 
-				stream.CheckArrayAllocation((ulong)( ituContext.VpsNumDpbParams), "vps_dpb_max_tid");
 				this.vps_dpb_max_tid = new uint[ ituContext.VpsNumDpbParams];
+				for (int k = 0; k < this.vps_dpb_max_tid.Length; k++) this.vps_dpb_max_tid[k] = vps_max_sublayers_minus1; // inferred (7.4.3.3)
 				stream.CheckArrayAllocation((ulong)( ituContext.VpsNumDpbParams), "dpb_parameters");
 				this.dpb_parameters = new DpbParameters[ ituContext.VpsNumDpbParams];
 				for ( i = 0; i < ituContext.VpsNumDpbParams; i++ )
@@ -781,24 +780,24 @@ video_parameter_set_rbsp() {
 					size +=  stream.ReadClass<DpbParameters>(size, context, this.dpb_parameters[ i ], "dpb_parameters"); 
 				}
 
-				stream.CheckArrayAllocation((ulong)( ituContext.NumMultiLayerOlss), "vps_ols_dpb_pic_width");
-				this.vps_ols_dpb_pic_width = new ulong[ ituContext.NumMultiLayerOlss];
-				stream.CheckArrayAllocation((ulong)( ituContext.NumMultiLayerOlss), "vps_ols_dpb_pic_height");
-				this.vps_ols_dpb_pic_height = new ulong[ ituContext.NumMultiLayerOlss];
-				stream.CheckArrayAllocation((ulong)( ituContext.NumMultiLayerOlss), "vps_ols_dpb_chroma_format");
-				this.vps_ols_dpb_chroma_format = new uint[ ituContext.NumMultiLayerOlss];
-				stream.CheckArrayAllocation((ulong)( ituContext.NumMultiLayerOlss), "vps_ols_dpb_bitdepth_minus8");
-				this.vps_ols_dpb_bitdepth_minus8 = new ulong[ ituContext.NumMultiLayerOlss];
-				stream.CheckArrayAllocation((ulong)( ituContext.NumMultiLayerOlss), "vps_ols_dpb_params_idx");
-				this.vps_ols_dpb_params_idx = new ulong[ ituContext.NumMultiLayerOlss];
-				for ( i = 0; i < ituContext.NumMultiLayerOlss; i++ )
+				stream.CheckArrayAllocation((ulong)( ituContext.DeriveOls()), "vps_ols_dpb_pic_width");
+				this.vps_ols_dpb_pic_width = new ulong[ ituContext.DeriveOls()];
+				stream.CheckArrayAllocation((ulong)( ituContext.DeriveOls()), "vps_ols_dpb_pic_height");
+				this.vps_ols_dpb_pic_height = new ulong[ ituContext.DeriveOls()];
+				stream.CheckArrayAllocation((ulong)( ituContext.DeriveOls()), "vps_ols_dpb_chroma_format");
+				this.vps_ols_dpb_chroma_format = new uint[ ituContext.DeriveOls()];
+				stream.CheckArrayAllocation((ulong)( ituContext.DeriveOls()), "vps_ols_dpb_bitdepth_minus8");
+				this.vps_ols_dpb_bitdepth_minus8 = new ulong[ ituContext.DeriveOls()];
+				stream.CheckArrayAllocation((ulong)( ituContext.DeriveOls()), "vps_ols_dpb_params_idx");
+				this.vps_ols_dpb_params_idx = new ulong[ ituContext.DeriveOls()];
+				for ( i = 0; i < ituContext.DeriveOls(); i++ )
 				{
 					size += stream.ReadUnsignedIntGolomb(size, out this.vps_ols_dpb_pic_width[ i ], "vps_ols_dpb_pic_width"); 
 					size += stream.ReadUnsignedIntGolomb(size, out this.vps_ols_dpb_pic_height[ i ], "vps_ols_dpb_pic_height"); 
 					size += stream.ReadUnsignedInt(size, 2, out this.vps_ols_dpb_chroma_format[ i ], "vps_ols_dpb_chroma_format"); 
 					size += stream.ReadUnsignedIntGolomb(size, out this.vps_ols_dpb_bitdepth_minus8[ i ], "vps_ols_dpb_bitdepth_minus8"); 
 
-					if ( ituContext.VpsNumDpbParams > 1  &&  ituContext.VpsNumDpbParams  !=  ituContext.NumMultiLayerOlss )
+					if ( ituContext.VpsNumDpbParams > 1  &&  ituContext.VpsNumDpbParams  !=  ituContext.DeriveOls() )
 					{
 						size += stream.ReadUnsignedIntGolomb(size, out this.vps_ols_dpb_params_idx[ i ], "vps_ols_dpb_params_idx"); 
 					}
@@ -817,8 +816,8 @@ video_parameter_set_rbsp() {
 					}
 					size += stream.ReadUnsignedIntGolomb(size, out this.vps_num_ols_timing_hrd_params_minus1, "vps_num_ols_timing_hrd_params_minus1"); 
 
-					stream.CheckArrayAllocation((ulong)(  vps_num_ols_timing_hrd_params_minus1 + 1), "vps_hrd_max_tid");
 					this.vps_hrd_max_tid = new uint[  vps_num_ols_timing_hrd_params_minus1 + 1];
+					for (int k = 0; k < this.vps_hrd_max_tid.Length; k++) this.vps_hrd_max_tid[k] = vps_max_sublayers_minus1; // inferred (7.4.3.3)
 					stream.CheckArrayAllocation((ulong)(  vps_num_ols_timing_hrd_params_minus1 + 1), "ols_timing_hrd_parameters");
 					this.ols_timing_hrd_parameters = new OlsTimingHrdParameters[  vps_num_ols_timing_hrd_params_minus1 + 1];
 					for ( i = 0; i  <=  vps_num_ols_timing_hrd_params_minus1; i++ )
@@ -834,12 +833,12 @@ video_parameter_set_rbsp() {
 					}
 
 					if ( vps_num_ols_timing_hrd_params_minus1 > 0  && 
-     vps_num_ols_timing_hrd_params_minus1 + 1  !=  ituContext.NumMultiLayerOlss )
+     vps_num_ols_timing_hrd_params_minus1 + 1  !=  ituContext.DeriveOls() )
 					{
 
-						stream.CheckArrayAllocation((ulong)( ituContext.NumMultiLayerOlss), "vps_ols_timing_hrd_idx");
-						this.vps_ols_timing_hrd_idx = new ulong[ ituContext.NumMultiLayerOlss];
-						for ( i = 0; i < ituContext.NumMultiLayerOlss; i++ )
+						stream.CheckArrayAllocation((ulong)( ituContext.DeriveOls()), "vps_ols_timing_hrd_idx");
+						this.vps_ols_timing_hrd_idx = new ulong[ ituContext.DeriveOls()];
+						for ( i = 0; i < ituContext.DeriveOls(); i++ )
 						{
 							size += stream.ReadUnsignedIntGolomb(size, out this.vps_ols_timing_hrd_idx[ i ], "vps_ols_timing_hrd_idx"); 
 						}
@@ -877,6 +876,7 @@ video_parameter_set_rbsp() {
 			uint firstSubLayer = 0;
 			size += stream.WriteUnsignedInt(4, this.vps_video_parameter_set_id, "vps_video_parameter_set_id"); 
 			size += stream.WriteUnsignedInt(6, this.vps_max_layers_minus1, "vps_max_layers_minus1"); 
+			ituContext.OnVpsMaxLayersMinus1(this);
 			size += stream.WriteUnsignedInt(3, this.vps_max_sublayers_minus1, "vps_max_sublayers_minus1"); 
 
 			if ( vps_max_layers_minus1 > 0  &&  vps_max_sublayers_minus1 > 0 )
@@ -934,7 +934,6 @@ video_parameter_set_rbsp() {
 					if ( vps_ols_mode_idc  ==  2 )
 					{
 						size += stream.WriteUnsignedInt(8, this.vps_num_output_layer_sets_minus2, "vps_num_output_layer_sets_minus2"); 
-						ituContext.OnVpsNumOutputLayerSetsMinus2();
 
 						for ( i = 1; i  <=  vps_num_output_layer_sets_minus2 + 1; i ++ )
 						{
@@ -942,7 +941,6 @@ video_parameter_set_rbsp() {
 							for ( j = 0; j  <=  vps_max_layers_minus1; j++ )
 							{
 								size += stream.WriteUnsignedInt(1, this.vps_ols_output_layer_flag[ i ][ j ], "vps_ols_output_layer_flag"); 
-								ituContext.OnVpsOlsOutputLayerFlag(j);
 							}
 						}
 					}
@@ -976,10 +974,10 @@ video_parameter_set_rbsp() {
 				size += stream.WriteClass<ProfileTierLevel>(context, this.profile_tier_level[ i ], "profile_tier_level"); 
 			}
 
-			for ( i = 0; i < ituContext.TotalNumOlss; i++ )
+			for ( i = 0; i < ituContext.DeriveTotalNumOlss(); i++ )
 			{
 
-				if ( vps_num_ptls_minus1 > 0  &&  vps_num_ptls_minus1 + 1  !=  ituContext.TotalNumOlss )
+				if ( vps_num_ptls_minus1 > 0  &&  vps_num_ptls_minus1 + 1  !=  ituContext.DeriveTotalNumOlss() )
 				{
 					size += stream.WriteUnsignedInt(8, this.vps_ols_ptl_idx[ i ], "vps_ols_ptl_idx"); 
 				}
@@ -1005,14 +1003,14 @@ video_parameter_set_rbsp() {
 					size += stream.WriteClass<DpbParameters>(context, this.dpb_parameters[ i ], "dpb_parameters"); 
 				}
 
-				for ( i = 0; i < ituContext.NumMultiLayerOlss; i++ )
+				for ( i = 0; i < ituContext.DeriveOls(); i++ )
 				{
 					size += stream.WriteUnsignedIntGolomb( this.vps_ols_dpb_pic_width[ i ], "vps_ols_dpb_pic_width"); 
 					size += stream.WriteUnsignedIntGolomb( this.vps_ols_dpb_pic_height[ i ], "vps_ols_dpb_pic_height"); 
 					size += stream.WriteUnsignedInt(2, this.vps_ols_dpb_chroma_format[ i ], "vps_ols_dpb_chroma_format"); 
 					size += stream.WriteUnsignedIntGolomb( this.vps_ols_dpb_bitdepth_minus8[ i ], "vps_ols_dpb_bitdepth_minus8"); 
 
-					if ( ituContext.VpsNumDpbParams > 1  &&  ituContext.VpsNumDpbParams  !=  ituContext.NumMultiLayerOlss )
+					if ( ituContext.VpsNumDpbParams > 1  &&  ituContext.VpsNumDpbParams  !=  ituContext.DeriveOls() )
 					{
 						size += stream.WriteUnsignedIntGolomb( this.vps_ols_dpb_params_idx[ i ], "vps_ols_dpb_params_idx"); 
 					}
@@ -1042,10 +1040,10 @@ video_parameter_set_rbsp() {
 					}
 
 					if ( vps_num_ols_timing_hrd_params_minus1 > 0  && 
-     vps_num_ols_timing_hrd_params_minus1 + 1  !=  ituContext.NumMultiLayerOlss )
+     vps_num_ols_timing_hrd_params_minus1 + 1  !=  ituContext.DeriveOls() )
 					{
 
-						for ( i = 0; i < ituContext.NumMultiLayerOlss; i++ )
+						for ( i = 0; i < ituContext.DeriveOls(); i++ )
 						{
 							size += stream.WriteUnsignedIntGolomb( this.vps_ols_timing_hrd_idx[ i ], "vps_ols_timing_hrd_idx"); 
 						}
@@ -1649,6 +1647,7 @@ seq_parameter_set_rbsp() {
 			size += stream.ReadUnsignedInt(size, 4, out this.sps_seq_parameter_set_id, "sps_seq_parameter_set_id"); 
 			ituContext.SetSpsSeqParameterSetId(sps_seq_parameter_set_id);
 			size += stream.ReadUnsignedInt(size, 4, out this.sps_video_parameter_set_id, "sps_video_parameter_set_id"); 
+			ituContext.OnSpsVideoParameterSetId(sps_video_parameter_set_id);
 			size += stream.ReadUnsignedInt(size, 3, out this.sps_max_sublayers_minus1, "sps_max_sublayers_minus1"); 
 			size += stream.ReadUnsignedInt(size, 2, out this.sps_chroma_format_idc, "sps_chroma_format_idc"); 
 			size += stream.ReadUnsignedInt(size, 2, out this.sps_log2_ctu_size_minus5, "sps_log2_ctu_size_minus5"); 
@@ -1721,7 +1720,7 @@ seq_parameter_set_rbsp() {
 						if ( i < sps_num_subpics_minus1  && 
       sps_pic_width_max_in_luma_samples > ituContext.CtbSizeY )
 						{
-							size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_height_max_in_luma_samples + ituContext.CtbSizeY - 1 ) / ituContext.CtbSizeY ) ), out this.sps_subpic_width_minus1[ i ], "sps_subpic_width_minus1"); 
+							size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_width_max_in_luma_samples + ituContext.CtbSizeY - 1 ) / ituContext.CtbSizeY ) ), out this.sps_subpic_width_minus1[ i ], "sps_subpic_width_minus1"); 
 						}
 
 						if ( i < sps_num_subpics_minus1  && 
@@ -1901,38 +1900,26 @@ seq_parameter_set_rbsp() {
 
 			stream.CheckArrayAllocation((ulong)( ( sps_rpl1_same_as_rpl0_flag != 0 ? 1 : 2 )), "sps_num_ref_pic_lists");
 			this.sps_num_ref_pic_lists = new ulong[ ( sps_rpl1_same_as_rpl0_flag != 0 ? 1 : 2 )];
-if (ituContext.num_ref_entries == null)
-                ituContext.num_ref_entries = new ulong[2][];
-            if (ituContext.inter_layer_ref_pic_flag == null)
-                ituContext.inter_layer_ref_pic_flag = new byte[2][][];
-            if (ituContext.st_ref_pic_flag == null)
-                ituContext.st_ref_pic_flag = new byte[2][][];
-            if (ituContext.abs_delta_poc_st == null)
-                ituContext.abs_delta_poc_st = new ulong[2][][];
-            if (ituContext.strp_entry_sign_flag == null)
-                ituContext.strp_entry_sign_flag = new byte[2][][];
-            if (ituContext.rpls_poc_lsb_lt == null)
-                ituContext.rpls_poc_lsb_lt = new ulong[2][][];
-            if (ituContext.ilrp_idx == null)
-                ituContext.ilrp_idx = new ulong[2][][];
+ituContext.num_ref_entries = new ulong[2][];
+            ituContext.ltrp_in_header_flag = new byte[2][];
+            ituContext.inter_layer_ref_pic_flag = new byte[2][][];
+            ituContext.st_ref_pic_flag = new byte[2][][];
+            ituContext.abs_delta_poc_st = new ulong[2][][];
+            ituContext.strp_entry_sign_flag = new byte[2][][];
+            ituContext.rpls_poc_lsb_lt = new ulong[2][][];
+            ituContext.ilrp_idx = new ulong[2][][];
 			for ( i = 0; i < ( sps_rpl1_same_as_rpl0_flag != 0 ? 1 : 2 ); i++ )
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.sps_num_ref_pic_lists[ i ], "sps_num_ref_pic_lists"); 
 
-if (ituContext.num_ref_entries[i] == null)
-                    ituContext.num_ref_entries[i] = new ulong[sps_num_ref_pic_lists[i] + 1];
-                if (ituContext.inter_layer_ref_pic_flag[i] == null)
-                    ituContext.inter_layer_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];
-                if (ituContext.st_ref_pic_flag[i] == null)
-                    ituContext.st_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];
-                if (ituContext.abs_delta_poc_st[i] == null)
-                    ituContext.abs_delta_poc_st[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];
-                if (ituContext.strp_entry_sign_flag[i] == null)
-                    ituContext.strp_entry_sign_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];
-                if (ituContext.rpls_poc_lsb_lt[i] == null)
-                    ituContext.rpls_poc_lsb_lt[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];
-                if (ituContext.ilrp_idx[i] == null)
-                    ituContext.ilrp_idx[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];
+ituContext.num_ref_entries[i] = new ulong[sps_num_ref_pic_lists[i] + 1];
+                ituContext.ltrp_in_header_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1];
+                ituContext.inter_layer_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];
+                ituContext.st_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];
+                ituContext.abs_delta_poc_st[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];
+                ituContext.strp_entry_sign_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];
+                ituContext.rpls_poc_lsb_lt[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];
+                ituContext.ilrp_idx[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];
 				for ( j = 0; j < sps_num_ref_pic_lists[ i ]; j++)
 				{
 					this.ref_pic_list_struct =  new RefPicListStruct( i,  j ) ;
@@ -1940,6 +1927,7 @@ if (ituContext.num_ref_entries[i] == null)
 				}
 			}
 			size += stream.ReadUnsignedInt(size, 1, out this.sps_ref_wraparound_enabled_flag, "sps_ref_wraparound_enabled_flag"); 
+			ituContext.OnSpsRefWraparoundEnabledFlag();
 			size += stream.ReadUnsignedInt(size, 1, out this.sps_temporal_mvp_enabled_flag, "sps_temporal_mvp_enabled_flag"); 
 
 			if ( sps_temporal_mvp_enabled_flag != 0 )
@@ -2162,6 +2150,7 @@ if (ituContext.num_ref_entries[i] == null)
 			size += stream.WriteUnsignedInt(4, this.sps_seq_parameter_set_id, "sps_seq_parameter_set_id"); 
 			ituContext.SetSpsSeqParameterSetId(sps_seq_parameter_set_id);
 			size += stream.WriteUnsignedInt(4, this.sps_video_parameter_set_id, "sps_video_parameter_set_id"); 
+			ituContext.OnSpsVideoParameterSetId(sps_video_parameter_set_id);
 			size += stream.WriteUnsignedInt(3, this.sps_max_sublayers_minus1, "sps_max_sublayers_minus1"); 
 			size += stream.WriteUnsignedInt(2, this.sps_chroma_format_idc, "sps_chroma_format_idc"); 
 			size += stream.WriteUnsignedInt(2, this.sps_log2_ctu_size_minus5, "sps_log2_ctu_size_minus5"); 
@@ -2221,7 +2210,7 @@ if (ituContext.num_ref_entries[i] == null)
 						if ( i < sps_num_subpics_minus1  && 
       sps_pic_width_max_in_luma_samples > ituContext.CtbSizeY )
 						{
-							size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_height_max_in_luma_samples + ituContext.CtbSizeY - 1 ) / ituContext.CtbSizeY ) ), this.sps_subpic_width_minus1[ i ], "sps_subpic_width_minus1"); 
+							size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_width_max_in_luma_samples + ituContext.CtbSizeY - 1 ) / ituContext.CtbSizeY ) ), this.sps_subpic_width_minus1[ i ], "sps_subpic_width_minus1"); 
 						}
 
 						if ( i < sps_num_subpics_minus1  && 
@@ -2394,6 +2383,7 @@ this.ref_pic_list_struct.ListIdx = i;
 				}
 			}
 			size += stream.WriteUnsignedInt(1, this.sps_ref_wraparound_enabled_flag, "sps_ref_wraparound_enabled_flag"); 
+			ituContext.OnSpsRefWraparoundEnabledFlag();
 			size += stream.WriteUnsignedInt(1, this.sps_temporal_mvp_enabled_flag, "sps_temporal_mvp_enabled_flag"); 
 
 			if ( sps_temporal_mvp_enabled_flag != 0 )
@@ -2976,7 +2966,7 @@ pic_parameter_set_rbsp() {
 				for ( i = 0; i  <=  pps_num_exp_tile_rows_minus1; i++ )
 				{
 					size += stream.ReadUnsignedIntGolomb(size, out this.pps_tile_row_height_minus1[ i ], "pps_tile_row_height_minus1"); 
-					ituContext.OnPpsTileRowHeightMinus1();
+					ituContext.OnPpsTileRowHeightMinus1(i);
 				}
 
 				if ( ituContext.NumTilesInPic > 1 )
@@ -3012,21 +3002,19 @@ pic_parameter_set_rbsp() {
 					for ( i = 0; i < pps_num_slices_in_pic_minus1; i++ )
 					{
 
-						if ( ituContext.SliceTopLeftTileIdx[ i ] % ituContext.NumTileColumns  !=  ituContext.NumTileColumns - 1 )
+						if ( ituContext.DeriveRectSlices(this).SliceTopLeftTileIdx[ i ] % ituContext.NumTileColumns  !=  ituContext.NumTileColumns - 1 )
 						{
 							size += stream.ReadUnsignedIntGolomb(size, out this.pps_slice_width_in_tiles_minus1[ i ], "pps_slice_width_in_tiles_minus1"); 
 						}
 
-						if ( ituContext.SliceTopLeftTileIdx[ i ] / ituContext.NumTileColumns  !=  ituContext.NumTileRows - 1  && 
+						if ( ituContext.DeriveRectSlices(this).SliceTopLeftTileIdx[ i ] / ituContext.NumTileColumns  !=  ituContext.NumTileRows - 1  && 
       ( pps_tile_idx_delta_present_flag != 0  || 
-      ituContext.SliceTopLeftTileIdx[ i ] % ituContext.NumTileColumns  ==  0 ) )
+      ituContext.DeriveRectSlices(this).SliceTopLeftTileIdx[ i ] % ituContext.NumTileColumns  ==  0 ) )
 						{
 							size += stream.ReadUnsignedIntGolomb(size, out this.pps_slice_height_in_tiles_minus1[ i ], "pps_slice_height_in_tiles_minus1"); 
 						}
 
-						if ( pps_slice_width_in_tiles_minus1[ i ]  ==  0  && 
-      pps_slice_height_in_tiles_minus1[ i ]  ==  0  && 
-      ituContext.RowHeightVal[ ituContext.SliceTopLeftTileIdx[ i ] / ituContext.NumTileColumns ] > 1 )
+						if (ituContext.OnPpsSliceSize(this, i))
 						{
 							size += stream.ReadUnsignedIntGolomb(size, out this.pps_num_exp_slices_in_tile[ i ], "pps_num_exp_slices_in_tile"); 
 
@@ -3035,7 +3023,7 @@ pic_parameter_set_rbsp() {
 							{
 								size += stream.ReadUnsignedIntGolomb(size, out this.pps_exp_slice_height_in_ctus_minus1[ i ][ j ], "pps_exp_slice_height_in_ctus_minus1"); 
 							}
-							i+= ituContext.NumSlicesInTile[ i ] - 1;
+							i+= ituContext.DeriveRectSlices(this).NumSlicesInTile[ i ] - 1;
 						}
 
 						if ( pps_tile_idx_delta_present_flag != 0  &&  i < pps_num_slices_in_pic_minus1 )
@@ -3052,6 +3040,7 @@ pic_parameter_set_rbsp() {
 				}
 			}
 			size += stream.ReadUnsignedInt(size, 1, out this.pps_cabac_init_present_flag, "pps_cabac_init_present_flag"); 
+			ituContext.OnPpsCabacInitPresentFlag();
 
 			stream.CheckArrayAllocation((ulong)( 2), "pps_num_ref_idx_default_active_minus1");
 			this.pps_num_ref_idx_default_active_minus1 = new ulong[ 2];
@@ -3237,7 +3226,7 @@ pic_parameter_set_rbsp() {
 				for ( i = 0; i  <=  pps_num_exp_tile_rows_minus1; i++ )
 				{
 					size += stream.WriteUnsignedIntGolomb( this.pps_tile_row_height_minus1[ i ], "pps_tile_row_height_minus1"); 
-					ituContext.OnPpsTileRowHeightMinus1();
+					ituContext.OnPpsTileRowHeightMinus1(i);
 				}
 
 				if ( ituContext.NumTilesInPic > 1 )
@@ -3263,21 +3252,19 @@ pic_parameter_set_rbsp() {
 					for ( i = 0; i < pps_num_slices_in_pic_minus1; i++ )
 					{
 
-						if ( ituContext.SliceTopLeftTileIdx[ i ] % ituContext.NumTileColumns  !=  ituContext.NumTileColumns - 1 )
+						if ( ituContext.DeriveRectSlices(this).SliceTopLeftTileIdx[ i ] % ituContext.NumTileColumns  !=  ituContext.NumTileColumns - 1 )
 						{
 							size += stream.WriteUnsignedIntGolomb( this.pps_slice_width_in_tiles_minus1[ i ], "pps_slice_width_in_tiles_minus1"); 
 						}
 
-						if ( ituContext.SliceTopLeftTileIdx[ i ] / ituContext.NumTileColumns  !=  ituContext.NumTileRows - 1  && 
+						if ( ituContext.DeriveRectSlices(this).SliceTopLeftTileIdx[ i ] / ituContext.NumTileColumns  !=  ituContext.NumTileRows - 1  && 
       ( pps_tile_idx_delta_present_flag != 0  || 
-      ituContext.SliceTopLeftTileIdx[ i ] % ituContext.NumTileColumns  ==  0 ) )
+      ituContext.DeriveRectSlices(this).SliceTopLeftTileIdx[ i ] % ituContext.NumTileColumns  ==  0 ) )
 						{
 							size += stream.WriteUnsignedIntGolomb( this.pps_slice_height_in_tiles_minus1[ i ], "pps_slice_height_in_tiles_minus1"); 
 						}
 
-						if ( pps_slice_width_in_tiles_minus1[ i ]  ==  0  && 
-      pps_slice_height_in_tiles_minus1[ i ]  ==  0  && 
-      ituContext.RowHeightVal[ ituContext.SliceTopLeftTileIdx[ i ] / ituContext.NumTileColumns ] > 1 )
+						if (ituContext.OnPpsSliceSize(this, i))
 						{
 							size += stream.WriteUnsignedIntGolomb( this.pps_num_exp_slices_in_tile[ i ], "pps_num_exp_slices_in_tile"); 
 
@@ -3285,7 +3272,7 @@ pic_parameter_set_rbsp() {
 							{
 								size += stream.WriteUnsignedIntGolomb( this.pps_exp_slice_height_in_ctus_minus1[ i ][ j ], "pps_exp_slice_height_in_ctus_minus1"); 
 							}
-							i+= ituContext.NumSlicesInTile[ i ] - 1;
+							i+= ituContext.DeriveRectSlices(this).NumSlicesInTile[ i ] - 1;
 						}
 
 						if ( pps_tile_idx_delta_present_flag != 0  &&  i < pps_num_slices_in_pic_minus1 )
@@ -3302,6 +3289,7 @@ pic_parameter_set_rbsp() {
 				}
 			}
 			size += stream.WriteUnsignedInt(1, this.pps_cabac_init_present_flag, "pps_cabac_init_present_flag"); 
+			ituContext.OnPpsCabacInitPresentFlag();
 
 			for ( i = 0; i < 2; i++ )
 			{
@@ -3421,13 +3409,13 @@ adaptation_parameter_set_rbsp() {
   alf_data()  
  else if( aps_params_type  ==  LMCS_APS )  
   lmcs_data()  
- /* else if( aps_params_type  ==  SCALING_APS ) *//*
- /* scaling_list_data()  *//*
- /*aps_extension_flag u(1) *//*
- /*if( aps_extension_flag )  *//*
-  /*while( more_rbsp_data() )  *//*
-  /* aps_extension_data_flag u(1) *//*
- /*rbsp_trailing_bits()  *//*
+ else if( aps_params_type  ==  SCALING_APS )
+  scaling_list_data()
+ aps_extension_flag u(1)
+ if( aps_extension_flag )
+  while( more_rbsp_data() )
+   aps_extension_data_flag u(1)
+ rbsp_trailing_bits()
 }
     */
     public class AdaptationParameterSetRbsp : IItuSerializable
@@ -3442,6 +3430,14 @@ adaptation_parameter_set_rbsp() {
 		public AlfData AlfData { get { return alf_data; } set { alf_data = value; } }
 		private LmcsData lmcs_data;
 		public LmcsData LmcsData { get { return lmcs_data; } set { lmcs_data = value; } }
+		private ScalingListData scaling_list_data;
+		public ScalingListData ScalingListData { get { return scaling_list_data; } set { scaling_list_data = value; } }
+		private byte aps_extension_flag;
+		public byte ApsExtensionFlag { get { return aps_extension_flag; } set { aps_extension_flag = value; } }
+		private Dictionary<int, byte> aps_extension_data_flag = new Dictionary<int, byte>();
+		public Dictionary<int, byte> ApsExtensionDataFlag { get { return aps_extension_data_flag; } set { aps_extension_data_flag = value; } }
+		private RbspTrailingBits rbsp_trailing_bits;
+		public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
@@ -3459,6 +3455,7 @@ adaptation_parameter_set_rbsp() {
 
             ulong size = 0;
 
+			int whileIndex = -1;
 			size += stream.ReadUnsignedInt(size, 3, out this.aps_params_type, "aps_params_type"); 
 			size += stream.ReadUnsignedInt(size, 5, out this.aps_adaptation_parameter_set_id, "aps_adaptation_parameter_set_id"); 
 			size += stream.ReadUnsignedInt(size, 1, out this.aps_chroma_present_flag, "aps_chroma_present_flag"); 
@@ -3471,20 +3468,27 @@ adaptation_parameter_set_rbsp() {
 			else if ( aps_params_type  ==  H266Constants.LMCS_APS )
 			{
 				this.lmcs_data =  new LmcsData() ;
-				size +=  stream.ReadClass<LmcsData>(size, context, this.lmcs_data, "lmcs_data"); // else if( aps_params_type  ==  SCALING_APS ) 
+				size +=  stream.ReadClass<LmcsData>(size, context, this.lmcs_data, "lmcs_data"); 
 			}
-/*  scaling_list_data()   */
+			else if ( aps_params_type  ==  H266Constants.SCALING_APS )
+			{
+				this.scaling_list_data =  new ScalingListData() ;
+				size +=  stream.ReadClass<ScalingListData>(size, context, this.scaling_list_data, "scaling_list_data"); 
+			}
+			size += stream.ReadUnsignedInt(size, 1, out this.aps_extension_flag, "aps_extension_flag"); 
 
-/* aps_extension_flag u(1)  */
+			if ( aps_extension_flag != 0 )
+			{
 
-/* if( aps_extension_flag )   */
+				while ( stream.ReadMoreRbspData(this) )
+				{
+					whileIndex++;
 
-/* while( more_rbsp_data() )   */
-
-/*  aps_extension_data_flag u(1)  */
-
-/* rbsp_trailing_bits()   */
-
+					size += stream.ReadUnsignedInt(size, 1, whileIndex, this.aps_extension_data_flag, "aps_extension_data_flag"); 
+				}
+			}
+			this.rbsp_trailing_bits =  new RbspTrailingBits() ;
+			size +=  stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits, "rbsp_trailing_bits"); 
 
             return size;
          }
@@ -3496,6 +3500,7 @@ adaptation_parameter_set_rbsp() {
                 throw new ArgumentException($"Context should be of type H266Context");
             ulong size = 0;
 
+			int whileIndex = -1;
 			size += stream.WriteUnsignedInt(3, this.aps_params_type, "aps_params_type"); 
 			size += stream.WriteUnsignedInt(5, this.aps_adaptation_parameter_set_id, "aps_adaptation_parameter_set_id"); 
 			size += stream.WriteUnsignedInt(1, this.aps_chroma_present_flag, "aps_chroma_present_flag"); 
@@ -3506,20 +3511,25 @@ adaptation_parameter_set_rbsp() {
 			}
 			else if ( aps_params_type  ==  H266Constants.LMCS_APS )
 			{
-				size += stream.WriteClass<LmcsData>(context, this.lmcs_data, "lmcs_data"); // else if( aps_params_type  ==  SCALING_APS ) 
+				size += stream.WriteClass<LmcsData>(context, this.lmcs_data, "lmcs_data"); 
 			}
-/*  scaling_list_data()   */
+			else if ( aps_params_type  ==  H266Constants.SCALING_APS )
+			{
+				size += stream.WriteClass<ScalingListData>(context, this.scaling_list_data, "scaling_list_data"); 
+			}
+			size += stream.WriteUnsignedInt(1, this.aps_extension_flag, "aps_extension_flag"); 
 
-/* aps_extension_flag u(1)  */
+			if ( aps_extension_flag != 0 )
+			{
 
-/* if( aps_extension_flag )   */
+				while ( stream.WriteMoreRbspData(this) )
+				{
+					whileIndex++;
 
-/* while( more_rbsp_data() )   */
-
-/*  aps_extension_data_flag u(1)  */
-
-/* rbsp_trailing_bits()   */
-
+					size += stream.WriteUnsignedInt(1, whileIndex, this.aps_extension_data_flag, "aps_extension_data_flag"); 
+				}
+			}
+			size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits"); 
 
             return size;
          }
@@ -3831,6 +3841,7 @@ slice_header() {
 
 			uint i = 0;
 			size += stream.ReadUnsignedInt(size, 1, out this.sh_picture_header_in_slice_header_flag, "sh_picture_header_in_slice_header_flag"); 
+			ituContext.OnShPictureHeaderInSliceHeaderFlag(this);
 
 			if (sh_picture_header_in_slice_header_flag != 0)
 			{
@@ -3860,10 +3871,9 @@ slice_header() {
 			if (ituContext.PicParameterSetRbsp.PpsRectSliceFlag== 0 && ituContext.NumTilesInPic - (int)sh_slice_address > 1 )
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.sh_num_tiles_in_slice_minus1, "sh_num_tiles_in_slice_minus1"); 
-				ituContext.OnShNumTilesInSliceMinus1();
 			}
 
-			if (ituContext.SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhInterSliceAllowedFlag != 0)
+			if (ituContext.PictureHeader.PhInterSliceAllowedFlag != 0)
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.sh_slice_type, "sh_slice_type"); 
 			}
@@ -3918,12 +3928,12 @@ slice_header() {
 				}
 			}
 
-			if (ituContext.SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhLmcsEnabledFlag != 0 && sh_picture_header_in_slice_header_flag== 0)
+			if (ituContext.PictureHeader.PhLmcsEnabledFlag != 0 && sh_picture_header_in_slice_header_flag== 0)
 			{
 				size += stream.ReadUnsignedInt(size, 1, out this.sh_lmcs_used_flag, "sh_lmcs_used_flag"); 
 			}
 
-			if (ituContext.SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhExplicitScalingListEnabledFlag != 0 && sh_picture_header_in_slice_header_flag== 0)
+			if (ituContext.PictureHeader.PhExplicitScalingListEnabledFlag != 0 && sh_picture_header_in_slice_header_flag== 0)
 			{
 				size += stream.ReadUnsignedInt(size, 1, out this.sh_explicit_scaling_list_used_flag, "sh_explicit_scaling_list_used_flag"); 
 			}
@@ -3965,7 +3975,7 @@ slice_header() {
 					size += stream.ReadUnsignedInt(size, 1, out this.sh_cabac_init_flag, "sh_cabac_init_flag"); 
 				}
 
-				if (ituContext.SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhTemporalMvpEnabledFlag != 0 && ituContext.PicParameterSetRbsp.PpsRplInfoInPhFlag== 0)
+				if (ituContext.PictureHeader.PhTemporalMvpEnabledFlag != 0 && ituContext.PicParameterSetRbsp.PpsRplInfoInPhFlag== 0)
 				{
 
 					if (sh_slice_type == H266FrameTypes.B)
@@ -3973,8 +3983,8 @@ slice_header() {
 						size += stream.ReadUnsignedInt(size, 1, out this.sh_collocated_from_l0_flag, "sh_collocated_from_l0_flag"); 
 					}
 
-					if ((sh_collocated_from_l0_flag != 0 && ituContext.NumRefIdxActive[0] > 1) ||
-                (sh_collocated_from_l0_flag == 0 && ituContext.NumRefIdxActive[1] > 1))
+					if ((sh_collocated_from_l0_flag != 0 && ituContext.DeriveNumRefIdxActive()[0] > 1) ||
+                (sh_collocated_from_l0_flag == 0 && ituContext.DeriveNumRefIdxActive()[1] > 1))
 					{
 						size += stream.ReadUnsignedIntGolomb(size, out this.sh_collocated_ref_idx, "sh_collocated_ref_idx"); 
 					}
@@ -4073,17 +4083,16 @@ slice_header() {
 				for (i = 0; i < sh_slice_header_extension_length; i++)
 				{
 					size += stream.ReadUnsignedInt(size, 8, out this.sh_slice_header_extension_data_byte[i], "sh_slice_header_extension_data_byte"); 
-					ituContext.OnShSliceHeaderExtensionDataByte();
 				}
 			}
 
-			if (ituContext.NumEntryPoints > 0)
+			if (ituContext.DeriveNumEntryPoints() > 0)
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.sh_entry_offset_len_minus1, "sh_entry_offset_len_minus1"); 
 
-				stream.CheckArrayAllocation((ulong)( ituContext.NumEntryPoints), "sh_entry_point_offset_minus1");
-				this.sh_entry_point_offset_minus1 = new ulong[ ituContext.NumEntryPoints];
-				for (i = 0; i < ituContext.NumEntryPoints; i++)
+				stream.CheckArrayAllocation((ulong)( ituContext.DeriveNumEntryPoints()), "sh_entry_point_offset_minus1");
+				this.sh_entry_point_offset_minus1 = new ulong[ ituContext.DeriveNumEntryPoints()];
+				for (i = 0; i < ituContext.DeriveNumEntryPoints(); i++)
 				{
 					size += stream.ReadUnsignedIntVariable(size, sh_entry_offset_len_minus1 + 1, out this.sh_entry_point_offset_minus1[i], "sh_entry_point_offset_minus1"); 
 				}
@@ -4103,6 +4112,7 @@ slice_header() {
 
 			uint i = 0;
 			size += stream.WriteUnsignedInt(1, this.sh_picture_header_in_slice_header_flag, "sh_picture_header_in_slice_header_flag"); 
+			ituContext.OnShPictureHeaderInSliceHeaderFlag(this);
 
 			if (sh_picture_header_in_slice_header_flag != 0)
 			{
@@ -4129,10 +4139,9 @@ slice_header() {
 			if (ituContext.PicParameterSetRbsp.PpsRectSliceFlag== 0 && ituContext.NumTilesInPic - (int)sh_slice_address > 1 )
 			{
 				size += stream.WriteUnsignedIntGolomb( this.sh_num_tiles_in_slice_minus1, "sh_num_tiles_in_slice_minus1"); 
-				ituContext.OnShNumTilesInSliceMinus1();
 			}
 
-			if (ituContext.SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhInterSliceAllowedFlag != 0)
+			if (ituContext.PictureHeader.PhInterSliceAllowedFlag != 0)
 			{
 				size += stream.WriteUnsignedIntGolomb( this.sh_slice_type, "sh_slice_type"); 
 			}
@@ -4185,12 +4194,12 @@ slice_header() {
 				}
 			}
 
-			if (ituContext.SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhLmcsEnabledFlag != 0 && sh_picture_header_in_slice_header_flag== 0)
+			if (ituContext.PictureHeader.PhLmcsEnabledFlag != 0 && sh_picture_header_in_slice_header_flag== 0)
 			{
 				size += stream.WriteUnsignedInt(1, this.sh_lmcs_used_flag, "sh_lmcs_used_flag"); 
 			}
 
-			if (ituContext.SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhExplicitScalingListEnabledFlag != 0 && sh_picture_header_in_slice_header_flag== 0)
+			if (ituContext.PictureHeader.PhExplicitScalingListEnabledFlag != 0 && sh_picture_header_in_slice_header_flag== 0)
 			{
 				size += stream.WriteUnsignedInt(1, this.sh_explicit_scaling_list_used_flag, "sh_explicit_scaling_list_used_flag"); 
 			}
@@ -4229,7 +4238,7 @@ slice_header() {
 					size += stream.WriteUnsignedInt(1, this.sh_cabac_init_flag, "sh_cabac_init_flag"); 
 				}
 
-				if (ituContext.SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhTemporalMvpEnabledFlag != 0 && ituContext.PicParameterSetRbsp.PpsRplInfoInPhFlag== 0)
+				if (ituContext.PictureHeader.PhTemporalMvpEnabledFlag != 0 && ituContext.PicParameterSetRbsp.PpsRplInfoInPhFlag== 0)
 				{
 
 					if (sh_slice_type == H266FrameTypes.B)
@@ -4237,8 +4246,8 @@ slice_header() {
 						size += stream.WriteUnsignedInt(1, this.sh_collocated_from_l0_flag, "sh_collocated_from_l0_flag"); 
 					}
 
-					if ((sh_collocated_from_l0_flag != 0 && ituContext.NumRefIdxActive[0] > 1) ||
-                (sh_collocated_from_l0_flag == 0 && ituContext.NumRefIdxActive[1] > 1))
+					if ((sh_collocated_from_l0_flag != 0 && ituContext.DeriveNumRefIdxActive()[0] > 1) ||
+                (sh_collocated_from_l0_flag == 0 && ituContext.DeriveNumRefIdxActive()[1] > 1))
 					{
 						size += stream.WriteUnsignedIntGolomb( this.sh_collocated_ref_idx, "sh_collocated_ref_idx"); 
 					}
@@ -4334,15 +4343,14 @@ slice_header() {
 				for (i = 0; i < sh_slice_header_extension_length; i++)
 				{
 					size += stream.WriteUnsignedInt(8, this.sh_slice_header_extension_data_byte[i], "sh_slice_header_extension_data_byte"); 
-					ituContext.OnShSliceHeaderExtensionDataByte();
 				}
 			}
 
-			if (ituContext.NumEntryPoints > 0)
+			if (ituContext.DeriveNumEntryPoints() > 0)
 			{
 				size += stream.WriteUnsignedIntGolomb( this.sh_entry_offset_len_minus1, "sh_entry_offset_len_minus1"); 
 
-				for (i = 0; i < ituContext.NumEntryPoints; i++)
+				for (i = 0; i < ituContext.DeriveNumEntryPoints(); i++)
 				{
 					size += stream.WriteUnsignedIntVariable(sh_entry_offset_len_minus1 + 1, this.sh_entry_point_offset_minus1[i], "sh_entry_point_offset_minus1"); 
 				}
@@ -4755,6 +4763,7 @@ ph_extension_data_byte[ i ] u(8)
 			uint i = 0;
 			uint presenceFlag = 0;
 			size += stream.ReadUnsignedInt(size, 1, out this.ph_gdr_or_irap_pic_flag, "ph_gdr_or_irap_pic_flag"); 
+			ituContext.OnPhGdrOrIrapPicFlag(this);
 			size += stream.ReadUnsignedInt(size, 1, out this.ph_non_ref_pic_flag, "ph_non_ref_pic_flag"); 
 
 			if ( ph_gdr_or_irap_pic_flag != 0 )
@@ -5104,6 +5113,7 @@ ph_extension_data_byte[ i ] u(8)
 			uint i = 0;
 			uint presenceFlag = 0;
 			size += stream.WriteUnsignedInt(1, this.ph_gdr_or_irap_pic_flag, "ph_gdr_or_irap_pic_flag"); 
+			ituContext.OnPhGdrOrIrapPicFlag(this);
 			size += stream.WriteUnsignedInt(1, this.ph_non_ref_pic_flag, "ph_non_ref_pic_flag"); 
 
 			if ( ph_gdr_or_irap_pic_flag != 0 )
@@ -5499,6 +5509,8 @@ ref_pic_lists() {
 			this.rpl_idx = new ulong[ 2];
 if (ituContext.num_ref_entries == null)
                 ituContext.num_ref_entries = new ulong[2][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1] };
+            if (ituContext.ltrp_in_header_flag == null)
+                ituContext.ltrp_in_header_flag = new byte[2][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1] };
             if (ituContext.inter_layer_ref_pic_flag == null)
                 ituContext.inter_layer_ref_pic_flag = new byte[2][][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
             if (ituContext.st_ref_pic_flag == null)
@@ -5526,7 +5538,7 @@ if (ituContext.num_ref_entries == null)
 					size += stream.ReadUnsignedInt(size, 1, out this.rpl_sps_flag[i], "rpl_sps_flag"); 
 				}
 
-				if (rpl_sps_flag[i] != 0)
+				if (ituContext.InferRplSpsFlag(this, i) != 0)
 				{
 
 					if (ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[i] > 1 &&
@@ -5548,7 +5560,7 @@ if (ituContext.num_ref_entries == null)
 				for (j = 0; j < ituContext.NumLtrpEntries[i][ituContext.RplsIdx[i]]; j++)
 				{
 
-					if (ref_pic_list_struct.LtrpInHeaderFlag[i][ituContext.RplsIdx[i]] != 0)
+					if (ituContext.ltrp_in_header_flag[i][ituContext.RplsIdx[i]] != 0)
 					{
 						size += stream.ReadUnsignedIntVariable(size, ituContext.SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4, out this.poc_lsb_lt[i][j], "poc_lsb_lt"); 
 					}
@@ -5583,7 +5595,7 @@ if (ituContext.num_ref_entries == null)
 					size += stream.WriteUnsignedInt(1, this.rpl_sps_flag[i], "rpl_sps_flag"); 
 				}
 
-				if (rpl_sps_flag[i] != 0)
+				if (ituContext.InferRplSpsFlag(this, i) != 0)
 				{
 
 					if (ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[i] > 1 &&
@@ -5603,7 +5615,7 @@ this.ref_pic_list_struct.ListIdx = i;
 				for (j = 0; j < ituContext.NumLtrpEntries[i][ituContext.RplsIdx[i]]; j++)
 				{
 
-					if (ref_pic_list_struct.LtrpInHeaderFlag[i][ituContext.RplsIdx[i]] != 0)
+					if (ituContext.ltrp_in_header_flag[i][ituContext.RplsIdx[i]] != 0)
 					{
 						size += stream.WriteUnsignedIntVariable(ituContext.SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4, this.poc_lsb_lt[i][j], "poc_lsb_lt"); 
 					}
@@ -5731,12 +5743,11 @@ pred_weight_table() {
 			if (ituContext.PicParameterSetRbsp.PpsWpInfoInPhFlag != 0)
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.num_l0_weights, "num_l0_weights"); 
-				ituContext.OnNumL0Weights(num_l0_weights);
 			}
 
-			stream.CheckArrayAllocation((ulong)( ituContext.NumWeightsL0), "luma_weight_l0_flag");
-			this.luma_weight_l0_flag = new byte[ ituContext.NumWeightsL0];
-			for (i = 0; i < ituContext.NumWeightsL0; i++)
+			stream.CheckArrayAllocation((ulong)( ituContext.DeriveNumWeightsL0(this)), "luma_weight_l0_flag");
+			this.luma_weight_l0_flag = new byte[ ituContext.DeriveNumWeightsL0(this)];
+			for (i = 0; i < ituContext.DeriveNumWeightsL0(this); i++)
 			{
 				size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l0_flag[i], "luma_weight_l0_flag"); 
 			}
@@ -5744,23 +5755,23 @@ pred_weight_table() {
 			if (ituContext.SeqParameterSetRbsp.SpsChromaFormatIdc != 0)
 			{
 
-				stream.CheckArrayAllocation((ulong)( ituContext.NumWeightsL0), "chroma_weight_l0_flag");
-				this.chroma_weight_l0_flag = new byte[ ituContext.NumWeightsL0];
-				for (i = 0; i < ituContext.NumWeightsL0; i++)
+				stream.CheckArrayAllocation((ulong)( ituContext.DeriveNumWeightsL0(this)), "chroma_weight_l0_flag");
+				this.chroma_weight_l0_flag = new byte[ ituContext.DeriveNumWeightsL0(this)];
+				for (i = 0; i < ituContext.DeriveNumWeightsL0(this); i++)
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.chroma_weight_l0_flag[i], "chroma_weight_l0_flag"); 
 				}
 			}
 
-			stream.CheckArrayAllocation((ulong)( ituContext.NumWeightsL0), "delta_luma_weight_l0");
-			this.delta_luma_weight_l0 = new long[ ituContext.NumWeightsL0];
-			stream.CheckArrayAllocation((ulong)( ituContext.NumWeightsL0), "luma_offset_l0");
-			this.luma_offset_l0 = new long[ ituContext.NumWeightsL0];
-			stream.CheckArrayAllocation((ulong)( ituContext.NumWeightsL0), "delta_chroma_weight_l0");
-			this.delta_chroma_weight_l0 = new long[ ituContext.NumWeightsL0][];
-			stream.CheckArrayAllocation((ulong)( ituContext.NumWeightsL0), "delta_chroma_offset_l0");
-			this.delta_chroma_offset_l0 = new long[ ituContext.NumWeightsL0][];
-			for (i = 0; i < ituContext.NumWeightsL0; i++)
+			stream.CheckArrayAllocation((ulong)( ituContext.DeriveNumWeightsL0(this)), "delta_luma_weight_l0");
+			this.delta_luma_weight_l0 = new long[ ituContext.DeriveNumWeightsL0(this)];
+			stream.CheckArrayAllocation((ulong)( ituContext.DeriveNumWeightsL0(this)), "luma_offset_l0");
+			this.luma_offset_l0 = new long[ ituContext.DeriveNumWeightsL0(this)];
+			stream.CheckArrayAllocation((ulong)( ituContext.DeriveNumWeightsL0(this)), "delta_chroma_weight_l0");
+			this.delta_chroma_weight_l0 = new long[ ituContext.DeriveNumWeightsL0(this)][];
+			stream.CheckArrayAllocation((ulong)( ituContext.DeriveNumWeightsL0(this)), "delta_chroma_offset_l0");
+			this.delta_chroma_offset_l0 = new long[ ituContext.DeriveNumWeightsL0(this)][];
+			for (i = 0; i < ituContext.DeriveNumWeightsL0(this); i++)
 			{
 
 				if (luma_weight_l0_flag[i] != 0)
@@ -5788,12 +5799,11 @@ pred_weight_table() {
         ituContext.num_ref_entries[1][ituContext.RplsIdx[1]] > 0)
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.num_l1_weights, "num_l1_weights"); 
-				ituContext.OnNumL1Weights(num_l1_weights);
 			}
 
-			stream.CheckArrayAllocation((ulong)( ituContext.NumWeightsL1), "luma_weight_l1_flag");
-			this.luma_weight_l1_flag = new byte[ ituContext.NumWeightsL1];
-			for (i = 0; i < ituContext.NumWeightsL1; i++)
+			stream.CheckArrayAllocation((ulong)( ituContext.DeriveNumWeightsL1(this)), "luma_weight_l1_flag");
+			this.luma_weight_l1_flag = new byte[ ituContext.DeriveNumWeightsL1(this)];
+			for (i = 0; i < ituContext.DeriveNumWeightsL1(this); i++)
 			{
 				size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l1_flag[i], "luma_weight_l1_flag"); 
 			}
@@ -5801,23 +5811,23 @@ pred_weight_table() {
 			if (ituContext.SeqParameterSetRbsp.SpsChromaFormatIdc != 0)
 			{
 
-				stream.CheckArrayAllocation((ulong)( ituContext.NumWeightsL1), "chroma_weight_l1_flag");
-				this.chroma_weight_l1_flag = new byte[ ituContext.NumWeightsL1];
-				for (i = 0; i < ituContext.NumWeightsL1; i++)
+				stream.CheckArrayAllocation((ulong)( ituContext.DeriveNumWeightsL1(this)), "chroma_weight_l1_flag");
+				this.chroma_weight_l1_flag = new byte[ ituContext.DeriveNumWeightsL1(this)];
+				for (i = 0; i < ituContext.DeriveNumWeightsL1(this); i++)
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.chroma_weight_l1_flag[i], "chroma_weight_l1_flag"); 
 				}
 			}
 
-			stream.CheckArrayAllocation((ulong)( ituContext.NumWeightsL1), "delta_luma_weight_l1");
-			this.delta_luma_weight_l1 = new long[ ituContext.NumWeightsL1];
-			stream.CheckArrayAllocation((ulong)( ituContext.NumWeightsL1), "luma_offset_l1");
-			this.luma_offset_l1 = new long[ ituContext.NumWeightsL1];
-			stream.CheckArrayAllocation((ulong)( ituContext.NumWeightsL1), "delta_chroma_weight_l1");
-			this.delta_chroma_weight_l1 = new long[ ituContext.NumWeightsL1][];
-			stream.CheckArrayAllocation((ulong)( ituContext.NumWeightsL1), "delta_chroma_offset_l1");
-			this.delta_chroma_offset_l1 = new long[ ituContext.NumWeightsL1][];
-			for (i = 0; i < ituContext.NumWeightsL1; i++)
+			stream.CheckArrayAllocation((ulong)( ituContext.DeriveNumWeightsL1(this)), "delta_luma_weight_l1");
+			this.delta_luma_weight_l1 = new long[ ituContext.DeriveNumWeightsL1(this)];
+			stream.CheckArrayAllocation((ulong)( ituContext.DeriveNumWeightsL1(this)), "luma_offset_l1");
+			this.luma_offset_l1 = new long[ ituContext.DeriveNumWeightsL1(this)];
+			stream.CheckArrayAllocation((ulong)( ituContext.DeriveNumWeightsL1(this)), "delta_chroma_weight_l1");
+			this.delta_chroma_weight_l1 = new long[ ituContext.DeriveNumWeightsL1(this)][];
+			stream.CheckArrayAllocation((ulong)( ituContext.DeriveNumWeightsL1(this)), "delta_chroma_offset_l1");
+			this.delta_chroma_offset_l1 = new long[ ituContext.DeriveNumWeightsL1(this)][];
+			for (i = 0; i < ituContext.DeriveNumWeightsL1(this); i++)
 			{
 
 				if (luma_weight_l1_flag[i] != 0)
@@ -5863,10 +5873,9 @@ pred_weight_table() {
 			if (ituContext.PicParameterSetRbsp.PpsWpInfoInPhFlag != 0)
 			{
 				size += stream.WriteUnsignedIntGolomb( this.num_l0_weights, "num_l0_weights"); 
-				ituContext.OnNumL0Weights(num_l0_weights);
 			}
 
-			for (i = 0; i < ituContext.NumWeightsL0; i++)
+			for (i = 0; i < ituContext.DeriveNumWeightsL0(this); i++)
 			{
 				size += stream.WriteUnsignedInt(1, this.luma_weight_l0_flag[i], "luma_weight_l0_flag"); 
 			}
@@ -5874,13 +5883,13 @@ pred_weight_table() {
 			if (ituContext.SeqParameterSetRbsp.SpsChromaFormatIdc != 0)
 			{
 
-				for (i = 0; i < ituContext.NumWeightsL0; i++)
+				for (i = 0; i < ituContext.DeriveNumWeightsL0(this); i++)
 				{
 					size += stream.WriteUnsignedInt(1, this.chroma_weight_l0_flag[i], "chroma_weight_l0_flag"); 
 				}
 			}
 
-			for (i = 0; i < ituContext.NumWeightsL0; i++)
+			for (i = 0; i < ituContext.DeriveNumWeightsL0(this); i++)
 			{
 
 				if (luma_weight_l0_flag[i] != 0)
@@ -5904,10 +5913,9 @@ pred_weight_table() {
         ituContext.num_ref_entries[1][ituContext.RplsIdx[1]] > 0)
 			{
 				size += stream.WriteUnsignedIntGolomb( this.num_l1_weights, "num_l1_weights"); 
-				ituContext.OnNumL1Weights(num_l1_weights);
 			}
 
-			for (i = 0; i < ituContext.NumWeightsL1; i++)
+			for (i = 0; i < ituContext.DeriveNumWeightsL1(this); i++)
 			{
 				size += stream.WriteUnsignedInt(1, this.luma_weight_l1_flag[i], "luma_weight_l1_flag"); 
 			}
@@ -5915,13 +5923,13 @@ pred_weight_table() {
 			if (ituContext.SeqParameterSetRbsp.SpsChromaFormatIdc != 0)
 			{
 
-				for (i = 0; i < ituContext.NumWeightsL1; i++)
+				for (i = 0; i < ituContext.DeriveNumWeightsL1(this); i++)
 				{
 					size += stream.WriteUnsignedInt(1, this.chroma_weight_l1_flag[i], "chroma_weight_l1_flag"); 
 				}
 			}
 
-			for (i = 0; i < ituContext.NumWeightsL1; i++)
+			for (i = 0; i < ituContext.DeriveNumWeightsL1(this); i++)
 			{
 
 				if (luma_weight_l1_flag[i] != 0)
@@ -6793,6 +6801,201 @@ alf_cc_cr_filter_signal_flag u(1)
     /*
  
 
+scaling_list_data() {
+ for( id = 0; id < 28; id ++ ) {
+  matrixSize = id < 2 ? 2 : ( id < 8 ? 4 : 8 )
+  if( aps_chroma_present_flag  ||  id % 3  ==  2  ||  id  ==  27 ) {
+   scaling_list_copy_mode_flag[ id ] u(1)
+   if( !scaling_list_copy_mode_flag[ id ] )
+    scaling_list_pred_mode_flag[ id ] u(1)
+   if( ( scaling_list_copy_mode_flag[ id ]  ||  scaling_list_pred_mode_flag[ id ] )  &&
+     id != 0  &&  id != 2  &&  id != 8 )
+    scaling_list_pred_id_delta[ id ] ue(v)
+   if( !scaling_list_copy_mode_flag[ id ] ) {
+    nextCoef = 0
+    if( id > 13 ) {
+     scaling_list_dc_coef[ id - 14 ] se(v)
+     nextCoef += scaling_list_dc_coef[ id - 14 ]
+    }
+    for( i = 0; i < matrixSize * matrixSize; i++ ) {
+     x = DiagScanOrder[ 3 ][ 3 ][ i ][ 0 ]
+     y = DiagScanOrder[ 3 ][ 3 ][ i ][ 1 ]
+     if( !( id > 25  &&  x >= 4  &&  y >= 4 ) ) {
+      scaling_list_delta_coef[ id ][ i ] se(v)
+      nextCoef += scaling_list_delta_coef[ id ][ i ]
+     }
+     ScalingList[ id ][ i ] = nextCoef
+    }
+   }
+  }
+ }
+}
+    */
+    public class ScalingListData : IItuSerializable
+    {
+		private byte[] scaling_list_copy_mode_flag;
+		public byte[] ScalingListCopyModeFlag { get { return scaling_list_copy_mode_flag; } set { scaling_list_copy_mode_flag = value; } }
+		private byte[] scaling_list_pred_mode_flag;
+		public byte[] ScalingListPredModeFlag { get { return scaling_list_pred_mode_flag; } set { scaling_list_pred_mode_flag = value; } }
+		private ulong[] scaling_list_pred_id_delta;
+		public ulong[] ScalingListPredIdDelta { get { return scaling_list_pred_id_delta; } set { scaling_list_pred_id_delta = value; } }
+		private long[] scaling_list_dc_coef;
+		public long[] ScalingListDcCoef { get { return scaling_list_dc_coef; } set { scaling_list_dc_coef = value; } }
+		private long[][] scaling_list_delta_coef;
+		public long[][] ScalingListDeltaCoef { get { return scaling_list_delta_coef; } set { scaling_list_delta_coef = value; } }
+
+         public int HasMoreRbspData { get; set; }
+         public int[] ReadNextBits { get; set; }
+
+         public ScalingListData()
+         { 
+
+         }
+
+         public ulong Read(IItuContext context, ItuStream stream)
+         {
+            H266Context ituContext = context as H266Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H266Context");
+
+            ulong size = 0;
+
+			uint id = 0;
+			int matrixSize = 0;
+			uint nextCoef = 0;
+			uint i = 0;
+			uint x = 0;
+			uint y = 0;
+			uint[][] ScalingList = H266Context.NewScalingList();
+
+			stream.CheckArrayAllocation((ulong)( 28), "scaling_list_copy_mode_flag");
+			this.scaling_list_copy_mode_flag = new byte[ 28];
+			stream.CheckArrayAllocation((ulong)( 28), "scaling_list_pred_mode_flag");
+			this.scaling_list_pred_mode_flag = new byte[ 28];
+			stream.CheckArrayAllocation((ulong)( 28), "scaling_list_pred_id_delta");
+			this.scaling_list_pred_id_delta = new ulong[ 28];
+			stream.CheckArrayAllocation((ulong)( 28), "scaling_list_dc_coef");
+			this.scaling_list_dc_coef = new long[ 28];
+			stream.CheckArrayAllocation((ulong)( 28), "scaling_list_delta_coef");
+			this.scaling_list_delta_coef = new long[ 28][];
+			for ( id = 0; id < 28; id ++ )
+			{
+				matrixSize= id < 2 ? 2 : ( id < 8 ? 4 : 8 );
+
+				if ( ituContext.AdaptationParameterSetRbsp.ApsChromaPresentFlag != 0  ||  id % 3  ==  2  ||  id  ==  27 )
+				{
+					size += stream.ReadUnsignedInt(size, 1, out this.scaling_list_copy_mode_flag[ id ], "scaling_list_copy_mode_flag"); 
+
+					if ( scaling_list_copy_mode_flag[ id ]== 0 )
+					{
+						size += stream.ReadUnsignedInt(size, 1, out this.scaling_list_pred_mode_flag[ id ], "scaling_list_pred_mode_flag"); 
+					}
+
+					if ( ( scaling_list_copy_mode_flag[ id ] != 0  ||  scaling_list_pred_mode_flag[ id ] != 0 )  &&
+     id != 0  &&  id != 2  &&  id != 8 )
+					{
+						size += stream.ReadUnsignedIntGolomb(size, out this.scaling_list_pred_id_delta[ id ], "scaling_list_pred_id_delta"); 
+					}
+
+					if ( scaling_list_copy_mode_flag[ id ]== 0 )
+					{
+						nextCoef= 0;
+
+						if ( id > 13 )
+						{
+							size += stream.ReadSignedIntGolomb(size, out this.scaling_list_dc_coef[ id - 14 ], "scaling_list_dc_coef"); 
+							nextCoef+= (uint)scaling_list_dc_coef[ id - 14 ];
+						}
+
+						stream.CheckArrayAllocation((ulong)( matrixSize * matrixSize), "scaling_list_delta_coef[ id ]");
+						this.scaling_list_delta_coef[ id ] = new long[ matrixSize * matrixSize];
+						for ( i = 0; i < matrixSize * matrixSize; i++ )
+						{
+							x= (uint)H266Context.DiagScanOrder[ 3 ][ 3 ][ i ][ 0 ];
+							y= (uint)H266Context.DiagScanOrder[ 3 ][ 3 ][ i ][ 1 ];
+
+							if ( !( id > 25  &&  x >= 4  &&  y >= 4 ) )
+							{
+								size += stream.ReadSignedIntGolomb(size, out this.scaling_list_delta_coef[ id ][ i ], "scaling_list_delta_coef"); 
+								nextCoef+= (uint)scaling_list_delta_coef[ id ][ i ];
+							}
+							ScalingList[ id ][ i ]= nextCoef;
+						}
+					}
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IItuContext context, ItuStream stream)
+         {
+            H266Context ituContext = context as H266Context;
+            if (ituContext == null)
+                throw new ArgumentException($"Context should be of type H266Context");
+            ulong size = 0;
+
+			uint id = 0;
+			int matrixSize = 0;
+			uint nextCoef = 0;
+			uint i = 0;
+			uint x = 0;
+			uint y = 0;
+			uint[][] ScalingList = H266Context.NewScalingList();
+
+			for ( id = 0; id < 28; id ++ )
+			{
+				matrixSize= id < 2 ? 2 : ( id < 8 ? 4 : 8 );
+
+				if ( ituContext.AdaptationParameterSetRbsp.ApsChromaPresentFlag != 0  ||  id % 3  ==  2  ||  id  ==  27 )
+				{
+					size += stream.WriteUnsignedInt(1, this.scaling_list_copy_mode_flag[ id ], "scaling_list_copy_mode_flag"); 
+
+					if ( scaling_list_copy_mode_flag[ id ]== 0 )
+					{
+						size += stream.WriteUnsignedInt(1, this.scaling_list_pred_mode_flag[ id ], "scaling_list_pred_mode_flag"); 
+					}
+
+					if ( ( scaling_list_copy_mode_flag[ id ] != 0  ||  scaling_list_pred_mode_flag[ id ] != 0 )  &&
+     id != 0  &&  id != 2  &&  id != 8 )
+					{
+						size += stream.WriteUnsignedIntGolomb( this.scaling_list_pred_id_delta[ id ], "scaling_list_pred_id_delta"); 
+					}
+
+					if ( scaling_list_copy_mode_flag[ id ]== 0 )
+					{
+						nextCoef= 0;
+
+						if ( id > 13 )
+						{
+							size += stream.WriteSignedIntGolomb( this.scaling_list_dc_coef[ id - 14 ], "scaling_list_dc_coef"); 
+							nextCoef+= (uint)scaling_list_dc_coef[ id - 14 ];
+						}
+
+						for ( i = 0; i < matrixSize * matrixSize; i++ )
+						{
+							x= (uint)H266Context.DiagScanOrder[ 3 ][ 3 ][ i ][ 0 ];
+							y= (uint)H266Context.DiagScanOrder[ 3 ][ 3 ][ i ][ 1 ];
+
+							if ( !( id > 25  &&  x >= 4  &&  y >= 4 ) )
+							{
+								size += stream.WriteSignedIntGolomb( this.scaling_list_delta_coef[ id ][ i ], "scaling_list_delta_coef"); 
+								nextCoef+= (uint)scaling_list_delta_coef[ id ][ i ];
+							}
+							ScalingList[ id ][ i ]= nextCoef;
+						}
+					}
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
 lmcs_data() {  
  lmcs_min_bin_idx ue(v) 
  lmcs_delta_max_bin_idx ue(v) 
@@ -6848,10 +7051,10 @@ lmcs_data() {
 			ituContext.OnLmcsDeltaMaxBinIdx();
 			size += stream.ReadUnsignedIntGolomb(size, out this.lmcs_delta_cw_prec_minus1, "lmcs_delta_cw_prec_minus1"); 
 
-			stream.CheckArrayAllocation((ulong)(  ituContext.LmcsMaxBinIdx), "lmcs_delta_abs_cw");
-			this.lmcs_delta_abs_cw = new ulong[  ituContext.LmcsMaxBinIdx];
-			stream.CheckArrayAllocation((ulong)(  ituContext.LmcsMaxBinIdx), "lmcs_delta_sign_cw_flag");
-			this.lmcs_delta_sign_cw_flag = new byte[  ituContext.LmcsMaxBinIdx];
+			stream.CheckArrayAllocation((ulong)(  ituContext.LmcsMaxBinIdx + 1 ), "lmcs_delta_abs_cw");
+			this.lmcs_delta_abs_cw = new ulong[  ituContext.LmcsMaxBinIdx + 1 ];
+			stream.CheckArrayAllocation((ulong)(  ituContext.LmcsMaxBinIdx + 1 ), "lmcs_delta_sign_cw_flag");
+			this.lmcs_delta_sign_cw_flag = new byte[  ituContext.LmcsMaxBinIdx + 1 ];
 			for ( i = (uint)lmcs_min_bin_idx; i  <=  ituContext.LmcsMaxBinIdx; i++ )
 			{
 				size += stream.ReadUnsignedIntVariable(size, lmcs_delta_cw_prec_minus1 + 1, out this.lmcs_delta_abs_cw[ i ], "lmcs_delta_abs_cw"); 
@@ -8175,6 +8378,7 @@ if(ituContext.cbr_flag == null)
 			for ( i = firstSubLayer; i  <=  MaxSubLayersVal; i++ )
 			{
 				size += stream.ReadUnsignedInt(size, 1, out this.fixed_pic_rate_general_flag[ i ], "fixed_pic_rate_general_flag"); 
+				ituContext.OnFixedPicRateGeneralFlag(this, i);
 
 				if ( fixed_pic_rate_general_flag[ i ]== 0 )
 				{
@@ -8219,6 +8423,7 @@ if(ituContext.cbr_flag == null)
 			for ( i = firstSubLayer; i  <=  MaxSubLayersVal; i++ )
 			{
 				size += stream.WriteUnsignedInt(1, this.fixed_pic_rate_general_flag[ i ], "fixed_pic_rate_general_flag"); 
+				ituContext.OnFixedPicRateGeneralFlag(this, i);
 
 				if ( fixed_pic_rate_general_flag[ i ]== 0 )
 				{
@@ -8417,9 +8622,11 @@ sei_message() {
 				size += stream.ReadUnsignedInt(size, 8, whileIndex, this.payload_size_byte, "payload_size_byte"); 
 				payloadSize+= payload_size_byte[whileIndex];
 			} while ( payload_size_byte[whileIndex]  ==  0xFF );
+			ulong bitsSinceOuterMark = stream.GetBitsPositionSinceLastMark();
 			stream.MarkCurrentBitsPosition();
 			this.sei_payload =  new SeiPayload( payloadType,  payloadSize ) ;
 			size +=  stream.ReadClass<SeiPayload>(size, context, this.sei_payload, "sei_payload"); 
+			stream.RestoreBitsMark(bitsSinceOuterMark);
 			ituContext.SetSeiPayload(sei_payload);
 
             return size;
@@ -8453,8 +8660,10 @@ sei_message() {
 				size += stream.WriteUnsignedInt(8, whileIndex, this.payload_size_byte, "payload_size_byte"); 
 				payloadSize+= payload_size_byte[whileIndex];
 			} while ( payload_size_byte[whileIndex]  ==  0xFF );
+			ulong bitsSinceOuterMark = stream.GetBitsPositionSinceLastMark();
 			stream.MarkCurrentBitsPosition();
 			size += stream.WriteClass<SeiPayload>(context, this.sei_payload, "sei_payload"); 
+			stream.RestoreBitsMark(bitsSinceOuterMark);
 			ituContext.SetSeiPayload(sei_payload);
 
             return size;
@@ -8534,6 +8743,7 @@ ref_pic_list_struct( listIdx, rplsIdx ) {
 			uint j = 0;
     
 this.num_ref_entries = ituContext.num_ref_entries;
+            this.ltrp_in_header_flag = ituContext.ltrp_in_header_flag;
             this.inter_layer_ref_pic_flag = ituContext.inter_layer_ref_pic_flag;
             this.st_ref_pic_flag = ituContext.st_ref_pic_flag;
             this.abs_delta_poc_st = ituContext.abs_delta_poc_st;
@@ -8547,6 +8757,7 @@ this.num_ref_entries = ituContext.num_ref_entries;
             ituContext.strp_entry_sign_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];
             ituContext.rpls_poc_lsb_lt[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];
             ituContext.ilrp_idx[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];
+            ituContext.ltrp_in_header_flag[listIdx][rplsIdx] = (byte)(rplsIdx == ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[listIdx] ? 1 : 0);
 
 			if ( ituContext.SeqParameterSetRbsp.SpsLongTermRefPicsFlag != 0  &&  rplsIdx < ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[ listIdx ]  && 
    num_ref_entries[ listIdx ][ rplsIdx ] > 0 )
@@ -8568,12 +8779,10 @@ this.num_ref_entries = ituContext.num_ref_entries;
 					if ( ituContext.SeqParameterSetRbsp.SpsLongTermRefPicsFlag != 0 )
 					{
 						size += stream.ReadUnsignedInt(size, 1, out this.st_ref_pic_flag[ listIdx ][ rplsIdx ][ i ], "st_ref_pic_flag"); 
-						ituContext.OnStRefPicFlag(listIdx, rplsIdx, this);
 					}
 					else 
 					{
 						st_ref_pic_flag[ listIdx ][ rplsIdx ][ i ]= 1 /* LukasV added default */;
-ituContext.OnStRefPicFlag(listIdx, rplsIdx, this);
 					}
 
 					if ( st_ref_pic_flag[ listIdx ][ rplsIdx ][ i ] != 0 )
@@ -8631,12 +8840,10 @@ ituContext.OnStRefPicFlag(listIdx, rplsIdx, this);
 					if ( ituContext.SeqParameterSetRbsp.SpsLongTermRefPicsFlag != 0 )
 					{
 						size += stream.WriteUnsignedInt(1, this.st_ref_pic_flag[ listIdx ][ rplsIdx ][ i ], "st_ref_pic_flag"); 
-						ituContext.OnStRefPicFlag(listIdx, rplsIdx, this);
 					}
 					else 
 					{
 						st_ref_pic_flag[ listIdx ][ rplsIdx ][ i ]= 1 /* LukasV added default */;
-ituContext.OnStRefPicFlag(listIdx, rplsIdx, this);
 					}
 
 					if ( st_ref_pic_flag[ listIdx ][ rplsIdx ][ i ] != 0 )
@@ -8825,12 +9032,12 @@ sei_payload( payloadType, payloadSize ) {
 			if ( ituContext.NalHeader.NalUnitHeader.NalUnitType == H266NALTypes.PREFIX_SEI_NUT )
 			{
 
-				if ( payloadType  ==  0 )
+				if ( payloadType == 0 && ituContext.FitsItsPayload(stream, payloadSize, new BufferingPeriod(payloadSize)) )
 				{
 					this.buffering_period =  new BufferingPeriod( payloadSize ) ;
 					size +=  stream.ReadClass<BufferingPeriod>(size, context, this.buffering_period, "buffering_period"); 
 				}
-				else if ( payloadType  ==  1 )
+				else if ( payloadType == 1 && ituContext.FitsItsPayload(stream, payloadSize, new PicTiming(payloadSize)) )
 				{
 					this.pic_timing =  new PicTiming( payloadSize ) ;
 					size +=  stream.ReadClass<PicTiming>(size, context, this.pic_timing, "pic_timing"); 
@@ -8865,7 +9072,7 @@ sei_payload( payloadType, payloadSize ) {
 					this.parameter_sets_inclusion_indication =  new ParameterSetsInclusionIndication( payloadSize ) ;
 					size +=  stream.ReadClass<ParameterSetsInclusionIndication>(size, context, this.parameter_sets_inclusion_indication, "parameter_sets_inclusion_indication"); 
 				}
-				else if ( payloadType  ==  130 )
+				else if ( payloadType == 130 && ituContext.FitsItsPayload(stream, payloadSize, new DecodingUnitInfo(payloadSize)) )
 				{
 					this.decoding_unit_info =  new DecodingUnitInfo( payloadSize ) ;
 					size +=  stream.ReadClass<DecodingUnitInfo>(size, context, this.decoding_unit_info, "decoding_unit_info"); 
@@ -9008,11 +9215,11 @@ sei_payload( payloadType, payloadSize ) {
 			if ( ituContext.NalHeader.NalUnitHeader.NalUnitType == H266NALTypes.PREFIX_SEI_NUT )
 			{
 
-				if ( payloadType  ==  0 )
+				if ( payloadType == 0 && this.buffering_period != null )
 				{
 					size += stream.WriteClass<BufferingPeriod>(context, this.buffering_period, "buffering_period"); 
 				}
-				else if ( payloadType  ==  1 )
+				else if ( payloadType == 1 && this.pic_timing != null )
 				{
 					size += stream.WriteClass<PicTiming>(context, this.pic_timing, "pic_timing"); 
 				}
@@ -9040,7 +9247,7 @@ sei_payload( payloadType, payloadSize ) {
 				{
 					size += stream.WriteClass<ParameterSetsInclusionIndication>(context, this.parameter_sets_inclusion_indication, "parameter_sets_inclusion_indication"); 
 				}
-				else if ( payloadType  ==  130 )
+				else if ( payloadType == 130 && this.decoding_unit_info != null )
 				{
 					size += stream.WriteClass<DecodingUnitInfo>(context, this.decoding_unit_info, "decoding_unit_info"); 
 				}
@@ -13909,8 +14116,8 @@ decoding_unit_info( payloadSize ) {
    scalable_nesting( payloadSize ) { 
    sn_ols_flag  u(1) 
    sn_subpic_flag u(1) 
-   sn_num_olss_minus1 ue(v) 
    if( sn_ols_flag ) {  
+      sn_num_olss_minus1 ue(v) 
       for( i = 0; i  <=  sn_num_olss_minus1; i++ )  
          sn_ols_idx_delta_minus1[ i ] ue(v) 
    } else { 
@@ -13985,10 +14192,10 @@ decoding_unit_info( payloadSize ) {
 			int whileIndex = -1;
 			size += stream.ReadUnsignedInt(size, 1, out this.sn_ols_flag, "sn_ols_flag"); 
 			size += stream.ReadUnsignedInt(size, 1, out this.sn_subpic_flag, "sn_subpic_flag"); 
-			size += stream.ReadUnsignedIntGolomb(size, out this.sn_num_olss_minus1, "sn_num_olss_minus1"); 
 
 			if ( sn_ols_flag != 0 )
 			{
+				size += stream.ReadUnsignedIntGolomb(size, out this.sn_num_olss_minus1, "sn_num_olss_minus1"); 
 
 				stream.CheckArrayAllocation((ulong)(  sn_num_olss_minus1 + 1), "sn_ols_idx_delta_minus1");
 				this.sn_ols_idx_delta_minus1 = new ulong[  sn_num_olss_minus1 + 1];
@@ -14057,10 +14264,10 @@ decoding_unit_info( payloadSize ) {
 			int whileIndex = -1;
 			size += stream.WriteUnsignedInt(1, this.sn_ols_flag, "sn_ols_flag"); 
 			size += stream.WriteUnsignedInt(1, this.sn_subpic_flag, "sn_subpic_flag"); 
-			size += stream.WriteUnsignedIntGolomb( this.sn_num_olss_minus1, "sn_num_olss_minus1"); 
 
 			if ( sn_ols_flag != 0 )
 			{
+				size += stream.WriteUnsignedIntGolomb( this.sn_num_olss_minus1, "sn_num_olss_minus1"); 
 
 				for ( i = 0; i  <=  sn_num_olss_minus1; i++ )
 				{

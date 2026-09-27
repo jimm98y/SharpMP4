@@ -16,7 +16,7 @@ open_bitstream_unit( sz ) {
        obu_size = sz - 1 - obu_extension_flag
     }
     startPosition = get_position()
-    if ( obu_type != OBU_SEQUENCE_HEADER && obu_type != OBU_TEMPORAL_DELIMITER && OperatingPointIdc != 0 && obu_extension_flag == 1 ) {
+    if ( obu_type != OBU_SEQUENCE_HEADER && obu_type != OBU_TEMPORAL_DELIMITER && OperatingPointIdc != 0 && AllLayers == 0 && obu_extension_flag == 1 ) {
        inTemporalLayer = (OperatingPointIdc >> temporal_id ) & 1
        inSpatialLayer = (OperatingPointIdc >> ( spatial_id + 8 ) ) & 1
        if ( !inTemporalLayer || ! inSpatialLayer ) {
@@ -104,7 +104,7 @@ open_bitstream_unit( sz ) {
 			}
 			startPosition= stream.GetPosition();
 
-			if ( obu_type != AV1ObuTypes.OBU_SEQUENCE_HEADER && obu_type != AV1ObuTypes.OBU_TEMPORAL_DELIMITER && OperatingPointIdc != 0 && obu_extension_flag == 1 )
+			if ( obu_type != AV1ObuTypes.OBU_SEQUENCE_HEADER && obu_type != AV1ObuTypes.OBU_TEMPORAL_DELIMITER && OperatingPointIdc != 0 && AllLayers == 0 && obu_extension_flag == 1 )
 			{
 				inTemporalLayer= (OperatingPointIdc >> (int)temporal_id ) & 1;
 				inSpatialLayer= (OperatingPointIdc >> (int)( spatial_id + 8 ) ) & 1;
@@ -973,6 +973,7 @@ frame_header_obu() {
  } else {
  SeenFrameHeader = 1
  uncompressed_header()
+ frame_header_done()
  if ( show_existing_frame ) {
  decode_frame_wrapup()
  SeenFrameHeader = 0
@@ -989,6 +990,8 @@ frame_header_obu() {
 		public int _SeenFrameHeader { get { return SeenFrameHeader; } set { SeenFrameHeader = value; } }
 		private int uncompressed_header;
 		public int _UncompressedHeader { get { return uncompressed_header; } set { uncompressed_header = value; } }
+		private int frame_header_done;
+		public int _FrameHeaderDone { get { return frame_header_done; } set { frame_header_done = value; } }
 		private int decode_frame_wrapup;
 		public int _DecodeFrameWrapup { get { return decode_frame_wrapup; } set { decode_frame_wrapup = value; } }
 		private int TileNum;
@@ -1005,6 +1008,7 @@ frame_header_obu() {
 			{
 				SeenFrameHeader= 1;
 				UncompressedHeader(); 
+				FrameHeaderDone(); 
 
 				if ( show_existing_frame != 0 )
 				{
@@ -2088,7 +2092,7 @@ tile_info () {
  } else {
  widestTileSb = 0
  startSb = 0
- for ( i = 0; startSb < sbCols; i++ ) {
+ for ( i = 0; startSb < sbCols && i < MAX_TILE_COLS; i++ ) {
  MiColStarts[ i ] = startSb << sbShift
  maxWidth = Min(sbCols - startSb, maxTileWidthSb)
  width_in_sbs_minus_1 ns(maxWidth)
@@ -2103,9 +2107,9 @@ tile_info () {
  maxTileAreaSb = (sbRows * sbCols) >> (minLog2Tiles + 1)
  else
  maxTileAreaSb = sbRows * sbCols
- maxTileHeightSb = Max( maxTileAreaSb / widestTileSb, 1 )
+ maxTileHeightSb = Max( maxTileAreaSb / Max( widestTileSb, 1 ), 1 )
  startSb = 0
- for ( i = 0; startSb < sbRows; i++ ) {
+ for ( i = 0; startSb < sbRows && i < MAX_TILE_ROWS; i++ ) {
  MiRowStarts[ i ] = startSb << sbShift
  maxHeight = Min(sbRows - startSb, maxTileHeightSb)
  height_in_sbs_minus_1 ns(maxHeight)
@@ -2153,7 +2157,7 @@ tile_info () {
 		public int _IncrementTileColsLog2 { get { return increment_tile_cols_log2; } set { increment_tile_cols_log2 = value; } }
 		private int tileWidthSb;
 		public int _TileWidthSb { get { return tileWidthSb; } set { tileWidthSb = value; } }
-		private int[] MiColStarts= new int[AV1Constants.MAX_TILE_COLS];
+		private int[] MiColStarts= new int[AV1Constants.MAX_TILE_COLS + 1];
 		public int[] _MiColStarts { get { return MiColStarts; } set { MiColStarts = value; } }
 		private int TileCols;
 		public int _TileCols { get { return TileCols; } set { TileCols = value; } }
@@ -2165,7 +2169,7 @@ tile_info () {
 		public int _IncrementTileRowsLog2 { get { return increment_tile_rows_log2; } set { increment_tile_rows_log2 = value; } }
 		private int tileHeightSb;
 		public int _TileHeightSb { get { return tileHeightSb; } set { tileHeightSb = value; } }
-		private int[] MiRowStarts= new int[AV1Constants.MAX_TILE_ROWS];
+		private int[] MiRowStarts= new int[AV1Constants.MAX_TILE_ROWS + 1];
 		public int[] _MiRowStarts { get { return MiRowStarts; } set { MiRowStarts = value; } }
 		private int TileRows;
 		public int _TileRows { get { return TileRows; } set { TileRows = value; } }
@@ -2265,7 +2269,7 @@ tile_info () {
 				widestTileSb= 0;
 				startSb= 0;
 
-				for ( i = 0; startSb < sbCols; i++ )
+				for ( i = 0; startSb < sbCols && i < AV1Constants.MAX_TILE_COLS; i++ )
 				{
 					MiColStarts[ i ]= startSb << sbShift;
 					maxWidth= Math.Min(sbCols - startSb, maxTileWidthSb);
@@ -2286,10 +2290,10 @@ tile_info () {
 				{
 					maxTileAreaSb= sbRows * sbCols;
 				}
-				maxTileHeightSb= Math.Max( maxTileAreaSb / widestTileSb, 1 );
+				maxTileHeightSb= Math.Max( maxTileAreaSb / Math.Max( widestTileSb, 1 ), 1 );
 				startSb= 0;
 
-				for ( i = 0; startSb < sbRows; i++ )
+				for ( i = 0; startSb < sbRows && i < AV1Constants.MAX_TILE_ROWS; i++ )
 				{
 					MiRowStarts[ i ]= startSb << sbShift;
 					maxHeight= Math.Min(sbRows - startSb, maxTileHeightSb);
@@ -2766,13 +2770,13 @@ cdef_params() {
     */
 		private int cdef_bits;
 		public int _CdefBits { get { return cdef_bits; } set { cdef_bits = value; } }
-		private int[] cdef_y_pri_strength= new int[1];
+		private int[] cdef_y_pri_strength= new int[8];
 		public int[] _CdefyPriStrength { get { return cdef_y_pri_strength; } set { cdef_y_pri_strength = value; } }
-		private int[] cdef_y_sec_strength= new int[1];
+		private int[] cdef_y_sec_strength= new int[8];
 		public int[] _CdefySecStrength { get { return cdef_y_sec_strength; } set { cdef_y_sec_strength = value; } }
-		private int[] cdef_uv_pri_strength= new int[1];
+		private int[] cdef_uv_pri_strength= new int[8];
 		public int[] _CdefUvPriStrength { get { return cdef_uv_pri_strength; } set { cdef_uv_pri_strength = value; } }
-		private int[] cdef_uv_sec_strength= new int[1];
+		private int[] cdef_uv_sec_strength= new int[8];
 		public int[] _CdefUvSecStrength { get { return cdef_uv_sec_strength; } set { cdef_uv_sec_strength = value; } }
 		private int CdefDamping;
 		public int _CdefDamping { get { return CdefDamping; } set { CdefDamping = value; } }
@@ -3595,9 +3599,9 @@ film_grain_params() {
 		public int _TempGrainSeed { get { return tempGrainSeed; } set { tempGrainSeed = value; } }
 		private int num_y_points;
 		public int _NumyPoints { get { return num_y_points; } set { num_y_points = value; } }
-		private int[] point_y_value= new int[14];
+		private int[] point_y_value= new int[16];
 		public int[] _PointyValue { get { return point_y_value; } set { point_y_value = value; } }
-		private int[] point_y_scaling= new int[14];
+		private int[] point_y_scaling= new int[16];
 		public int[] _PointyScaling { get { return point_y_scaling; } set { point_y_scaling = value; } }
 		private int chroma_scaling_from_luma;
 		public int _ChromaScalingFromLuma { get { return chroma_scaling_from_luma; } set { chroma_scaling_from_luma = value; } }
@@ -3605,13 +3609,13 @@ film_grain_params() {
 		public int _NumCbPoints { get { return num_cb_points; } set { num_cb_points = value; } }
 		private int num_cr_points;
 		public int _NumCrPoints { get { return num_cr_points; } set { num_cr_points = value; } }
-		private int[] point_cb_value= new int[10];
+		private int[] point_cb_value= new int[16];
 		public int[] _PointCbValue { get { return point_cb_value; } set { point_cb_value = value; } }
-		private int[] point_cb_scaling= new int[10];
+		private int[] point_cb_scaling= new int[16];
 		public int[] _PointCbScaling { get { return point_cb_scaling; } set { point_cb_scaling = value; } }
-		private int[] point_cr_value= new int[10];
+		private int[] point_cr_value= new int[16];
 		public int[] _PointCrValue { get { return point_cr_value; } set { point_cr_value = value; } }
-		private int[] point_cr_scaling= new int[10];
+		private int[] point_cr_scaling= new int[16];
 		public int[] _PointCrScaling { get { return point_cr_scaling; } set { point_cr_scaling = value; } }
 		private int grain_scaling_minus_8;
 		public int _GrainScalingMinus8 { get { return grain_scaling_minus_8; } set { grain_scaling_minus_8 = value; } }
@@ -4001,15 +4005,19 @@ temporal_delimiter_obu() {
 
     /*
 padding_obu() { 
+ obu_padding_length = PayloadBytesBeforeTrailingBits()
  for ( i = 0; i < obu_padding_length; i++ )
  obu_padding_byte f(8)
 }
     */
+		private int obu_padding_length;
+		public int _ObuPaddingLength { get { return obu_padding_length; } set { obu_padding_length = value; } }
 		private int obu_padding_byte;
 		public int _ObuPaddingByte { get { return obu_padding_byte; } set { obu_padding_byte = value; } }
 
         private void PaddingObu()
         {
+			obu_padding_length= PayloadBytesBeforeTrailingBits();
 
 			for ( i = 0; i < obu_padding_length; i++ )
 			{
@@ -4030,6 +4038,8 @@ metadata_obu() {
  metadata_scalability()
  else if ( metadata_type == METADATA_TYPE_TIMECODE )
  metadata_timecode()
+ else
+ metadata_unknown_payload()
  }
     */
 		private int metadata_type;
@@ -4044,10 +4054,12 @@ metadata_obu() {
 		public int _MetadataScalability { get { return metadata_scalability; } set { metadata_scalability = value; } }
 		private int metadata_timecode;
 		public int _MetadataTimecode { get { return metadata_timecode; } set { metadata_timecode = value; } }
+		private int metadata_unknown_payload;
+		public int _MetadataUnknownPayload { get { return metadata_unknown_payload; } set { metadata_unknown_payload = value; } }
 
         private void MetadataObu()
         {
-			obu_size_len = (int)stream.ReadLeb128( out this.metadata_type, "metadata_type"); 
+			stream.ReadLeb128( out this.metadata_type, "metadata_type"); 
 
 			if ( metadata_type == AV1MetadataType.METADATA_TYPE_ITUT_T35 )
 			{
@@ -4068,6 +4080,10 @@ metadata_obu() {
 			else if ( metadata_type == AV1MetadataType.METADATA_TYPE_TIMECODE )
 			{
 				MetadataTimecode(); 
+			}
+			else 
+			{
+				MetadataUnknownPayload(); 
 			}
         }
 

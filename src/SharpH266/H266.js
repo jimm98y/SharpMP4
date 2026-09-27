@@ -540,13 +540,13 @@ adaptation_parameter_set_rbsp() {
   alf_data()  
  else if( aps_params_type  ==  LMCS_APS )  
   lmcs_data()  
- /* else if( aps_params_type  ==  SCALING_APS ) */
- /* scaling_list_data()  */
- /*aps_extension_flag u(1) */
- /*if( aps_extension_flag )  */
-  /*while( more_rbsp_data() )  */
-  /* aps_extension_data_flag u(1) */
- /*rbsp_trailing_bits()  */
+ else if( aps_params_type  ==  SCALING_APS )
+  scaling_list_data()
+ aps_extension_flag u(1)
+ if( aps_extension_flag )
+  while( more_rbsp_data() )
+   aps_extension_data_flag u(1)
+ rbsp_trailing_bits()
 } 
 
 slice_layer_rbsp() {
@@ -1027,6 +1027,36 @@ alf_cc_cr_filter_signal_flag u(1)
   }  
  }  
 } 
+
+scaling_list_data() {
+ for( id = 0; id < 28; id ++ ) {
+  matrixSize = id < 2 ? 2 : ( id < 8 ? 4 : 8 )
+  if( aps_chroma_present_flag  ||  id % 3  ==  2  ||  id  ==  27 ) {
+   scaling_list_copy_mode_flag[ id ] u(1)
+   if( !scaling_list_copy_mode_flag[ id ] )
+    scaling_list_pred_mode_flag[ id ] u(1)
+   if( ( scaling_list_copy_mode_flag[ id ]  ||  scaling_list_pred_mode_flag[ id ] )  &&
+     id != 0  &&  id != 2  &&  id != 8 )
+    scaling_list_pred_id_delta[ id ] ue(v)
+   if( !scaling_list_copy_mode_flag[ id ] ) {
+    nextCoef = 0
+    if( id > 13 ) {
+     scaling_list_dc_coef[ id - 14 ] se(v)
+     nextCoef += scaling_list_dc_coef[ id - 14 ]
+    }
+    for( i = 0; i < matrixSize * matrixSize; i++ ) {
+     x = DiagScanOrder[ 3 ][ 3 ][ i ][ 0 ]
+     y = DiagScanOrder[ 3 ][ 3 ][ i ][ 1 ]
+     if( !( id > 25  &&  x >= 4  &&  y >= 4 ) ) {
+      scaling_list_delta_coef[ id ][ i ] se(v)
+      nextCoef += scaling_list_delta_coef[ id ][ i ]
+     }
+     ScalingList[ id ][ i ] = nextCoef
+    }
+   }
+  }
+ }
+}
 
 lmcs_data() {  
  lmcs_min_bin_idx ue(v) 
@@ -2022,8 +2052,8 @@ decoding_unit_info( payloadSize ) {
    scalable_nesting( payloadSize ) { 
    sn_ols_flag  u(1) 
    sn_subpic_flag u(1) 
-   sn_num_olss_minus1 ue(v) 
    if( sn_ols_flag ) {  
+      sn_num_olss_minus1 ue(v) 
       for( i = 0; i  <=  sn_num_olss_minus1; i++ )  
          sn_ols_idx_delta_minus1[ i ] ue(v) 
    } else { 

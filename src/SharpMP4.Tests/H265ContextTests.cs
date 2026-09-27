@@ -37,6 +37,39 @@ public class H265ContextTests
         Assert.AreEqual(10 * 8, context.PicSizeInCtbsY, "640x480 in 64x64 coding tree blocks");
     }
 
+    /// <summary>
+    /// A set parsed under an id that is already taken replaces the one there, as the spec has it:
+    /// a stream changes resolution, or two streams are joined, by sending new sets under the same
+    /// ids. Only the first was kept, and once a slice looked its sets up by id it was read against
+    /// the old picture size.
+    /// </summary>
+    [TestMethod]
+    public void ASetSentAgainUnderTheSameIdReplacesTheOldOne()
+    {
+        var context = new H265Context();
+        var before = Sps(id: 0, width: 640, height: 480);
+        var after = Sps(id: 0, width: 3840, height: 2160);
+        var ppsBefore = new PicParameterSetRbsp { PpsPicParameterSetId = 0, PpsSeqParameterSetId = 0 };
+        var ppsAfter = new PicParameterSetRbsp { PpsPicParameterSetId = 0, PpsSeqParameterSetId = 0 };
+
+        // Each set registers itself as its id is read.
+        context.SeqParameterSetRbsp = before;
+        context.SetSpsSeqParameterSetId(0);
+        context.PicParameterSetRbsp = ppsBefore;
+        context.SetPpsPicParameterSetId(0);
+
+        context.SeqParameterSetRbsp = after;
+        context.SetSpsSeqParameterSetId(0);
+        context.PicParameterSetRbsp = ppsAfter;
+        context.SetPpsPicParameterSetId(0);
+
+        context.SetSlicePicParameterSetId(0);
+
+        Assert.AreSame(ppsAfter, context.PicParameterSetRbsp);
+        Assert.AreSame(after, context.SeqParameterSetRbsp);
+        Assert.AreEqual(60 * 34, context.PicSizeInCtbsY, "3840x2160 in 64x64 coding tree blocks");
+    }
+
     [TestMethod]
     public void ASliceNamingAMissingSetIsRejected()
     {

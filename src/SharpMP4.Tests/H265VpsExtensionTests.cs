@@ -86,6 +86,95 @@ public class H265VpsExtensionTests
         Assert.AreEqual(1u, context.NumRefListLayers[1]);
     }
 
+    // Conformance stream LAYERID_A_NOKIA_2: two independent layers, the second with nuh_layer_id 2,
+    // and one additional layer set of the second alone. 1280x720.
+    private static readonly byte[] NokiaLayerIdVps = Convert.FromHexString(
+        "40010c11ffff0160000003000003000003000003007b9490957f5d080028480a5c050000030000030000030000030005" +
+        "e23682800168500fd14a48a4d2");
+
+    // Conformance stream ALPHA_A_BBC_1: a base layer and an alpha layer predicted from it, with a
+    // VUI. 1920x1080.
+    private static readonly byte[] BbcAlphaVps = Convert.FromHexString(
+        "40010c11ffff0180000003000003000003000003007b94905700000303e90000ea607f7b180000c3024e0f0000030000" +
+        "1f100000030000f75907800438a0085293dfc85010101608");
+
+    // Conformance stream MVHEVCS_D_NTT_3: two views coded independently of each other. 1024x768.
+    private static readonly byte[] NttViewsVps = Convert.FromHexString(
+        "40010c11ffff01600000030000030000030000030099949056ff99200021192e0c04000003001f100000030001331a08" +
+        "000601403f45293480");
+
+    /// <summary>
+    /// The layer variables are indexed by nuh_layer_id, which need not count up from 0 - here the
+    /// second layer is 2. Sized by the number of layers, they ran out at it.
+    /// </summary>
+    [TestMethod]
+    public void IndexesLayersByTheirNuhLayerId()
+    {
+        var (vps, context) = Read(NokiaLayerIdVps);
+
+        Assert.AreEqual(2u, vps.VpsExtension.LayerIdInNuh[1]);
+        Assert.AreEqual(1u, context.LayerIdxInVps[2]);
+        Assert.AreEqual(0u, context.NumDirectRefLayers[2]);
+    }
+
+    /// <summary>
+    /// A tree of layers lists the layer heading it and then the layers predicted from it, so its
+    /// count starts at 1 (F-6). Counted from 0, a layer alone made an empty tree,
+    /// highest_layer_idx_plus1 was read 0 bits wide instead of 1, and with the additional layer set
+    /// it describes lost, everything after it was misread. The picture size coming out right is
+    /// the check that it was not.
+    /// </summary>
+    [TestMethod]
+    public void CountsTheLayerHeadingATree()
+    {
+        var (vps, context) = Read(NokiaLayerIdVps);
+
+        Assert.AreEqual(2u, context.NumIndependentLayers);
+        CollectionAssert.AreEqual(new uint[] { 1, 1 }, context.NumLayersInTreePartition);
+        Assert.AreEqual(1ul, vps.VpsExtension.HighestLayerIdxPlus1[0][1]);
+        CollectionAssert.AreEqual(new[] { 2 }, context.LayerSetLayerIdList[2].Take(context.NumLayersInIdList[2]).ToArray());
+
+        var format = vps.VpsExtension.RepFormat[0];
+        Assert.AreEqual(1280u, (uint)format.PicWidthVpsInLumaSamples);
+        Assert.AreEqual(720u, (uint)format.PicHeightVpsInLumaSamples);
+    }
+
+    /// <summary>
+    /// Two layers coded independently: no direct_dependency_flag set, so two trees, and
+    /// num_add_layer_sets is coded. The dependencies used to be worked out at each flag, reading the
+    /// rows of layers not read yet.
+    /// </summary>
+    [TestMethod]
+    public void ReadsLayersCodedIndependently()
+    {
+        var (vps, context) = Read(NttViewsVps);
+
+        Assert.AreEqual(2u, context.NumIndependentLayers);
+        Assert.AreEqual(2u, context.NumViews);
+        var format = vps.VpsExtension.RepFormat[0];
+        Assert.AreEqual(1024u, (uint)format.PicWidthVpsInLumaSamples);
+        Assert.AreEqual(768u, (uint)format.PicHeightVpsInLumaSamples);
+    }
+
+    /// <summary>
+    /// cross_layer_irap_aligned_flag is coded only when cross_layer_pic_type_aligned_flag is 0, and
+    /// is otherwise inferred to be 1 - so all_layers_idr_aligned_flag after it is coded. Left 0,
+    /// that flag went unread and the rest of the VUI was read a bit early, past the end of the set.
+    /// </summary>
+    [TestMethod]
+    public void InfersIrapAlignmentFromPictureTypeAlignment()
+    {
+        var (vps, _) = Read(BbcAlphaVps);
+
+        var vui = vps.VpsExtension.VpsVui;
+        Assert.AreEqual<byte>(1, vui.CrossLayerPicTypeAlignedFlag);
+        Assert.AreEqual<byte>(1, vui.CrossLayerIrapAlignedFlag);
+        Assert.AreEqual<byte>(1, vui.AllLayersIdrAlignedFlag);
+        Assert.AreEqual<byte>(1, vui.TilesNotInUseFlag);
+        Assert.AreEqual<byte>(1, vui.WppNotInUseFlag);
+        Assert.AreEqual<byte>(0, vps.VpsExtension2Flag);
+    }
+
     /// <summary>Read in step, the set has to come back unchanged.</summary>
     [TestMethod]
     public void RoundTripsThroughWrite()

@@ -135,6 +135,12 @@ namespace SharpH26X
 
         public ulong GetBitsPositionSinceLastMark() => (ulong)this.Bitstream.GetBitsSinceMark();
 
+        /// <summary>
+        /// Puts back a mark set before another: GetBitsPositionSinceLastMark then counts from the
+        /// earlier one again, which was bitsSinceMark bits before the later one.
+        /// </summary>
+        public void RestoreBitsMark(ulong bitsSinceMark) => this.Bitstream.MoveMarkBack((long)bitsSinceMark);
+
         public bool ByteAligned()
         {
             return this.Bitstream.BitsPosition % 8 == 0;
@@ -345,6 +351,39 @@ namespace SharpH26X
             var size = WriteUnsignedIntGolomb(mapped, "");
             LogEnd(name, size, value);
             return size;
+        }
+
+        /// <summary>
+        /// A copy of this stream from where it is, to read ahead on: reading the copy neither moves
+        /// this stream nor logs anything.
+        /// </summary>
+        public ItuStream Lookahead()
+        {
+            long position = _stream.Position;
+            byte[] bytes;
+            if (_stream is MemoryStream memory)
+            {
+                bytes = memory.ToArray();
+            }
+            else
+            {
+                bytes = new byte[_stream.Length];
+                _stream.Position = 0;
+                int read = 0;
+                while (read < bytes.Length)
+                {
+                    int count = _stream.Read(bytes, read, bytes.Length - read);
+                    if (count <= 0)
+                        break;
+                    read += count;
+                }
+                _stream.Position = position;
+            }
+
+            var copy = new MemoryStream(bytes) { Position = position };
+            var bitstream = new RbspBitstream(copy);
+            bitstream.CopyState(this.Bitstream);
+            return new ItuStream(bitstream, new DefaultMp4Logger());
         }
 
         public bool ReadMoreRbspData(IItuSerializable serializable, ulong maxPayloadSize = ulong.MaxValue)

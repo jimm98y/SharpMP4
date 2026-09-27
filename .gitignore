@@ -396,3 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Conformance bitstreams fetched by DownloadConformance.ps1
+/conformance/

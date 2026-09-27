@@ -821,7 +821,10 @@ namespace Sharp{type}
                     return "stream.ReadLeVar(TileSizeBytes,";
 
                 case "leb128()":
-                    return "obu_size_len = (int)stream.ReadLeb128(";
+                    // Only obu_size's length is kept - it says where the payload starts. Every
+                    // leb128 used to set it, so a metadata_type after it made the OBU header out
+                    // by the difference in their lengths.
+                    return aomField.Name == "obu_size" ? "obu_size_len = (int)stream.ReadLeb128(" : "stream.ReadLeb128(";
 
                 case "uint(32)":
                     return "stream.ReadUnsignedInt32(size,";

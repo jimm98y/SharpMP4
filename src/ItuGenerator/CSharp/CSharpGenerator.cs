@@ -33,6 +33,12 @@ namespace ItuGenerator.CSharp
         void FixMethodAllocation(string name, ref string method, ref string typedef);
         string GetDerivedVariables(string name);
         void FixNestedIndexes(List<string> ret, ItuField field);
+
+        /// <summary>
+        /// What a local array the syntax assigns into starts as, or null to leave it null - for
+        /// the arrays a derivation fills element by element.
+        /// </summary>
+        string GetLocalArrayInitializer(string name);
         string ContextClass { get; }
     }
 
@@ -192,7 +198,7 @@ namespace Sharp{type}
             return resultCode.ToString();
         }
                 
-        private static string BuildRequiredVariables(ItuClass ituClass)
+        private string BuildRequiredVariables(ItuClass ituClass)
         {
             var resultCode = new StringBuilder();
 
@@ -251,7 +257,8 @@ namespace Sharp{type}
                         }
                     }
 
-                    resultCode.Append($"\r\n\t\t\t{type}{array} {v.Name} = null;"); // TODO: size
+                    string initializer = specificGenerator.GetLocalArrayInitializer(v.Name) ?? "null";
+                    resultCode.Append($"\r\n\t\t\t{type}{array} {v.Name} = {initializer};");
                 }
             }
 
@@ -761,6 +768,15 @@ namespace Sharp{type}
                         {
                             string variable = parts[1].Substring(variableIndex).TrimStart(conditionChars);
 
+                            // A loop that runs to its bound inclusively needs one element more than
+                            // the bound. The counts minus one most such loops run to get theirs below,
+                            // by name; any other bound - NumDeltaPocs[ RefRpsIdx ] in st_ref_pic_set -
+                            // was left an element short.
+                            bool inclusive = parts[1].Contains("<=");
+                            bool countedByName = variable.Contains("_minus1") || variable.Contains("Minus1") || variable.Contains("MaxSubLayersVal");
+                            if (inclusive && !countedByName && !string.IsNullOrWhiteSpace(variable))
+                                variable = variable.TrimEnd() + " + 1 ";
+
                             if (!string.IsNullOrWhiteSpace(variable))
                             {
                                 foreach (var req in block.RequiresAllocation)
@@ -952,6 +968,20 @@ namespace Sharp{type}
             return condition;
         }
 
+        /// <summary>
+        /// The variable a for loop's initialisation assigns - "i" of "( i = 0, n = 0; i &lt; 8; i++ )" -
+        /// or null when it assigns none.
+        /// </summary>
+        private static string LoopVariable(string condition)
+        {
+            if (string.IsNullOrEmpty(condition) || condition.Length < 2)
+                return null;
+
+            string init = condition.Substring(1, condition.Length - 2).Split(';')[0].Split(',')[0];
+            var match = Regex.Match(init, @"^\s*([A-Za-z_]\w*)\s*=(?!=)");
+            return match.Success ? match.Groups[1].Value : null;
+        }
+
         public string FixNestedInLoopVariables(ItuCode code, string condition, string prefix = "", string suffix = "")
         {
             if (string.IsNullOrEmpty(condition))
@@ -970,7 +1000,16 @@ namespace Sharp{type}
 
             while (parent != null)
             {
-                if (parent.Type == "for")
+                // The variable a loop declares is the one its initialisation assigns. Searching the
+                // whole condition for "x =" also finds it in the step or the bound - "matrixId +=
+                // ( sizeId == 3 ) ? 3 : 1" read as a loop over sizeId - so it is taken from there
+                // first, and the search is left for loops without one.
+                string declared = parent.Type == "for" ? LoopVariable(parent.Condition) : null;
+                if (declared != null)
+                {
+                    ret.Insert(0, $"[{declared}]");
+                }
+                else if (parent.Type == "for")
                 {
                     if (parent.Condition.Contains("i =") || parent.Condition.Contains("i=") || parent.Condition.Contains("i =") || parent.Condition.Contains("i++"))
                         ret.Insert(0, "[i]");

@@ -202,6 +202,14 @@ namespace SharpH265
                 }
                 else
                 {
+                    // A predicted set has no entries of its own to count: its variables are
+                    // worked out from the set it is predicted from. CurrRpsIdx (7-54 context) is
+                    // worked out here: it was set only where short_term_ref_pic_set_idx is coded,
+                    // so a slice coding its own set counted the SPS set of the slice before.
+                    if (header != null)
+                        CurrRpsIdx = header.ShortTermRefPicSetSpsFlag != 0 ? header.ShortTermRefPicSetIdx : SeqParameterSetRbsp.NumShortTermRefPicSets;
+                    EnsureStRefPicSet(CurrRpsIdx);
+
                     if (NumNegativePics != null && UsedByCurrPicS0 != null &&
                         CurrRpsIdx < (ulong)NumNegativePics.Length && UsedByCurrPicS0[CurrRpsIdx] != null)
                     {
@@ -219,12 +227,29 @@ namespace SharpH265
                     }
                 }
 
-                if (header != null && UsedByCurrPicLt != null)
+                // UsedByCurrPicLt (7-52), from the header: it was set only where
+                // used_by_curr_pic_lt_flag is coded, so the entries taken from the SPS went
+                // uncounted, and list_entry_lX was read a bit short.
+                if (header != null)
                 {
                     int numLt = (int)(header.NumLongTermSps + header.NumLongTermPics);
-                    for (int i = 0; i < numLt && i < UsedByCurrPicLt.Length; i++)
-                        if (UsedByCurrPicLt[i] != 0)
+                    for (int i = 0; i < numLt; i++)
+                    {
+                        uint used;
+                        if (i < (int)header.NumLongTermSps)
+                        {
+                            // lt_idx_sps[ i ] is 0 where not coded.
+                            ulong idx = header.LtIdxSps != null && i < header.LtIdxSps.Length ? header.LtIdxSps[i] : 0;
+                            var spsFlags = SeqParameterSetRbsp.UsedByCurrPicLtSpsFlag;
+                            used = spsFlags != null && idx < (ulong)spsFlags.Length ? spsFlags[idx] : 0u;
+                        }
+                        else
+                        {
+                            used = header.UsedByCurrPicLtFlag != null && i < header.UsedByCurrPicLtFlag.Length ? header.UsedByCurrPicLtFlag[i] : 0u;
+                        }
+                        if (used != 0)
                             count++;
+                    }
                 }
 
                 if (PicParameterSetRbsp?.PpsSccExtension != null &&
@@ -422,10 +447,186 @@ namespace SharpH265
                 SeiPayload.UserDataUnregistered = payload.UserDataUnregistered;
         }
 
-        public void OnDeltaIdxMinus1(ulong stRpsIdx)
+        /// <summary>
+        /// What a P or B slice leaves out and the spec infers (7.4.7.1): the active reference counts
+        /// come from the picture parameter set unless the slice overrides them, and
+        /// collocated_from_l0_flag, coded for B slices only, is 1. Later elements are conditioned on
+        /// all three - collocated_ref_idx on the count of the list it names, the weight tables and
+        /// list modifications on both - so leaving them 0 read a different header.
+        /// </summary>
+        public void OnNumRefIdxActiveOverrideFlag(SliceSegmentHeader header)
         {
-            var delta_idx_minus1 = SeqParameterSetRbsp.StRefPicSet[stRpsIdx].DeltaIdxMinus1;
-            RefRpsIdx = stRpsIdx - (delta_idx_minus1 + 1); // 7-59
+            if (header.NumRefIdxActiveOverrideFlag == 0 && PicParameterSetRbsp != null)
+            {
+                header.NumRefIdxL0ActiveMinus1 = PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1;
+                header.NumRefIdxL1ActiveMinus1 = PicParameterSetRbsp.NumRefIdxL1DefaultActiveMinus1;
+            }
+
+            // Read over for a B slice further on.
+            header.CollocatedFromL0Flag = 1;
+        }
+
+        /// <summary>
+        /// Called just before a predicted set reads its entries, of which there are one more than
+        /// NumDeltaPocs of the set it is predicted from - so that set has to be worked out by then,
+        /// however it was coded itself.
+        /// </summary>
+        public void OnAbsDeltaRpsMinus1(ulong stRpsIdx, StRefPicSet set)
+        {
+            // delta_idx_minus1 is coded only for a slice's own set; elsewhere it is inferred to be 0.
+            RefRpsIdx = stRpsIdx - (set.DeltaIdxMinus1 + 1); // 7-59
+            EnsureStRefPicSet(RefRpsIdx);
+        }
+
+        /// <summary>
+        /// The set each index of the arrays below was worked out from. A set is worked out again
+        /// when a different one takes its index: another sequence parameter set's, or another
+        /// slice's own.
+        /// </summary>
+        private StRefPicSet[] _stRefPicSetDerivedFrom = new StRefPicSet[0];
+
+        /// <summary>The set at an index: the sequence parameter set's, then the slice's own after them.</summary>
+        private StRefPicSet StRefPicSetAt(ulong stRpsIdx)
+        {
+            var sps = SeqParameterSetRbsp;
+            if (sps?.StRefPicSet != null && stRpsIdx < sps.NumShortTermRefPicSets && stRpsIdx < (ulong)sps.StRefPicSet.Length)
+                return sps.StRefPicSet[stRpsIdx];
+
+            var header = SliceSegmentLayerRbsp?.SliceSegmentHeader;
+            return header != null && sps != null && stRpsIdx == sps.NumShortTermRefPicSets ? header.StRefPicSet : null;
+        }
+
+        /// <summary>Works out a set's variables, unless they are already this set's.</summary>
+        private void EnsureStRefPicSet(ulong stRpsIdx)
+        {
+            var set = StRefPicSetAt(stRpsIdx);
+            if (set == null)
+                return;
+
+            if (stRpsIdx < (ulong)_stRefPicSetDerivedFrom.Length && ReferenceEquals(_stRefPicSetDerivedFrom[stRpsIdx], set))
+                return;
+
+            DeriveStRefPicSet(stRpsIdx, set);
+        }
+
+        /// <summary>
+        /// NumNegativePics, NumPositivePics, DeltaPocS0/S1, UsedByCurrPicS0/S1 and NumDeltaPocs of one
+        /// set (7-61 to 7-71). A coded set lists its pictures; a predicted one takes those of the set
+        /// it is predicted from, shifted by deltaRps, keeping the ones use_delta_flag says to. Only
+        /// the coded kind used to be worked out, and only from inside the loops that read its
+        /// entries - so a predicted set, or an empty one, left whatever an earlier set had put there.
+        /// </summary>
+        private void DeriveStRefPicSet(ulong stRpsIdx, StRefPicSet set)
+        {
+            var s0 = new List<(int Delta, uint Used)>();
+            var s1 = new List<(int Delta, uint Used)>();
+
+            if (set.InterRefPicSetPredictionFlag == 0)
+            {
+                // Worked out as the entries are read, so an array not read yet may not be there.
+                int negative = Math.Min((int)set.NumNegativePics, Math.Min(set.DeltaPocS0Minus1?.Length ?? 0, set.UsedByCurrPicS0Flag?.Length ?? 0));
+                int positive = Math.Min((int)set.NumPositivePics, Math.Min(set.DeltaPocS1Minus1?.Length ?? 0, set.UsedByCurrPicS1Flag?.Length ?? 0));
+
+                int poc = 0;
+                for (int i = 0; i < negative; i++)
+                {
+                    poc -= (int)set.DeltaPocS0Minus1[i] + 1; // 7-67, 7-69
+                    s0.Add((poc, set.UsedByCurrPicS0Flag[i])); // 7-65
+                }
+
+                poc = 0;
+                for (int i = 0; i < positive; i++)
+                {
+                    poc += (int)set.DeltaPocS1Minus1[i] + 1; // 7-68, 7-70
+                    s1.Add((poc, set.UsedByCurrPicS1Flag[i])); // 7-66
+                }
+            }
+            else
+            {
+                ulong refIdx = stRpsIdx - (set.DeltaIdxMinus1 + 1); // 7-59
+                EnsureStRefPicSet(refIdx);
+
+                int deltaRps = (1 - 2 * set.DeltaRpsSign) * ((int)set.AbsDeltaRpsMinus1 + 1); // 7-60
+                int refNegative = (int)ValueAt(NumNegativePics, refIdx);
+                int refPositive = (int)ValueAt(NumPositivePics, refIdx);
+                int refAll = refNegative + refPositive;
+                int[] refS0 = ValueAt(DeltaPocS0, refIdx) ?? new int[0];
+                int[] refS1 = ValueAt(DeltaPocS1, refIdx) ?? new int[0];
+
+                uint Used(int j) => set.UsedByCurrPicFlag[j];
+
+                // use_delta_flag is inferred to be 1 where it is not coded: where the picture is used.
+                bool UseDelta(int j) => set.UsedByCurrPicFlag[j] != 0 || set.UseDeltaFlag[j] != 0;
+
+                // 7-61
+                for (int j = refPositive - 1; j >= 0; j--)
+                {
+                    int dPoc = refS1[j] + deltaRps;
+                    if (dPoc < 0 && UseDelta(refNegative + j))
+                        s0.Add((dPoc, Used(refNegative + j)));
+                }
+
+                if (deltaRps < 0 && UseDelta(refAll))
+                    s0.Add((deltaRps, Used(refAll)));
+
+                for (int j = 0; j < refNegative; j++)
+                {
+                    int dPoc = refS0[j] + deltaRps;
+                    if (dPoc < 0 && UseDelta(j))
+                        s0.Add((dPoc, Used(j)));
+                }
+
+                // 7-62
+                for (int j = refNegative - 1; j >= 0; j--)
+                {
+                    int dPoc = refS0[j] + deltaRps;
+                    if (dPoc > 0 && UseDelta(j))
+                        s1.Add((dPoc, Used(j)));
+                }
+
+                if (deltaRps > 0 && UseDelta(refAll))
+                    s1.Add((deltaRps, Used(refAll)));
+
+                for (int j = 0; j < refPositive; j++)
+                {
+                    int dPoc = refS1[j] + deltaRps;
+                    if (dPoc > 0 && UseDelta(refNegative + j))
+                        s1.Add((dPoc, Used(refNegative + j)));
+                }
+            }
+
+            int size = (int)stRpsIdx + 1;
+            NumNegativePics = Grown(NumNegativePics, size);
+            NumPositivePics = Grown(NumPositivePics, size);
+            NumDeltaPocs = Grown(NumDeltaPocs, size);
+            DeltaPocS0 = Grown(DeltaPocS0, size);
+            DeltaPocS1 = Grown(DeltaPocS1, size);
+            UsedByCurrPicS0 = Grown(UsedByCurrPicS0, size);
+            UsedByCurrPicS1 = Grown(UsedByCurrPicS1, size);
+            _stRefPicSetDerivedFrom = Grown(_stRefPicSetDerivedFrom, size);
+
+            NumNegativePics[stRpsIdx] = (ulong)s0.Count;
+            NumPositivePics[stRpsIdx] = (ulong)s1.Count;
+            NumDeltaPocs[stRpsIdx] = (ulong)(s0.Count + s1.Count); // 7-71
+            DeltaPocS0[stRpsIdx] = s0.Select(x => x.Delta).ToArray();
+            DeltaPocS1[stRpsIdx] = s1.Select(x => x.Delta).ToArray();
+            UsedByCurrPicS0[stRpsIdx] = s0.Select(x => x.Used).ToArray();
+            UsedByCurrPicS1[stRpsIdx] = s1.Select(x => x.Used).ToArray();
+            _stRefPicSetDerivedFrom[stRpsIdx] = set;
+        }
+
+        private static T ValueAt<T>(T[] array, ulong index) =>
+            array != null && index < (ulong)array.Length ? array[index] : default(T);
+
+        private static T[] Grown<T>(T[] array, int size)
+        {
+            if (array != null && array.Length >= size)
+                return array;
+
+            var grown = new T[size];
+            if (array != null)
+                Array.Copy(array, grown, array.Length);
+            return grown;
         }
 
         public void OnNestingMaxTemporalIdPlus1(uint i)
@@ -434,86 +635,24 @@ namespace SharpH265
             MaxTemporalId[i] = nesting_max_temporal_id_plus1[i] - 1;
         }
 
+        /// <summary>
+        /// Called for each entry of a coded set as it is read; the set is worked out whole each time,
+        /// so it is complete once its last entry is in. Growing the arrays here used to replace them
+        /// with new ones, dropping every earlier set's values.
+        /// </summary>
         public void OnUsedByCurrPicS0Flag(uint i, ulong stRpsIdx, StRefPicSet st_ref_pic_set)
         {
-            var num_negative_pics = st_ref_pic_set.NumNegativePics;
-            var used_by_curr_pic_s0_flag = st_ref_pic_set.UsedByCurrPicS0Flag;
-            var delta_poc_s0_minus1 = st_ref_pic_set.DeltaPocS0Minus1;
-
-            if (NumNegativePics == null || NumNegativePics.Length <= (int)stRpsIdx)
-                NumNegativePics = new ulong[stRpsIdx + 1];
-            if (NumDeltaPocs == null || NumDeltaPocs.Length <= (int)stRpsIdx)
-                NumDeltaPocs = new ulong[stRpsIdx + 1];
-
-            NumNegativePics[stRpsIdx] = num_negative_pics; // 7-63
-
-            // Both counts, whichever of the two loops runs: a set with no pictures on one side
-            // never reaches the loop for that side, and 7-71 below adds the two together.
-            if (NumPositivePics == null || NumPositivePics.Length <= (int)stRpsIdx)
-                NumPositivePics = new ulong[stRpsIdx + 1];
-            NumPositivePics[stRpsIdx] = st_ref_pic_set.NumPositivePics; // 7-64
-            NumDeltaPocs[stRpsIdx] = NumNegativePics[stRpsIdx] + NumPositivePics[stRpsIdx]; // 7-71
-
-            if (UsedByCurrPicS0 == null || UsedByCurrPicS0.Length <= (int)stRpsIdx)
-                UsedByCurrPicS0 = new uint[stRpsIdx + 1][];
-            if (UsedByCurrPicS0[stRpsIdx] == null || UsedByCurrPicS0[stRpsIdx].Length < (int)num_negative_pics)
-                UsedByCurrPicS0[stRpsIdx] = new uint[num_negative_pics];
-
-            if (DeltaPocS0 == null || DeltaPocS0.Length <= (int)stRpsIdx)
-                DeltaPocS0 = new int[stRpsIdx + 1][];
-            if (DeltaPocS0[stRpsIdx] == null || DeltaPocS0[stRpsIdx].Length < (int)num_negative_pics)
-                DeltaPocS0[stRpsIdx] = new int[num_negative_pics];
-
-            UsedByCurrPicS0[stRpsIdx][i] = used_by_curr_pic_s0_flag[i]; // 7-65
-            if (i == 0)
-            {
-                DeltaPocS0[stRpsIdx][i] = -((int)delta_poc_s0_minus1[i] + 1); // 7-67
-            }
-            else
-            {
-                DeltaPocS0[stRpsIdx][i] = DeltaPocS0[stRpsIdx][i - 1] - ((int)delta_poc_s0_minus1[i] + 1); // 7-69
-            }
+            DeriveStRefPicSet(stRpsIdx, st_ref_pic_set);
         }
 
+        /// <summary>
+        /// Called for each entry of a coded set as it is read; the set is worked out whole each time,
+        /// so it is complete once its last entry is in. Growing the arrays here used to replace them
+        /// with new ones, dropping every earlier set's values.
+        /// </summary>
         public void OnUsedByCurrPicS1Flag(uint i, ulong stRpsIdx, StRefPicSet st_ref_pic_set)
         {
-            var num_positive_pics = st_ref_pic_set.NumPositivePics;
-            var used_by_curr_pic_s1_flag = st_ref_pic_set.UsedByCurrPicS1Flag;
-            var delta_poc_s1_minus1 = st_ref_pic_set.DeltaPocS1Minus1;
-
-            if (NumPositivePics == null || NumPositivePics.Length <= (int)stRpsIdx)
-                NumPositivePics = new ulong[stRpsIdx + 1];
-            if (NumDeltaPocs == null || NumDeltaPocs.Length <= (int)stRpsIdx)
-                NumDeltaPocs = new ulong[stRpsIdx + 1];
-
-            NumPositivePics[stRpsIdx] = num_positive_pics; // 7-64
-
-            // The same the other way round. A first slice whose reference set looks only forwards
-            // used to throw here, because nothing had made this array yet.
-            if (NumNegativePics == null || NumNegativePics.Length <= (int)stRpsIdx)
-                NumNegativePics = new ulong[stRpsIdx + 1];
-            NumNegativePics[stRpsIdx] = st_ref_pic_set.NumNegativePics; // 7-63
-
-            if (UsedByCurrPicS1 == null || UsedByCurrPicS1.Length <= (int)stRpsIdx)
-                UsedByCurrPicS1 = new uint[stRpsIdx + 1][];
-            if (UsedByCurrPicS1[stRpsIdx] == null || UsedByCurrPicS1[stRpsIdx].Length < (int)num_positive_pics)
-                UsedByCurrPicS1[stRpsIdx] = new uint[num_positive_pics];
-
-            if (DeltaPocS1 == null || DeltaPocS1.Length <= (int)stRpsIdx)
-                DeltaPocS1 = new int[stRpsIdx + 1][];
-            if (DeltaPocS1[stRpsIdx] == null || DeltaPocS1[stRpsIdx].Length < (int)num_positive_pics)
-                DeltaPocS1[stRpsIdx] = new int[num_positive_pics];
-
-            UsedByCurrPicS1[stRpsIdx][i] = used_by_curr_pic_s1_flag[i]; // 7-66
-            if (i == 0)
-            {
-                DeltaPocS1[stRpsIdx][i] = (int)delta_poc_s1_minus1[i] + 1; // 7-68
-            }
-            else
-            {
-                DeltaPocS1[stRpsIdx][i] = DeltaPocS1[stRpsIdx][i - 1] + ((int)delta_poc_s1_minus1[i] + 1); // 7-70
-            }
-            NumDeltaPocs[stRpsIdx] = NumNegativePics[stRpsIdx] + NumPositivePics[stRpsIdx]; // 7-71
+            DeriveStRefPicSet(stRpsIdx, st_ref_pic_set);
         }
 
         public void OnNumBspSchedulesMinus1(uint h, uint i, uint t)
@@ -549,26 +688,84 @@ namespace SharpH265
             VclInitialArrivalDelayPresent = value;
         }
 
-        public void OnLayerIDIncludedFlag(uint i, uint j)
+        /// <summary>How many values nuh_layer_id can take, and so how many layers a VPS can describe.</summary>
+        private const int LayerIds = 64;
+
+        /// <summary>How many values a view order index can take: it is a dimension_id, of up to 8 bits.</summary>
+        private const int ViewOrderIdxs = 256;
+
+        /// <summary>
+        /// Called as a VPS reads vps_num_layer_sets_minus1: a new VPS, so everything worked out from
+        /// the last one goes, and layer set 0 - never coded, only the base layer - is set up.
+        /// </summary>
+        /// <remarks>
+        /// The layer variables used to be allocated once, sized for the first VPS, and indexed by
+        /// layer count where the spec indexes them by nuh_layer_id, which can be anything up to 63;
+        /// a stream whose layers were not numbered 0, 1, 2... or with more layer sets than layers
+        /// ran off their end.
+        /// </remarks>
+        /// <summary>
+        /// cross_layer_irap_aligned_flag is coded only when cross_layer_pic_type_aligned_flag is 0:
+        /// pictures of one type across layers are IRAPs across layers too, and it is inferred to be
+        /// vps_vui_present_flag, 1 here (F.7.4.3.1.4). Left 0, all_layers_idr_aligned_flag after it
+        /// went unread, and the rest of the VUI a bit early.
+        /// </summary>
+        public void OnCrossLayerPicTypeAlignedFlag(VpsVui vui)
         {
-            if (LayerSetLayerIdList == null)
-            {
-                NumLayersInIdList = new int[VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1];
-            }
+            if (vui.CrossLayerPicTypeAlignedFlag != 0)
+                vui.CrossLayerIrapAlignedFlag = 1;
+        }
 
-            if (LayerSetLayerIdList == null)
-            {
-                LayerSetLayerIdList = new int[VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1][];
+        public void OnVpsNumLayerSetsMinus1()
+        {
+            var vps_num_layer_sets_minus1 = VideoParameterSetRbsp.VpsNumLayerSetsMinus1;
 
-                for (int k = 0; k < LayerSetLayerIdList.Length; k++)
-                {
-                    LayerSetLayerIdList[k] = new int[VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1];
-                }
-            }
+            NumLayerSets = vps_num_layer_sets_minus1 + 1;
+            FirstAddLayerSetIdx = 0;
+            LastAddLayerSetIdx = 0;
+            NumViews = 1;
+            NumIndependentLayers = 1;
 
+            NumLayersInIdList = new int[NumLayerSets];
+            LayerSetLayerIdList = new int[NumLayerSets][];
+            for (int k = 0; k < LayerSetLayerIdList.Length; k++)
+                LayerSetLayerIdList[k] = new int[LayerIds];
             NumLayersInIdList[0] = 1;
             LayerSetLayerIdList[0][0] = 0;
 
+            LayerIdxInVps = new uint[LayerIds];
+            ScalabilityId = null;
+            DepthLayerFlag = new int[LayerIds];
+            ViewOrderIdx = new int[LayerIds];
+            DependencyId = new int[LayerIds];
+            AuxId = new int[LayerIds];
+            DependencyFlag = null;
+            IdDirectRefLayer = null;
+            IdRefLayer = null;
+            IdPredictedLayer = null;
+            NumDirectRefLayers = new uint[LayerIds];
+            NumRefLayers = new uint[LayerIds];
+            NumPredictedLayers = new uint[LayerIds];
+            TreePartitionLayerIdList = null;
+            NumLayersInTreePartition = null;
+            MaxSubLayersInLayerSetMinus1 = null;
+            OlsIdxToLsIdx = null;
+            OutputLayerFlag = null;
+            NumOutputLayersInOutputLayerSet = null;
+            OlsHighestOutputLayerId = null;
+            NecessaryLayerFlag = null;
+            NumNecessaryLayers = null;
+            ViewOIdxList = null;
+            NumRefListLayers = new uint[LayerIds];
+            IdRefListLayer = null;
+            ViewCompLayerPresentFlag = null;
+            ViewCompLayerId = null;
+            CpPresentFlag = null;
+            BspSchedCnt = null;
+        }
+
+        public void OnLayerIDIncludedFlag(uint i, uint j)
+        {
             var layer_id_included_flag = VideoParameterSetRbsp.LayerIdIncludedFlag;
             var vps_max_layer_id = VideoParameterSetRbsp.VpsMaxLayerId;
 
@@ -601,17 +798,6 @@ namespace SharpH265
                 OnOutputLayerFlag(i, 0);
         }
 
-        public void OnLayerIdInNuh(uint i)
-        {
-            if (LayerIdxInVps == null || LayerIdxInVps.Length < Math.Min(62, VideoParameterSetRbsp.VpsMaxLayersMinus1) + 1)
-            {
-                LayerIdxInVps = new uint[Math.Min(62, VideoParameterSetRbsp.VpsMaxLayersMinus1) + 1];
-            }
-
-            var layer_id_in_nuh = VideoParameterSetRbsp.VpsExtension.LayerIdInNuh;
-            LayerIdxInVps[layer_id_in_nuh[i]] = i;
-        }
-
         public void OnOutputLayerFlag(uint ii, uint jj)
         {
             var NumOutputLayerSets = VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets;
@@ -621,26 +807,26 @@ namespace SharpH265
 
             var defaultOutputLayerIdc = Math.Min(default_output_layer_idc, 2);
 
-            if (OutputLayerFlag == null || OutputLayerFlag.Length < (int)vps_num_layer_sets_minus1 + 1)
-            {
-                OutputLayerFlag = new uint[vps_num_layer_sets_minus1 + 1][];
-                for (int i = 0; i < (int)vps_num_layer_sets_minus1 + 1; i++)
-                {
-                    OutputLayerFlag[i] = new uint[NumLayersInIdList[OlsIdxToLsIdx[i]]];
-                }
-            }
-            if (NumOutputLayersInOutputLayerSet == null || NumOutputLayersInOutputLayerSet.Length < (int)vps_num_layer_sets_minus1 + 1)
-                NumOutputLayersInOutputLayerSet = new uint[vps_num_layer_sets_minus1 + 1];
-            if (OlsHighestOutputLayerId == null || OlsHighestOutputLayerId.Length < (int)vps_num_layer_sets_minus1 + 1)
-                OlsHighestOutputLayerId = new uint[vps_num_layer_sets_minus1 + 1];
+            // Every output layer set has a row - the additional ones too, past the layer sets - as
+            // long as its layer set has layers. Sized by the layer sets alone, and once, by whichever
+            // set a row was mapped to before its own mapping was read, they ran out. Every call
+            // works every row out again, so one resized loses nothing.
+            if (OutputLayerFlag == null || OutputLayerFlag.Length < (int)NumOutputLayerSets)
+                OutputLayerFlag = new uint[NumOutputLayerSets][];
             if (NecessaryLayerFlag == null || NecessaryLayerFlag.Length < (int)NumOutputLayerSets)
-            {
                 NecessaryLayerFlag = new uint[NumOutputLayerSets][];
-                for (int i = 0; i < (int)NumOutputLayerSets; i++)
-                {
-                    NecessaryLayerFlag[i] = new uint[NumLayersInIdList[OlsIdxToLsIdx[i]]];
-                }
+            for (int i = 0; i < (int)NumOutputLayerSets; i++)
+            {
+                int layers = NumLayersInIdList[OlsIdxToLsIdx[i]];
+                if (OutputLayerFlag[i]?.Length != layers)
+                    OutputLayerFlag[i] = new uint[layers];
+                if (NecessaryLayerFlag[i]?.Length != layers)
+                    NecessaryLayerFlag[i] = new uint[layers];
             }
+            if (NumOutputLayersInOutputLayerSet == null || NumOutputLayersInOutputLayerSet.Length < (int)NumOutputLayerSets)
+                NumOutputLayersInOutputLayerSet = new uint[NumOutputLayerSets];
+            if (OlsHighestOutputLayerId == null || OlsHighestOutputLayerId.Length < (int)NumOutputLayerSets)
+                OlsHighestOutputLayerId = new uint[NumOutputLayerSets];
             if (NumNecessaryLayers == null || NumNecessaryLayers.Length < (int)NumOutputLayerSets)
                 NumNecessaryLayers = new uint[NumOutputLayerSets];
 
@@ -649,7 +835,7 @@ namespace SharpH265
                 for (int i = 0; i <= (int)vps_num_layer_sets_minus1; i++)
                 {
                     int nuhLayerIdA = LayerSetLayerIdList[OlsIdxToLsIdx[i]][0]; // highest value in LayerSetLayerIdList[OlsIdxToLsIdx[i]]
-                    for (int k = 0; k < LayerSetLayerIdList[OlsIdxToLsIdx[i]].Length; k++)
+                    for (int k = 0; k < NumLayersInIdList[OlsIdxToLsIdx[i]]; k++)
                     {
                         if (LayerSetLayerIdList[OlsIdxToLsIdx[i]][k] > nuhLayerIdA)
                             nuhLayerIdA = LayerSetLayerIdList[OlsIdxToLsIdx[i]][k];
@@ -801,10 +987,29 @@ namespace SharpH265
             PicHeightInSamplesC = (int)pic_height_in_luma_samples / SubHeightC; // 7-22
         }
 
-        public void OnSubLayersVpsMaxMinus1()
+        /// <summary>
+        /// Called as max_tid_ref_present_flag is read, the element after the sub-layer counts:
+        /// MaxSubLayersInLayerSetMinus1 (F-10), which dpb_size() loops on.
+        /// </summary>
+        /// <remarks>
+        /// This hung on sub_layers_vps_max_minus1, which is coded only when
+        /// vps_sub_layers_max_minus1_present_flag is 1 and otherwise inferred to be
+        /// vps_max_sub_layers_minus1 - so it never ran for most streams, and when it did, it ran
+        /// before the layers after the one just read had their counts.
+        /// </remarks>
+        public void OnMaxTidRefPresentFlag()
         {
-            var sub_layers_vps_max_minus1 = VideoParameterSetRbsp.VpsExtension.SubLayersVpsMaxMinus1;
+            var extension = VideoParameterSetRbsp.VpsExtension;
+            if (extension.VpsSubLayersMaxMinus1PresentFlag == 0)
+            {
+                extension.SubLayersVpsMaxMinus1 = new uint[MaxLayersMinus1 + 1];
+                for (int i = 0; i <= MaxLayersMinus1; i++)
+                    extension.SubLayersVpsMaxMinus1[i] = VideoParameterSetRbsp.VpsMaxSubLayersMinus1;
+            }
 
+            var sub_layers_vps_max_minus1 = extension.SubLayersVpsMaxMinus1;
+
+            MaxSubLayersInLayerSetMinus1 = new int[NumLayerSets];
             for (int i = 0; i < (int)NumLayerSets; i++)
             {
                 uint maxSlMinus1 = 0;
@@ -842,8 +1047,11 @@ namespace SharpH265
                 LastAddLayerSetIdx = FirstAddLayerSetIdx + num_add_layer_sets - 1;
             }
 
-            if (MaxSubLayersInLayerSetMinus1 == null || MaxSubLayersInLayerSetMinus1.Length < (int)NumLayerSets)
-                MaxSubLayersInLayerSetMinus1 = new int[NumLayerSets];
+            // The additional layer sets follow the coded ones in the same lists.
+            NumLayersInIdList = Grown(NumLayersInIdList, (int)NumLayerSets);
+            LayerSetLayerIdList = Grown(LayerSetLayerIdList, (int)NumLayerSets);
+            for (int k = 0; k < LayerSetLayerIdList.Length; k++)
+                LayerSetLayerIdList[k] ??= new int[LayerIds];
         }
 
         public void OnHighestLayerIdxPlus1(uint i) // F-9
@@ -864,33 +1072,62 @@ namespace SharpH265
             NumLayersInIdList[lsIdx] = layerNum;
         }
 
-        public void OnDimensionId() // F-3
+        /// <summary>
+        /// Called as view_id_len is read, the element after the layers' identifiers: everything
+        /// that follows from those (F-1 to F-3), which view_id_val loops on and the dependencies
+        /// right after index by.
+        /// </summary>
+        /// <remarks>
+        /// This ran as each dimension_id was read, over every layer, so it read the dimension_id of
+        /// layers not yet read. And dimension_id is coded only without splitting_flag,
+        /// layer_id_in_nuh only with vps_nuh_layer_id_present_flag: neither's inference was made,
+        /// so with splitting_flag nothing here ran at all, and without layer_id_in_nuh neither did
+        /// LayerIdxInVps.
+        /// </remarks>
+        public void OnViewIdLen()
         {
-            var dimension_id = VideoParameterSetRbsp.VpsExtension.DimensionId;
-            var layer_id_in_nuh = VideoParameterSetRbsp.VpsExtension.LayerIdInNuh;
-            var scalability_mask_flag = VideoParameterSetRbsp.VpsExtension.ScalabilityMaskFlag;
+            var extension = VideoParameterSetRbsp.VpsExtension;
+            var layer_id_in_nuh = extension.LayerIdInNuh;
+            var dimension_id = extension.DimensionId;
+            var scalability_mask_flag = extension.ScalabilityMaskFlag;
+            var splitting_flag = extension.SplittingFlag;
 
-            if (ScalabilityId == null || ScalabilityId.Length < MaxLayersMinus1 + 1)
+            int numScalabilityTypes = 0;
+            for (int smIdx = 0; smIdx < 16; smIdx++)
+                numScalabilityTypes += scalability_mask_flag[smIdx];
+
+            // layer_id_in_nuh[i] is i when not coded, and layer 0's never is.
+            for (int i = 0; i <= MaxLayersMinus1; i++)
             {
-                ScalabilityId = new int[MaxLayersMinus1 + 1][];
-                for (int i = 0; i < MaxLayersMinus1 + 1; i++)
-                {
-                    ScalabilityId[i] = new int[16];
-                }
+                if (i == 0 || extension.VpsNuhLayerIdPresentFlag == 0)
+                    layer_id_in_nuh[i] = (uint)i;
+                LayerIdxInVps[layer_id_in_nuh[i]] = (uint)i;
             }
-            if (DepthLayerFlag == null || DepthLayerFlag.Length < MaxLayersMinus1 + 1)
-                DepthLayerFlag = new int[MaxLayersMinus1 + 1];
-            if (ViewOrderIdx == null || ViewOrderIdx.Length < MaxLayersMinus1 + 1)
-                ViewOrderIdx = new int[MaxLayersMinus1 + 1];
-            if (DependencyId == null || DependencyId.Length < MaxLayersMinus1 + 1)
-                DependencyId = new int[MaxLayersMinus1 + 1];
-            if (AuxId == null || AuxId.Length < MaxLayersMinus1 + 1)
-                AuxId = new int[MaxLayersMinus1 + 1];
 
+            // With splitting_flag the dimensions are bit fields of nuh_layer_id, the last taking
+            // what the others leave of its 6 bits (F-1); without, layer 0's are 0.
+            var dimBitOffset = new int[numScalabilityTypes + 1];
+            for (int j = 1; j < numScalabilityTypes; j++)
+                dimBitOffset[j] = dimBitOffset[j - 1] + (int)extension.DimensionIdLenMinus1[j - 1] + 1;
+            dimBitOffset[numScalabilityTypes] = 6;
+
+            for (int i = 0; i <= MaxLayersMinus1; i++)
+            {
+                if (splitting_flag == 0 && i > 0)
+                    continue;
+
+                dimension_id[i] = new ulong[numScalabilityTypes];
+                for (int j = 0; j < numScalabilityTypes && splitting_flag != 0; j++)
+                    dimension_id[i][j] = (ulong)((layer_id_in_nuh[i] & ((1u << dimBitOffset[j + 1]) - 1)) >> dimBitOffset[j]);
+            }
+
+            // F-3
+            ScalabilityId = new int[MaxLayersMinus1 + 1][];
             NumViews = 1;
             for (int i = 0; i <= MaxLayersMinus1; i++)
             {
                 uint lId = layer_id_in_nuh[i];
+                ScalabilityId[i] = new int[16];
                 for (int smIdx = 0, j = 0; smIdx < 16; smIdx++)
                 {
                     if (scalability_mask_flag[smIdx] != 0)
@@ -911,6 +1148,10 @@ namespace SharpH265
                     NumViews += newViewFlag;
                 }
             }
+
+            // With a single layer no direct_dependency_flag is read, and the dependencies are
+            // worked out as the last one is; this covers that case.
+            DeriveDependencies();
         }
 
         public void OnDirectDependencyType()
@@ -919,31 +1160,27 @@ namespace SharpH265
 
             if (ViewOIdxList == null || ViewOIdxList.Length < MaxLayersMinus1 + 1)
                 ViewOIdxList = new uint[MaxLayersMinus1 + 1];
-            if (NumRefListLayers == null || NumRefListLayers.Length < MaxLayersMinus1 + 1)
-                NumRefListLayers = new uint[MaxLayersMinus1 + 1];
-            if (IdRefListLayer == null || IdRefListLayer.Length < MaxLayersMinus1 + 1)
+            // Indexed by nuh_layer_id, and the view components by view order index - a dimension_id,
+            // up to 8 bits - not by how many layers or views there are.
+            if (NumRefListLayers == null || NumRefListLayers.Length < LayerIds)
+                NumRefListLayers = new uint[LayerIds];
+            if (IdRefListLayer == null)
             {
-                IdRefListLayer = new int[MaxLayersMinus1 + 1][];
-                for (int i = 0; i < MaxLayersMinus1 + 1; i++)
-                {
+                IdRefListLayer = new int[LayerIds][];
+                for (int i = 0; i < LayerIds; i++)
                     IdRefListLayer[i] = new int[MaxLayersMinus1 + 1];
-                }
             }
             if (ViewCompLayerPresentFlag == null)
             {
-                ViewCompLayerPresentFlag = new uint[MaxLayersMinus1 + 1][];
-                for (int i = 0; i < MaxLayersMinus1 + 1; i++)
-                {
+                ViewCompLayerPresentFlag = new uint[ViewOrderIdxs][];
+                for (int i = 0; i < ViewOrderIdxs; i++)
                     ViewCompLayerPresentFlag[i] = new uint[2];
-                }
             }
             if (ViewCompLayerId == null)
             {
-                ViewCompLayerId = new int[MaxLayersMinus1 + 1][];
-                for (int i = 0; i < MaxLayersMinus1 + 1; i++)
-                {
+                ViewCompLayerId = new int[ViewOrderIdxs][];
+                for (int i = 0; i < ViewOrderIdxs; i++)
                     ViewCompLayerId[i] = new int[2];
-                }
             }
 
             // I-7
@@ -993,81 +1230,67 @@ namespace SharpH265
             }
         }
 
-        public void OnDirectDependencyFlag()
+        /// <summary>
+        /// Called as each direct_dependency_flag is read; the dependencies are worked out once the
+        /// last is in.
+        /// </summary>
+        /// <remarks>
+        /// Worked out at every flag, this read the rows of layers whose flags had not been read yet,
+        /// which do not exist until then.
+        /// </remarks>
+        public void OnDirectDependencyFlag(uint i, uint j)
+        {
+            if (i == MaxLayersMinus1 && j == i - 1)
+                DeriveDependencies();
+        }
+
+        /// <summary>
+        /// What follows from the dependency flags (F-4 to F-6): which layers each depends on,
+        /// directly or not, which depend on it, and the trees of layers the independent ones head,
+        /// down to NumIndependentLayers, on which num_add_layer_sets is conditioned.
+        /// </summary>
+        private void DeriveDependencies()
         {
             var direct_dependency_flag = VideoParameterSetRbsp.VpsExtension.DirectDependencyFlag;
             var layer_id_in_nuh = VideoParameterSetRbsp.VpsExtension.LayerIdInNuh;
+            int layers = (int)MaxLayersMinus1 + 1;
 
-
-            uint k = 0;
+            // Flags not coded - j >= i - or not read yet are 0.
+            int Direct(int i, int j) => direct_dependency_flag?[i] != null && j < direct_dependency_flag[i].Length ? direct_dependency_flag[i][j] : 0;
 
             // F-4
-            if (DependencyFlag == null || DependencyFlag.Length < MaxLayersMinus1 + 1)
+            DependencyFlag = new int[layers][];
+            for (int i = 0; i < layers; i++)
             {
-                DependencyFlag = new int[MaxLayersMinus1 + 1][];
-                for (int i = 0; i < MaxLayersMinus1 + 1; i++)
+                DependencyFlag[i] = new int[layers];
+                for (int j = 0; j < layers; j++)
                 {
-                    DependencyFlag[i] = new int[MaxLayersMinus1 + 1];
-                }
-            }
-
-            for (int i = 0; i <= MaxLayersMinus1; i++)
-            {
-                for (int j = 0; j <= MaxLayersMinus1; j++)
-                {
-                    DependencyFlag[i][j] = direct_dependency_flag[i][j];
-                    for (k = 0; k < i; k++)
-                        if (direct_dependency_flag[i][k] != 0 && DependencyFlag[k][j] != 0)
+                    DependencyFlag[i][j] = Direct(i, j);
+                    for (int k = 0; k < i; k++)
+                        if (Direct(i, k) != 0 && DependencyFlag[k][j] != 0)
                             DependencyFlag[i][j] = 1;
                 }
             }
 
-            // F-5
-            if (IdDirectRefLayer == null || IdDirectRefLayer.Length < MaxLayersMinus1 + 1)
-            {
-                IdDirectRefLayer = new int[MaxLayersMinus1 + 1][];
-                for (int i = 0; i < MaxLayersMinus1 + 1; i++)
-                {
-                    IdDirectRefLayer[i] = new int[MaxLayersMinus1 + 1];
-                }
-            }
-            if (IdRefLayer == null || IdRefLayer.Length < MaxLayersMinus1 + 1)
-            {
-                IdRefLayer = new int[MaxLayersMinus1 + 1][];
-                for (int i = 0; i < MaxLayersMinus1 + 1; i++)
-                {
-                    IdRefLayer[i] = new int[MaxLayersMinus1 + 1];
-                }
-            }
-            if (IdPredictedLayer == null || IdPredictedLayer.Length < MaxLayersMinus1 + 1)
-            {
-                IdPredictedLayer = new int[MaxLayersMinus1 + 1][];
-                for (int i = 0; i < MaxLayersMinus1 + 1; i++)
-                {
-                    IdPredictedLayer[i] = new int[MaxLayersMinus1 + 1];
-                }
-            }
-            if (NumDirectRefLayers == null || NumDirectRefLayers.Length < MaxLayersMinus1 + 1)
-            {
-                NumDirectRefLayers = new uint[MaxLayersMinus1 + 1];
-            }
-            if (NumRefLayers == null || NumRefLayers.Length < MaxLayersMinus1 + 1)
-            {
-                NumRefLayers = new uint[MaxLayersMinus1 + 1];
-            }
-            if (NumPredictedLayers == null || NumPredictedLayers.Length < MaxLayersMinus1 + 1)
-            {
-                NumPredictedLayers = new uint[MaxLayersMinus1 + 1];
-            }
-
-            for (int i = 0; i <= MaxLayersMinus1; i++)
+            // F-5, indexed by nuh_layer_id
+            IdDirectRefLayer = new int[LayerIds][];
+            IdRefLayer = new int[LayerIds][];
+            IdPredictedLayer = new int[LayerIds][];
+            NumDirectRefLayers = new uint[LayerIds];
+            NumRefLayers = new uint[LayerIds];
+            NumPredictedLayers = new uint[LayerIds];
+            for (int i = 0; i < layers; i++)
             {
                 int iNuhLId = (int)layer_id_in_nuh[i];
-                int j = 0, d = 0, r = 0, p = 0;
-                for (j = 0, d = 0, r = 0, p = 0; j <= MaxLayersMinus1; j++)
+                IdDirectRefLayer[iNuhLId] = new int[layers];
+                IdRefLayer[iNuhLId] = new int[layers];
+                IdPredictedLayer[iNuhLId] = new int[layers];
+
+                int d = 0, r = 0, p = 0;
+                for (int j = 0; j < layers; j++)
                 {
                     int jNuhLid = (int)layer_id_in_nuh[j];
-                    if (direct_dependency_flag[i][j] != 0)
+                    if (Direct(i, j) != 0)
                         IdDirectRefLayer[iNuhLId][d++] = jNuhLid;
                     if (DependencyFlag[i][j] != 0)
                         IdRefLayer[iNuhLId][r++] = jNuhLid;
@@ -1079,47 +1302,34 @@ namespace SharpH265
                 NumPredictedLayers[iNuhLId] = (uint)p;
             }
 
-            k = 0;
-
-            // F-6
-            if (layerIdInListFlag == null || layerIdInListFlag.Length < 64)
-                layerIdInListFlag = new int[64];
-
-            if (TreePartitionLayerIdList == null || TreePartitionLayerIdList.Length < MaxLayersMinus1 + 1)
-            {
-                TreePartitionLayerIdList = new int[MaxLayersMinus1 + 1][];
-                for (int i = 0; i < MaxLayersMinus1 + 1; i++)
-                {
-                    TreePartitionLayerIdList[i] = new int[MaxLayersMinus1 + 1];
-                }
-            }
-            if (NumLayersInTreePartition == null || NumLayersInTreePartition.Length < MaxLayersMinus1 + 1)
-            {
-                NumLayersInTreePartition = new uint[MaxLayersMinus1 + 1];
-            }
-
-            for (int i = 0; i <= 63; i++)
-                layerIdInListFlag[i] = 0;
-            for (int i = 0; i <= MaxLayersMinus1; i++)
+            // F-6. A tree lists the layer heading it first and the layers predicted from it after,
+            // so those start at 1; starting at 0 wrote the first over its head and counted a layer
+            // short, which is the width highest_layer_idx_plus1 is read at.
+            layerIdInListFlag = new int[LayerIds];
+            TreePartitionLayerIdList = new int[layers][];
+            NumLayersInTreePartition = new uint[layers];
+            uint trees = 0;
+            for (int i = 0; i < layers; i++)
             {
                 int iNuhLId = (int)layer_id_in_nuh[i];
                 if (NumDirectRefLayers[iNuhLId] == 0)
                 {
-                    uint h = 0;
-                    TreePartitionLayerIdList[k][0] = iNuhLId;
+                    TreePartitionLayerIdList[trees] = new int[layers];
+                    TreePartitionLayerIdList[trees][0] = iNuhLId;
+                    uint h = 1;
                     for (int j = 0; j < NumPredictedLayers[iNuhLId]; j++)
                     {
                         int predLId = IdPredictedLayer[iNuhLId][j];
                         if (layerIdInListFlag[predLId] == 0)
                         {
-                            TreePartitionLayerIdList[k][h++] = predLId;
+                            TreePartitionLayerIdList[trees][h++] = predLId;
                             layerIdInListFlag[predLId] = 1;
                         }
                     }
-                    NumLayersInTreePartition[k++] = h;
+                    NumLayersInTreePartition[trees++] = h;
                 }
             }
-            NumIndependentLayers = k;
+            NumIndependentLayers = trees;
         }
 
         public void OnCpRefVoi() // I-12
@@ -1127,18 +1337,14 @@ namespace SharpH265
             var num_cp = VideoParameterSetRbsp.Vps3dExtension.NumCp;
             var cp_ref_voi = VideoParameterSetRbsp.Vps3dExtension.CpRefVoi;
 
-            if (CpPresentFlag == null || CpPresentFlag.Length < NumViews)
-            {
-                CpPresentFlag = new uint[NumViews][];
-                for (int i = 0; i < NumViews; i++)
-                {
-                    CpPresentFlag[i] = new uint[MaxLayersMinus1 + 1];
-                }
-            }
+            // Both indices are view order indices, not counts of views.
+            if (CpPresentFlag == null)
+                CpPresentFlag = new uint[ViewOrderIdxs][];
 
             for (int n = 1; n < NumViews; n++)
             {
                 uint i = ViewOIdxList[n];
+                CpPresentFlag[i] ??= new uint[ViewOrderIdxs];
                 for (int m = 0; m < num_cp[i]; m++)
                     CpPresentFlag[i][cp_ref_voi[i][m]] = 1;
             }
@@ -1195,10 +1401,17 @@ namespace SharpH265
                     ? max_tid_il_ref_pics_plus1[i][k]
                     : 7u;
 
+            // The layers of the reference picture lists (I.7.4.7.1): the direct reference layers,
+            // less, in 3D-HEVC, those of the other component - a depth layer's texture - which
+            // refLayerPicIdc indexes IdRefListLayer for. Counted over all direct reference layers,
+            // a depth slice read list_entry_lX a bit too wide.
+            uint numRefListLayers = NumRefListLayers != null && nuh_layer_id < NumRefListLayers.Length ? NumRefListLayers[nuh_layer_id] : (uint)NumDirectRefLayers[nuh_layer_id];
+            int RefListLayer(uint i) => NumRefListLayers != null && nuh_layer_id < NumRefListLayers.Length ? IdRefListLayer[nuh_layer_id][i] : IdDirectRefLayer[nuh_layer_id][i];
+
             uint j = 0;
-            for (uint i = 0; i < NumDirectRefLayers[nuh_layer_id]; i++)
+            for (uint i = 0; i < numRefListLayers; i++)
             {
-                uint refLayerIdx = LayerIdxInVps[IdDirectRefLayer[nuh_layer_id][i]];
+                uint refLayerIdx = LayerIdxInVps[RefListLayer(i)];
                 if (SubLayersVpsMaxMinus1(refLayerIdx) >= TemporalId &&
                     (TemporalId == 0 || MaxTidIlRefPicsPlus1(refLayerIdx, LayerIdxInVps[nuh_layer_id]) > TemporalId))
                     refLayerPicIdc[j++] = i;
@@ -1211,7 +1424,7 @@ namespace SharpH265
                 NumActiveRefLayerPics = numRefLayerPics;
             else if (inter_layer_pred_enabled_flag == 0)
                 NumActiveRefLayerPics = 0;
-            else if (max_one_active_ref_layer_flag != 0 || NumDirectRefLayers[nuh_layer_id] == 1)
+            else if (max_one_active_ref_layer_flag != 0 || numRefListLayers == 1)
                 NumActiveRefLayerPics = 1;
             else
                 NumActiveRefLayerPics = num_inter_layer_ref_pics_minus1 + 1;
@@ -1290,100 +1503,208 @@ namespace SharpH265
                 RefPicLayerId[i] = IdRefListLayer[nuh_layer_id][inter_layer_pred_layer_idc[i]];
         }
 
+        /// <summary>
+        /// The arrays of one colour mapping octant's residuals, which colour_mapping_octants()
+        /// indexes by where the octant sits in the whole table - [ idxShiftY ][ idxCb ][ idxCr ] -
+        /// then by vertex and, for the coefficients, by colour component. Each octant got arrays
+        /// as long as its own loops instead, allocated at the loop's index and read at the
+        /// table's, so the first residual flag read threw.
+        /// </summary>
+        public T[][][][] ColourMappingOctantGrid<T>(int vertices) =>
+            OctantGrid(() => new T[vertices]);
+
+        /// <inheritdoc cref="ColourMappingOctantGrid{T}(int)"/>
+        public T[][][][][] ColourMappingOctantGrid<T>(int vertices, int components) =>
+            OctantGrid(() =>
+            {
+                var perVertex = new T[vertices][];
+                for (int j = 0; j < vertices; j++)
+                    perVertex[j] = new T[components];
+                return perVertex;
+            });
+
+        private TOctant[][][] OctantGrid<TOctant>(Func<TOctant> octant)
+        {
+            var table = PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable;
+            int side = 1 << (int)table.CmOctantDepth;
+            int lumaSide = (1 << (int)table.CmyPartNumLog2) * side;
+
+            var grid = new TOctant[lumaSide][][];
+            for (int y = 0; y < lumaSide; y++)
+            {
+                grid[y] = new TOctant[side][];
+                for (int cb = 0; cb < side; cb++)
+                {
+                    grid[y][cb] = new TOctant[side];
+                    for (int cr = 0; cr < side; cr++)
+                        grid[y][cb][cr] = octant();
+                }
+            }
+            return grid;
+        }
+
+        /// <summary>
+        /// ScalingList[ sizeId ][ matrixId ][ i ] (7.4.5): four sizes of six matrices of up to 64
+        /// coefficients, which scaling_list_data() fills as it reads.
+        /// </summary>
+        public static uint[][][] NewScalingList()
+        {
+            var list = new uint[4][][];
+            for (int sizeId = 0; sizeId < 4; sizeId++)
+            {
+                list[sizeId] = new uint[6][];
+                for (int matrixId = 0; matrixId < 6; matrixId++)
+                    list[sizeId][matrixId] = new uint[64];
+            }
+            return list;
+        }
+
         public void OnSliceType()
         {
-            if (SeqParameterSetRbsp.Sps3dExtension == null || SeqParameterSetRbsp.Sps3dExtension == null)
+            if (SeqParameterSetRbsp.Sps3dExtension == null)
                 return;
 
-            // I.7.4.7.1
+            // I.7.4.7.1, the part the slice's layer decides alone.
             var nuh_layer_id = NalHeader.NalUnitHeader.NuhLayerId;
-            var sub_layers_vps_max_minus1 = VideoParameterSetRbsp.VpsExtension.SubLayersVpsMaxMinus1;
-            var max_tid_il_ref_pics_plus1 = VideoParameterSetRbsp.VpsExtension.MaxTidIlRefPicsPlus1;
-            var direct_dependency_flag = VideoParameterSetRbsp.VpsExtension.DirectDependencyFlag;
-
-            var vsp_mc_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.VspMcEnabledFlag;
-            var dbbp_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.DbbpEnabledFlag;
-            var depth_ref_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.DepthRefEnabledFlag;
-            var intra_contour_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.IntraContourEnabledFlag;
-            var cqt_cu_part_pred_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.CqtCuPartPredEnabledFlag;
-            var tex_mc_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.TexMcEnabledFlag;
-
             DepthFlag = DepthLayerFlag[nuh_layer_id];
             ViewIdx = ViewOrderIdx[nuh_layer_id];
+        }
 
-            curCmpLIds = DepthFlag != 0 ? new int[] { (int)nuh_layer_id } : RefPicLayerId.ToArray();
+        public void OnInterLayerPredEnabledFlag()
+        {
+            // Needed straight away, for whether inter_layer_pred_layer_idc is coded - and
+            // num_inter_layer_ref_pics_minus1, which would work it out again, is not always.
+            DeriveNumActiveRefLayerPics();
+        }
+
+        /// <summary>
+        /// inCmpPredAvailFlag (I.7.4.7.1), worked out where in_comp_pred_flag is conditioned on it.
+        /// </summary>
+        /// <remarks>
+        /// It depends on RefPicLayerId, the layers the slice predicts from, which the slice header
+        /// codes after slice_type. Worked out at slice_type, as it was, it read the previous slice's
+        /// layers - or none, and threw. The loop also stopped one layer short, and a layer whose
+        /// sub-layers reached exactly as high as the slice's own did not count as available.
+        /// </remarks>
+        public int DeriveInCmpPredAvailFlag()
+        {
+            inCmpPredAvailFlag = 0;
+            var sps3d = SeqParameterSetRbsp.Sps3dExtension;
+            if (sps3d == null || VideoParameterSetRbsp?.VpsExtension == null)
+                return inCmpPredAvailFlag;
+
+            var nuh_layer_id = NalHeader.NalUnitHeader.NuhLayerId;
+            var extension = VideoParameterSetRbsp.VpsExtension;
+            var header = SliceSegmentLayerRbsp.SliceSegmentHeader;
+
+            // RefPicLayerId (F.7.4.7.1). inter_layer_pred_layer_idc is coded only when not every
+            // reference layer is active; otherwise the active ones are the first, in order - or,
+            // with default_ref_layers_active_flag, those refLayerPicIdc lists.
+            DeriveNumActiveRefLayerPics();
+            RefPicLayerId = new int[NumActiveRefLayerPics];
+            for (int i = 0; i < (int)NumActiveRefLayerPics; i++)
+            {
+                ulong idc =
+                    header.InterLayerPredLayerIdc != null && i < header.InterLayerPredLayerIdc.Length && extension.DefaultRefLayersActiveFlag == 0 ? header.InterLayerPredLayerIdc[i] :
+                    extension.DefaultRefLayersActiveFlag != 0 ? refLayerPicIdc[i] :
+                    (ulong)i;
+                RefPicLayerId[i] = IdRefListLayer[nuh_layer_id][idc];
+            }
+
+            uint Direct(uint i, uint j) =>
+                extension.DirectDependencyFlag?[i] != null && j < extension.DirectDependencyFlag[i].Length ? extension.DirectDependencyFlag[i][j] : 0u;
+            uint MaxTidIlRefPicsPlus1(uint i, uint j) =>
+                extension.MaxTidIlRefPicsPlus1?[i] != null && j < extension.MaxTidIlRefPicsPlus1[i].Length ? extension.MaxTidIlRefPicsPlus1[i][j] : 7u;
+            uint CpPresent(int i, int j) => CpPresentFlag?[i] != null ? CpPresentFlag[i][j] : 0u;
+
+            curCmpLIds = DepthFlag != 0 ? new int[] { (int)nuh_layer_id } : RefPicLayerId;
             numCurCmpLIds = DepthFlag != 0 ? 1 : NumActiveRefLayerPics;
 
             cpAvailableFlag = 1;
             allRefCmpLayersAvailFlag = 1;
+            inCmpRefViewIdcs = new int[numCurCmpLIds];
 
-            if(inCmpRefViewIdcs == null || inCmpRefViewIdcs.Length < MaxLayersMinus1 + 1)
-            {
-                inCmpRefViewIdcs = new int[MaxLayersMinus1 + 1];
-            }
-
-            for (int i = 0; i < (int)numCurCmpLIds - 1; i++)
+            uint layerIdx = LayerIdxInVps[nuh_layer_id];
+            int otherComponent = DepthFlag == 0 ? 1 : 0;
+            for (int i = 0; i < (int)numCurCmpLIds; i++)
             {
                 inCmpRefViewIdcs[i] = ViewOrderIdx[curCmpLIds[i]];
-                if (CpPresentFlag[ViewIdx][inCmpRefViewIdcs[i]] == 0)
+                if (CpPresent(ViewIdx, inCmpRefViewIdcs[i]) == 0)
                     cpAvailableFlag = 0;
 
                 refCmpCurLIdAvailFlag = 0;
-                if(ViewCompLayerPresentFlag[inCmpRefViewIdcs[i]][DepthFlag == 0 ? 1 : 0] == 1)
+                if (ViewCompLayerPresentFlag[inCmpRefViewIdcs[i]][otherComponent] == 1)
                 {
-                    uint j = LayerIdxInVps[ViewCompLayerId[inCmpRefViewIdcs[i]][DepthFlag == 0 ? 1 : 0]];
-                    if(direct_dependency_flag[LayerIdxInVps[nuh_layer_id]][j] == 1 && sub_layers_vps_max_minus1[j] > TemporalId && (TemporalId == 0 || max_tid_il_ref_pics_plus1[j][LayerIdxInVps[nuh_layer_id]] > TemporalId))
-                    {
+                    uint j = LayerIdxInVps[ViewCompLayerId[inCmpRefViewIdcs[i]][otherComponent]];
+                    if (Direct(layerIdx, j) == 1 &&
+                        extension.SubLayersVpsMaxMinus1[j] >= TemporalId &&
+                        (TemporalId == 0 || MaxTidIlRefPicsPlus1(j, layerIdx) > TemporalId))
                         refCmpCurLIdAvailFlag = 1;
-                    }
                 }
                 if (refCmpCurLIdAvailFlag == 0)
-                {
                     allRefCmpLayersAvailFlag = 0;
-                }
             }
 
-            if (allRefCmpLayersAvailFlag == 0)
-            {
-                inCmpPredAvailFlag = 0;
-            }
-            else
+            if (allRefCmpLayersAvailFlag != 0)
             {
                 if (DepthFlag == 0)
-                {
-                    inCmpPredAvailFlag = (vsp_mc_enabled_flag[DepthFlag] != 0 || dbbp_enabled_flag[DepthFlag] != 0 || depth_ref_enabled_flag[DepthFlag] != 0) ? 1 : 0;
-                }
+                    inCmpPredAvailFlag = (sps3d.VspMcEnabledFlag[DepthFlag] != 0 || sps3d.DbbpEnabledFlag[DepthFlag] != 0 || sps3d.DepthRefEnabledFlag[DepthFlag] != 0) ? 1 : 0;
                 else
-                {
-                    inCmpPredAvailFlag = (intra_contour_enabled_flag[DepthFlag] != 0 || cqt_cu_part_pred_enabled_flag[DepthFlag] != 0 || tex_mc_enabled_flag[DepthFlag] != 0) ? 1 : 0;
-                }
+                    inCmpPredAvailFlag = (sps3d.IntraContourEnabledFlag[DepthFlag] != 0 || sps3d.CqtCuPartPredEnabledFlag[DepthFlag] != 0 || sps3d.TexMcEnabledFlag[DepthFlag] != 0) ? 1 : 0;
             }
+
+            return inCmpPredAvailFlag;
         }
 
+        /// <summary>
+        /// Registers the sequence parameter set being parsed. One sent again under the same id
+        /// replaces the one there, as the spec has it: that is how a stream changes resolution, or
+        /// two streams are joined. Keeping the first read every later slice against the old set.
+        /// </summary>
         public void SetSpsSeqParameterSetId(ulong sps_seq_parameter_set_id)
         {
             if (SeqParameterSetRbsp == null)
                 return;
 
-            if (!SeqParameterSets.ContainsKey(SeqParameterSetRbsp.SpsSeqParameterSetId))
-            {
-                SeqParameterSets.Add(SeqParameterSetRbsp.SpsSeqParameterSetId, SeqParameterSetRbsp);
-            }
+            SeqParameterSets[SeqParameterSetRbsp.SpsSeqParameterSetId] = SeqParameterSetRbsp;
+        }
+
+        /// <summary>
+        /// A PPS may come before the SPS it names (VPSSPSPPS_A, RPS_C): nothing in its syntax
+        /// takes from the SPS, and the slice that activates it activates the SPS as well. It
+        /// threw on a PPS without an SPS before it.
+        /// </summary>
+        /// <summary>
+        /// fixed_pic_rate_within_cvs_flag is coded only when fixed_pic_rate_general_flag is 0, and
+        /// is 1 otherwise (E.3.2): left 0, low_delay_hrd_flag was read where
+        /// elemental_duration_in_tc_minus1 is.
+        /// </summary>
+        public void OnFixedPicRateGeneralFlag(HrdParameters hrd, uint i)
+        {
+            if (hrd.FixedPicRateGeneralFlag[i] != 0)
+                hrd.FixedPicRateWithinCvsFlag[i] = 1;
+        }
+
+        /// <summary>The SPS a slice of each layer last activated.</summary>
+        public SeqParameterSetRbsp[] ActiveSeqParameterSets { get; } = new SeqParameterSetRbsp[64];
+
+        /// <summary>
+        /// chroma_format_idc of the picture a decoded picture hash is for: that of the SPS active in
+        /// the SEI's layer. It was taken from the SPS parsed last, which in a multi-layer stream is
+        /// often another layer's - one that takes its format from the VPS, and so read as 4:0:0.
+        /// </summary>
+        public ulong ChromaFormatIdcOfSeiLayer()
+        {
+            var sps = ActiveSeqParameterSets[NalHeader?.NalUnitHeader?.NuhLayerId ?? 0] ?? SeqParameterSetRbsp;
+            return sps?.ChromaFormatIdc ?? 1;
         }
 
         public void SetPpsSeqParameterSetId(ulong pps_seq_parameter_set_id)
         {
-            if (pps_seq_parameter_set_id != SeqParameterSetRbsp.SpsSeqParameterSetId)
-            {
-                if (SeqParameterSets.ContainsKey(pps_seq_parameter_set_id))
-                {
-                    SeqParameterSetRbsp = SeqParameterSets[pps_seq_parameter_set_id];
-                }
-                else
-                {
-                    throw new Exception($"SeqParameterSet with id {pps_seq_parameter_set_id} not found.");
-                }
-            }
+            if (SeqParameterSets.TryGetValue(pps_seq_parameter_set_id, out var sps))
+                SeqParameterSetRbsp = sps;
+            else if (SeqParameterSetRbsp == null || SeqParameterSetRbsp.SpsSeqParameterSetId != pps_seq_parameter_set_id)
+                return;
 
             ResolveMultiLayerRepFormat(SeqParameterSetRbsp);
         }
@@ -1440,15 +1761,13 @@ namespace SharpH265
             sps.ConfWinBottomOffset = rep.ConfWinVpsBottomOffset;
         }
 
+        /// <summary>Registers the picture parameter set being parsed, replacing one of the same id.</summary>
         public void SetPpsPicParameterSetId(ulong pps_pic_parameter_set_id)
         {
             if (PicParameterSetRbsp == null)
                 return;
 
-            if (!PicParameterSets.ContainsKey(PicParameterSetRbsp.PpsPicParameterSetId))
-            {
-                PicParameterSets.Add(PicParameterSetRbsp.PpsPicParameterSetId, PicParameterSetRbsp);
-            }
+            PicParameterSets[PicParameterSetRbsp.PpsPicParameterSetId] = PicParameterSetRbsp;
         }
         
         /// <summary>
@@ -1471,7 +1790,9 @@ namespace SharpH265
             else if (SeqParameterSetRbsp == null || SeqParameterSetRbsp.SpsSeqParameterSetId != spsId)
                 throw new Exception($"SeqParameterSet with id {spsId} not found.");
 
+            ResolveMultiLayerRepFormat(SeqParameterSetRbsp);
             DerivePictureSizes(SeqParameterSetRbsp);
+            ActiveSeqParameterSets[NalHeader?.NalUnitHeader?.NuhLayerId ?? 0] = SeqParameterSetRbsp;
         }
     }
 }

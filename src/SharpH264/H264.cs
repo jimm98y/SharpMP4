@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SharpH26X;
 
 namespace SharpH264
 {
@@ -66,6 +67,13 @@ namespace SharpH264
     {
         public SeiPayload SeiPayload { get; set; }
         public Dictionary<ulong, SeqParameterSetRbsp> SeqParameterSets { get; } = new Dictionary<ulong, SeqParameterSetRbsp>();
+
+        /// <summary>
+        /// The subset sequence parameter sets of MVC and SVC, by id. They were not kept: a subset
+        /// SPS registered itself as the SPS being parsed, whichever that was, and the PPSs and
+        /// slices of the views and layers it describes could not find it.
+        /// </summary>
+        public Dictionary<ulong, SubsetSeqParameterSetRbsp> SubsetSeqParameterSets { get; } = new Dictionary<ulong, SubsetSeqParameterSetRbsp>();
         public Dictionary<ulong, PicParameterSetRbsp> PicParameterSets { get; } = new Dictionary<ulong, PicParameterSetRbsp>();
 
         public int NumClockTS { get; set; }
@@ -275,12 +283,34 @@ namespace SharpH264
                 ChromaArrayType = 0;
         }
 
+        /// <summary>The nal_unit_type of the last slice of a primary coded picture.</summary>
+        private uint _lastPrimarySliceNalUnitType;
+
         public void OnNalUnitType()
         {
             var nal_unit_type = NalHeader.NalUnitType;
 
-            IdrPicFlag = (uint)((nal_unit_type == 5) ? 1 : 0);
+            if (nal_unit_type == 1 || nal_unit_type == 5)
+                _lastPrimarySliceNalUnitType = nal_unit_type;
+
+            // An auxiliary coded picture (nal_unit_type 19, alpha) is IDR as its primary coded
+            // picture is: it follows that picture, and codes idr_pic_id when it does, as ffmpeg reads it.
+            // Taken from its own nal_unit_type, the alpha slice of an IDR picture lost idr_pic_id.
+            if (nal_unit_type == 19)
+                IdrPicFlag = (uint)((_lastPrimarySliceNalUnitType == 5) ? 1 : 0);
+            else
+                IdrPicFlag = (uint)((nal_unit_type == 5) ? 1 : 0);
         }
+
+        /// <summary>
+        /// IdrPicFlag of the NAL units the extensions code (prefix NAL units and slice extensions):
+        /// idr_flag for SVC, the negation of non_idr_flag for MVC and 3D-AVC. Taken
+        /// from nal_unit_type alone it was 0 there, and dec_ref_pic_marking() of an IDR slice
+        /// extension read the adaptive marking an IDR picture does not code.
+        /// </summary>
+        public void OnIdrFlag(NalUnitHeaderSvcExtension svc) => IdrPicFlag = svc.IdrFlag;
+        public void OnIdrFlag(NalUnitHeaderMvcExtension mvc) => IdrPicFlag = (uint)(mvc.NonIdrFlag == 0 ? 1 : 0);
+        public void OnIdrFlag(NalUnitHeader3davcExtension avc3d) => IdrPicFlag = (uint)(avc3d.NonIdrFlag == 0 ? 1 : 0);
 
         public void OnAvc3dExtensionFlag()
         {
@@ -347,63 +377,169 @@ namespace SharpH264
             OnSeparateColourPlaneFlag();
         }
 
-        public void SetSeqParameterSetId(ulong seq_parameter_set_id)
+        /// <summary>
+        /// Whether the scalability information SEI message ahead is coded as Rec. ITU-T H.264
+        /// (11/2007) specifies it (G.13.1.1 there), with its parameter set counts minus one,
+        /// rather than as later editions do. The SVC conformance bitstreams use the 2007 syntax;
+        /// read the later way, every message with parameter sets in it ran off its payload.
+        /// </summary>
+        /// <remarks>
+        /// A message is read right when it ends where its payload does, with only the payload's
+        /// alignment bits after it. The later syntax is taken whenever it does, so a message read
+        /// alike both ways stays as the current edition has it.
+        /// </remarks>
+        public bool IsScalabilityInfo2007(ItuStream stream, uint payloadSize)
         {
-            if (SeqParameterSetRbsp == null)
-                return;
+            if (EndsWithItsPayload(stream, payloadSize, new ScalabilityInfo(payloadSize)))
+                return false;
 
-            if(!SeqParameterSets.ContainsKey(SeqParameterSetRbsp.SeqParameterSetData.SeqParameterSetId))
+            return EndsWithItsPayload(stream, payloadSize, new ScalabilityInfo2007(payloadSize));
+        }
+
+        /// <summary>Whether an SEI message, read ahead, ends where its payload does.</summary>
+        public bool FitsItsPayload(ItuStream stream, uint payloadSize, IItuSerializable message) =>
+            EndsWithItsPayload(stream, payloadSize, message);
+
+        private bool EndsWithItsPayload(ItuStream stream, uint payloadSize, IItuSerializable message)
+        {
+            using var ahead = stream.Lookahead();
+
+            ulong read;
+            try
             {
-                SeqParameterSets.Add(SeqParameterSetRbsp.SeqParameterSetData.SeqParameterSetId, SeqParameterSetRbsp);
+                read = message.Read(this, ahead);
+            }
+            catch (Exception)
+            {
+                return false; // read past the end, or into values nothing could hold
             }
 
-            if(seq_parameter_set_id != SeqParameterSetRbsp.SeqParameterSetData.SeqParameterSetId)
+            ulong payloadBits = (ulong)payloadSize * 8;
+            if (read > payloadBits)
+                return false;
+
+            // What is left is sei_payload()'s alignment: a one, then zeros.
+            for (ulong bit = 0; bit < payloadBits - read; bit++)
             {
-                if(SeqParameterSets.ContainsKey(seq_parameter_set_id))
-                {
-                    SeqParameterSetRbsp = SeqParameterSets[seq_parameter_set_id];
-                }
-                else
-                {
-                    throw new Exception($"SeqParameterSet with id {seq_parameter_set_id} not found.");
-                }
+                if (ahead.Bitstream.ReadBit() != (bit == 0 ? 1 : 0))
+                    return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Called as seq_parameter_set_data() starts. chroma_format_idc is coded only for the high
+        /// profiles and is 1 otherwise (7.4.2.1.1); left 0, a monochrome SPS was read as 4:2:0 and
+        /// back, depending on which was parsed last.
+        /// </summary>
+        public void OnProfileIdc(SeqParameterSetData data)
+        {
+            data.ChromaFormatIdc = 1;
+        }
+
+        public void OnProfileIdc(IItuSerializable other)
+        {
+        }
+
+        /// <summary>
+        /// A sequence parameter set, or a subset one, registers itself under its id. One sent again
+        /// under the same id replaces the one there - keeping the first read later slices against
+        /// the old one.
+        /// </summary>
+        public void SetSeqParameterSetId(ulong seq_parameter_set_id, SeqParameterSetData data)
+        {
+            if (NalHeader?.NalUnitType == H264NALTypes.SUBSET_SPS && SubsetSeqParameterSetRbsp != null)
+            {
+                SubsetSeqParameterSets[seq_parameter_set_id] = SubsetSeqParameterSetRbsp;
+
+                // What the subset SPS reads after this refers to the SPS it extends - its own
+                // seq_parameter_set_data(), not the last SPS parsed.
+                SeqParameterSetRbsp = new SeqParameterSetRbsp { SeqParameterSetData = data };
+            }
+            else if (SeqParameterSetRbsp != null)
+            {
+                SeqParameterSets[seq_parameter_set_id] = SeqParameterSetRbsp;
             }
         }
 
-        public void SetPicParameterSetId(ulong pic_parameter_set_id)
+        /// <summary>
+        /// A PPS reads the rest of itself against the SPS it names. One naming an SPS not received
+        /// is kept all the same: a layer extracted from an SVC stream keeps the PPSs of the layers
+        /// above it without their SPSs (SVCHMTS-1-L3), and no slice uses them. It threw.
+        /// </summary>
+        public void SetSeqParameterSetId(ulong seq_parameter_set_id, PicParameterSetRbsp pps)
         {
-            if (PicParameterSetRbsp == null)
+            if (!SeqParameterSets.ContainsKey(seq_parameter_set_id) && !SubsetSeqParameterSets.ContainsKey(seq_parameter_set_id))
                 return;
 
-            if (!PicParameterSets.ContainsKey(PicParameterSetRbsp.PicParameterSetId))
+            ActivateSeqParameterSet(seq_parameter_set_id, preferSubset: false);
+        }
+
+        /// <summary>An SPS extension or an SEI message naming an SPS reads against it.</summary>
+        public void SetSeqParameterSetId(ulong seq_parameter_set_id, IItuSerializable referrer)
+        {
+            ActivateSeqParameterSet(seq_parameter_set_id, preferSubset: false);
+        }
+
+        /// <summary>A PPS registers itself under its id, replacing one sent before under it.</summary>
+        public void SetPicParameterSetId(ulong pic_parameter_set_id, PicParameterSetRbsp pps)
+        {
+            PicParameterSets[pic_parameter_set_id] = pps;
+        }
+
+        /// <summary>
+        /// A slice activates the PPS it names, and that the SPS - a subset SPS for the slices of
+        /// MVC's non-base views and SVC's enhancement layers, coded as slice extensions.
+        /// </summary>
+        public void SetPicParameterSetId(ulong pic_parameter_set_id, IItuSerializable sliceHeader)
+        {
+            if (!PicParameterSets.TryGetValue(pic_parameter_set_id, out var pps))
+                throw new Exception($"PicParameterSet with id {pic_parameter_set_id} not found.");
+
+            PicParameterSetRbsp = pps;
+            bool extension = NalHeader?.NalUnitType == H264NALTypes.SLICE_EXT ||
+                NalHeader?.NalUnitType == H264NALTypes.SLICE_EXT_VIEW_COMPONENT;
+            ActivateSeqParameterSet(pps.SeqParameterSetId, preferSubset: extension);
+        }
+
+        private void ActivateSeqParameterSet(ulong seq_parameter_set_id, bool preferSubset)
+        {
+            if (preferSubset && SubsetSeqParameterSets.TryGetValue(seq_parameter_set_id, out var subset))
             {
-                PicParameterSets.Add(PicParameterSetRbsp.PicParameterSetId, PicParameterSetRbsp);
+                SubsetSeqParameterSetRbsp = subset;
+                SeqParameterSetRbsp = new SeqParameterSetRbsp { SeqParameterSetData = subset.SeqParameterSetData };
+            }
+            else if (SeqParameterSets.TryGetValue(seq_parameter_set_id, out var sps))
+            {
+                SeqParameterSetRbsp = sps;
+            }
+            else if (SubsetSeqParameterSets.TryGetValue(seq_parameter_set_id, out subset))
+            {
+                SubsetSeqParameterSetRbsp = subset;
+                SeqParameterSetRbsp = new SeqParameterSetRbsp { SeqParameterSetData = subset.SeqParameterSetData };
+            }
+            else
+            {
+                throw new Exception($"SeqParameterSet with id {seq_parameter_set_id} not found.");
             }
 
-            if (pic_parameter_set_id != PicParameterSetRbsp.PicParameterSetId)
-            {
-                if (PicParameterSets.ContainsKey(pic_parameter_set_id))
-                {
-                    PicParameterSetRbsp = PicParameterSets[pic_parameter_set_id];
+            DeriveFromSps();
+        }
 
-                    // set also SPS
-                    if(PicParameterSetRbsp.SeqParameterSetId != SeqParameterSetRbsp.SeqParameterSetData.SeqParameterSetId)
-                    {
-                        if (SeqParameterSets.ContainsKey(PicParameterSetRbsp.SeqParameterSetId))
-                        {
-                            SeqParameterSetRbsp = SeqParameterSets[PicParameterSetRbsp.SeqParameterSetId];
-                        }
-                        else
-                        {
-                            throw new Exception($"SeqParameterSet with id {PicParameterSetRbsp.SeqParameterSetId} not found.");
-                        }
-                    }
-                }
-                else
-                {
-                    throw new Exception($"PicParameterSet with id {pic_parameter_set_id} not found.");
-                }
-            }
+        /// <summary>
+        /// What the syntax takes from the SPS in force, worked out again when it changes. It was
+        /// worked out only as an SPS was parsed, so from the last one parsed - another view's, or
+        /// another layer's - and ChromaArrayType not at all when chroma_format_idc was not coded.
+        /// </summary>
+        private void DeriveFromSps()
+        {
+            var data = SeqParameterSetRbsp.SeqParameterSetData;
+            ChromaArrayType = data.SeparateColourPlaneFlag == 0 ? data.ChromaFormatIdc : 0;
+            PicWidthInMbs = data.PicWidthInMbsMinus1 + 1;
+            PicHeightInMapUnits = data.PicHeightInMapUnitsMinus1 + 1;
+            PicSizeInMapUnits = PicWidthInMbs * PicHeightInMapUnits;
+            var vui = data.VuiParameters;
+            CpbDpbDelaysPresentFlag = vui != null && (vui.NalHrdParametersPresentFlag == 1 || vui.VclHrdParametersPresentFlag == 1) ? 1u : 0u;
         }
     }
 }
