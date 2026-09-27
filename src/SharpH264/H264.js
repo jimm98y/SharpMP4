@@ -1661,6 +1661,136 @@ scalability_info( payloadSize ) {
  }   
 }  
 
+scalability_info_2007( payloadSize ) {
+ temporal_id_nesting_flag 5 u(1)
+ priority_layer_info_present_flag 5 u(1)
+ priority_id_setting_flag 5 u(1)
+ num_layers_minus1 5 ue(v)
+ for( i = 0; i <= num_layers_minus1; i++ ) {
+  layer_id[ i ] 5 ue(v)
+  priority_id[ i ] 5 u(6)
+  discardable_flag[ i ] 5 u(1)
+  dependency_id[ i ] 5 u(3)
+  quality_id[ i ] 5 u(4)
+  temporal_id[ i ] 5 u(3)
+  sub_pic_layer_flag[ i ] 5 u(1)
+  sub_region_layer_flag[ i ] 5 u(1)
+  iroi_division_info_present_flag[ i ] 5 u(1)
+  profile_level_info_present_flag[ i ] 5 u(1)
+  bitrate_info_present_flag[ i ] 5 u(1)
+  frm_rate_info_present_flag[ i ] 5 u(1)
+  frm_size_info_present_flag[ i ] 5 u(1)
+  layer_dependency_info_present_flag[ i ] 5 u(1)
+  parameter_sets_info_present_flag[ i ] 5 u(1)
+  bitstream_restriction_info_present_flag[ i ] 5 u(1)
+  exact_inter_layer_pred_flag[ i ] 5 u(1)
+  if( sub_pic_layer_flag[ i ]  ||  iroi_division_info_present_flag[ i ] )
+   exact_sample_value_match_flag[ i ] 5 u(1)
+  layer_conversion_flag[ i ] 5 u(1)
+  layer_output_flag[ i ] 5 u(1)
+  if (profile_level_info_present_flag[ i ])
+   layer_profile_level_idc[ i ] 5 u(24)
+  if( bitrate_info_present_flag[ i ] ) {
+   avg_bitrate[ i ] 5 u(16)
+   max_bitrate_layer[ i ] 5 u(16)
+   max_bitrate_layer_representation[ i ] 5 u(16)
+   max_bitrate_calc_window[ i ] 5 u(16)
+  }
+  if( frm_rate_info_present_flag[ i ] ) {
+   constant_frm_rate_idc[ i ] 5 u(2)
+   avg_frm_rate[ i ] 5 u(16)
+  }
+  if( frm_size_info_present_flag[ i ]  ||
+   iroi_division_info_present_flag[ i ] ) {
+   frm_width_in_mbs_minus1[ i ] 5 ue(v)
+   frm_height_in_mbs_minus1[ i ] 5 ue(v)
+  }
+  if( sub_region_layer_flag[ i ] ) {
+   base_region_layer_id[ i ] 5 ue(v)
+   dynamic_rect_flag[ i ] 5 u(1)
+   if( !dynamic_rect_flag[ i ] ) {
+    horizontal_offset[ i ] 5 u(16)
+    vertical_offset[ i ] 5 u(16)
+    region_width[ i ] 5 u(16)
+    region_height[ i ] 5 u(16)
+   }
+  }
+  if( sub_pic_layer_flag[ i ] )
+   roi_id[ i ] 5 ue(v)
+  if ( iroi_division_info_present_flag[ i ] ) {
+   iroi_grid_flag[ i ] 5 u(1)
+   if ( iroi_grid_flag[ i ] ) {
+    grid_width_in_mbs_minus1[ i ] 5 ue(v)
+    grid_height_in_mbs_minus1[ i ] 5 ue(v)
+   } else {
+    num_rois_minus1[ i ] 5 ue(v)
+    for (j = 0; j <= num_rois_minus1[ i ]; j++ ) {
+     first_mb_in_roi[ i ][ j ] 5 ue(v)
+     roi_width_in_mbs_minus1[ i ][ j ] 5 ue(v)
+     roi_height_in_mbs_minus1[ i ][ j ] 5 ue(v)
+    }
+   }
+  }
+  if( layer_dependency_info_present_flag[ i ] ) {
+   num_directly_dependent_layers[ i ] 5 ue(v)
+   for( j = 0; j < num_directly_dependent_layers[ i ]; j++ )
+    directly_dependent_layer_id_delta_minus1[ i ][ j ] 5 ue(v)
+  } else
+   layer_dependency_info_src_layer_id_delta[ i ] 5 ue(v)
+  if( parameter_sets_info_present_flag[ i ] ) {
+   num_seq_parameter_set_minus1[ i ] 5 ue(v)
+   for( j = 0; j <= num_seq_parameter_set_minus1[ i ]; j++ )
+    seq_parameter_set_id_delta[ i ][ j ] 5 ue(v)
+   num_subset_seq_parameter_set_minus1[ i ] 5 ue(v)
+   for( j = 0; j <= num_subset_seq_parameter_set_minus1[ i ]; j++ )
+    subset_seq_parameter_set_id_delta[ i ][ j ] 5 ue(v)
+   num_pic_parameter_set_minus1[ i ] 5 ue(v)
+   for( j = 0; j <= num_pic_parameter_set_minus1[ i ]; j++ )
+    pic_parameter_set_id_delta[ i ][ j ] 5 ue(v)
+  } else
+   parameter_sets_info_src_layer_id_delta[ i ] 5 ue(v)
+  if( bitstream_restriction_info_present_flag[ i ] ) {
+   motion_vectors_over_pic_boundaries_flag[ i ] 5 u(1)
+   max_bytes_per_pic_denom[ i ] 5 ue(v)
+   max_bits_per_mb_denom[ i ] 5 ue(v)
+   log2_max_mv_length_horizontal[ i ] 5 ue(v)
+   log2_max_mv_length_vertical[ i ] 5 ue(v)
+   num_reorder_frames[ i ] 5 ue(v)
+   max_dec_frame_buffering[ i ] 5 ue(v)
+  }
+  if( layer_conversion_flag[ i ] ) {
+   conversion_type_idc[ i ] 5 ue(v)
+   for( j=0; j < 2; j++ ) {
+    rewriting_info_flag[ i ][ j ] 5 u(1)
+    if( rewriting_info_flag[ i ][ j ] ) {
+     rewriting_profile_level_idc[ i ][ j ] 5 u(24)
+     rewriting_avg_bitrate[ i ][ j ] 5 u(16)
+     rewriting_max_bitrate[ i ][ j ] 5 u(16)
+    }
+   }
+  }
+ }
+ if( priority_layer_info_present_flag ) {
+  pr_num_dId_minus1 5 ue(v)
+  for( i = 0; i <= pr_num_dId_minus1; i++ ) {
+   pr_dependency_id[ i ] 5 u(3)
+   pr_num_minus1[ i ] 5 ue(v)
+   for( j = 0; j <= pr_num_minus1; j++ ) {
+    pr_id[ i ][ j ] 5 ue(v)
+    pr_profile_level_idc[ i ][ j ] 5 u(24)
+    pr_avg_bitrate[ i ][ j ] 5 u(16)
+    pr_max_bitrate[ i ][ j ] 5 u(16)
+   }
+  }
+ }
+ if( priority_id_setting_flag ) {
+  PriorityIdSettingUriIdx = 0
+  do
+   priority_id_setting_uri[ PriorityIdSettingUriIdx ] 5 b(8)
+  while( priority_id_setting_uri[ PriorityIdSettingUriIdx++ ]  !=  0 )
+ }
+}
+
 sub_pic_scalable_layer( payloadSize ) {  
  layer_id 5 ue(v) 
 }

@@ -66,6 +66,9 @@ namespace SharpMP4.Common
         public virtual void Mark() => this._lastMarkPos = this._bitsPosition;
         public virtual long GetBitsSinceMark() => this._bitsPosition - this._lastMarkPos;
 
+        /// <summary>Moves the mark back by a number of bits, as counted by GetBitsSinceMark.</summary>
+        public virtual void MoveMarkBack(long bits) => this._lastMarkPos -= bits;
+
         public int ReadBit()
         {
             long bytePos = _bitsPosition / 8;

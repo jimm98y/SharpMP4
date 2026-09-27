@@ -10,7 +10,14 @@ namespace ItuGenerator.CSharp
         {
             string name = (field as ItuField).Name;
 
-            if (name == "sei_payload" || name == "vui_payload")
+            if (name == "sei_payload")
+            {
+                // An SEI message nested in another (scalable nesting) marks the stream for its own
+                // payload; the mark of the one around it is put back after, for its
+                // more_data_in_payload() to count from.
+                retm = $"{spacing}ulong bitsSinceOuterMark = stream.GetBitsPositionSinceLastMark();\r\n{spacing}stream.MarkCurrentBitsPosition();\r\n{retm}\r\n{spacing}stream.RestoreBitsMark(bitsSinceOuterMark);";
+            }
+            else if (name == "vui_payload")
             {
                 retm = $"{spacing}stream.MarkCurrentBitsPosition();\r\n{retm}";
             }
@@ -21,7 +28,7 @@ namespace ItuGenerator.CSharp
             else if (name == "num_ref_entries")
             {
                 if (methodType == MethodType.Read)
-                    retm = "    \r\nthis.num_ref_entries = ituContext.num_ref_entries;\r\n            this.inter_layer_ref_pic_flag = ituContext.inter_layer_ref_pic_flag;\r\n            this.st_ref_pic_flag = ituContext.st_ref_pic_flag;\r\n            this.abs_delta_poc_st = ituContext.abs_delta_poc_st;\r\n            this.strp_entry_sign_flag = ituContext.strp_entry_sign_flag;\r\n            this.rpls_poc_lsb_lt = ituContext.rpls_poc_lsb_lt;\r\n            this.ilrp_idx = ituContext.ilrp_idx;\r\n" + retm + "\r\n ituContext.inter_layer_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.st_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.abs_delta_poc_st[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.strp_entry_sign_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.rpls_poc_lsb_lt[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.ilrp_idx[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];";
+                    retm = "    \r\nthis.num_ref_entries = ituContext.num_ref_entries;\r\n            this.ltrp_in_header_flag = ituContext.ltrp_in_header_flag;\r\n            this.inter_layer_ref_pic_flag = ituContext.inter_layer_ref_pic_flag;\r\n            this.st_ref_pic_flag = ituContext.st_ref_pic_flag;\r\n            this.abs_delta_poc_st = ituContext.abs_delta_poc_st;\r\n            this.strp_entry_sign_flag = ituContext.strp_entry_sign_flag;\r\n            this.rpls_poc_lsb_lt = ituContext.rpls_poc_lsb_lt;\r\n            this.ilrp_idx = ituContext.ilrp_idx;\r\n" + retm + "\r\n ituContext.inter_layer_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.st_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.abs_delta_poc_st[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.strp_entry_sign_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.rpls_poc_lsb_lt[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.ilrp_idx[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.ltrp_in_header_flag[listIdx][rplsIdx] = (byte)(rplsIdx == ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[listIdx] ? 1 : 0);";
             }
 
             if (methodType == MethodType.Write)
@@ -89,7 +96,7 @@ namespace ItuGenerator.CSharp
             switch (parameter)
             {
                 case "TotalNumOlss":
-                    return "ituContext.TotalNumOlss";
+                    return "ituContext.DeriveTotalNumOlss()";
                 case "VpsNumDpbParams":
                     return "ituContext.VpsNumDpbParams";
                 case "NumOutputLayersInOls":
@@ -105,7 +112,7 @@ namespace ItuGenerator.CSharp
                 case "OutputLayerIdx":
                     return "ituContext.OutputLayerIdx";
                 case "NumMultiLayerOlss":
-                    return "ituContext.NumMultiLayerOlss";
+                    return "ituContext.DeriveOls()";
                 case "MultiLayerOlsIdx":
                     return "ituContext.MultiLayerOlsIdx";
                 case "LayerUsedAsRefLayerFlag":
@@ -245,7 +252,9 @@ namespace ItuGenerator.CSharp
                 case "NumTilesInPic":
                     return "ituContext.NumTilesInPic";
                 case "ltrp_in_header_flag":
-                    return "ref_pic_list_struct.LtrpInHeaderFlag";
+                    // The structure in force may be the SPS's, in which case ref_pic_lists() codes
+                    // none of its own.
+                    return "ituContext.ltrp_in_header_flag";
                 case "colourTransformSize":
                     return "( (1  <<  ( (int)colour_transform_log2_number_of_points_per_lut_minus1 + 1 ) ) + 1 )";
                 case "nal_unit_type":
@@ -319,13 +328,14 @@ namespace ItuGenerator.CSharp
                 case "NumCtusInSlice":
                     return "ituContext.NumCtusInSlice";
                 case "SliceTopLeftTileIdx":
-                    return "ituContext.SliceTopLeftTileIdx";
+                    // The PPS's slice loop needs each slice's as it reads it.
+                    return "ituContext.DeriveRectSlices(this).SliceTopLeftTileIdx";
                 case "sliceWidthInTiles":
                     return "ituContext.sliceWidthInTiles";
                 case "sliceHeightInTiles":
                     return "ituContext.sliceHeightInTiles";
                 case "NumSlicesInTile":
-                    return "ituContext.NumSlicesInTile";
+                    return "ituContext.DeriveRectSlices(this).NumSlicesInTile";
                 case "sliceHeightInCtus":
                     return "ituContext.sliceHeightInCtus";
                 case "CtbAddrInSlice":
@@ -359,13 +369,13 @@ namespace ItuGenerator.CSharp
                 case "sps_idr_rpl_present_flag":
                     return "ituContext.SeqParameterSetRbsp.SpsIdrRplPresentFlag";
                 case "ph_inter_slice_allowed_flag":
-                    return "ituContext.SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhInterSliceAllowedFlag";   
+                    return "ituContext.PictureHeader.PhInterSliceAllowedFlag";   
                 case "ph_lmcs_enabled_flag":
-                    return "ituContext.SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhLmcsEnabledFlag";
+                    return "ituContext.PictureHeader.PhLmcsEnabledFlag";
                 case "ph_explicit_scaling_list_enabled_flag":
-                    return "ituContext.SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhExplicitScalingListEnabledFlag";
+                    return "ituContext.PictureHeader.PhExplicitScalingListEnabledFlag";
                 case "ph_temporal_mvp_enabled_flag":
-                    return "ituContext.SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhTemporalMvpEnabledFlag";
+                    return "ituContext.PictureHeader.PhTemporalMvpEnabledFlag";
                 case "pps_deblocking_filter_override_enabled_flag":
                     return "ituContext.PicParameterSetRbsp.PpsDeblockingFilterOverrideEnabledFlag";
                 case "pps_slice_header_extension_present_flag":
@@ -377,15 +387,18 @@ namespace ItuGenerator.CSharp
                 case "sps_transform_skip_enabled_flag":
                     return "ituContext.SeqParameterSetRbsp.SpsTransformSkipEnabledFlag";
                 case "NumWeightsL0":
-                    return "ituContext.NumWeightsL0";
+                    return "ituContext.DeriveNumWeightsL0(this)";
                 case "NumRefIdxActive":
-                    return "ituContext.NumRefIdxActive";
+                    // Worked out where it is tested: nothing coded alongside it is always there.
+                    return "ituContext.DeriveNumRefIdxActive()";
                 case "SubpicIdVal":
                     return "ituContext.SubpicIdVal";
+                case "DiagScanOrder":
+                    return "H266Context.DiagScanOrder";
                 case "NumEntryPoints":
-                    return "ituContext.NumEntryPoints";
+                    return "ituContext.DeriveNumEntryPoints()";
                 case "NumWeightsL1":
-                    return "ituContext.NumWeightsL1";
+                    return "ituContext.DeriveNumWeightsL1(this)";
                 case "CtbAddrInCurrSlice":
                     return "ituContext.CtbAddrInCurrSlice";
                 case "NumCtusInCurrSlice":
@@ -409,6 +422,8 @@ namespace ItuGenerator.CSharp
                     return "ituContext.SetPpsPicParameterSetId(pps_pic_parameter_set_id);";
                 case "ph_pic_parameter_set_id":
                     return "ituContext.SetPhPicParameterSetId(ph_pic_parameter_set_id);";
+                case "sps_video_parameter_set_id":
+                    return "ituContext.OnSpsVideoParameterSetId(sps_video_parameter_set_id);";
                 case "sps_seq_parameter_set_id":
                     return "ituContext.SetSpsSeqParameterSetId(sps_seq_parameter_set_id);";
                 case "pps_seq_parameter_set_id":
@@ -416,12 +431,10 @@ namespace ItuGenerator.CSharp
 
                 case "general_timing_hrd_parameters":
                     return "ituContext.SetGeneralTimingHrdParameters(general_timing_hrd_parameters);";
-                case "vps_num_output_layer_sets_minus2":
-                    return "ituContext.OnVpsNumOutputLayerSetsMinus2();";
+                case "vps_max_layers_minus1":
+                    return "ituContext.OnVpsMaxLayersMinus1(this);";
                 case "vps_num_dpb_params_minus1":
                     return "ituContext.OnVpsNumDpbParamsMinus1();";
-                case "vps_ols_output_layer_flag":
-                    return "ituContext.OnVpsOlsOutputLayerFlag(j);";
                 case "vps_direct_ref_layer_flag":
                     return "ituContext.OnVpsDirectRefLayerFlag();";
                 case "alf_chroma_filter_signal_flag":
@@ -438,28 +451,32 @@ namespace ItuGenerator.CSharp
                     return "ituContext.OnPpsPicHeightInLumaSamples();";
                 case "sps_log2_min_luma_coding_block_size_minus2":
                     return "ituContext.OnSpsLog2MinLumaCodingBlockSizeMinus2();";
-                case "pps_tile_row_height_minus1": // TODO: not sure this is the right place
-                    return "ituContext.OnPpsTileRowHeightMinus1();";
-                case "st_ref_pic_flag": 
-                    return "ituContext.OnStRefPicFlag(listIdx, rplsIdx, this);";
+                case "pps_tile_row_height_minus1":
+                    return "ituContext.OnPpsTileRowHeightMinus1(i);";
+                case "pps_cabac_init_present_flag":
+                    // The first element after the PPS's partitioning.
+                    return "ituContext.OnPpsCabacInitPresentFlag();";
                 case "rpl_idx": 
                     return "ituContext.OnRplIdx(this, i);";
-                case "num_l0_weights": 
-                    return "ituContext.OnNumL0Weights(num_l0_weights);";
                 case "sh_num_ref_idx_active_minus1": 
                     return "ituContext.OnShNumRefIdxActiveMinus1();";
+                case "fixed_pic_rate_general_flag":
+                    return "ituContext.OnFixedPicRateGeneralFlag(this, i);";
+                case "sh_picture_header_in_slice_header_flag":
+                    // The first element of every slice header: the inferred values go in before
+                    // anything else is read.
+                    return "ituContext.OnShPictureHeaderInSliceHeaderFlag(this);";
+                case "ph_gdr_or_irap_pic_flag":
+                    return "ituContext.OnPhGdrOrIrapPicFlag(this);";
+                case "sps_ref_wraparound_enabled_flag":
+                    // The first element after the SPS's reference picture list structures.
+                    return "ituContext.OnSpsRefWraparoundEnabledFlag();";
                 case "sh_subpic_id": 
                     return "ituContext.OnShSubpicId(sh_subpic_id);";
                 case "pps_subpic_id": 
                     return "ituContext.OnPpsSubpicId();";
                 case "sps_extra_sh_bit_present_flag": 
                     return "ituContext.OnSpsExtraShBitPresentFlag();";
-                case "sh_slice_header_extension_data_byte": 
-                    return "ituContext.OnShSliceHeaderExtensionDataByte();";
-                case "sh_num_tiles_in_slice_minus1": 
-                    return "ituContext.OnShNumTilesInSliceMinus1();";
-                case "num_l1_weights": 
-                    return "ituContext.OnNumL1Weights(num_l1_weights);";
                 case "abs_delta_poc_st": 
                     return "ituContext.OnAbsDeltaPocSt(listIdx, rplsIdx, i, this);";
             }
@@ -479,6 +496,17 @@ namespace ItuGenerator.CSharp
 
         public string FixCondition(string condition, MethodType methodType)
         {
+            // The HRD messages are read only if they fit their payload, and otherwise as a reserved
+            // message; on writing, whichever of the two was read. Pic timing and DU information
+            // take their lengths from the buffering period, so without one they do not fit either.
+            foreach (var (type, name, className) in new[] { ("0", "buffering_period", "BufferingPeriod"), ("1", "pic_timing", "PicTiming"), ("130", "decoding_unit_info", "DecodingUnitInfo") })
+            {
+                if (condition.Replace(" ", "").Trim('(', ')') == "payloadType==" + type)
+                    return methodType == MethodType.Read
+                        ? $"( payloadType == {type} && ituContext.FitsItsPayload(stream, payloadSize, new {className}(payloadSize)) )"
+                        : $"( payloadType == {type} && this.{name} != null )";
+            }
+
             condition = condition.Replace("nal_unit_type != ", "nal_unit_type != H266NALTypes.");
             condition = condition.Replace("nal_unit_type == ", "nal_unit_type == H266NALTypes.");
             condition = condition.Replace("nal_unit_type >= ", "nal_unit_type >= H266NALTypes.");
@@ -498,6 +526,16 @@ namespace ItuGenerator.CSharp
             condition = condition.Replace("- sh_slice_address", "- (int)sh_slice_address");
 
             condition = condition.Replace("ALF_APS", "H266Constants.ALF_APS");
+
+            // A slice's size, where the PPS leaves it out, is inferred before it is tested.
+            if (condition.Contains("pps_slice_width_in_tiles_minus1[ i ]  ==  0"))
+                condition = "(ituContext.OnPpsSliceSize(this, i))";
+
+            // rpl_sps_flag[ i ] is inferred where not coded, and ref_pic_lists() tests it straight
+            // after, so the test is where the inference is made.
+            string bare = condition.Replace(" ", "").Replace("!=0", "").Trim('(', ')');
+            if (bare == "rpl_sps_flag[i]")
+                condition = condition.Replace("rpl_sps_flag[i]", "ituContext.InferRplSpsFlag(this, i)").Replace("rpl_sps_flag[ i ]", "ituContext.InferRplSpsFlag(this, i)");
             condition = condition.Replace("LMCS_APS", "H266Constants.LMCS_APS");
             condition = condition.Replace("SCALING_APS", "H266Constants.SCALING_APS");
 
@@ -519,11 +557,11 @@ namespace ItuGenerator.CSharp
 
         public string FixStatement(string fieldValue)
         {
+            fieldValue = fieldValue.Replace("= DiagScanOrder", "= (uint)DiagScanOrder");
             fieldValue = fieldValue.Replace("Abs(", "(uint)Math.Abs(");
             fieldValue = fieldValue.Replace("Min(", "(uint)Math.Min(");
             fieldValue = fieldValue.Replace("Max(", "(uint)Math.Max(");
 
-            fieldValue = fieldValue.Replace("/* LukasV added default */", "/* LukasV added default */;\r\nituContext.OnStRefPicFlag(listIdx, rplsIdx, this)");
             return fieldValue;
         }
 
@@ -581,6 +619,9 @@ namespace ItuGenerator.CSharp
                 { "st_ref_pic_flag",        null },
             };
 
+            if (parameter == "matrixSize")
+                return "i(32)";
+
             if (map.ContainsKey(parameter))
                 return map[parameter];
             else
@@ -589,9 +630,15 @@ namespace ItuGenerator.CSharp
 
         public string FixFieldValue(string fieldValue)
         {
-            fieldValue = fieldValue.Replace("scaling_list_dc_coef[ id - 14 ]", "(uint)scaling_list_dc_coef[ id - 14 ][ id ]");
+            fieldValue = fieldValue.Replace("scaling_list_dc_coef[ id - 14 ]", "(uint)scaling_list_dc_coef[ id - 14 ]");
             fieldValue = fieldValue.Replace("scaling_list_delta_coef[ id ][ i ]", "(uint)scaling_list_delta_coef[ id ][ i ]");
             return fieldValue;
+        }
+
+        public string GetLocalArrayInitializer(string name)
+        {
+            // ScalingList[ id ][ i ] (7.4.3.21), which scaling_list_data() fills as it reads.
+            return name == "ScalingList" ? "H266Context.NewScalingList()" : null;
         }
 
         public void FixMethodAllocation(string name, ref string method, ref string typedef)
@@ -604,8 +651,8 @@ namespace ItuGenerator.CSharp
             switch(parameter)
             {
                 case "sps_subpic_ctu_top_left_x":
+                case "sps_subpic_width_minus1": // horizontal, so by the width, as the spec has it
                     return "(uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_width_max_in_luma_samples + ituContext.CtbSizeY - 1 ) / ituContext.CtbSizeY ) )";
-                case "sps_subpic_width_minus1":
                 case "sps_subpic_height_minus1":
                 case "sps_subpic_ctu_top_left_y":
                     return "(uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_height_max_in_luma_samples + ituContext.CtbSizeY - 1 ) / ituContext.CtbSizeY ) )";
@@ -718,16 +765,25 @@ namespace ItuGenerator.CSharp
         {
             string ret;
 
+            if (variableName == "vps_pt_present_flag")
+                return $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};\r\n{spacing}this.vps_pt_present_flag[0] = 1; // inferred (7.4.3.3)";
+            if (variableName == "vps_ptl_max_tid")
+                return $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};\r\n{spacing}for (int k = 0; k < this.vps_ptl_max_tid.Length; k++) this.vps_ptl_max_tid[k] = vps_max_sublayers_minus1; // inferred (7.4.3.3)";
+            if (variableName == "vps_dpb_max_tid")
+                return $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};\r\n{spacing}for (int k = 0; k < this.vps_dpb_max_tid.Length; k++) this.vps_dpb_max_tid[k] = vps_max_sublayers_minus1; // inferred (7.4.3.3)";
+            if (variableName == "vps_hrd_max_tid")
+                return $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};\r\n{spacing}for (int k = 0; k < this.vps_hrd_max_tid.Length; k++) this.vps_hrd_max_tid[k] = vps_max_sublayers_minus1; // inferred (7.4.3.3)";
+
             if (variableName == "ref_pic_list_struct")
             {
                 if (variableType == "RefPicListStruct[ 2]")
-                    ret = "\r\nif (ituContext.num_ref_entries == null)\r\n                ituContext.num_ref_entries = new ulong[2][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1] };\r\n            if (ituContext.inter_layer_ref_pic_flag == null)\r\n                ituContext.inter_layer_ref_pic_flag = new byte[2][][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.st_ref_pic_flag == null)\r\n                ituContext.st_ref_pic_flag = new byte[2][][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.abs_delta_poc_st == null)\r\n                ituContext.abs_delta_poc_st = new ulong[2][][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.strp_entry_sign_flag == null)\r\n                ituContext.strp_entry_sign_flag = new byte[2][][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.rpls_poc_lsb_lt == null)\r\n                ituContext.rpls_poc_lsb_lt = new ulong[2][][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.ilrp_idx == null)\r\n                ituContext.ilrp_idx = new ulong[2][][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };";
+                    ret = "\r\nif (ituContext.num_ref_entries == null)\r\n                ituContext.num_ref_entries = new ulong[2][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1] };\r\n            if (ituContext.ltrp_in_header_flag == null)\r\n                ituContext.ltrp_in_header_flag = new byte[2][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1] };\r\n            if (ituContext.inter_layer_ref_pic_flag == null)\r\n                ituContext.inter_layer_ref_pic_flag = new byte[2][][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.st_ref_pic_flag == null)\r\n                ituContext.st_ref_pic_flag = new byte[2][][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.abs_delta_poc_st == null)\r\n                ituContext.abs_delta_poc_st = new ulong[2][][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.strp_entry_sign_flag == null)\r\n                ituContext.strp_entry_sign_flag = new byte[2][][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.rpls_poc_lsb_lt == null)\r\n                ituContext.rpls_poc_lsb_lt = new ulong[2][][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.ilrp_idx == null)\r\n                ituContext.ilrp_idx = new ulong[2][][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };";
                 else
-                    ret = "\r\nif (ituContext.num_ref_entries == null)\r\n                ituContext.num_ref_entries = new ulong[2][];\r\n            if (ituContext.inter_layer_ref_pic_flag == null)\r\n                ituContext.inter_layer_ref_pic_flag = new byte[2][][];\r\n            if (ituContext.st_ref_pic_flag == null)\r\n                ituContext.st_ref_pic_flag = new byte[2][][];\r\n            if (ituContext.abs_delta_poc_st == null)\r\n                ituContext.abs_delta_poc_st = new ulong[2][][];\r\n            if (ituContext.strp_entry_sign_flag == null)\r\n                ituContext.strp_entry_sign_flag = new byte[2][][];\r\n            if (ituContext.rpls_poc_lsb_lt == null)\r\n                ituContext.rpls_poc_lsb_lt = new ulong[2][][];\r\n            if (ituContext.ilrp_idx == null)\r\n                ituContext.ilrp_idx = new ulong[2][][];";
+                    ret = "\r\nituContext.num_ref_entries = new ulong[2][];\r\n            ituContext.ltrp_in_header_flag = new byte[2][];\r\n            ituContext.inter_layer_ref_pic_flag = new byte[2][][];\r\n            ituContext.st_ref_pic_flag = new byte[2][][];\r\n            ituContext.abs_delta_poc_st = new ulong[2][][];\r\n            ituContext.strp_entry_sign_flag = new byte[2][][];\r\n            ituContext.rpls_poc_lsb_lt = new ulong[2][][];\r\n            ituContext.ilrp_idx = new ulong[2][][];";
             }
             else if (variableName == "ref_pic_list_struct[ i ]")
             {
-                ret = "\r\nif (ituContext.num_ref_entries[i] == null)\r\n                    ituContext.num_ref_entries[i] = new ulong[sps_num_ref_pic_lists[i] + 1];\r\n                if (ituContext.inter_layer_ref_pic_flag[i] == null)\r\n                    ituContext.inter_layer_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (ituContext.st_ref_pic_flag[i] == null)\r\n                    ituContext.st_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (ituContext.abs_delta_poc_st[i] == null)\r\n                    ituContext.abs_delta_poc_st[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];\r\n                if (ituContext.strp_entry_sign_flag[i] == null)\r\n                    ituContext.strp_entry_sign_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (ituContext.rpls_poc_lsb_lt[i] == null)\r\n                    ituContext.rpls_poc_lsb_lt[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];\r\n                if (ituContext.ilrp_idx[i] == null)\r\n                    ituContext.ilrp_idx[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];";
+                ret = "\r\nituContext.num_ref_entries[i] = new ulong[sps_num_ref_pic_lists[i] + 1];\r\n                ituContext.ltrp_in_header_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1];\r\n                ituContext.inter_layer_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                ituContext.st_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                ituContext.abs_delta_poc_st[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];\r\n                ituContext.strp_entry_sign_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                ituContext.rpls_poc_lsb_lt[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];\r\n                ituContext.ilrp_idx[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];";
             }
             else if (variableName.StartsWith("sublayer_hrd_parameters"))
             {
@@ -786,8 +842,7 @@ namespace ItuGenerator.CSharp
                 appendType += "[]"; // TODO fix this workaround
             }
             else if (
-                variableName == "colour_transf_lut" ||
-                variableName == "scaling_list_dc_coef"
+                variableName == "colour_transf_lut"
                 )
             {
                 appendType += "[]"; // TODO fix this workaround
@@ -797,7 +852,12 @@ namespace ItuGenerator.CSharp
         }
 
         public void FixNestedIndexes(List<string> ret, ItuField field)
-        {         
+        {
+            // scaling_list_dc_coef[ id - 14 ] is indexed by the list alone, as the spec has it; the
+            // id loop it is read in adds no dimension.
+            if (field != null && field.Name == "scaling_list_dc_coef")
+                ret.RemoveAll(index => index.Replace(" ", "") == "[id]");
+
             if (field != null && (
                 field.Name == "ref_pic_list_struct" ||
                 field.Name == "sublayer_hrd_parameters"

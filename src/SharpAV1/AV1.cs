@@ -24,12 +24,30 @@ namespace SharpAV1
         /// </summary>
         public int SelectedOperatingPoint { get; set; } = 0;
 
-        private int obu_padding_length = 0;
+        /// <summary>
+        /// 1 to read the OBUs of every layer, rather than drop those outside the operating point
+        /// selected as a decoder does (7.1) - to look at a scalable stream whole.
+        /// </summary>
+        public int AllLayers { get; set; } = 0;
+
+        /// <summary>
+        /// Reject what a conforming stream cannot contain - a fixed bit of the wrong value, a
+        /// profile or tile index out of its range, a reference that is not there, a redundant
+        /// frame header that differs from the one it repeats - as ffmpeg's reader does, rather
+        /// than read on. Off by default: a stream is read as far as it can be.
+        /// </summary>
+        public bool Strict { get; set; }
+
         private int obu_size_len = 0;
         private int prevFrame;
 
         public byte[] LastObuFrameHeader { get; set; }
-        public int ObuSizeLen { get { return obu_size_len; } }
+        /// <summary>
+        /// The bits of the last OBU's obu_size - none when it coded no size. It kept the size of
+        /// the last OBU that did, and a caller working out where an OBU without one ends, or where
+        /// its payload starts, was that many bytes out.
+        /// </summary>
+        public int ObuSizeLen { get { return obu_has_size_field != 0 ? obu_size_len : 0; } }
 
         public int[] RefMiCols { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
         public int[] RefMiRows { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
@@ -41,9 +59,11 @@ namespace SharpAV1
         public int[] RefUpscaledWidth { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
         public int[] Remap_Lr_Type { get; set; } = new int[] { AV1FrameRestorationType.RESTORE_NONE, AV1FrameRestorationType.RESTORE_SWITCHABLE, AV1FrameRestorationType.RESTORE_WIENER, AV1FrameRestorationType.RESTORE_SGRPROJ };
         public int[] Ref_Frame_List = { AV1RefFrames.LAST2_FRAME, AV1RefFrames.LAST3_FRAME, AV1RefFrames.BWDREF_FRAME, AV1RefFrames.ALTREF2_FRAME, AV1RefFrames.ALTREF_FRAME };
-        public int[] Segmentation_Feature_Bits { get; set; } = new int[AV1Constants.SEG_LVL_MAX];
-        public int[] Segmentation_Feature_Max { get; set; } = new int[AV1Constants.SEG_LVL_MAX];
-        public int[] Segmentation_Feature_Signed { get; set; } = new int[AV1Constants.SEG_LVL_MAX];
+        // The segmentation features' widths, ranges and signs (5.9.14). They were left all zero,
+        // so no feature value was ever read, and everything after one out of step.
+        public int[] Segmentation_Feature_Bits { get; set; } = [8, 6, 6, 6, 6, 3, 0, 0];
+        public int[] Segmentation_Feature_Max { get; set; } = [255, AV1Constants.MAX_LOOP_FILTER, AV1Constants.MAX_LOOP_FILTER, AV1Constants.MAX_LOOP_FILTER, AV1Constants.MAX_LOOP_FILTER, 7, 0, 0];
+        public int[] Segmentation_Feature_Signed { get; set; } = [1, 1, 1, 1, 1, 0, 0, 0];
 
         public int[][] PrevSegmentIds { get; set; } = new int[AV1Constants.NUM_REF_FRAMES][] { new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8] };
         public int[][][] SavedSegmentIds { get; set; } = new int[AV1Constants.NUM_REF_FRAMES][][] {
@@ -104,7 +124,55 @@ namespace SharpAV1
         public void Read(AomStream stream, int size)
         {
             this.stream = stream ?? throw new ArgumentNullException(nameof(stream));
+            if (Strict)
+                stream.Validate = CheckValue;
             OpenBitstreamUnit(size);
+        }
+
+        /// <summary>
+        /// Which reference slots a frame has been stored in: what a frame that refers to one needs.
+        /// Not RefValid, which an error resilient frame expecting other order hints clears too.
+        /// Marked as soon as the frame header says which slots the frame refreshes, as ffmpeg
+        /// marks them: in a broken stream, the tile groups after it may never come.
+        /// </summary>
+        private readonly bool[] refFilled = new bool[AV1Constants.NUM_REF_FRAMES];
+
+        /// <summary>The checks of <see cref="Strict"/> on the elements they concern.</summary>
+        private void CheckValue(string name, long value)
+        {
+            bool valid = name switch
+            {
+                "obu_forbidden_bit" or "zero_bit" => value == 0,
+                "trailing_one_bit" => value == 1,
+                "seq_profile" => value <= 2,
+                // leb128() values are at most 2^32 - 1 (4.10.5).
+                "obu_size" or "metadata_type" => value <= uint.MaxValue,
+                "tg_start" => value < NumTiles,
+                "tg_end" => value >= tg_start && value < NumTiles,
+                // The element is read in the loop over i, the reference it names ref_frame_idx[ i ].
+                "found_ref" => value == 0 || refFilled[ref_frame_idx[i]],
+                "frame_to_show_map_idx" => refFilled[value],
+                _ => true,
+            };
+
+            if (!valid)
+                throw new InvalidDataException($"{name} of {value} is not allowed here.");
+
+            // refresh_frame_flags is allFrames, not coded, for a switch frame and a shown key frame,
+            // and a key frame shown again refreshes every slot too (7.21).
+            if (name == "refresh_frame_flags")
+                MarkFilled(value);
+            else if (name == "show_frame" && (frame_type == AV1FrameTypes.SWITCH_FRAME || (value == 1 && frame_type == AV1FrameTypes.KEY_FRAME)))
+                MarkFilled(0xFF);
+            else if (name == "frame_to_show_map_idx" && RefFrameType[value] == AV1FrameTypes.KEY_FRAME)
+                MarkFilled(0xFF);
+        }
+
+        private void MarkFilled(long flags)
+        {
+            for (int slot = 0; slot < AV1Constants.NUM_REF_FRAMES; slot++)
+                if (((flags >> slot) & 1) != 0)
+                    refFilled[slot] = true;
         }
 
         public static int Clip3(int low, int high, int value)
@@ -112,11 +180,30 @@ namespace SharpAV1
             return MathEx.Clamp(value, low, high);
         }
 
+        /// <summary>
+        /// get_qindex (7.12.2): the quantizer index a segment is coded with. The frame header asks
+        /// for it to decide which segments are lossless, and a lossless frame codes no loop filter
+        /// or CDEF parameters - so a stub that never returned 0 read those that were not there.
+        /// </summary>
         private int GetQIndex(int ignoreDeltaQ, int segmentId)
         {
-            // This is a stub for the quantizer index retrieval logic.
-            // In a complete implementation, this would retrieve the quantizer index based on the segment ID.
-            return ignoreDeltaQ;
+            // CurrentQIndex only moves while tiles are decoded; in the headers it is base_q_idx.
+            int currentQIndex = base_q_idx;
+
+            if (segmentation_enabled != 0 && FeatureEnabled[segmentId][AV1Constants.SEG_LVL_ALT_Q] != 0)
+            {
+                int data = FeatureData[segmentId][AV1Constants.SEG_LVL_ALT_Q];
+                int qindex = base_q_idx + data;
+                if (ignoreDeltaQ == 0 && delta_q_present == 1)
+                    qindex = currentQIndex + data;
+
+                return Clip3(0, 255, qindex);
+            }
+
+            if (ignoreDeltaQ == 0 && delta_q_present == 1)
+                return currentQIndex;
+
+            return base_q_idx;
         }
 
         private void DropObu() 
@@ -124,14 +211,20 @@ namespace SharpAV1
             /* nothing */
         }
 
+        /// <summary>
+        /// set_frame_refs (7.8). The loops count with variables of their own: they shared the
+        /// class's i, which the find_* helpers left at NUM_REF_FRAMES, so only LAST2_FRAME was
+        /// looked for among the forward references and the rest took the earliest frame - and
+        /// skip_mode_present was read where a decoder does not.
+        /// </summary>
         private void SetFrameRefs() 
         {
-            for (i = 0; i < AV1Constants.REFS_PER_FRAME; i++)
+            for (int i = 0; i < AV1Constants.REFS_PER_FRAME; i++)
                 ref_frame_idx[i] = -1;
             ref_frame_idx[AV1RefFrames.LAST_FRAME - AV1RefFrames.LAST_FRAME] = last_frame_idx;
             ref_frame_idx[AV1RefFrames.GOLDEN_FRAME - AV1RefFrames.LAST_FRAME] = gold_frame_idx;
 
-            for (i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
+            for (int i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
                 usedFrame[i] = 0;
 
             usedFrame[last_frame_idx] = 1;
@@ -139,7 +232,7 @@ namespace SharpAV1
 
             curFrameHint = 1 << (OrderHintBits - 1);
 
-            for (i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
+            for (int i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
                 shiftedOrderHints[i] = curFrameHint + GetRelativeDist(RefOrderHint[i], OrderHint);
 
             lastOrderHint = shiftedOrderHints[last_frame_idx];
@@ -166,7 +259,7 @@ namespace SharpAV1
                 usedFrame[refc] = 1;
             }
 
-            for (i = 0; i < AV1Constants.REFS_PER_FRAME - 2; i++)
+            for (int i = 0; i < AV1Constants.REFS_PER_FRAME - 2; i++)
             {
                 refFrame = Ref_Frame_List[i];
                 if (ref_frame_idx[refFrame - AV1RefFrames.LAST_FRAME] < 0)
@@ -181,7 +274,7 @@ namespace SharpAV1
             }
 
             refc = -1;
-            for (i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
+            for (int i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
             {
                 hint = shiftedOrderHints[i];
                 if (refc < 0 || hint < earliestOrderHint)
@@ -190,7 +283,7 @@ namespace SharpAV1
                     earliestOrderHint = hint;
                 }
             }
-            for (i = 0; i < AV1Constants.REFS_PER_FRAME; i++)
+            for (int i = 0; i < AV1Constants.REFS_PER_FRAME; i++)
             {
                 if (ref_frame_idx[i] < 0)
                 {
@@ -202,7 +295,7 @@ namespace SharpAV1
         private int FindLatestForward()
         {
             refc = -1;
-            for (i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
+            for (int i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
             {
                 hint = shiftedOrderHints[i];
                 if (usedFrame[i] == 0 &&
@@ -219,7 +312,7 @@ namespace SharpAV1
         private int FindEarliestBackward()
         {
             refc = -1;
-            for (i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
+            for (int i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
             {
                 hint = shiftedOrderHints[i];
                 if (usedFrame[i] == 0 &&
@@ -236,7 +329,7 @@ namespace SharpAV1
         private int FindLatestBackward()
         {
             refc = -1;
-            for (i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
+            for (int i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
             {
                 hint = shiftedOrderHints[i];
                 if (usedFrame[i] == 0 &&
@@ -257,20 +350,20 @@ namespace SharpAV1
             update_grain = 0;
             film_grain_params_ref_idx = 0;
             num_y_points = 0;
-            for (int i = 0; i < 14; i++)
+            for (int i = 0; i < point_y_value.Length; i++)
             {
                 point_y_value[i] = 0;
                 point_y_scaling[i] = 0;
             }
             chroma_scaling_from_luma = 0;
             num_cb_points = 0;
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < point_cb_value.Length; i++)
             {
                 point_cb_value[i] = 0;
                 point_cb_scaling[i] = 0;
             }
             num_cr_points = 0;
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < point_cr_value.Length; i++)
             {
                 point_cr_value[i] = 0;
                 point_cr_scaling[i] = 0;
@@ -326,7 +419,11 @@ namespace SharpAV1
         private void LoadPrevious() 
         {
             prevFrame = ref_frame_idx[primary_ref_frame];
-            PrevGmParams = SavedGmParams[prevFrame];
+
+            // A copy: taking the saved array itself, setup_past_independence() in a later frame
+            // wrote its defaults over what that reference frame had saved.
+            for (int r = AV1RefFrames.LAST_FRAME; r <= AV1RefFrames.ALTREF_FRAME; r++)
+                Array.Copy(SavedGmParams[prevFrame][r], PrevGmParams[r], 6);
             LoadLoopFilterParams(prevFrame);
             LoadSegmentationParams(prevFrame);
         }
@@ -403,26 +500,68 @@ namespace SharpAV1
             /* nothing - needed for the decoding */
         }
 
-        private void ItutT35PayloadBytes() 
+        /// <summary>The ITU-T T.35 payload of the last metadata OBU that had one - HDR10+, for one.</summary>
+        public byte[] ItutT35Payload { get; private set; }
+
+        /// <summary>
+        /// itu_t_t35_payload_bytes: the rest of the OBU, up to its trailing bits. The syntax gives
+        /// no length, so it is where the trailing one bit is - the last byte that is not zero,
+        /// 0x80, the payload being whole bytes. Read as nothing, as it was, the payload was taken
+        /// for trailing bits, and those ran on past the end of the OBU.
+        /// </summary>
+        private void ItutT35PayloadBytes()
         {
-            /* nothing - needed for the decoding */
+            stream.ReadBytes(PayloadBytesBeforeTrailingBits() * 8, out byte[] payload, "itu_t_t35_payload_bytes");
+            ItutT35Payload = payload;
         }
 
+        /// <summary>The payload of the last metadata OBU of a type the syntax does not know.</summary>
+        public byte[] UnknownMetadataPayload { get; private set; }
+
+        private void MetadataUnknownPayload()
+        {
+            stream.ReadBytes(PayloadBytesBeforeTrailingBits() * 8, out byte[] payload, "payload");
+            UnknownMetadataPayload = payload;
+        }
+
+        /// <summary>
+        /// How many whole bytes the OBU has left before its trailing bits: up to the last byte that
+        /// is not zero, which - what comes before being whole bytes - is the 0x80 its trailing one
+        /// bit starts. Worked out by reading ahead, without reading on.
+        /// </summary>
+        private int PayloadBytesBeforeTrailingBits()
+        {
+            long remainingBits = (long)obu_size * 8 - (stream.GetPosition() - startPosition);
+            var baseStream = stream.Bitstream.BaseStream;
+            if (remainingBits <= 0 || stream.GetPosition() % 8 != 0 || !baseStream.CanSeek)
+                return 0;
+
+            // Byte aligned, so the underlying stream is at the next byte to read.
+            var rest = new byte[remainingBits / 8];
+            long position = baseStream.Position;
+            int read = 0;
+            while (read < rest.Length)
+            {
+                int count = baseStream.Read(rest, read, rest.Length - read);
+                if (count <= 0)
+                    break;
+                read += count;
+            }
+            baseStream.Position = position;
+
+            int trailing = read > 0 ? Array.FindLastIndex(rest, read - 1, read, b => b != 0) : -1;
+            return Math.Max(0, trailing);
+        }
+
+        /// <summary>
+        /// load_previous_segment_ids (7.20): the segment map of the frame predicted from. The map
+        /// comes of decoding tiles, which a header parser does not, so there is none to load. This
+        /// used to copy one the size of the current frame from arrays sized for none, and to
+        /// overwrite the size recorded for the reference frame with the current one's.
+        /// </summary>
         private void LoadPreviousSegmentIds()
         {
             prevFrame = ref_frame_idx[primary_ref_frame];
-            if (segmentation_enabled == 1)
-            {
-                RefMiCols[prevFrame] = MiCols;
-                RefMiRows[prevFrame] = MiRows;
-                for (int row = 0; row < MiRows; row++)
-                {
-                    for (int col = 0; col < MiCols; col++)
-                    {
-                        PrevSegmentIds[row][col] = SavedSegmentIds[prevFrame][row][col];
-                    }
-                }
-            }
         }
 
         private void MarkRefFrames(int idLen) 
@@ -443,7 +582,65 @@ namespace SharpAV1
             }
         }
 
-        private void DecodeFrameWrapup() 
+        /// <summary>
+        /// Whether this frame's references were refreshed when its header ended, not to be again.
+        /// </summary>
+        private bool referencesRefreshed;
+
+        /// <summary>How many bits the last frame header took: what a redundant copy of it takes.</summary>
+        private int lastFrameHeaderBits;
+
+        /// <summary>Whether a redundant frame header is being read again from the one it copies.</summary>
+        private bool readingCopy;
+
+        /// <summary>
+        /// Where the frame header ends. With <see cref="Strict"/>, the references are refreshed
+        /// here, as ffmpeg's reader refreshes them: a frame it rejects past its header - a trailing
+        /// bit, a tile group - has refreshed them all the same, and the frames after it are read
+        /// against those. The spec refreshes them in decode_frame_wrapup(), once the frame is
+        /// decoded; in a conforming stream both come to the same.
+        /// </summary>
+        private void FrameHeaderDone()
+        {
+            if (readingCopy)
+                return;
+
+            lastFrameHeaderBits = stream.GetPosition() - startPosition;
+            if (Strict && show_existing_frame == 0)
+            {
+                RefreshReferences();
+                referencesRefreshed = true;
+            }
+        }
+
+        private void DecodeFrameWrapup()
+        {
+            // A key frame shown again is loaded first (7.21), and every reference then refreshed
+            // from it. Without the loading, every slot took the order hint, size and parameters of
+            // whatever frame came before - and the frames after read skip_mode_present, which
+            // depends on the references' order hints, or did not, by those.
+            if (show_existing_frame == 1 && frame_type == AV1FrameTypes.KEY_FRAME)
+            {
+                int shown = frame_to_show_map_idx;
+                current_frame_id = RefFrameId[shown];
+                UpscaledWidth = RefUpscaledWidth[shown];
+                FrameHeight = RefFrameHeight[shown];
+                RenderWidth = RefRenderWidth[shown];
+                RenderHeight = RefRenderHeight[shown];
+                OrderHint = RefOrderHint[shown];
+                for (int ri = AV1RefFrames.LAST_FRAME; ri <= AV1RefFrames.ALTREF_FRAME; ri++)
+                    Array.Copy(SavedGmParams[shown][ri], gm_params[ri], 6);
+                LoadLoopFilterParams(shown);
+                LoadSegmentationParams(shown);
+            }
+
+            if (referencesRefreshed)
+                referencesRefreshed = false;
+            else
+                RefreshReferences();
+        }
+
+        private void RefreshReferences()
         {
             for (int i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
             {
@@ -457,7 +654,10 @@ namespace SharpAV1
                     RefRenderHeight[i] = RenderHeight;
                     RefFrameType[i] = frame_type;
                     
-                    for (int ri = AV1RefFrames.LAST_FRAME; ri < AV1RefFrames.ALTREF_FRAME; ri++)
+                    // Every reference, ALTREF_FRAME too (7.20): stopping short of it, a frame
+                    // predicting ALTREF_FRAME's global motion read against zeros, not what the
+                    // frame it refers to had.
+                    for (int ri = AV1RefFrames.LAST_FRAME; ri <= AV1RefFrames.ALTREF_FRAME; ri++)
                     {
                         for (int j = 0; j <= 5; j++)
                         {
@@ -487,18 +687,48 @@ namespace SharpAV1
 
         private void FrameHeaderCopy()
         {
-            using (var aomStream = new AomStream(new MemoryStream(LastObuFrameHeader)))
+            if (LastObuFrameHeader == null)
+                throw new InvalidDataException("A redundant frame header with no frame header before it.");
+
+            // With Strict, the references were refreshed when the header ended: read again against
+            // them, the header would not take the bits it took. The copy is the header's bits.
+            int bits = lastFrameHeaderBits;
+            if (!Strict)
             {
+                using var aomStream = new AomStream(new MemoryStream(LastObuFrameHeader));
                 var oldStream = this.stream;
                 var oldSeenFrameHeader = SeenFrameHeader;
                 var oldObuType = _ObuType;
                 SeenFrameHeader = 0;
                 this.stream = aomStream;
-                FrameHeaderObu();
-                SeenFrameHeader = oldSeenFrameHeader;
-                _ObuType = oldObuType;
-                this.stream = oldStream;
+                readingCopy = true;
+                try
+                {
+                    FrameHeaderObu();
+                }
+                finally
+                {
+                    readingCopy = false;
+                    SeenFrameHeader = oldSeenFrameHeader;
+                    _ObuType = oldObuType;
+                    this.stream = oldStream;
+                }
+                bits = aomStream.GetPosition();
             }
+
+            // The copy is in this OBU too, as many bits as the header it copies: read over them.
+            // Left where they were, they were read as the OBU's trailing bits.
+            byte[] copy = [];
+            if (bits >= 8)
+                this.stream.ReadBytes(bits / 8 * 8, out copy, "frame_header_copy");
+            int rest = 0;
+            if (bits % 8 > 0)
+                this.stream.ReadFixed(bits % 8, out rest, "frame_header_copy");
+
+            // A redundant frame header is a copy of the one it repeats (6.8.1).
+            if (Strict && (!copy.AsSpan().SequenceEqual(LastObuFrameHeader.AsSpan(0, copy.Length)) ||
+                (bits % 8 > 0 && rest != LastObuFrameHeader[bits / 8] >> (8 - bits % 8))))
+                throw new InvalidDataException("A redundant frame header that differs from the frame header it repeats.");
         }
     }
 

@@ -2410,11 +2410,18 @@ slice_segment_header() {
                     slice_ic_disabled_merge_zero_idx_flag u(1)
             }  
             five_minus_max_num_merge_cand ue(v)
+            if( motion_vector_resolution_control_idc == 2 )
+                use_integer_mv_flag u(1)
         }  
         slice_qp_delta se(v)
         if (pps_slice_chroma_qp_offsets_present_flag) {  
             slice_cb_qp_offset se(v) 
             slice_cr_qp_offset se(v)
+        }
+        if( pps_slice_act_qp_offsets_present_flag ) {
+            slice_act_y_qp_offset se(v)
+            slice_act_cb_qp_offset se(v)
+            slice_act_cr_qp_offset se(v)
         }
         if (chroma_qp_offset_list_enabled_flag)  
             cu_chroma_qp_offset_enabled_flag u(1)

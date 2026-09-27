@@ -196,6 +196,13 @@ namespace SharpMP4.Tracks
                     {
                         if (this.Logger.IsDebugEnabled) this.Logger.LogDebug("OBU Frame");
 
+                        // A redundant frame header may repeat the header of a frame OBU as well as
+                        // that of a frame header OBU. The copy reads only the header's syntax, so
+                        // the tile group after it does no harm.
+                        _context.LastObuFrameHeader = CopyOf(buffer,
+                            offset + 1 /* obu header */ + (_context._ObuExtensionFlag != 0 ? 1 : 0) /* obu extension */ + (_context.ObuSizeLen >> 3),
+                            _context._ObuSize);
+
                         AppendToSample(buffer, offset, length);
 
                         if(_context._FrameType == AV1FrameTypes.KEY_FRAME && _context._ShowFrame != 0)

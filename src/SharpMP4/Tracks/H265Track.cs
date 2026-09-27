@@ -112,6 +112,14 @@ namespace SharpMP4.Tracks
                 _context.NalHeader = nu;
                 ituSize += nu.Read(_context, stream);
 
+                // Decoders ignore NAL units with nuh_layer_id 63 (7.4.2.2): what they carry is not
+                // this specification's to parse (LAYERID63_A puts random data there).
+                if (nu.NalUnitHeader.NuhLayerId == 63)
+                {
+                    AppendNalUnit(buffer, offset, length);
+                    return;
+                }
+
                 if (nu.NalUnitHeader.NalUnitType == H265NALTypes.AUD_NUT)
                 {
                     // access unit delimiter NAL unit with nuh_layer_id equal to 0(when present)

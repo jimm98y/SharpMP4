@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using SharpH26X;
 
 namespace SharpH266
 {
@@ -64,12 +67,60 @@ namespace SharpH266
 
     public partial class H266Context
     {
+        /// <summary>
+        /// DiagScanOrder[ log2BlockWidth ][ log2BlockHeight ][ sPos ][ sComp ] (6.5.2): the up-right
+        /// diagonal scan of each block size, x then y.
+        /// </summary>
+        public static readonly int[][][][] DiagScanOrder = BuildDiagScanOrder();
+
+        private static int[][][][] BuildDiagScanOrder()
+        {
+            var order = new int[6][][][];
+            for (int log2W = 0; log2W < 6; log2W++)
+            {
+                order[log2W] = new int[6][][];
+                for (int log2H = 0; log2H < 6; log2H++)
+                {
+                    int width = 1 << log2W, height = 1 << log2H;
+                    var scan = new int[width * height][];
+                    int i = 0, x = 0, y = 0;
+                    bool stop = false;
+                    while (!stop)
+                    {
+                        while (y >= 0)
+                        {
+                            if (x < width && y < height)
+                                scan[i++] = [x, y];
+                            y--;
+                            x++;
+                        }
+                        y = x;
+                        x = 0;
+                        if (i >= width * height)
+                            stop = true;
+                    }
+                    order[log2W][log2H] = scan;
+                }
+            }
+            return order;
+        }
+
+        /// <summary>ScalingList[ id ][ i ]: 28 lists of up to 64 coefficients.</summary>
+        public static uint[][] NewScalingList()
+        {
+            var list = new uint[28][];
+            for (int id = 0; id < 28; id++)
+                list[id] = new uint[64];
+            return list;
+        }
+
         internal byte[][] cbr_flag;
         internal ulong[][] bit_rate_du_value_minus1;
         internal ulong[][] cpb_size_du_value_minus1;
         internal ulong[][] bit_rate_value_minus1;
         internal ulong[][] cpb_size_value_minus1;
         internal ulong[][] num_ref_entries;
+        internal byte[][] ltrp_in_header_flag;
         internal byte[][][] inter_layer_ref_pic_flag;
         internal byte[][][] st_ref_pic_flag;
         internal ulong[][][] abs_delta_poc_st;
@@ -105,7 +156,7 @@ namespace SharpH266
         public uint CtbSizeY { get; set; }
         public ulong MaxNumMergeCand { get; set; }
         public int NumExtraPhBits { get; set; }
-        public int NumAlfFilters { get; set; }
+        public int NumAlfFilters { get; set; } = 25; // a constant (7.4.3.18); it was set only when chroma filters were signalled
         public ulong LmcsMaxBinIdx { get; set; }
         public uint PicWidthInCtbsY { get; set; }
         public uint PicHeightInCtbsY { get; set; }
@@ -149,7 +200,35 @@ namespace SharpH266
         public uint[] NumSlicesInSubpic { get; set; }
         public int[] SubpicIdxForSlice { get; set; }
         public uint[] SubpicLevelSliceIdx { get; set; }
-        public uint[][] NumLtrpEntries { get; set; }
+        /// <summary>
+        /// NumLtrpEntries[ listIdx ][ rplsIdx ] (7.4.10): the long-term entries of each reference
+        /// picture list structure, counted from the tables as they are now.
+        /// </summary>
+        public uint[][] NumLtrpEntries
+        {
+            get
+            {
+                var counts = new uint[2][];
+                for (int listIdx = 0; listIdx < 2; listIdx++)
+                {
+                    var entries = num_ref_entries?[listIdx];
+                    counts[listIdx] = new uint[entries?.Length ?? 0];
+                    for (int rplsIdx = 0; rplsIdx < counts[listIdx].Length; rplsIdx++)
+                    {
+                        var interLayer = inter_layer_ref_pic_flag?[listIdx]?[rplsIdx];
+                        var shortTerm = st_ref_pic_flag?[listIdx]?[rplsIdx];
+                        for (ulong i = 0; i < entries[rplsIdx]; i++)
+                        {
+                            bool isInterLayer = interLayer != null && interLayer[i] != 0;
+                            bool isShortTerm = shortTerm != null && shortTerm[i] != 0;
+                            if (!isInterLayer && !isShortTerm)
+                                counts[listIdx][rplsIdx]++;
+                        }
+                    }
+                }
+                return counts;
+            }
+        }
         public ulong[] RplsIdx { get; set; } = new ulong[2];
         public ulong NumWeightsL0 { get; set; }
         public ulong[] NumRefIdxActive { get; set; }
@@ -228,22 +307,55 @@ namespace SharpH266
                 SeiPayload.UserDataUnregistered = payload.UserDataUnregistered;
         }
 
-        public void OnVpsNumOutputLayerSetsMinus2()
+        /// <summary>
+        /// Several VPS flags are coded only in some VPSs, and inferred otherwise (7.4.3.3):
+        /// vps_default_ptl_dpb_hrd_max_tid_flag and vps_all_independent_layers_flag are 1,
+        /// vps_each_layer_is_an_ols_flag is 1 with one layer, 0 else, and vps_ols_mode_idc is 2.
+        /// Left 0, a VPS with one sublayer read vps_ptl_max_tid that was not there, and one with
+        /// independent layers but no OLS per layer skipped its output layer sets.
+        /// </summary>
+        public void OnVpsMaxLayersMinus1(VideoParameterSetRbsp vps)
         {
-            var vps_each_layer_is_an_ols_flag = VideoParameterSetRbsp.VpsEachLayerIsAnOlsFlag;
-            var vps_ols_mode_idc = VideoParameterSetRbsp.VpsOlsModeIdc;
-            var vps_max_layers_minus1 = VideoParameterSetRbsp.VpsMaxLayersMinus1;
-            var vps_num_output_layer_sets_minus2 = VideoParameterSetRbsp.VpsNumOutputLayerSetsMinus2;
+            vps.VpsDefaultPtlDpbHrdMaxTidFlag = 1;
+            vps.VpsAllIndependentLayersFlag = 1;
+            vps.VpsEachLayerIsAnOlsFlag = (byte)(vps.VpsMaxLayersMinus1 == 0 ? 1 : 0);
+            vps.VpsOlsModeIdc = 2;
+        }
 
-            if (vps_each_layer_is_an_ols_flag == 0)
-                olsModeIdc = vps_ols_mode_idc;
-            else
-                olsModeIdc = 4;
+        /// <summary>
+        /// TotalNumOlss (7-36), worked out where it is used: it was set only when
+        /// vps_num_output_layer_sets_minus2 was coded, and kept the last VPS's value otherwise.
+        /// </summary>
+        public uint DeriveTotalNumOlss()
+        {
+            var vps = VideoParameterSetRbsp;
+            if (vps == null)
+                return 1;
 
+            olsModeIdc = vps.VpsEachLayerIsAnOlsFlag == 0 ? vps.VpsOlsModeIdc : 4;
             if (olsModeIdc == 4 || olsModeIdc == 0 || olsModeIdc == 1)
-                TotalNumOlss = vps_max_layers_minus1 + 1;
+                TotalNumOlss = vps.VpsMaxLayersMinus1 + 1;
             else if (olsModeIdc == 2)
-                TotalNumOlss = vps_num_output_layer_sets_minus2 + 2;
+                TotalNumOlss = vps.VpsNumOutputLayerSetsMinus2 + 2;
+            return TotalNumOlss;
+        }
+
+        /// <summary>
+        /// Whether an SEI message can be read within its payloadSize, read ahead. A buffering period
+        /// that signals VCL parameters but carries only the NAL ones (HRD_B_2) ran past the NAL
+        /// unit, and the pic timing after it had no buffering period to take its lengths from.
+        /// </summary>
+        public bool FitsItsPayload(ItuStream stream, ulong payloadSize, IItuSerializable message)
+        {
+            using var ahead = stream.Lookahead();
+            try
+            {
+                return message.Read(this, ahead) <= payloadSize * 8;
+            }
+            catch (Exception)
+            {
+                return false; // read past the end, or into values nothing could hold
+            }
         }
 
         public void OnVpsNumDpbParamsMinus1()
@@ -262,6 +374,10 @@ namespace SharpH266
             var vps_max_layers_minus1 = VideoParameterSetRbsp.VpsMaxLayersMinus1;
             var vps_direct_ref_layer_flag = VideoParameterSetRbsp.VpsDirectRefLayerFlag;
             var vps_layer_id = VideoParameterSetRbsp.VpsLayerId;
+
+            // Worked out at every flag, so the rows of the layers not read yet are 0 so far.
+            uint Direct(int i, int j) =>
+                vps_direct_ref_layer_flag?[i] != null && j < vps_direct_ref_layer_flag[i].Length ? vps_direct_ref_layer_flag[i][j] : 0u;
 
             uint[][] dependencyFlag = new uint[vps_max_layers_minus1 + 1][];
             for (int i = 0; i < dependencyFlag.Length; i++)
@@ -291,16 +407,17 @@ namespace SharpH266
                 NumDirectRefLayers = new int[vps_max_layers_minus1 + 1];
             if (NumRefLayers == null || NumRefLayers.Length < vps_max_layers_minus1 + 1)
                 NumRefLayers = new int[vps_max_layers_minus1 + 1];
-            if (GeneralLayerIdx == null || GeneralLayerIdx.Length < vps_max_layers_minus1 + 1)
-                GeneralLayerIdx = new int[vps_max_layers_minus1 + 1];
+            // Indexed by nuh_layer_id, up to 63, not by the count of layers.
+            if (GeneralLayerIdx == null || GeneralLayerIdx.Length < 64)
+                GeneralLayerIdx = new int[64];
 
             for (int i = 0; i <= vps_max_layers_minus1; i++)
             {
                 for (int j = 0; j <= vps_max_layers_minus1; j++)
                 {
-                    dependencyFlag[i][j] = vps_direct_ref_layer_flag[i][j];
+                    dependencyFlag[i][j] = Direct(i, j);
                     for (int k = 0; k < i; k++)
-                        if (vps_direct_ref_layer_flag[i][k] != 0 && dependencyFlag[k][j] != 0)
+                        if (Direct(i, k) != 0 && dependencyFlag[k][j] != 0)
                             dependencyFlag[i][j] = 1;
                 }
                 LayerUsedAsRefLayerFlag[i] = 0;
@@ -311,7 +428,7 @@ namespace SharpH266
                 int d = 0, r = 0;
                 for (int j = 0; j <= vps_max_layers_minus1; j++)
                 {
-                    if (vps_direct_ref_layer_flag[i][j] != 0)
+                    if (Direct(i, j) != 0)
                     {
                         DirectRefLayerIdx[i][d++] = j;
                         LayerUsedAsRefLayerFlag[j] = 1;
@@ -327,147 +444,169 @@ namespace SharpH266
                 GeneralLayerIdx[vps_layer_id[i]] = i;
         }
 
-        public void OnVpsOlsOutputLayerFlag(uint jj)
-        {
-            var vps_layer_id = VideoParameterSetRbsp.VpsLayerId;
-            var vps_ptl_max_tid = VideoParameterSetRbsp.VpsPtlMaxTid;
-            var vps_ols_ptl_idx = VideoParameterSetRbsp.VpsOlsPtlIdx;
-            var vps_max_layers_minus1 = VideoParameterSetRbsp.VpsMaxLayersMinus1;
-            var vps_ols_mode_idc = VideoParameterSetRbsp.VpsOlsModeIdc;
-            var vps_each_layer_is_an_ols_flag = VideoParameterSetRbsp.VpsEachLayerIsAnOlsFlag;
-            var vps_max_tid_il_ref_pics_plus1 = VideoParameterSetRbsp.VpsMaxTidIlRefPicsPlus1;
-            var vps_direct_ref_layer_flag = VideoParameterSetRbsp.VpsDirectRefLayerFlag;
-            var vps_ols_output_layer_flag = VideoParameterSetRbsp.VpsOlsOutputLayerFlag;
+        /// <summary>
+        /// The output layer sets (7-37 to 7-41), worked out where NumMultiLayerOlss is used, after
+        /// every element they take is read. They were worked out at each vps_ols_output_layer_flag,
+        /// coded only when vps_ols_mode_idc is 2, and before the profile indices they take.
+        /// </summary>
+        /// <summary>
+        /// Reject what a conforming stream cannot contain, as ffmpeg's reader does, rather than
+        /// read on: an output layer set without an output layer, and so the VPS it is in, and the
+        /// parameter sets and pictures that depend on a set rejected. Off by default.
+        /// </summary>
+        public bool Strict { get; set; }
 
-            if (NumOutputLayersInOls == null || NumOutputLayersInOls.Length < TotalNumOlss)
-                NumOutputLayersInOls = new uint[TotalNumOlss];
-            if (OutputLayerIdInOls == null || OutputLayerIdInOls.Length < TotalNumOlss)
+        private readonly HashSet<ulong> rejectedVps = new HashSet<ulong>();
+
+        /// <summary>
+        /// With <see cref="Strict"/>, the checks on the output layer sets once they are worked out:
+        /// NumOutputLayersInOls[ i ] is at least 1 for every OLS (7.4.3.3), and a VPS without an
+        /// OLS per layer has an OLS of more than one layer.
+        /// </summary>
+        private void CheckOls(VideoParameterSetRbsp vps, uint total)
+        {
+            for (int i = 1; i < total; i++)
             {
-                OutputLayerIdInOls = new uint[TotalNumOlss][];
-                OutputLayerIdInOls[0] = new uint[1];
-            }
-            if (NumSubLayersInLayerInOLS == null || NumSubLayersInLayerInOLS.Length < TotalNumOlss)
-            {
-                NumSubLayersInLayerInOLS = new uint[TotalNumOlss][];
-                for (int i = 0; i < TotalNumOlss; i++)
+                if (NumOutputLayersInOls[i] == 0)
                 {
-                    NumSubLayersInLayerInOLS[i] = new uint[TotalNumOlss];
+                    rejectedVps.Add(vps.VpsVideoParameterSetId);
+                    throw new InvalidDataException($"Output layer set {i} has no output layer.");
                 }
             }
-            if (layerIncludedInOlsFlag == null || layerIncludedInOlsFlag.Length < TotalNumOlss)
+
+            if (vps.VpsEachLayerIsAnOlsFlag == 0 && NumMultiLayerOlss == 0)
             {
-                layerIncludedInOlsFlag = new uint[TotalNumOlss][];
-                for (int i = 0; i < TotalNumOlss; i++)
-                {
-                    layerIncludedInOlsFlag[i] = new uint[TotalNumOlss];
-                }
+                rejectedVps.Add(vps.VpsVideoParameterSetId);
+                throw new InvalidDataException("No output layer set has more than one layer.");
             }
-            if (OutputLayerIdx == null || OutputLayerIdx.Length < TotalNumOlss)
+        }
+
+        /// <summary>With <see cref="Strict"/>, an SPS naming a VPS that was rejected is rejected too.</summary>
+        public void OnSpsVideoParameterSetId(ulong sps_video_parameter_set_id)
+        {
+            if (Strict && rejectedVps.Contains(sps_video_parameter_set_id))
             {
-                OutputLayerIdx = new int[TotalNumOlss][];
-                for (int i = 0; i < TotalNumOlss; i++)
-                {
-                    OutputLayerIdx[i] = new int[TotalNumOlss];
-                }
+                SeqParameterSets.Remove(SeqParameterSetRbsp.SpsSeqParameterSetId);
+                throw new InvalidDataException($"VPS {sps_video_parameter_set_id} is not available.");
             }
-            if (LayerIdInOls == null || LayerIdInOls.Length < TotalNumOlss)
+        }
+
+        public ulong DeriveOls()
+        {
+            var vps = VideoParameterSetRbsp;
+            if (vps == null)
+                return NumMultiLayerOlss = 0;
+
+            uint total = DeriveTotalNumOlss();
+            uint layers = vps.VpsMaxLayersMinus1 + 1;
+            var vps_layer_id = vps.VpsLayerId;
+            var vps_each_layer_is_an_ols_flag = vps.VpsEachLayerIsAnOlsFlag;
+            var vps_ols_output_layer_flag = vps.VpsOlsOutputLayerFlag;
+            OnVpsDirectRefLayerFlag();
+
+            // Inferred where not coded: vps_ptl_max_tid and vps_max_tid_il_ref_pics_plus1 (7.4.3.3)
+            // from vps_max_sublayers_minus1, vps_ols_ptl_idx from the number of PTLs.
+            uint PtlIdx(int i) =>
+                vps.VpsNumPtlsMinus1 + 1 == total ? (uint)i :
+                vps.VpsNumPtlsMinus1 == 0 || vps.VpsOlsPtlIdx == null || i >= vps.VpsOlsPtlIdx.Length ? 0 : vps.VpsOlsPtlIdx[i];
+            uint SubLayers(int i)
             {
-                LayerIdInOls = new uint[TotalNumOlss][];
-                for (int i = 0; i < TotalNumOlss; i++)
-                {
-                    LayerIdInOls[i] = new uint[TotalNumOlss];
-                }
+                uint idx = PtlIdx(i);
+                if (vps.VpsDefaultPtlDpbHrdMaxTidFlag != 0 || vps.VpsPtlMaxTid == null || idx >= vps.VpsPtlMaxTid.Length)
+                    return vps.VpsMaxSublayersMinus1 + 1;
+                return vps.VpsPtlMaxTid[idx] + 1;
             }
-            if (LayerUsedAsOutputLayerFlag == null || LayerUsedAsOutputLayerFlag.Length < vps_max_layers_minus1 + 1)
-                LayerUsedAsOutputLayerFlag = new uint[vps_max_layers_minus1 + 1];
-            if (MultiLayerOlsIdx == null || MultiLayerOlsIdx.Length < TotalNumOlss)
-                LayerUsedAsOutputLayerFlag = new uint[TotalNumOlss];
-            if (NumLayersInOls == null || NumLayersInOls.Length < TotalNumOlss)
-                NumLayersInOls = new uint[TotalNumOlss];
+            uint Direct(int m, int k) =>
+                vps.VpsDirectRefLayerFlag?[m] != null && k < vps.VpsDirectRefLayerFlag[m].Length ? vps.VpsDirectRefLayerFlag[m][k] : 0u;
+            uint MaxTidIlRef(int m, int k) =>
+                vps.VpsMaxTidRefPresentFlag?[m] == 1 && vps.VpsMaxTidIlRefPicsPlus1?[m] != null && k < vps.VpsMaxTidIlRefPicsPlus1[m].Length ?
+                    vps.VpsMaxTidIlRefPicsPlus1[m][k] : vps.VpsMaxSublayersMinus1 + 1;
+            uint OutputFlag(int i, int k) =>
+                vps_ols_output_layer_flag?[i] != null && k < vps_ols_output_layer_flag[i].Length ? vps_ols_output_layer_flag[i][k] : 0u;
+
+            uint[][] Rows(uint count) => Enumerable.Range(0, (int)count).Select(_ => new uint[layers]).ToArray();
+            NumOutputLayersInOls = new uint[total];
+            OutputLayerIdInOls = Rows(total);
+            NumSubLayersInLayerInOLS = Rows(total);
+            layerIncludedInOlsFlag = Rows(total);
+            OutputLayerIdx = Enumerable.Range(0, (int)total).Select(_ => new int[layers]).ToArray();
+            LayerIdInOls = Rows(total);
+            LayerUsedAsOutputLayerFlag = new uint[layers];
+            MultiLayerOlsIdx = new ulong[total];
+            NumLayersInOls = new uint[total];
 
             NumOutputLayersInOls[0] = 1;
             OutputLayerIdInOls[0][0] = vps_layer_id[0];
-            NumSubLayersInLayerInOLS[0][0] = vps_ptl_max_tid[vps_ols_ptl_idx[0]] + 1;
+            NumSubLayersInLayerInOLS[0][0] = SubLayers(0);
             LayerUsedAsOutputLayerFlag[0] = 1;
-            for (int i = 1; i <= vps_max_layers_minus1; i++)
+            for (int i = 1; i < layers; i++)
             {
                 if (olsModeIdc == 4 || olsModeIdc < 2)
                     LayerUsedAsOutputLayerFlag[i] = 1;
-                else if (vps_ols_mode_idc == 2)
+                else if (olsModeIdc == 2)
                     LayerUsedAsOutputLayerFlag[i] = 0;
             }
-            for (int i = 1; i < TotalNumOlss; i++)
+            for (int i = 1; i < total; i++)
             {
                 if (olsModeIdc == 4 || olsModeIdc == 0)
                 {
                     NumOutputLayersInOls[i] = 1;
                     OutputLayerIdInOls[i][0] = vps_layer_id[i];
                     if (vps_each_layer_is_an_ols_flag != 0)
-                        NumSubLayersInLayerInOLS[i][0] = vps_ptl_max_tid[vps_ols_ptl_idx[i]] + 1;
+                        NumSubLayersInLayerInOLS[i][0] = SubLayers(i);
                     else
                     {
-                        NumSubLayersInLayerInOLS[i][i] = vps_ptl_max_tid[vps_ols_ptl_idx[i]] + 1;
+                        NumSubLayersInLayerInOLS[i][i] = SubLayers(i);
                         for (int k = i - 1; k >= 0; k--)
                         {
                             NumSubLayersInLayerInOLS[i][k] = 0;
                             for (int m = k + 1; m <= i; m++)
                             {
-                                uint maxSublayerNeeded = Math.Min(NumSubLayersInLayerInOLS[i][m], vps_max_tid_il_ref_pics_plus1[m][k]);
-                                if (vps_direct_ref_layer_flag[m][k] != 0 &&
-                                  NumSubLayersInLayerInOLS[i][k] < maxSublayerNeeded)
+                                uint maxSublayerNeeded = Math.Min(NumSubLayersInLayerInOLS[i][m], MaxTidIlRef(m, k));
+                                if (Direct(m, k) != 0 && NumSubLayersInLayerInOLS[i][k] < maxSublayerNeeded)
                                     NumSubLayersInLayerInOLS[i][k] = maxSublayerNeeded;
                             }
                         }
                     }
                 }
-                else if (vps_ols_mode_idc == 1)
+                else if (olsModeIdc == 1)
                 {
                     NumOutputLayersInOls[i] = (uint)(i + 1);
                     for (int j = 0; j < NumOutputLayersInOls[i]; j++)
                     {
-                        if (OutputLayerIdInOls[i] == null || OutputLayerIdInOls.Length <= NumOutputLayersInOls[i])
-                            OutputLayerIdInOls[i] = new uint[NumOutputLayersInOls[i] + 1];
-
                         OutputLayerIdInOls[i][j] = vps_layer_id[j];
-                        NumSubLayersInLayerInOLS[i][j] = vps_ptl_max_tid[vps_ols_ptl_idx[i]] + 1;
+                        NumSubLayersInLayerInOLS[i][j] = SubLayers(i);
                     }
                 }
-                else if (vps_ols_mode_idc == 2)
+                else if (olsModeIdc == 2)
                 {
-                    for (int j = 0; j <= vps_max_layers_minus1; j++)
-                    {
-                        layerIncludedInOlsFlag[i][j] = 0;
-                        NumSubLayersInLayerInOLS[i][j] = 0;
-                    }
                     int highestIncludedLayer = 0;
-                    for (int k = 0, j = 0; k <= vps_max_layers_minus1; k++)
+                    int j = 0;
+                    for (int k = 0; k < layers; k++)
                     {
-                        if (vps_ols_output_layer_flag[i][k] != 0)
+                        if (OutputFlag(i, k) != 0)
                         {
                             layerIncludedInOlsFlag[i][k] = 1;
                             highestIncludedLayer = k;
                             LayerUsedAsOutputLayerFlag[k] = 1;
                             OutputLayerIdx[i][j] = k;
                             OutputLayerIdInOls[i][j++] = vps_layer_id[k];
-                            NumSubLayersInLayerInOLS[i][k] = vps_ptl_max_tid[vps_ols_ptl_idx[i]] + 1;
+                            NumSubLayersInLayerInOLS[i][k] = SubLayers(i);
                         }
                     }
-                    NumOutputLayersInOls[i] = jj;
-                    for (int j = 0; j < NumOutputLayersInOls[i]; j++)
+                    NumOutputLayersInOls[i] = (uint)j;
+                    for (j = 0; j < NumOutputLayersInOls[i]; j++)
                     {
                         int idx = OutputLayerIdx[i][j];
                         for (int k = 0; k < NumRefLayers[idx]; k++)
-                        {
-                            if (layerIncludedInOlsFlag[i][ReferenceLayerIdx[idx][k]] == 0)
-                                layerIncludedInOlsFlag[i][ReferenceLayerIdx[idx][k]] = 1;
-                        }
+                            layerIncludedInOlsFlag[i][ReferenceLayerIdx[idx][k]] = 1;
                     }
                     for (int k = highestIncludedLayer - 1; k >= 0; k--)
-                        if (layerIncludedInOlsFlag[i][k] != 0 && vps_ols_output_layer_flag[i][k] == 0)
+                        if (layerIncludedInOlsFlag[i][k] != 0 && OutputFlag(i, k) == 0)
                             for (int m = k + 1; m <= highestIncludedLayer; m++)
                             {
-                                uint maxSublayerNeeded = Math.Min(NumSubLayersInLayerInOLS[i][m], vps_max_tid_il_ref_pics_plus1[m][k]);
-                                if (vps_direct_ref_layer_flag[m][k] != 0 && layerIncludedInOlsFlag[i][m] != 0 &&
+                                uint maxSublayerNeeded = Math.Min(NumSubLayersInLayerInOLS[i][m], MaxTidIlRef(m, k));
+                                if (Direct(m, k) != 0 && layerIncludedInOlsFlag[i][m] != 0 &&
                                    NumSubLayersInLayerInOLS[i][k] < maxSublayerNeeded)
                                     NumSubLayersInLayerInOLS[i][k] = maxSublayerNeeded;
                             }
@@ -477,25 +616,26 @@ namespace SharpH266
             NumLayersInOls[0] = 1;
             LayerIdInOls[0][0] = vps_layer_id[0];
             NumMultiLayerOlss = 0;
-            for (int i = 1; i < TotalNumOlss; i++)
+            for (int i = 1; i < total; i++)
             {
                 if (vps_each_layer_is_an_ols_flag != 0)
                 {
                     NumLayersInOls[i] = 1;
                     LayerIdInOls[i][0] = vps_layer_id[i];
                 }
-                else if (vps_ols_mode_idc == 0 || vps_ols_mode_idc == 1)
+                else if (olsModeIdc == 0 || olsModeIdc == 1)
                 {
                     NumLayersInOls[i] = (uint)(i + 1);
                     for (int j = 0; j < NumLayersInOls[i]; j++)
                         LayerIdInOls[i][j] = vps_layer_id[j];
                 }
-                else if (vps_ols_mode_idc == 2)
+                else if (olsModeIdc == 2)
                 {
-                    for (int k = 0, j = 0; k <= vps_max_layers_minus1; k++)
+                    int j = 0;
+                    for (int k = 0; k < layers; k++)
                         if (layerIncludedInOlsFlag[i][k] != 0)
                             LayerIdInOls[i][j++] = vps_layer_id[k];
-                    NumLayersInOls[i] = jj;
+                    NumLayersInOls[i] = (uint)j;
                 }
                 if (NumLayersInOls[i] > 1)
                 {
@@ -503,6 +643,10 @@ namespace SharpH266
                     NumMultiLayerOlss++;
                 }
             }
+
+            if (Strict)
+                CheckOls(vps, total);
+            return NumMultiLayerOlss;
         }
 
         public void OnSpsLog2CtuSizeMinus5()
@@ -526,6 +670,17 @@ namespace SharpH266
             for (int i = 0; i < (sps_num_extra_ph_bytes * 8); i++)
                 if (sps_extra_ph_bit_present_flag[i] != 0)
                     NumExtraPhBits++;
+        }
+
+        /// <summary>
+        /// fixed_pic_rate_within_cvs_flag is coded only when fixed_pic_rate_general_flag is 0, and
+        /// is 1 otherwise (7.4.6.2): left 0, low_delay_hrd_flag was read where
+        /// elemental_duration_in_tc_minus1 is.
+        /// </summary>
+        public void OnFixedPicRateGeneralFlag(OlsTimingHrdParameters hrd, uint i)
+        {
+            if (hrd.FixedPicRateGeneralFlag[i] != 0)
+                hrd.FixedPicRateWithinCvsFlag[i] = 1;
         }
 
         public void OnAlfChromaFilterSignalFlag()
@@ -581,293 +736,272 @@ namespace SharpH266
             PicHeightInSamplesC = pps_pic_height_in_luma_samples / SubHeightC; // 72
         }
 
-        public void OnPpsTileRowHeightMinus1()
+        /// <summary>
+        /// Called as each pps_tile_row_height_minus1 is read; the tiles (6.5.1) are worked out once
+        /// the last is in, since NumTilesInPic conditions what follows.
+        /// </summary>
+        /// <remarks>
+        /// This worked everything out at every row - the slices too, from the parts of the PPS not
+        /// read yet - and sized the column and row lists by the ones coded, so the uniform ones that
+        /// follow them ran past the end.
+        /// </remarks>
+        public void OnPpsTileRowHeightMinus1(uint i)
         {
-            var pps_num_exp_tile_columns_minus1 = PicParameterSetRbsp.PpsNumExpTileColumnsMinus1;
-            var pps_num_exp_tile_rows_minus1 = PicParameterSetRbsp.PpsNumExpTileRowsMinus1;
-            var pps_tile_column_width_minus1 = PicParameterSetRbsp.PpsTileColumnWidthMinus1;
-            var pps_tile_row_height_minus1 = PicParameterSetRbsp.PpsTileRowHeightMinus1;
-            var pps_single_slice_per_subpic_flag = PicParameterSetRbsp.PpsSingleSlicePerSubpicFlag;
-            var pps_num_slices_in_pic_minus1 = PicParameterSetRbsp.PpsNumSlicesInPicMinus1;
-            var pps_slice_width_in_tiles_minus1 = PicParameterSetRbsp.PpsSliceWidthInTilesMinus1;
-            var pps_slice_height_in_tiles_minus1 = PicParameterSetRbsp.PpsSliceHeightInTilesMinus1;
-            var pps_num_exp_slices_in_tile = PicParameterSetRbsp.PpsNumExpSlicesInTile;
-            var pps_exp_slice_height_in_ctus_minus1 = PicParameterSetRbsp.PpsExpSliceHeightInCtusMinus1;
-            var pps_tile_idx_delta_present_flag = PicParameterSetRbsp.PpsTileIdxDeltaPresentFlag;
-            var pps_tile_idx_delta_val = PicParameterSetRbsp.PpsTileIdxDeltaVal;
-
-            var sps_num_subpics_minus1 = SeqParameterSetRbsp.SpsNumSubpicsMinus1;
-            var sps_subpic_ctu_top_left_x = SeqParameterSetRbsp.SpsSubpicCtuTopLeftx;
-            var sps_subpic_width_minus1 = SeqParameterSetRbsp.SpsSubpicWidthMinus1;
-            var sps_subpic_ctu_top_left_y = SeqParameterSetRbsp.SpsSubpicCtuTopLefty;
-            var sps_subpic_height_minus1 = SeqParameterSetRbsp.SpsSubpicHeightMinus1;
-            var sps_subpic_info_present_flag = SeqParameterSetRbsp.SpsSubpicInfoPresentFlag;
-
-            if (ColWidthVal == null || ColWidthVal.Length < (int)pps_num_exp_tile_columns_minus1 + 1)
-                ColWidthVal = new ulong[pps_num_exp_tile_columns_minus1 + 1];
-            if (RowHeightVal == null || RowHeightVal.Length < (int)pps_num_exp_tile_rows_minus1 + 1)
-                RowHeightVal = new ulong[pps_num_exp_tile_rows_minus1 + 1];
-
-            // 14
-            int i;
-            ulong remainingWidthInCtbsY = PicWidthInCtbsY;
-            for (i = 0; i <= (int)pps_num_exp_tile_columns_minus1; i++)
+            if (i == PicParameterSetRbsp.PpsNumExpTileRowsMinus1)
             {
-                ColWidthVal[i] = pps_tile_column_width_minus1[i] + 1;
-                remainingWidthInCtbsY -= ColWidthVal[i];
-            }
-            ulong uniformTileColWidth = pps_tile_column_width_minus1[pps_num_exp_tile_columns_minus1] + 1;
-            while (remainingWidthInCtbsY >= uniformTileColWidth)
-            {
-                ColWidthVal[i++] = uniformTileColWidth;
-                remainingWidthInCtbsY -= uniformTileColWidth;
-            }
-            if (remainingWidthInCtbsY > 0)
-                ColWidthVal[i++] = remainingWidthInCtbsY;
-            NumTileColumns = i;
+                DeriveTiles();
 
-            // 15
-            int j;
-            ulong remainingHeightInCtbsY = PicHeightInCtbsY;
-            for (j = 0; j <= (int)pps_num_exp_tile_rows_minus1; j++)
-            {
-                RowHeightVal[j] = pps_tile_row_height_minus1[j] + 1;
-                remainingHeightInCtbsY -= RowHeightVal[j];
+                // With a single tile pps_rect_slice_flag is not coded, and is 1 (7.4.3.5).
+                if (NumTilesInPic <= 1)
+                    PicParameterSetRbsp.PpsRectSliceFlag = 1;
             }
-            ulong uniformTileRowHeight = pps_tile_row_height_minus1[pps_num_exp_tile_rows_minus1] + 1;
-            while (remainingHeightInCtbsY >= uniformTileRowHeight)
-            {
-                RowHeightVal[j++] = uniformTileRowHeight;
-                remainingHeightInCtbsY -= uniformTileRowHeight;
-            }
-            if (remainingHeightInCtbsY > 0)
-                RowHeightVal[j++] = remainingHeightInCtbsY;
-            NumTileRows = j;
+        }
 
-            // needed in PPS
+        /// <summary>
+        /// Called as the PPS reads pps_cabac_init_present_flag, the first element after its
+        /// partitioning: a picture not partitioned is a single tile, and with every slice read the
+        /// slices can be laid out.
+        /// </summary>
+        public void OnPpsCabacInitPresentFlag()
+        {
+            if (PicParameterSetRbsp.PpsNoPicPartitionFlag != 0)
+            {
+                // Not partitioned: one tile, and one slice to each subpicture (7.4.3.5).
+                DeriveTiles();
+                PicParameterSetRbsp.PpsRectSliceFlag = 1;
+                PicParameterSetRbsp.PpsSingleSlicePerSubpicFlag = 1;
+            }
+            DeriveSlices();
+        }
+
+        /// <summary>The tile columns and rows (6.5.1, 14 to 20).</summary>
+        private void DeriveTiles()
+        {
+            var pps = PicParameterSetRbsp;
+            bool partitioned = pps.PpsNoPicPartitionFlag == 0;
+
+            // (14), (15): the sizes coded, then as many of the last as fit, then what is left.
+            // A picture not partitioned is one column and one row.
+            ulong[] Split(ulong total, ulong[] codedMinus1, ulong lastCoded, out int count)
+            {
+                var sizes = new ulong[total + 1];
+                ulong remaining = total;
+                count = 0;
+                if (partitioned)
+                {
+                    for (ulong k = 0; k <= lastCoded; k++)
+                    {
+                        sizes[count] = codedMinus1[k] + 1;
+                        remaining -= Math.Min(remaining, sizes[count]);
+                        count++;
+                    }
+                    ulong uniform = codedMinus1[lastCoded] + 1;
+                    while (remaining >= uniform)
+                    {
+                        sizes[count++] = uniform;
+                        remaining -= uniform;
+                    }
+                }
+                if (remaining > 0)
+                    sizes[count++] = remaining;
+                return sizes;
+            }
+
+            ColWidthVal = Split(PicWidthInCtbsY, pps.PpsTileColumnWidthMinus1, pps.PpsNumExpTileColumnsMinus1, out int columns);
+            RowHeightVal = Split(PicHeightInCtbsY, pps.PpsTileRowHeightMinus1, pps.PpsNumExpTileRowsMinus1, out int rows);
+            NumTileColumns = columns;
+            NumTileRows = rows;
             NumTilesInPic = NumTileColumns * NumTileRows;
 
-            if (TileColBdVal == null || TileColBdVal.Length < NumTileColumns + 1)
-                TileColBdVal = new ulong[NumTileColumns + 1];
-
-            for (TileColBdVal[0] = 0, i = 0; i < NumTileColumns; i++)
+            // (16), (17)
+            TileColBdVal = new ulong[NumTileColumns + 1];
+            for (int i = 0; i < NumTileColumns; i++)
                 TileColBdVal[i + 1] = TileColBdVal[i] + ColWidthVal[i];
-
-            if (TileRowBdVal == null || TileRowBdVal.Length < NumTileRows + 1)
-                TileRowBdVal = new ulong[NumTileRows + 1];
-
-            for (TileRowBdVal[0] = 0, j = 0; j < NumTileRows; j++)
+            TileRowBdVal = new ulong[NumTileRows + 1];
+            for (int j = 0; j < NumTileRows; j++)
                 TileRowBdVal[j + 1] = TileRowBdVal[j] + RowHeightVal[j];
 
-            // 18
-            if (CtbToTileColBd == null || CtbToTileColBd.Length < PicWidthInCtbsY + 1)
-                CtbToTileColBd = new ulong[PicWidthInCtbsY + 1];
-            if (ctbToTileColIdx == null || ctbToTileColIdx.Length < PicWidthInCtbsY + 1)
-                ctbToTileColIdx = new uint[PicWidthInCtbsY + 1];
-
-            uint ctbAddrX = 0;
-            uint tileX = 0;
-            for (ctbAddrX = 0; ctbAddrX <= PicWidthInCtbsY; ctbAddrX++)
+            // (18), (19)
+            CtbToTileColBd = new ulong[PicWidthInCtbsY + 1];
+            ctbToTileColIdx = new uint[PicWidthInCtbsY + 1];
+            for (uint ctbAddrX = 0, tileX = 0; ctbAddrX <= PicWidthInCtbsY; ctbAddrX++)
             {
-                if (ctbAddrX == TileColBdVal[tileX + 1])
+                if (tileX < NumTileColumns && ctbAddrX == TileColBdVal[tileX + 1])
                     tileX++;
                 CtbToTileColBd[ctbAddrX] = TileColBdVal[tileX];
                 ctbToTileColIdx[ctbAddrX] = tileX;
             }
-
-            // 19
-            if (CtbToTileRowBd == null || CtbToTileRowBd.Length < PicHeightInCtbsY + 1)
-                CtbToTileRowBd = new ulong[PicHeightInCtbsY + 1];
-            if (ctbToTileRowIdx == null || ctbToTileRowIdx.Length < PicHeightInCtbsY + 1)
-                ctbToTileRowIdx = new uint[PicHeightInCtbsY + 1];
-
-            uint ctbAddrY = 0;
-            uint tileY = 0;
-            for (ctbAddrY = 0; ctbAddrY <= PicHeightInCtbsY; ctbAddrY++)
+            CtbToTileRowBd = new ulong[PicHeightInCtbsY + 1];
+            ctbToTileRowIdx = new uint[PicHeightInCtbsY + 1];
+            for (uint ctbAddrY = 0, tileY = 0; ctbAddrY <= PicHeightInCtbsY; ctbAddrY++)
             {
-                if (ctbAddrY == TileRowBdVal[tileY + 1])
+                if (tileY < NumTileRows && ctbAddrY == TileRowBdVal[tileY + 1])
                     tileY++;
                 CtbToTileRowBd[ctbAddrY] = TileRowBdVal[tileY];
                 ctbToTileRowIdx[ctbAddrY] = tileY;
             }
 
-            // 20
-            if (SubpicWidthInTiles == null || SubpicWidthInTiles.Length < (int)sps_num_subpics_minus1 + 1)
-                SubpicWidthInTiles = new uint[sps_num_subpics_minus1 + 1];
-            if (SubpicHeightInTiles == null || SubpicHeightInTiles.Length < (int)sps_num_subpics_minus1 + 1)
-                SubpicHeightInTiles = new uint[sps_num_subpics_minus1 + 1];
-            if (subpicHeightLessThanOneTileFlag == null || subpicHeightLessThanOneTileFlag.Length < (int)sps_num_subpics_minus1 + 1)
-                subpicHeightLessThanOneTileFlag = new uint[sps_num_subpics_minus1 + 1];
-
-            for (i = 0; i <= (int)sps_num_subpics_minus1; i++)
+            // (20)
+            int subpics = NumSubpics;
+            SubpicWidthInTiles = new uint[subpics];
+            SubpicHeightInTiles = new uint[subpics];
+            subpicHeightLessThanOneTileFlag = new uint[subpics];
+            for (int i = 0; i < subpics; i++)
             {
-                ulong leftX = sps_subpic_ctu_top_left_x[i];
-                ulong rightX = leftX + sps_subpic_width_minus1[i];
+                ulong leftX = SubpicLeft(i);
+                ulong rightX = Math.Min(leftX + SubpicWidthMinus1(i), PicWidthInCtbsY - 1);
                 SubpicWidthInTiles[i] = ctbToTileColIdx[rightX] + 1 - ctbToTileColIdx[leftX];
-                ulong topY = sps_subpic_ctu_top_left_y[i];
-                ulong bottomY = topY + sps_subpic_height_minus1[i];
+                ulong topY = SubpicTop(i);
+                ulong bottomY = Math.Min(topY + SubpicHeightMinus1(i), PicHeightInCtbsY - 1);
                 SubpicHeightInTiles[i] = ctbToTileRowIdx[bottomY] + 1 - ctbToTileRowIdx[topY];
-                if (SubpicHeightInTiles[i] == 1 && sps_subpic_height_minus1[i] + 1 < RowHeightVal[ctbToTileRowIdx[topY]])
-                    subpicHeightLessThanOneTileFlag[i] = 1;
-                else
-                    subpicHeightLessThanOneTileFlag[i] = 0;
+                subpicHeightLessThanOneTileFlag[i] =
+                    SubpicHeightInTiles[i] == 1 && SubpicHeightMinus1(i) + 1 < RowHeightVal[ctbToTileRowIdx[topY]] ? 1u : 0u;
             }
+        }
 
-            // 21
-            if (NumCtusInSlice == null || NumCtusInSlice.Length < (int)sps_num_subpics_minus1 + 1)
-                NumCtusInSlice = new uint[sps_num_subpics_minus1 + 1];
-            if (CtbAddrInSlice == null || CtbAddrInSlice.Length < (int)sps_num_subpics_minus1 + 1)
-                CtbAddrInSlice = new ulong[sps_num_subpics_minus1 + 1][];
+        // The subpictures: without sps_subpic_info_present_flag, one covering the picture.
+        private int NumSubpics => SeqParameterSetRbsp.SpsSubpicInfoPresentFlag != 0 ? (int)SeqParameterSetRbsp.SpsNumSubpicsMinus1 + 1 : 1;
 
-            if (pps_single_slice_per_subpic_flag != 0)
+        // The position and size of subpicture i, as coded or inferred (7.4.3.4): what is not coded
+        // reaches to the right and bottom of the picture, or with sps_subpic_same_size_flag repeats
+        // subpicture 0 in a grid. They were taken as 0 where not coded, so the last subpicture was
+        // one CTU in size and held none of the slices below its first row.
+        private ulong SubpicLeft(int i) => SubpicPosition(i, true);
+        private ulong SubpicTop(int i) => SubpicPosition(i, false);
+        private ulong SubpicWidthMinus1(int i) => SubpicSize(i, true);
+        private ulong SubpicHeightMinus1(int i) => SubpicSize(i, false);
+
+        private ulong SubpicPosition(int i, bool x)
+        {
+            var sps = SeqParameterSetRbsp;
+            if (sps.SpsSubpicInfoPresentFlag == 0)
+                return 0;
+            bool sameSize = sps.SpsNumSubpicsMinus1 > 0 && sps.SpsSubpicSameSizeFlag != 0;
+            var coded = x ? sps.SpsSubpicCtuTopLeftx : sps.SpsSubpicCtuTopLefty;
+            if ((!sameSize || i == 0) && i > 0 && SpsPicSize(x) > CtbSizeY && coded != null && i < coded.Length)
+                return coded[i];
+            if (!sameSize || i == 0)
+                return 0;
+            ulong numSubpicCols = SpsPicSizeInCtbs(true) / (SubpicSize(0, true) + 1);
+            return x ? (ulong)i % numSubpicCols * (SubpicSize(0, true) + 1) : (ulong)i / numSubpicCols * (SubpicSize(0, false) + 1);
+        }
+
+        private ulong SubpicSize(int i, bool x)
+        {
+            var sps = SeqParameterSetRbsp;
+            if (sps.SpsSubpicInfoPresentFlag == 0)
+                return (x ? PicWidthInCtbsY : PicHeightInCtbsY) - 1;
+            bool sameSize = sps.SpsNumSubpicsMinus1 > 0 && sps.SpsSubpicSameSizeFlag != 0;
+            var coded = x ? sps.SpsSubpicWidthMinus1 : sps.SpsSubpicHeightMinus1;
+            if ((!sameSize || i == 0) && i < (int)sps.SpsNumSubpicsMinus1 && SpsPicSize(x) > CtbSizeY && coded != null && i < coded.Length)
+                return coded[i];
+            if (!sameSize || i == 0)
+                return SpsPicSizeInCtbs(x) - SubpicPosition(i, x) - 1;
+            return SubpicSize(0, x);
+        }
+
+        private ulong SpsPicSize(bool x) =>
+            x ? SeqParameterSetRbsp.SpsPicWidthMaxInLumaSamples : SeqParameterSetRbsp.SpsPicHeightMaxInLumaSamples;
+
+        // tmpWidthVal and tmpHeightVal (7.4.3.4).
+        private ulong SpsPicSizeInCtbs(bool x) => (SpsPicSize(x) + CtbSizeY - 1) / CtbSizeY;
+
+        /// <summary>
+        /// The rectangular slices as far as the PPS has coded them, for the slice loop that reads
+        /// them: which tile each starts at is worked out from the slices before it (6.5.1, 21).
+        /// It was taken from the layout worked out at the tile rows, before any slice was read.
+        /// </summary>
+        public H266Context DeriveRectSlices(PicParameterSetRbsp pps)
+        {
+            LayOutRectSlices(pps, addCtbs: false);
+            return this;
+        }
+
+        /// <summary>
+        /// Whether rectangular slice i is one of several in a tile, which the PPS then codes the
+        /// heights of - with slice i's size inferred first where the PPS left it out (7.4.3.5): a
+        /// width of one tile, and the height of the slice before it unless in the last row. Left 0,
+        /// a slice inheriting a taller height was read as sitting inside one tile.
+        /// </summary>
+        public bool OnPpsSliceSize(PicParameterSetRbsp pps, uint i)
+        {
+            LayOutRectSlices(pps, addCtbs: false);
+
+            uint topLeft = SliceTopLeftTileIdx[i];
+            int tileX = (int)(topLeft % (uint)NumTileColumns);
+            int tileY = (int)(topLeft / (uint)NumTileColumns);
+            bool widthCoded = tileX != NumTileColumns - 1;
+            bool heightCoded = tileY != NumTileRows - 1 && (pps.PpsTileIdxDeltaPresentFlag != 0 || tileX == 0);
+
+            if (!widthCoded)
+                pps.PpsSliceWidthInTilesMinus1[i] = 0;
+            if (!heightCoded)
+                pps.PpsSliceHeightInTilesMinus1[i] = tileY == NumTileRows - 1 || i == 0 ? 0 : pps.PpsSliceHeightInTilesMinus1[i - 1];
+
+            return pps.PpsSliceWidthInTilesMinus1[i] == 0 && pps.PpsSliceHeightInTilesMinus1[i] == 0 && RowHeightVal[tileY] > 1;
+        }
+
+        /// <summary>The slices of the picture and the CTUs in each (6.5.1, 21 to 23).</summary>
+        private void DeriveSlices()
+        {
+            var pps = PicParameterSetRbsp;
+            if (pps.PpsRectSliceFlag == 0)
+                return; // each slice header says where its slice is
+
+            if (pps.PpsSingleSlicePerSubpicFlag != 0)
             {
-                if (sps_subpic_info_present_flag == 0) /* There is no subpicture info and only one slice in a picture. */
+                // pps_num_slices_in_pic_minus1 is inferred to be sps_num_subpics_minus1.
+                int subpics = NumSubpics;
+                NumCtusInSlice = new uint[subpics];
+                CtbAddrInSlice = new ulong[subpics][];
+
+                if (SeqParameterSetRbsp.SpsSubpicInfoPresentFlag == 0)
                 {
-                    for (j = 0; j < NumTileRows; j++)
-                    {
-                        for (i = 0; i < NumTileColumns; i++)
+                    for (int j = 0; j < NumTileRows; j++)
+                        for (int i = 0; i < NumTileColumns; i++)
                             AddCtbsToSlice(0, TileColBdVal[i], TileColBdVal[i + 1], TileRowBdVal[j], TileRowBdVal[j + 1]);
-                    }
                 }
                 else
                 {
-                    for (i = 0; i <= (int)sps_num_subpics_minus1; i++)
+                    for (int i = 0; i < subpics; i++)
                     {
-                        NumCtusInSlice[i] = 0;
-                        if (subpicHeightLessThanOneTileFlag[i] != 0) /* The slice consists of a set of CTU rows in a tile. */
-                            AddCtbsToSlice(i, sps_subpic_ctu_top_left_x[i],
-                             sps_subpic_ctu_top_left_x[i] + sps_subpic_width_minus1[i] + 1,
-                             sps_subpic_ctu_top_left_y[i],
-                             sps_subpic_ctu_top_left_y[i] + sps_subpic_height_minus1[i] + 1);
+                        if (subpicHeightLessThanOneTileFlag[i] != 0)
+                        {
+                            AddCtbsToSlice(i, SubpicLeft(i), SubpicLeft(i) + SubpicWidthMinus1(i) + 1,
+                                SubpicTop(i), SubpicTop(i) + SubpicHeightMinus1(i) + 1);
+                        }
                         else
-                        { /* The slice consists of a number of complete tiles covering a rectangular region. */
-                            tileX = ctbToTileColIdx[sps_subpic_ctu_top_left_x[i]];
-                            tileY = ctbToTileRowIdx[sps_subpic_ctu_top_left_y[i]];
-                            for (j = 0; j < SubpicHeightInTiles[i]; j++)
-                                for (int k = 0; k < SubpicWidthInTiles[i]; k++)
+                        {
+                            uint tileX = ctbToTileColIdx[SubpicLeft(i)];
+                            uint tileY = ctbToTileRowIdx[SubpicTop(i)];
+                            for (uint j = 0; j < SubpicHeightInTiles[i]; j++)
+                                for (uint k = 0; k < SubpicWidthInTiles[i]; k++)
                                     AddCtbsToSlice(i, TileColBdVal[tileX + k], TileColBdVal[tileX + k + 1],
-                                      TileRowBdVal[tileY + j], TileRowBdVal[tileY + j + 1]);
+                                        TileRowBdVal[tileY + j], TileRowBdVal[tileY + j + 1]);
                         }
                     }
                 }
             }
             else
             {
-                int tileIdx = 0;
-                for (i = 0; i <= (int)pps_num_slices_in_pic_minus1; i++)
-                    NumCtusInSlice[i] = 0;
-
-                if (SliceTopLeftTileIdx == null || SliceTopLeftTileIdx.Length < (int)pps_num_slices_in_pic_minus1 + 1)
-                    SliceTopLeftTileIdx = new uint[pps_num_slices_in_pic_minus1 + 1];
-                if (sliceWidthInTiles == null || sliceWidthInTiles.Length < (int)pps_num_slices_in_pic_minus1 + 1)
-                    sliceWidthInTiles = new ulong[pps_num_slices_in_pic_minus1 + 1];
-                if (sliceHeightInTiles == null || sliceHeightInTiles.Length < (int)pps_num_slices_in_pic_minus1 + 1)
-                    sliceHeightInTiles = new ulong[pps_num_slices_in_pic_minus1 + 1];
-                if (NumSlicesInTile == null || NumSlicesInTile.Length < (int)pps_num_slices_in_pic_minus1 + 1)
-                    NumSlicesInTile = new uint[pps_num_slices_in_pic_minus1 + 1];
-                if (sliceHeightInCtus == null || sliceHeightInCtus.Length < (int)pps_num_slices_in_pic_minus1 + 1)
-                    sliceHeightInCtus = new ulong[pps_num_slices_in_pic_minus1 + 1];
-
-                for (i = 0; i <= (int)pps_num_slices_in_pic_minus1; i++)
-                {
-                    SliceTopLeftTileIdx[i] = (uint)tileIdx;
-                    tileX = (uint)(tileIdx % NumTileColumns);
-                    tileY = (uint)(tileIdx / NumTileColumns);
-                    if (i < (int)pps_num_slices_in_pic_minus1)
-                    {
-                        sliceWidthInTiles[i] = pps_slice_width_in_tiles_minus1[i] + 1;
-                        sliceHeightInTiles[i] = pps_slice_height_in_tiles_minus1[i] + 1;
-                    }
-                    else
-                    {
-                        sliceWidthInTiles[i] = (uint)(NumTileColumns - tileX);
-                        sliceHeightInTiles[i] = (uint)(NumTileRows - tileY);
-                        NumSlicesInTile[i] = 1;
-                    }
-                    if (sliceWidthInTiles[i] == 1 && sliceHeightInTiles[i] == 1)
-                    {
-                        if (pps_num_exp_slices_in_tile[i] == 0)
-                        {
-                            NumSlicesInTile[i] = 1;
-                            sliceHeightInCtus[i] = RowHeightVal[SliceTopLeftTileIdx[i] / NumTileColumns];
-                        }
-                        else
-                        {
-                            remainingHeightInCtbsY = RowHeightVal[SliceTopLeftTileIdx[i] / NumTileColumns];
-                            for (j = 0; j < (int)pps_num_exp_slices_in_tile[i]; j++)
-                            {
-                                sliceHeightInCtus[i + j] = pps_exp_slice_height_in_ctus_minus1[i][j] + 1;
-                                remainingHeightInCtbsY -= sliceHeightInCtus[i + j];
-                            }
-                            ulong uniformSliceHeight = sliceHeightInCtus[i + j - 1];
-                            while (remainingHeightInCtbsY >= uniformSliceHeight)
-                            {
-                                sliceHeightInCtus[i + j] = uniformSliceHeight;
-                                remainingHeightInCtbsY -= uniformSliceHeight;
-                                j++;
-                            }
-                            if (remainingHeightInCtbsY > 0)
-                            {
-                                sliceHeightInCtus[i + j] = remainingHeightInCtbsY;
-                                j++;
-                            }
-                            NumSlicesInTile[i] = (uint)j;
-                        }
-                        ulong ctbY = TileRowBdVal[tileY];
-                        for (j = 0; j < NumSlicesInTile[i]; j++)
-                        {
-                            AddCtbsToSlice(i + j, TileColBdVal[tileX], TileColBdVal[tileX + 1], ctbY, ctbY + sliceHeightInCtus[i + j]);
-                            ctbY += sliceHeightInCtus[i + j];
-                            sliceWidthInTiles[i + j] = 1;
-                            sliceHeightInTiles[i + j] = 1;
-                        }
-                        i += (int)(NumSlicesInTile[i] - 1);
-                    }
-                    else
-                    {
-                        for (j = 0; j < (int)sliceHeightInTiles[i]; j++)
-                        {
-                            for (int k = 0; k < (int)sliceWidthInTiles[i]; k++)
-                            {
-                                AddCtbsToSlice(i, TileColBdVal[tileX + k], TileColBdVal[tileX + k + 1], TileRowBdVal[tileY + j], TileRowBdVal[tileY + j + 1]);
-                            }
-                        }
-                    }
-                    if (i < (int)pps_num_slices_in_pic_minus1)
-                    {
-                        if (pps_tile_idx_delta_present_flag != 0)
-                        {
-                            tileIdx += (int)pps_tile_idx_delta_val[i];
-                        }
-                        else
-                        {
-                            tileIdx += (int)sliceWidthInTiles[i];
-                            if (tileIdx % NumTileColumns == 0)
-                                tileIdx += (((int)sliceHeightInTiles[i] - 1) * NumTileColumns);
-                        }
-                    }
-                }
+                LayOutRectSlices(pps, addCtbs: true);
             }
 
-            // 23
-            if (NumSlicesInSubpic == null || NumSlicesInSubpic.Length < (int)sps_num_subpics_minus1 + 1)
-                NumSlicesInSubpic = new uint[sps_num_subpics_minus1 + 1];
-            if (SubpicIdxForSlice == null || SubpicIdxForSlice.Length < (int)pps_num_slices_in_pic_minus1 + 1)
-                SubpicIdxForSlice = new int[pps_num_slices_in_pic_minus1 + 1];
-            if (SubpicLevelSliceIdx == null || SubpicLevelSliceIdx.Length < (int)pps_num_slices_in_pic_minus1 + 1)
-                SubpicLevelSliceIdx = new uint[pps_num_slices_in_pic_minus1 + 1];
-
-            for (i = 0; i <= (int)sps_num_subpics_minus1; i++)
+            // (23)
+            int slices = NumCtusInSlice.Length;
+            NumSlicesInSubpic = new uint[NumSubpics];
+            SubpicIdxForSlice = new int[slices];
+            SubpicLevelSliceIdx = new uint[slices];
+            for (int i = 0; i < NumSubpics; i++)
             {
-                NumSlicesInSubpic[i] = 0;
-                for (j = 0; j <= (int)pps_num_slices_in_pic_minus1; j++)
+                for (int j = 0; j < slices; j++)
                 {
+                    if (NumCtusInSlice[j] == 0)
+                        continue;
                     ulong posX = CtbAddrInSlice[j][0] % PicWidthInCtbsY;
                     ulong posY = CtbAddrInSlice[j][0] / PicWidthInCtbsY;
-                    if ((posX >= sps_subpic_ctu_top_left_x[i]) &&
-                      (posX < sps_subpic_ctu_top_left_x[i] + sps_subpic_width_minus1[i] + 1) &&
-                      (posY >= sps_subpic_ctu_top_left_y[i]) &&
-                      (posY < sps_subpic_ctu_top_left_y[i] + sps_subpic_height_minus1[i] + 1))
+                    if (posX >= SubpicLeft(i) && posX < SubpicLeft(i) + SubpicWidthMinus1(i) + 1 &&
+                        posY >= SubpicTop(i) && posY < SubpicTop(i) + SubpicHeightMinus1(i) + 1)
                     {
                         SubpicIdxForSlice[j] = i;
                         SubpicLevelSliceIdx[j] = NumSlicesInSubpic[i];
@@ -877,38 +1011,278 @@ namespace SharpH266
             }
         }
 
+        /// <summary>
+        /// (21) for rectangular slices the PPS codes one by one, over what it has read so far: the
+        /// slices not read yet read as zeros, which leaves the ones before them as they are.
+        /// </summary>
+        private void LayOutRectSlices(PicParameterSetRbsp pps, bool addCtbs)
+        {
+            int slices = (int)pps.PpsNumSlicesInPicMinus1 + 1;
+            SliceTopLeftTileIdx = new uint[slices];
+            sliceWidthInTiles = new ulong[slices];
+            sliceHeightInTiles = new ulong[slices];
+            NumSlicesInTile = new uint[slices];
+            sliceHeightInCtus = new ulong[slices];
+            NumCtusInSlice = new uint[slices];
+            CtbAddrInSlice = new ulong[slices][];
+
+            ulong Coded(ulong[] values, int i) => values != null && i < values.Length ? values[i] : 0;
+
+            int tileIdx = 0;
+            for (int i = 0; i < slices; i++)
+            {
+                if (tileIdx < 0 || tileIdx >= NumTilesInPic)
+                    break; // past what has been read
+
+                SliceTopLeftTileIdx[i] = (uint)tileIdx;
+                int tileX = tileIdx % NumTileColumns;
+                int tileY = tileIdx / NumTileColumns;
+                if (i < slices - 1)
+                {
+                    sliceWidthInTiles[i] = Coded(pps.PpsSliceWidthInTilesMinus1, i) + 1;
+                    sliceHeightInTiles[i] = Coded(pps.PpsSliceHeightInTilesMinus1, i) + 1;
+                }
+                else
+                {
+                    sliceWidthInTiles[i] = (ulong)(NumTileColumns - tileX);
+                    sliceHeightInTiles[i] = (ulong)(NumTileRows - tileY);
+                    NumSlicesInTile[i] = 1;
+                }
+
+                if (sliceWidthInTiles[i] == 1 && sliceHeightInTiles[i] == 1)
+                {
+                    ulong expSlices = Coded(pps.PpsNumExpSlicesInTile, i);
+                    if (expSlices == 0)
+                    {
+                        NumSlicesInTile[i] = 1;
+                        sliceHeightInCtus[i] = RowHeightVal[tileY];
+                    }
+                    else
+                    {
+                        ulong remainingHeightInCtbsY = RowHeightVal[tileY];
+                        var heights = pps.PpsExpSliceHeightInCtusMinus1?[i];
+                        int j;
+                        for (j = 0; j < (int)expSlices && i + j < slices; j++)
+                        {
+                            sliceHeightInCtus[i + j] = (heights != null && j < heights.Length ? heights[j] : 0) + 1;
+                            remainingHeightInCtbsY -= Math.Min(remainingHeightInCtbsY, sliceHeightInCtus[i + j]);
+                        }
+                        ulong uniformSliceHeight = sliceHeightInCtus[i + j - 1];
+                        while (remainingHeightInCtbsY >= uniformSliceHeight && i + j < slices)
+                        {
+                            sliceHeightInCtus[i + j] = uniformSliceHeight;
+                            remainingHeightInCtbsY -= uniformSliceHeight;
+                            j++;
+                        }
+                        if (remainingHeightInCtbsY > 0 && i + j < slices)
+                        {
+                            sliceHeightInCtus[i + j] = remainingHeightInCtbsY;
+                            j++;
+                        }
+                        NumSlicesInTile[i] = (uint)j;
+                    }
+
+                    ulong ctbY = TileRowBdVal[tileY];
+                    for (int j = 0; j < NumSlicesInTile[i]; j++)
+                    {
+                        if (addCtbs)
+                            AddCtbsToSlice(i + j, TileColBdVal[tileX], TileColBdVal[tileX + 1], ctbY, ctbY + sliceHeightInCtus[i + j]);
+                        ctbY += sliceHeightInCtus[i + j];
+                        sliceWidthInTiles[i + j] = 1;
+                        sliceHeightInTiles[i + j] = 1;
+                    }
+                    i += (int)NumSlicesInTile[i] - 1;
+                }
+                else if (addCtbs)
+                {
+                    for (ulong j = 0; j < sliceHeightInTiles[i] && tileY + (int)j < NumTileRows; j++)
+                        for (ulong k = 0; k < sliceWidthInTiles[i] && tileX + (int)k < NumTileColumns; k++)
+                            AddCtbsToSlice(i, TileColBdVal[tileX + (int)k], TileColBdVal[tileX + (int)k + 1],
+                                TileRowBdVal[tileY + (int)j], TileRowBdVal[tileY + (int)j + 1]);
+                }
+
+                if (i < slices - 1)
+                {
+                    if (pps.PpsTileIdxDeltaPresentFlag != 0)
+                    {
+                        tileIdx += (int)(pps.PpsTileIdxDeltaVal != null && i < pps.PpsTileIdxDeltaVal.Length ? pps.PpsTileIdxDeltaVal[i] : 0);
+                    }
+                    else
+                    {
+                        tileIdx += (int)sliceWidthInTiles[i];
+                        if (tileIdx % NumTileColumns == 0)
+                            tileIdx += ((int)sliceHeightInTiles[i] - 1) * NumTileColumns;
+                    }
+                }
+            }
+        }
+
         public void AddCtbsToSlice(int sliceIdx, ulong startX, ulong stopX, ulong startY, ulong stopY)
         {
+            var addresses = CtbAddrInSlice[sliceIdx] ??= new ulong[16];
             for (ulong ctbY = startY; ctbY < stopY; ctbY++)
             {
                 for (ulong ctbX = startX; ctbX < stopX; ctbX++)
                 {
-                    CtbAddrInSlice[sliceIdx][NumCtusInSlice[sliceIdx]] = ctbY * PicWidthInCtbsY + ctbX;
+                    if (NumCtusInSlice[sliceIdx] == addresses.Length)
+                        CtbAddrInSlice[sliceIdx] = addresses = Grown(addresses, addresses.Length * 2);
+                    addresses[NumCtusInSlice[sliceIdx]] = ctbY * PicWidthInCtbsY + ctbX;
                     NumCtusInSlice[sliceIdx]++;
                 }
             }
         }
 
-        public void OnStRefPicFlag(uint listIdx, ulong rplsIdx, RefPicListStruct refPicListStruct)
+        private static T[] Grown<T>(T[] array, int size)
         {
-            var num_ref_entries = refPicListStruct.NumRefEntries;
-            var inter_layer_ref_pic_flag = refPicListStruct.InterLayerRefPicFlag;
-            var st_ref_pic_flag = refPicListStruct.StRefPicFlag;
-            var sps_num_ref_pic_lists = SeqParameterSetRbsp.SpsNumRefPicLists;
+            var grown = new T[size];
+            Array.Copy(array, grown, array.Length);
+            return grown;
+        }
 
-            if (NumLtrpEntries == null || NumLtrpEntries.Length < sps_num_ref_pic_lists.Length)
+        /// <summary>
+        /// What a slice header leaves out and the spec infers, set before it is read so that what
+        /// is read overwrites it: sh_slice_type is I when the picture allows no inter slices
+        /// (7.4.8), sh_num_ref_idx_active_override_flag is 1, and sh_collocated_from_l0_flag,
+        /// coded for B slices only, is 1. Left 0 - B, and no override - intra slices read the
+        /// reference counts of a B slice, and P slices looked for their collocated picture in the
+        /// wrong list.
+        /// </summary>
+        public void OnShPictureHeaderInSliceHeaderFlag(SliceHeader header)
+        {
+            header.ShSliceType = H266FrameTypes.I;
+            header.ShNumRefIdxActiveOverrideFlag = 1;
+            header.ShCollocatedFromL0Flag = 1;
+
+            // sh_subpic_id, when not coded, is of the only subpicture.
+            CurrSubpicIdx = 0;
+        }
+
+        /// <summary>
+        /// The picture header of the picture being read, whether it came in a picture header NAL
+        /// unit or in the slice header. The slice header's references to it went through the slice
+        /// header's own, which is null when the picture header came on its own - so every slice of
+        /// such a picture threw.
+        /// </summary>
+        public PictureHeaderStructure PictureHeader { get; set; }
+
+        /// <summary>
+        /// Called as a picture header starts: it becomes the one in force, and
+        /// ph_collocated_from_l0_flag, coded only when list 1 has entries, is 1 otherwise (7.4.3.8).
+        /// </summary>
+        public void OnPhGdrOrIrapPicFlag(PictureHeaderStructure header)
+        {
+            PictureHeader = header;
+            header.PhCollocatedFromL0Flag = 1;
+
+            // ph_intra_slice_allowed_flag is coded only when inter slices are allowed, and is 1
+            // otherwise (7.4.3.8): left 0, an intra-only picture's intra slice parameters went unread.
+            header.PhIntraSliceAllowedFlag = 1;
+        }
+
+        /// <summary>
+        /// Called as the SPS reads sps_ref_wraparound_enabled_flag, the element after its reference
+        /// picture list structures. With sps_rpl1_same_as_rpl0_flag only list 0's are coded, and
+        /// list 1's are inferred to be the same (7.4.3.4): without that, list 1 had no count, and
+        /// every slice predicting from it read past the end of one.
+        /// </summary>
+        public void OnSpsRefWraparoundEnabledFlag()
+        {
+            var sps = SeqParameterSetRbsp;
+            if (sps.SpsRpl1SameAsRpl0Flag == 0)
+                return;
+
+            ulong lists = sps.SpsNumRefPicLists[0];
+            sps.SpsNumRefPicLists = new[] { lists, lists };
+
+            // The structures themselves are shared - read once, never changed - but list 1 keeps
+            // its own slot past them, for the one a picture or slice header codes.
+            T[] Copy<T>(T[] list0)
             {
-                NumLtrpEntries = new uint[sps_num_ref_pic_lists.Length][];
+                var list1 = new T[lists + 1];
+                if (list0 != null)
+                    Array.Copy(list0, list1, (int)Math.Min(lists, (ulong)list0.Length));
+                return list1;
             }
 
-            if(NumLtrpEntries[listIdx] == null)
-                NumLtrpEntries[listIdx] = new uint[sps_num_ref_pic_lists[listIdx] + 1];
+            num_ref_entries[1] = Copy(num_ref_entries[0]);
+            inter_layer_ref_pic_flag[1] = Copy(inter_layer_ref_pic_flag[0]);
+            st_ref_pic_flag[1] = Copy(st_ref_pic_flag[0]);
+            abs_delta_poc_st[1] = Copy(abs_delta_poc_st[0]);
+            strp_entry_sign_flag[1] = Copy(strp_entry_sign_flag[0]);
+            rpls_poc_lsb_lt[1] = Copy(rpls_poc_lsb_lt[0]);
+            ilrp_idx[1] = Copy(ilrp_idx[0]);
+            ltrp_in_header_flag[1] = Copy(ltrp_in_header_flag[0]);
+        }
 
-            NumLtrpEntries[listIdx][rplsIdx] = 0;
+        /// <summary>
+        /// rpl_sps_flag[ i ], as ref_pic_lists() tests it: coded or inferred (7.4.9). It is coded
+        /// only when the SPS has structures to pick from, and for list 1 only with
+        /// pps_rpl1_idx_present_flag; otherwise list 1 does as list 0 did. rpl_idx is inferred
+        /// alongside it, and RplsIdx worked out - both used to be only when rpl_idx was coded, so
+        /// a list taken from the SPS without an index, or coded in the header, was looked up at
+        /// whatever index the previous slice left.
+        /// </summary>
+        public byte InferRplSpsFlag(RefPicLists lists, uint i)
+        {
+            var sps_num_ref_pic_lists = SeqParameterSetRbsp.SpsNumRefPicLists;
+            var pps_rpl1_idx_present_flag = PicParameterSetRbsp.PpsRpl1IdxPresentFlag;
+            bool rpl1FromRpl0 = i == 1 && pps_rpl1_idx_present_flag == 0;
 
-            for (uint i = 0; i < num_ref_entries[listIdx][rplsIdx]; i++)
-                if (inter_layer_ref_pic_flag[listIdx][rplsIdx][i] == 0 && st_ref_pic_flag[listIdx][rplsIdx][i] == 0)
-                    NumLtrpEntries[listIdx][rplsIdx]++;
+            bool coded = sps_num_ref_pic_lists[i] > 0 && !rpl1FromRpl0;
+            if (!coded)
+                lists.RplSpsFlag[i] = sps_num_ref_pic_lists[i] == 0 ? (byte)0 : (rpl1FromRpl0 ? lists.RplSpsFlag[0] : (byte)0);
+
+            if (lists.RplSpsFlag[i] != 0)
+            {
+                // Read over when coded, by OnRplIdx.
+                lists.RplIdx[i] = rpl1FromRpl0 && sps_num_ref_pic_lists[1] > 1 ? lists.RplIdx[0] : 0;
+                RplsIdx[i] = lists.RplIdx[i];
+            }
+            else
+            {
+                RplsIdx[i] = sps_num_ref_pic_lists[i];
+            }
+
+            return lists.RplSpsFlag[i];
+        }
+
+        /// <summary>
+        /// NumRefIdxActive (7.4.8), worked out where it is used. It was worked out only as
+        /// sh_num_ref_idx_active_minus1 was read, which it is not when the override is off or a
+        /// list has a single entry, so the collocated picture's index was read, or not, by the
+        /// counts of an earlier slice.
+        /// </summary>
+        public ulong[] DeriveNumRefIdxActive()
+        {
+            var header = SliceLayerRbsp.SliceHeader;
+            var pps_num_ref_idx_default_active_minus1 = PicParameterSetRbsp.PpsNumRefIdxDefaultActiveMinus1;
+
+            if (NumRefIdxActive == null || NumRefIdxActive.Length < 2)
+                NumRefIdxActive = new ulong[2];
+
+            for (int i = 0; i < 2; i++)
+            {
+                if (header.ShSliceType == H266FrameTypes.B || (header.ShSliceType == H266FrameTypes.P && i == 0))
+                {
+                    if (header.ShNumRefIdxActiveOverrideFlag != 0)
+                    {
+                        // sh_num_ref_idx_active_minus1 is 0 where not coded.
+                        var minus1 = header.ShNumRefIdxActiveMinus1;
+                        NumRefIdxActive[i] = (minus1 != null && i < minus1.Length ? minus1[i] : 0) + 1;
+                    }
+                    else
+                    {
+                        ulong entries = num_ref_entries[i][RplsIdx[i]];
+                        NumRefIdxActive[i] = Math.Min(entries, pps_num_ref_idx_default_active_minus1[i] + 1);
+                    }
+                }
+                else
+                {
+                    NumRefIdxActive[i] = 0;
+                }
+            }
+
+            return NumRefIdxActive;
         }
 
         public void OnRplIdx(RefPicLists refPicLists, uint i)
@@ -920,45 +1294,16 @@ namespace SharpH266
             RplsIdx[i] = rpl_sps_flag[i] != 0 ? rpl_idx[i] : sps_num_ref_pic_lists[i];
         }
 
-        public void OnNumL0Weights(ulong num_l0_weights)
+        /// <summary>NumWeightsL0 (148), worked out where pred_weight_table() loops on it.</summary>
+        public ulong DeriveNumWeightsL0(PredWeightTable table)
         {
-            var pps_wp_info_in_ph_flag = PicParameterSetRbsp.PpsWpInfoInPhFlag;
-
-            if (pps_wp_info_in_ph_flag == 1)
-                NumWeightsL0 = num_l0_weights;
-            else
-                NumWeightsL0 = NumRefIdxActive[0];
+            NumWeightsL0 = PicParameterSetRbsp.PpsWpInfoInPhFlag != 0 ? table.NumL0Weights : DeriveNumRefIdxActive()[0];
+            return NumWeightsL0;
         }
 
         public void OnShNumRefIdxActiveMinus1()
         {
-            var sh_num_ref_idx_active_override_flag = SliceLayerRbsp.SliceHeader.ShNumRefIdxActiveOverrideFlag;
-            var sh_slice_type = SliceLayerRbsp.SliceHeader.ShSliceType;
-            var sh_num_ref_idx_active_minus1 = SliceLayerRbsp.SliceHeader.ShNumRefIdxActiveMinus1;
-            var pps_num_ref_idx_default_active_minus1 = PicParameterSetRbsp.PpsNumRefIdxDefaultActiveMinus1;
-
-            if(NumRefIdxActive == null || NumRefIdxActive.Length < 2)
-                NumRefIdxActive = new ulong[2];
-
-            for (int i = 0; i < 2; i++)
-            {
-                if (sh_slice_type == H266FrameTypes.B || (sh_slice_type == H266FrameTypes.P && i == 0))
-                {
-                    if (sh_num_ref_idx_active_override_flag != 0)
-                        NumRefIdxActive[i] = sh_num_ref_idx_active_minus1[i] + 1;
-                    else
-                    {
-                        var num_ref_entries = SliceLayerRbsp.SliceHeader.RefPicLists.RefPicListStruct.NumRefEntries;
-
-                        if (num_ref_entries[i][RplsIdx[i]] >= pps_num_ref_idx_default_active_minus1[i] + 1)
-                            NumRefIdxActive[i] = pps_num_ref_idx_default_active_minus1[i] + 1;
-                        else
-                            NumRefIdxActive[i] = num_ref_entries[i][RplsIdx[i]];
-                    }
-                }
-                else /* sh_slice_type  ==  I  | |  ( sh_slice_type  ==  P  &&  i  ==  1 ) */
-                    NumRefIdxActive[i] = 0;
-            }
+            DeriveNumRefIdxActive();
         }
 
         public void OnPpsSubpicId()
@@ -995,13 +1340,17 @@ namespace SharpH266
                     NumExtraShBits++;
         }
 
-        public void OnShSliceHeaderExtensionDataByte()
+        /// <summary>
+        /// NumEntryPoints (7.4.8), worked out where it is tested from the CTUs of the current slice.
+        /// Both were worked out only as optional elements were read - the slice header extension,
+        /// sh_num_tiles_in_slice_minus1 - so most slices read the entry points of another.
+        /// </summary>
+        public int DeriveNumEntryPoints()
         {
-            var sps_entry_point_offsets_present_flag = SeqParameterSetRbsp.SpsEntryPointOffsetsPresentFlag;
-            var sps_entropy_coding_sync_enabled_flag = SeqParameterSetRbsp.SpsEntropyCodingSyncEnabledFlag;
+            DeriveCurrSlice();
 
             NumEntryPoints = 0;
-            if (sps_entry_point_offsets_present_flag != 0)
+            if (SeqParameterSetRbsp.SpsEntryPointOffsetsPresentFlag != 0)
             {
                 for (int i = 1; i < NumCtusInCurrSlice; i++)
                 {
@@ -1010,63 +1359,60 @@ namespace SharpH266
                     ulong prevCtbAddrX = CtbAddrInCurrSlice[i - 1] % PicWidthInCtbsY;
                     ulong prevCtbAddrY = CtbAddrInCurrSlice[i - 1] / PicWidthInCtbsY;
                     if (CtbToTileRowBd[ctbAddrY] != CtbToTileRowBd[prevCtbAddrY] ||
-                    CtbToTileColBd[ctbAddrX] != CtbToTileColBd[prevCtbAddrX] ||
-                    (ctbAddrY != prevCtbAddrY && sps_entropy_coding_sync_enabled_flag != 0))
+                        CtbToTileColBd[ctbAddrX] != CtbToTileColBd[prevCtbAddrX] ||
+                        (ctbAddrY != prevCtbAddrY && SeqParameterSetRbsp.SpsEntropyCodingSyncEnabledFlag != 0))
                         NumEntryPoints++;
                 }
             }
+
+            return NumEntryPoints;
         }
 
-        public void OnShNumTilesInSliceMinus1()
+        /// <summary>The CTUs of the current slice (7.4.8).</summary>
+        private void DeriveCurrSlice()
         {
-            var pps_rect_slice_flag = PicParameterSetRbsp.PpsRectSliceFlag;
-            var sh_slice_address = SliceLayerRbsp.SliceHeader.ShSliceAddress;
-            var sh_num_tiles_in_slice_minus1 = SliceLayerRbsp.SliceHeader.ShNumTilesInSliceMinus1;
+            var header = SliceLayerRbsp.SliceHeader;
 
-            if (CtbAddrInCurrSlice == null || CtbAddrInCurrSlice.Length < NumCtusInCurrSlice)
-                CtbAddrInCurrSlice = new ulong[NumCtusInCurrSlice];
-
-            if (pps_rect_slice_flag != 0)
+            if (PicParameterSetRbsp.PpsRectSliceFlag != 0)
             {
-                ulong picLevelSliceIdx = sh_slice_address;
+                ulong picLevelSliceIdx = header.ShSliceAddress;
                 for (int j = 0; j < CurrSubpicIdx; j++)
                     picLevelSliceIdx += NumSlicesInSubpic[j];
                 NumCtusInCurrSlice = NumCtusInSlice[picLevelSliceIdx];
-                for (int i = 0; i < NumCtusInCurrSlice; i++)
-                    CtbAddrInCurrSlice[i] = CtbAddrInSlice[picLevelSliceIdx][i];
+                CtbAddrInCurrSlice = CtbAddrInSlice[picLevelSliceIdx] ?? [];
             }
             else
             {
-                NumCtusInCurrSlice = 0;
-                for (int tileIdx = (int)sh_slice_address; tileIdx <= (int)sh_slice_address + (int)sh_num_tiles_in_slice_minus1; tileIdx++)
+                // sh_num_tiles_in_slice_minus1 is 0 where not coded.
+                var addresses = new List<ulong>();
+                for (int tileIdx = (int)header.ShSliceAddress; tileIdx <= (int)(header.ShSliceAddress + header.ShNumTilesInSliceMinus1) && tileIdx < NumTilesInPic; tileIdx++)
                 {
                     int tileX = tileIdx % NumTileColumns;
                     int tileY = tileIdx / NumTileColumns;
-                    for (int ctbY = (int)TileRowBdVal[tileY]; ctbY < (int)TileRowBdVal[tileY + 1]; ctbY++)
-                    {
-                        for (int ctbX = (int)TileColBdVal[tileX]; ctbX < (int)TileColBdVal[tileX + 1]; ctbX++)
-                        {
-                            CtbAddrInCurrSlice[NumCtusInCurrSlice] = (uint)(ctbY * PicWidthInCtbsY + ctbX);
-                            NumCtusInCurrSlice++;
-                        }
-                    }
+                    for (ulong ctbY = TileRowBdVal[tileY]; ctbY < TileRowBdVal[tileY + 1]; ctbY++)
+                        for (ulong ctbX = TileColBdVal[tileX]; ctbX < TileColBdVal[tileX + 1]; ctbX++)
+                            addresses.Add(ctbY * PicWidthInCtbsY + ctbX);
                 }
+                CtbAddrInCurrSlice = addresses.ToArray();
+                NumCtusInCurrSlice = (uint)addresses.Count;
             }
         }
 
-        public void OnNumL1Weights(ulong num_l1_weights)
+        /// <summary>
+        /// NumWeightsL1 (149), worked out where pred_weight_table() loops on it. It was worked out
+        /// only as num_l1_weights was read, which it is only with the weights in the picture header,
+        /// and from the header's own reference picture list, which a list taken from the SPS lacks.
+        /// </summary>
+        public ulong DeriveNumWeightsL1(PredWeightTable table)
         {
-            var pps_weighted_bipred_flag = PicParameterSetRbsp.PpsWeightedBipredFlag;
-            var pps_wp_info_in_ph_flag = PicParameterSetRbsp.PpsWpInfoInPhFlag;
-            var num_ref_entries = SliceLayerRbsp.SliceHeader.RefPicLists.RefPicListStruct.NumRefEntries;
-
-            if (pps_weighted_bipred_flag == 0 ||
-                (pps_wp_info_in_ph_flag != 0 && num_ref_entries[1][RplsIdx[1]] == 0))
+            var pps = PicParameterSetRbsp;
+            if (pps.PpsWeightedBipredFlag == 0 || (pps.PpsWpInfoInPhFlag != 0 && num_ref_entries[1][RplsIdx[1]] == 0))
                 NumWeightsL1 = 0;
-            else if (pps_wp_info_in_ph_flag != 0)
-                NumWeightsL1 = num_l1_weights;
+            else if (pps.PpsWpInfoInPhFlag != 0)
+                NumWeightsL1 = table.NumL1Weights;
             else
-                NumWeightsL1 = NumRefIdxActive[1];
+                NumWeightsL1 = DeriveNumRefIdxActive()[1];
+            return NumWeightsL1;
         }
 
         public void OnAbsDeltaPocSt(uint listIdx, ulong rplsIdx, uint i, RefPicListStruct refPicListStruct)
@@ -1093,69 +1439,70 @@ namespace SharpH266
                 AbsDeltaPocSt[listIdx][rplsIdx][i] = abs_delta_poc_st[listIdx][rplsIdx][i] + 1;
         }
     
+        /// <summary>
+        /// A sequence parameter set registers itself under its id. One sent again under the same id
+        /// replaces the one there; keeping the first read later pictures against the old one.
+        /// </summary>
         public void SetSpsSeqParameterSetId(ulong sps_seq_parameter_set_id)
         {
-            if (SeqParameterSetRbsp == null)
-                return;
-
-            if (!SeqParameterSets.ContainsKey(SeqParameterSetRbsp.SpsSeqParameterSetId))
-            {
-                SeqParameterSets.Add(SeqParameterSetRbsp.SpsSeqParameterSetId, SeqParameterSetRbsp);
-            }
+            if (SeqParameterSetRbsp != null)
+                SeqParameterSets[sps_seq_parameter_set_id] = SeqParameterSetRbsp;
         }
 
+        /// <summary>A PPS reads the rest of itself against the SPS it names.</summary>
         public void SetPpsSeqParameterSetId(ulong pps_seq_parameter_set_id)
         {
-            if (pps_seq_parameter_set_id != SeqParameterSetRbsp.SpsSeqParameterSetId)
+            if (!SeqParameterSets.TryGetValue(pps_seq_parameter_set_id, out var sps))
             {
-                if (SeqParameterSets.ContainsKey(pps_seq_parameter_set_id))
-                {
-                    SeqParameterSetRbsp = SeqParameterSets[pps_seq_parameter_set_id];
-                }
-                else
-                {
-                    throw new Exception($"SeqParameterSet with id {pps_seq_parameter_set_id} not found.");
-                }
+                // Registered as its id was read: a PPS read no further is not there to refer to.
+                if (Strict)
+                    PicParameterSets.Remove(PicParameterSetRbsp.PpsPicParameterSetId);
+                throw new Exception($"SeqParameterSet with id {pps_seq_parameter_set_id} not found.");
             }
+
+            SeqParameterSetRbsp = sps;
+            DeriveFromSps();
         }
 
+        /// <summary>A PPS registers itself under its id, replacing one sent before under it.</summary>
         public void SetPpsPicParameterSetId(ulong pps_pic_parameter_set_id)
         {
-            if (PicParameterSetRbsp == null)
-                return;
-
-            if (!PicParameterSets.ContainsKey(PicParameterSetRbsp.PpsPicParameterSetId))
-            {
-                PicParameterSets.Add(PicParameterSetRbsp.PpsPicParameterSetId, PicParameterSetRbsp);
-            }
+            if (PicParameterSetRbsp != null)
+                PicParameterSets[pps_pic_parameter_set_id] = PicParameterSetRbsp;
         }
 
+        /// <summary>
+        /// A picture header activates the PPS it names, and that the SPS, and what the syntax takes
+        /// from them is worked out again. It switched only when the id differed from the set last
+        /// parsed, and kept what had been worked out from that one - the picture size in CTUs, the
+        /// tiles and slices, the extra header bits - so a picture was read against another's.
+        /// </summary>
         public void SetPhPicParameterSetId(ulong ph_pic_parameter_set_id)
         {
-            if (ph_pic_parameter_set_id != PicParameterSetRbsp.PpsPicParameterSetId)
-            {
-                if (PicParameterSets.ContainsKey(ph_pic_parameter_set_id))
-                {
-                    PicParameterSetRbsp = PicParameterSets[ph_pic_parameter_set_id];
+            if (!PicParameterSets.TryGetValue(ph_pic_parameter_set_id, out var pps))
+                throw new Exception($"PicParameterSet with id {ph_pic_parameter_set_id} not found.");
+            if (!SeqParameterSets.TryGetValue(pps.PpsSeqParameterSetId, out var sps))
+                throw new Exception($"SeqParameterSet with id {pps.PpsSeqParameterSetId} not found.");
 
-                    // set also SPS
-                    if (PicParameterSetRbsp.PpsSeqParameterSetId != SeqParameterSetRbsp.SpsSeqParameterSetId)
-                    {
-                        if (SeqParameterSets.ContainsKey(PicParameterSetRbsp.PpsSeqParameterSetId))
-                        {
-                            SeqParameterSetRbsp = SeqParameterSets[PicParameterSetRbsp.PpsSeqParameterSetId];
-                        }
-                        else
-                        {
-                            throw new Exception($"SeqParameterSet with id {PicParameterSetRbsp.PpsSeqParameterSetId} not found.");
-                        }
-                    }
-                }
-                else
-                {
-                    throw new Exception($"PicParameterSet with id {ph_pic_parameter_set_id} not found.");
-                }
-            }
+            PicParameterSetRbsp = pps;
+            SeqParameterSetRbsp = sps;
+            DeriveFromSps();
+            OnPpsPicHeightInLumaSamples();
+            if (pps.PpsNoPicPartitionFlag == 0 && pps.PpsTileRowHeightMinus1 != null)
+                OnPpsTileRowHeightMinus1((uint)pps.PpsNumExpTileRowsMinus1);
+            OnPpsCabacInitPresentFlag();
+            if (sps.SpsSubpicIdMappingExplicitlySignalledFlag != 0 || sps.SpsSubpicInfoPresentFlag != 0)
+                OnPpsSubpicId();
+        }
+
+        /// <summary>What the syntax takes from the SPS in force.</summary>
+        private void DeriveFromSps()
+        {
+            OnSpsLog2CtuSizeMinus5();
+            OnSpsLog2MinLumaCodingBlockSizeMinus2();
+            OnSpsSixMinusMaxNumMergeCand();
+            OnSpsExtraPhBitPresentFlag();
+            OnSpsExtraShBitPresentFlag();
         }
     }
 }
