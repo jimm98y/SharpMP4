@@ -193,7 +193,9 @@ namespace SharpISOBMFF
                case "auxi":  return new AuxiliaryTypeInfoBox();
                case "auxl":  return new AuxiliaryImageReferenceBox();
                case "av01": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("av01"));break;
+               case "av02": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("av02"));break;
                case "av1C":  return new AV1CodecConfigurationBox();
+               case "av2C":  return new AV2CodecConfigurationBox();
                case "avc1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("avc1"));break;
                case "avc2": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("avc2"));break;
                case "avc3": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("avc3"));break;

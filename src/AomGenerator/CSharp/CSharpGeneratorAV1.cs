@@ -379,6 +379,9 @@ namespace AomGenerator.CSharp
             value = value.Replace("read_delta_q", "ReadDeltaq");
             value = value.Replace("inverse_recenter", "InverseRecenter");
             value = value.Replace("get_relative_dist", "GetRelativeDist");
+            value = value.Replace("find_latest_backward", "FindLatestBackward");
+            value = value.Replace("find_earliest_backward", "FindEarliestBackward");
+            value = value.Replace("find_latest_forward", "FindLatestForward");
             value = value.Replace("decode_unsigned_subexp_with_ref", "DecodeUnsignedSubexpWithRef");
             value = value.Replace("decode_signed_subexp_with_ref", "DecodeSignedSubexpWithRef");
             value = value.Replace("decode_subexp", "DecodeSubexp");
@@ -479,6 +482,8 @@ namespace AomGenerator.CSharp
                 case "RefValid":
                 case "RefOrderHint":
                 case "ref_order_hint":
+                case "usedFrame":
+                case "shiftedOrderHints":
                     return "new int[AV1Constants.NUM_REF_FRAMES]";
                 
                 case "OrderHints":
@@ -573,6 +578,21 @@ namespace AomGenerator.CSharp
             }
         }
 
+        // AV1's expressions are fixed up where they stand (FixStatement), and its types and reads are the generator's own.
+        public AomExpressions Expressions => null;
+
+        public string GetFieldType(AomField field) => null;
+
+        public string GetReadMethod(AomField field) => null;
+
+        public IEnumerable<string> FieldSets => null;
+
+        public void Prepare(IEnumerable<AomMethod> methods) { }
+
+        public string GetParameterType(AomMethod method, string parameter) => null;
+
+        public string GetReturnType(AomMethod method) => null;
+
         public string PreprocessDefinitionsFile(string definitions)
         {
             // rename ref -> refc to avoid C# conflicts with built-in ref keyword
@@ -580,6 +600,8 @@ namespace AomGenerator.CSharp
             definitions = definitions.Replace("[ref]", "[refc]");
             definitions = definitions.Replace(", ref,", ", refc,");
             definitions = definitions.Replace("ref++", "refc++");
+            // AV1.Functions.js writes ref as the specification does, "ref = -1", "return ref" and the like
+            definitions = System.Text.RegularExpressions.Regex.Replace(definitions, @"\bref\b", "refc");
 
             // TODO: ternary operator support
             definitions = definitions.Replace("twelve_bit ?", "twelve_bit != 0 ?");

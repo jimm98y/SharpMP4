@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using static Pidgin.Parser;
 using static Pidgin.Parser<char>;
 
@@ -28,7 +29,28 @@ namespace AomGenerator
         public static Parser<char, string> AnyCharE => AnyCharExcept('(', ')').AtLeastOnceString();
         public static Parser<char, string> Expr => OneOf(Rec(() => Parentheses), AnyCharE);
         public static Parser<char, string> Parentheses => Char('(').Then(Rec(() => Expr).Until(Char(')'))).Select(x => $"({string.Concat(x)})");
-        public static Parser<char, IEnumerable<AomCode>> SingleBlock => (Try(BlockIfThenElse).Or(Try(BlockForWhile).Or(Try(BreakStatement).Or(Try(ReturnStatement).Or(Field))))).Repeat(1);
+        public static Parser<char, IEnumerable<AomCode>> SingleBlock => (Try(BlockIfThenElse).Or(Try(BlockForWhile).Or(Try(BreakStatement).Or(Try(ReturnStatement).Or(Try(TupleAssignment).Or(Field)))))).Repeat(1);
+
+        /// <summary>
+        /// The rest of a line, and of the lines after it while a parenthesis is open: AV2 breaks a long
+        /// expression over lines inside its parentheses.
+        /// </summary>
+        public static Parser<char, string> LineRest => LineSegment.Bind(segment => EndsInOperator(segment)
+            ? Try(EndOfLine.Then(Rec(() => LineRest))).Select(rest => segment.TrimEnd() + " " + rest.TrimStart()).Or(Return(segment))
+            // A line that starts with an index goes on from the one before: "a[ i ]" / "[ j ]".
+            : Try(EndOfLine.Then(SkipWhitespaces).Then(Lookahead(Char('[')))).Then(Rec(() => LineRest)).Select(rest => segment.TrimEnd() + rest.TrimStart()).Or(Return(segment)));
+
+        private static Parser<char, string> LineSegment => OneOf(Try(Parentheses), AnyCharExcept('(', ')', '\r', '\n').AtLeastOnceString()).Many().Select(x => string.Concat(x));
+
+        /// <summary>A line that ends in an operator goes on on the next: "a = b ?" / "c : d".</summary>
+        private static bool EndsInOperator(string segment)
+        {
+            string trimmed = segment.TrimEnd();
+            if (trimmed.Length == 0)
+                return false;
+            char last = trimmed[trimmed.Length - 1];
+            return "?:+-*/%&|^<>=,!".IndexOf(last) >= 0 && !trimmed.EndsWith("++") && !trimmed.EndsWith("--");
+        }
 
         public static Parser<char, string> FieldType => OneOf(
             Try(String("f(1)")),
@@ -75,13 +97,17 @@ namespace AomGenerator
             Try(String("NS(PaletteSizeUV)")),
             Try(String("NS(numSyms - mk)")),
             Try(String("uvlc()")),
-            Try(String("leb128()"))
+            Try(String("leb128()")),
+            // AV2 has many more widths of these: any argument, as the spec writes it.
+            Try(OneOf(Try(String("svlc")), Try(String("tu")), Try(String("rg")), Try(String("le")), Try(String("su")), Try(String("ns")), Try(String("f")))
+                .Then(Parentheses, (name, argument) => name + argument))
             );
 
         public static Parser<char, string> FieldValue =>
             Map((operation, value) => $"{operation} {value}",
-                SkipWhitespaces.Then(OneOf(String("="), String("+="), String("-="))),
-                SkipWhitespaces.Then(Any.Until(EndOfLine)).Select(x => string.Concat(x))
+                SkipWhitespaces.Then(OneOf(String("="), String("+="), String("-="), String("|="), String("&="), String("^="), String("*="), String("/="),
+                    Try(String("<<=")), String(">>="))),
+                SkipWhitespaces.Then(LineRest)
                 );
 
 
@@ -103,8 +129,15 @@ namespace AomGenerator
 
         public static Parser<char, AomCode> ReturnStatement =>
              Map((classParameter) => new AomReturn(classParameter),
-                SkipWhitespaces.Then(String("return")).Then(Try(Any.Until(Try(EndOfLine).IgnoreResult())).Optional())
+                SkipWhitespaces.Then(String("return")).Then(LineRest.Select(x => (IEnumerable<char>)x).Optional())
              ).Select(x => (AomCode)x);
+
+        /// <summary>AV2's assignment of the values a function returns: ( a, b ) = f( ... ).</summary>
+        public static Parser<char, AomCode> TupleAssignment =>
+             Map((targets, value) => (AomCode)new AomTuple(targets, value),
+                SkipWhitespaces.Then(Parentheses),
+                SkipWhitespaces.Then(Char('=')).Then(SkipWhitespaces).Then(LineRest)
+             );
 
         public static Parser<char, AomCode> BreakStatement => SkipWhitespaces.Then(String("break").ThenReturn((AomCode)new AomBreak()));
 
@@ -147,7 +180,7 @@ namespace AomGenerator
                 SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
             ).Select(x => (AomCode)x);
 
-        public static Parser<char, AomCode> CodeBlock => Try(BlockIfThenElse).Or(Try(BlockForWhile).Or(Try(BreakStatement).Or(Try(ReturnStatement).Or(Try(Field).Or(Comment)))));
+        public static Parser<char, AomCode> CodeBlock => Try(BlockIfThenElse).Or(Try(BlockForWhile).Or(Try(BreakStatement).Or(Try(ReturnStatement).Or(Try(TupleAssignment).Or(Try(Field).Or(Comment))))));
 
         public static Parser<char, IEnumerable<AomCode>> CodeBlocks => SkipWhitespaces.Then(CodeBlock.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
@@ -223,6 +256,22 @@ namespace AomGenerator
 
         public AomBlock Parent { get; internal set; }
         public bool MakeList { get; internal set; }
+    }
+
+    /// <summary>( a, b ) = f( ... ): the values a function returns, assigned in order.</summary>
+    public class AomTuple : AomCode
+    {
+        public AomTuple(string targets, string value)
+        {
+            // "( a, b )" to its names
+            Targets = targets.Trim().TrimStart('(').TrimEnd(')').Split(',').Select(x => x.Trim()).ToList();
+            Value = value;
+        }
+
+        public List<string> Targets { get; }
+        public string Value { get; }
+
+        public AomBlock Parent { get; internal set; }
     }
 
     public class AomBreak : AomCode

@@ -90,6 +90,9 @@ namespace SharpAVX
 
         #endregion // Bit read/write
 
+        /// <summary>The number of bytes the last leb128() read (AV2 4.11.6).</summary>
+        public int Leb128Bytes { get; private set; }
+
         public ulong ReadLeb128(out int value, string name)
         {
             // Gathered in 64 bits: up to eight bytes of seven bits each. Gathered in an int, the
@@ -108,6 +111,7 @@ namespace SharpAVX
             }
 
             value = unchecked((int)v);
+            this.Leb128Bytes = Leb128Bytes;
             LogEnd(name, (ulong)Leb128Bytes << 3, v);
             Validate?.Invoke(name, v);
 
@@ -226,6 +230,96 @@ namespace SharpAVX
             LogEnd(name, (ulong)w, value);
             return (ulong)w;
         }        
+
+        /// <summary>ns(n) as an int, as AV2 keeps every element.</summary>
+        public ulong Read_ns(int count, out int value, string name)
+        {
+            ulong size = Read_ns(count, out uint v, name);
+            value = (int)v;
+            return size;
+        }
+
+        /// <summary>uvlc() as an int; a value past what an int holds is not one a header has.</summary>
+        public ulong ReadUvlc(out int value, string name)
+        {
+            ulong size = ReadUvlc(out uint v, name);
+            value = checked((int)v);
+            return size;
+        }
+
+        /// <summary>svlc(), AV2 4.11.4: a uvlc() mapped to 0, 1, -1, 2, -2 and so on.</summary>
+        public ulong ReadSvlc(out int value, string name)
+        {
+            ulong size = ReadUvlc(out uint v, "");
+            long half = ((long)v + 1) >> 1;
+            value = (int)((v & 1) != 0 ? half : -half);
+            LogEnd(name, size, value);
+            return size;
+        }
+
+        /// <summary>le(n), AV2 4.11.5: an unsigned little-endian number of n bytes, up to 4 of them.</summary>
+        public ulong ReadLe(int count, out int value, string name)
+        {
+            if (count > 4)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            long t = 0;
+            for (int i = 0; i < count; i++)
+            {
+                long b = ReadBits(8);
+                if (b == -1)
+                    throw new EndOfStreamException();
+                t += b << (i * 8);
+            }
+            value = unchecked((int)t);
+            LogEnd(name, (ulong)count << 3, t);
+            return (ulong)count << 3;
+        }
+
+        /// <summary>tu(mx), AV2 4.11.9: a number from 0 to mx in truncated unary.</summary>
+        public ulong ReadTu(int max, out int value, string name)
+        {
+            ulong size = 0;
+            value = max;
+            for (int idx = 0; idx < max; idx++)
+            {
+                int bit = ReadBit();
+                if (bit == -1)
+                    throw new EndOfStreamException();
+                size++;
+                if (bit == 0)
+                {
+                    value = idx;
+                    break;
+                }
+            }
+            LogEnd(name, size, value);
+            return size;
+        }
+
+        /// <summary>rg(n), AV2 4.11.10: Rice-Golomb, a unary quotient then an n bit remainder; -1 past 32 ones.</summary>
+        public ulong ReadRg(int count, out int value, string name)
+        {
+            ulong size = 0;
+            value = -1;
+            for (int q = 0; q < 32; q++)
+            {
+                int bit = ReadBit();
+                if (bit == -1)
+                    throw new EndOfStreamException();
+                size++;
+                if (bit == 0)
+                {
+                    long remainder = ReadBits(count);
+                    if (remainder == -1)
+                        throw new EndOfStreamException();
+                    size += (ulong)count;
+                    value = (int)(((long)q << count) + remainder);
+                    break;
+                }
+            }
+            LogEnd(name, size, value);
+            return size;
+        }
 
         private int _logLevel = 0;
 

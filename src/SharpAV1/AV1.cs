@@ -113,15 +113,6 @@ namespace SharpAV1
         
         public int[][] saved_loop_filter_ref_deltas = new int[AV1Constants.NUM_REF_FRAMES][] { new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8] };
         public int[][] saved_loop_filter_mode_deltas = new int[AV1Constants.NUM_REF_FRAMES][] { new int[2], new int[2], new int[2], new int[2], new int[2], new int[2], new int[2], new int[2] };
-        private int[] usedFrame = new int[AV1Constants.NUM_REF_FRAMES];
-        private int[] shiftedOrderHints = new int[AV1Constants.NUM_REF_FRAMES];
-        private int curFrameHint;
-        private int lastOrderHint;
-        private int goldOrderHint;
-        private int earliestOrderHint;
-        private int latestOrderHint;
-        private int diffLen;
-
         public void Read(AomStream stream, int size)
         {
             this.stream = stream ?? throw new ArgumentNullException(nameof(stream));
@@ -218,132 +209,6 @@ namespace SharpAV1
         /// looked for among the forward references and the rest took the earliest frame - and
         /// skip_mode_present was read where a decoder does not.
         /// </summary>
-        private void SetFrameRefs() 
-        {
-            for (int i = 0; i < AV1Constants.REFS_PER_FRAME; i++)
-                ref_frame_idx[i] = -1;
-            ref_frame_idx[AV1RefFrames.LAST_FRAME - AV1RefFrames.LAST_FRAME] = last_frame_idx;
-            ref_frame_idx[AV1RefFrames.GOLDEN_FRAME - AV1RefFrames.LAST_FRAME] = gold_frame_idx;
-
-            for (int i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
-                usedFrame[i] = 0;
-
-            usedFrame[last_frame_idx] = 1;
-            usedFrame[gold_frame_idx] = 1;
-
-            curFrameHint = 1 << (OrderHintBits - 1);
-
-            for (int i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
-                shiftedOrderHints[i] = curFrameHint + GetRelativeDist(RefOrderHint[i], OrderHint);
-
-            lastOrderHint = shiftedOrderHints[last_frame_idx];
-            goldOrderHint = shiftedOrderHints[gold_frame_idx];
-
-            refc = FindLatestBackward();
-            if (refc >= 0)
-            {
-                ref_frame_idx[AV1RefFrames.ALTREF_FRAME - AV1RefFrames.LAST_FRAME] = refc;
-                usedFrame[refc] = 1;
-            }
-
-            refc = FindEarliestBackward();
-            if (refc >= 0)
-            {
-                ref_frame_idx[AV1RefFrames.BWDREF_FRAME - AV1RefFrames.LAST_FRAME] = refc;
-                usedFrame[refc] = 1;
-            }
-
-            refc = FindEarliestBackward();
-            if (refc >= 0)
-            {
-                ref_frame_idx[AV1RefFrames.ALTREF2_FRAME - AV1RefFrames.LAST_FRAME] = refc;
-                usedFrame[refc] = 1;
-            }
-
-            for (int i = 0; i < AV1Constants.REFS_PER_FRAME - 2; i++)
-            {
-                refFrame = Ref_Frame_List[i];
-                if (ref_frame_idx[refFrame - AV1RefFrames.LAST_FRAME] < 0)
-                {
-                    refc = FindLatestForward();
-                    if (refc >= 0)
-                    {
-                        ref_frame_idx[refFrame - AV1RefFrames.LAST_FRAME] = refc;
-                        usedFrame[refc] = 1;
-                    }
-                }
-            }
-
-            refc = -1;
-            for (int i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
-            {
-                hint = shiftedOrderHints[i];
-                if (refc < 0 || hint < earliestOrderHint)
-                {
-                    refc = i;
-                    earliestOrderHint = hint;
-                }
-            }
-            for (int i = 0; i < AV1Constants.REFS_PER_FRAME; i++)
-            {
-                if (ref_frame_idx[i] < 0)
-                {
-                    ref_frame_idx[i] = refc;
-                }
-            }
-        }
-
-        private int FindLatestForward()
-        {
-            refc = -1;
-            for (int i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
-            {
-                hint = shiftedOrderHints[i];
-                if (usedFrame[i] == 0 &&
-                hint < curFrameHint &&
-                (refc < 0 || hint >= latestOrderHint))
-                {
-                    refc = i;
-                    latestOrderHint = hint;
-                }
-            }
-            return refc;
-        }
-
-        private int FindEarliestBackward()
-        {
-            refc = -1;
-            for (int i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
-            {
-                hint = shiftedOrderHints[i];
-                if (usedFrame[i] == 0 &&
-                hint >= curFrameHint &&
-                (refc < 0 || hint < earliestOrderHint))
-                {
-                    refc = i; 
-                    earliestOrderHint = hint;
-                }
-            }
-            return refc;
-        }
-
-        private int FindLatestBackward()
-        {
-            refc = -1;
-            for (int i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
-            {
-                hint = shiftedOrderHints[i];
-                if (usedFrame[i] == 0 &&
-                hint >= curFrameHint &&
-                (refc < 0 || hint >= latestOrderHint))
-                {
-                    refc = i;
-                    latestOrderHint = hint;
-                }
-            }
-            return refc;
-        }
-
         private void ResetGrainParams() 
         {
             apply_grain = 0;
@@ -565,24 +430,6 @@ namespace SharpAV1
             prevFrame = ref_frame_idx[primary_ref_frame];
         }
 
-        private void MarkRefFrames(int idLen) 
-        {
-            diffLen = delta_frame_id_length_minus_2 + 2;
-            for (i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
-            {
-                if (current_frame_id > (1 << diffLen))
-                {
-                    if (RefFrameId[i] > current_frame_id || RefFrameId[i] < (current_frame_id - (1 << diffLen)))
-                        RefValid[i] = 0;
-                }
-                else
-                {
-                    if (RefFrameId[i] > current_frame_id && RefFrameId[i] < ((1 << idLen) + current_frame_id - (1 << diffLen)))
-                        RefValid[i] = 0;
-                }
-            }
-        }
-
         /// <summary>
         /// Whether this frame's references were refreshed when its header ended, not to be again.
         /// </summary>
@@ -727,9 +574,22 @@ namespace SharpAV1
                 this.stream.ReadFixed(bits % 8, out rest, "frame_header_copy");
 
             // A redundant frame header is a copy of the one it repeats (6.8.1).
-            if (Strict && (!copy.AsSpan().SequenceEqual(LastObuFrameHeader.AsSpan(0, copy.Length)) ||
+            if (Strict && (!StartsWith(LastObuFrameHeader, copy) ||
                 (bits % 8 > 0 && rest != LastObuFrameHeader[bits / 8] >> (8 - bits % 8))))
                 throw new InvalidDataException("A redundant frame header that differs from the frame header it repeats.");
+        }
+
+        /// <summary>Whether data starts with prefix; spans are not in net481's framework.</summary>
+        private static bool StartsWith(byte[] data, byte[] prefix)
+        {
+            if (data.Length < prefix.Length)
+                return false;
+            for (int i = 0; i < prefix.Length; i++)
+            {
+                if (data[i] != prefix[i])
+                    return false;
+            }
+            return true;
         }
     }
 

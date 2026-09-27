@@ -2334,6 +2334,7 @@ tile_log2( blkSize, target ) {
 
         private int TileLog2(int blkSize, int target)
         {
+			int k = 0;
 
 			for ( k = 0; (blkSize << (int) k) < target; k++ )
 			{
@@ -4605,6 +4606,337 @@ tile_list_entry() {
 			stream.ReadFixed(16, out this.tile_data_size_minus_1, "tile_data_size_minus_1"); 
 			N= 8 * (tile_data_size_minus_1 + 1);
 			stream.ReadBytes(N, out this.coded_tile_data, "coded_tile_data"); 
+        }
+
+    /*
+set_frame_refs() {
+/* AV1 Bitstream & Decoding Process Specification, 7.8 Set frame refs process: its code, in order *//*
+for ( i = 0; i < REFS_PER_FRAME; i++ )
+  ref_frame_idx[ i ] = -1
+ref_frame_idx[ LAST_FRAME - LAST_FRAME ] = last_frame_idx
+ref_frame_idx[ GOLDEN_FRAME - LAST_FRAME ] = gold_frame_idx
+for ( i = 0; i < NUM_REF_FRAMES; i++ )
+  usedFrame[ i ] = 0
+usedFrame[ last_frame_idx ] = 1
+usedFrame[ gold_frame_idx ] = 1
+/* "A variable curFrameHint is set equal to 1 << (OrderHintBits - 1)." *//*
+curFrameHint = 1 << (OrderHintBits - 1)
+for ( i = 0; i < NUM_REF_FRAMES; i++ )
+  shiftedOrderHints[ i ] = curFrameHint + get_relative_dist( RefOrderHint[ i ], OrderHint )
+/* "The variable lastOrderHint ... is set equal to shiftedOrderHints[ last_frame_idx ]." *//*
+lastOrderHint = shiftedOrderHints[ last_frame_idx ]
+/* "The variable goldOrderHint ... is set equal to shiftedOrderHints[ gold_frame_idx ]." *//*
+goldOrderHint = shiftedOrderHints[ gold_frame_idx ]
+refc = find_latest_backward()
+if ( refc >= 0 ) {
+  ref_frame_idx[ ALTREF_FRAME - LAST_FRAME ] = refc
+  usedFrame[ refc ] = 1
+}
+refc = find_earliest_backward()
+if ( refc >= 0 ) {
+  ref_frame_idx[ BWDREF_FRAME - LAST_FRAME ] = refc
+  usedFrame[ refc ] = 1
+}
+refc = find_earliest_backward()
+if ( refc >= 0 ) {
+  ref_frame_idx[ ALTREF2_FRAME - LAST_FRAME ] = refc
+  usedFrame[ refc ] = 1
+}
+for ( i = 0; i < REFS_PER_FRAME - 2; i++ ) {
+  refFrame = Ref_Frame_List[ i ]
+  if ( ref_frame_idx[ refFrame - LAST_FRAME ] < 0 ) {
+    refc = find_latest_forward()
+    if ( refc >= 0 ) {
+      ref_frame_idx[ refFrame - LAST_FRAME ] = refc
+      usedFrame[ refc ] = 1
+    }
+  }
+}
+refc = -1
+for ( i = 0; i < NUM_REF_FRAMES; i++ ) {
+  hint = shiftedOrderHints[ i ]
+  if ( refc < 0 || hint < earliestOrderHint ) {
+    refc = i
+    earliestOrderHint = hint
+  }
+}
+for ( i = 0; i < REFS_PER_FRAME; i++ ) {
+  if ( ref_frame_idx[ i ] < 0 ) {
+    ref_frame_idx[ i ] = refc
+  }
+}
+}
+    */
+		private int[] usedFrame= new int[AV1Constants.NUM_REF_FRAMES];
+		public int[] _UsedFrame { get { return usedFrame; } set { usedFrame = value; } }
+		private int curFrameHint;
+		public int _CurFrameHint { get { return curFrameHint; } set { curFrameHint = value; } }
+		private int[] shiftedOrderHints= new int[AV1Constants.NUM_REF_FRAMES];
+		public int[] _ShiftedOrderHints { get { return shiftedOrderHints; } set { shiftedOrderHints = value; } }
+		private int lastOrderHint;
+		public int _LastOrderHint { get { return lastOrderHint; } set { lastOrderHint = value; } }
+		private int goldOrderHint;
+		public int _GoldOrderHint { get { return goldOrderHint; } set { goldOrderHint = value; } }
+		private int earliestOrderHint;
+		public int _EarliestOrderHint { get { return earliestOrderHint; } set { earliestOrderHint = value; } }
+
+        private void SetFrameRefs()
+        {
+/*  AV1 Bitstream & Decoding Process Specification, 7.8 Set frame refs process: its code, in order  */
+
+
+			for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
+			{
+				ref_frame_idx[ i ]= -1;
+			}
+			ref_frame_idx[ AV1RefFrames.LAST_FRAME - AV1RefFrames.LAST_FRAME ]= last_frame_idx;
+			ref_frame_idx[ AV1RefFrames.GOLDEN_FRAME - AV1RefFrames.LAST_FRAME ]= gold_frame_idx;
+
+			for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++ )
+			{
+				usedFrame[ i ]= 0;
+			}
+			usedFrame[ last_frame_idx ]= 1;
+			usedFrame[ gold_frame_idx ]= 1;
+			curFrameHint= 1 << (OrderHintBits - 1);
+
+			for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++ )
+			{
+				shiftedOrderHints[ i ]= curFrameHint + GetRelativeDist( RefOrderHint[ i ], OrderHint );
+			}
+			lastOrderHint= shiftedOrderHints[ last_frame_idx ];
+			goldOrderHint= shiftedOrderHints[ gold_frame_idx ];
+			refc= FindLatestBackward();
+
+			if ( refc >= 0 )
+			{
+				ref_frame_idx[ AV1RefFrames.ALTREF_FRAME - AV1RefFrames.LAST_FRAME ]= refc;
+				usedFrame[ refc ]= 1;
+			}
+			refc= FindEarliestBackward();
+
+			if ( refc >= 0 )
+			{
+				ref_frame_idx[ AV1RefFrames.BWDREF_FRAME - AV1RefFrames.LAST_FRAME ]= refc;
+				usedFrame[ refc ]= 1;
+			}
+			refc= FindEarliestBackward();
+
+			if ( refc >= 0 )
+			{
+				ref_frame_idx[ AV1RefFrames.ALTREF2_FRAME - AV1RefFrames.LAST_FRAME ]= refc;
+				usedFrame[ refc ]= 1;
+			}
+
+			for ( i = 0; i < AV1Constants.REFS_PER_FRAME - 2; i++ )
+			{
+				refFrame= Ref_Frame_List[ i ];
+
+				if ( ref_frame_idx[ refFrame - AV1RefFrames.LAST_FRAME ] < 0 )
+				{
+					refc= FindLatestForward();
+
+					if ( refc >= 0 )
+					{
+						ref_frame_idx[ refFrame - AV1RefFrames.LAST_FRAME ]= refc;
+						usedFrame[ refc ]= 1;
+					}
+				}
+			}
+			refc= -1;
+
+			for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++ )
+			{
+				hint= shiftedOrderHints[ i ];
+
+				if ( refc < 0 || hint < earliestOrderHint )
+				{
+					refc= i;
+					earliestOrderHint= hint;
+				}
+			}
+
+			for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
+			{
+
+				if ( ref_frame_idx[ i ] < 0 )
+				{
+					ref_frame_idx[ i ]= refc;
+				}
+			}
+        }
+
+    /*
+find_latest_backward() {
+/* AV1 Bitstream & Decoding Process Specification, 7.8 Set frame refs process *//*
+  refc = -1
+  for ( i = 0; i < NUM_REF_FRAMES; i++ ) {
+    hint = shiftedOrderHints[ i ]
+    if ( !usedFrame[ i ] &&
+         hint >= curFrameHint &&
+         ( refc < 0 || hint >= latestOrderHint ) ) {
+      refc = i
+      latestOrderHint = hint
+    }
+  }
+  return refc
+}
+    */
+		private int latestOrderHint;
+		public int _LatestOrderHint { get { return latestOrderHint; } set { latestOrderHint = value; } }
+
+        private int FindLatestBackward()
+        {
+			int i = 0;
+/*  AV1 Bitstream & Decoding Process Specification, 7.8 Set frame refs process  */
+
+			refc= -1;
+
+			for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++ )
+			{
+				hint= shiftedOrderHints[ i ];
+
+				if ( usedFrame[ i ]== 0 &&
+         hint >= curFrameHint &&
+         ( refc < 0 || hint >= latestOrderHint ) )
+				{
+					refc= i;
+					latestOrderHint= hint;
+				}
+			}
+			return refc;
+        }
+
+    /*
+find_earliest_backward() {
+/* AV1 Bitstream & Decoding Process Specification, 7.8 Set frame refs process *//*
+  refc = -1
+  for ( i = 0; i < NUM_REF_FRAMES; i++ ) {
+    hint = shiftedOrderHints[ i ]
+    if ( !usedFrame[ i ] &&
+         hint >= curFrameHint &&
+         ( refc < 0 || hint < earliestOrderHint ) ) {
+      refc = i
+      earliestOrderHint = hint
+    }
+  }
+  return refc
+}
+    */
+
+        private int FindEarliestBackward()
+        {
+			int i = 0;
+/*  AV1 Bitstream & Decoding Process Specification, 7.8 Set frame refs process  */
+
+			refc= -1;
+
+			for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++ )
+			{
+				hint= shiftedOrderHints[ i ];
+
+				if ( usedFrame[ i ]== 0 &&
+         hint >= curFrameHint &&
+         ( refc < 0 || hint < earliestOrderHint ) )
+				{
+					refc= i;
+					earliestOrderHint= hint;
+				}
+			}
+			return refc;
+        }
+
+    /*
+find_latest_forward() {
+/* AV1 Bitstream & Decoding Process Specification, 7.8 Set frame refs process *//*
+  refc = -1
+  for ( i = 0; i < NUM_REF_FRAMES; i++ ) {
+    hint = shiftedOrderHints[ i ]
+    if ( !usedFrame[ i ] &&
+         hint < curFrameHint &&
+         ( refc < 0 || hint >= latestOrderHint ) ) {
+      refc = i
+      latestOrderHint = hint
+    }
+  }
+  return refc
+}
+    */
+
+        private int FindLatestForward()
+        {
+			int i = 0;
+/*  AV1 Bitstream & Decoding Process Specification, 7.8 Set frame refs process  */
+
+			refc= -1;
+
+			for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++ )
+			{
+				hint= shiftedOrderHints[ i ];
+
+				if ( usedFrame[ i ]== 0 &&
+         hint < curFrameHint &&
+         ( refc < 0 || hint >= latestOrderHint ) )
+				{
+					refc= i;
+					latestOrderHint= hint;
+				}
+			}
+			return refc;
+        }
+
+    /*
+mark_ref_frames( idLen ) {
+/* AV1 Bitstream & Decoding Process Specification, 5.9.4 Reference frame marking function *//*
+    diffLen = delta_frame_id_length_minus_2 + 2
+    for ( i = 0; i < NUM_REF_FRAMES; i++ ) {
+        if ( current_frame_id > ( 1 << diffLen ) ) {
+            if ( RefFrameId[ i ] > current_frame_id ||
+                 RefFrameId[ i ] < ( current_frame_id - ( 1 << diffLen ) ) )
+                RefValid[ i ] = 0
+        } else {
+            if ( RefFrameId[ i ] > current_frame_id &&
+                 RefFrameId[ i ] < ( ( 1 << idLen ) +
+                                     current_frame_id -
+                                     ( 1 << diffLen ) ) )
+                RefValid[ i ] = 0
+        }
+    }
+}
+    */
+		private int diffLen;
+		public int _DiffLen { get { return diffLen; } set { diffLen = value; } }
+
+        private void MarkRefFrames(int idLen)
+        {
+/*  AV1 Bitstream & Decoding Process Specification, 5.9.4 Reference frame marking function  */
+
+			diffLen= delta_frame_id_length_minus_2 + 2;
+
+			for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++ )
+			{
+
+				if ( current_frame_id > ( 1 << (int) diffLen ) )
+				{
+
+					if ( RefFrameId[ i ] > current_frame_id ||
+                 RefFrameId[ i ] < ( current_frame_id - ( 1 << (int) diffLen ) ) )
+					{
+						RefValid[ i ]= 0;
+					}
+				}
+				else 
+				{
+
+					if ( RefFrameId[ i ] > current_frame_id &&
+                 RefFrameId[ i ] < ( ( 1 << (int) idLen ) +
+                                     current_frame_id -
+                                     ( 1 << (int) diffLen ) ) )
+					{
+						RefValid[ i ]= 0;
+					}
+				}
+			}
         }
 
     }

@@ -172,7 +172,7 @@ namespace BoxGenerator
             {
             "mp4v","s263","drmi","encv","resv","icpv","hvc1","hvc2","hvc3","lhv1","lhe1","hev1","hev2","hev3","avcp","mvc1","mvc2","mvc3","mvc4","mvd1","mvd2",
             "mvd3","mvd4","a3d1","a3d2","a3d3","a3d4","svc1","svc2","hvt1","lht1","hvt3","hvt2","vvc1","vvi1","vvs1","vvcN","evc1","evs1","evs2","av01","avc1",
-            "avc2","avc3","avc4","vp08","vp09","vp10","apcn","dvhe","dvav","mjpg","uncv","j2ki",
+            "avc2","avc3","avc4","vp08","vp09","vp10","av02","apcn","dvhe","dvav","mjpg","uncv","j2ki",
             // quicktime https://developer.apple.com/documentation/quicktime-file-format/video_sample_description
             "cvid","jpeg","smc ","rle ","rpza","kpcd","png ","mjpa","mjpb","SVQ1","SVQ3","dvc ","dvcp","gif ","h263","tiff","raw ","2vuY","yuv2","v308","v408",
             "v216","v410","v210","qhvc",

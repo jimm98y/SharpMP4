@@ -112,7 +112,7 @@ public static partial class SharpTrace
 
                     // Each OBU is read from where it starts, whatever the one before left.
                     capture.Fields = [];
-                    using var reader = new SharpAV1.AomStream(new MemoryStream(temporalUnit, offset, left), capture);
+                    using var reader = new SharpAVX.AomStream(new MemoryStream(temporalUnit, offset, left), capture);
                     Exception? error = null;
                     try
                     {

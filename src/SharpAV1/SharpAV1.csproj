@@ -11,6 +11,7 @@
 
 	<ItemGroup>
 		<AdditionalFiles Include="AV1.js" />
+		<AdditionalFiles Include="AV1.Functions.js" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(AutoGenerateCode) == 'true'">

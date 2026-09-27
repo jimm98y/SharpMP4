@@ -1,4 +1,5 @@
 using SharpAV1;
+using SharpAVX;
 using SharpMP4.Common;
 
 namespace SharpMP4.Tests;

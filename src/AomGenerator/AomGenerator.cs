@@ -10,6 +10,9 @@ namespace AomGenerator
 {
     public class AomGenerator
     {
+        /// <summary>The syntax a file belongs to: AV2.Functions.js is AV2's, as AV2.js is.</summary>
+        public static string Family(string name) => name.Split('.')[0];
+
         public static string Generate(string path, string content)
         {
             ICustomGenerator customGenerator = null;

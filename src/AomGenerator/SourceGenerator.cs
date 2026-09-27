@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using System.IO;
+using System.Linq;
 
 namespace AomGenerator
 {
@@ -17,8 +18,14 @@ namespace AomGenerator
             // read their contents and save their name
             IncrementalValuesProvider<(string name, string content)> namesAndContents = textFiles.Select((text, cancellationToken) => (name: Path.GetFileNameWithoutExtension(text.Path), content: text.GetText(cancellationToken)!.ToString()));
 
+            // AV2.js and the AV2.*.js beside it are one syntax, generated as one: AV2.js first, then the rest by name
+            var families = namesAndContents.Collect().SelectMany((files, cancellationToken) => files
+                .GroupBy(f => AomGenerator.Family(f.name))
+                .Select(g => (name: g.Key, content: string.Join("\n\n", g.OrderBy(f => f.name == g.Key ? "" : f.name).Select(f => f.content))))
+                .ToList());
+
             // generate a class that contains their values as const strings
-            initContext.RegisterSourceOutput(namesAndContents, (spc, nameAndContent) =>
+            initContext.RegisterSourceOutput(families, (spc, nameAndContent) =>
             {
                 string code = AomGenerator.Generate(nameAndContent.name, nameAndContent.content);
                 spc.AddSource($"{nameAndContent.name}.g.cs", code);
