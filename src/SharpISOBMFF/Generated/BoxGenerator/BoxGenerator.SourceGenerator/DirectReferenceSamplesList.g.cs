@@ -40,7 +40,7 @@ public partial class DirectReferenceSamplesList : VisualSampleGroupEntry
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.sample_id, "sample_id"); 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.num_direct_reference_samples, "num_direct_reference_samples"); 
 
-		this.direct_reference_sample_id = new uint[IsoStream.GetInt( num_direct_reference_samples)];
+		this.direct_reference_sample_id = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( num_direct_reference_samples), "direct_reference_sample_id");
 		for (int i = 0; i < num_direct_reference_samples; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.direct_reference_sample_id[i], "direct_reference_sample_id"); 

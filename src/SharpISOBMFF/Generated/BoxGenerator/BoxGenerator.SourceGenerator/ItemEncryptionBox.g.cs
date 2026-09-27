@@ -82,10 +82,10 @@ public partial class ItemEncryptionBox : ItemFullProperty
 		}
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.num_keys, "num_keys"); 
 
-		this.Per_Sample_IV_Size = new byte[IsoStream.GetInt( num_keys)];
-		this.KID = new byte[IsoStream.GetInt( num_keys)][];
-		this.constant_IV_size = new byte[IsoStream.GetInt( num_keys)];
-		this.constant_IV = new byte[IsoStream.GetInt( num_keys)][];
+		this.Per_Sample_IV_Size = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( num_keys), "Per_Sample_IV_Size");
+		this.KID = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( num_keys), "KID");
+		this.constant_IV_size = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( num_keys), "constant_IV_size");
+		this.constant_IV = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( num_keys), "constant_IV");
 		for (int i=0; i< num_keys; i++)
 		{
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.Per_Sample_IV_Size[i], "Per_Sample_IV_Size"); 

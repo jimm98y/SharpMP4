@@ -43,9 +43,9 @@ public partial class MVCSubTrackViewBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.item_count, "item_count"); 
 
-		this.view_id = new ushort[IsoStream.GetInt( item_count)];
-		this.temporal_id = new byte[IsoStream.GetInt( item_count)];
-		this.reserved = new byte[IsoStream.GetInt( item_count)];
+		this.view_id = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( item_count), "view_id");
+		this.temporal_id = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( item_count), "temporal_id");
+		this.reserved = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( item_count), "reserved");
 		for (int i = 0; i< item_count; i++)
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, 10,  out this.view_id[i], "view_id"); 

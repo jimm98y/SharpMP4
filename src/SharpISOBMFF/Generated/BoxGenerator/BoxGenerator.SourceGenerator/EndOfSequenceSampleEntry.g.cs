@@ -34,7 +34,7 @@ public partial class EndOfSequenceSampleEntry : VisualSampleGroupEntry
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.num_eos_nal_unit_minus1, "num_eos_nal_unit_minus1"); 
 
-		this.eosNalUnit = new ushort[IsoStream.GetInt( num_eos_nal_unit_minus1 + 1)];
+		this.eosNalUnit = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( num_eos_nal_unit_minus1 + 1), "eosNalUnit");
 		for (int i=0; i <= num_eos_nal_unit_minus1; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.eosNalUnit[i], "eosNalUnit"); 

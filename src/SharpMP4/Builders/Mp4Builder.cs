@@ -18,8 +18,17 @@ namespace SharpMP4.Builders
             public ITrack Track { get; set; }
             public ulong EndTime { get; set; }
             public List<uint> SampleSizes { get; set; } = new List<uint>();
-            public List<uint> SampleOffsets { get; set; } = new List<uint>();
+            public List<long> SampleOffsets { get; set; } = new List<long>();
             public List<uint> RandomAccessPoints { get; set; } = new List<uint>();
+
+            /// <summary>
+            /// Composition time minus decode time, per sample. Non-zero whenever pictures are
+            /// coded out of presentation order, as with B pictures.
+            /// </summary>
+            public List<int> CompositionOffsets { get; set; } = new List<int>();
+
+            /// <summary>Decode duration of each sample, in track timescale units.</summary>
+            public List<uint> SampleDurations { get; set; } = new List<uint>();
 
             public TrackContext(ITrack track)
             {
@@ -74,7 +83,10 @@ namespace SharpMP4.Builders
             return trackID;
         }
 
-        private void WriteSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
+        private void WriteSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint, int compositionOffset = 0) =>
+            WriteSample(trackID, new ArraySegment<byte>(sample), sampleDuration, isRandomAccessPoint, compositionOffset);
+
+        private void WriteSample(uint trackID, ArraySegment<byte> sample, int sampleDuration, bool isRandomAccessPoint, int compositionOffset = 0)
         {
             if (_storage == null)
             {
@@ -83,9 +95,11 @@ namespace SharpMP4.Builders
 
             uint currentSampleDuration = sampleDuration <= 0 ? (uint)_trackContexts[trackID].Track.DefaultSampleDuration : (uint)sampleDuration;
             var track = _trackContexts[trackID];
-            track.SampleOffsets.Add((uint)_storage.GetPosition());
-            _storage.Write(sample, 0, sample.Length);
-            track.SampleSizes.Add((uint)sample.Length);
+            track.SampleOffsets.Add(_storage.GetPosition());
+            _storage.Write(sample.Array, sample.Offset, sample.Count);
+            track.SampleSizes.Add((uint)sample.Count);
+            track.CompositionOffsets.Add(compositionOffset);
+            track.SampleDurations.Add(currentSampleDuration);
             track.EndTime += currentSampleDuration;
 
             if(isRandomAccessPoint)
@@ -94,7 +108,7 @@ namespace SharpMP4.Builders
             }
         }
 
-        private MovieBox BuildMoov()
+        private MovieBox BuildMoov(bool largeOffsets)
         {
             var moov = new MovieBox();
 
@@ -229,12 +243,28 @@ namespace SharpMP4.Builders
                 stsd.Children.Add(sampleEntryBox);
                 stsd.EntryCount = 1;
 
+                // Run-length encode the real per-sample durations. Averaging them into a single
+                // entry only holds for constant frame rate content, and loses the track duration
+                // whenever samples differ in length.
+                var sttsCounts = new List<uint>();
+                var sttsDeltas = new List<uint>();
+                foreach (var duration in track.SampleDurations)
+                {
+                    if (sttsDeltas.Count > 0 && sttsDeltas[sttsDeltas.Count - 1] == duration)
+                        sttsCounts[sttsCounts.Count - 1]++;
+                    else
+                    {
+                        sttsCounts.Add(1);
+                        sttsDeltas.Add(duration);
+                    }
+                }
+
                 var stts = new TimeToSampleBox();
                 stts.SetParent(stbl);
                 stbl.Children.Add(stts);
-                stts.SampleCount = new uint[] { (uint)track.SampleOffsets.Count };
-                stts.SampleDelta = new uint[] { (uint)(track.EndTime / (uint)Math.Max(1, track.SampleSizes.Count)) };
-                stts.EntryCount = (uint)stts.SampleCount.Length;
+                stts.SampleCount = sttsCounts.ToArray();
+                stts.SampleDelta = sttsDeltas.ToArray();
+                stts.EntryCount = (uint)sttsCounts.Count;
 
                 if (track.Track.HandlerType == HandlerTypes.Video)
                 {
@@ -244,6 +274,38 @@ namespace SharpMP4.Builders
                     stbl.Children.Add(stss);
                     stss.SampleNumber = track.RandomAccessPoints.ToArray(); 
                     stss.EntryCount = stss.SampleNumber != null ? (uint)stss.SampleNumber.Length : 0;
+                }
+
+                if (track.CompositionOffsets.Any(offset => offset != 0))
+                {
+                    // Pictures are coded out of presentation order, so the difference between
+                    // composition and decode time has to be recorded.
+                    var ctts = new CompositionOffsetBox();
+                    ctts.SetParent(stbl);
+                    stbl.Children.Add(ctts);
+
+                    // Version 0 carries unsigned offsets, so shift them all by the most negative
+                    // one. That delays every composition time by the same amount, which leaves the
+                    // presentation order untouched.
+                    int bias = track.CompositionOffsets.Min();
+
+                    var counts = new List<uint>();
+                    var offsets = new List<uint>();
+                    foreach (var offset in track.CompositionOffsets)
+                    {
+                        uint value = (uint)(offset - bias);
+                        if (offsets.Count > 0 && offsets[offsets.Count - 1] == value)
+                            counts[counts.Count - 1]++;
+                        else
+                        {
+                            counts.Add(1);
+                            offsets.Add(value);
+                        }
+                    }
+
+                    ctts.SampleCount = counts.ToArray();
+                    ctts.SampleOffset = offsets.ToArray();
+                    ctts.EntryCount = (uint)counts.Count;
                 }
 
                 var stsc = new SampleToChunkBox();
@@ -261,29 +323,79 @@ namespace SharpMP4.Builders
                 stsz.EntrySize = track.SampleSizes.ToArray();
                 stsz.SampleCount = (uint)track.SampleSizes.Count;
 
-                var stco = new ChunkOffsetBox();
-                stco.SetParent(stbl);
-                stbl.Children.Add(stco);
-                stco.ChunkOffset = track.SampleOffsets.ToArray(); // Temporary offset from the beginning of raw data, we have to add mdat offset later
-                stco.EntryCount = (uint)track.SampleOffsets.Count;
+                // Offsets are still relative to the start of the media data here; the header size
+                // is added once it is known. Past 4 GB they no longer fit in a 32-bit stco, and
+                // truncating them would silently produce a file that cannot be played, so switch
+                // to the 64-bit co64 instead. largeOffsets is decided in FinalizeMedia, which is
+                // the first point at which the header size is known.
+                if (largeOffsets)
+                {
+                    var co64 = new ChunkLargeOffsetBox();
+                    co64.SetParent(stbl);
+                    stbl.Children.Add(co64);
+                    co64.ChunkOffset = track.SampleOffsets.Select(offset => (ulong)offset).ToArray();
+                    co64.EntryCount = (uint)track.SampleOffsets.Count;
+                }
+                else
+                {
+                    var stco = new ChunkOffsetBox();
+                    stco.SetParent(stbl);
+                    stbl.Children.Add(stco);
+                    stco.ChunkOffset = track.SampleOffsets.Select(offset => (uint)offset).ToArray();
+                    stco.EntryCount = (uint)track.SampleOffsets.Count;
+                }
             }
 
             return moov;
         }
 
-        public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration)
+        /// <summary>The same, for a sample that sits inside a larger buffer.</summary>
+        public void ProcessTrackSample(uint trackID, ArraySegment<byte> sample, int sampleDuration = -1, int compositionOffset = 0)
+        {
+            _trackContexts[trackID].Track.ProcessSample(sample.Array, sample.Offset, sample.Count,
+                out var processedSample, out var isRandomAccessPoint);
+
+            if (processedSample.Array != null)
+            {
+                WriteSample(trackID, processedSample, sampleDuration, isRandomAccessPoint, compositionOffset);
+            }
+        }
+
+        /// <summary>
+        /// Appends a sample, recording how far its composition time sits from its decode time.
+        /// </summary>
+        /// <param name="compositionOffset">
+        /// Composition time minus decode time, in track timescale units. Needed whenever pictures
+        /// are coded out of presentation order; leave at 0 for streams that are not reordered.
+        /// </param>
+        public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration = -1, int compositionOffset = 0)
         {
             _trackContexts[trackID].Track.ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
 
-            if (processedSample != null)
+            if (processedSample.Array != null)
             {
-                ProcessRawSample(trackID, processedSample, sampleDuration, isRandomAccessPoint);
+                WriteSample(trackID, processedSample, sampleDuration, isRandomAccessPoint, compositionOffset);
             }
         }
 
         public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
         {
             WriteSample(trackID, sample, sampleDuration, isRandomAccessPoint);
+        }
+
+        public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint, int compositionOffset)
+        {
+            WriteSample(trackID, sample, sampleDuration, isRandomAccessPoint, compositionOffset);
+        }
+
+        /// <summary>
+        /// The same, for a sample that sits inside a larger buffer - one a caller fills again for
+        /// each sample - so it does not have to be copied out into an array of its own first.
+        /// </summary>
+        public void ProcessRawSample(uint trackID, ArraySegment<byte> sample, int sampleDuration,
+            bool isRandomAccessPoint, int compositionOffset = 0)
+        {
+            WriteSample(trackID, sample, sampleDuration, isRandomAccessPoint, compositionOffset);
         }
 
         public void FinalizeMedia()
@@ -311,16 +423,35 @@ namespace SharpMP4.Builders
             ftyp.CompatibleBrands = compatibleBrands.Distinct().Select(IsoStream.FromFourCC).ToArray();
 
             // create moov at the beginning of the file (faststart, allowing to play video early while still streaming)
-            var moov = BuildMoov();
-            moov.SetParent(mp4);
-            mp4.Children.Add(moov);
-
             var mdat = new MediaDataBox();
-            mp4.Children.Add(mdat);
             mdat.Data = new StreamMarker(0, _storage.GetLength(), new IsoStream(_storage));
 
-            // we know the final size of the moov box, we can now adjust the stco offsets
-            long mdatOffset = ((int)(ftyp.CalculateSize() + moov.CalculateSize()) >> 3) + 4 + (mdat.HasLargeSize ? 8 : 4);
+            // The offsets are relative to the media data until the header size is known, and the
+            // header size depends on which offset box is used. Size it with 32-bit offsets first,
+            // then redo it with 64-bit ones if the real offsets would not fit.
+            bool largeOffsets = false;
+            MovieBox moov;
+            long mdatOffset;
+            while (true)
+            {
+                moov = BuildMoov(largeOffsets);
+                mdatOffset = ((long)(ftyp.CalculateSize() + moov.CalculateSize()) >> 3) + 4 + (mdat.HasLargeSize ? 8 : 4);
+
+                long highestOffset = 0;
+                foreach (var track in _trackContexts.Values)
+                    if (track.SampleOffsets.Count > 0)
+                        highestOffset = Math.Max(highestOffset, track.SampleOffsets[track.SampleOffsets.Count - 1]);
+
+                if (largeOffsets || highestOffset + mdatOffset <= uint.MaxValue)
+                    break;
+
+                largeOffsets = true;
+            }
+
+            moov.SetParent(mp4);
+            mp4.Children.Add(moov);
+            mp4.Children.Add(mdat);
+
             moov.ModifyChunkOffsets(mdatOffset);
 
             var stream = _output.GetStream(0);

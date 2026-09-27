@@ -35,7 +35,7 @@ public partial class ChunkOffsetBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.entry_count, "entry_count"); 
 
-		this.chunk_offset = new uint[IsoStream.GetInt( entry_count)];
+		this.chunk_offset = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count), "chunk_offset");
 		for (int i=0; i < entry_count; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.chunk_offset[i], "chunk_offset"); 

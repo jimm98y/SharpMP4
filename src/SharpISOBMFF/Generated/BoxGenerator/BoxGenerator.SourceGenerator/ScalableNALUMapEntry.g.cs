@@ -39,7 +39,7 @@ public partial class ScalableNALUMapEntry : VisualSampleGroupEntry
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.reserved, "reserved"); 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.NALU_count, "NALU_count"); 
 
-		this.groupID = new byte[IsoStream.GetInt( NALU_count)];
+		this.groupID = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( NALU_count), "groupID");
 		for (int i=0; i< NALU_count; i++)
 		{
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.groupID[i], "groupID"); 

@@ -72,8 +72,8 @@ public partial class NALUMapEntry : VisualSampleGroupEntry
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.entry_count, "entry_count"); 
 		}
 
-		this.NALU_start_number = new ushort[IsoStream.GetInt( entry_count)];
-		this.groupID = new ushort[IsoStream.GetInt( entry_count)];
+		this.NALU_start_number = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( entry_count), "NALU_start_number");
+		this.groupID = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( entry_count), "groupID");
 		for (int i=0; i< entry_count; i++)
 		{
 

@@ -76,13 +76,13 @@ public partial class SubpicMultipleGroupsBox : EntityToGroupBox
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.num_subgroup_ids, "num_subgroup_ids"); 
 		ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8);
 
-		this.track_subgroup_id = new byte[IsoStream.GetInt( num_entities_in_group)][];
+		this.track_subgroup_id = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( num_entities_in_group), "track_subgroup_id");
 		for (int i = 0; i < num_entities_in_group; i++)
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, (uint)(subgroupIdLen ),  out this.track_subgroup_id[i], "track_subgroup_id"); 
 		}
 
-		this.num_active_tracks = new ushort[IsoStream.GetInt( num_subgroup_ids)];
+		this.num_active_tracks = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( num_subgroup_ids), "num_active_tracks");
 		for (int i = 0; i < num_subgroup_ids; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.num_active_tracks[i], "num_active_tracks"); 

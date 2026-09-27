@@ -7,12 +7,13 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class IOD_Descriptor extends BaseDescriptor : bit(8) tag=MP4_IOD_Tag {
-unsigned int(16) odid; unsigned int(8) odProfileLevel;
+ unsigned int(16) odid;
+ unsigned int(8) odProfileLevel;
  unsigned int(8) sceneProfileLevel;
-	unsigned int(8) audioProfileId;
-	unsigned int(8) videoProfileId;
-	unsigned int(8) graphicsProfileLevel;
-	IodsSample samples[];
+ unsigned int(8) audioProfileId;
+ unsigned int(8) videoProfileId;
+ unsigned int(8) graphicsProfileLevel;
+ ES_ID_Inc esIdInc[1 .. 255];
  }
  
 */
@@ -38,9 +39,7 @@ public partial class IOD_Descriptor : BaseDescriptor
 
 	protected byte graphicsProfileLevel; 
 	public byte GraphicsProfileLevel { get { return this.graphicsProfileLevel; } set { this.graphicsProfileLevel = value; } }
-
-	protected IodsSample[] samples; 
-	public IodsSample[] Samples { get { return this.samples; } set { this.samples = value; } }
+	public IEnumerable<ES_ID_Inc> EsIdInc { get { return this.children.OfType<ES_ID_Inc>(); } }
 
 	public IOD_Descriptor(): base(DescriptorTags.MP4_IOD_Tag)
 	{
@@ -56,7 +55,8 @@ public partial class IOD_Descriptor : BaseDescriptor
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.audioProfileId, "audioProfileId"); 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.videoProfileId, "videoProfileId"); 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.graphicsProfileLevel, "graphicsProfileLevel"); 
-		boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(uint.MaxValue), () => new IodsSample(),  out this.samples, "samples"); 
+		// boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.esIdInc, "esIdInc"); 
+		boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this);
 		return boxSize;
 	}
 
@@ -70,7 +70,8 @@ public partial class IOD_Descriptor : BaseDescriptor
 		boxSize += stream.WriteUInt8( this.audioProfileId, "audioProfileId"); 
 		boxSize += stream.WriteUInt8( this.videoProfileId, "videoProfileId"); 
 		boxSize += stream.WriteUInt8( this.graphicsProfileLevel, "graphicsProfileLevel"); 
-		boxSize += stream.WriteClass( this.samples, "samples"); 
+		// boxSize += stream.WriteDescriptor( this.esIdInc, "esIdInc"); 
+		boxSize += stream.WriteDescriptorsTillEnd(this);
 		return boxSize;
 	}
 
@@ -84,7 +85,8 @@ public partial class IOD_Descriptor : BaseDescriptor
 		boxSize += 8; // audioProfileId
 		boxSize += 8; // videoProfileId
 		boxSize += 8; // graphicsProfileLevel
-		boxSize += IsoStream.CalculateClassSize(samples); // samples
+		// boxSize += IsoStream.CalculateDescriptorSize(esIdInc); // esIdInc
+		boxSize += IsoStream.CalculateDescriptors(this);
 		return boxSize;
 	}
 }

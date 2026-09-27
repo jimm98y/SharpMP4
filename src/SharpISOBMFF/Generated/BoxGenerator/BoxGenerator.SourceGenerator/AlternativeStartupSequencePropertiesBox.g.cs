@@ -54,8 +54,8 @@ public partial class AlternativeStartupSequencePropertiesBox : FullBox
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.num_entries, "num_entries"); 
 
-			this.grouping_type_parameter = new uint[IsoStream.GetInt( num_entries)];
-			this.min_initial_alt_startup_offset0 = new int[IsoStream.GetInt( num_entries)];
+			this.grouping_type_parameter = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( num_entries), "grouping_type_parameter");
+			this.min_initial_alt_startup_offset0 = stream.SafeAllocate<int>(boxSize, readSize, IsoStream.GetInt( num_entries), "min_initial_alt_startup_offset0");
 			for (int j=0; j < num_entries; j++)
 			{
 				boxSize += stream.ReadUInt32(boxSize, readSize,  out this.grouping_type_parameter[j], "grouping_type_parameter"); 

@@ -147,37 +147,37 @@ public partial class ErrorProtectionSpecificConfig : IMp4Serializable
 		boxSize += stream.ReadBits(boxSize, readSize, 3,  out this.bit_stuffing, "bit_stuffing"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 3,  out this.number_of_concatenated_frame, "number_of_concatenated_frame"); 
 
-		this.number_of_class = new byte[IsoStream.GetInt( number_of_predefined_set)];
-		this.length_escape = new bool[IsoStream.GetInt( number_of_predefined_set)][];
-		this.rate_escape = new bool[IsoStream.GetInt( number_of_predefined_set)][];
-		this.crclen_escape = new bool[IsoStream.GetInt( number_of_predefined_set)][];
-		this.concatenate_flag = new bool[IsoStream.GetInt( number_of_predefined_set)][];
-		this.fec_type = new byte[IsoStream.GetInt( number_of_predefined_set)][];
-		this.termination_switch = new bool[IsoStream.GetInt( number_of_predefined_set)][];
-		this.interleave_switch = new byte[IsoStream.GetInt( number_of_predefined_set)][];
-		this.class_optional = new bool[IsoStream.GetInt( number_of_predefined_set)][];
-		this.number_of_bits_for_length = new byte[IsoStream.GetInt( number_of_predefined_set)][];
-		this.class_length = new ushort[IsoStream.GetInt( number_of_predefined_set)][];
-		this.class_rate = new byte[IsoStream.GetInt( number_of_predefined_set)][];
-		this.class_crclen = new byte[IsoStream.GetInt( number_of_predefined_set)][];
-		this.class_reordered_output = new bool[IsoStream.GetInt( number_of_predefined_set)];
-		this.class_output_order = new byte[IsoStream.GetInt( number_of_predefined_set)][];
+		this.number_of_class = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( number_of_predefined_set), "number_of_class");
+		this.length_escape = stream.SafeAllocate<bool[]>(boxSize, readSize, IsoStream.GetInt( number_of_predefined_set), "length_escape");
+		this.rate_escape = stream.SafeAllocate<bool[]>(boxSize, readSize, IsoStream.GetInt( number_of_predefined_set), "rate_escape");
+		this.crclen_escape = stream.SafeAllocate<bool[]>(boxSize, readSize, IsoStream.GetInt( number_of_predefined_set), "crclen_escape");
+		this.concatenate_flag = stream.SafeAllocate<bool[]>(boxSize, readSize, IsoStream.GetInt( number_of_predefined_set), "concatenate_flag");
+		this.fec_type = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( number_of_predefined_set), "fec_type");
+		this.termination_switch = stream.SafeAllocate<bool[]>(boxSize, readSize, IsoStream.GetInt( number_of_predefined_set), "termination_switch");
+		this.interleave_switch = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( number_of_predefined_set), "interleave_switch");
+		this.class_optional = stream.SafeAllocate<bool[]>(boxSize, readSize, IsoStream.GetInt( number_of_predefined_set), "class_optional");
+		this.number_of_bits_for_length = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( number_of_predefined_set), "number_of_bits_for_length");
+		this.class_length = stream.SafeAllocate<ushort[]>(boxSize, readSize, IsoStream.GetInt( number_of_predefined_set), "class_length");
+		this.class_rate = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( number_of_predefined_set), "class_rate");
+		this.class_crclen = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( number_of_predefined_set), "class_crclen");
+		this.class_reordered_output = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( number_of_predefined_set), "class_reordered_output");
+		this.class_output_order = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( number_of_predefined_set), "class_output_order");
 		for (int i = 0; i < number_of_predefined_set; i++)
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, 6,  out this.number_of_class[i], "number_of_class"); 
 
-			this.length_escape[i] = new bool[IsoStream.GetInt( number_of_class[i])];
-			this.rate_escape[i] = new bool[IsoStream.GetInt( number_of_class[i])];
-			this.crclen_escape[i] = new bool[IsoStream.GetInt( number_of_class[i])];
-			this.concatenate_flag[i] = new bool[IsoStream.GetInt( number_of_class[i])];
-			this.fec_type[i] = new byte[IsoStream.GetInt( number_of_class[i])];
-			this.termination_switch[i] = new bool[IsoStream.GetInt( number_of_class[i])];
-			this.interleave_switch[i] = new byte[IsoStream.GetInt( number_of_class[i])];
-			this.class_optional[i] = new bool[IsoStream.GetInt( number_of_class[i])];
-			this.number_of_bits_for_length[i] = new byte[IsoStream.GetInt( number_of_class[i])];
-			this.class_length[i] = new ushort[IsoStream.GetInt( number_of_class[i])];
-			this.class_rate[i] = new byte[IsoStream.GetInt( number_of_class[i])];
-			this.class_crclen[i] = new byte[IsoStream.GetInt( number_of_class[i])];
+			this.length_escape[i] = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( number_of_class[i]), "length_escape[i]");
+			this.rate_escape[i] = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( number_of_class[i]), "rate_escape[i]");
+			this.crclen_escape[i] = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( number_of_class[i]), "crclen_escape[i]");
+			this.concatenate_flag[i] = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( number_of_class[i]), "concatenate_flag[i]");
+			this.fec_type[i] = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( number_of_class[i]), "fec_type[i]");
+			this.termination_switch[i] = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( number_of_class[i]), "termination_switch[i]");
+			this.interleave_switch[i] = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( number_of_class[i]), "interleave_switch[i]");
+			this.class_optional[i] = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( number_of_class[i]), "class_optional[i]");
+			this.number_of_bits_for_length[i] = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( number_of_class[i]), "number_of_bits_for_length[i]");
+			this.class_length[i] = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( number_of_class[i]), "class_length[i]");
+			this.class_rate[i] = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( number_of_class[i]), "class_rate[i]");
+			this.class_crclen[i] = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( number_of_class[i]), "class_crclen[i]");
 			for (int j = 0; j < number_of_class[i]; j++)
 			{
 				boxSize += stream.ReadBit(boxSize, readSize,  out this.length_escape[i][j], "length_escape"); 
@@ -238,7 +238,7 @@ public partial class ErrorProtectionSpecificConfig : IMp4Serializable
 			if (class_reordered_output[i] == true)
 			{
 
-				this.class_output_order[i] = new byte[IsoStream.GetInt( number_of_class[i])];
+				this.class_output_order[i] = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( number_of_class[i]), "class_output_order[i]");
 				for (int j = 0; j < number_of_class[i]; j++)
 				{
 					boxSize += stream.ReadBits(boxSize, readSize, 6,  out this.class_output_order[i][j], "class_output_order"); 

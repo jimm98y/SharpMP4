@@ -100,19 +100,19 @@ public partial class ViewIdentifierBox : FullBox
 		boxSize += stream.ReadBits(boxSize, readSize, 3,  out this.max_temporal_id, "max_temporal_id"); 
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.num_views, "num_views"); 
 
-		this.reserved1 = new byte[IsoStream.GetInt(num_views)];
-		this.view_id = new ushort[IsoStream.GetInt(num_views)];
-		this.reserved2 = new byte[IsoStream.GetInt(num_views)];
-		this.view_order_index = new ushort[IsoStream.GetInt(num_views)];
-		this.texture_in_stream = new bool[IsoStream.GetInt(num_views)];
-		this.texture_in_track = new bool[IsoStream.GetInt(num_views)];
-		this.depth_in_stream = new bool[IsoStream.GetInt(num_views)];
-		this.depth_in_track = new bool[IsoStream.GetInt(num_views)];
-		this.base_view_type = new byte[IsoStream.GetInt(num_views)];
-		this.num_ref_views = new ushort[IsoStream.GetInt(num_views)];
-		this.reserved5 = new byte[IsoStream.GetInt(num_views)][];
-		this.dependent_component_idc = new byte[IsoStream.GetInt(num_views)][];
-		this.ref_view_id = new ushort[IsoStream.GetInt(num_views)][];
+		this.reserved1 = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_views), "reserved1");
+		this.view_id = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(num_views), "view_id");
+		this.reserved2 = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_views), "reserved2");
+		this.view_order_index = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(num_views), "view_order_index");
+		this.texture_in_stream = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(num_views), "texture_in_stream");
+		this.texture_in_track = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(num_views), "texture_in_track");
+		this.depth_in_stream = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(num_views), "depth_in_stream");
+		this.depth_in_track = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(num_views), "depth_in_track");
+		this.base_view_type = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_views), "base_view_type");
+		this.num_ref_views = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(num_views), "num_ref_views");
+		this.reserved5 = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt(num_views), "reserved5");
+		this.dependent_component_idc = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt(num_views), "dependent_component_idc");
+		this.ref_view_id = stream.SafeAllocate<ushort[]>(boxSize, readSize, IsoStream.GetInt(num_views), "ref_view_id");
 		for (int i=0; i<num_views; i++)
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, 6,  out this.reserved1[i], "reserved1"); 
@@ -126,9 +126,9 @@ public partial class ViewIdentifierBox : FullBox
 			boxSize += stream.ReadBits(boxSize, readSize, 2,  out this.base_view_type[i], "base_view_type"); 
 			boxSize += stream.ReadBits(boxSize, readSize, 10,  out this.num_ref_views[i], "num_ref_views"); 
 
-			this.reserved5[i] = new byte[IsoStream.GetInt( num_ref_views[i])];
-			this.dependent_component_idc[i] = new byte[IsoStream.GetInt( num_ref_views[i])];
-			this.ref_view_id[i] = new ushort[IsoStream.GetInt( num_ref_views[i])];
+			this.reserved5[i] = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( num_ref_views[i]), "reserved5[i]");
+			this.dependent_component_idc[i] = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( num_ref_views[i]), "dependent_component_idc[i]");
+			this.ref_view_id[i] = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( num_ref_views[i]), "ref_view_id[i]");
 			for (int j = 0; j < num_ref_views[i]; j++)
 			{
 				boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.reserved5[i][j], "reserved5"); 

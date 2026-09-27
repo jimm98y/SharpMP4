@@ -44,7 +44,7 @@ public partial class VvcSubpicOrderEntry : VisualSampleGroupEntry
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.subpic_id_info_flag, "subpic_id_info_flag"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 15,  out this.num_subpic_ref_idx, "num_subpic_ref_idx"); 
 
-		this.subp_track_ref_idx = new ushort[IsoStream.GetInt( num_subpic_ref_idx)];
+		this.subp_track_ref_idx = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( num_subpic_ref_idx), "subp_track_ref_idx");
 		for (int i = 0; i < num_subpic_ref_idx; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.subp_track_ref_idx[i], "subp_track_ref_idx"); 

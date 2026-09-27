@@ -150,7 +150,7 @@ public partial class ELDSpecificConfig : IMp4Serializable
 
 				boxSize += stream.ReadInt32(boxSize, readSize,  out this.cntt, "cntt"); 
 
-				this.other_byte = new byte[IsoStream.GetInt( len)];
+				this.other_byte = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( len), "other_byte");
 				for (int cnt = 0; cnt < len; cnt++)
 				{
 					boxSize += stream.ReadUInt8(boxSize, readSize,  out this.other_byte[cnt], "other_byte"); 

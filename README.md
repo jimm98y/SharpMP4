@@ -87,5 +87,14 @@ You can also enable/disable different trace levels like:
 mp4Builder.Logger.IsWarnEnabled = false;
 ```
 
+## Conformance bitstreams
+The published conformance suites for H.264, H.265, H.266 and AV1 can be downloaded for testing the parsers against:
+```powershell
+.\DownloadConformance.ps1                            # the core sets for all four codecs, about 4.8 GB
+.\DownloadConformance.ps1 -Codec H265, H266          # only some codecs
+.\DownloadConformance.ps1 -IncludeSvc -IncludeArgon  # also H.264 SVC (12.9 GB) and AV1 Argon Streams (7 GB)
+```
+They go into the `conformance` folder, which git ignores. Running the script again skips what is already there. The reference decoder's output - decoded pictures, traces and logs, which make the H.264 suites several times their download size - is left out unless `-KeepReference` is given. It works in Windows PowerShell 5.1 and PowerShell 7.
+
 ## Credits
 Huge inspiration for this project was the `mp4parser` https://github.com/sannies/mp4parser, thank you very much!

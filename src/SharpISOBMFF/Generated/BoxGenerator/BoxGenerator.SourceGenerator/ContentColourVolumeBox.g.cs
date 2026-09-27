@@ -88,8 +88,8 @@ public partial class ContentColourVolumeBox : Box
 		if ( ccv_primaries_present_flag )
 		{
 
-			this.ccv_primaries_x = new int[IsoStream.GetInt( 3)];
-			this.ccv_primaries_y = new int[IsoStream.GetInt( 3)];
+			this.ccv_primaries_x = stream.SafeAllocate<int>(boxSize, readSize, IsoStream.GetInt( 3), "ccv_primaries_x");
+			this.ccv_primaries_y = stream.SafeAllocate<int>(boxSize, readSize, IsoStream.GetInt( 3), "ccv_primaries_y");
 			for (int  c = 0; c < 3; c++ )
 			{
 				boxSize += stream.ReadInt32(boxSize, readSize,  out this.ccv_primaries_x[ c ], "ccv_primaries_x"); 

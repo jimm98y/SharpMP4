@@ -38,6 +38,44 @@ namespace SharpH26X
         {
         }
 
+        /// <summary>
+        /// Verifies that an array of <paramref name="count"/> entries could actually be read from
+        /// what is left of the stream, before the array is allocated.
+        /// </summary>
+        /// <remarks>
+        /// Several array lengths in the H.26x syntax - num_negative_pics, num_entry_point_offsets
+        /// and their neighbours - are Exp-Golomb coded, so a corrupt or hostile stream can put an
+        /// enormous value there. Allocating straight from one lets a NAL unit of a few kilobytes
+        /// ask for gigabytes. Every entry occupies at least one bit, so a count can never exceed
+        /// the number of bits left; that bound rejects nothing a conforming stream produces.
+        /// </remarks>
+        public void CheckArrayAllocation(ulong count, string name)
+        {
+            long length;
+            long position;
+            try
+            {
+                length = _stream.Length;
+                position = _stream.Position;
+            }
+            catch (NotSupportedException)
+            {
+                return; // not seekable, so there is nothing to bound against
+            }
+
+            // The bit reader buffers a byte ahead, so the stream position can already sit at the
+            // end while bits are still to be handed out. Allow for that, plus a byte for the one
+            // an emulation prevention scan may have pulled in; the bound is there to stop counts
+            // in the millions, and a couple of bytes of slack costs nothing.
+            ulong remainingBits = (ulong)Math.Max(0, length - position) * 8 + 16;
+            if (count > remainingBits)
+            {
+                string message = $"Invalid count of '{name}': {count} entries do not fit into the remaining {Math.Max(0, length - position)} bytes";
+                Logger?.LogDebug(message);
+                throw new ItuEndOfStreamException(message);
+            }
+        }
+
         #region Bit read/write
 
         private int ReadByte()
@@ -97,6 +135,12 @@ namespace SharpH26X
 
         public ulong GetBitsPositionSinceLastMark() => (ulong)this.Bitstream.GetBitsSinceMark();
 
+        /// <summary>
+        /// Puts back a mark set before another: GetBitsPositionSinceLastMark then counts from the
+        /// earlier one again, which was bitsSinceMark bits before the later one.
+        /// </summary>
+        public void RestoreBitsMark(ulong bitsSinceMark) => this.Bitstream.MoveMarkBack((long)bitsSinceMark);
+
         public bool ByteAligned()
         {
             return this.Bitstream.BitsPosition % 8 == 0;
@@ -151,6 +195,20 @@ namespace SharpH26X
             value.Add(index, v);
             return read;
         }
+
+        /// <summary>
+        /// Reads whole bytes from a byte aligned position, emulation prevention bytes dropped.
+        /// The same as reading them eight bits at a time, for the bulk of a NAL unit - see
+        /// <see cref="RbspBitstream.ReadBytes"/>.
+        /// </summary>
+        /// <returns>How many bytes were read: fewer than asked for only at the end of the stream.</returns>
+        public int ReadBytes(byte[] buffer, int offset, int count) => Bitstream.ReadBytes(buffer, offset, count);
+
+        /// <summary>
+        /// Writes whole bytes at a byte aligned position, emulation prevention bytes put in. The
+        /// same as writing them eight bits at a time - see <see cref="RbspBitstream.WriteBytes"/>.
+        /// </summary>
+        public void WriteBytes(byte[] buffer, int offset, int count) => Bitstream.WriteBytes(buffer, offset, count);
 
         public ulong WriteUnsignedInt(ulong count, byte value, string name)
         {
@@ -293,6 +351,39 @@ namespace SharpH26X
             var size = WriteUnsignedIntGolomb(mapped, "");
             LogEnd(name, size, value);
             return size;
+        }
+
+        /// <summary>
+        /// A copy of this stream from where it is, to read ahead on: reading the copy neither moves
+        /// this stream nor logs anything.
+        /// </summary>
+        public ItuStream Lookahead()
+        {
+            long position = _stream.Position;
+            byte[] bytes;
+            if (_stream is MemoryStream memory)
+            {
+                bytes = memory.ToArray();
+            }
+            else
+            {
+                bytes = new byte[_stream.Length];
+                _stream.Position = 0;
+                int read = 0;
+                while (read < bytes.Length)
+                {
+                    int count = _stream.Read(bytes, read, bytes.Length - read);
+                    if (count <= 0)
+                        break;
+                    read += count;
+                }
+                _stream.Position = position;
+            }
+
+            var copy = new MemoryStream(bytes) { Position = position };
+            var bitstream = new RbspBitstream(copy);
+            bitstream.CopyState(this.Bitstream);
+            return new ItuStream(bitstream, new DefaultMp4Logger());
         }
 
         public bool ReadMoreRbspData(IItuSerializable serializable, ulong maxPayloadSize = ulong.MaxValue)
@@ -653,6 +744,12 @@ namespace SharpH26X
 
         private void LogBegin(string name)
         {
+            // Checked before the message is built. These run on every syntax element read, so
+            // formatting first and discarding inside the logger costs the allocations and the
+            // string work on the hottest path in the parser even when nothing is being logged.
+            if (this.Logger == null || !this.Logger.IsInfoEnabled)
+                return;
+
             var padding = new StringBuilder();
             for (int i = 0; i < _logLevel; i++)
             {
@@ -665,6 +762,9 @@ namespace SharpH26X
         private void LogEnd<T>(string name, ulong size, T value)
         {
             if (string.IsNullOrEmpty(name))
+                return;
+
+            if (this.Logger == null || !this.Logger.IsInfoEnabled)
                 return;
 
             var padding = new StringBuilder();

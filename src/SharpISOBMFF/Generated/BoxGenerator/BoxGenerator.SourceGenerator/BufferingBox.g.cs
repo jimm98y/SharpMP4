@@ -50,11 +50,11 @@ public partial class BufferingBox : Box
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.operating_point_count, "operating_point_count"); 
 
-		this.byte_rate = new uint[IsoStream.GetInt( operating_point_count)];
-		this.cpb_size = new uint[IsoStream.GetInt( operating_point_count)];
-		this.dpb_size = new uint[IsoStream.GetInt( operating_point_count)];
-		this.init_cpb_delay = new uint[IsoStream.GetInt( operating_point_count)];
-		this.init_dpb_delay = new uint[IsoStream.GetInt( operating_point_count)];
+		this.byte_rate = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( operating_point_count), "byte_rate");
+		this.cpb_size = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( operating_point_count), "cpb_size");
+		this.dpb_size = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( operating_point_count), "dpb_size");
+		this.init_cpb_delay = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( operating_point_count), "init_cpb_delay");
+		this.init_dpb_delay = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( operating_point_count), "init_dpb_delay");
 		for (int i = 0; i < operating_point_count; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.byte_rate[i], "byte_rate"); 

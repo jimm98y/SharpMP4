@@ -94,8 +94,8 @@ public partial class SVCDecoderConfigurationRecord : IMp4Serializable
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.reserved0, "reserved0"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 7,  out this.numOfSequenceParameterSets, "numOfSequenceParameterSets"); 
 
-		this.sequenceParameterSetLength = new ushort[IsoStream.GetInt( 0)];
-		this.sequenceParameterSetNALUnit = new byte[IsoStream.GetInt( 0)][];
+		this.sequenceParameterSetLength = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( 0), "sequenceParameterSetLength");
+		this.sequenceParameterSetNALUnit = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( 0), "sequenceParameterSetNALUnit");
 		for (int i=0; i< numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.sequenceParameterSetLength[i], "sequenceParameterSetLength"); 
@@ -103,8 +103,8 @@ public partial class SVCDecoderConfigurationRecord : IMp4Serializable
 		}
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.numOfPictureParameterSets, "numOfPictureParameterSets"); 
 
-		this.pictureParameterSetLength = new ushort[IsoStream.GetInt( numOfPictureParameterSets)];
-		this.pictureParameterSetNALUnit = new byte[IsoStream.GetInt( numOfPictureParameterSets)][];
+		this.pictureParameterSetLength = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( numOfPictureParameterSets), "pictureParameterSetLength");
+		this.pictureParameterSetNALUnit = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( numOfPictureParameterSets), "pictureParameterSetNALUnit");
 		for (int i=0; i< numOfPictureParameterSets; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.pictureParameterSetLength[i], "pictureParameterSetLength"); 

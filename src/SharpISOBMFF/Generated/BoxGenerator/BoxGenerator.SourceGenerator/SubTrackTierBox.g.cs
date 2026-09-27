@@ -35,7 +35,7 @@ public partial class SubTrackTierBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.item_count, "item_count"); 
 
-		this.tierID = new ushort[IsoStream.GetInt( item_count)];
+		this.tierID = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( item_count), "tierID");
 		for (int i = 0; i< item_count; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.tierID[i], "tierID"); 

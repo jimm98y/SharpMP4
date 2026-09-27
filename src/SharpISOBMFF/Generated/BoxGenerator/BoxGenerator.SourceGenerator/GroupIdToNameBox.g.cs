@@ -39,8 +39,8 @@ public partial class GroupIdToNameBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.entry_count, "entry_count"); 
 
-		this.group_ID = new uint[IsoStream.GetInt( entry_count)];
-		this.group_name = new BinaryUTF8String[IsoStream.GetInt( entry_count)];
+		this.group_ID = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count), "group_ID");
+		this.group_name = stream.SafeAllocate<BinaryUTF8String>(boxSize, readSize, IsoStream.GetInt( entry_count), "group_name");
 		for (int i=0; i < entry_count; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.group_ID[i], "group_ID"); 

@@ -65,7 +65,7 @@ public partial class MD5IntegrityBox : FullBox
 			}
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.num_entries, "num_entries"); 
 
-			this.group_description_index = new uint[IsoStream.GetInt(num_entries)];
+			this.group_description_index = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt(num_entries), "group_description_index");
 			for (int i=0; i<num_entries; i++)
 			{
 				boxSize += stream.ReadUInt32(boxSize, readSize,  out this.group_description_index[i], "group_description_index"); 

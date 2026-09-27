@@ -6,18 +6,16 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class StereoComfortBox extends FullBox('cmfy') {
-  unsigned int(32) baseline_value;
+aligned(8) class StereoComfortBox extends Box('cmfy') {
+ Box boxes[];
  }
 
 */
-public partial class StereoComfortBox : FullBox
+public partial class StereoComfortBox : Box
 {
 	public const string TYPE = "cmfy";
 	public override string DisplayName { get { return "StereoComfortBox"; } }
-
-	protected uint baseline_value; 
-	public uint BaselineValue { get { return this.baseline_value; } set { this.baseline_value = value; } }
+	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public StereoComfortBox(): base(IsoStream.FromFourCC("cmfy"))
 	{
@@ -27,7 +25,8 @@ public partial class StereoComfortBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.baseline_value, "baseline_value"); 
+		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes, "boxes"); 
+		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
 		return boxSize;
 	}
 
@@ -35,7 +34,8 @@ public partial class StereoComfortBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt32( this.baseline_value, "baseline_value"); 
+		// boxSize += stream.WriteBox( this.boxes, "boxes"); 
+		boxSize += stream.WriteBoxArrayTillEnd(this);
 		return boxSize;
 	}
 
@@ -43,7 +43,8 @@ public partial class StereoComfortBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += 32; // baseline_value
+		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
 }

@@ -67,14 +67,14 @@ public partial class LayerInfoGroupEntry : VisualSampleGroupEntry
 		boxSize += stream.ReadBits(boxSize, readSize, 2,  out this.reserved, "reserved"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 6,  out this.num_layers_in_track, "num_layers_in_track"); 
 
-		this.reserved0 = new byte[IsoStream.GetInt(num_layers_in_track)];
-		this.irap_gdr_pics_in_layer_only_flag = new bool[IsoStream.GetInt(num_layers_in_track)];
-		this.completeness_flag = new bool[IsoStream.GetInt(num_layers_in_track)];
-		this.layer_id = new byte[IsoStream.GetInt(num_layers_in_track)];
-		this.min_TemporalId = new byte[IsoStream.GetInt(num_layers_in_track)];
-		this.max_TemporalId = new byte[IsoStream.GetInt(num_layers_in_track)];
-		this.reserved00 = new bool[IsoStream.GetInt(num_layers_in_track)];
-		this.sub_layer_presence_flags = new byte[IsoStream.GetInt(num_layers_in_track)];
+		this.reserved0 = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_layers_in_track), "reserved0");
+		this.irap_gdr_pics_in_layer_only_flag = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(num_layers_in_track), "irap_gdr_pics_in_layer_only_flag");
+		this.completeness_flag = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(num_layers_in_track), "completeness_flag");
+		this.layer_id = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_layers_in_track), "layer_id");
+		this.min_TemporalId = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_layers_in_track), "min_TemporalId");
+		this.max_TemporalId = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_layers_in_track), "max_TemporalId");
+		this.reserved00 = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(num_layers_in_track), "reserved00");
+		this.sub_layer_presence_flags = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(num_layers_in_track), "sub_layer_presence_flags");
 		for (int i=0; i<num_layers_in_track; i++)
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, 2,  out this.reserved0[i], "reserved0"); 

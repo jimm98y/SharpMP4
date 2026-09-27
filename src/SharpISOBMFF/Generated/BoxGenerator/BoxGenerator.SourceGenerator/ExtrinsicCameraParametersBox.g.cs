@@ -63,16 +63,16 @@ public partial class ExtrinsicCameraParametersBox : FullBox
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.prec_rotation_param, "prec_rotation_param"); 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.prec_translation_param, "prec_translation_param"); 
 
-		this.exponent_r = new byte[IsoStream.GetInt(3)][];
-		this.mantissa_r = new long[IsoStream.GetInt(3)][];
-		this.exponent_t = new byte[IsoStream.GetInt(3)];
-		this.mantissa_t = new long[IsoStream.GetInt(3)];
+		this.exponent_r = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt(3), "exponent_r");
+		this.mantissa_r = stream.SafeAllocate<long[]>(boxSize, readSize, IsoStream.GetInt(3), "mantissa_r");
+		this.exponent_t = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(3), "exponent_t");
+		this.mantissa_t = stream.SafeAllocate<long>(boxSize, readSize, IsoStream.GetInt(3), "mantissa_t");
 		for (int j=0; j<3; j++)
 		{
 			/*  row  */
 
-			this.exponent_r[j] = new byte[IsoStream.GetInt(3)];
-			this.mantissa_r[j] = new long[IsoStream.GetInt(3)];
+			this.exponent_r[j] = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(3), "exponent_r[j]");
+			this.mantissa_r[j] = stream.SafeAllocate<long>(boxSize, readSize, IsoStream.GetInt(3), "mantissa_r[j]");
 			for (int k=0; k<3; k++)
 			{
 				/*  column  */

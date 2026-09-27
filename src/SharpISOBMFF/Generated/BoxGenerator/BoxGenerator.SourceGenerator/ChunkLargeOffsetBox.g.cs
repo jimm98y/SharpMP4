@@ -35,7 +35,7 @@ public partial class ChunkLargeOffsetBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.entry_count, "entry_count"); 
 
-		this.chunk_offset = new ulong[IsoStream.GetInt( entry_count)];
+		this.chunk_offset = stream.SafeAllocate<ulong>(boxSize, readSize, IsoStream.GetInt( entry_count), "chunk_offset");
 		for (int i=0; i < entry_count; i++)
 		{
 			boxSize += stream.ReadUInt64(boxSize, readSize,  out this.chunk_offset[i], "chunk_offset"); 

@@ -57,10 +57,10 @@ public partial class ItemPropertyAssociationBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.entry_count, "entry_count"); 
 
-		this.item_ID = new uint[IsoStream.GetInt( entry_count)];
-		this.association_count = new byte[IsoStream.GetInt( entry_count)];
-		this.essential = new bool[IsoStream.GetInt( entry_count)][];
-		this.property_index = new ushort[IsoStream.GetInt( entry_count)][];
+		this.item_ID = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count), "item_ID");
+		this.association_count = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( entry_count), "association_count");
+		this.essential = stream.SafeAllocate<bool[]>(boxSize, readSize, IsoStream.GetInt( entry_count), "essential");
+		this.property_index = stream.SafeAllocate<ushort[]>(boxSize, readSize, IsoStream.GetInt( entry_count), "property_index");
 		for (int i = 0; i < entry_count; i++)
 		{
 
@@ -75,8 +75,8 @@ public partial class ItemPropertyAssociationBox : FullBox
 			}
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.association_count[i], "association_count"); 
 
-			this.essential[i] = new bool[IsoStream.GetInt(association_count[i])];
-			this.property_index[i] = new ushort[IsoStream.GetInt(association_count[i])];
+			this.essential[i] = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(association_count[i]), "essential[i]");
+			this.property_index[i] = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(association_count[i]), "property_index[i]");
 			for (int j=0; j<association_count[i]; j++)
 			{
 				boxSize += stream.ReadBit(boxSize, readSize,  out this.essential[i][j], "essential"); 

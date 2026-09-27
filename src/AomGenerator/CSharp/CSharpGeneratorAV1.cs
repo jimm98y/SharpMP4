@@ -484,11 +484,14 @@ namespace AomGenerator.CSharp
                 case "OrderHints":
                     return "new int[AV1RefFrames.LAST_FRAME + AV1Constants.REFS_PER_FRAME]";
 
+                // One more than there can be tiles: tile_info() ends each list with the frame's
+                // own edge, MiColStarts[ TileCols ] = MiCols, and a frame can have as many tiles
+                // as the maximum.
                 case "MiColStarts":
-                    return "new int[AV1Constants.MAX_TILE_COLS]";
+                    return "new int[AV1Constants.MAX_TILE_COLS + 1]";
 
                 case "MiRowStarts":
-                    return "new int[AV1Constants.MAX_TILE_ROWS]";
+                    return "new int[AV1Constants.MAX_TILE_ROWS + 1]";
 
                 case "FeatureEnabled":
                 case "FeatureData":
@@ -500,11 +503,14 @@ namespace AomGenerator.CSharp
                 case "loop_filter_level":
                     return "new int[4]";
 
+                // One per CDEF preset: cdef_params reads 1 << cdef_bits of them, and cdef_bits is
+                // two bits, so up to 8. One was enough only for the branch that sets entry 0 and
+                // returns - which a frame with CDEF enabled does not take.
                 case "cdef_y_pri_strength":
                 case "cdef_y_sec_strength":
                 case "cdef_uv_pri_strength":
                 case "cdef_uv_sec_strength":
-                    return "new int[1]";
+                    return "new int[8]";
 
                 case "FrameRestorationType":
                     return "new int[3]";
@@ -540,17 +546,16 @@ namespace AomGenerator.CSharp
                 case "SkipModeFrame":
                     return "new int[2]";
 
+                // num_y_points, num_cb_points and num_cr_points are f(4): up to 15, where a
+                // conforming stream stops at 14 and 10. Sized to those, a stream past them threw
+                // where ffmpeg reads on.
                 case "point_y_value":
                 case "point_y_scaling":
-                    return "new int[14]";
-
                 case "point_cb_value":
                 case "point_cb_scaling":
-                    return "new int[10]";
-
                 case "point_cr_value":
                 case "point_cr_scaling":
-                    return "new int[10]";
+                    return "new int[16]";
 
                 case "ar_coeffs_y_plus_128":
                     return "new int[24]";
@@ -589,8 +594,36 @@ namespace AomGenerator.CSharp
             definitions = definitions.Replace(" v & 1 ", "( v & 1 ) != 0");
             definitions = definitions.Replace("return subexp_final_bits", "return (int)subexp_final_bits");
             definitions = definitions.Replace("itu_t_t35_payload_bytes", "itu_t_t35_payload_bytes()");
+
+            // obu_padding_length is what the OBU has left before its trailing bits (5.9.2), which
+            // the syntax does not say how to work out; left 0, the padding was read as trailing bits.
+            // A caller may read every layer, where a decoder drops the OBUs outside the operating
+            // point it chose (7.1).
+            definitions = definitions.Replace("OperatingPointIdc != 0 && obu_extension_flag == 1", "OperatingPointIdc != 0 && AllLayers == 0 && obu_extension_flag == 1");
+
+            definitions = definitions.Replace("padding_obu() { ", "padding_obu() { \n obu_padding_length = PayloadBytesBeforeTrailingBits()");
+
+            // A hook where the frame header ends, for the reader to act on it there.
+            definitions = new System.Text.RegularExpressions.Regex(@"(\buncompressed_header\(\))(\s+)(if \( show_existing_frame \) \{)").Replace(
+                definitions, m => $"{m.Groups[1].Value}{m.Groups[2].Value}frame_header_done(){m.Groups[2].Value}{m.Groups[3].Value}", 1);
+
+            // A metadata type the syntax does not know - registered later, user private, reserved -
+            // is to be ignored (6.7.1): its payload is read as bytes. With no branch for it, the
+            // payload was read as trailing bits.
+            definitions = new System.Text.RegularExpressions.Regex(@"metadata_timecode\(\)(\r?\n)(\s*)\}").Replace(
+                definitions, m => $"metadata_timecode(){m.Groups[1].Value} else{m.Groups[1].Value} metadata_unknown_payload(){m.Groups[1].Value}{m.Groups[2].Value}}}", 1);
             
             definitions = definitions.Replace("height_in_sbs_minus_1 + 1", "(int)(height_in_sbs_minus_1 + 1)");
+
+            // A conforming frame has at most MAX_TILE_COLS and MAX_TILE_ROWS tiles; one that
+            // codes a tile a superblock past that is read up to the limit, as ffmpeg reads it,
+            // not past the end of the tile lists.
+            definitions = definitions.Replace("for ( i = 0; startSb < sbCols; i++ )", "for ( i = 0; startSb < sbCols && i < MAX_TILE_COLS; i++ )");
+            definitions = definitions.Replace("for ( i = 0; startSb < sbRows; i++ )", "for ( i = 0; startSb < sbRows && i < MAX_TILE_ROWS; i++ )");
+
+            // A frame no superblock wide - one sized after a reference a broken stream never
+            // coded - has no widest tile: taken as 1, the division does not throw.
+            definitions = definitions.Replace("maxTileAreaSb / widestTileSb", "maxTileAreaSb / Max( widestTileSb, 1 )");
             definitions = definitions.Replace("width_in_sbs_minus_1 + 1", "(int)(width_in_sbs_minus_1 + 1)");
 
             definitions = definitions.Replace("CodedLossless && ( FrameWidth == UpscaledWidth )", "(CodedLossless != 0 && ( FrameWidth == UpscaledWidth )) ? 1 : 0");

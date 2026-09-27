@@ -223,7 +223,7 @@ public partial class ALSSpecificConfig : IMp4Serializable
 		if (chan_sort)
 		{
 
-			this.chan_pos = new bool[IsoStream.GetInt( channels)];
+			this.chan_pos = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( channels), "chan_pos");
 			for (int c = 0; c < channels; c++)
 			{
 				boxSize += stream.ReadBit(boxSize, readSize,  out this.chan_pos[c], "chan_pos"); // 1..16 uimsbf 
@@ -243,7 +243,7 @@ public partial class ALSSpecificConfig : IMp4Serializable
 		if ((ra_flag == 2) && (random_access > 0))
 		{
 
-			this.ra_unit_size = new uint[IsoStream.GetInt( ((samples - 1) / (frame_length + 1)) + 1)];
+			this.ra_unit_size = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( ((samples - 1) / (frame_length + 1)) + 1), "ra_unit_size");
 			for (int f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++)
 			{
 				boxSize += stream.ReadUInt32(boxSize, readSize,  out this.ra_unit_size[f], "ra_unit_size"); 

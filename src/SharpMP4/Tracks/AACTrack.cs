@@ -130,28 +130,20 @@ namespace SharpMP4.Tracks
             }
         }
 
-        public override void ProcessSample(byte[] sample, out byte[] output, out bool isRandomAccessPoint)
+        public override void ProcessSample(byte[] buffer, int offset, int length, out ArraySegment<byte> output, out bool isRandomAccessPoint)
         {
             isRandomAccessPoint = true; // in case of audio it's implied, no need to signal it
 
-            if(sample == null)
+            if (buffer == null)
             {
-                output = null;
+                output = default;
                 return;
             }
 
-            if (AdtsHeader.HasHeader(sample))
-            {
-                //var header = new AdtsHeader();
-                //header.Read(sample);
-
-                // strip ADTS header
-                output = sample.Skip(AdtsHeader.GetLength(sample)).ToArray();
-            }
-            else
-            {
-                output = sample;
-            }
+            // An ADTS header is not stored, so the sample starts after it. Nothing is copied: what
+            // comes back is the bytes where they already are.
+            int header = AdtsHeader.GetLength(buffer, offset, length);
+            output = new ArraySegment<byte>(buffer, offset + header, length - header);
         }
 
         public override Box CreateSampleEntryBox()
@@ -242,9 +234,11 @@ namespace SharpMP4.Tracks
         /// </summary>
         /// <param name="sample">AAC sample bytes.</param>
         /// <returns>true when the ADTS header is present, false otherwise.</returns>
-        public static bool HasHeader(byte[] sample)
+        public static bool HasHeader(byte[] sample) => HasHeader(sample, 0, sample.Length);
+
+        public static bool HasHeader(byte[] buffer, int offset, int length)
         {
-            return sample.Length > 7 && sample[0] == 0xFF && sample[1] >> 4 == 0xF;
+            return length > 7 && buffer[offset] == 0xFF && buffer[offset + 1] >> 4 == 0xF;
         }
 
         /// <summary>
@@ -252,12 +246,14 @@ namespace SharpMP4.Tracks
         /// </summary>
         /// <param name="sample">AAC sample bytes.</param>
         /// <returns>Length in bytes of the ADTS header if present, 0 otherwise.</returns>
-        public static int GetLength(byte[] sample)
+        public static int GetLength(byte[] sample) => GetLength(sample, 0, sample.Length);
+
+        public static int GetLength(byte[] buffer, int offset, int length)
         {
-            if (!HasHeader(sample))
+            if (!HasHeader(buffer, offset, length))
                 return 0;
 
-            return ((sample[1] >> 4) & 0x1) == 1 ? 9 : 7;
+            return ((buffer[offset + 1] >> 4) & 0x1) == 1 ? 9 : 7;
         }
 
         /// <summary>

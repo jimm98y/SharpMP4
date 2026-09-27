@@ -125,15 +125,15 @@ public partial class ItemLocationBox : FullBox
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.item_count, "item_count"); 
 		}
 
-		this.item_ID = new uint[IsoStream.GetInt(item_count)];
-		this.reserved0 = new ushort[IsoStream.GetInt(item_count)];
-		this.construction_method = new byte[IsoStream.GetInt(item_count)];
-		this.data_reference_index = new ushort[IsoStream.GetInt(item_count)];
-		this.base_offset = new byte[IsoStream.GetInt(item_count)][];
-		this.extent_count = new ushort[IsoStream.GetInt(item_count)];
-		this.item_reference_index = new byte[IsoStream.GetInt(item_count)][][];
-		this.extent_offset = new byte[IsoStream.GetInt(item_count)][][];
-		this.extent_length = new byte[IsoStream.GetInt(item_count)][][];
+		this.item_ID = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt(item_count), "item_ID");
+		this.reserved0 = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(item_count), "reserved0");
+		this.construction_method = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(item_count), "construction_method");
+		this.data_reference_index = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(item_count), "data_reference_index");
+		this.base_offset = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt(item_count), "base_offset");
+		this.extent_count = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(item_count), "extent_count");
+		this.item_reference_index = stream.SafeAllocate<byte[][]>(boxSize, readSize, IsoStream.GetInt(item_count), "item_reference_index");
+		this.extent_offset = stream.SafeAllocate<byte[][]>(boxSize, readSize, IsoStream.GetInt(item_count), "extent_offset");
+		this.extent_length = stream.SafeAllocate<byte[][]>(boxSize, readSize, IsoStream.GetInt(item_count), "extent_length");
 		for (int i=0; i<item_count; i++)
 		{
 
@@ -156,9 +156,9 @@ public partial class ItemLocationBox : FullBox
 			boxSize += stream.ReadBits(boxSize, readSize, (uint)(base_offset_size*8 ),  out this.base_offset[i], "base_offset"); 
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.extent_count[i], "extent_count"); 
 
-			this.item_reference_index[i] = new byte[IsoStream.GetInt(extent_count[i])][];
-			this.extent_offset[i] = new byte[IsoStream.GetInt(extent_count[i])][];
-			this.extent_length[i] = new byte[IsoStream.GetInt(extent_count[i])][];
+			this.item_reference_index[i] = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt(extent_count[i]), "item_reference_index[i]");
+			this.extent_offset[i] = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt(extent_count[i]), "extent_offset[i]");
+			this.extent_length[i] = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt(extent_count[i]), "extent_length[i]");
 			for (int j=0; j<extent_count[i]; j++)
 			{
 

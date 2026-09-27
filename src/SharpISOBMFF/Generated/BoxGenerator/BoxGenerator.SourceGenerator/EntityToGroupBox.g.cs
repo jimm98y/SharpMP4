@@ -39,7 +39,7 @@ public partial class EntityToGroupBox : FullBox
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.group_id, "group_id"); 
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.num_entities_in_group, "num_entities_in_group"); 
 
-		this.entity_id = new uint[IsoStream.GetInt(num_entities_in_group)];
+		this.entity_id = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt(num_entities_in_group), "entity_id");
 		for (int i=0; i<num_entities_in_group; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.entity_id[i], "entity_id"); // the remaining data may be specified for a particular grouping_type

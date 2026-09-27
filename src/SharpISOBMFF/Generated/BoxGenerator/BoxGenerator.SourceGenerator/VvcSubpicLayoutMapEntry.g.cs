@@ -38,7 +38,7 @@ public partial class VvcSubpicLayoutMapEntry : VisualSampleGroupEntry
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.groupID_info_4cc, "groupID_info_4cc"); 
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.entry_count_minus1, "entry_count_minus1"); 
 
-		this.groupID = new ushort[IsoStream.GetInt( entry_count_minus1 + 1)];
+		this.groupID = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( entry_count_minus1 + 1), "groupID");
 		for (int i=0; i <= entry_count_minus1; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.groupID[i], "groupID"); 

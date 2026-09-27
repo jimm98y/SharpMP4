@@ -38,7 +38,7 @@ public partial class SingleItemTypeReferenceBoxLarge : Box
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.from_item_ID, "from_item_ID"); 
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.reference_count, "reference_count"); 
 
-		this.to_item_ID = new uint[IsoStream.GetInt(reference_count)];
+		this.to_item_ID = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt(reference_count), "to_item_ID");
 		for (int j=0; j<reference_count; j++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.to_item_ID[j], "to_item_ID"); 

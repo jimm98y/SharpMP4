@@ -1,4 +1,5 @@
-﻿using SharpISOBMFF;
+﻿using System;
+using SharpISOBMFF;
 
 namespace SharpMP4.Tracks
 {
@@ -17,6 +18,16 @@ namespace SharpMP4.Tracks
             DefaultSampleDuration = sampleDuration;
             HandlerType = IsoStream.ToFourCC(handlerType);
             HandlerName = handlerName;
+        }
+
+        /// <summary>
+        /// The sample goes to the file as it arrives, so this hands back exactly what it was
+        /// given, without copying it anywhere.
+        /// </summary>
+        public override void ProcessSample(byte[] buffer, int offset, int length, out ArraySegment<byte> output, out bool isRandomAccessPoint)
+        {
+            isRandomAccessPoint = true;
+            output = buffer == null ? default : new ArraySegment<byte>(buffer, offset, length);
         }
 
         public override Box CreateSampleEntryBox()

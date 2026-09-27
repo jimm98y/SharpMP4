@@ -57,8 +57,8 @@ public partial class MultiviewRelationAttributeBox : FullBox
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.reserved1, "reserved1"); 
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.num_common_attributes, "num_common_attributes"); 
 
-		this.common_attribute = new uint[IsoStream.GetInt(num_common_attributes)];
-		this.common_value = new uint[IsoStream.GetInt(num_common_attributes)];
+		this.common_attribute = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt(num_common_attributes), "common_attribute");
+		this.common_value = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt(num_common_attributes), "common_value");
 		for (int i=0; i<num_common_attributes; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.common_attribute[i], "common_attribute"); 
@@ -67,7 +67,7 @@ public partial class MultiviewRelationAttributeBox : FullBox
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.reserved2, "reserved2"); 
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.num_differentiating_attributes, "num_differentiating_attributes"); 
 
-		this.differentiating_attribute = new uint[IsoStream.GetInt(num_differentiating_attributes)];
+		this.differentiating_attribute = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt(num_differentiating_attributes), "differentiating_attribute");
 		for (int i=0; i<num_differentiating_attributes; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.differentiating_attribute[i], "differentiating_attribute"); 

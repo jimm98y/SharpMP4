@@ -81,11 +81,11 @@ public partial class TrackFragmentRandomAccessBox : FullBox
 		boxSize += stream.ReadBits(boxSize, readSize, 2,  out this.length_size_of_sample_num, "length_size_of_sample_num"); 
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.number_of_entry, "number_of_entry"); 
 
-		this.time = new ulong[IsoStream.GetInt( number_of_entry)];
-		this.moof_offset = new ulong[IsoStream.GetInt( number_of_entry)];
-		this.traf_number = new byte[IsoStream.GetInt( number_of_entry)][];
-		this.trun_number = new byte[IsoStream.GetInt( number_of_entry)][];
-		this.sample_delta = new byte[IsoStream.GetInt( number_of_entry)][];
+		this.time = stream.SafeAllocate<ulong>(boxSize, readSize, IsoStream.GetInt( number_of_entry), "time");
+		this.moof_offset = stream.SafeAllocate<ulong>(boxSize, readSize, IsoStream.GetInt( number_of_entry), "moof_offset");
+		this.traf_number = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( number_of_entry), "traf_number");
+		this.trun_number = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( number_of_entry), "trun_number");
+		this.sample_delta = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( number_of_entry), "sample_delta");
 		for (int i=0; i < number_of_entry; i++)
 		{
 

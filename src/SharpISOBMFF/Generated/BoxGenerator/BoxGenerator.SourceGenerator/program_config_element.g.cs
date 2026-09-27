@@ -187,44 +187,44 @@ public partial class program_config_element : IMp4Serializable
 			boxSize += stream.ReadBit(boxSize, readSize,  out this.pseudo_surround_enable, "pseudo_surround_enable"); 
 		}
 
-		this.front_element_is_cpe = new bool[IsoStream.GetInt( num_front_channel_elements)];
-		this.front_element_tag_select = new byte[IsoStream.GetInt( num_front_channel_elements)];
+		this.front_element_is_cpe = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( num_front_channel_elements), "front_element_is_cpe");
+		this.front_element_tag_select = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( num_front_channel_elements), "front_element_tag_select");
 		for (int i = 0; i < num_front_channel_elements; i++)
 		{
 			boxSize += stream.ReadBit(boxSize, readSize,  out this.front_element_is_cpe[i], "front_element_is_cpe"); 
 			boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.front_element_tag_select[i], "front_element_tag_select"); 
 		}
 
-		this.side_element_is_cpe = new bool[IsoStream.GetInt( num_side_channel_elements)];
-		this.side_element_tag_select = new byte[IsoStream.GetInt( num_side_channel_elements)];
+		this.side_element_is_cpe = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( num_side_channel_elements), "side_element_is_cpe");
+		this.side_element_tag_select = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( num_side_channel_elements), "side_element_tag_select");
 		for (int i = 0; i < num_side_channel_elements; i++)
 		{
 			boxSize += stream.ReadBit(boxSize, readSize,  out this.side_element_is_cpe[i], "side_element_is_cpe"); 
 			boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.side_element_tag_select[i], "side_element_tag_select"); 
 		}
 
-		this.back_element_is_cpe = new bool[IsoStream.GetInt( num_back_channel_elements)];
-		this.back_element_tag_select = new byte[IsoStream.GetInt( num_back_channel_elements)];
+		this.back_element_is_cpe = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( num_back_channel_elements), "back_element_is_cpe");
+		this.back_element_tag_select = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( num_back_channel_elements), "back_element_tag_select");
 		for (int i = 0; i < num_back_channel_elements; i++)
 		{
 			boxSize += stream.ReadBit(boxSize, readSize,  out this.back_element_is_cpe[i], "back_element_is_cpe"); 
 			boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.back_element_tag_select[i], "back_element_tag_select"); 
 		}
 
-		this.lfe_element_tag_select = new byte[IsoStream.GetInt( num_lfe_channel_elements)];
+		this.lfe_element_tag_select = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( num_lfe_channel_elements), "lfe_element_tag_select");
 		for (int i = 0; i < num_lfe_channel_elements; i++)
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.lfe_element_tag_select[i], "lfe_element_tag_select"); 
 		}
 
-		this.assoc_data_element_tag_select = new byte[IsoStream.GetInt( num_assoc_data_elements)];
+		this.assoc_data_element_tag_select = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( num_assoc_data_elements), "assoc_data_element_tag_select");
 		for (int i = 0; i < num_assoc_data_elements; i++)
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.assoc_data_element_tag_select[i], "assoc_data_element_tag_select"); 
 		}
 
-		this.cc_element_is_ind_sw = new bool[IsoStream.GetInt( num_valid_cc_elements)];
-		this.valid_cc_element_tag_select = new byte[IsoStream.GetInt( num_valid_cc_elements)];
+		this.cc_element_is_ind_sw = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( num_valid_cc_elements), "cc_element_is_ind_sw");
+		this.valid_cc_element_tag_select = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( num_valid_cc_elements), "valid_cc_element_tag_select");
 		for (int i = 0; i < num_valid_cc_elements; i++)
 		{
 			boxSize += stream.ReadBit(boxSize, readSize,  out this.cc_element_is_ind_sw[i], "cc_element_is_ind_sw"); 
@@ -233,7 +233,7 @@ public partial class program_config_element : IMp4Serializable
 		boxSize += stream.ReadByteAlignment(boxSize, readSize,  out this.byte_alignment, "byte_alignment"); // Note 1 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.comment_field_bytes, "comment_field_bytes"); 
 
-		this.comment_field_data = new byte[IsoStream.GetInt( comment_field_bytes)];
+		this.comment_field_data = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( comment_field_bytes), "comment_field_data");
 		for (int i = 0; i < comment_field_bytes; i++)
 		{
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.comment_field_data[i], "comment_field_data"); 

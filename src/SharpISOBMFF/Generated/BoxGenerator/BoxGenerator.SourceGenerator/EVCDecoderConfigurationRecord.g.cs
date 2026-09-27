@@ -119,19 +119,19 @@ public partial class EVCDecoderConfigurationRecord : IMp4Serializable
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.aps_in_stream, "aps_in_stream"); 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.numOfArrays, "numOfArrays"); 
 
-		this.reserved0 = new byte[IsoStream.GetInt(numOfArrays)];
-		this.NAL_unit_type = new byte[IsoStream.GetInt(numOfArrays)];
-		this.numNalus = new ushort[IsoStream.GetInt(numOfArrays)];
-		this.nalUnitLength = new ushort[IsoStream.GetInt(numOfArrays)][];
-		this.nalUnit = new byte[IsoStream.GetInt(numOfArrays)][][];
+		this.reserved0 = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(numOfArrays), "reserved0");
+		this.NAL_unit_type = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(numOfArrays), "NAL_unit_type");
+		this.numNalus = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(numOfArrays), "numNalus");
+		this.nalUnitLength = stream.SafeAllocate<ushort[]>(boxSize, readSize, IsoStream.GetInt(numOfArrays), "nalUnitLength");
+		this.nalUnit = stream.SafeAllocate<byte[][]>(boxSize, readSize, IsoStream.GetInt(numOfArrays), "nalUnit");
 		for (int j=0; j<numOfArrays; j++)
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, 2,  out this.reserved0[j], "reserved0"); 
 			boxSize += stream.ReadBits(boxSize, readSize, 6,  out this.NAL_unit_type[j], "NAL_unit_type"); 
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.numNalus[j], "numNalus"); 
 
-			this.nalUnitLength[j] = new ushort[IsoStream.GetInt(numNalus[j])];
-			this.nalUnit[j] = new byte[IsoStream.GetInt(numNalus[j])][];
+			this.nalUnitLength[j] = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(numNalus[j]), "nalUnitLength[j]");
+			this.nalUnit[j] = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt(numNalus[j]), "nalUnit[j]");
 			for (int i=0; i<numNalus[j]; i++)
 			{
 				boxSize += stream.ReadUInt16(boxSize, readSize,  out this.nalUnitLength[j][i], "nalUnitLength"); 

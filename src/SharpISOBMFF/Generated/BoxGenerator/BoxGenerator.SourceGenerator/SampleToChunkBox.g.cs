@@ -43,9 +43,9 @@ public partial class SampleToChunkBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.entry_count, "entry_count"); 
 
-		this.first_chunk = new uint[IsoStream.GetInt( entry_count)];
-		this.samples_per_chunk = new uint[IsoStream.GetInt( entry_count)];
-		this.sample_description_index = new uint[IsoStream.GetInt( entry_count)];
+		this.first_chunk = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count), "first_chunk");
+		this.samples_per_chunk = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count), "samples_per_chunk");
+		this.sample_description_index = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count), "sample_description_index");
 		for (int i=0; i < entry_count; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.first_chunk[i], "first_chunk"); 

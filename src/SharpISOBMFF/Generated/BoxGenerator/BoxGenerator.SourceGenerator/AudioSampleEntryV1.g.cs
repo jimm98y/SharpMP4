@@ -53,7 +53,9 @@ public partial class AudioSampleEntryV1 : SampleEntry
 	public ushort Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
 	protected uint samplerate = 1<<16;  //  optional boxes follow
-	public uint Samplerate { get { return this.samplerate; } set { this.samplerate = value; } }
+	protected bool sampleratePresent;
+	public uint Samplerate { get { return this.samplerate; } set { this.samplerate = value; this.sampleratePresent = true; } }
+	public bool SampleratePresent { get { return this.sampleratePresent; } set { this.sampleratePresent = value; } }
 	public SamplingRateBox _SamplingRateBox { get { return this.children.OfType<SamplingRateBox>().FirstOrDefault(); } }
 	public Box _Box { get { return this.children.OfType<Box>().FirstOrDefault(); } }
 	public ChannelLayout _ChannelLayout { get { return this.children.OfType<ChannelLayout>().FirstOrDefault(); } }
@@ -79,7 +81,7 @@ public partial class AudioSampleEntryV1 : SampleEntry
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.samplesize, "samplesize"); 
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.pre_defined, "pre_defined"); 
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.reserved0, "reserved0"); 
-		if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt32(boxSize, readSize,  out this.samplerate, "samplerate"); // optional boxes follow
+		if (stream.HasMoreData(boxSize, readSize)) { boxSize += stream.ReadUInt32(boxSize, readSize,  out this.samplerate, "samplerate"); this.sampleratePresent = true; } // optional boxes follow
 		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.SamplingRateBox, "SamplingRateBox"); 
 		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.Box, "Box"); // further boxes as needed
 		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ChannelLayout, "ChannelLayout"); 
@@ -105,7 +107,7 @@ public partial class AudioSampleEntryV1 : SampleEntry
 		boxSize += stream.WriteUInt16( this.samplesize, "samplesize"); 
 		boxSize += stream.WriteUInt16( this.pre_defined, "pre_defined"); 
 		boxSize += stream.WriteUInt16( this.reserved0, "reserved0"); 
-		boxSize += stream.WriteUInt32( this.samplerate, "samplerate"); // optional boxes follow
+		if (this.sampleratePresent) boxSize += stream.WriteUInt32( this.samplerate, "samplerate"); // optional boxes follow
 		// boxSize += stream.WriteBox( this.SamplingRateBox, "SamplingRateBox"); 
 		// boxSize += stream.WriteBox( this.Box, "Box"); // further boxes as needed
 		// boxSize += stream.WriteBox( this.ChannelLayout, "ChannelLayout"); 
@@ -131,7 +133,7 @@ public partial class AudioSampleEntryV1 : SampleEntry
 		boxSize += 16; // samplesize
 		boxSize += 16; // pre_defined
 		boxSize += 16; // reserved0
-		boxSize += 32; // samplerate
+		if (this.sampleratePresent) boxSize += 32; // samplerate
 		// boxSize += IsoStream.CalculateBoxSize(SamplingRateBox); // SamplingRateBox
 		// boxSize += IsoStream.CalculateBoxSize(Box); // Box
 		// boxSize += IsoStream.CalculateBoxSize(ChannelLayout); // ChannelLayout

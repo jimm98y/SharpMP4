@@ -50,9 +50,10 @@ namespace BoxGenerator.CSharp
             else if (box.BoxName == "CompactSampleToGroupBox")
             {
                 cls += "\r\n\t\tbool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);\r\n";
-                cls += "\t\tuint count_size_code = (flags >> 2) & 0x3;\r\n";
-                cls += "\t\tuint pattern_size_code = (flags >> 4) & 0x3;\r\n";
-                cls += "\t\tuint index_size_code = flags & 0x3;\r\n";
+                // Each holds f(code), the size in bits a code of 0, 1, 2 or 3 stands for: 4, 8, 16 or 32 (14496-12 8.9.5).
+                cls += "\t\tuint count_size_code = 4u << (int)((flags >> 2) & 0x3);\r\n";
+                cls += "\t\tuint pattern_size_code = 4u << (int)((flags >> 4) & 0x3);\r\n";
+                cls += "\t\tuint index_size_code = 4u << (int)(flags & 0x3);\r\n";
             }
             else if (box.BoxName == "VvcDecoderConfigurationRecord")
             {
@@ -169,6 +170,22 @@ namespace SharpISOBMFF
         {
             if (uuid != null) fourCC = $""{fourCC} {ConvertEx.ToHexString(uuid).ToLowerInvariant()}"";
 
+            // Every box in a TrackReferenceBox is a TrackReferenceTypeBox, whatever its type
+            // (ISO/IEC 14496-12 8.3.3): 'mpod', 'dpnd', 'sync' and the like mean other things
+            // elsewhere, and were read as those.
+            if (parent == ""tref"")
+                return new TrackReferenceTypeBox(IsoStream.FromFourCC(fourCC));
+
+            // A key in a key table is typed by its local key ID (14496-12 12.9); QuickTime metadata's
+            // keys are 'mdta'.
+            if (parent == ""keys"" && fourCC != ""mdta"")
+                return new MetaDataKeyBox(IsoStream.FromFourCC(fourCC));
+
+            // In a user data box, a '©' type is QuickTime text: strings each with its length and language
+            // (QuickTime File Format, User Data Text Strings). In iTunes metadata it holds a 'data' box.
+            if (parent == ""udta"" && fourCC.Length == 4 && fourCC[0] == '©')
+                return new QuickTimeTextBox(IsoStream.FromFourCC(fourCC));
+
             switch(fourCC)
             {
 ");
@@ -207,6 +224,12 @@ namespace SharpISOBMFF
                         {
                             elseBlock = "else return new Mp4aBox();";
                         }
+                        else if (item.Value.Single().BoxName == "AudioSampleEntry")
+                        {
+                            // Out of a sample description, an audio codec's type names its configuration: the
+                            // 'alac' in an 'alac' entry, or the 'ms\0\x02' in a QuickTime 'wave'.
+                            elseBlock = $"else return new CodecConfigurationBox({optParams});";
+                        }
 
                         factory.Append($"               case \"{item.Key}\": {optCondition} return new {item.Value.Single().BoxName}({optParams});{(optCondition != "" ? $"{elseBlock}break;" : "")}{comment}\r\n");
                     }
@@ -219,16 +242,37 @@ namespace SharpISOBMFF
                         item.Value.First().BoxName == "SegmentIndexBox" ||
                         item.Value.First().BoxName == "TrackHintInformation" ||
                         item.Value.First().BoxName == "ViewPriorityBox" ||
-                        item.Value.First().BoxName == "RtpMovieHintInformation" ||
                         item.Value.First().BoxName == "AppleName2Box"
                         )
                     {
                         string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
                         factory.Append($"               case \"{item.Key}\": return new {item.Value.First().BoxName}();{comment}\r\n");
                     }
+                    else if (item.Key == "rtp ")
+                    {
+                        // A sample description holds the hint track's sample entry (14496-12 9.1.2.1); anywhere
+                        // else, in an 'hnti', 'rtp ' is the session's SDP (9.1.4.1).
+                        factory.Append($"               case \"{item.Key}\": if(parent == \"stsd\") return new RtpHintSampleEntry(); else return new RtpMovieHintInformation();\r\n");
+                    }
                     else if (item.Key == "cprt")
                     {
                         factory.Append($"               case \"{item.Key}\": if(parent == \"ilst\") return new AppleCopyrightBox(); else return new CopyrightBox();\r\n");
+                    }
+                    else if (item.Key == "rtng")
+                    {
+                        // In a user data box, 'rtng' is the 3GPP rating (TS 26.244); in iTunes metadata, Apple's.
+                        factory.Append($"               case \"{item.Key}\": if(parent == \"udta\") return new ThreeGPPRatingBox(); else return new AppleRatingBox();\r\n");
+                    }
+                    else if (item.Key == "gnre")
+                    {
+                        // In a user data box, 'gnre' is the 3GPP genre (TS 26.244); in iTunes metadata, Apple's.
+                        factory.Append($"               case \"{item.Key}\": if(parent == \"udta\") return new ThreeGPPGenreBox(); else return new GenreBox();\r\n");
+                    }
+                    else if (item.Key == "keys")
+                    {
+                        // A timed metadata sample entry's key table holds only the keys (14496-12 12.9);
+                        // QuickTime metadata's counts its entries first.
+                        factory.Append($"               case \"{item.Key}\": if(parent == \"mebx\") return new BoxedMetaDataKeyTableBox(); else return new MetaDataKeyTableBox();\r\n");
                     }
                     else if (item.Key == "ster")
                     {
@@ -485,7 +529,11 @@ namespace SharpISOBMFF
                 //  see: https://www.academia.edu/66625880/Forensic_Analysis_of_Video_Files_Using_Metadata
                 //  see: https://web.archive.org/web/20220126080109/https://leo-van-stee.github.io/
                 // TODO: maybe instead of lookahead, we just have to check the parents
-                cls.Append("\r\npublic bool IsQuickTime { get { return (GetParent() == null || (((Box)GetParent()).FourCC == IsoStream.FromFourCC(\"udta\") || ((Box)GetParent()).FourCC == IsoStream.FromFourCC(\"trak\"))); } }");
+                //  Where the stream can be read ahead, the box itself says which it is: see IsoStream.PeekMetaHasFullBoxHeader.
+                //  By its parent alone, an ISOBMFF 'meta' in 'moov' was taken for a QuickTime one.
+                //  IsQuickTime is true when the box has the version and flags of a FullBox.
+                cls.Append("\r\npublic bool? HasFullBoxHeader { get; set; }");
+                cls.Append("\r\npublic bool IsQuickTime { get { return HasFullBoxHeader ?? (GetParent() == null || (((Box)GetParent()).FourCC == IsoStream.FromFourCC(\"udta\") || ((Box)GetParent()).FourCC == IsoStream.FromFourCC(\"trak\"))); } }");
             }
             else if (b.BoxName == "AVCDecoderConfigurationRecord")
             {
@@ -556,6 +604,11 @@ namespace SharpISOBMFF
 
             cls.Append($"\r\n\r\n\tpublic {b.BoxName}({ctorParams}){baseCtorParams}\r\n\t{{\r\n");
             cls.Append(ctorContent);
+
+            // A 'uuid' box whose base takes a version and flags gets its user type here, as the base cannot
+            // take both: without it the box's size would leave out the 16 bytes of the type.
+            if (b.Extended != null && !string.IsNullOrEmpty(b.Extended.UserType) && b.Extended.BoxName != null && b.Extended.Parameters != null)
+                cls.Append($"\t\tthis.uuid = ConvertEx.FromHexString(\"{b.Extended.UserType}\");\r\n");
             cls.Append($"\t}}\r\n");
 
             bool shouldOverride = b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) || b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier";
@@ -566,7 +619,7 @@ namespace SharpISOBMFF
                 string baseRead = "\r\n\t\tboxSize += base.Read(stream, readSize);";
                 if (b.BoxName == "MetaBox")
                 {
-                    baseRead = "\r\n\t\tif(IsQuickTime) boxSize += base.Read(stream, readSize);";
+                    baseRead = "\r\n\t\tHasFullBoxHeader = stream.PeekMetaHasFullBoxHeader();\r\n\t\tif(IsQuickTime) boxSize += base.Read(stream, readSize);";
                 }
                 cls.Append(baseRead);
             }
@@ -635,7 +688,8 @@ namespace SharpISOBMFF
                 
                 if (b.BoxName == "MetaBox")
                 {
-                    baseSize = "\r\n\t\tif(IsQuickTime) boxSize += base.CalculateSize();";
+                    // Without the version and flags, the box still has its header.
+                    baseSize = "\r\n\t\tboxSize += base.CalculateSize();\r\n\t\tif(!IsQuickTime) boxSize -= 32; // version, flags";
                 }
 
                 cls.Append(baseSize);
@@ -821,12 +875,35 @@ namespace SharpISOBMFF
                         }
                     }
 
+                    // An optional field is written only when it was read or set, so what was left out stays out.
+                    if (IsOptional(field as PseudoField))
+                    {
+                        return
+                            "\r\n" +
+                            $"\tprotected {fieldType} {name}{value}; {comment}\r\n" +
+                            $"\tprotected bool {name}Present;\r\n" +
+                            $"\tpublic {fieldType} {propertyName} {{ get {{ return this.{name}; }} set {{ this.{name} = value; this.{name}Present = true; }} }}\r\n" +
+                            $"\tpublic bool {propertyName}Present {{ get {{ return this.{name}Present; }} set {{ this.{name}Present = value; }} }}";
+                    }
+
                     return
                             "\r\n" +
                             $"\tprotected {fieldType} {name}{value}; {comment}\r\n" + // must be "protected", derived classes access base members
                             $"\tpublic {fieldType} {propertyName} {{ get {{ return this.{name}; }} set {{ this.{name} = value; }} }}";
                 }
             }
+        }
+
+        /// <summary>
+        /// A field the syntax marks optional, outside any loop: whether it was there is kept with it, so
+        /// that it is written back only if it was.
+        /// </summary>
+        private bool IsOptional(PseudoField field)
+        {
+            return field != null &&
+                field.Comment != null && field.Comment.Contains("optional") &&
+                !parserDocument.IsWorkaround(field.Type.Type) &&
+                parserDocument.GetLoopNestingLevel(field) == 0;
         }
 
         private string BuildMethod(PseudoClass b, PseudoBlock parent, PseudoCode field, int level, MethodType methodType)
@@ -906,19 +983,16 @@ namespace SharpISOBMFF
                 spacing += "// ";
             }
 
+            bool isOptional = IsOptional(field as PseudoField) && !spacing.Contains("//");
             if (fieldComment != null && fieldComment.Contains("optional"))
             {
                 if (methodType == MethodType.Read)
                 {
                     spacing += "if (stream.HasMoreData(boxSize, readSize)) ";
                 }
-                else if (methodType == MethodType.Write)
+                else if (isOptional)
                 {
-                    spacing += ""; // TODO
-                }
-                else if (methodType == MethodType.Size)
-                {
-                    spacing += ""; // TODO
+                    spacing += $"if (this.{name}Present) ";
                 }
             }
 
@@ -945,12 +1019,28 @@ namespace SharpISOBMFF
                 }
             }
 
-            if (methodType == MethodType.Read)
+            // The IV size of 'senc' is not in the box (ISO/IEC 23001-7): the box's size settles it. PIFF's
+            // gives it where its flags say so.
+            if (methodType == MethodType.Read && name == "samples" && (b.BoxName == "SampleEncryptionBox" || b.BoxName == "PiffSampleEncryptionBox"))
+            {
+                bool piff = b.BoxName == "PiffSampleEncryptionBox";
+                string condition = piff ? "if ((flags & 0x1) == 0) " : "";
+                string layout = piff ? "0" : "version";
+                spacing = $"{spacing}{condition}this.Per_Sample_IV_Size = stream.InferPerSampleIvSize(boxSize, readSize, {layout}, flags, sample_count, Per_Sample_IV_Size);\r\n{spacing}";
+            }
+
+            if (methodType == MethodType.Read && isOptional)
+                return $"{spacing}{{ {boxSize}{m} out this.{name}{typedef}, \"{name}\"); this.{name}Present = true; }} {fieldComment}";
+            else if (methodType == MethodType.Read)
                 return $"{spacing}{boxSize}{m} out this.{name}{typedef}, \"{name}\"); {fieldComment}";
             else if (methodType == MethodType.Write)
                 return $"{spacing}{boxSize}{m} this.{name}{typedef}, \"{name}\"); {fieldComment}";
-            else
-                return $"{spacing}{boxSize}{m}; // {name}";
+
+            // A class read one at a time in a loop is sized one at a time too, not as the whole array each time.
+            if (parserDocument.GetLoopNestingLevel(field) > 0 && !string.IsNullOrEmpty(typedef) && m.StartsWith("IsoStream.CalculateClassSize("))
+                m = m.Replace($"CalculateClassSize({name})", $"CalculateClassSize({name}{typedef})");
+
+            return $"{spacing}{boxSize}{m}; // {name}";
         }
 
         private string BuildBlock(PseudoClass b, PseudoBlock parent, PseudoBlock block, int level, MethodType methodType)
@@ -1068,7 +1158,15 @@ namespace SharpISOBMFF
 
             if (methodType == MethodType.Read)
             {
-                if (block.RequiresAllocation.Count > 0)
+                // A field declared in more than one branch - sample_count appears in both the
+                // version 0 and the version 1 body of ctts - becomes a single property, and it is
+                // only registered for allocation under the branch that declared it first. The
+                // other branch then reads into a null array. Collect what this block fills too,
+                // so each branch allocates the arrays it is about to write.
+                var requiresAllocation = block.Type == "for"
+                    ? CollectBlockAllocations(b, block)
+                    : block.RequiresAllocation;
+                if (requiresAllocation.Count > 0)
                 {
                     if (block.Type == "for")
                     {
@@ -1097,7 +1195,7 @@ namespace SharpISOBMFF
 
                         if (!string.IsNullOrWhiteSpace(variable))
                         {
-                            foreach (var req in block.RequiresAllocation)
+                            foreach (var req in requiresAllocation)
                             {
                                 bool hasBoxes = GetReadMethod(req).Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "SampleGroupDescriptionBox";
                                 if (hasBoxes)
@@ -1118,26 +1216,17 @@ namespace SharpISOBMFF
                                     }
                                 }
 
-                                string variableType = GetCSharpType(req);
-                                int indexesTypeDef = parserDocument.GetFieldTypeDef(req).Count(x => x == '[');
-                                int indexesType = variableType.Count(x => x == '[');
                                 string variableName = parserDocument.GetFieldName(req) + suffix;
-                                if (variableType.Contains("[]"))
+                                string elementType = GetCSharpType(req);
+                                if (elementType.Contains("[]"))
                                 {
-                                    int diff = indexesType - indexesTypeDef;
-                                    variableType = variableType.Replace("[]", "");
-                                    variableType = $"{variableType}[IsoStream.GetInt({variable})]";
-                                    for (int i = 0; i < diff; i++)
-                                    {
-                                        variableType += "[]";
-                                    }
+                                    int diff = elementType.Count(x => x == '[') - parserDocument.GetFieldTypeDef(req).Count(x => x == '[');
+                                    elementType = elementType.Replace("[]", "") + string.Concat(Enumerable.Repeat("[]", Math.Max(diff, 0)));
                                 }
-                                else
-                                {
-                                    variableType += $"[IsoStream.GetInt({variable})]";
-                                }
+                                elementType += appendType;
 
-                                ret.Append($"\r\n{spacing}this.{variableName} = new {variableType}{appendType};");
+                                // the allocation is checked against the remaining data to protect against malformed counts
+                                ret.Append($"\r\n{spacing}this.{variableName} = stream.SafeAllocate<{elementType}>(boxSize, readSize, IsoStream.GetInt({variable}), \"{variableName}\");");
                             }
                         }
                     }
@@ -1158,6 +1247,47 @@ namespace SharpISOBMFF
             ret.Append($"\r\n{spacing}}}");
 
             return ret.ToString();
+        }
+
+        /// <summary>
+        /// The array fields a loop body fills: those registered for the block, plus any the class
+        /// declares as an array and this block also reads into.
+        /// </summary>
+        /// <remarks>
+        /// A field declared in more than one branch becomes a single property, and it is only
+        /// registered for allocation under the branch that declared it first - sample_count
+        /// appears in both the version 0 and the version 1 body of ctts, so reading a version 1
+        /// box indexed into a null array. Only names the class already treats as arrays are
+        /// added, so nothing that is a plain value inside a loop gets allocated by mistake.
+        /// </remarks>
+        private List<PseudoField> CollectBlockAllocations(PseudoClass box, PseudoBlock block)
+        {
+            var result = new List<PseudoField>(block.RequiresAllocation);
+            if (block.Content == null || box.FlattenedFields == null)
+                return result;
+
+            var seen = new HashSet<string>();
+            foreach (var existing in result)
+                seen.Add(parserDocument.GetFieldName(existing));
+
+            var arrayFields = new HashSet<string>();
+            foreach (var declared in box.FlattenedFields)
+            {
+                if (parserDocument.GetLoopNestingLevel(declared) > 0)
+                    arrayFields.Add(parserDocument.GetFieldName(declared));
+            }
+
+            foreach (var item in block.Content)
+            {
+                if (item is PseudoField field)
+                {
+                    string name = parserDocument.GetFieldName(field);
+                    if (arrayFields.Contains(name) && seen.Add(name))
+                        result.Add(field);
+                }
+            }
+
+            return result;
         }
 
         private string BuildSwitchCase(PseudoClass b, PseudoCase swcase, int level, MethodType methodType)
@@ -1317,6 +1447,10 @@ namespace SharpISOBMFF
                 {
                     // TODO array
                     csharpResult = "stream.ReadStringSizeLangPrefixed(boxSize, readSize, ";
+                }
+                else if (info.Type == "bytestring")
+                {
+                    csharpResult = "stream.ReadStringTillEnd(boxSize, readSize, ";
                 }
                 else
                 {

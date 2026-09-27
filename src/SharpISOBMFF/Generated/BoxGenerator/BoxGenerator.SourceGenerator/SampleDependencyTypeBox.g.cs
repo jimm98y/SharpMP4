@@ -44,10 +44,10 @@ public partial class SampleDependencyTypeBox : FullBox
 		int sample_count = (int)((readSize - boxSize) >> 3); // should be taken from the stsz sample_count, but we can calculate it from the readSize - 1 byte per sample
 
 
-		this.is_leading = new byte[IsoStream.GetInt( sample_count)];
-		this.sample_depends_on = new byte[IsoStream.GetInt( sample_count)];
-		this.sample_is_depended_on = new byte[IsoStream.GetInt( sample_count)];
-		this.sample_has_redundancy = new byte[IsoStream.GetInt( sample_count)];
+		this.is_leading = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( sample_count), "is_leading");
+		this.sample_depends_on = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( sample_count), "sample_depends_on");
+		this.sample_is_depended_on = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( sample_count), "sample_is_depended_on");
+		this.sample_has_redundancy = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( sample_count), "sample_has_redundancy");
 		for (int i=0; i < sample_count; i++)
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, 2,  out this.is_leading[i], "is_leading"); 

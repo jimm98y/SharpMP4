@@ -41,8 +41,8 @@ public partial class ShadowSyncSampleBox : FullBox
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.entry_count, "entry_count"); 
 		
 
-		this.shadowed_sample_number = new uint[IsoStream.GetInt( entry_count)];
-		this.sync_sample_number = new uint[IsoStream.GetInt( entry_count)];
+		this.shadowed_sample_number = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count), "shadowed_sample_number");
+		this.sync_sample_number = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count), "sync_sample_number");
 		for (int i=0; i < entry_count; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.shadowed_sample_number[i], "shadowed_sample_number"); 

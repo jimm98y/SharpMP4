@@ -102,15 +102,15 @@ public partial class DownMixInstructions : FullBox
 			downmix_instructions_count = 1;
 		}
 
-		this.targetLayout = new byte[IsoStream.GetInt(downmix_instructions_count)];
-		this.reserved0 = new bool[IsoStream.GetInt(downmix_instructions_count)];
-		this.targetChannelCount = new byte[IsoStream.GetInt(downmix_instructions_count)];
-		this.in_stream = new bool[IsoStream.GetInt(downmix_instructions_count)];
-		this.downmix_ID = new byte[IsoStream.GetInt(downmix_instructions_count)];
-		this.bs_downmix_offset = new byte[IsoStream.GetInt(downmix_instructions_count)];
-		this.bs_downmix_coefficient_v1 = new byte[IsoStream.GetInt(downmix_instructions_count)][][];
-		this.reserved00 = new byte[IsoStream.GetInt(downmix_instructions_count)][];
-		this.bs_downmix_coefficient = new byte[IsoStream.GetInt(downmix_instructions_count)][][];
+		this.targetLayout = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(downmix_instructions_count), "targetLayout");
+		this.reserved0 = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(downmix_instructions_count), "reserved0");
+		this.targetChannelCount = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(downmix_instructions_count), "targetChannelCount");
+		this.in_stream = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt(downmix_instructions_count), "in_stream");
+		this.downmix_ID = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(downmix_instructions_count), "downmix_ID");
+		this.bs_downmix_offset = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt(downmix_instructions_count), "bs_downmix_offset");
+		this.bs_downmix_coefficient_v1 = stream.SafeAllocate<byte[][]>(boxSize, readSize, IsoStream.GetInt(downmix_instructions_count), "bs_downmix_coefficient_v1");
+		this.reserved00 = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt(downmix_instructions_count), "reserved00");
+		this.bs_downmix_coefficient = stream.SafeAllocate<byte[][]>(boxSize, readSize, IsoStream.GetInt(downmix_instructions_count), "bs_downmix_coefficient");
 		for (int a=0; a<downmix_instructions_count; a++)
 		{
 			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.targetLayout[a], "targetLayout"); 
@@ -129,11 +129,11 @@ public partial class DownMixInstructions : FullBox
 					boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.bs_downmix_offset[a], "bs_downmix_offset"); 
 					int size = 4;
 
-					this.bs_downmix_coefficient_v1[a] = new byte[IsoStream.GetInt( targetChannelCount[a])][];
+					this.bs_downmix_coefficient_v1[a] = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( targetChannelCount[a]), "bs_downmix_coefficient_v1[a]");
 					for (int i=0; i < targetChannelCount[a]; i++)
 					{
 
-						this.bs_downmix_coefficient_v1[a][i] = new byte[IsoStream.GetInt( baseChannelCount)];
+						this.bs_downmix_coefficient_v1[a][i] = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( baseChannelCount), "bs_downmix_coefficient_v1[a][i]");
 						for (int j=0; j < baseChannelCount; j++)
 						{
 							boxSize += stream.ReadBits(boxSize, readSize, 5,  out this.bs_downmix_coefficient_v1[a][i][j], "bs_downmix_coefficient_v1"); 
@@ -146,11 +146,11 @@ public partial class DownMixInstructions : FullBox
 				else 
 				{
 
-					this.bs_downmix_coefficient[a] = new byte[IsoStream.GetInt( targetChannelCount[a])][];
+					this.bs_downmix_coefficient[a] = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( targetChannelCount[a]), "bs_downmix_coefficient[a]");
 					for (int i=0; i < targetChannelCount[a]; i++)
 					{
 
-						this.bs_downmix_coefficient[a][i] = new byte[IsoStream.GetInt( baseChannelCount)];
+						this.bs_downmix_coefficient[a][i] = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( baseChannelCount), "bs_downmix_coefficient[a][i]");
 						for (int j=0; j < baseChannelCount; j++)
 						{
 							boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.bs_downmix_coefficient[a][i][j], "bs_downmix_coefficient"); 

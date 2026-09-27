@@ -38,13 +38,13 @@ public partial class SampleDependencyBox : FullBox
 		int sample_count = 0; // TODO: taken from the stsz sample_count
 
 
-		this.dependency_count = new ushort[IsoStream.GetInt( sample_count)];
-		this.relative_sample_number = new short[IsoStream.GetInt( sample_count)][];
+		this.dependency_count = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( sample_count), "dependency_count");
+		this.relative_sample_number = stream.SafeAllocate<short[]>(boxSize, readSize, IsoStream.GetInt( sample_count), "relative_sample_number");
 		for (int i=0; i < sample_count; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.dependency_count[i], "dependency_count"); 
 
-			this.relative_sample_number[i] = new short[IsoStream.GetInt( dependency_count[i])];
+			this.relative_sample_number[i] = stream.SafeAllocate<short>(boxSize, readSize, IsoStream.GetInt( dependency_count[i]), "relative_sample_number[i]");
 			for (int k=0; k < dependency_count[i]; k++)
 			{
 				boxSize += stream.ReadInt16(boxSize, readSize,  out this.relative_sample_number[i][k], "relative_sample_number"); 

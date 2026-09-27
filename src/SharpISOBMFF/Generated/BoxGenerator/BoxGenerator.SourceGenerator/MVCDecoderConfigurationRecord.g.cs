@@ -15,8 +15,14 @@ unsigned int(8) AVCLevelIndication;
  bit(1) explicit_au_track; 
 bit(4) reserved = '1111'b; 
 unsigned int(2) lengthSizeMinusOne;  
-bit(1) reserved = '0'b; 
-unsigned int(7) numOfSequenceParameterSets; 
+bit(1) avcc_layout; // '0'b reserved since the 2014 edition; before it, the first of avcC's '111'b 
+if (avcc_layout) { 
+  bit(2) reserved = '11'b; 
+  unsigned int(5) numOfSequenceParameterSets; 
+} 
+else { 
+  unsigned int(7) numOfSequenceParameterSets; 
+} 
 for (i=0; i< numOfSequenceParameterSets; i++) { 
 unsigned int(16) sequenceParameterSetLength ; 
   bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; 
@@ -60,8 +66,11 @@ public partial class MVCDecoderConfigurationRecord : IMp4Serializable
 	protected byte lengthSizeMinusOne; 
 	public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
 
-	protected bool reserved0 = false; 
-	public bool Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+	protected bool avcc_layout;  //  '0'b reserved since the 2014 edition; before it, the first of avcC's '111'b 
+	public bool AvccLayout { get { return this.avcc_layout; } set { this.avcc_layout = value; } }
+
+	protected byte reserved0 = 0b11; 
+	public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
 	protected byte numOfSequenceParameterSets; 
 	public byte NumOfSequenceParameterSets { get { return this.numOfSequenceParameterSets; } set { this.numOfSequenceParameterSets = value; } }
@@ -96,11 +105,21 @@ public partial class MVCDecoderConfigurationRecord : IMp4Serializable
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.explicit_au_track, "explicit_au_track"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.reserved, "reserved"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 2,  out this.lengthSizeMinusOne, "lengthSizeMinusOne"); 
-		boxSize += stream.ReadBit(boxSize, readSize,  out this.reserved0, "reserved0"); 
-		boxSize += stream.ReadBits(boxSize, readSize, 7,  out this.numOfSequenceParameterSets, "numOfSequenceParameterSets"); 
+		boxSize += stream.ReadBit(boxSize, readSize,  out this.avcc_layout, "avcc_layout"); // '0'b reserved since the 2014 edition; before it, the first of avcC's '111'b 
 
-		this.sequenceParameterSetLength = new ushort[IsoStream.GetInt( numOfSequenceParameterSets)];
-		this.sequenceParameterSetNALUnit = new byte[IsoStream.GetInt( numOfSequenceParameterSets)][];
+		if (avcc_layout)
+		{
+			boxSize += stream.ReadBits(boxSize, readSize, 2,  out this.reserved0, "reserved0"); 
+			boxSize += stream.ReadBits(boxSize, readSize, 5,  out this.numOfSequenceParameterSets, "numOfSequenceParameterSets"); 
+		}
+
+		else 
+		{
+			boxSize += stream.ReadBits(boxSize, readSize, 7,  out this.numOfSequenceParameterSets, "numOfSequenceParameterSets"); 
+		}
+
+		this.sequenceParameterSetLength = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( numOfSequenceParameterSets), "sequenceParameterSetLength");
+		this.sequenceParameterSetNALUnit = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( numOfSequenceParameterSets), "sequenceParameterSetNALUnit");
 		for (int i=0; i< numOfSequenceParameterSets; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.sequenceParameterSetLength[i], "sequenceParameterSetLength"); 
@@ -108,8 +127,8 @@ public partial class MVCDecoderConfigurationRecord : IMp4Serializable
 		}
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.numOfPictureParameterSets, "numOfPictureParameterSets"); 
 
-		this.pictureParameterSetLength = new ushort[IsoStream.GetInt( numOfPictureParameterSets)];
-		this.pictureParameterSetNALUnit = new byte[IsoStream.GetInt( numOfPictureParameterSets)][];
+		this.pictureParameterSetLength = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( numOfPictureParameterSets), "pictureParameterSetLength");
+		this.pictureParameterSetNALUnit = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( numOfPictureParameterSets), "pictureParameterSetNALUnit");
 		for (int i=0; i< numOfPictureParameterSets; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.pictureParameterSetLength[i], "pictureParameterSetLength"); 
@@ -129,8 +148,18 @@ public partial class MVCDecoderConfigurationRecord : IMp4Serializable
 		boxSize += stream.WriteBit( this.explicit_au_track, "explicit_au_track"); 
 		boxSize += stream.WriteBits(4,  this.reserved, "reserved"); 
 		boxSize += stream.WriteBits(2,  this.lengthSizeMinusOne, "lengthSizeMinusOne"); 
-		boxSize += stream.WriteBit( this.reserved0, "reserved0"); 
-		boxSize += stream.WriteBits(7,  this.numOfSequenceParameterSets, "numOfSequenceParameterSets"); 
+		boxSize += stream.WriteBit( this.avcc_layout, "avcc_layout"); // '0'b reserved since the 2014 edition; before it, the first of avcC's '111'b 
+
+		if (avcc_layout)
+		{
+			boxSize += stream.WriteBits(2,  this.reserved0, "reserved0"); 
+			boxSize += stream.WriteBits(5,  this.numOfSequenceParameterSets, "numOfSequenceParameterSets"); 
+		}
+
+		else 
+		{
+			boxSize += stream.WriteBits(7,  this.numOfSequenceParameterSets, "numOfSequenceParameterSets"); 
+		}
 
 		for (int i=0; i< numOfSequenceParameterSets; i++)
 		{
@@ -158,8 +187,18 @@ public partial class MVCDecoderConfigurationRecord : IMp4Serializable
 		boxSize += 1; // explicit_au_track
 		boxSize += 4; // reserved
 		boxSize += 2; // lengthSizeMinusOne
-		boxSize += 1; // reserved0
-		boxSize += 7; // numOfSequenceParameterSets
+		boxSize += 1; // avcc_layout
+
+		if (avcc_layout)
+		{
+			boxSize += 2; // reserved0
+			boxSize += 5; // numOfSequenceParameterSets
+		}
+
+		else 
+		{
+			boxSize += 7; // numOfSequenceParameterSets
+		}
 
 		for (int i=0; i< numOfSequenceParameterSets; i++)
 		{

@@ -6,16 +6,16 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class BaseMediaInfoAtom() extends Box('gmin') {
+aligned(8) class BaseMediaInfoAtom() extends FullBox('gmin', version = 0, 0) {
  unsigned int(16) graphicsMode;
  unsigned int(16) opColorR;
  unsigned int(16) opColorG;
  unsigned int(16) opColorB;
  unsigned int(16) balance;
- unsigned int(16) reserved
+ unsigned int(16) reserved;
  } 
 */
-public partial class BaseMediaInfoAtom : Box
+public partial class BaseMediaInfoAtom : FullBox
 {
 	public const string TYPE = "gmin";
 	public override string DisplayName { get { return "BaseMediaInfoAtom"; } }
@@ -38,7 +38,7 @@ public partial class BaseMediaInfoAtom : Box
 	protected ushort reserved; 
 	public ushort Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-	public BaseMediaInfoAtom(): base(IsoStream.FromFourCC("gmin"))
+	public BaseMediaInfoAtom(): base(IsoStream.FromFourCC("gmin"), 0, 0)
 	{
 	}
 

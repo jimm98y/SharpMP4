@@ -37,7 +37,7 @@ public partial class SyncSampleBox : FullBox
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.entry_count, "entry_count"); 
 		
 
-		this.sample_number = new uint[IsoStream.GetInt( entry_count)];
+		this.sample_number = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count), "sample_number");
 		for (int i=0; i < entry_count; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.sample_number[i], "sample_number"); 

@@ -110,8 +110,8 @@ public partial class FilePartitionBox : FullBox
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.entry_count, "entry_count"); 
 		}
 
-		this.block_count = new ushort[IsoStream.GetInt( entry_count)];
-		this.block_size = new uint[IsoStream.GetInt( entry_count)];
+		this.block_count = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( entry_count), "block_count");
+		this.block_size = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count), "block_size");
 		for (int i=0; i < entry_count; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.block_count[i], "block_count"); 

@@ -1,0 +1,473 @@
+﻿<#
+.SYNOPSIS
+Downloads the conformance bitstreams and files the parsers are tested against.
+
+.DESCRIPTION
+Fetches the published conformance suites for H.264, H.265, H.266 and AV1 into the
+conformance folder next to this script, which git ignores. Each suite is laid out as
+
+    conformance\<codec>\<set>\<stream or archive name>\...
+
+Archives are unpacked into a folder of their own and then deleted, unless
+-KeepArchives is given. Anything already downloaded is skipped, so the script can
+be run again to finish an interrupted download or to add a suite.
+
+What the reference decoder produced is left out unless -KeepReference is given: the
+decoded pictures, its traces and its logs. They are what makes the H.264 suites
+several times their download size - 30 GB of them for 1.5 GB of bitstreams - and
+nothing that parses headers needs them. The bitstreams, their MD5 checksums and the
+descriptions are kept.
+
+Sources:
+    H.264  ITU-T JVT     https://www.itu.int/wftp3/av-arch/jvt-site/draft_conformance/
+    H.265  ITU-T JCT-VC  https://www.itu.int/wftp3/av-arch/jctvc-site/bitstream_exchange/draft_conformance/
+    H.266  ITU-T JVET    https://www.itu.int/wftp3/av-arch/jvet-site/bitstream_exchange/VVC/FDIS_r1/
+    AV1    libaom test vectors  https://storage.googleapis.com/aom-test-data/ (av1-1-*)
+    AV1    Argon Streams        https://aomedia.org/av1-video-decoder-verification-tool/
+    ISOBMFF  MPEG file format conformance (ISO/IEC 14496-32)
+                                https://github.com/MPEGGroup/FileFormatConformance
+    FATE     FFmpeg's samples that are ISOBMFF or QuickTime files
+                                https://fate-suite.ffmpeg.org/
+
+Only files directly in each set's folder are fetched: the subfolders the ITU keeps
+beside them hold superseded versions of the same streams.
+
+Works in Windows PowerShell 5.1 and PowerShell 7.
+
+.PARAMETER Destination
+Where the suites go. The conformance folder next to this script by default.
+
+.PARAMETER Codec
+Which suites to fetch: any of H264, H265, H266, AV1, IsoBmff (the file format
+conformance files, each with GPAC's dump of its boxes) and Fate (FFmpeg's samples
+that are ISOBMFF or QuickTime files, about 140 MB). All of them by default.
+
+.PARAMETER IncludeSvc
+Also fetches the H.264 scalable video coding set, 12.9 GB.
+
+.PARAMETER IncludeArgon
+Also fetches Argon Streams AV1, the AOMedia coverage suite, 7 GB.
+
+.PARAMETER KeepArchives
+Keeps each archive after unpacking it.
+
+.PARAMETER KeepReference
+Unpacks the reference decoder's output too: decoded pictures, traces and logs.
+
+.EXAMPLE
+.\DownloadConformance.ps1
+The core sets for all four codecs, about 4.8 GB.
+
+.EXAMPLE
+.\DownloadConformance.ps1 -Codec H265, H266
+Only H.265 and H.266.
+
+.EXAMPLE
+.\DownloadConformance.ps1 -IncludeSvc -IncludeArgon
+Everything, about 25 GB.
+#>
+[CmdletBinding()]
+param(
+    [string]$Destination,
+
+    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate')]
+    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate'),
+
+    [switch]$IncludeSvc,
+    [switch]$IncludeArgon,
+    [switch]$KeepArchives,
+    [switch]$KeepReference
+)
+
+$ErrorActionPreference = 'Stop'
+
+# Windows PowerShell 5.1 has no $PSScriptRoot yet where parameter defaults are worked out.
+if (-not $Destination) { $Destination = Join-Path $PSScriptRoot 'conformance' }
+
+# Windows PowerShell 5.1 may still offer only TLS 1.0 and 1.1, which the servers refuse.
+[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+
+# The progress bar slows Invoke-WebRequest down by an order of magnitude in 5.1.
+$ProgressPreference = 'SilentlyContinue'
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+$itu = 'https://www.itu.int'
+
+# The sets to fetch per codec, as ITU directories, and the name each is kept under.
+$ituSets = @{
+    'H264' = @(
+        @{ Name = 'AVCv1'; Url = '/wftp3/av-arch/jvt-site/draft_conformance/AVCv1/' },
+        @{ Name = 'FRExt'; Url = '/wftp3/av-arch/jvt-site/draft_conformance/FRExt/' },
+        @{ Name = 'MVC'; Url = '/wftp3/av-arch/jvt-site/draft_conformance/MVC/' },
+        @{ Name = 'Professional_profiles'; Url = '/wftp3/av-arch/jvt-site/draft_conformance/Professional_profiles/' }
+    )
+    'H265' = @(
+        @{ Name = 'HEVC_v1'; Url = '/wftp3/av-arch/jctvc-site/bitstream_exchange/draft_conformance/HEVC_v1/' },
+        @{ Name = 'RExt'; Url = '/wftp3/av-arch/jctvc-site/bitstream_exchange/draft_conformance/RExt/' },
+        @{ Name = 'MV-HEVC'; Url = '/wftp3/av-arch/jctvc-site/bitstream_exchange/draft_conformance/MV-HEVC/' },
+        @{ Name = 'SCC'; Url = '/wftp3/av-arch/jctvc-site/bitstream_exchange/draft_conformance/SCC/' },
+        @{ Name = 'SHVC'; Url = '/wftp3/av-arch/jctvc-site/bitstream_exchange/draft_conformance/SHVC/' },
+        @{ Name = '3D-HEVC'; Url = '/wftp3/av-arch/jctvc-site/bitstream_exchange/draft_conformance/3D-HEVC/' }
+    )
+    'H266' = @(
+        @{ Name = 'FDIS_r1'; Url = '/wftp3/av-arch/jvet-site/bitstream_exchange/VVC/FDIS_r1/' }
+    )
+}
+
+if ($IncludeSvc) {
+    $ituSets['H264'] += @{ Name = 'SVC'; Url = '/wftp3/av-arch/jvt-site/draft_conformance/SVC/' }
+}
+
+$argonUrl = 'https://aom-cwg-av1-argon-streams-public.s3.us-east-1.amazonaws.com/argon_coveragetool_av1_base_and_extended_profiles_v2.1.1.zip'
+
+$script:fetched = 0
+$script:skipped = 0
+$script:failed = New-Object System.Collections.Generic.List[string]
+
+function Get-Text([string]$Url) {
+    # A server that labels text as binary gets bytes back from Windows PowerShell 5.1.
+    $content = (Invoke-WebRequest -Uri $Url -UseBasicParsing).Content
+    if ($content -is [byte[]]) { return [Text.Encoding]::UTF8.GetString($content) }
+    return $content
+}
+
+# Downloads to a .part file and renames it once complete, so an interrupted download is
+# never taken for a finished one. A file already there with the expected size is kept.
+function Save-File([string]$Url, [string]$Path, [long]$ExpectedSize = -1) {
+    if ((Test-Path -LiteralPath $Path) -and ($ExpectedSize -lt 0 -or (Get-Item -LiteralPath $Path).Length -eq $ExpectedSize)) {
+        $script:skipped++
+        return $true
+    }
+
+    New-Item -ItemType Directory -Force -Path (Split-Path -Parent $Path) | Out-Null
+    $part = "$Path.part"
+
+    for ($attempt = 1; $attempt -le 3; $attempt++) {
+        try {
+            $client = New-Object System.Net.WebClient
+            try { $client.DownloadFile($Url, $part) } finally { $client.Dispose() }
+
+            if ($ExpectedSize -ge 0 -and (Get-Item -LiteralPath $part).Length -ne $ExpectedSize) {
+                throw "expected $ExpectedSize bytes, got $((Get-Item -LiteralPath $part).Length)"
+            }
+
+            Move-Item -LiteralPath $part -Destination $Path -Force
+            $script:fetched++
+            return $true
+        }
+        catch {
+            Write-Warning "  attempt $attempt of 3 failed for $Url : $($_.Exception.Message)"
+            Remove-Item -LiteralPath $part -Force -ErrorAction SilentlyContinue
+            Start-Sleep -Seconds (5 * $attempt)
+        }
+    }
+
+    $script:failed.Add($Url)
+    return $false
+}
+
+# Unpacks an archive into a folder named after it. A marker is written last, so a folder
+# left half unpacked is unpacked again rather than taken as done.
+function Expand-Stream([string]$Archive) {
+    $folder = [IO.Path]::Combine((Split-Path -Parent $Archive), [IO.Path]::GetFileNameWithoutExtension($Archive))
+    $marker = Join-Path $folder '.unpacked'
+
+    if (-not (Test-Path -LiteralPath $marker)) {
+        if (Test-Path -LiteralPath $folder) { Remove-Item -LiteralPath $folder -Recurse -Force }
+        New-Item -ItemType Directory -Force -Path $folder | Out-Null
+        $root = [IO.Path]::GetFullPath($folder).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+
+        $zip = [IO.Compression.ZipFile]::OpenRead($Archive)
+        try {
+            foreach ($entry in $zip.Entries) {
+                # A folder entry, or what the reference decoder produced.
+                if ($entry.Name -eq '') { continue }
+                if (-not $KeepReference -and (Test-Reference $entry.Name $entry.Length)) { continue }
+
+                # An entry that would land outside its folder is left out.
+                $target = [IO.Path]::GetFullPath([IO.Path]::Combine($folder, $entry.FullName))
+                if (-not $target.StartsWith($root, [StringComparison]::OrdinalIgnoreCase)) { continue }
+
+                New-Item -ItemType Directory -Force -Path (Split-Path -Parent $target) | Out-Null
+                [IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $target, $true)
+            }
+        }
+        finally {
+            $zip.Dispose()
+        }
+
+        Set-Content -LiteralPath $marker -Value (Split-Path -Leaf $Archive)
+    }
+
+    if (-not $KeepArchives) { Remove-Item -LiteralPath $Archive -Force }
+}
+
+# What the reference decoder produced, rather than what it was given: decoded pictures, its
+# traces and logs, and text too large to be a description - the traces are text as well.
+function Test-Reference([string]$Name, [long]$Length) {
+    $extension = [IO.Path]::GetExtension($Name).ToLowerInvariant()
+    if ($extension -in '.yuv', '.qcif', '.cif', '.rgb', '.rec', '.trc', '.log') { return $true }
+    return ($extension -in '.txt', '.opl', '.csv', '.dat') -and $Length -gt 1MB
+}
+
+# Takes the reference decoder's output out of what an earlier run, or -KeepReference, unpacked.
+function Remove-Reference {
+    $freed = 0L
+    Get-ChildItem -LiteralPath $Destination -Recurse -File | Where-Object { Test-Reference $_.Name $_.Length } | ForEach-Object {
+        $freed += $_.Length
+        Remove-Item -LiteralPath $_.FullName -Force
+    }
+
+    if ($freed -gt 0) { Write-Host ("Removed {0:N1} GB of decoded pictures, traces and logs." -f ($freed / 1GB)) }
+}
+
+function Test-Unpacked([string]$Archive) {
+    $folder = [IO.Path]::Combine((Split-Path -Parent $Archive), [IO.Path]::GetFileNameWithoutExtension($Archive))
+    return Test-Path -LiteralPath (Join-Path $folder '.unpacked')
+}
+
+# The files directly in an ITU directory listing, with their sizes. The listings are
+# IIS pages: a date, a size or <dir>, then the link.
+function Get-ItuListing([string]$Path) {
+    $html = Get-Text ($itu + $Path)
+    $entry = '(\d+/\d+/\d+\s+\d+:\d+\s+[AP]M)\s+(&lt;dir&gt;|\d+)\s+<A HREF="([^"]+)">([^<]+)</A>'
+
+    foreach ($m in [regex]::Matches($html, $entry, 'IgnoreCase')) {
+        if ($m.Groups[2].Value -notmatch 'dir') {
+            [pscustomobject]@{
+                Name = [Net.WebUtility]::HtmlDecode($m.Groups[4].Value)
+                Url  = $itu + $m.Groups[3].Value
+                Size = [long]$m.Groups[2].Value
+            }
+        }
+    }
+}
+
+function Get-ItuSet([string]$CodecFolder, $Set) {
+    $target = Join-Path (Join-Path $Destination $CodecFolder) $Set.Name
+    $files = @(Get-ItuListing $Set.Url | Where-Object { $_.Name -notmatch '\.(html?|txt|doc|docx|xls|xlsx|pdf)$' })
+    $megabytes = [math]::Round((($files | Measure-Object Size -Sum).Sum) / 1MB)
+    Write-Host "$CodecFolder/$($Set.Name): $($files.Count) files, $megabytes MB"
+
+    $i = 0
+    foreach ($file in $files) {
+        $i++
+        $path = Join-Path $target $file.Name
+        $isArchive = $file.Name -match '\.zip$'
+
+        if ($isArchive -and (Test-Unpacked $path)) {
+            $script:skipped++
+            continue
+        }
+
+        Write-Host ("  [{0}/{1}] {2}" -f $i, $files.Count, $file.Name)
+        if ((Save-File $file.Url $path $file.Size) -and $isArchive) {
+            try { Expand-Stream $path }
+            catch {
+                Write-Warning "  could not unpack $($file.Name): $($_.Exception.Message)"
+                $script:failed.Add($file.Url)
+            }
+        }
+    }
+}
+
+# libaom's test vectors, listed through the storage bucket's JSON API, each checked against
+# the MD5 the bucket keeps for it.
+function Get-LibaomVectors {
+    $target = Join-Path (Join-Path $Destination 'av1') 'libaom'
+    $objects = New-Object System.Collections.Generic.List[object]
+    $token = $null
+
+    do {
+        $url = 'https://storage.googleapis.com/storage/v1/b/aom-test-data/o?prefix=av1-1-&maxResults=1000&fields=items(name,size,md5Hash),nextPageToken'
+        if ($token) { $url += '&pageToken=' + [Uri]::EscapeDataString($token) }
+        $page = Invoke-RestMethod -Uri $url
+        # The .orig files are backups of a few vectors, and not public.
+        if ($page.items) { $objects.AddRange([object[]]@($page.items | Where-Object { $_.name -notmatch '\.orig$' })) }
+        $token = $page.nextPageToken
+    } while ($token)
+
+    $bytes = 0L
+    foreach ($object in $objects) { $bytes += [long]$object.size }
+    $megabytes = [math]::Round($bytes / 1MB)
+    Write-Host "av1/libaom: $($objects.Count) files, $megabytes MB"
+
+    foreach ($object in $objects) {
+        $path = Join-Path $target $object.name
+        $url = 'https://storage.googleapis.com/aom-test-data/' + $object.name
+        $known = Test-Path -LiteralPath $path
+
+        if ((Save-File $url $path ([long]$object.size)) -and -not $known) {
+            $expected = ([BitConverter]::ToString([Convert]::FromBase64String($object.md5Hash)) -replace '-', '').ToLowerInvariant()
+            $actual = (Get-FileHash -LiteralPath $path -Algorithm MD5).Hash.ToLowerInvariant()
+            if ($actual -ne $expected) {
+                Write-Warning "  $($object.name) does not match its MD5; removed"
+                Remove-Item -LiteralPath $path -Force
+                $script:failed.Add($url)
+            }
+        }
+    }
+}
+
+# Argon Streams: one archive, checked against the MD5 published beside it.
+function Get-Argon {
+    $target = Join-Path (Join-Path $Destination 'av1') 'argon'
+    $archive = Join-Path $target (Split-Path -Leaf ([Uri]$argonUrl).AbsolutePath)
+
+    if (Test-Unpacked $archive) {
+        Write-Host 'av1/argon: already unpacked'
+        $script:skipped++
+        return
+    }
+
+    Write-Host 'av1/argon: 1 archive, about 7 GB'
+    if (-not (Save-File $argonUrl $archive)) { return }
+
+    # Published BSD style, "MD5 (name) = hash", so take the hash wherever it stands.
+    $md5sum = Get-Text "$argonUrl.md5sum"
+    if ($md5sum -notmatch '\b([0-9a-fA-F]{32})\b') {
+        Write-Warning "  no MD5 in $argonUrl.md5sum"
+        $script:failed.Add($argonUrl)
+        return
+    }
+    $expected = $Matches[1].ToLowerInvariant()
+    $actual = (Get-FileHash -LiteralPath $archive -Algorithm MD5).Hash.ToLowerInvariant()
+    if ($actual -ne $expected) {
+        Write-Warning '  the Argon archive does not match its MD5; removed'
+        Remove-Item -LiteralPath $archive -Force
+        $script:failed.Add($argonUrl)
+        return
+    }
+
+    Expand-Stream $archive
+}
+
+# MPEG's file format conformance files: every published file with its description and GPAC's
+# dump of its boxes (*_gpac.json). Listed through GitHub's tree API; the files themselves are in
+# Git LFS, served without git-lfs from media.githubusercontent.com, and checked against the MD5
+# their description gives.
+function Get-FileFormatConformance {
+    $repository = 'MPEGGroup/FileFormatConformance'
+    $prefix = 'data/file_features/published/'
+    $target = Join-Path $Destination 'isobmff'
+
+    $tree = Invoke-RestMethod -Uri "https://api.github.com/repos/$repository/git/trees/main?recursive=1" -Headers @{ 'User-Agent' = 'DownloadConformance' }
+    $blobs = @($tree.tree | Where-Object { $_.type -eq 'blob' -and $_.path.StartsWith($prefix) -and $_.path -notmatch '/(README\.md|\.cfignore)$' })
+    Write-Host "isobmff: $($blobs.Count) files"
+
+    foreach ($blob in $blobs) {
+        $relative = $blob.path.Substring($prefix.Length)
+        $path = Join-Path $target $relative.Replace('/', [IO.Path]::DirectorySeparatorChar)
+        if ($relative.EndsWith('.json')) {
+            [void](Save-File "https://raw.githubusercontent.com/$repository/main/$($blob.path)" $path)
+            continue
+        }
+
+        $known = Test-Path -LiteralPath $path
+        if ((Save-File "https://media.githubusercontent.com/media/$repository/main/$($blob.path)" $path) -and -not $known) {
+            # The description beside a file is named after it without its extension.
+            $description = [IO.Path]::Combine((Split-Path -Parent $path), [IO.Path]::GetFileNameWithoutExtension($path) + '.json')
+            if ($relative.EndsWith('.zip')) {
+                $description = [IO.Path]::Combine((Split-Path -Parent $path), [IO.Path]::GetFileNameWithoutExtension([IO.Path]::GetFileNameWithoutExtension($path)) + '.json')
+            }
+            $expected = $null
+            if (Test-Path -LiteralPath $description) {
+                $expected = (Get-Content -LiteralPath $description -Raw | ConvertFrom-Json).md5
+            }
+            if ($expected -and -not $relative.EndsWith('.zip')) {
+                $actual = (Get-FileHash -LiteralPath $path -Algorithm MD5).Hash.ToLowerInvariant()
+                if ($actual -ne $expected.ToLowerInvariant()) {
+                    Write-Warning "  $relative does not match its MD5; removed"
+                    Remove-Item -LiteralPath $path -Force
+                    $script:failed.Add($blob.path)
+                    continue
+                }
+            }
+            if ($relative.EndsWith('.zip')) { Expand-Stream $path }
+        }
+    }
+}
+
+# FFmpeg's FATE samples that are ISOBMFF or QuickTime files: real files from cameras, phones and
+# editors, with the metadata and vendor boxes no conformance suite has. The Apache listings are
+# crawled for the extensions such files go by, and for files with none; a file is kept only if
+# its first box is one a file can start with. FATE publishes no checksums to check them against.
+$fateUrl = 'https://fate-suite.ffmpeg.org/'
+$fateExtensions = '\.(mov|qt|mp4|m4a|m4v|m4b|3gp|3g2|heic|heif|hif|avif|mj2|f4v|ism|ismv|isma|cmfv|cmfa|mqv|psp|dvr)$'
+$fateFirstBoxes = 'ftyp', 'styp', 'moov', 'mdat', 'free', 'skip', 'wide', 'pnot', 'uuid', 'sidx', 'moof', 'junk', 'PICT'
+
+function Get-FateListing([string]$Path) {
+    $html = Get-Text ($fateUrl + $Path)
+    foreach ($m in [regex]::Matches($html, '<a href="([^"?/][^"?]*)">')) {
+        $href = [Net.WebUtility]::HtmlDecode($m.Groups[1].Value)
+        if ($href.EndsWith('/')) {
+            Get-FateListing ($Path + $href)
+        }
+        elseif ($href -match $fateExtensions -or ($href -notmatch '\.' -and $href -ne 'md5sum')) {
+            $Path + $href
+        }
+    }
+}
+
+function Test-IsoBmffStart([string]$Path) {
+    $bytes = New-Object byte[] 8
+    $stream = [IO.File]::OpenRead($Path)
+    try { $read = $stream.Read($bytes, 0, 8) } finally { $stream.Dispose() }
+    return $read -eq 8 -and [Text.Encoding]::ASCII.GetString($bytes, 4, 4) -cin $fateFirstBoxes
+}
+
+function Get-FateSuite {
+    $target = Join-Path $Destination 'fate'
+    $files = @(Get-FateListing '')
+    Write-Host "fate: $($files.Count) candidates"
+
+    # What turned out not to be such a file is listed here, so that the next run does not fetch it again.
+    $rejectedList = Join-Path $target 'not-isobmff.txt'
+    $rejected = @{}
+    if (Test-Path -LiteralPath $rejectedList) {
+        Get-Content -LiteralPath $rejectedList | ForEach-Object { $rejected[$_] = $true }
+    }
+
+    foreach ($relative in $files) {
+        if ($rejected.ContainsKey($relative)) { $script:skipped++; continue }
+
+        $path = Join-Path $target $relative.Replace('/', [IO.Path]::DirectorySeparatorChar)
+        $known = Test-Path -LiteralPath $path
+        $url = $fateUrl + (($relative.Split('/') | ForEach-Object { [Uri]::EscapeDataString($_) }) -join '/')
+        if ((Save-File $url $path) -and -not $known -and -not (Test-IsoBmffStart $path)) {
+            Remove-Item -LiteralPath $path -Force
+            Add-Content -LiteralPath $rejectedList -Value $relative
+        }
+    }
+}
+
+New-Item -ItemType Directory -Force -Path $Destination | Out-Null
+Write-Host "Downloading into $Destination"
+
+$folders = @{ 'H264' = 'h264'; 'H265' = 'h265'; 'H266' = 'h266' }
+foreach ($c in $Codec) {
+    if ($c -eq 'AV1') {
+        Get-LibaomVectors
+        if ($IncludeArgon) { Get-Argon }
+    }
+    elseif ($c -eq 'IsoBmff') {
+        Get-FileFormatConformance
+    }
+    elseif ($c -eq 'Fate') {
+        Get-FateSuite
+    }
+    else {
+        foreach ($set in $ituSets[$c]) { Get-ItuSet $folders[$c] $set }
+    }
+}
+
+if (-not $KeepReference) { Remove-Reference }
+
+Write-Host ''
+Write-Host "Done: $($script:fetched) downloaded, $($script:skipped) already there, $($script:failed.Count) failed."
+if ($script:failed.Count -gt 0) {
+    $script:failed | ForEach-Object { Write-Host "  failed: $_" }
+    Write-Host 'Run the script again to retry them.'
+    exit 1
+}

@@ -8,6 +8,10 @@ namespace SharpMP4.Common
     /// </summary>
     public sealed class DefaultMp4Logger : IMp4Logger
     {
+        // The level properties report the master switch too, so callers can ask whether a
+        // message would be logged and skip building it. Parsers consult these on every syntax
+        // element, and formatting a message only for the logger to drop it dominated the cost of
+        // reading a bitstream.
         private bool _loggingEnabled = false;
 
         private bool _isErrorEnabled = true;
@@ -24,31 +28,31 @@ namespace SharpMP4.Common
 
         public bool IsErrorEnabled
         {
-            get => _isErrorEnabled;
+            get => _loggingEnabled && _isErrorEnabled;
             set => _isErrorEnabled = value;
         }
 
         public bool IsWarningEnabled
         {
-            get => _isWarningEnabled;
+            get => _loggingEnabled && _isWarningEnabled;
             set => _isWarningEnabled = value;
         }
 
         public bool IsInfoEnabled
         {
-            get => _isInfoEnabled;
+            get => _loggingEnabled && _isInfoEnabled;
             set => _isInfoEnabled = value;
         }
 
         public bool IsDebugEnabled
         {
-            get => _isDebugEnabled;
+            get => _loggingEnabled && _isDebugEnabled;
             set => _isDebugEnabled = value;
         }
 
         public bool IsTraceEnabled
         {
-            get => _isTraceEnabled;
+            get => _loggingEnabled && _isTraceEnabled;
             set => _isTraceEnabled = value;
         }
 

@@ -20,9 +20,6 @@ namespace SharpMP4.Tracks
     {
         public const string BRAND = "avc1";
 
-        private List<byte[]> _nalBuffer = new List<byte[]>();
-        private bool _nalBufferContainsVCL = false; 
-        private bool _nalBufferContainsIDR = false;
 
         // first VCL detection
         private ulong last_frame_num;
@@ -91,46 +88,41 @@ namespace SharpMP4.Tracks
         /// </summary>
         /// <param name="sample">NAL bytes.</param>
         /// <param name="isRandomAccessPoint">true when the sample contains a keyframe.</param>
-        public override void ProcessSample(byte[] sample, out byte[] output, out bool isRandomAccessPoint)
+        public override void ProcessSample(byte[] buffer, int offset, int length, out ArraySegment<byte> output, out bool isRandomAccessPoint)
         {
-            isRandomAccessPoint = _nalBufferContainsIDR;
-            output = null;
+            isRandomAccessPoint = SampleHasIdr;
+            output = default;
 
-            if(sample == null)
+            if (buffer == null)
             {
                 // flush the last AU
-                if (_nalBuffer.Count > 0 && _nalBufferContainsVCL)
+                if (HasSample && SampleHasVcl)
                 {
-                    output = CreateSample(_nalBuffer);
-                    _nalBuffer.Clear();
-                    _nalBufferContainsVCL = false;
-                    _nalBufferContainsIDR = false;
+                    output = TakeSample();
                 }
                 return;
             }
 
             // check for Annex-B
-            if (sample.Length >= 3 && sample[0] == 0 && sample[1] == 0 && (sample[2] == 1 || (sample.Length >= 4 && sample[2] == 0 && sample[3] == 1)))
+            if (length >= 3 && buffer[offset] == 0 && buffer[offset + 1] == 0
+                && (buffer[offset + 2] == 1 || (length >= 4 && buffer[offset + 2] == 0 && buffer[offset + 3] == 1)))
             {
                 throw new ArgumentException("NAL unit must not have Annex-B prefix!");
             }
 
-            using (ItuStream stream = new ItuStream(new MemoryStream(sample)))
+            using (ItuStream stream = new ItuStream(new MemoryStream(buffer, offset, length)))
             {
                 ulong ituSize = 0;
-                var nu = new NalUnit((uint)sample.Length);
+                var nu = new NalUnit((uint)length);
                 _context.NalHeader = nu;
                 ituSize += nu.Read(_context, stream);
 
                 if(nu.NalUnitType == H264NALTypes.AUD)
                 {
                     // access unit delimiter NAL unit(when present)
-                    if (_nalBufferContainsVCL)
+                    if (SampleHasVcl)
                     {
-                        output = CreateSample(_nalBuffer);
-                        _nalBuffer.Clear();
-                        _nalBufferContainsVCL = false;
-                        _nalBufferContainsIDR = false;
+                        output = TakeSample();
                     }
                 }
                 else if (nu.NalUnitType == H264NALTypes.SPS)
@@ -140,7 +132,7 @@ namespace SharpMP4.Tracks
                     if (!Sps.ContainsKey(_context.SeqParameterSetRbsp.SeqParameterSetData.SeqParameterSetId))
                     {
                         Sps.Add(_context.SeqParameterSetRbsp.SeqParameterSetData.SeqParameterSetId, _context.SeqParameterSetRbsp);
-                        SpsRaw.Add(_context.SeqParameterSetRbsp.SeqParameterSetData.SeqParameterSetId, sample);
+                        SpsRaw.Add(_context.SeqParameterSetRbsp.SeqParameterSetData.SeqParameterSetId, CopyOf(buffer, offset, length));
                     }
 
                     // if SPS contains the timescale, set it
@@ -169,12 +161,9 @@ namespace SharpMP4.Tracks
                     }
 
                     // sequence parameter set NAL unit (when present)
-                    if (_nalBufferContainsVCL)
+                    if (SampleHasVcl)
                     {
-                        output = CreateSample(_nalBuffer);
-                        _nalBuffer.Clear();
-                        _nalBufferContainsVCL = false;
-                        _nalBufferContainsIDR = false;
+                        output = TakeSample();
                     }
                 }
                 else if (nu.NalUnitType == H264NALTypes.PPS)
@@ -184,40 +173,31 @@ namespace SharpMP4.Tracks
                     if (!Pps.ContainsKey(_context.PicParameterSetRbsp.PicParameterSetId))
                     {
                         Pps.Add(_context.PicParameterSetRbsp.PicParameterSetId, _context.PicParameterSetRbsp);
-                        PpsRaw.Add(_context.PicParameterSetRbsp.PicParameterSetId, sample);
+                        PpsRaw.Add(_context.PicParameterSetRbsp.PicParameterSetId, CopyOf(buffer, offset, length));
                     }
 
                     // picture parameter set NAL unit (when present)
-                    if (_nalBufferContainsVCL)
+                    if (SampleHasVcl)
                     {
-                        output = CreateSample(_nalBuffer);
-                        _nalBuffer.Clear();
-                        _nalBufferContainsVCL = false;
-                        _nalBufferContainsIDR = false;
+                        output = TakeSample();
                     }
                 }
                 else if (nu.NalUnitType == H264NALTypes.SEI)
                 {
                     // SEI NAL unit (when present)
-                    if (_nalBufferContainsVCL)
+                    if (SampleHasVcl)
                     {
-                        output = CreateSample(_nalBuffer);
-                        _nalBuffer.Clear();
-                        _nalBufferContainsVCL = false;
-                        _nalBufferContainsIDR = false;
+                        output = TakeSample();
                     }
 
-                    _nalBuffer.Add(sample);
+                    AppendNalUnit(buffer, offset, length);
                 }
                 else if(nu.NalUnitType >= H264NALTypes.PREFIX_NAL && nu.NalUnitType <= H264NALTypes.RESERVED1)
                 {
                     // NAL units with nal_unit_type in the range of 14 to 18, inclusive (when present),
-                    if (_nalBufferContainsVCL)
+                    if (SampleHasVcl)
                     {
-                        output = CreateSample(_nalBuffer);
-                        _nalBuffer.Clear();
-                        _nalBufferContainsVCL = false;
-                        _nalBufferContainsIDR = false;
+                        output = TakeSample();
                     }
                 }
                 else
@@ -267,7 +247,7 @@ namespace SharpMP4.Tracks
                         else if (nu.NalUnitType == H264NALTypes.IDR_SLICE) // 5
                         {
                             // keyframe
-                            _nalBufferContainsIDR = true;
+                            SampleHasIdr = true;
 
                             _context.SliceLayerWithoutPartitioningRbsp = new SliceLayerWithoutPartitioningRbsp();
                             _context.SliceLayerWithoutPartitioningRbsp.Read(_context, stream);
@@ -305,13 +285,10 @@ namespace SharpMP4.Tracks
                             (IdrPicFlag == 1 && last_IdrPicFlag == 1 && idr_pic_id != last_idr_pic_id) // IdrPicFlag is equal to 1 for both and idr_pic_id differs in value
                             )
                         {
-                            if (_nalBufferContainsVCL)
+                            if (SampleHasVcl)
                             {
-                                output = CreateSample(_nalBuffer);
-                                _nalBuffer.Clear();
-                                isRandomAccessPoint = _nalBufferContainsIDR;
-                                _nalBufferContainsVCL = false;
-                                _nalBufferContainsIDR = false;
+                                isRandomAccessPoint = SampleHasIdr;
+                                output = TakeSample();
                             }
                         }
 
@@ -329,83 +306,12 @@ namespace SharpMP4.Tracks
                         last_idr_pic_id = idr_pic_id;
                         last_filled = true;
 
-                        _nalBufferContainsVCL = true;
+                        SampleHasVcl = true;
                     }
 
-                    _nalBuffer.Add(sample);
+                    AppendNalUnit(buffer, offset, length);
                 }
             }
-        }
-
-        private byte[] CreateSample(List<byte[]> buffer)
-        {
-            if (buffer.Count == 0)
-                return null;
-
-            IEnumerable<byte> result = new byte[0];
-
-            foreach (var nal in _nalBuffer)
-            {
-                uint nalUnitLength = (uint)nal.Length;
-
-                byte[] size;
-                switch (NalLengthSize)
-                {
-                    case 1:
-                        {
-                            if (nalUnitLength > byte.MaxValue) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
-                            size = new byte[]
-                            {
-                                (byte)(nalUnitLength & 0xff)
-                            };
-                        }
-                        break;
-
-                    case 2:
-                        {
-                            if (nalUnitLength > ushort.MaxValue) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
-                            size = new byte[]
-                            {
-                                (byte)((nalUnitLength & 0xff00) >> 8),
-                                (byte)(nalUnitLength & 0xff)
-                            };
-                        }
-                        break;
-
-                    case 3:
-                        {
-                            if (nalUnitLength > 16777215) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
-                            size = new byte[]
-                            {
-                                (byte)((nalUnitLength & 0xff0000) >> 16),
-                                (byte)((nalUnitLength & 0xff00) >> 8),
-                                (byte)(nalUnitLength & 0xff)
-                            };
-                        }
-                        break;
-
-                    case 4:
-                        {
-                            if (nalUnitLength > uint.MaxValue) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
-                            size = new byte[]
-                            {
-                                (byte)((nalUnitLength & 0xff000000) >> 24),
-                                (byte)((nalUnitLength & 0xff0000) >> 16),
-                                (byte)((nalUnitLength & 0xff00) >> 8),
-                                (byte)(nalUnitLength & 0xff)
-                            };
-                        }
-                        break;
-
-                    default:
-                        throw new NotSupportedException($"NAL unit length {NalLengthSize} not supported!");
-                }
-                result = result.Concat(size).Concat(nal);
-            }
-
-            if (this.Logger.IsDebugEnabled) this.Logger.LogDebug($"{nameof(H264Track)}: AU: {_nalBuffer.Count}");
-
-            return result.ToArray();
         }
 
         public override Box CreateSampleEntryBox()

@@ -59,7 +59,7 @@ public partial class SpatialAudioBox : Box
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.ambisonic_normalization, "ambisonic_normalization"); 
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.num_channels, "num_channels"); 
 
-		this.channel_map = new uint[IsoStream.GetInt( num_channels)];
+		this.channel_map = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( num_channels), "channel_map");
 		for (int i = 0; i < num_channels; i++)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.channel_map[i], "channel_map"); 

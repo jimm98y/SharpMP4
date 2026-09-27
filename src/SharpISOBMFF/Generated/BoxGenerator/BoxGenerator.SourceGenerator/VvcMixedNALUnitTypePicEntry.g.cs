@@ -47,8 +47,8 @@ public partial class VvcMixedNALUnitTypePicEntry : VisualSampleGroupEntry
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.num_mix_nalu_pic_idx, "num_mix_nalu_pic_idx"); 
 
-		this.mix_subp_track_idx1 = new ushort[IsoStream.GetInt( num_mix_nalu_pic_idx)];
-		this.mix_subp_track_idx2 = new ushort[IsoStream.GetInt( num_mix_nalu_pic_idx)];
+		this.mix_subp_track_idx1 = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( num_mix_nalu_pic_idx), "mix_subp_track_idx1");
+		this.mix_subp_track_idx2 = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( num_mix_nalu_pic_idx), "mix_subp_track_idx2");
 		for (int i = 0; i < num_mix_nalu_pic_idx; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.mix_subp_track_idx1[i], "mix_subp_track_idx1"); 

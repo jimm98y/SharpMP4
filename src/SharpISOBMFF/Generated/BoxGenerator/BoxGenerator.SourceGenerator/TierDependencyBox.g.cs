@@ -33,7 +33,7 @@ public partial class TierDependencyBox : Box
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.entry_count, "entry_count"); 
 
-		this.dependencyTierId = new ushort[IsoStream.GetInt( entry_count)];
+		this.dependencyTierId = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( entry_count), "dependencyTierId");
 		for (int i=0; i < entry_count; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.dependencyTierId[i], "dependencyTierId"); 

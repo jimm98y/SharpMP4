@@ -45,7 +45,7 @@ public partial class CompactSampleSizeBox : FullBox
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.field_size, "field_size"); 
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.sample_count, "sample_count"); 
 
-		this.entry_size = new byte[IsoStream.GetInt( sample_count)][];
+		this.entry_size = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( sample_count), "entry_size");
 		for (int i=0; i < sample_count; i++)
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, (uint)(field_size ),  out this.entry_size[i], "entry_size"); 

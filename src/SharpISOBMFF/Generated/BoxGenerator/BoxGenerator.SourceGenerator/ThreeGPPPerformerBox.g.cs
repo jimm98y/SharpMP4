@@ -6,18 +6,18 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class ThreeGPPPerformerBox() extends Box('perf') {
-	bit(1) reserved;
- unsigned int(5)[3] language;
-	string value; 
+aligned(8) class ThreeGPPPerformerBox() extends FullBox('perf', version = 0, 0) {
+	bit(1) reserved = 0;
+	unsigned int(5)[3] language;
+	string value;
 } 
 */
-public partial class ThreeGPPPerformerBox : Box
+public partial class ThreeGPPPerformerBox : FullBox
 {
 	public const string TYPE = "perf";
 	public override string DisplayName { get { return "ThreeGPPPerformerBox"; } }
 
-	protected bool reserved; 
+	protected bool reserved = false; 
 	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
 	protected string language; 
@@ -26,7 +26,7 @@ public partial class ThreeGPPPerformerBox : Box
 	protected BinaryUTF8String value; 
 	public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
 
-	public ThreeGPPPerformerBox(): base(IsoStream.FromFourCC("perf"))
+	public ThreeGPPPerformerBox(): base(IsoStream.FromFourCC("perf"), 0, 0)
 	{
 	}
 

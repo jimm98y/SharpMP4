@@ -56,8 +56,8 @@ public partial class FileReservoirBox : FullBox
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.entry_count, "entry_count"); 
 		}
 
-		this.item_ID = new uint[IsoStream.GetInt( entry_count)];
-		this.symbol_count = new uint[IsoStream.GetInt( entry_count)];
+		this.item_ID = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count), "item_ID");
+		this.symbol_count = stream.SafeAllocate<uint>(boxSize, readSize, IsoStream.GetInt( entry_count), "symbol_count");
 		for (int i=0; i < entry_count; i++)
 		{
 

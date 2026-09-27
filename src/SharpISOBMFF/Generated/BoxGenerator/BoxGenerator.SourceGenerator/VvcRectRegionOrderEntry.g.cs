@@ -68,15 +68,15 @@ public partial class VvcRectRegionOrderEntry : VisualSampleGroupEntry
 		boxSize += stream.ReadBits(boxSize, readSize, 7,  out this.reserved, "reserved"); 
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.num_alternate_region_set, "num_alternate_region_set"); 
 
-		this.num_regions_in_set = new ushort[IsoStream.GetInt( num_alternate_region_set)];
-		this.alternate_region_set_id = new ushort[IsoStream.GetInt( num_alternate_region_set)];
-		this.groupID = new ushort[IsoStream.GetInt( num_alternate_region_set)][];
+		this.num_regions_in_set = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( num_alternate_region_set), "num_regions_in_set");
+		this.alternate_region_set_id = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( num_alternate_region_set), "alternate_region_set_id");
+		this.groupID = stream.SafeAllocate<ushort[]>(boxSize, readSize, IsoStream.GetInt( num_alternate_region_set), "groupID");
 		for (int i = 0; i < num_alternate_region_set; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.num_regions_in_set[i], "num_regions_in_set"); 
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.alternate_region_set_id[i], "alternate_region_set_id"); 
 
-			this.groupID[i] = new ushort[IsoStream.GetInt( num_regions_in_set[i])];
+			this.groupID[i] = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( num_regions_in_set[i]), "groupID[i]");
 			for (int j = 0; j < num_regions_in_set[i]; j++)
 			{
 				boxSize += stream.ReadUInt16(boxSize, readSize,  out this.groupID[i][j], "groupID"); 
@@ -84,7 +84,7 @@ public partial class VvcRectRegionOrderEntry : VisualSampleGroupEntry
 		}
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.num_regions_minus1, "num_regions_minus1"); 
 
-		this.region_id = new ushort[IsoStream.GetInt( num_regions_minus1 + 1)];
+		this.region_id = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( num_regions_minus1 + 1), "region_id");
 		for (int i = 0; i < num_regions_minus1; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.region_id[i], "region_id"); 

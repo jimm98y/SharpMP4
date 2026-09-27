@@ -25,6 +25,21 @@ namespace ItuGenerator.CSharp
                             .Replace("3dv_acquisition_element", "three_dv_acquisition_element")
                             .Replace("intrinsic_params_equal_flag ? 0 : num_views_minus1", "(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)")
                             .Replace(" scalingList", " scalingLst"); // TODO remove this temporary fix
+
+            // The SVC conformance bitstreams code the scalability information SEI message as the
+            // 11/2007 edition specifies it, with its parameter set counts minus one; later editions
+            // changed that. Both tables are kept as specified, and the message is read by the later
+            // one unless that does not end where the payload does and the 2007 one does.
+            definitions = definitions.Replace(
+                "scalability_info( payloadSize )  /* specified in Annex G */ 5",
+                "{\n if( ScalabilityInfo2007 )\n  scalability_info_2007( payloadSize ) 5\n else\n  scalability_info( payloadSize ) 5\n}");
+
+            // The 2007 table counts the characters of the URI with a variable of its own, which the
+            // generator does not follow; the later table reads the same bytes without one.
+            definitions = definitions
+                            .Replace("  PriorityIdSettingUriIdx = 0", "")
+                            .Replace("priority_id_setting_uri[ PriorityIdSettingUriIdx ] 5 b(8)", "priority_id_setting_uri 5 b(8)")
+                            .Replace("while( priority_id_setting_uri[ PriorityIdSettingUriIdx++ ]  !=  0 )", "while( priority_id_setting_uri !=  0 )");
             return definitions;
         }
 
@@ -197,6 +212,21 @@ namespace ItuGenerator.CSharp
 
         public string FixCondition(string condition, MethodType methodType)
         {
+            // Which edition's scalability information SEI message this is: worked out by reading
+            // ahead, or on writing, by which of the two was read.
+            // The MVC conformance bitstreams named _old code the view scalability information SEI
+            // message as a draft had it, which the specified table does not read to the end of
+            // its payload: such a message is read as a reserved one, as ffmpeg reads it as bytes.
+            if (condition.Replace(" ", "").Trim('(', ')') == "payloadType==38")
+                return methodType == MethodType.Read
+                    ? "( payloadType == 38 && ituContext.FitsItsPayload(stream, payloadSize, new ViewScalabilityInfo(payloadSize)) )"
+                    : "( payloadType == 38 && this.view_scalability_info != null )";
+
+            if (condition.Contains("ScalabilityInfo2007"))
+                return methodType == MethodType.Read
+                    ? "(ituContext.IsScalabilityInfo2007(stream, payloadSize))"
+                    : "(this.scalability_info_2007 != null)";
+
             condition = condition.Replace("slice_type == B", "H264FrameTypes.IsB(slice_type)");
             condition = condition.Replace("slice_type == P", "H264FrameTypes.IsP(slice_type)");
             condition = condition.Replace("slice_type == I", "H264FrameTypes.IsI(slice_type)");
@@ -293,6 +323,11 @@ namespace ItuGenerator.CSharp
             return fieldValue;
         }
 
+        public string GetLocalArrayInitializer(string name)
+        {
+            return null;
+        }
+
         public void FixMethodAllocation(string name, ref string method, ref string typedef)
         {
             if (name == "depth_timing_offset" && string.IsNullOrWhiteSpace(typedef))
@@ -314,9 +349,12 @@ namespace ItuGenerator.CSharp
                 case "sei_payload":
                     return "ituContext.SetSeiPayload(sei_payload);";
                 case "pic_parameter_set_id":
-                    return "ituContext.SetPicParameterSetId(pic_parameter_set_id);";
+                    return "ituContext.SetPicParameterSetId(pic_parameter_set_id, this);";
                 case "seq_parameter_set_id":
-                    return "ituContext.SetSeqParameterSetId(seq_parameter_set_id);";
+                    return "ituContext.SetSeqParameterSetId(seq_parameter_set_id, this);";
+                case "profile_idc":
+                    // The first element of seq_parameter_set_data().
+                    return "ituContext.OnProfileIdc(this);";
 
                 case "pic_struct":
                     return "ituContext.OnPicStruct(pic_struct);";
@@ -326,6 +364,9 @@ namespace ItuGenerator.CSharp
                     return "ituContext.OnSeparateColourPlaneFlag();";
                 case "nal_unit_type":
                     return "ituContext.OnNalUnitType();";
+                case "idr_flag":
+                case "non_idr_flag":
+                    return "ituContext.OnIdrFlag(this);";
                 case "avc_3d_extension_flag":
                     return "ituContext.OnAvc3dExtensionFlag();";
                 case "vcl_hrd_parameters_present_flag":
@@ -435,7 +476,9 @@ namespace ItuGenerator.CSharp
                 case "post_lut_target_value":
                     return "(((ituContext.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3)";
                 case "slice_group_change_cycle":
-                    return "ituContext.SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle";
+                    // Ceil( Log2( PicSizeInMapUnits ÷ SliceGroupChangeRate + 1 ) ) bits (7.4.3), with ÷
+                    // the exact quotient: it was the element's own value, 0 in a header being read.
+                    return "(uint)Math.Ceiling( MathEx.Log2( (double)ituContext.PicSizeInMapUnits / (ituContext.PicParameterSetRbsp.SliceGroupChangeRateMinus1 + 1) + 1 ) )";
             }
 
             Debug.WriteLine(parameter);
@@ -444,6 +487,14 @@ namespace ItuGenerator.CSharp
 
         public string FixAllocations(string spacing, string appendType, string variableType, string variableName)
         {
+            if (variableName == "delta_scale")
+            {
+                // Not checked against what is left of the stream: a scaling list stops coding its
+                // entries once nextScale is 0, so a list of 64 can take a few bits, and its length
+                // is 16 or 64 by the syntax, never read from the stream.
+                return $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
+            }
+
             return "";
         }
 

@@ -48,10 +48,10 @@ public partial class PaddingBitsBox : FullBox
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.sample_count, "sample_count"); 
 		
 
-		this.reserved = new bool[IsoStream.GetInt( (int)Math.Floor((double)(sample_count + 1)/2))];
-		this.pad1 = new byte[IsoStream.GetInt( (int)Math.Floor((double)(sample_count + 1)/2))];
-		this.reserved0 = new bool[IsoStream.GetInt( (int)Math.Floor((double)(sample_count + 1)/2))];
-		this.pad2 = new byte[IsoStream.GetInt( (int)Math.Floor((double)(sample_count + 1)/2))];
+		this.reserved = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( (int)Math.Floor((double)(sample_count + 1)/2)), "reserved");
+		this.pad1 = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( (int)Math.Floor((double)(sample_count + 1)/2)), "pad1");
+		this.reserved0 = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( (int)Math.Floor((double)(sample_count + 1)/2)), "reserved0");
+		this.pad2 = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( (int)Math.Floor((double)(sample_count + 1)/2)), "pad2");
 		for (int i=0; i < (int)Math.Floor((double)(sample_count + 1)/2); i++)
 		{
 			boxSize += stream.ReadBit(boxSize, readSize,  out this.reserved[i], "reserved"); 

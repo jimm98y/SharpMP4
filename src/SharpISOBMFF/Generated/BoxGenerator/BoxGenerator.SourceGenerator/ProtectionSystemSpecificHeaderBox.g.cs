@@ -6,13 +6,15 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class ProtectionSystemSpecificHeaderBox() extends FullBox('pssh') {
+aligned(8) class ProtectionSystemSpecificHeaderBox() extends FullBox('pssh', version, flags = 0) {
  unsigned int(8) systemId[16];
  if (version > 0) {
- unsigned int(32) count;
- ProtectionSystemSpecificKeyID keyIDs[count];
+  unsigned int(32) count;
+  ProtectionSystemSpecificKeyID keyIDs[count];
  }
-  }
+ unsigned int(32) dataSize;
+ unsigned int(8) data[dataSize];
+ }
  
 */
 public partial class ProtectionSystemSpecificHeaderBox : FullBox
@@ -29,7 +31,13 @@ public partial class ProtectionSystemSpecificHeaderBox : FullBox
 	protected ProtectionSystemSpecificKeyID[] keyIDs; 
 	public ProtectionSystemSpecificKeyID[] KeyIDs { get { return this.keyIDs; } set { this.keyIDs = value; } }
 
-	public ProtectionSystemSpecificHeaderBox(): base(IsoStream.FromFourCC("pssh"))
+	protected uint dataSize; 
+	public uint DataSize { get { return this.dataSize; } set { this.dataSize = value; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public ProtectionSystemSpecificHeaderBox(byte version = 0): base(IsoStream.FromFourCC("pssh"), version, 0)
 	{
 	}
 
@@ -44,6 +52,8 @@ public partial class ProtectionSystemSpecificHeaderBox : FullBox
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.count, "count"); 
 			boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(count), () => new ProtectionSystemSpecificKeyID(),  out this.keyIDs, "keyIDs"); 
 		}
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.dataSize, "dataSize"); 
+		boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(dataSize),  out this.data, "data"); 
 		return boxSize;
 	}
 
@@ -58,6 +68,8 @@ public partial class ProtectionSystemSpecificHeaderBox : FullBox
 			boxSize += stream.WriteUInt32( this.count, "count"); 
 			boxSize += stream.WriteClass( this.keyIDs, "keyIDs"); 
 		}
+		boxSize += stream.WriteUInt32( this.dataSize, "dataSize"); 
+		boxSize += stream.WriteUInt8Array((uint)(dataSize),  this.data, "data"); 
 		return boxSize;
 	}
 
@@ -72,6 +84,8 @@ public partial class ProtectionSystemSpecificHeaderBox : FullBox
 			boxSize += 32; // count
 			boxSize += IsoStream.CalculateClassSize(keyIDs); // keyIDs
 		}
+		boxSize += 32; // dataSize
+		boxSize += ((ulong)(dataSize) * 8); // data
 		return boxSize;
 	}
 }

@@ -134,12 +134,12 @@ public partial class VvcDecoderConfigurationRecord : IMp4Serializable
 		}
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.num_of_arrays, "num_of_arrays"); 
 
-		this.array_completeness = new bool[IsoStream.GetInt( num_of_arrays)];
-		this.reserved1 = new byte[IsoStream.GetInt( num_of_arrays)];
-		this.NAL_unit_type = new byte[IsoStream.GetInt( num_of_arrays)];
-		this.num_nalus = new ushort[IsoStream.GetInt( num_of_arrays)];
-		this.nal_unit_length = new ushort[IsoStream.GetInt( num_of_arrays)][];
-		this.nal_unit = new byte[IsoStream.GetInt( num_of_arrays)][][];
+		this.array_completeness = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( num_of_arrays), "array_completeness");
+		this.reserved1 = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( num_of_arrays), "reserved1");
+		this.NAL_unit_type = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( num_of_arrays), "NAL_unit_type");
+		this.num_nalus = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( num_of_arrays), "num_nalus");
+		this.nal_unit_length = stream.SafeAllocate<ushort[]>(boxSize, readSize, IsoStream.GetInt( num_of_arrays), "nal_unit_length");
+		this.nal_unit = stream.SafeAllocate<byte[][]>(boxSize, readSize, IsoStream.GetInt( num_of_arrays), "nal_unit");
 		for (int j=0; j < num_of_arrays; j++)
 		{
 			boxSize += stream.ReadBit(boxSize, readSize,  out this.array_completeness[j], "array_completeness"); 
@@ -150,8 +150,8 @@ public partial class VvcDecoderConfigurationRecord : IMp4Serializable
 			{
 				boxSize += stream.ReadUInt16(boxSize, readSize,  out this.num_nalus[j], "num_nalus"); 
 
-				this.nal_unit_length[j] = new ushort[IsoStream.GetInt( num_nalus[j])];
-				this.nal_unit[j] = new byte[IsoStream.GetInt( num_nalus[j])][];
+				this.nal_unit_length[j] = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt( num_nalus[j]), "nal_unit_length[j]");
+				this.nal_unit[j] = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( num_nalus[j]), "nal_unit[j]");
 				for (int i=0; i< num_nalus[j]; i++)
 				{
 					boxSize += stream.ReadUInt16(boxSize, readSize,  out this.nal_unit_length[j][i], "nal_unit_length"); 

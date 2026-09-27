@@ -1,4 +1,5 @@
 ﻿using SharpMP4.Common;
+using System;
 using SharpMP4.Tracks;
 
 namespace SharpMP4.Builders
@@ -32,7 +33,17 @@ namespace SharpMP4.Builders
         /// <param name="trackID">Track ID</param>
         /// <param name="sample">Sample bytes.</param>
         /// <param name="sampleDuration">Duration of the sample in the timescale of the track.</param>
-        void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration = -1);
+        /// <param name="compositionOffset">
+        /// Composition time minus decode time, in track timescale units. Needed whenever pictures
+        /// are coded out of presentation order; leave at 0 for streams that are not reordered.
+        /// </param>
+        void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration = -1, int compositionOffset = 0);
+
+        /// <summary>
+        /// The same, for a sample that sits inside a larger buffer - the buffer a reader fills and
+        /// then writes over - so it does not have to be copied out into an array of its own first.
+        /// </summary>
+        void ProcessTrackSample(uint trackID, ArraySegment<byte> sample, int sampleDuration = -1, int compositionOffset = 0);
 
         /// <summary>
         /// Store the sample bytes into the MP4 container "as is". For video, this expects the entire AU consisting of multiple NALUs each prefixed by the length.

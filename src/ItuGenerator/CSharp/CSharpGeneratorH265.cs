@@ -9,7 +9,14 @@ namespace ItuGenerator.CSharp
         {
             string name = (field as ItuField).Name;
 
-            if (name == "sei_payload" || name == "vui_payload")
+            if (name == "sei_payload")
+            {
+                // An SEI message nested in another (scalable nesting) marks the stream for its own
+                // payload; the mark of the one around it is put back after, for its
+                // more_data_in_payload() to count from.
+                retm = $"{spacing}ulong bitsSinceOuterMark = stream.GetBitsPositionSinceLastMark();\r\n{spacing}stream.MarkCurrentBitsPosition();\r\n{retm}\r\n{spacing}stream.RestoreBitsMark(bitsSinceOuterMark);";
+            }
+            else if (name == "vui_payload")
             {
                 retm = $"{spacing}stream.MarkCurrentBitsPosition();\r\n{retm}";
             }
@@ -73,6 +80,10 @@ namespace ItuGenerator.CSharp
                     return "ituContext.PicParameterSetRbsp.DependentSliceSegmentsEnabledFlag";
                 case "chroma_qp_offset_list_enabled_flag":
                     return "ituContext.PicParameterSetRbsp.PpsRangeExtension != null && ituContext.PicParameterSetRbsp.PpsRangeExtension.ChromaQpOffsetListEnabledFlag";
+                case "pps_slice_act_qp_offsets_present_flag":
+                    return "(ituContext.PicParameterSetRbsp.PpsSccExtension?.PpsSliceActQpOffsetsPresentFlag ?? 0)";
+                case "motion_vector_resolution_control_idc":
+                    return "(ituContext.SeqParameterSetRbsp.SpsSccExtension?.MotionVectorResolutionControlIdc ?? 0)";
                 case "num_extra_slice_header_bits":
                     return "ituContext.PicParameterSetRbsp.NumExtraSliceHeaderBits";
                 case "MaxLayersMinus1":
@@ -144,7 +155,9 @@ namespace ItuGenerator.CSharp
                 case "NumOutputLayerSets":
                     return "ituContext.VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets";
                 case "vps_poc_lsb_aligned_flag":
-                    return "ituContext.VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag";
+                    // Inferred 0 without a VPS extension - a single layer stream whose slices have a
+                    // header extension.
+                    return "(ituContext.VideoParameterSetRbsp?.VpsExtension?.VpsPocLsbAlignedFlag ?? 0)";
                 case "vps_num_layer_sets_minus1":
                     return "ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1";
                 case "vps_max_sub_layers_minus1":
@@ -164,7 +177,8 @@ namespace ItuGenerator.CSharp
                 case "entropy_coding_sync_enabled_flag":
                     return "ituContext.PicParameterSetRbsp.EntropyCodingSyncEnabledFlag";
                 case "poc_reset_info_present_flag":
-                    return "ituContext.PicParameterSetRbsp.PpsMultilayerExtension.PocResetInfoPresentFlag";
+                    // Inferred 0 without a multi-layer PPS extension.
+                    return "(ituContext.PicParameterSetRbsp.PpsMultilayerExtension?.PocResetInfoPresentFlag ?? 0)";
                 case "output_flag_present_flag":
                     return "ituContext.PicParameterSetRbsp.OutputFlagPresentFlag";
                 case "sps_temporal_mvp_enabled_flag":
@@ -220,13 +234,21 @@ namespace ItuGenerator.CSharp
                 case "ViewOIdxList":
                     return "ituContext.ViewOIdxList";
                 case "inCmpPredAvailFlag":
-                    return "ituContext.inCmpPredAvailFlag";
+                    // Worked out where it is tested: it depends on the inter-layer part of the
+                    // slice header just before.
+                    return "ituContext.DeriveInCmpPredAvailFlag()";
                 case "nalInitialArrivalDelayPresent":
                     return "ituContext.NalInitialArrivalDelayPresent";
                 case "ViewIdx":
                     return "ituContext.ViewOrderIdx[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]";
                 case "DepthFlag":
-                    return "ituContext.DepthLayerFlag[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ]";
+                    // DepthFlag is referenced by exactly one syntax element, slice_ic_enabled_flag,
+                    // which belongs to the 3D-HEVC slice segment header (I.7.3.6.1). H265.js carries
+                    // that table merged into 7.3.6.1, so the Annex I gate has to be applied here.
+                    // Outside 3D-HEVC, report a depth layer so the Annex I branch is never taken -
+                    // otherwise MV-HEVC streams (Apple spatial video) read one bit too many and the
+                    // rest of the slice segment header is parsed at the wrong bit offset.
+                    return "(ituContext.Is3dExtension != 0 ? ituContext.DepthLayerFlag[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ] : 1)";
                 case "defaultOutputLayerIdc":
                     return "Math.Min( ituContext.VideoParameterSetRbsp.VpsExtension.DefaultOutputLayerIdc, 2 )";
                 case "PartNumY":
@@ -257,6 +279,8 @@ namespace ItuGenerator.CSharp
             {
                 case "sei_payload":
                     return "ituContext.SetSeiPayload(sei_payload);";
+                case "fixed_pic_rate_general_flag":
+                    return "ituContext.OnFixedPicRateGeneralFlag(this, i);";
                 case "pps_pic_parameter_set_id":
                     return "ituContext.SetPpsPicParameterSetId(pps_pic_parameter_set_id);";
                 case "slice_pic_parameter_set_id":
@@ -268,33 +292,41 @@ namespace ItuGenerator.CSharp
 
                 case "vps_max_layers_minus1":
                     return "ituContext.OnVpsMaxLayersMinus1();";
+                case "vps_num_layer_sets_minus1":
+                    return "ituContext.OnVpsNumLayerSetsMinus1();";
                 case "num_add_layer_sets":
                     return "ituContext.OnNumAddLayerSets();\r\n }\r\n else \r\n {\r\n ituContext.OnNumAddLayerSets(); \r\n";
                 case "highest_layer_idx_plus1":
                     return "ituContext.OnHighestLayerIdxPlus1(i);";
                 case "direct_dependency_flag":
-                    return "ituContext.OnDirectDependencyFlag();";
-                case "dimension_id":
-                    return "ituContext.OnDimensionId();";
+                    return "ituContext.OnDirectDependencyFlag(i, j);";
+                case "view_id_len":
+                    // The first element after the layers' identifiers, coded or not.
+                    return "ituContext.OnViewIdLen();";
                 case "cp_ref_voi":
                     return "ituContext.OnCpRefVoi();";
                 case "cpb_cnt_minus1":
                     return "ituContext.OnCpbCntMinus1(i);";
-                case "sub_layers_vps_max_minus1":
-                    return "ituContext.OnSubLayersVpsMaxMinus1();";
+                case "max_tid_ref_present_flag":
+                    // The first element after the sub-layer counts, coded or not.
+                    return "ituContext.OnMaxTidRefPresentFlag();";
                 case "log2_diff_max_min_luma_coding_block_size":
                     return "ituContext.OnLog2DiffMaxMinLumaCodingBlockSize();";
                 case "layer_set_idx_for_ols_minus1":
                     return "ituContext.OnLayerSetIdxForOlsMinus1(i, NumOutputLayerSets);\r\n\t\t\t\t}\r\n\t\t\t\telse\r\n\t\t\t\t{\r\n\t\t\t\t\tituContext.OnLayerSetIdxForOlsMinus1(i, NumOutputLayerSets);";
                 case "output_layer_flag":
                     return "ituContext.OnOutputLayerFlag(i, j);";
-                case "layer_id_in_nuh":
-                    return "ituContext.OnLayerIdInNuh(i);";
                 case "nal_hrd_parameters_present_flag":
                     return "ituContext.OnNalHrdParametersPresentFlag(nal_hrd_parameters_present_flag);";
                 case "vcl_hrd_parameters_present_flag":
                     return "ituContext.OnVclHrdParametersPresentFlag(vcl_hrd_parameters_present_flag);";
                 case "direct_dependency_type":
+                    return "ituContext.OnDirectDependencyType();";
+                case "direct_dependency_all_layers_type":
+                    // The derivations hung on direct_dependency_type (I-7 to I-9) depend on the
+                    // dependency flags, not on the types. When one type is coded for all layers the
+                    // per-pair types are never read, so without this they never run and the
+                    // reference layer lists stay empty.
                     return "ituContext.OnDirectDependencyType();";
                 case "num_bsp_schedules_minus1":
                     return "ituContext.OnNumBspSchedulesMinus1(h, i, t);";
@@ -302,8 +334,18 @@ namespace ItuGenerator.CSharp
                     return "ituContext.OnUsedByCurrPicS0Flag(i, stRpsIdx, this);";
                 case "used_by_curr_pic_s1_flag":
                     return "ituContext.OnUsedByCurrPicS1Flag(i, stRpsIdx, this);";
-                case "delta_idx_minus1":
-                    return "ituContext.OnDeltaIdxMinus1(stRpsIdx);";
+                case "cross_layer_pic_type_aligned_flag":
+                    return "ituContext.OnCrossLayerPicTypeAlignedFlag(this);";
+                case "inter_layer_pred_enabled_flag":
+                    return "ituContext.OnInterLayerPredEnabledFlag();";
+                case "num_ref_idx_active_override_flag":
+                    return "ituContext.OnNumRefIdxActiveOverrideFlag(this);";
+                case "abs_delta_rps_minus1":
+                    // The last element before a predicted set reads its entries, whose number is
+                    // NumDeltaPocs of the set it is predicted from: RefRpsIdx has to be known, and
+                    // that set worked out, by then. delta_idx_minus1 is coded only for a slice's own
+                    // set, so hanging this on it left SPS sets predicting from a stale index.
+                    return "ituContext.OnAbsDeltaRpsMinus1(stRpsIdx, this);";
                 case "nesting_max_temporal_id_plus1":
                     return "ituContext.OnNestingMaxTemporalIdPlus1(i);";
                 case "num_inter_layer_ref_pics_minus1":
@@ -337,6 +379,24 @@ namespace ItuGenerator.CSharp
 
         public string FixCondition(string condition, MethodType methodType)
         {
+            // Profile 11 (screen-extended high throughput 4:4:4) came after the 02/2018 edition the
+            // syntax is taken from; later editions read it as they read profiles 9 and 10. The bits
+            // are the same either way, only which elements they are; ffmpeg reads the later ones.
+            string flat = System.Text.RegularExpressions.Regex.Replace(condition, @"\s+", " ");
+            foreach (string prefix in new[] { "general_profile_idc", "sub_layer_profile_idc[ i ]" })
+            {
+                string flags = prefix == "general_profile_idc" ? "general_profile_compatibility_flag[ 11 ]" : "sub_layer_profile_compatibility_flag[ i ][ 11 ]";
+                bool widened = flat.Contains(prefix + " == 10") ||
+                    (flat.Contains(prefix + " >= 1") && flat.Contains(prefix + " == 9"));
+                // The sub-layer max_14bit condition stays as it is: profile 5 alone in every edition.
+                if (widened)
+                    return $"( {condition.Trim()} || {prefix} == 11 || {flags} != 0 )";
+            }
+
+            // decoded_picture_hash() is for the picture of the SEI's layer.
+            condition = condition.Replace("chroma_format_idc == 0 ? 1 : 3", "ituContext.ChromaFormatIdcOfSeiLayer() == 0 ? 1 : 3");
+            condition = condition.Replace("ituContext.SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3", "ituContext.ChromaFormatIdcOfSeiLayer() == 0 ? 1 : 3");
+
             condition = condition.Replace("slice_type == B", "H265FrameTypes.IsB(slice_type)");
             condition = condition.Replace("slice_type != B", "!H265FrameTypes.IsB(slice_type)");
             condition = condition.Replace("slice_type == P", "H265FrameTypes.IsP(slice_type)");
@@ -443,6 +503,19 @@ namespace ItuGenerator.CSharp
             fieldValue = fieldValue.Replace("<<", "<< (int)");
             fieldValue = fieldValue.Replace("cp_ref_voi[ i ][ m ]", "(uint)cp_ref_voi[ i ][ m ]");
             return fieldValue;
+        }
+
+        public string GetLocalArrayInitializer(string name)
+        {
+            switch (name)
+            {
+                case "ScalingList":
+                    // ScalingList[ sizeId ][ matrixId ][ i ] (7.4.5), which scaling_list_data()
+                    // fills as it reads; left null, the first explicit list threw.
+                    return "H265Context.NewScalingList()";
+            }
+
+            return null;
         }
 
         public void FixMethodAllocation(string name, ref string method, ref string typedef)
@@ -570,7 +643,7 @@ namespace ItuGenerator.CSharp
                 case "delta_dlt_val0":
                     return "((H265Context)context).PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8";
                 case "delta_val_diff_minus_min":
-                    return "(uint)Math.Ceiling( MathEx.Log2( max_diff - min_diff_minus1 + 1 ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( max_diff - min_diff_minus1 ) )"; // I.7.4.3.3.8
                 case "man_gvd_z_near":
                     return "(man_len_gvd_z_near_minus1[ i ] + 1)";
                 case "man_gvd_z_far":
@@ -610,6 +683,15 @@ namespace ItuGenerator.CSharp
 
         public string FixAllocations(string spacing, string appendType, string variableType, string variableName)
         {
+            // pps_multilayer_extension() indexes these by ref_loc_offset_layer_id[ i ], a layer id,
+            // not by i: sized by num_ref_loc_offsets, a layer id past the count was out of range.
+            if (variableName is "scaled_ref_layer_left_offset" or "scaled_ref_layer_top_offset" or "scaled_ref_layer_right_offset" or "scaled_ref_layer_bottom_offset" or
+                "ref_region_left_offset" or "ref_region_top_offset" or "ref_region_right_offset" or "ref_region_bottom_offset" or
+                "phase_hor_luma" or "phase_ver_luma" or "phase_hor_chroma_plus8" or "phase_ver_chroma_plus8")
+            {
+                return $"\r\n{spacing}this.{variableName} = new {variableType.Substring(0, variableType.IndexOf('['))}[64]{appendType};";
+            }
+
             if(variableName == "layer_id_included_flag[ i ]")
             {
                 return $"\r\n{spacing}this.{variableName} = new {variableType.Replace("vps_max_layer_id", "vps_max_layer_id + 1")}{appendType};";
@@ -625,6 +707,81 @@ namespace ItuGenerator.CSharp
             else if(variableName == "direct_dependency_flag[ i ]")
             {
                 return $"\r\n{spacing}this.{variableName} = new {variableType.Replace(" i", "((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1")}{appendType};";
+            }
+            else if(variableName == "max_vps_dec_pic_buffering_minus1[ i ]")
+            {
+                // The syntax element is max_vps_dec_pic_buffering_minus1[ i ][ k ][ j ] - output
+                // layer set, then layer, then sub-layer - but it sits inside the sub-layer loop, so
+                // allocating in loop order gave [ i ][ j ][ k ]. Any layer after the first then
+                // indexed past the sub-layer dimension.
+                return $"\r\n{spacing}this.{variableName} = new ulong[ ituContext.NumLayersInIdList[ currLsIdx ]][];" +
+                    $"\r\n{spacing}for (uint kk = 0; kk < ituContext.NumLayersInIdList[ currLsIdx ]; kk++)" +
+                    $"\r\n{spacing}\tthis.{variableName}[ kk ] = new ulong[ ituContext.MaxSubLayersInLayerSetMinus1[ currLsIdx ] + 1];";
+            }
+            else if(variableName == "max_vps_dec_pic_buffering_minus1[ i ][ j ]")
+            {
+                return null; // allocated whole with [ i ] above
+            }
+            else if(variableName == "num_cp" || variableName == "cp_in_slice_segment_header_flag")
+            {
+                // vps_3d_extension() indexes these by view order index, ViewOIdxList[ n ] - a
+                // dimension_id of up to 8 bits - not by n, so NumViews entries were not enough.
+                return $"\r\n{spacing}this.{variableName} = new {variableType.Replace("ituContext.NumViews", "256")}{appendType};";
+            }
+            else if(variableName == "cp_ref_voi")
+            {
+                return $"\r\n{spacing}this.{variableName} = new ulong[ 256][];";
+            }
+            else if(variableName == "vps_cp_scale" || variableName == "vps_cp_off" ||
+                variableName == "vps_cp_inv_scale_plus_scale" || variableName == "vps_cp_inv_off_plus_off")
+            {
+                return $"\r\n{spacing}this.{variableName} = new long[ 256][];";
+            }
+            else if(variableName == "cp_scale" || variableName == "cp_off" ||
+                variableName == "cp_inv_scale_plus_scale" || variableName == "cp_inv_off_plus_off")
+            {
+                // Indexed by view order index, cp_ref_voi[ ViewIdx ][ m ], not by m.
+                return $"\r\n{spacing}this.{variableName} = new long[ 256];";
+            }
+            else if(variableName == "coded_res_flag")
+            {
+                return $"\r\n{spacing}this.coded_res_flag = ituContext.ColourMappingOctantGrid<byte>(4);";
+            }
+            else if(variableName == "res_coeff_q" || variableName == "res_coeff_r")
+            {
+                return $"\r\n{spacing}this.{variableName} = ituContext.ColourMappingOctantGrid<ulong>(4, 3);";
+            }
+            else if(variableName == "res_coeff_s")
+            {
+                return $"\r\n{spacing}this.{variableName} = ituContext.ColourMappingOctantGrid<byte>(4, 3);";
+            }
+            else if(variableName.StartsWith("coded_res_flag[") || variableName.StartsWith("res_coeff_"))
+            {
+                return null; // the whole grid is allocated above
+            }
+            else if(variableName == "cp_ref_voi[ n ]")
+            {
+                // Read as cp_ref_voi[ i ][ m ]: the row is view i's, not the n-th.
+                return $"\r\n{spacing}this.cp_ref_voi[ i ] = new ulong[ num_cp[ i ]];";
+            }
+            else if(variableName == "vps_cp_scale[ n ]" || variableName == "vps_cp_off[ n ]" ||
+                variableName == "vps_cp_inv_scale_plus_scale[ n ]" || variableName == "vps_cp_inv_off_plus_off[ n ]")
+            {
+                // Read as vps_cp_scale[ i ][ j ], j a view order index too: cp_ref_voi[ i ][ m ].
+                return $"\r\n{spacing}this.{variableName.Replace("[ n ]", "[ i ]")} = new long[ 256];";
+            }
+            else if(variableName == "vps_non_vui_extension_data_byte")
+            {
+                // The syntax indexes these from 1 to vps_non_vui_extension_length inclusive.
+                return $"\r\n{spacing}this.{variableName} = new {variableType.Replace("vps_non_vui_extension_length", "vps_non_vui_extension_length + 1")}{appendType};";
+            }
+            else if(variableName == "sub_layer_dpb_info_present_flag[ i ]")
+            {
+                // F.7.4.3.1.3: when not present, sub_layer_dpb_info_present_flag[ i ][ 0 ] is
+                // inferred to be 1 and the rest to be 0. The flag is only ever coded for j > 0, so
+                // left at the zero an allocation gives it, the DPB sizes of every output layer set
+                // are skipped and everything after dpb_size() is read from the wrong position.
+                return $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};\r\n{spacing}this.{variableName}[0] = 1;";
             }
 
             return "";
@@ -650,12 +807,7 @@ namespace ItuGenerator.CSharp
                 variableName == "vps_cp_scale[ n ]" ||
                 variableName == "vps_cp_off[ n ]" ||
                 variableName == "vps_cp_inv_scale_plus_scale[ n ]" ||
-                variableName == "vps_cp_inv_off_plus_off[ n ]" ||
-                variableName == "cp_scale" ||
-                variableName == "cp_off" ||
-                variableName == "cp_scale" ||
-                variableName == "cp_inv_scale_plus_scale" ||
-                variableName == "cp_inv_off_plus_off")
+                variableName == "vps_cp_inv_off_plus_off[ n ]")
             {
                 appendType += "[]"; // TODO fix this workaround
             }
@@ -698,9 +850,27 @@ namespace ItuGenerator.CSharp
                 ))
             {
                 ret.Remove(ret[0]);
+
+                // vps_cp_scale[ i ][ j ] and the rest are indexed by the views, i and j, not by
+                // the m loop that finds j; indexing by m too stored each pair's value once per
+                // reference view, in a dimension nothing sized.
+                if (field.Name.StartsWith("vps_cp_"))
+                    ret.Remove("[ m ]");
             }
 
-            if (field != null && 
+            // cp_scale[ j ] and the rest of the slice's camera parameters are indexed by view order
+            // index j alone, as in the VPS; the m loop that finds j adds no dimension.
+            if (field != null && (
+                field.Name == "cp_scale" ||
+                field.Name == "cp_off" ||
+                field.Name == "cp_inv_scale_plus_scale" ||
+                field.Name == "cp_inv_off_plus_off"
+                ))
+            {
+                ret.RemoveAll(index => index.Replace(" ", "") == "[m]");
+            }
+
+            if (field != null &&
                 field.Name == "slice_reserved_flag"
                 )
             {

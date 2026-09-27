@@ -38,8 +38,8 @@ public partial class DecodeRetimingEntry : VisualSampleGroupEntry
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.tierCount, "tierCount"); 
 
-		this.tierID = new ushort[IsoStream.GetInt(tierCount)];
-		this.delta = new short[IsoStream.GetInt(tierCount)];
+		this.tierID = stream.SafeAllocate<ushort>(boxSize, readSize, IsoStream.GetInt(tierCount), "tierID");
+		this.delta = stream.SafeAllocate<short>(boxSize, readSize, IsoStream.GetInt(tierCount), "delta");
 		for (int i=0; i<tierCount; i++)
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.tierID[i], "tierID"); 
