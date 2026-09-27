@@ -160,11 +160,13 @@ namespace BoxGenerator
             // add additional boxes
             string[] audioSampleEntryTypes = new string[]
             {
-            "samr","sawb","mp4a","drms","alac","owma","ac-3","ec-3","mlpa","dtsl","dtsh","dtse","Opus","enca","resa","sevc","sqcp","ssmv","lpcm","dtsc","sowt",
+            "samr","sawb","mp4a","m4ae","drms","alac","owma","ac-3","ec-3","mlpa","dtsl","dtsh","dtse","Opus","enca","resa","sevc","sqcp","ssmv","lpcm","dtsc","sowt",
             // quicktime https://developer.apple.com/documentation/quicktime-file-format/sound_sample_descriptions
             // "\\0\\0\\0\\0" - using TerminatorBox instead
             "NONE","raw ","twos","sowt","MAC3","MAC6","ima4","fl32","fl64","in24","in32","ulaw","alaw","\\x6D\\x73\\x00\\x02","\\x6D\\x73\\x00\\x11",
-            "dvca","QDMC","QDM2","Qclp","\\x6D\\x73\\x00\\x55",".mp3"
+            "dvca","QDMC","QDM2","Qclp","\\x6D\\x73\\x00\\x55",".mp3",
+            // met in FFmpeg's samples: GSM, MPEG-H, Vorbis and WMA
+            "agsm","mhm1","msVo","wma "
             };
             string[] visualSampleEntryTypes = new string[]
             {
@@ -173,7 +175,11 @@ namespace BoxGenerator
             "avc2","avc3","avc4","vp08","vp09","vp10","apcn","dvhe","dvav","mjpg","uncv","j2ki",
             // quicktime https://developer.apple.com/documentation/quicktime-file-format/video_sample_description
             "cvid","jpeg","smc ","rle ","rpza","kpcd","png ","mjpa","mjpb","SVQ1","SVQ3","dvc ","dvcp","gif ","h263","tiff","raw ","2vuY","yuv2","v308","v408",
-            "v216","v410","v210","qhvc"
+            "v216","v410","v210","qhvc",
+            // met in FFmpeg's samples: ProRes, DNxHD/HR and Avid, Hap, DXV, CineForm, AIC, DVCPRO HD, Pixlet,
+            // QuickDraw, Media 100, Indeo 3, VP6 with alpha, 8BPS and VC-1
+            "apch","apco","apcs","ap4h","AVdn","AVdh","AVDJ","Hap1","Hap5","HapY","HapM","HapA","DXD3","DXDI",
+            "CFHD","icod","dvh2","dvh5","dvhq","pxlt","qdrw","dtPA","IV32","VP6A","8BPS","vc-1"
             };
 
             foreach (var type in audioSampleEntryTypes)
@@ -507,6 +513,7 @@ namespace BoxGenerator
                 case "utf8string":
                 case "utfstring":
                 case "utf8list":
+                case "bytestring": // a string kept as the bytes to the end of the box, whatever its form
                 case "string":
                     info.FieldType = ParsedBoxType.String;
                     break;

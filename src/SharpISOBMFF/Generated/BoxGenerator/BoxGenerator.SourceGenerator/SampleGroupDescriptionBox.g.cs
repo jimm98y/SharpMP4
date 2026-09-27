@@ -155,7 +155,7 @@ public partial class SampleGroupDescriptionBox : FullBox
 					boxSize += 32; // description_length
 				}
 			}
-			boxSize += IsoStream.CalculateClassSize(SampleGroupDescriptionEntry); // SampleGroupDescriptionEntry
+			boxSize += IsoStream.CalculateClassSize(SampleGroupDescriptionEntry[i]); // SampleGroupDescriptionEntry
 			/*   that is appropriate and permitted for the media type */
 		}
 		return boxSize;

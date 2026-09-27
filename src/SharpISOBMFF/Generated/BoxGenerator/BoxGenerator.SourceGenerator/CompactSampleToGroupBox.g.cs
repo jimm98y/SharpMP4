@@ -61,9 +61,9 @@ public partial class CompactSampleToGroupBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
 		bool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);
-		uint count_size_code = (flags >> 2) & 0x3;
-		uint pattern_size_code = (flags >> 4) & 0x3;
-		uint index_size_code = flags & 0x3;
+		uint count_size_code = 4u << (int)((flags >> 2) & 0x3);
+		uint pattern_size_code = 4u << (int)((flags >> 4) & 0x3);
+		uint index_size_code = 4u << (int)(flags & 0x3);
 
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.grouping_type, "grouping_type"); 
 
@@ -100,9 +100,9 @@ public partial class CompactSampleToGroupBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
 		bool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);
-		uint count_size_code = (flags >> 2) & 0x3;
-		uint pattern_size_code = (flags >> 4) & 0x3;
-		uint index_size_code = flags & 0x3;
+		uint count_size_code = 4u << (int)((flags >> 2) & 0x3);
+		uint pattern_size_code = 4u << (int)((flags >> 4) & 0x3);
+		uint index_size_code = 4u << (int)(flags & 0x3);
 
 		boxSize += stream.WriteUInt32( this.grouping_type, "grouping_type"); 
 
@@ -135,9 +135,9 @@ public partial class CompactSampleToGroupBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		bool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);
-		uint count_size_code = (flags >> 2) & 0x3;
-		uint pattern_size_code = (flags >> 4) & 0x3;
-		uint index_size_code = flags & 0x3;
+		uint count_size_code = 4u << (int)((flags >> 2) & 0x3);
+		uint pattern_size_code = 4u << (int)((flags >> 4) & 0x3);
+		uint index_size_code = 4u << (int)(flags & 0x3);
 
 		boxSize += 32; // grouping_type
 

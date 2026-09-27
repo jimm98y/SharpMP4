@@ -329,7 +329,7 @@ public partial class VvcOperatingPointsRecord : IMp4Serializable
 		for (int i=0; i<=num_profile_tier_level_minus1; i++)
 		{
 			boxSize += 8; // ptl_max_temporal_id
-			boxSize += IsoStream.CalculateClassSize(ptl); // ptl
+			boxSize += IsoStream.CalculateClassSize(ptl[i]); // ptl
 		}
 		boxSize += 1; // all_independent_layers_flag
 		boxSize += 7; // reserved

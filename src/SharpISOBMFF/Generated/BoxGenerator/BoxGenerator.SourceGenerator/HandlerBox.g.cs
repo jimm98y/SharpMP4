@@ -10,7 +10,7 @@ aligned(8) class HandlerBox extends FullBox('hdlr', version = 0, 0) {
 	unsigned int(32)	pre_defined = 0;
 	unsigned int(32)	handler_type;
 	const unsigned int(32)[3]	reserved = 0;
-	utf8string	name;
+	bytestring	name; // utf8string in ISOBMFF, counted in QuickTime: all that is left, as bytes
 }
 */
 public partial class HandlerBox : FullBox
@@ -27,7 +27,7 @@ public partial class HandlerBox : FullBox
 	protected uint[] reserved = []; 
 	public uint[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-	protected BinaryUTF8String name; 
+	protected BinaryUTF8String name;  //  utf8string in ISOBMFF, counted in QuickTime: all that is left, as bytes
 	public BinaryUTF8String Name { get { return this.name; } set { this.name = value; } }
 
 	public HandlerBox(): base(IsoStream.FromFourCC("hdlr"), 0, 0)
@@ -41,7 +41,7 @@ public partial class HandlerBox : FullBox
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.pre_defined, "pre_defined"); 
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.handler_type, "handler_type"); 
 		boxSize += stream.ReadUInt32Array(boxSize, readSize, 3,  out this.reserved, "reserved"); 
-		boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.name, "name"); 
+		boxSize += stream.ReadStringTillEnd(boxSize, readSize,  out this.name, "name"); // utf8string in ISOBMFF, counted in QuickTime: all that is left, as bytes
 		return boxSize;
 	}
 
@@ -52,7 +52,7 @@ public partial class HandlerBox : FullBox
 		boxSize += stream.WriteUInt32( this.pre_defined, "pre_defined"); 
 		boxSize += stream.WriteUInt32( this.handler_type, "handler_type"); 
 		boxSize += stream.WriteUInt32Array(3,  this.reserved, "reserved"); 
-		boxSize += stream.WriteStringZeroTerminated( this.name, "name"); 
+		boxSize += stream.WriteStringZeroTerminated( this.name, "name"); // utf8string in ISOBMFF, counted in QuickTime: all that is left, as bytes
 		return boxSize;
 	}
 

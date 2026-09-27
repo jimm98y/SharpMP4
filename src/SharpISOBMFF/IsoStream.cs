@@ -124,6 +124,136 @@ namespace SharpISOBMFF
             _stream.SeekFromBeginning(offset);
         }
 
+        /// <summary>
+        /// Whether the next bytes, up to 4 KB of them, are all zero. A box inside another cannot be of
+        /// size 0, so zeros to the end of a box are padding, not a box. False where the stream cannot seek.
+        /// </summary>
+        public bool PeekIsZero(ulong count)
+        {
+            if (count == 0 || count > 4096 || !CanStreamSeek())
+                return false;
+
+            long start = GetCurrentOffset();
+            if (start < 0 || (ulong)(GetStreamLength() - start) < count)
+                return false;
+
+            try
+            {
+                for (ulong i = 0; i < count; i++)
+                {
+                    if (ReadByteInternal() != 0)
+                        return false;
+                }
+                return true;
+            }
+            finally
+            {
+                SeekFromBeginning(start);
+            }
+        }
+
+        /// <summary>
+        /// The per sample IV size of a version 0 'senc', which the box does not give: it is in the track's
+        /// 'tenc', or a 'seig' sample group (ISO/IEC 23001-7). The box's size settles it all the same, as only
+        /// one of the sizes allowed - 0, 8 and 16 - reads its samples to its very end. <paramref name="current"/>
+        /// is tried first, and kept where none fits or the stream cannot seek.
+        /// </summary>
+        public byte InferPerSampleIvSize(ulong boxSize, ulong readSize, byte version, uint flags, uint sampleCount, byte current)
+        {
+            if (version != 0 || sampleCount == 0 || readSize == ulong.MaxValue || readSize <= boxSize)
+                return current;
+
+            ulong length = (readSize - boxSize) >> 3;
+            byte[] sizes = { current, 16, 8, 0 };
+
+            if ((flags & 0x2) == 0)
+            {
+                foreach (byte size in sizes)
+                {
+                    if ((ulong)size * sampleCount == length)
+                        return size;
+                }
+                return current;
+            }
+
+            if (length > (16 << 20) || !CanStreamSeek())
+                return current;
+
+            long start = GetCurrentOffset();
+            var bytes = new byte[length];
+            try
+            {
+                for (ulong i = 0; i < length; i++)
+                {
+                    int b = ReadByteInternal();
+                    if (b < 0)
+                        return current;
+                    bytes[i] = (byte)b;
+                }
+            }
+            finally
+            {
+                SeekFromBeginning(start);
+            }
+
+            foreach (byte size in sizes)
+            {
+                ulong position = 0;
+                uint sample = 0;
+                for (; sample < sampleCount; sample++)
+                {
+                    position += size;
+                    if (position + 2 > length)
+                        break;
+                    ulong subsamples = (ulong)(bytes[position] << 8 | bytes[position + 1]);
+                    position += 2 + 6 * subsamples;
+                }
+                if (sample == sampleCount && position == length)
+                    return size;
+            }
+
+            return current;
+        }
+
+        /// <summary>
+        /// Whether the 'meta' box about to be read starts with a version and flags, as ISOBMFF's
+        /// MetaBox does, or goes straight to its first box, as the QuickTime 'meta' atom does:
+        /// the first has its 'hdlr' at bytes 8 to 12, the second at bytes 4 to 8. Null where the
+        /// stream cannot be read ahead, or neither is there.
+        /// </summary>
+        public bool? PeekMetaHasFullBoxHeader()
+        {
+            if (!CanStreamSeek())
+                return null;
+
+            long start = GetCurrentOffset();
+            if (start < 0 || GetStreamLength() - start < 12)
+                return null;
+
+            var bytes = new byte[12];
+            try
+            {
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    int b = ReadByteInternal();
+                    if (b < 0)
+                        return null;
+                    bytes[i] = (byte)b;
+                }
+            }
+            finally
+            {
+                SeekFromBeginning(start);
+            }
+
+            bool At(int offset) => bytes[offset] == 'h' && bytes[offset + 1] == 'd' && bytes[offset + 2] == 'l' && bytes[offset + 3] == 'r';
+            if (At(8))
+                return true;
+            if (At(4))
+                return false;
+            return null;
+        }
+
         #endregion // Stream operations
 
         #region Basic read/write operations
@@ -506,6 +636,30 @@ namespace SharpISOBMFF
             return WriteString(value, name);
         }
 
+        /// <summary>
+        /// A string as all the bytes left in the box, whatever form they have: zero terminated, as ISOBMFF
+        /// has it, counted, as QuickTime has it, or either with more after it. <see cref="BinaryUTF8String.Text"/>
+        /// tells which when asked; the bytes write back as they were read.
+        /// </summary>
+        public ulong ReadStringTillEnd(ulong boxSize, ulong readSize, out BinaryUTF8String value, string name)
+        {
+            ulong remaining = readSize == ulong.MaxValue || readSize <= boxSize ? 0 : (readSize - boxSize) >> 3;
+            var buffer = new List<byte>();
+            for (ulong i = 0; i < remaining; i++)
+            {
+                int b = ReadByteInternal();
+                if (b == -1)
+                    break;
+                buffer.Add((byte)b);
+            }
+
+            value = new BinaryUTF8String(buffer.ToArray());
+
+            ulong size = (ulong)buffer.Count * 8;
+            LogEnd(name, size, EscapeString(value.Text));
+            return size;
+        }
+
         public ulong ReadStringZeroTerminated(ulong boxSize, ulong readSize, out BinaryUTF8String value, string name)
         {
             ulong remaining = readSize - boxSize;
@@ -752,7 +906,25 @@ namespace SharpISOBMFF
                 box.Header = header;
                 if (this.Logger.IsDebugEnabled)
                     LogBox(header, GetIndentation(box));
-                size = ReadBox(header, box, availableSize);
+
+                try
+                {
+                    size = ReadBox(header, box, availableSize);
+                }
+                catch (Exception ex) when (!(ex is OutOfMemoryException) && header.Size != 0 && headerOffset >= 0 && CanStreamSeek() &&
+                    typeof(T).IsAssignableFrom(typeof(UnreadableBox)))
+                {
+                    // The box's syntax does not fit what is in it: it is kept as its bytes, rather than lose
+                    // the box it is in, and all after it.
+                    this.Logger.LogDebug($"Box '{ToFourCC(header.Type)}' could not be read, kept as its bytes: {ex.Message}");
+                    SeekFromBeginning(headerOffset + (long)(headerSize >> 3));
+                    this.bitstream.BitsPosition = (this.bitstream.BitsPosition | 7) + 1; // off the byte read before, so the next is read anew
+
+                    box = new UnreadableBox(header.Type, ex.Message);
+                    box.SetParent(parent);
+                    box.Header = header;
+                    size = box.Read(this, GetBoxSize(header) - headerSize) + headerSize;
+                }
             }
 
             value = (T)box;
@@ -799,7 +971,31 @@ namespace SharpISOBMFF
             string parentFourCC = "";
             if (parent != null)
                 parentFourCC = ToFourCC(((Box)parent).FourCC);
+
+            // 'raw ' is uncompressed video and 8 bit PCM sound alike (QuickTime File Format), which only
+            // the track's handler tells apart.
+            if (header.Type == FromFourCC("raw ") && parentFourCC == "stsd" && GetHandlerType(parent) == FromFourCC("soun"))
+                return new AudioSampleEntry(header.Type);
+
             return BoxFactory.CreateBox(ToFourCC(header.Type), parentFourCC, header.Usertype, this.Logger);
+        }
+
+        /// <summary>The handler type of the track a box is in, from its 'mdia', which has read its 'hdlr' by then.</summary>
+        private static uint GetHandlerType(IMp4Serializable box)
+        {
+            for (var b = box; b != null; b = b.GetParent())
+            {
+                if (b is Box mdia && mdia.FourCC == FromFourCC("mdia"))
+                {
+                    foreach (var child in mdia.Children ?? new List<Box>())
+                    {
+                        if (child is HandlerBox handler)
+                            return handler.HandlerType;
+                    }
+                    return 0;
+                }
+            }
+            return 0;
         }
 
         public ulong ReadBox<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T value, string name) where T : Box
@@ -919,6 +1115,10 @@ namespace SharpISOBMFF
             ulong remaining = readSize - boxSize;
             while (consumed < remaining && (remaining - consumed) >= 64) // box header is at least 8 bytes
             {
+                // Zeros to the end are padding, which the box keeps: QuickTime pads some sample descriptions so.
+                if (PeekIsZero((remaining - consumed) >> 3))
+                    break;
+
                 Box v;
                 consumed += ReadBox(consumed, remaining, box, out v, "");
                 if (consumed > readSize)
@@ -1602,6 +1802,9 @@ namespace SharpISOBMFF
         /// Verifies that an array of <paramref name="count"/> entries, each consuming at least <paramref name="minBitsPerEntry"/> bits,
         /// can fit into the remaining data before the array is allocated.
         /// </summary>
+        /// <summary>A count of entries allocated without checking they fit: at most half a megabyte of references.</summary>
+        private const ulong SmallArrayCount = 1 << 16;
+
         private void CheckArrayAllocation(ulong boxSize, ulong readSize, ulong count, ulong minBitsPerEntry, string name)
         {
             // What is left of the box, and what is left of the stream. The first comes out of the
@@ -1627,6 +1830,14 @@ namespace SharpISOBMFF
             if (remaining == ulong.MaxValue)
             {
                 return; // unbounded, non-seekable: nothing to check against
+            }
+
+            // Entries can take no bits at all - an iloc extent's offset and length when
+            // offset_size and length_size are 0 - so a count that costs little to allocate is let
+            // through whatever is left: the check is there to stop a very large one.
+            if (count <= SmallArrayCount)
+            {
+                return;
             }
 
             // division instead of multiplication to avoid the overflow
@@ -2605,6 +2816,41 @@ namespace SharpISOBMFF
         public override string ToString()
         {
             return GetString(Bytes);
+        }
+
+        /// <summary>
+        /// Whether the bytes are a counted string, QuickTime's form: a first byte that is the length of
+        /// the text after it, which has no zero in it and ends at the end of the bytes or at a zero. An empty
+        /// zero terminated string reads the same either way.
+        /// </summary>
+        public bool IsLengthPrefixed
+        {
+            get
+            {
+                if (Length < 2 || Bytes[0] == 0 || Bytes[0] > Length - 1)
+                    return false;
+                int count = Bytes[0];
+                if (Array.IndexOf(Bytes, (byte)0, 1, count) >= 0)
+                    return false;
+                return count + 1 == Length || Bytes[count + 1] == 0;
+            }
+        }
+
+        /// <summary>
+        /// The text, whichever form it came in: counted when <see cref="IsLengthPrefixed"/>, otherwise up to
+        /// the first zero. What follows it, if anything, is left out.
+        /// </summary>
+        public string Text
+        {
+            get
+            {
+                if (Length == 0)
+                    return "";
+                if (IsLengthPrefixed)
+                    return Encoding.UTF8.GetString(Bytes, 1, Bytes[0]);
+                int end = Array.IndexOf(Bytes, (byte)0);
+                return Encoding.UTF8.GetString(Bytes, 0, end < 0 ? Length : end);
+            }
         }
 
         public static byte[] GetBytes(string text)

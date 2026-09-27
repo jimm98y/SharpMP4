@@ -6,18 +6,18 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class ThreeGPPDescriptionBox() extends Box('dscp') {
-	bit(1) reserved;
-unsigned int(5)[3] language;
+aligned(8) class ThreeGPPDescriptionBox() extends FullBox('dscp', version = 0, 0) {
+	bit(1) reserved = 0;
+	unsigned int(5)[3] language;
 	string value;
-}
+} 
 */
-public partial class ThreeGPPDescriptionBox : Box
+public partial class ThreeGPPDescriptionBox : FullBox
 {
 	public const string TYPE = "dscp";
 	public override string DisplayName { get { return "ThreeGPPDescriptionBox"; } }
 
-	protected bool reserved; 
+	protected bool reserved = false; 
 	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
 	protected string language; 
@@ -26,7 +26,7 @@ public partial class ThreeGPPDescriptionBox : Box
 	protected BinaryUTF8String value; 
 	public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
 
-	public ThreeGPPDescriptionBox(): base(IsoStream.FromFourCC("dscp"))
+	public ThreeGPPDescriptionBox(): base(IsoStream.FromFourCC("dscp"), 0, 0)
 	{
 	}
 

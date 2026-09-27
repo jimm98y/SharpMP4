@@ -7,14 +7,16 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class DoViConfigurationBox() extends Box('dvcC') {
- unsigned int(8) dvVersionMajor;
- unsigned int(8) dvVersionMinor;
- unsigned int(16) profileLevelFlags;
- unsigned int(32) reserved1;
- unsigned int(32) reserved2;
-unsigned int(32) reserved3;
-unsigned int(32) reserved4;
- 
+ unsigned int(8) dv_version_major;
+ unsigned int(8) dv_version_minor;
+ unsigned int(7) dv_profile;
+ unsigned int(6) dv_level;
+ bit(1) rpu_present_flag;
+ bit(1) el_present_flag;
+ bit(1) bl_present_flag;
+ unsigned int(4) dv_bl_signal_compatibility_id;
+ const unsigned int(28) reserved = 0;
+ const unsigned int(32)[4] reserved = 0;
  } 
 */
 public partial class DoViConfigurationBox : Box
@@ -22,26 +24,35 @@ public partial class DoViConfigurationBox : Box
 	public const string TYPE = "dvcC";
 	public override string DisplayName { get { return "DoViConfigurationBox"; } }
 
-	protected byte dvVersionMajor; 
-	public byte DvVersionMajor { get { return this.dvVersionMajor; } set { this.dvVersionMajor = value; } }
+	protected byte dv_version_major; 
+	public byte DvVersionMajor { get { return this.dv_version_major; } set { this.dv_version_major = value; } }
 
-	protected byte dvVersionMinor; 
-	public byte DvVersionMinor { get { return this.dvVersionMinor; } set { this.dvVersionMinor = value; } }
+	protected byte dv_version_minor; 
+	public byte DvVersionMinor { get { return this.dv_version_minor; } set { this.dv_version_minor = value; } }
 
-	protected ushort profileLevelFlags; 
-	public ushort ProfileLevelFlags { get { return this.profileLevelFlags; } set { this.profileLevelFlags = value; } }
+	protected byte dv_profile; 
+	public byte DvProfile { get { return this.dv_profile; } set { this.dv_profile = value; } }
 
-	protected uint reserved1; 
-	public uint Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+	protected byte dv_level; 
+	public byte DvLevel { get { return this.dv_level; } set { this.dv_level = value; } }
 
-	protected uint reserved2; 
-	public uint Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
+	protected bool rpu_present_flag; 
+	public bool RpuPresentFlag { get { return this.rpu_present_flag; } set { this.rpu_present_flag = value; } }
 
-	protected uint reserved3; 
-	public uint Reserved3 { get { return this.reserved3; } set { this.reserved3 = value; } }
+	protected bool el_present_flag; 
+	public bool ElPresentFlag { get { return this.el_present_flag; } set { this.el_present_flag = value; } }
 
-	protected uint reserved4; 
-	public uint Reserved4 { get { return this.reserved4; } set { this.reserved4 = value; } }
+	protected bool bl_present_flag; 
+	public bool BlPresentFlag { get { return this.bl_present_flag; } set { this.bl_present_flag = value; } }
+
+	protected byte dv_bl_signal_compatibility_id; 
+	public byte DvBlSignalCompatibilityId { get { return this.dv_bl_signal_compatibility_id; } set { this.dv_bl_signal_compatibility_id = value; } }
+
+	protected uint reserved = 0; 
+	public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+	protected uint[] reserved0 = []; 
+	public uint[] Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
 	public DoViConfigurationBox(): base(IsoStream.FromFourCC("dvcC"))
 	{
@@ -51,13 +62,16 @@ public partial class DoViConfigurationBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.dvVersionMajor, "dvVersionMajor"); 
-		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.dvVersionMinor, "dvVersionMinor"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.profileLevelFlags, "profileLevelFlags"); 
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.reserved1, "reserved1"); 
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.reserved2, "reserved2"); 
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.reserved3, "reserved3"); 
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.reserved4, "reserved4"); 
+		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.dv_version_major, "dv_version_major"); 
+		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.dv_version_minor, "dv_version_minor"); 
+		boxSize += stream.ReadBits(boxSize, readSize, 7,  out this.dv_profile, "dv_profile"); 
+		boxSize += stream.ReadBits(boxSize, readSize, 6,  out this.dv_level, "dv_level"); 
+		boxSize += stream.ReadBit(boxSize, readSize,  out this.rpu_present_flag, "rpu_present_flag"); 
+		boxSize += stream.ReadBit(boxSize, readSize,  out this.el_present_flag, "el_present_flag"); 
+		boxSize += stream.ReadBit(boxSize, readSize,  out this.bl_present_flag, "bl_present_flag"); 
+		boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.dv_bl_signal_compatibility_id, "dv_bl_signal_compatibility_id"); 
+		boxSize += stream.ReadBits(boxSize, readSize, 28,  out this.reserved, "reserved"); 
+		boxSize += stream.ReadUInt32Array(boxSize, readSize, 4,  out this.reserved0, "reserved0"); 
 		return boxSize;
 	}
 
@@ -65,13 +79,16 @@ public partial class DoViConfigurationBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8( this.dvVersionMajor, "dvVersionMajor"); 
-		boxSize += stream.WriteUInt8( this.dvVersionMinor, "dvVersionMinor"); 
-		boxSize += stream.WriteUInt16( this.profileLevelFlags, "profileLevelFlags"); 
-		boxSize += stream.WriteUInt32( this.reserved1, "reserved1"); 
-		boxSize += stream.WriteUInt32( this.reserved2, "reserved2"); 
-		boxSize += stream.WriteUInt32( this.reserved3, "reserved3"); 
-		boxSize += stream.WriteUInt32( this.reserved4, "reserved4"); 
+		boxSize += stream.WriteUInt8( this.dv_version_major, "dv_version_major"); 
+		boxSize += stream.WriteUInt8( this.dv_version_minor, "dv_version_minor"); 
+		boxSize += stream.WriteBits(7,  this.dv_profile, "dv_profile"); 
+		boxSize += stream.WriteBits(6,  this.dv_level, "dv_level"); 
+		boxSize += stream.WriteBit( this.rpu_present_flag, "rpu_present_flag"); 
+		boxSize += stream.WriteBit( this.el_present_flag, "el_present_flag"); 
+		boxSize += stream.WriteBit( this.bl_present_flag, "bl_present_flag"); 
+		boxSize += stream.WriteBits(4,  this.dv_bl_signal_compatibility_id, "dv_bl_signal_compatibility_id"); 
+		boxSize += stream.WriteBits(28,  this.reserved, "reserved"); 
+		boxSize += stream.WriteUInt32Array(4,  this.reserved0, "reserved0"); 
 		return boxSize;
 	}
 
@@ -79,13 +96,16 @@ public partial class DoViConfigurationBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += 8; // dvVersionMajor
-		boxSize += 8; // dvVersionMinor
-		boxSize += 16; // profileLevelFlags
-		boxSize += 32; // reserved1
-		boxSize += 32; // reserved2
-		boxSize += 32; // reserved3
-		boxSize += 32; // reserved4
+		boxSize += 8; // dv_version_major
+		boxSize += 8; // dv_version_minor
+		boxSize += 7; // dv_profile
+		boxSize += 6; // dv_level
+		boxSize += 1; // rpu_present_flag
+		boxSize += 1; // el_present_flag
+		boxSize += 1; // bl_present_flag
+		boxSize += 4; // dv_bl_signal_compatibility_id
+		boxSize += 28; // reserved
+		boxSize += 4 * 32; // reserved0
 		return boxSize;
 	}
 }

@@ -6,30 +6,28 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class ThreeGPPLocationInformationBox() extends Box('loci') {
-	bit(1) reserved;
- unsigned int(5)[3] language;
-	string value;
- string placeName; unsigned int(8) role; fixedpoint1616 longitude;
- fixedpoint1616 latitude;
- fixedpoint1616 altitude;
- string astronomicalBody;
- string additionalNotes;
- }
+aligned(8) class ThreeGPPLocationInformationBox() extends FullBox('loci', version = 0, 0) {
+	bit(1) reserved = 0;
+	unsigned int(5)[3] language;
+	string placeName;
+	unsigned int(8) role;
+	fixedpoint1616 longitude;
+	fixedpoint1616 latitude;
+	fixedpoint1616 altitude;
+	string astronomicalBody;
+	string additionalNotes;
+}
 */
-public partial class ThreeGPPLocationInformationBox : Box
+public partial class ThreeGPPLocationInformationBox : FullBox
 {
 	public const string TYPE = "loci";
 	public override string DisplayName { get { return "ThreeGPPLocationInformationBox"; } }
 
-	protected bool reserved; 
+	protected bool reserved = false; 
 	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
 	protected string language; 
 	public string Language { get { return this.language; } set { this.language = value; } }
-
-	protected BinaryUTF8String value; 
-	public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
 
 	protected BinaryUTF8String placeName; 
 	public BinaryUTF8String PlaceName { get { return this.placeName; } set { this.placeName = value; } }
@@ -52,7 +50,7 @@ public partial class ThreeGPPLocationInformationBox : Box
 	protected BinaryUTF8String additionalNotes; 
 	public BinaryUTF8String AdditionalNotes { get { return this.additionalNotes; } set { this.additionalNotes = value; } }
 
-	public ThreeGPPLocationInformationBox(): base(IsoStream.FromFourCC("loci"))
+	public ThreeGPPLocationInformationBox(): base(IsoStream.FromFourCC("loci"), 0, 0)
 	{
 	}
 
@@ -62,7 +60,6 @@ public partial class ThreeGPPLocationInformationBox : Box
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.reserved, "reserved"); 
 		boxSize += stream.ReadIso639(boxSize, readSize,  out this.language, "language"); 
-		boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.value, "value"); 
 		boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.placeName, "placeName"); 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.role, "role"); 
 		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.longitude, "longitude"); 
@@ -79,7 +76,6 @@ public partial class ThreeGPPLocationInformationBox : Box
 		boxSize += base.Write(stream);
 		boxSize += stream.WriteBit( this.reserved, "reserved"); 
 		boxSize += stream.WriteIso639( this.language, "language"); 
-		boxSize += stream.WriteStringZeroTerminated( this.value, "value"); 
 		boxSize += stream.WriteStringZeroTerminated( this.placeName, "placeName"); 
 		boxSize += stream.WriteUInt8( this.role, "role"); 
 		boxSize += stream.WriteDouble32( this.longitude, "longitude"); 
@@ -96,7 +92,6 @@ public partial class ThreeGPPLocationInformationBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 1; // reserved
 		boxSize += 15; // language
-		boxSize += IsoStream.CalculateStringSize(value); // value
 		boxSize += IsoStream.CalculateStringSize(placeName); // placeName
 		boxSize += 8; // role
 		boxSize += 32; // longitude

@@ -1,6 +1,6 @@
 ﻿<#
 .SYNOPSIS
-Downloads the conformance bitstreams the codec parsers are tested against.
+Downloads the conformance bitstreams and files the parsers are tested against.
 
 .DESCRIPTION
 Fetches the published conformance suites for H.264, H.265, H.266 and AV1 into the
@@ -24,6 +24,10 @@ Sources:
     H.266  ITU-T JVET    https://www.itu.int/wftp3/av-arch/jvet-site/bitstream_exchange/VVC/FDIS_r1/
     AV1    libaom test vectors  https://storage.googleapis.com/aom-test-data/ (av1-1-*)
     AV1    Argon Streams        https://aomedia.org/av1-video-decoder-verification-tool/
+    ISOBMFF  MPEG file format conformance (ISO/IEC 14496-32)
+                                https://github.com/MPEGGroup/FileFormatConformance
+    FATE     FFmpeg's samples that are ISOBMFF or QuickTime files
+                                https://fate-suite.ffmpeg.org/
 
 Only files directly in each set's folder are fetched: the subfolders the ITU keeps
 beside them hold superseded versions of the same streams.
@@ -34,7 +38,9 @@ Works in Windows PowerShell 5.1 and PowerShell 7.
 Where the suites go. The conformance folder next to this script by default.
 
 .PARAMETER Codec
-Which codecs to fetch: any of H264, H265, H266 and AV1. All of them by default.
+Which suites to fetch: any of H264, H265, H266, AV1, IsoBmff (the file format
+conformance files, each with GPAC's dump of its boxes) and Fate (FFmpeg's samples
+that are ISOBMFF or QuickTime files, about 140 MB). All of them by default.
 
 .PARAMETER IncludeSvc
 Also fetches the H.264 scalable video coding set, 12.9 GB.
@@ -62,10 +68,10 @@ Everything, about 25 GB.
 #>
 [CmdletBinding()]
 param(
-    [string]$Destination = (Join-Path $PSScriptRoot 'conformance'),
+    [string]$Destination,
 
-    [ValidateSet('H264', 'H265', 'H266', 'AV1')]
-    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1'),
+    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate')]
+    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate'),
 
     [switch]$IncludeSvc,
     [switch]$IncludeArgon,
@@ -74,6 +80,9 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+
+# Windows PowerShell 5.1 has no $PSScriptRoot yet where parameter defaults are worked out.
+if (-not $Destination) { $Destination = Join-Path $PSScriptRoot 'conformance' }
 
 # Windows PowerShell 5.1 may still offer only TLS 1.0 and 1.1, which the servers refuse.
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
@@ -334,6 +343,105 @@ function Get-Argon {
     Expand-Stream $archive
 }
 
+# MPEG's file format conformance files: every published file with its description and GPAC's
+# dump of its boxes (*_gpac.json). Listed through GitHub's tree API; the files themselves are in
+# Git LFS, served without git-lfs from media.githubusercontent.com, and checked against the MD5
+# their description gives.
+function Get-FileFormatConformance {
+    $repository = 'MPEGGroup/FileFormatConformance'
+    $prefix = 'data/file_features/published/'
+    $target = Join-Path $Destination 'isobmff'
+
+    $tree = Invoke-RestMethod -Uri "https://api.github.com/repos/$repository/git/trees/main?recursive=1" -Headers @{ 'User-Agent' = 'DownloadConformance' }
+    $blobs = @($tree.tree | Where-Object { $_.type -eq 'blob' -and $_.path.StartsWith($prefix) -and $_.path -notmatch '/(README\.md|\.cfignore)$' })
+    Write-Host "isobmff: $($blobs.Count) files"
+
+    foreach ($blob in $blobs) {
+        $relative = $blob.path.Substring($prefix.Length)
+        $path = Join-Path $target $relative.Replace('/', [IO.Path]::DirectorySeparatorChar)
+        if ($relative.EndsWith('.json')) {
+            [void](Save-File "https://raw.githubusercontent.com/$repository/main/$($blob.path)" $path)
+            continue
+        }
+
+        $known = Test-Path -LiteralPath $path
+        if ((Save-File "https://media.githubusercontent.com/media/$repository/main/$($blob.path)" $path) -and -not $known) {
+            # The description beside a file is named after it without its extension.
+            $description = [IO.Path]::Combine((Split-Path -Parent $path), [IO.Path]::GetFileNameWithoutExtension($path) + '.json')
+            if ($relative.EndsWith('.zip')) {
+                $description = [IO.Path]::Combine((Split-Path -Parent $path), [IO.Path]::GetFileNameWithoutExtension([IO.Path]::GetFileNameWithoutExtension($path)) + '.json')
+            }
+            $expected = $null
+            if (Test-Path -LiteralPath $description) {
+                $expected = (Get-Content -LiteralPath $description -Raw | ConvertFrom-Json).md5
+            }
+            if ($expected -and -not $relative.EndsWith('.zip')) {
+                $actual = (Get-FileHash -LiteralPath $path -Algorithm MD5).Hash.ToLowerInvariant()
+                if ($actual -ne $expected.ToLowerInvariant()) {
+                    Write-Warning "  $relative does not match its MD5; removed"
+                    Remove-Item -LiteralPath $path -Force
+                    $script:failed.Add($blob.path)
+                    continue
+                }
+            }
+            if ($relative.EndsWith('.zip')) { Expand-Stream $path }
+        }
+    }
+}
+
+# FFmpeg's FATE samples that are ISOBMFF or QuickTime files: real files from cameras, phones and
+# editors, with the metadata and vendor boxes no conformance suite has. The Apache listings are
+# crawled for the extensions such files go by, and for files with none; a file is kept only if
+# its first box is one a file can start with. FATE publishes no checksums to check them against.
+$fateUrl = 'https://fate-suite.ffmpeg.org/'
+$fateExtensions = '\.(mov|qt|mp4|m4a|m4v|m4b|3gp|3g2|heic|heif|hif|avif|mj2|f4v|ism|ismv|isma|cmfv|cmfa|mqv|psp|dvr)$'
+$fateFirstBoxes = 'ftyp', 'styp', 'moov', 'mdat', 'free', 'skip', 'wide', 'pnot', 'uuid', 'sidx', 'moof', 'junk', 'PICT'
+
+function Get-FateListing([string]$Path) {
+    $html = Get-Text ($fateUrl + $Path)
+    foreach ($m in [regex]::Matches($html, '<a href="([^"?/][^"?]*)">')) {
+        $href = [Net.WebUtility]::HtmlDecode($m.Groups[1].Value)
+        if ($href.EndsWith('/')) {
+            Get-FateListing ($Path + $href)
+        }
+        elseif ($href -match $fateExtensions -or ($href -notmatch '\.' -and $href -ne 'md5sum')) {
+            $Path + $href
+        }
+    }
+}
+
+function Test-IsoBmffStart([string]$Path) {
+    $bytes = New-Object byte[] 8
+    $stream = [IO.File]::OpenRead($Path)
+    try { $read = $stream.Read($bytes, 0, 8) } finally { $stream.Dispose() }
+    return $read -eq 8 -and [Text.Encoding]::ASCII.GetString($bytes, 4, 4) -cin $fateFirstBoxes
+}
+
+function Get-FateSuite {
+    $target = Join-Path $Destination 'fate'
+    $files = @(Get-FateListing '')
+    Write-Host "fate: $($files.Count) candidates"
+
+    # What turned out not to be such a file is listed here, so that the next run does not fetch it again.
+    $rejectedList = Join-Path $target 'not-isobmff.txt'
+    $rejected = @{}
+    if (Test-Path -LiteralPath $rejectedList) {
+        Get-Content -LiteralPath $rejectedList | ForEach-Object { $rejected[$_] = $true }
+    }
+
+    foreach ($relative in $files) {
+        if ($rejected.ContainsKey($relative)) { $script:skipped++; continue }
+
+        $path = Join-Path $target $relative.Replace('/', [IO.Path]::DirectorySeparatorChar)
+        $known = Test-Path -LiteralPath $path
+        $url = $fateUrl + (($relative.Split('/') | ForEach-Object { [Uri]::EscapeDataString($_) }) -join '/')
+        if ((Save-File $url $path) -and -not $known -and -not (Test-IsoBmffStart $path)) {
+            Remove-Item -LiteralPath $path -Force
+            Add-Content -LiteralPath $rejectedList -Value $relative
+        }
+    }
+}
+
 New-Item -ItemType Directory -Force -Path $Destination | Out-Null
 Write-Host "Downloading into $Destination"
 
@@ -342,6 +450,12 @@ foreach ($c in $Codec) {
     if ($c -eq 'AV1') {
         Get-LibaomVectors
         if ($IncludeArgon) { Get-Argon }
+    }
+    elseif ($c -eq 'IsoBmff') {
+        Get-FileFormatConformance
+    }
+    elseif ($c -eq 'Fate') {
+        Get-FateSuite
     }
     else {
         foreach ($set in $ituSets[$c]) { Get-ItuSet $folders[$c] $set }
