@@ -72,7 +72,7 @@ public partial class GroupIdToNameBox : FullBox
 		for (int i=0; i < entry_count; i++)
 		{
 			boxSize += 32; // group_ID
-			boxSize += IsoStream.CalculateStringSize(group_name); // group_name
+			boxSize += IsoStream.CalculateStringSize(group_name[i]); // group_name
 		}
 		return boxSize;
 	}

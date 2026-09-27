@@ -100,7 +100,7 @@ public partial class SVCMetadataSampleConfigBox : FullBox
 		for (int i=0; i<entry_count; i++)
 		{
 			boxSize += 8; // statement_type
-			boxSize += IsoStream.CalculateStringSize(statement_namespace); // statement_namespace
+			boxSize += IsoStream.CalculateStringSize(statement_namespace[i]); // statement_namespace
 		}
 		return boxSize;
 	}

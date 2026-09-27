@@ -63,7 +63,7 @@ public partial class DataReferenceBox : FullBox
 
 		for (int i=0; i < entry_count; i++)
 		{
-			// boxSize += IsoStream.CalculateBoxSize(data_entry); // data_entry
+			// boxSize += IsoStream.CalculateBoxSize(data_entry[i]); // data_entry
 		}
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;

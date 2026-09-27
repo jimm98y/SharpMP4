@@ -411,7 +411,7 @@ namespace BoxGenerator
                             continue;
                         if (condition.Contains(prefix + ff.Name + suffix) && !condition.Contains(prefix + ff.Name + "["))
                         {
-                            condition = condition.Replace(prefix + ff.Name + suffix, prefix + ff.Name + str + suffix);
+                            condition = IndexVariable(condition, prefix, ff.Name, suffix, str);
                         }
                     }
                     else if (f is PseudoBlock bb)
@@ -424,7 +424,7 @@ namespace BoxGenerator
                                     continue;
                                 if (condition.Contains(prefix + ffff.Name + suffix) && !condition.Contains(prefix + ffff.Name + "["))
                                 {
-                                    condition = condition.Replace(prefix + ffff.Name + suffix, prefix + ffff.Name + str + suffix);
+                                    condition = IndexVariable(condition, prefix, ffff.Name, suffix, str);
                                 }
                             }
                         }
@@ -435,6 +435,16 @@ namespace BoxGenerator
             }
 
             return condition;
+        }
+
+        /// <summary>
+        /// A variable indexed by the loops it is in: name as a whole word, so that channel_label is not
+        /// found inside channel_label_flag and made channel_label[i]_flag.
+        /// </summary>
+        private static string IndexVariable(string condition, string prefix, string name, string suffix, string indices)
+        {
+            string pattern = (prefix.Length == 0 ? @"(?<!\w)" : "") + System.Text.RegularExpressions.Regex.Escape(prefix + name) + @"(?!\w)" + System.Text.RegularExpressions.Regex.Escape(suffix);
+            return System.Text.RegularExpressions.Regex.Replace(condition, pattern, m => prefix + name + indices + suffix);
         }
 
         public string GetFieldTypeDef(PseudoCode field)

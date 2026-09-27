@@ -72,7 +72,7 @@ public partial class AV2CodecConfigurationBox : Box
 
 		for (int i = 0; i < config_obus_count_minus1 + 1; ++i)
 		{
-			boxSize += ((ulong)config_obu.Length * 8); // config_obu
+			boxSize += ((ulong)config_obu[i].Length * 8); // config_obu
 		}
 		return boxSize;
 	}
