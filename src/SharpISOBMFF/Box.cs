@@ -208,6 +208,21 @@ namespace SharpISOBMFF
         }
     }
 
+    /// <summary>
+    /// A box its syntax could not read - a count larger than what follows it, a field past its end -
+    /// kept as its bytes, so that the boxes around it still read, and it writes back as it was.
+    /// </summary>
+    public class UnreadableBox : UnknownBox
+    {
+        public UnreadableBox(uint fourCC, string error) : base(fourCC)
+        {
+            Error = error;
+        }
+
+        /// <summary>Why the box's syntax could not read it.</summary>
+        public string Error { get; }
+    }
+
     public class UnknownEntry : SampleGroupDescriptionEntry
     {
         public override string DisplayName { get { return nameof(UnknownEntry); } }

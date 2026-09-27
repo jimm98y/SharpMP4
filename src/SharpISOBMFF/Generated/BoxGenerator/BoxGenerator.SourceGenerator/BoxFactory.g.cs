@@ -21,6 +21,16 @@ namespace SharpISOBMFF
             if (parent == "tref")
                 return new TrackReferenceTypeBox(IsoStream.FromFourCC(fourCC));
 
+            // A key in a key table is typed by its local key ID (14496-12 12.9); QuickTime metadata's
+            // keys are 'mdta'.
+            if (parent == "keys" && fourCC != "mdta")
+                return new MetaDataKeyBox(IsoStream.FromFourCC(fourCC));
+
+            // In a user data box, a '©' type is QuickTime text: strings each with its length and language
+            // (QuickTime File Format, User Data Text Strings). In iTunes metadata it holds a 'data' box.
+            if (parent == "udta" && fourCC.Length == 4 && fourCC[0] == '©')
+                return new QuickTimeTextBox(IsoStream.FromFourCC(fourCC));
+
             switch(fourCC)
             {
                case "_cx_":  return new CxBox();
@@ -28,7 +38,7 @@ namespace SharpISOBMFF
                case "_htc":  return new HTCInfoBox();
                case "_yaw":  return new YawBox();
                case "----":  return new CustomBox();
-               case ".mp3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC(".mp3"));break;
+               case ".mp3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC(".mp3"));else return new CodecConfigurationBox(IsoStream.FromFourCC(".mp3"));break;
                case "@day":  return new RicohAppleRecordingYear2Box();
                case "@mak":  return new RicohAppleMakBox();
                case "@mod":  return new RicohAppleCameraModelBox();
@@ -42,9 +52,9 @@ namespace SharpISOBMFF
                case "@swr":  return new RicohAppleSoftwareBox();
                case "@xyz":  return new RicohAppleGPSCoordinatesBox();
                case "\0\0\0\0":  return new TerminatorBox();
-               case "\x6D\x73\x00\x02": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\x6D\x73\x00\x02"));break;
-               case "\x6D\x73\x00\x11": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\x6D\x73\x00\x11"));break;
-               case "\x6D\x73\x00\x55": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\x6D\x73\x00\x55"));break;
+               case "\x6D\x73\x00\x02": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\x6D\x73\x00\x02"));else return new CodecConfigurationBox(IsoStream.FromFourCC("\x6D\x73\x00\x02"));break;
+               case "\x6D\x73\x00\x11": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\x6D\x73\x00\x11"));else return new CodecConfigurationBox(IsoStream.FromFourCC("\x6D\x73\x00\x11"));break;
+               case "\x6D\x73\x00\x55": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\x6D\x73\x00\x55"));else return new CodecConfigurationBox(IsoStream.FromFourCC("\x6D\x73\x00\x55"));break;
                case "©alb":  return new AppleAlbumBox();
                case "©ard":  return new AppleArtDirectorBox();
                case "©arg":  return new AppleArgBox();
@@ -132,6 +142,7 @@ namespace SharpISOBMFF
                case "2vuY": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("2vuY"));break;
                case "3dpr":  return new MVDDepthResolutionBox();
                case "3sib":  return new MVDScalabilityInformationSEIBox();
+               case "8BPS": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("8BPS"));break;
                case "a1lx":  return new AV1LayeredImageIndexingProperty();
                case "a1op":  return new OperatingPointSelectorProperty();
                case "a3d1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("a3d1"));break;
@@ -140,29 +151,41 @@ namespace SharpISOBMFF
                case "a3d4": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("a3d4"));break;
                case "a3dC":  return new A3DConfigurationBox();
                case "aART":  return new AppleArtist2Box();
-               case "ac-3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ac-3"));break;
+               case "ac-3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ac-3"));else return new CodecConfigurationBox(IsoStream.FromFourCC("ac-3"));break;
                case "acgl":  return new SubpicCommonGroupBox();
+               case "ACLR":  return new ACLRBox();
+               case "ADHR":  return new ADHRBox();
+               case "agsm": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("agsm"));else return new CodecConfigurationBox(IsoStream.FromFourCC("agsm"));break;
                case "ainf":  return new AssetInformationBox();
                case "akID":  return new ITunesAccountTypeBox();
-               case "alac": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("alac"));break;
-               case "alaw": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("alaw"));break;
+               case "alac": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("alac"));else return new CodecConfigurationBox(IsoStream.FromFourCC("alac"));break;
+               case "alaw": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("alaw"));else return new CodecConfigurationBox(IsoStream.FromFourCC("alaw"));break;
                case "albm":  return new ThreeGPPAlbumBox();
                case "albr":  return new AlbumArtistBox();
+               case "ALFA":  return new ALFABox();
                case "alis":  return new AppleDataReferenceAliasBox();
                case "AllF":  return new PlayAllFramesBox();
+               case "almo":  return new AlmoBox();
                case "alou":  return new AlbumLoudnessInfo();
                case "alte":  return new AlteTrackGroupTypeBox();
                case "altr":  return new AlternativesEntityGroupBox();
                case "altt":  return new AccessibilityTextProperty();
+               case "AMBA":  return new AMBABox();
                case "amf0":  return new Amf0Box();
                case "amgl":  return new SubpicMultipleGroupsBox();
                case "amve":  return new AmbientViewingEnvironmentBox();
                case "angl":  return new CameraAngleBox();
+               case "ap4h": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("ap4h"));break;
+               case "apch": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("apch"));break;
                case "apcn": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("apcn"));break;
+               case "apco": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("apco"));break;
+               case "apcs": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("apcs"));break;
                case "apID":  return new ITunesPurchaseAccountBox();
                case "apmd":  return new AppleApertureModeBox();
                case "APRF":  return new PspAprfBox();
+               case "APRG":  return new APRGBox();
                case "ardt":  return new ARDroneFileBox();
+               case "ARES":  return new ARESBox();
                case "assp":  return new AlternativeStartupSequencePropertiesBox();
                case "atID":  return new AppleAtIDBox();
                case "auth":  return new ThreeGPPAuthorBox();
@@ -178,8 +201,12 @@ namespace SharpISOBMFF
                case "avcC":  return new AVCConfigurationBox();
                case "avcn":  return new AvcNalUnitStorageBox();
                case "avcp": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("avcp"));break;
+               case "AVdh": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("AVdh"));break;
+               case "AVDJ": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("AVDJ"));break;
+               case "AVdn": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("AVdn"));break;
                case "blin":  return new StereoCameraSystemBaselineBox();
                case "bloc":  return new BaseLocationBox();
+               case "bmdc":  return new BmdcBox();
                case "brnd":  return new BrandProperty();
                case "btec":  return new GlamourSettingsBox();
                case "btrt":  return new BitRateBox();
@@ -198,6 +225,7 @@ namespace SharpISOBMFF
                case "cdis":  return new ContentDistributorIDBox();
                case "cdsc":  return new TrackReferenceTypeBox(IsoStream.FromFourCC("cdsc"));
                case "cert":  return new CertificateBox();
+               case "CFHD": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("CFHD"));break;
                case "chan":  return new AudioChannelLayoutBox();
                case "chap":  return new AppleChapterListBox();
                case "chnl":  return new ChannelLayout();
@@ -237,6 +265,7 @@ namespace SharpISOBMFF
                case "cpat":  return new ComponentPatternDefinitionBox();
                case "cpil":  return new AppleCompilationBox();
                case "cprt": if(parent == "ilst") return new AppleCopyrightBox(); else return new CopyrightBox();
+               case "Cr8r":  return new Cr8rBox();
                case "crgn":  return new AppleClippingRegionBox();
                case "crtt":  return new CreationTimeProperty();
                case "csch":  return new CompatibleSchemeTypeBox();
@@ -284,28 +313,36 @@ namespace SharpISOBMFF
                case "dref":  return new DataReferenceBox();
                case "drep":  return new hintrepeatedBytesSent();
                case "drmi": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("drmi"));break;
-               case "drms": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("drms"));break;
+               case "drms": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("drms"));else return new CodecConfigurationBox(IsoStream.FromFourCC("drms"));break;
                case "dscp":  return new ThreeGPPDescriptionBox();
                case "dsmv":  return new SMVSpecificBox();
-               case "dtsc": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtsc"));break;
-               case "dtse": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtse"));break;
-               case "dtsh": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtsh"));break;
-               case "dtsl": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtsl"));break;
+               case "dtPA": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dtPA"));break;
+               case "dtsc": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtsc"));else return new CodecConfigurationBox(IsoStream.FromFourCC("dtsc"));break;
+               case "dtse": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtse"));else return new CodecConfigurationBox(IsoStream.FromFourCC("dtse"));break;
+               case "dtsh": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtsh"));else return new CodecConfigurationBox(IsoStream.FromFourCC("dtsh"));break;
+               case "dtsl": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtsl"));else return new CodecConfigurationBox(IsoStream.FromFourCC("dtsl"));break;
                case "dtyp":  return new MetaDatatypeDefinitionBox();
                case "dvav": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvav"));break;
                case "dvc ": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvc "));break;
-               case "dvca": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dvca"));break;
+               case "dvc1":  return new Dvc1Box();
+               case "dvca": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dvca"));else return new CodecConfigurationBox(IsoStream.FromFourCC("dvca"));break;
                case "dvcC":  return new DoViConfigurationBox();
                case "dvcp": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvcp"));break;
+               case "dvh2": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvh2"));break;
+               case "dvh5": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvh5"));break;
                case "dvhe": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvhe"));break;
-               case "ec-3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ec-3"));break;
+               case "dvhq": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvhq"));break;
+               case "dvvC":  return new DvvCBox();
+               case "DXD3": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("DXD3"));break;
+               case "DXDI": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("DXDI"));break;
+               case "ec-3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ec-3"));else return new CodecConfigurationBox(IsoStream.FromFourCC("ec-3"));break;
                case "ecam":  return new ExtrinsicCameraParametersBox();
                case "edts":  return new EditBox();
                case "egid":  return new EpisodeGlobalUniqueIdBox();
                case "elng":  return new ExtendedLanguageBox();
                case "elst":  return new EditListBox();
                case "emsg":  return new EventMessageBox();
-               case "enca": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("enca"));break;
+               case "enca": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("enca"));else return new CodecConfigurationBox(IsoStream.FromFourCC("enca"));break;
                case "enct":  return new TextSampleEntry();
                case "encv": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("encv"));break;
                case "enda":  return new AppleEndiannessBox();
@@ -326,13 +363,14 @@ namespace SharpISOBMFF
                case "fecr":  return new FECReservoirBox();
                case "FFMV":  return new FujiFilmFFMVBox();
                case "fiel":  return new FielBox();
+               case "FIEL":  return new VendorFIELBox();
                case "fiin":  return new FDItemInformationBox();
                case "finm":  return new OriginalFileNameBox();
                case "fire":  return new FileReservoirBox();
                case "FIRM":  return new FirmwareBox();
                case "fish":  return new FisheyeProjectionBox();
-               case "fl32": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("fl32"));break;
-               case "fl64": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("fl64"));break;
+               case "fl32": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("fl32"));else return new CodecConfigurationBox(IsoStream.FromFourCC("fl32"));break;
+               case "fl64": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("fl64"));else return new CodecConfigurationBox(IsoStream.FromFourCC("fl64"));break;
                case "flvr":  return new AppleFlvrBox();
                case "folw":  return new SubtitleTrackBox();
                case "forc":  return new ForcedSubtitleTrackBox();
@@ -351,10 +389,12 @@ namespace SharpISOBMFF
                case "geID":  return new AppleGeIDBox();
                case "gif ": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("gif "));break;
                case "gitn":  return new GroupIdToNameBox();
+               case "glbl":  return new GlblBox();
                case "gmhd":  return new GenericMediaHeaderAtom();
                case "gmin":  return new BaseMediaInfoAtom();
-               case "gnre":  return new GenreBox();
+               case "gnre": if(parent == "udta") return new ThreeGPPGenreBox(); else return new GenreBox();
                case "GoPr":  return new GoProTypeBox();
+               case "gpmd":  return new GpmdBox();
                case "GPMF":  return new GoProGPMFBox();
                case "gps ":  return new GpsBox();
                case "GPS ":  return new GPSDataList2Box();
@@ -370,6 +410,11 @@ namespace SharpISOBMFF
                case "gstd":  return new GoogleTrackDurationBox();
                case "GUID":  return new GUIDBox();
                case "h263": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("h263"));break;
+               case "Hap1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("Hap1"));break;
+               case "Hap5": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("Hap5"));break;
+               case "HapA": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("HapA"));break;
+               case "HapM": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("HapM"));break;
+               case "HapY": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("HapY"));break;
                case "hdlr":  return new HandlerBox();
                case "hdvd":  return new HdvdBox();
                case "hequ":  return new HalfEquirectangularProjectionBox();
@@ -384,6 +429,7 @@ namespace SharpISOBMFF
                case "hinv":  return new AppleHintVersionBox();
                case "hmhd":  return new HintMediaHeaderBox();
                case "hnti": return new TrackHintInformation(); // TODO: box is ambiguous in between TrackHintInformation and MovieHintInformation
+               case "hpre":  return new HpreBox();
                case "href":  return new HrefBox();
                case "htcb":  return new HTCBinaryBox();
                case "htka":  return new HTCTrackBox();
@@ -391,6 +437,7 @@ namespace SharpISOBMFF
                case "hvc2": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("hvc2"));break;
                case "hvc3": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("hvc3"));break;
                case "hvcC":  return new HEVCConfigurationBox();
+               case "hvcE":  return new HvcEBox();
                case "hvt1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("hvt1"));break;
                case "hvt2": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("hvt2"));break;
                case "hvt3": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("hvt3"));break;
@@ -398,6 +445,7 @@ namespace SharpISOBMFF
                case "icam":  return new IntrinsicCameraParametersBox();
                case "icef":  return new GenericCompressedUnitsItemInfoBox();
                case "icnu":  return new OMAIconURLBox();
+               case "icod": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("icod"));break;
                case "icpv": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("icpv"));break;
                case "ID32":  return new ID3TagBox();
                case "idat":  return new ItemDataBox();
@@ -409,14 +457,14 @@ namespace SharpISOBMFF
                case "iinf":  return new ItemInfoBox();
                case "iloc":  return new ItemLocationBox();
                case "ilst":  return new AppleItemListBox();
-               case "ima4": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ima4"));break;
+               case "ima4": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ima4"));else return new CodecConfigurationBox(IsoStream.FromFourCC("ima4"));break;
                case "imda":  return new IdentifiedMediaDataBox();
                case "imdt":  return new DataEntryImdaBox();
                case "imgt":  return new ImageTrackReferenceBox();
                case "imif":  return new IPMPInfoBox();
                case "imir":  return new ImageMirror();
-               case "in24": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("in24"));break;
-               case "in32": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("in32"));break;
+               case "in24": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("in24"));else return new CodecConfigurationBox(IsoStream.FromFourCC("in24"));break;
+               case "in32": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("in32"));else return new CodecConfigurationBox(IsoStream.FromFourCC("in32"));break;
                case "infe":  return new ItemInfoEntry();
                case "infi":  return new CameraInfoBox();
                case "INFO":  return new SamsungINFOBox();
@@ -435,8 +483,10 @@ namespace SharpISOBMFF
                case "irot":  return new ImageRotation();
                case "iscl":  return new ImageScaling();
                case "ispe":  return new ImageSpatialExtentsProperty();
+               case "it35":  return new It35Box();
                case "itai":  return new ItaiBox();
                case "itnu":  return new ITunesUBox();
+               case "IV32": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("IV32"));break;
                case "iviv":  return new FairPlayIvBox();
                case "j2kH":  return new J2kHBox();
                case "j2ki": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("j2ki"));break;
@@ -448,7 +498,7 @@ namespace SharpISOBMFF
                case "key ":  return new FairPlayUserKeyBox();
                case "keyd":  return new MetaDataKeyDeclarationBox();
                case "keyi":  return new MetaDataInlineKeysPresentBox();
-               case "keys":  return new MetaDataKeyTableBox();
+               case "keys": if(parent == "mebx") return new BoxedMetaDataKeyTableBox(); else return new MetaDataKeyTableBox();
                case "keyw":  return new AppleKeywordBox();
                case "kgtt":  return new AppleTrackTypeBox();
                case "kind":  return new KindBox();
@@ -467,6 +517,8 @@ namespace SharpISOBMFF
                case "lht1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("lht1"));break;
                case "lhv1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("lhv1"));break;
                case "lhvC":  return new LHEVCConfigurationBox();
+               case "lidl":  return new LidlBox();
+               case "lidp":  return new LidpBox();
                case "lnex":  return new CameraSystemLensExtrinsicsBox();
                case "lnhd":  return new CameraSystemLensHeaderBox();
                case "lnin":  return new CameraSystemLensIntrinsicsBox();
@@ -475,15 +527,15 @@ namespace SharpISOBMFF
                case "loca":  return new MetaDataLocaleBox();
                case "loci":  return new ThreeGPPLocationInformationBox();
                case "LOOP":  return new AppleLoopingBox();
-               case "lpcm": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("lpcm"));break;
+               case "lpcm": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("lpcm"));else return new CodecConfigurationBox(IsoStream.FromFourCC("lpcm"));break;
                case "lrcu":  return new OMALyricsURLBox();
                case "lsel":  return new LayerSelectorProperty();
                case "ludt":  return new LoudnessBox();
                case "Lvlm":  return new LevelMeterBox();
-               case "m4ae": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("m4ae"));break;
+               case "m4ae": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("m4ae"));else return new CodecConfigurationBox(IsoStream.FromFourCC("m4ae"));break;
                case "m4ds":  return new MPEG4ExtensionDescriptorsBox();
-               case "MAC3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("MAC3"));break;
-               case "MAC6": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("MAC6"));break;
+               case "MAC3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("MAC3"));else return new CodecConfigurationBox(IsoStream.FromFourCC("MAC3"));break;
+               case "MAC6": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("MAC6"));else return new CodecConfigurationBox(IsoStream.FromFourCC("MAC6"));break;
                case "manu":  return new MakeBox();
                case "matt":  return new AppleTrackMatteBox();
                case "maxr":  return new HintMaxRate();
@@ -509,12 +561,15 @@ namespace SharpISOBMFF
                case "mfhd":  return new MovieFragmentHeaderBox();
                case "mfra":  return new MovieFragmentRandomAccessBox();
                case "mfro":  return new MovieFragmentRandomAccessOffsetBox();
+               case "mhaC":  return new MhaCBox();
+               case "mhaP":  return new MhaPBox();
+               case "mhm1": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("mhm1"));else return new CodecConfigurationBox(IsoStream.FromFourCC("mhm1"));break;
                case "minf":  return new MediaInformationBox();
                case "mini":  return new MiniBox();
                case "mjpa": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("mjpa"));break;
                case "mjpb": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("mjpb"));break;
                case "mjpg": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("mjpg"));break;
-               case "mlpa": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("mlpa"));break;
+               case "mlpa": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("mlpa"));else return new CodecConfigurationBox(IsoStream.FromFourCC("mlpa"));break;
                case "MMA0":  return new MinoltaMMA0Box();
                case "MMA1":  return new MinoltaMMA1Box();
                case "moat":  return new MoatBox();
@@ -532,6 +587,7 @@ namespace SharpISOBMFF
                case "mshp":  return new MeshProjection();
                case "mskC":  return new MaskConfigurationProperty();
                case "mstv":  return new MVCSubTrackViewBox();
+               case "msVo": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("msVo"));else return new CodecConfigurationBox(IsoStream.FromFourCC("msVo"));break;
                case "MTDT":  return new PspMtdtBox();
                case "MUID":  return new MediaUIDBox();
                case "must":  return new RequiredBoxTypesBox();
@@ -564,7 +620,7 @@ namespace SharpISOBMFF
                case "NCTH":  return new NikonCameraThumbnailImageBox();
                case "NCVW":  return new NikonCameraPreviewImageBox();
                case "nmhd":  return new NullMediaHeaderBox();
-               case "NONE": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("NONE"));break;
+               case "NONE": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("NONE"));else return new CodecConfigurationBox(IsoStream.FromFourCC("NONE"));break;
                case "npck":  return new hintPacketsSentnpckDup(); // TODO: fix duplicate
                case "nsav":  return new AppleNoSaveBox();
                case "nump":  return new hintPacketsSent();
@@ -579,11 +635,11 @@ namespace SharpISOBMFF
                case "oinf":  return new OperatingPointsInformationProperty();
                case "OLYM":  return new OlympusOLYMBox();
                case "opeg":  return new OperatingPointGroupBox();
-               case "Opus": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("Opus"));break;
+               case "Opus": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("Opus"));else return new CodecConfigurationBox(IsoStream.FromFourCC("Opus"));break;
                case "orie":  return new OrieBox();
                case "otyp":  return new OriginalFileTypeBox();
                case "ovc1":  return new Ovc1VisualSampleEntryImpl();
-               case "owma": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("owma"));break;
+               case "owma": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("owma"));else return new CodecConfigurationBox(IsoStream.FromFourCC("owma"));break;
                case "pack":  return new ViewPackingBox();
                case "padb":  return new PaddingBitsBox();
                case "pads":  return new PadsBox();
@@ -619,6 +675,7 @@ namespace SharpISOBMFF
                case "prim":  return new ParametricImmersiveMediaProjectionBox();
                case "priv":  return new FairPlayPrivateKeyBox();
                case "prji":  return new ProjectionInformationBox();
+               case "PrmA":  return new PrmABox();
                case "prof":  return new AppleProductionApertureDimensionsBox();
                case "proj":  return new ProjectionBox();
                case "prrt":  return new ARDroneTelemetryBox();
@@ -627,12 +684,15 @@ namespace SharpISOBMFF
                case "ptv ":  return new ApplePtvBox();
                case "purd":  return new PurchaseDateBox();
                case "purl":  return new PodcastUrlBox();
+               case "pxlt": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("pxlt"));break;
                case "PXMN":  return new MakerNotePentaxBox();
                case "PXTH":  return new PentaxPreviewBox();
                case "pymd":  return new ImagePyramidEntityGroupBox();
-               case "Qclp": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("Qclp"));break;
-               case "QDM2": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("QDM2"));break;
-               case "QDMC": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("QDMC"));break;
+               case "Qclp": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("Qclp"));else return new CodecConfigurationBox(IsoStream.FromFourCC("Qclp"));break;
+               case "QDCA":  return new QDCABox();
+               case "QDM2": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("QDM2"));else return new CodecConfigurationBox(IsoStream.FromFourCC("QDM2"));break;
+               case "QDMC": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("QDMC"));else return new CodecConfigurationBox(IsoStream.FromFourCC("QDMC"));break;
+               case "qdrw": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("qdrw"));break;
                case "qhvc": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("qhvc"));break;
                case "qlif":  return new SVCPriorityLayerInfoBox();
                case "qtvr":  return new AppleQTVRTrackBox();
@@ -651,7 +711,8 @@ namespace SharpISOBMFF
                case "RDTL":  return new RicohRDTLBox();
                case "rect":  return new RectilinearProjectionBox();
                case "reel":  return new ReelNameBox();
-               case "resa": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("resa"));break;
+               case "rely":  return new RelyBox();
+               case "resa": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("resa"));else return new CodecConfigurationBox(IsoStream.FromFourCC("resa"));break;
                case "resv": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("resv"));break;
                case "RICO":  return new RicohRICOBox();
                case "righ":  return new RightsBox();
@@ -670,6 +731,7 @@ namespace SharpISOBMFF
                case "rmra":  return new AppleReferenceMovieBox();
                case "rmvc":  return new AppleVersionCheckBox();
                case "rndu":  return new RnduBox();
+               case "rowb":  return new RowbBox();
                case "rpdu":  return new RpduBox();
                case "rpza": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("rpza"));break;
                case "rref":  return new RequiredReferenceTypesProperty();
@@ -685,9 +747,10 @@ namespace SharpISOBMFF
                case "SA3D":  return new SpatialAudioBox();
                case "saio":  return new SampleAuxiliaryInformationOffsetsBox();
                case "saiz":  return new SampleAuxiliaryInformationSizesBox();
-               case "samr": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("samr"));break;
-               case "sawb": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("sawb"));break;
+               case "samr": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("samr"));else return new CodecConfigurationBox(IsoStream.FromFourCC("samr"));break;
+               case "sawb": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("sawb"));else return new CodecConfigurationBox(IsoStream.FromFourCC("sawb"));break;
                case "sbgp":  return new SampleToGroupBox();
+               case "sbtd":  return new SbtdBox();
                case "sbtt":  return new TextSubtitleSampleEntry();
                case "scen":  return new SceneBox();
                case "schi":  return new SchemeInformationBox();
@@ -712,7 +775,7 @@ namespace SharpISOBMFF
                case "SelO":  return new AppleSelectionOnlyBox();
                case "senc":  return new SampleEncryptionBox();
                case "setu":  return new MetaDataSetupBox();
-               case "sevc": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("sevc"));break;
+               case "sevc": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("sevc"));else return new CodecConfigurationBox(IsoStream.FromFourCC("sevc"));break;
                case "sfID":  return new ITunesCountryCodeBox();
                case "sgpd":  return new SampleGroupDescriptionBox();
                case "shot":  return new ShotNameBox();
@@ -740,17 +803,17 @@ namespace SharpISOBMFF
                case "soco":  return new ComposerSortBox();
                case "sonm":  return new TrackSortBox();
                case "sosn":  return new TVShowSortBox();
-               case "sowt": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("sowt"));break;
+               case "sowt": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("sowt"));else return new CodecConfigurationBox(IsoStream.FromFourCC("sowt"));break;
                case "spid":  return new VvcSubpicIDProperty();
                case "splt":  return new SplitTransitionEffectProperty();
                case "spor":  return new VvcSubpicOrderProperty();
-               case "sqcp": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("sqcp"));break;
+               case "sqcp": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("sqcp"));else return new CodecConfigurationBox(IsoStream.FromFourCC("sqcp"));break;
                case "srat":  return new SamplingRateBox();
                case "srpp":  return new SRTPProcessBox();
                case "srtp":  return new SrtpHintSampleEntry();
                case "ssix":  return new CompressedSubsegmentIndexBox();
                case "ssld":  return new SuggestedTimeDisplayDurationProperty();
-               case "ssmv": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ssmv"));break;
+               case "ssmv": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ssmv"));else return new CodecConfigurationBox(IsoStream.FromFourCC("ssmv"));break;
                case "ssrc":  return new NonPrimarySourceBox();
                case "sstl":  return new SVCSubTrackLayerBox();
                case "st3d":  return new Stereoscopic3D();
@@ -860,7 +923,7 @@ namespace SharpISOBMFF
                case "tvnn":  return new TVNetworkNameBox();
                case "tvsh":  return new TVShowBox();
                case "tvsn":  return new AppleTVSeasonBox();
-               case "twos": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("twos"));break;
+               case "twos": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("twos"));else return new CodecConfigurationBox(IsoStream.FromFourCC("twos"));break;
                case "tx3g":  return new TextSampleEntrytx3gDup(); // TODO: fix duplicate
                case "txas":  return new TrackExcludeFromAutoselectionBox();
                case "txtC":  return new TextConfigBox();
@@ -868,7 +931,7 @@ namespace SharpISOBMFF
                case "udat":  return new GPSLogBox();
                case "udes":  return new UserDescriptionProperty();
                case "udta":  return new UserDataBox();
-               case "ulaw": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ulaw"));break;
+               case "ulaw": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ulaw"));else return new CodecConfigurationBox(IsoStream.FromFourCC("ulaw"));break;
                case "uncC":  return new UncompressedFrameConfigurationBox();
                case "uncv": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("uncv"));break;
                case "uqua":  return new CameraSystemUnitQuaternionTransformBox();
@@ -897,6 +960,7 @@ namespace SharpISOBMFF
                case "v308": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("v308"));break;
                case "v408": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("v408"));break;
                case "v410": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("v410"));break;
+               case "vc-1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("vc-1"));break;
                case "vcmC":  return new VcmCBox();
                case "vcmM":  return new VcmMSampleEntry();
                case "vdep":  return new TrackReferenceTypeBoxvdepDup(); // TODO: fix duplicate
@@ -910,6 +974,7 @@ namespace SharpISOBMFF
                case "vp08": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("vp08"));break;
                case "vp09": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("vp09"));break;
                case "vp10": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("vp10"));break;
+               case "VP6A": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("VP6A"));break;
                case "vpcC":  return new VPCodecConfigurationBox();
                case "vplx":  return new TrackReferenceTypeBoxvplxDup(); // TODO: fix duplicate
                case "VPRF":  return new PspVprfBox();
@@ -933,6 +998,7 @@ namespace SharpISOBMFF
                case "wide":  return new FreeSpaceBoxwideDup(); // TODO: fix duplicate
                case "wipe":  return new WipeTransitionEffectProperty();
                case "WLOC":  return new AppleWindowLocationBox();
+               case "wma ": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("wma "));else return new CodecConfigurationBox(IsoStream.FromFourCC("wma "));break;
                case "wvtt":  return new WVTTSampleEntry();
                case "xid ":  return new AppleXidBox();
                case "xml ":  return new XMLBox();

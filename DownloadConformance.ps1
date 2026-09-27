@@ -26,6 +26,8 @@ Sources:
     AV1    Argon Streams        https://aomedia.org/av1-video-decoder-verification-tool/
     ISOBMFF  MPEG file format conformance (ISO/IEC 14496-32)
                                 https://github.com/MPEGGroup/FileFormatConformance
+    FATE     FFmpeg's samples that are ISOBMFF or QuickTime files
+                                https://fate-suite.ffmpeg.org/
 
 Only files directly in each set's folder are fetched: the subfolders the ITU keeps
 beside them hold superseded versions of the same streams.
@@ -36,8 +38,9 @@ Works in Windows PowerShell 5.1 and PowerShell 7.
 Where the suites go. The conformance folder next to this script by default.
 
 .PARAMETER Codec
-Which suites to fetch: any of H264, H265, H266, AV1 and IsoBmff (the file format
-conformance files, each with GPAC's dump of its boxes). All of them by default.
+Which suites to fetch: any of H264, H265, H266, AV1, IsoBmff (the file format
+conformance files, each with GPAC's dump of its boxes) and Fate (FFmpeg's samples
+that are ISOBMFF or QuickTime files, about 140 MB). All of them by default.
 
 .PARAMETER IncludeSvc
 Also fetches the H.264 scalable video coding set, 12.9 GB.
@@ -65,10 +68,10 @@ Everything, about 25 GB.
 #>
 [CmdletBinding()]
 param(
-    [string]$Destination = (Join-Path $PSScriptRoot 'conformance'),
+    [string]$Destination,
 
-    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff')]
-    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff'),
+    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate')]
+    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate'),
 
     [switch]$IncludeSvc,
     [switch]$IncludeArgon,
@@ -77,6 +80,9 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+
+# Windows PowerShell 5.1 has no $PSScriptRoot yet where parameter defaults are worked out.
+if (-not $Destination) { $Destination = Join-Path $PSScriptRoot 'conformance' }
 
 # Windows PowerShell 5.1 may still offer only TLS 1.0 and 1.1, which the servers refuse.
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
@@ -383,6 +389,59 @@ function Get-FileFormatConformance {
     }
 }
 
+# FFmpeg's FATE samples that are ISOBMFF or QuickTime files: real files from cameras, phones and
+# editors, with the metadata and vendor boxes no conformance suite has. The Apache listings are
+# crawled for the extensions such files go by, and for files with none; a file is kept only if
+# its first box is one a file can start with. FATE publishes no checksums to check them against.
+$fateUrl = 'https://fate-suite.ffmpeg.org/'
+$fateExtensions = '\.(mov|qt|mp4|m4a|m4v|m4b|3gp|3g2|heic|heif|hif|avif|mj2|f4v|ism|ismv|isma|cmfv|cmfa|mqv|psp|dvr)$'
+$fateFirstBoxes = 'ftyp', 'styp', 'moov', 'mdat', 'free', 'skip', 'wide', 'pnot', 'uuid', 'sidx', 'moof', 'junk', 'PICT'
+
+function Get-FateListing([string]$Path) {
+    $html = Get-Text ($fateUrl + $Path)
+    foreach ($m in [regex]::Matches($html, '<a href="([^"?/][^"?]*)">')) {
+        $href = [Net.WebUtility]::HtmlDecode($m.Groups[1].Value)
+        if ($href.EndsWith('/')) {
+            Get-FateListing ($Path + $href)
+        }
+        elseif ($href -match $fateExtensions -or ($href -notmatch '\.' -and $href -ne 'md5sum')) {
+            $Path + $href
+        }
+    }
+}
+
+function Test-IsoBmffStart([string]$Path) {
+    $bytes = New-Object byte[] 8
+    $stream = [IO.File]::OpenRead($Path)
+    try { $read = $stream.Read($bytes, 0, 8) } finally { $stream.Dispose() }
+    return $read -eq 8 -and [Text.Encoding]::ASCII.GetString($bytes, 4, 4) -cin $fateFirstBoxes
+}
+
+function Get-FateSuite {
+    $target = Join-Path $Destination 'fate'
+    $files = @(Get-FateListing '')
+    Write-Host "fate: $($files.Count) candidates"
+
+    # What turned out not to be such a file is listed here, so that the next run does not fetch it again.
+    $rejectedList = Join-Path $target 'not-isobmff.txt'
+    $rejected = @{}
+    if (Test-Path -LiteralPath $rejectedList) {
+        Get-Content -LiteralPath $rejectedList | ForEach-Object { $rejected[$_] = $true }
+    }
+
+    foreach ($relative in $files) {
+        if ($rejected.ContainsKey($relative)) { $script:skipped++; continue }
+
+        $path = Join-Path $target $relative.Replace('/', [IO.Path]::DirectorySeparatorChar)
+        $known = Test-Path -LiteralPath $path
+        $url = $fateUrl + (($relative.Split('/') | ForEach-Object { [Uri]::EscapeDataString($_) }) -join '/')
+        if ((Save-File $url $path) -and -not $known -and -not (Test-IsoBmffStart $path)) {
+            Remove-Item -LiteralPath $path -Force
+            Add-Content -LiteralPath $rejectedList -Value $relative
+        }
+    }
+}
+
 New-Item -ItemType Directory -Force -Path $Destination | Out-Null
 Write-Host "Downloading into $Destination"
 
@@ -394,6 +453,9 @@ foreach ($c in $Codec) {
     }
     elseif ($c -eq 'IsoBmff') {
         Get-FileFormatConformance
+    }
+    elseif ($c -eq 'Fate') {
+        Get-FateSuite
     }
     else {
         foreach ($set in $ituSets[$c]) { Get-ItuSet $folders[$c] $set }

@@ -6,11 +6,11 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class GenreBox() extends FullBox('gnre') {
+aligned(8) class GenreBox() extends Box('gnre') {
  Box boxes[]; 
- }
+}
 */
-public partial class GenreBox : FullBox
+public partial class GenreBox : Box
 {
 	public const string TYPE = "gnre";
 	public override string DisplayName { get { return "GenreBox"; } }

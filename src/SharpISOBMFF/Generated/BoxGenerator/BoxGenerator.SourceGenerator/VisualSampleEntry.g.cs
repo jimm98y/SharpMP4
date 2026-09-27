@@ -18,7 +18,11 @@ class VisualSampleEntry(codingname) extends SampleEntry (codingname){
 	template unsigned int(16)	frame_count = 1;
 	uint(8)[32]	compressorname;
 	template unsigned int(16)	depth = 0x0018;
-	int(16)	pre_defined = -1;
+	int(16)	color_table_id = -1; // pre_defined in ISOBMFF; QuickTime's color table ID
+	// QuickTime: an ID of 0 puts the color table of a depth of 8 bits or less right here
+	if (color_table_id == 0 && depth <= 8) {
+		QuickTimeColorTable() colorTable;
+	}
 	// other boxes from derived specifications
 	CleanApertureBox			clap;		// optional
 	PixelAspectRatioBox		pasp;		// optional
@@ -62,8 +66,11 @@ public partial class VisualSampleEntry : SampleEntry
 	protected ushort depth = 0x0018; 
 	public ushort Depth { get { return this.depth; } set { this.depth = value; } }
 
-	protected short pre_defined1 = -1;  //  other boxes from derived specifications
-	public short PreDefined1 { get { return this.pre_defined1; } set { this.pre_defined1 = value; } }
+	protected short color_table_id = -1;  //  pre_defined in ISOBMFF; QuickTime's color table ID
+	public short ColorTableId { get { return this.color_table_id; } set { this.color_table_id = value; } }
+
+	protected QuickTimeColorTable colorTable; 
+	public QuickTimeColorTable ColorTable { get { return this.colorTable; } set { this.colorTable = value; } }
 	public CleanApertureBox Clap { get { return this.children.OfType<CleanApertureBox>().FirstOrDefault(); } }
 	public PixelAspectRatioBox Pasp { get { return this.children.OfType<PixelAspectRatioBox>().FirstOrDefault(); } }
 
@@ -86,7 +93,14 @@ public partial class VisualSampleEntry : SampleEntry
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.frame_count, "frame_count"); 
 		boxSize += stream.ReadUInt8Array(boxSize, readSize, 32,  out this.compressorname, "compressorname"); 
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.depth, "depth"); 
-		boxSize += stream.ReadInt16(boxSize, readSize,  out this.pre_defined1, "pre_defined1"); // other boxes from derived specifications
+		boxSize += stream.ReadInt16(boxSize, readSize,  out this.color_table_id, "color_table_id"); // pre_defined in ISOBMFF; QuickTime's color table ID
+		/*  QuickTime: an ID of 0 puts the color table of a depth of 8 bits or less right here */
+
+		if (color_table_id == 0 && depth <= 8)
+		{
+			boxSize += stream.ReadClass(boxSize, readSize, this, () => new QuickTimeColorTable(),  out this.colorTable, "colorTable"); 
+		}
+		/*  other boxes from derived specifications */
 		// if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.clap, "clap"); // optional
 		// if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.pasp, "pasp"); // optional
 		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
@@ -108,7 +122,14 @@ public partial class VisualSampleEntry : SampleEntry
 		boxSize += stream.WriteUInt16( this.frame_count, "frame_count"); 
 		boxSize += stream.WriteUInt8Array(32,  this.compressorname, "compressorname"); 
 		boxSize += stream.WriteUInt16( this.depth, "depth"); 
-		boxSize += stream.WriteInt16( this.pre_defined1, "pre_defined1"); // other boxes from derived specifications
+		boxSize += stream.WriteInt16( this.color_table_id, "color_table_id"); // pre_defined in ISOBMFF; QuickTime's color table ID
+		/*  QuickTime: an ID of 0 puts the color table of a depth of 8 bits or less right here */
+
+		if (color_table_id == 0 && depth <= 8)
+		{
+			boxSize += stream.WriteClass( this.colorTable, "colorTable"); 
+		}
+		/*  other boxes from derived specifications */
 		// boxSize += stream.WriteBox( this.clap, "clap"); // optional
 		// boxSize += stream.WriteBox( this.pasp, "pasp"); // optional
 		boxSize += stream.WriteBoxArrayTillEnd(this);
@@ -130,7 +151,14 @@ public partial class VisualSampleEntry : SampleEntry
 		boxSize += 16; // frame_count
 		boxSize += 32 * 8; // compressorname
 		boxSize += 16; // depth
-		boxSize += 16; // pre_defined1
+		boxSize += 16; // color_table_id
+		/*  QuickTime: an ID of 0 puts the color table of a depth of 8 bits or less right here */
+
+		if (color_table_id == 0 && depth <= 8)
+		{
+			boxSize += IsoStream.CalculateClassSize(colorTable); // colorTable
+		}
+		/*  other boxes from derived specifications */
 		// boxSize += IsoStream.CalculateBoxSize(clap); // clap
 		// boxSize += IsoStream.CalculateBoxSize(pasp); // pasp
 		boxSize += IsoStream.CalculateBoxArray(this);

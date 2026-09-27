@@ -34,7 +34,9 @@ public partial class TrackFragmentHeaderBox : FullBox
 	public override string DisplayName { get { return "TrackFragmentHeaderBox"; } }
 
 	protected uint track_ID;  //  all the following are optional fields
-	public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
+	protected bool track_IDPresent;
+	public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; this.track_IDPresent = true; } }
+	public bool TrackIDPresent { get { return this.track_IDPresent; } set { this.track_IDPresent = value; } }
 
 	protected ulong base_data_offset; 
 	public ulong BaseDataOffset { get { return this.base_data_offset; } set { this.base_data_offset = value; } }
@@ -59,7 +61,7 @@ public partial class TrackFragmentHeaderBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt32(boxSize, readSize,  out this.track_ID, "track_ID"); // all the following are optional fields
+		if (stream.HasMoreData(boxSize, readSize)) { boxSize += stream.ReadUInt32(boxSize, readSize,  out this.track_ID, "track_ID"); this.track_IDPresent = true; } // all the following are optional fields
 		/*  their presence is indicated by bits in the tf_flags */
 
 		if ((flags  &  0x1) ==  0x1)
@@ -93,7 +95,7 @@ public partial class TrackFragmentHeaderBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt32( this.track_ID, "track_ID"); // all the following are optional fields
+		if (this.track_IDPresent) boxSize += stream.WriteUInt32( this.track_ID, "track_ID"); // all the following are optional fields
 		/*  their presence is indicated by bits in the tf_flags */
 
 		if ((flags  &  0x1) ==  0x1)
@@ -127,7 +129,7 @@ public partial class TrackFragmentHeaderBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += 32; // track_ID
+		if (this.track_IDPresent) boxSize += 32; // track_ID
 		/*  their presence is indicated by bits in the tf_flags */
 
 		if ((flags  &  0x1) ==  0x1)

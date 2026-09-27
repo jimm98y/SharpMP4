@@ -81,7 +81,8 @@ public bool IsQuickTime { get { return HasFullBoxHeader ?? (GetParent() == null 
 	public override ulong CalculateSize()
 	{
 		ulong boxSize = 0;
-		if(IsQuickTime) boxSize += base.CalculateSize();
+		boxSize += base.CalculateSize();
+		if(!IsQuickTime) boxSize -= 32; // version, flags
 		// boxSize += IsoStream.CalculateBoxSize(theHandler); // theHandler
 		// boxSize += IsoStream.CalculateBoxSize(primary_resource); // primary_resource
 		// boxSize += IsoStream.CalculateBoxSize(file_locations); // file_locations

@@ -117,4 +117,22 @@ public static class ConformanceCorpus
 
         return files.OrderBy(f => f.File, StringComparer.Ordinal).ToList();
     }
+
+    /// <summary>
+    /// Every FATE sample that is an ISOBMFF or QuickTime file, in a stable order. Those that were not
+    /// are listed in not-isobmff.txt, not kept. SHARPMP4_CONFORMANCE_FILTER narrows them.
+    /// </summary>
+    public static IReadOnlyList<string> FateFiles(string root)
+    {
+        string folder = Path.Combine(root, "fate");
+        if (!Directory.Exists(folder))
+            return [];
+
+        string? filter = Environment.GetEnvironmentVariable("SHARPMP4_CONFORMANCE_FILTER");
+        return Directory.EnumerateFiles(folder, "*", SearchOption.AllDirectories)
+            .Where(f => !f.EndsWith(".txt", StringComparison.OrdinalIgnoreCase) && !f.EndsWith(".part", StringComparison.OrdinalIgnoreCase))
+            .Where(f => string.IsNullOrEmpty(filter) || f.Contains(filter, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(f => f, StringComparer.Ordinal)
+            .ToList();
+    }
 }

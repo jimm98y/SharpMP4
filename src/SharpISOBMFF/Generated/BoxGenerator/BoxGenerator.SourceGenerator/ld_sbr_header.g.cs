@@ -173,7 +173,7 @@ public partial class ld_sbr_header : IMp4Serializable
 
 		for (int el = 0; el < numSbrHeader; el++)
 		{
-			boxSize += IsoStream.CalculateClassSize(sbr_header); // sbr_header
+			boxSize += IsoStream.CalculateClassSize(sbr_header[el]); // sbr_header
 		}
 		return boxSize;
 	}

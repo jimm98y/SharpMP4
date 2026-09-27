@@ -82,13 +82,13 @@ public static class BoxTreeComparison
     }
 
     /// <summary>A box type as GPAC writes it: a byte outside ASCII in hex, '©swr' as A9swr.</summary>
-    private static string TypeName(uint fourCC)
+    internal static string TypeName(uint fourCC)
     {
         var name = new System.Text.StringBuilder();
         for (int shift = 24; shift >= 0; shift -= 8)
         {
             byte b = (byte)(fourCC >> shift);
-            name.Append(b >= 0x80 ? b.ToString("X2") : ((char)b).ToString());
+            name.Append(b >= 0x80 || b < 0x20 ? b.ToString("X2") : ((char)b).ToString());
         }
         return name.ToString();
     }
@@ -97,7 +97,7 @@ public static class BoxTreeComparison
     /// The boxes a box keeps in fields of its own - an iref's references, a meta's handler - which
     /// the syntax reads one by one rather than into its children.
     /// </summary>
-    private static List<Box> BoxFields(Box box)
+    internal static List<Box> BoxFields(Box box)
     {
         var found = new List<Box>();
         for (var type = box.GetType(); type != null && type != typeof(Box); type = type.BaseType)

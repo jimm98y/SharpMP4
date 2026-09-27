@@ -663,7 +663,8 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class HandlerBox extends FullBox('hdlr', version = 0, 0) {\r\n\tunsigned int(32)\tpre_defined = 0;\r\n\tunsigned int(32)\thandler_type;\r\n\tconst unsigned int(32)[3]\treserved = 0;\r\n\tutf8string\tname;\r\n}"
+      "originalSyntax": "aligned(8) class HandlerBox extends FullBox('hdlr', version = 0, 0) {\r\n\tunsigned int(32)\tpre_defined = 0;\r\n\tunsigned int(32)\thandler_type;\r\n\tconst unsigned int(32)[3]\treserved = 0;\r\n\tutf8string\tname;\r\n}",
+      "syntax": "aligned(8) class HandlerBox extends FullBox('hdlr', version = 0, 0) {\r\n\tunsigned int(32)\tpre_defined = 0;\r\n\tunsigned int(32)\thandler_type;\r\n\tconst unsigned int(32)[3]\treserved = 0;\r\n\tbytestring\tname; // utf8string in ISOBMFF, counted in QuickTime: all that is left, as bytes\r\n}"
     },
     {
       "fourcc": "hmhd",

@@ -15,6 +15,12 @@ public enum Outcome
 
     /// <summary>ffmpeg traced nothing, so there is nothing to compare against.</summary>
     NoReference,
+
+    /// <summary>
+    /// A file known to be malformed, which SharpMP4 read without failing, finding the defects it is known
+    /// for and no others, and wrote back byte for byte, defects and all.
+    /// </summary>
+    Malformed,
 }
 
 /// <summary>What comparing one stream found.</summary>

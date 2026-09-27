@@ -69,7 +69,7 @@ public static class RoundTrip
         for (int shift = 24; shift >= 0; shift -= 8)
         {
             byte b = (byte)(fourCC >> shift);
-            name.Append(b >= 0x80 ? b.ToString("X2") : ((char)b).ToString());
+            name.Append(b >= 0x80 || b < 0x20 ? b.ToString("X2") : ((char)b).ToString());
         }
         return name.ToString();
     }

@@ -6,19 +6,19 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class ThreeGPPAlbumBox() extends Box('albm') {
-	bit(1) reserved;
- unsigned int(5)[3] language;
+aligned(8) class ThreeGPPAlbumBox() extends FullBox('albm', version = 0, 0) {
+	bit(1) reserved = 0;
+	unsigned int(5)[3] language;
 	string value;
- bit(8) trackNumber; // optional
+	unsigned int(8) trackNumber; // optional
 } 
 */
-public partial class ThreeGPPAlbumBox : Box
+public partial class ThreeGPPAlbumBox : FullBox
 {
 	public const string TYPE = "albm";
 	public override string DisplayName { get { return "ThreeGPPAlbumBox"; } }
 
-	protected bool reserved; 
+	protected bool reserved = false; 
 	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
 	protected string language; 
@@ -28,9 +28,11 @@ public partial class ThreeGPPAlbumBox : Box
 	public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
 
 	protected byte trackNumber;  //  optional
-	public byte TrackNumber { get { return this.trackNumber; } set { this.trackNumber = value; } }
+	protected bool trackNumberPresent;
+	public byte TrackNumber { get { return this.trackNumber; } set { this.trackNumber = value; this.trackNumberPresent = true; } }
+	public bool TrackNumberPresent { get { return this.trackNumberPresent; } set { this.trackNumberPresent = value; } }
 
-	public ThreeGPPAlbumBox(): base(IsoStream.FromFourCC("albm"))
+	public ThreeGPPAlbumBox(): base(IsoStream.FromFourCC("albm"), 0, 0)
 	{
 	}
 
@@ -41,7 +43,7 @@ public partial class ThreeGPPAlbumBox : Box
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.reserved, "reserved"); 
 		boxSize += stream.ReadIso639(boxSize, readSize,  out this.language, "language"); 
 		boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.value, "value"); 
-		if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt8(boxSize, readSize,  out this.trackNumber, "trackNumber"); // optional
+		if (stream.HasMoreData(boxSize, readSize)) { boxSize += stream.ReadUInt8(boxSize, readSize,  out this.trackNumber, "trackNumber"); this.trackNumberPresent = true; } // optional
 		return boxSize;
 	}
 
@@ -52,7 +54,7 @@ public partial class ThreeGPPAlbumBox : Box
 		boxSize += stream.WriteBit( this.reserved, "reserved"); 
 		boxSize += stream.WriteIso639( this.language, "language"); 
 		boxSize += stream.WriteStringZeroTerminated( this.value, "value"); 
-		boxSize += stream.WriteUInt8( this.trackNumber, "trackNumber"); // optional
+		if (this.trackNumberPresent) boxSize += stream.WriteUInt8( this.trackNumber, "trackNumber"); // optional
 		return boxSize;
 	}
 
@@ -63,7 +65,7 @@ public partial class ThreeGPPAlbumBox : Box
 		boxSize += 1; // reserved
 		boxSize += 15; // language
 		boxSize += IsoStream.CalculateStringSize(value); // value
-		boxSize += 8; // trackNumber
+		if (this.trackNumberPresent) boxSize += 8; // trackNumber
 		return boxSize;
 	}
 }

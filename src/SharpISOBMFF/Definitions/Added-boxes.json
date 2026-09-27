@@ -10,6 +10,21 @@
     {
       "containers": [ "*" ],
       "type": "Box",
+      "syntax": "aligned(8) class CodecConfigurationBox(unsigned int(32) format) extends Box(format) {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "containers": [ "udta" ],
+      "type": "Box",
+      "syntax": "aligned(8) class QuickTimeTextBox(unsigned int(32) format) extends Box(format) {\r\n MultiLanguageString value[];\r\n }"
+    },
+    {
+      "containers": [ "mebx" ],
+      "type": "Box",
+      "syntax": "aligned(8) class BoxedMetaDataKeyTableBox() extends Box('keys') {\r\n Box boxes[];\r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
       "syntax": "aligned(8) class AppleCameraModelBox() extends Box('©mod') {\r\n Box boxes[];\r\n } "
     },
     {
@@ -331,12 +346,12 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPTitleBox() extends Box('titl') {\r\n\tbit(1) reserved;\r\n unsigned int(5)[3] language;\r\n\tstring value;\r\n} "
+      "syntax": "aligned(8) class ThreeGPPTitleBox() extends FullBox('titl', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPAuthorBox() extends Box('auth') {\r\n\tbit(1) reserved;\r\n unsigned int(5)[3] language;\r\n\tstring value;\r\n} "
+      "syntax": "aligned(8) class ThreeGPPAuthorBox() extends FullBox('auth', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
     },
     {
       "containers": [ "*" ],
@@ -361,7 +376,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPDescriptionBox() extends Box('dscp') {\r\n\tbit(1) reserved;\r\nunsigned int(5)[3] language;\r\n\tstring value;\r\n}"
+      "syntax": "aligned(8) class ThreeGPPDescriptionBox() extends FullBox('dscp', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
     },
     {
       "containers": [ "*" ],
@@ -371,7 +386,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPKeywordsBox() extends Box('kywd') {\r\n\tbit(1) reserved;\r\nunsigned int(5)[3] language;\r\n\tstring value;\r\n}"
+      "syntax": "aligned(8) class ThreeGPPKeywordsBox() extends FullBox('kywd', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tunsigned int(8) keywordCount;\r\n\tfor (i = 0; i < keywordCount; i++) {\r\n\t\tunsigned int(8) keywordSize;\r\n\t\tbit(8*keywordSize) keyword;\r\n\t}\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -666,7 +681,12 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class GenreBox() extends FullBox('gnre') {\r\n Box boxes[]; \r\n }"
+      "syntax": "aligned(8) class GenreBox() extends Box('gnre') {\r\n Box boxes[]; \r\n}"
+    },
+    {
+      "containers": [ "udta" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ThreeGPPGenreBox() extends FullBox('gnre', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
     },
     {
       "containers": [ "*" ],
@@ -798,27 +818,27 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPAlbumBox() extends Box('albm') {\r\n\tbit(1) reserved;\r\n unsigned int(5)[3] language;\r\n\tstring value;\r\n bit(8) trackNumber; // optional\r\n} "
+      "syntax": "aligned(8) class ThreeGPPAlbumBox() extends FullBox('albm', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n\tunsigned int(8) trackNumber; // optional\r\n} "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPClassificationBox() extends Box('clsf') {\r\n\tbit(1) reserved;\r\n unsigned int(5)[3] language;\r\n\tstring value; \r\n} "
+      "syntax": "aligned(8) class ThreeGPPClassificationBox() extends FullBox('clsf', version = 0, 0) {\r\n\tunsigned int(32) classificationEntity;\r\n\tunsigned int(16) classificationTable;\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPLocationInformationBox() extends Box('loci') {\r\n\tbit(1) reserved;\r\n unsigned int(5)[3] language;\r\n\tstring value;\r\n string placeName; unsigned int(8) role; fixedpoint1616 longitude;\r\n fixedpoint1616 latitude;\r\n fixedpoint1616 altitude;\r\n string astronomicalBody;\r\n string additionalNotes;\r\n }"
+      "syntax": "aligned(8) class ThreeGPPLocationInformationBox() extends FullBox('loci', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring placeName;\r\n\tunsigned int(8) role;\r\n\tfixedpoint1616 longitude;\r\n\tfixedpoint1616 latitude;\r\n\tfixedpoint1616 altitude;\r\n\tstring astronomicalBody;\r\n\tstring additionalNotes;\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPPerformerBox() extends Box('perf') {\r\n\tbit(1) reserved;\r\n unsigned int(5)[3] language;\r\n\tstring value; \r\n} "
+      "syntax": "aligned(8) class ThreeGPPPerformerBox() extends FullBox('perf', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPRecordingYearBox() extends Box('yrrc') {\r\n\tbit(1) reserved;\r\n unsigned int(5)[3] language;\r\n\tstring value; \r\n unsigned int(16) year;\r\n } "
+      "syntax": "aligned(8) class ThreeGPPRecordingYearBox() extends FullBox('yrrc', version = 0, 0) {\r\n\tunsigned int(16) year;\r\n} "
     },
     {
       "containers": [ "*" ],
@@ -909,7 +929,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleLoopingBox() extends Box('LOOP') {\r\n\t unsigned int(8) data;\r\n } "
+      "syntax": "aligned(8) class AppleLoopingBox() extends Box('LOOP') {\r\n\t unsigned int(32) data; // 0 normal, 1 palindromic\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -1169,7 +1189,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class BaseMediaInfoAtom() extends Box('gmin') {\r\n unsigned int(16) graphicsMode;\r\n unsigned int(16) opColorR;\r\n unsigned int(16) opColorG;\r\n unsigned int(16) opColorB;\r\n unsigned int(16) balance;\r\n unsigned int(16) reserved\r\n } "
+      "syntax": "aligned(8) class BaseMediaInfoAtom() extends FullBox('gmin', version = 0, 0) {\r\n unsigned int(16) graphicsMode;\r\n unsigned int(16) opColorR;\r\n unsigned int(16) opColorG;\r\n unsigned int(16) opColorB;\r\n unsigned int(16) balance;\r\n unsigned int(16) reserved;\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -1194,7 +1214,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ProtectionSystemSpecificHeaderBox() extends FullBox('pssh') {\r\n unsigned int(8) systemId[16];\r\n if (version > 0) {\r\n unsigned int(32) count;\r\n ProtectionSystemSpecificKeyID keyIDs[count];\r\n }\r\n  }\r\n aligned(8) class ProtectionSystemSpecificKeyID() {\r\n unsigned int(8) key[16];\r\n } "
+      "syntax": "aligned(8) class ProtectionSystemSpecificHeaderBox() extends FullBox('pssh', version, flags = 0) {\r\n unsigned int(8) systemId[16];\r\n if (version > 0) {\r\n  unsigned int(32) count;\r\n  ProtectionSystemSpecificKeyID keyIDs[count];\r\n }\r\n unsigned int(32) dataSize;\r\n unsigned int(8) data[dataSize];\r\n }\r\n aligned(8) class ProtectionSystemSpecificKeyID() {\r\n unsigned int(8) key[16];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -1209,7 +1229,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class TrackEncryptionBox() extends FullBox('tenc') {\r\n unsigned int(24) defaultAlgorithmID;\r\n unsigned int(8) defaultIvSize;\r\n unsigned int(8) defaultKID[16];\r\n } "
+      "syntax": "aligned(8) class TrackEncryptionBox() extends FullBox('tenc', version, flags = 0) {\r\n unsigned int(8) reserved = 0;\r\n if (version == 0) {\r\n  unsigned int(8) reserved = 0;\r\n }\r\n else {\r\n  unsigned int(4) default_crypt_byte_block;\r\n  unsigned int(4) default_skip_byte_block;\r\n }\r\n unsigned int(8) default_isProtected;\r\n unsigned int(8) default_Per_Sample_IV_Size;\r\n unsigned int(8) default_KID[16];\r\n if (default_isProtected == 1 && default_Per_Sample_IV_Size == 0) {\r\n  unsigned int(8) defaultConstantIVSize;\r\n  unsigned int(8) defaultConstantIV[defaultConstantIVSize];\r\n }\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -1265,7 +1285,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class DoViConfigurationBox() extends Box('dvcC') {\r\n unsigned int(8) dvVersionMajor;\r\n unsigned int(8) dvVersionMinor;\r\n unsigned int(16) profileLevelFlags;\r\n unsigned int(32) reserved1;\r\n unsigned int(32) reserved2;\r\nunsigned int(32) reserved3;\r\nunsigned int(32) reserved4;\r\n \r\n } "
+      "syntax": "aligned(8) class DoViConfigurationBox() extends Box('dvcC') {\r\n unsigned int(8) dv_version_major;\r\n unsigned int(8) dv_version_minor;\r\n unsigned int(7) dv_profile;\r\n unsigned int(6) dv_level;\r\n bit(1) rpu_present_flag;\r\n bit(1) el_present_flag;\r\n bit(1) bl_present_flag;\r\n unsigned int(4) dv_bl_signal_compatibility_id;\r\n const unsigned int(28) reserved = 0;\r\n const unsigned int(32)[4] reserved = 0;\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -1350,7 +1370,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class PiffSampleEncryptionBox() extends FullBox('uuid a2394f525a9b4f14a2446c427c648df4', version, flags) \r\n{\r\n if(flags & 0x1) {\r\n unsigned int(24) algorithmID;\r\n unsigned int(8) Per_Sample_IV_Size;\r\n unsigned int(8) kid[16];\r\n }\r\n  unsigned int(32)  sample_count;\r\n   SampleEncryptionSample(version, flags, Per_Sample_IV_Size) samples[sample_count];\r\n}\r\n"
+      "syntax": "aligned(8) class PiffSampleEncryptionBox() extends FullBox('uuid a2394f525a9b4f14a2446c427c648df4', version, flags) \r\n{\r\n if(flags & 0x1) {\r\n unsigned int(24) algorithmID;\r\n unsigned int(8) Per_Sample_IV_Size;\r\n unsigned int(8) kid[16];\r\n }\r\n  unsigned int(32)  sample_count;\r\n   SampleEncryptionSample(0, flags, Per_Sample_IV_Size) samples[sample_count]; // PIFF has no multi IV samples, whatever its version\r\n}\r\n"
     },
     {
       "containers": [ "*" ],
@@ -1632,6 +1652,136 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class SpatialAudioBox extends Box('SA3D') {\r\n    unsigned int(8)  version;\r\n    unsigned int(8)  ambisonic_type;\r\n    unsigned int(32) ambisonic_order;\r\n    unsigned int(8)  ambisonic_channel_ordering;\r\n    unsigned int(8)  ambisonic_normalization;\r\n    unsigned int(32) num_channels;\r\n    for (i = 0; i < num_channels; i++) {\r\n        unsigned int(32) channel_map;\r\n    }\r\n}"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class SbtdBox() extends Box('sbtd') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class Cr8rBox() extends Box('Cr8r') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class VendorFIELBox() extends Box('FIEL') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ALFABox() extends Box('ALFA') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AMBABox() extends Box('AMBA') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class PrmABox() extends Box('PrmA') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class RowbBox() extends Box('rowb') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class GlblBox() extends Box('glbl') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class BmdcBox() extends Box('bmdc') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class DvvCBox() extends Box('dvvC') {\r\n unsigned int(8) dv_version_major;\r\n unsigned int(8) dv_version_minor;\r\n unsigned int(7) dv_profile;\r\n unsigned int(6) dv_level;\r\n bit(1) rpu_present_flag;\r\n bit(1) el_present_flag;\r\n bit(1) bl_present_flag;\r\n unsigned int(4) dv_bl_signal_compatibility_id;\r\n const unsigned int(28) reserved = 0;\r\n const unsigned int(32)[4] reserved = 0;\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class HvcEBox() extends Box('hvcE') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class RelyBox() extends Box('rely') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class QDCABox() extends Box('QDCA') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class It35Box() extends Box('it35') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class GpmdBox() extends Box('gpmd') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class MhaCBox() extends Box('mhaC') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class MhaPBox() extends Box('mhaP') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ACLRBox() extends Box('ACLR') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ADHRBox() extends Box('ADHR') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class APRGBox() extends Box('APRG') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ARESBox() extends Box('ARES') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AlmoBox() extends Box('almo') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class HpreBox() extends Box('hpre') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class Dvc1Box() extends Box('dvc1') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class LidlBox() extends Box('lidl') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class LidpBox() extends Box('lidp') {\r\n bit(8) data[];\r\n } "
     }
   ]
 }

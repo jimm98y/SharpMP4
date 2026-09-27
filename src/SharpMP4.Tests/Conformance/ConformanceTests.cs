@@ -83,6 +83,110 @@ public class ConformanceTests
     }
 
     /// <summary>
+    /// Reads FFmpeg's ISOBMFF and QuickTime samples, which have the metadata and vendor boxes no
+    /// specification describes, so nothing to compare them with: each file is checked against
+    /// itself instead (see <see cref="BoxHealth"/>) and must write back byte for byte. The boxes
+    /// SharpMP4 does not know are listed in the report, those in the most files first.
+    /// </summary>
+    [TestMethod]
+    public void FateFilesReadWithoutSignsOfMisreading()
+    {
+        string? root = ConformanceCorpus.Locate();
+        if (root == null)
+            Assert.Inconclusive("no conformance files; run DownloadConformance.ps1, or set SHARPMP4_CONFORMANCE");
+
+        var files = ConformanceCorpus.FateFiles(root);
+        if (files.Count == 0)
+            Assert.Inconclusive($"no FATE samples under {root}; run DownloadConformance.ps1 -Codec Fate");
+
+        var unknown = new ConcurrentDictionary<string, ConcurrentBag<string>>();
+        var results = new ConcurrentBag<StreamResult>();
+        Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, Environment.ProcessorCount / 2) }, file =>
+        {
+            var result = BoxHealth.Check(file, unknown);
+            if (result.Outcome != Outcome.SharpFailed)
+            {
+                try
+                {
+                    var roundTrip = RoundTrip.Check(file);
+                    for (int i = 0; i < roundTrip.Keys.Count; i++)
+                        result.Fail(roundTrip.Outcome, $"round trip: {roundTrip.Keys[i]}", roundTrip.Detail.Split('\n')[i].Trim());
+                }
+                catch (Exception ex)
+                {
+                    result.Fail(Outcome.SharpFailed, $"round trip: {ex.GetType().Name}", ex.Message);
+                }
+            }
+
+            if (result.Keys.Count == 0)
+                result.Outcome = Outcome.Match;
+            else
+                JudgeMalformed(root, result);
+            results.Add(result);
+        });
+
+        // A known defect that is no longer found means the list, or the reading, has changed: either way it is looked at.
+        foreach (var (file, defect) in MalformedFateFiles.SelectMany(m => m.Value.Defects.Select(d => (m.Key, d))))
+        {
+            var result = results.FirstOrDefault(r => Path.GetRelativePath(root, r.Path) == file);
+            if (result != null && result.Outcome == Outcome.Match)
+            {
+                result.Fail(Outcome.Diverged, $"known defect not found: {defect}", $"{defect}: known in this file, but not found");
+            }
+        }
+
+        var ordered = results.OrderBy(r => r.Path, StringComparer.Ordinal).ToList();
+        string summary = Summarise("fate", root, ordered);
+
+        var coverage = new StringBuilder();
+        coverage.AppendLine();
+        coverage.AppendLine($"Boxes SharpMP4 does not know, by the number of files they are in ({unknown.Count} kinds):");
+        foreach (var kind in unknown.OrderByDescending(k => k.Value.Distinct().Count()).ThenBy(k => k.Key, StringComparer.Ordinal))
+        {
+            var where = kind.Value.Distinct().OrderBy(f => f, StringComparer.Ordinal).ToList();
+            coverage.AppendLine($"  {where.Count,4} x {kind.Key}    e.g. {Path.GetRelativePath(root, where[0])}");
+        }
+
+        File.WriteAllText(Path.Combine(root, "report-fate.txt"), summary + coverage + Details(root, ordered));
+
+        int failing = ordered.Count(r => r.Outcome is Outcome.Diverged or Outcome.SharpFailed);
+        Assert.AreEqual(0, failing, summary);
+    }
+
+    /// <summary>
+    /// FATE samples that are malformed on purpose, or by the tool that wrote them, with what is wrong in
+    /// them: SharpMP4 is to find exactly that, keep it as it was, and write the file back byte for byte.
+    /// </summary>
+    private static readonly Dictionary<string, (string Why, string[] Defects)> MalformedFateFiles = new()
+    {
+        [Path.Combine("fate", "h264", "thezerotheorem-cut.mp4")] =
+            ("an 8 byte 'box' of type 0x00000099 after the 'colr' of its 'avc1'", ["avc1/?: not a box type"]),
+        [Path.Combine("fate", "mov", "invalid_elst_entry_count.mov")] =
+            ("an 'elst' counting more entries than it holds", ["edts/elst: could not be read"]),
+        [Path.Combine("fate", "qt-surge-suite", "surge-2-16-B-QDM2.mov")] =
+            ("8 bytes after the terminator of its 'wave', that no box can be", ["wave/00000004: larger than its parent"]),
+    };
+
+    /// <summary>
+    /// A file known to be malformed passes as <see cref="Outcome.Malformed"/> when it failed in no other
+    /// way: SharpMP4 did not throw, found its known defects and nothing else, and wrote it back as it was.
+    /// </summary>
+    private static void JudgeMalformed(string root, StreamResult result)
+    {
+        if (!MalformedFateFiles.TryGetValue(Path.GetRelativePath(root, result.Path), out var malformed))
+            return;
+
+        if (result.Outcome == Outcome.SharpFailed || result.Keys.Any(k => k.StartsWith("round trip")))
+            return;
+
+        if (!result.Keys.ToHashSet().SetEquals(malformed.Defects))
+            return;
+
+        result.Outcome = Outcome.Malformed;
+        result.Detail = $"malformed, and kept as it was: {malformed.Why}\n    " + result.Detail;
+    }
+
+    /// <summary>
     /// Reads every file format conformance file and writes it back, which must give the file again,
     /// byte for byte.
     /// </summary>
@@ -196,7 +300,8 @@ public class ConformanceTests
             $"{results.Count(r => r.Outcome == Outcome.Match)} read the same, " +
             $"{results.Count(r => r.Outcome == Outcome.Diverged)} diverge, " +
             $"{results.Count(r => r.Outcome == Outcome.SharpFailed)} throw, " +
-            $"{results.Count(r => r.Outcome == Outcome.NoReference)} without a reference; " +
+            $"{results.Count(r => r.Outcome == Outcome.NoReference)} without a reference" +
+            (results.Any(r => r.Outcome == Outcome.Malformed) ? $", {results.Count(r => r.Outcome == Outcome.Malformed)} malformed and kept as they were; " : "; ") +
             $"{results.Sum(r => r.FieldsCompared):N0} fields compared.");
 
         // A stream failing several ways counts under each.

@@ -367,7 +367,7 @@ public partial class OperatingPointGroupBox : EntityToGroupBox
 
 		for (int i=0; i<=num_profile_tier_level_minus1; i++)
 		{
-			boxSize += IsoStream.CalculateClassSize(opeg_ptl); // opeg_ptl
+			boxSize += IsoStream.CalculateClassSize(opeg_ptl[i]); // opeg_ptl
 		}
 		boxSize += 6; // reserved
 		boxSize += 1; // incomplete_operating_points_flag

@@ -30,6 +30,7 @@ public partial class PiffTrackEncryptionBox : FullBox
 
 	public PiffTrackEncryptionBox(byte version = 0, uint flags = 0): base(IsoStream.FromFourCC("uuid"), version, flags)
 	{
+		this.uuid = ConvertEx.FromHexString("8974dbce7be74c5184f97148f9882554");
 	}
 
 	public override ulong Read(IsoStream stream, ulong readSize)

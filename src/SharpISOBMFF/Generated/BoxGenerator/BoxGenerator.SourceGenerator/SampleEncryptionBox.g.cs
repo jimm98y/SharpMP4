@@ -37,6 +37,7 @@ public partial class SampleEncryptionBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.sample_count, "sample_count"); 
+		this.Per_Sample_IV_Size = stream.InferPerSampleIvSize(boxSize, readSize, version, flags, sample_count, Per_Sample_IV_Size);
 		boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(sample_count), () => new SampleEncryptionSample(version, flags, Per_Sample_IV_Size),  out this.samples, "samples"); 
 		return boxSize;
 	}
