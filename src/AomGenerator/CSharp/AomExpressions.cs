@@ -27,8 +27,19 @@ namespace AomGenerator.CSharp
         /// <summary>An expression where a condition is wanted.</summary>
         public string Bool(string expression) => EmitBool(Parse(expression));
 
+        /// <summary>
+        /// The structures that read the bitstream, themselves or through those they call: written, each
+        /// is its Write method.
+        /// </summary>
+        public ISet<string> ReadingStructures { get; set; } = new HashSet<string>();
+
+        /// <summary>True while the write methods are generated: a structure that reads is called as its Write method.</summary>
+        public bool Writing { get; set; }
+
         /// <summary>The name a syntax structure's method has.</summary>
-        public string MethodName(string name) => _syntaxStructures.Contains(name) ? name.ToPropertyCase() : name;
+        public string MethodName(string name) =>
+            !_syntaxStructures.Contains(name) ? name :
+            Writing && ReadingStructures.Contains(name) ? "Write" + name.ToPropertyCase() : name.ToPropertyCase();
 
         #region Parsing
 

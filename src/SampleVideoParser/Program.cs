@@ -1,5 +1,6 @@
 ﻿using SampleVideoParser;
 using SharpAV1;
+using SharpAVX;
 using SharpH264;
 using SharpH265;
 using SharpH266;

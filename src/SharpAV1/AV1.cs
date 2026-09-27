@@ -16,9 +16,61 @@ namespace SharpAV1
         void Read(AomStream stream, int size);
     }
 
+    /// <summary>
+    /// An OBU as it was read, for writing it again: its size, its syntax elements as they were read, and
+    /// the state they were read into. Changed through <see cref="Edit"/>, it is written with the changes.
+    /// </summary>
+    public sealed class AV1Obu
+    {
+        internal AV1Obu(int size, AomSyntaxRecord record, AV1Context read)
+        {
+            Size = size;
+            Record = record;
+            Read = read;
+        }
+
+        /// <summary>The bytes of the OBU, its header and obu_size among them (sz of open_bitstream_unit).</summary>
+        public int Size { get; set; }
+
+        /// <summary>Every occurrence of each syntax element, as it was read.</summary>
+        public AomSyntaxRecord Record { get; }
+
+        internal AV1Context Read { get; }
+
+        /// <summary>
+        /// The bytes of an OBU that could not be read - to the end of what it was read from - and so is
+        /// written as it was; null for one that was read.
+        /// </summary>
+        public byte[] Unreadable { get; internal set; }
+
+        /// <summary>The state to write the OBU from, if it has been changed; null, it is written as it was read.</summary>
+        public AV1Context Edited { get; private set; }
+
+        /// <summary>
+        /// The state the OBU was read into, to change before it is written: the elements it gives other
+        /// values are written with them. A change that makes the OBU longer or shorter needs obu_size too.
+        /// </summary>
+        public AV1Context Edit() => Edited ??= Read.Copy();
+
+        /// <summary>
+        /// The OBU without its record: written from the state it was read into, as an encoder writes from
+        /// its own - what that state does not say, such as the tile data, it cannot write.
+        /// </summary>
+        public AV1Obu FromState() => new AV1Obu(Size, new AomSyntaxRecord(), Read) { Edited = Edited };
+    }
+
     public partial class AV1Context
     {
         private AomStream stream;
+
+        /// <summary>True to keep, of each OBU read, what writing it again takes: <see cref="LastObu"/>.</summary>
+        public bool RecordSyntax { get; set; }
+
+        /// <summary>With <see cref="RecordSyntax"/>, the last OBU read.</summary>
+        public AV1Obu LastObu { get; private set; }
+
+        // True while an OBU is written.
+        private bool _writing;
 
         /// <summary>
         /// Default selected operating point.
@@ -118,7 +170,116 @@ namespace SharpAV1
             this.stream = stream ?? throw new ArgumentNullException(nameof(stream));
             if (Strict)
                 stream.Validate = CheckValue;
-            OpenBitstreamUnit(size);
+            foundRefs = 0;
+            var record = RecordSyntax ? new AomSyntaxRecord() : null;
+            stream.Record = record;
+            var input = stream.Bitstream.BaseStream;
+            long start = record != null && input.CanSeek ? input.Position : -1;
+            try
+            {
+                OpenBitstreamUnit(size);
+            }
+            catch when (start >= 0)
+            {
+                // Kept as its bytes, and the state reading it left: what a writer takes to follow on
+                input.Position = start;
+                var bytes = new byte[size];
+                int read = 0, count;
+                while (read < size && (count = input.Read(bytes, read, size - read)) > 0)
+                    read += count;
+                Array.Resize(ref bytes, read);
+                LastObu = new AV1Obu(size, record, Copy()) { Unreadable = bytes };
+                throw;
+            }
+            finally
+            {
+                stream.Record = null;
+            }
+            if (record != null)
+                LastObu = new AV1Obu(size, record, Copy());
+        }
+
+        /// <summary>
+        /// Writes an OBU read with <see cref="RecordSyntax"/>: as it was read, but for the changes made to
+        /// it (<see cref="AV1Obu.Edit"/>). This context must have written the OBUs before it, as another
+        /// read them - its state is a decoder's, which the syntax depends on - and been given, as the
+        /// reader is, the last frame header's bytes (<see cref="LastObuFrameHeader"/>).
+        /// </summary>
+        public void Write(AomStream stream, AV1Obu obu)
+        {
+            this.stream = stream ?? throw new ArgumentNullException(nameof(stream));
+            if (obu == null)
+                throw new ArgumentNullException(nameof(obu));
+            stream.WriteLimit = stream.GetPosition() + (long)obu.Size * 8;
+            stream.Source = obu.Record;
+            _original = obu.Read;
+            _edited = obu.Edited;
+            if (obu.Unreadable != null)
+            {
+                // As it was, and on from where reading it was left
+                stream.WriteBytes(obu.Unreadable.Length * 8, obu.Unreadable, "unreadable_obu");
+                LoadContext(obu.Read.SaveContext());
+                _original = null;
+                _edited = null;
+                stream.WriteLimit = -1;
+                return;
+            }
+            _writing = true;
+            try
+            {
+                WriteOpenBitstreamUnit(obu.Size);
+            }
+            finally
+            {
+                _writing = false;
+                _original = null;
+                _edited = null;
+                stream.Source = null;
+                stream.WriteLimit = -1;
+            }
+        }
+
+        /// <summary>A copy of the syntax elements and variables: what writing an OBU again takes of the state.</summary>
+        internal AV1Context Copy()
+        {
+            var copy = new AV1Context { SelectedOperatingPoint = SelectedOperatingPoint, AllLayers = AllLayers, Strict = Strict };
+            copy.LoadContext(SaveContext(), copy: false);
+            copy.ItutT35Payload = ItutT35Payload;
+            copy.UnknownMetadataPayload = UnknownMetadataPayload;
+            return copy;
+        }
+
+        /// <summary>
+        /// The rest of the OBU, which the syntax does not read: tile data, or an OBU dropped. Skipped as it
+        /// is read; recorded, it is kept, and written as it was.
+        /// </summary>
+        private void RestOfObu(string name)
+        {
+            long bits = (long)obu_size * 8 - (stream.GetPosition() - startPosition);
+            if (bits <= 0)
+                return;
+
+            // The bits to the next byte, then the bytes
+            int lead = (int)Math.Min(bits, (8 - stream.GetPosition() % 8) % 8);
+            int bytes = (int)((bits - lead) / 8);
+            if (_writing)
+            {
+                if (lead > 0)
+                    stream.WriteFixed(lead, stream.Pick(name + "_bits", 0, 0), name + "_bits");
+                byte[] rest = stream.Pick(name, (byte[])null, null)
+                    ?? throw new InvalidOperationException($"The {name} was not recorded: SharpAV1 writes it as it was read.");
+                stream.WriteBytes(bytes * 8, rest, name);
+            }
+            else if (stream.Record != null)
+            {
+                if (lead > 0)
+                    stream.ReadFixed(lead, out _, name + "_bits");
+                stream.ReadBytes(bytes * 8, out _, name);
+            }
+            else
+            {
+                stream.Skip(bits);
+            }
         }
 
         /// <summary>
@@ -128,6 +289,9 @@ namespace SharpAV1
         /// marks them: in a broken stream, the tile groups after it may never come.
         /// </summary>
         private readonly bool[] refFilled = new bool[AV1Constants.NUM_REF_FRAMES];
+
+        // The found_refs read in the OBU: the i of the loop they are read in, which is its own.
+        private int foundRefs;
 
         /// <summary>The checks of <see cref="Strict"/> on the elements they concern.</summary>
         private void CheckValue(string name, long value)
@@ -141,14 +305,17 @@ namespace SharpAV1
                 "obu_size" or "metadata_type" => value <= uint.MaxValue,
                 "tg_start" => value < NumTiles,
                 "tg_end" => value >= tg_start && value < NumTiles,
-                // The element is read in the loop over i, the reference it names ref_frame_idx[ i ].
-                "found_ref" => value == 0 || refFilled[ref_frame_idx[i]],
+                // Read in the loop over i, once for each i up to the one found: the reference it names is
+                // ref_frame_idx[ i ], i being how many were read before it in the OBU.
+                "found_ref" => value == 0 || refFilled[ref_frame_idx[foundRefs]],
                 "frame_to_show_map_idx" => refFilled[value],
                 _ => true,
             };
 
             if (!valid)
                 throw new InvalidDataException($"{name} of {value} is not allowed here.");
+            if (name == "found_ref")
+                foundRefs++;
 
             // refresh_frame_flags is allFrames, not coded, for a switch frame and a shown key frame,
             // and a key frame shown again refreshes every slot too (7.21).
@@ -167,6 +334,13 @@ namespace SharpAV1
                     refFilled[slot] = true;
         }
 
+        private static int Min(int x, int y) => x <= y ? x : y;
+
+        private static int Max(int x, int y) => x >= y ? x : y;
+
+        /// <summary>get_position( ): the bit position in the OBU's stream.</summary>
+        private int get_position() => stream.GetPosition();
+
         public static int Clip3(int low, int high, int value)
         {
             return MathEx.Clamp(value, low, high);
@@ -177,7 +351,7 @@ namespace SharpAV1
         /// for it to decide which segments are lossless, and a lossless frame codes no loop filter
         /// or CDEF parameters - so a stub that never returned 0 read those that were not there.
         /// </summary>
-        private int GetQIndex(int ignoreDeltaQ, int segmentId)
+        private int get_qindex(int ignoreDeltaQ, int segmentId)
         {
             // CurrentQIndex only moves while tiles are decoded; in the headers it is base_q_idx.
             int currentQIndex = base_q_idx;
@@ -198,9 +372,14 @@ namespace SharpAV1
             return base_q_idx;
         }
 
-        private void DropObu() 
-        { 
-            /* nothing */
+        /// <summary>
+        /// drop_obu( ): an OBU outside the operating point, which a decoder leaves unread. Recorded, it is
+        /// kept whole, and written as it was.
+        /// </summary>
+        private void drop_obu()
+        {
+            if (_writing || stream.Record != null)
+                RestOfObu("dropped_obu");
         }
 
         /// <summary>
@@ -209,7 +388,7 @@ namespace SharpAV1
         /// looked for among the forward references and the rest took the earliest frame - and
         /// skip_mode_present was read where a decoder does not.
         /// </summary>
-        private void ResetGrainParams() 
+        private void reset_grain_params() 
         {
             apply_grain = 0;
             grain_seed = 0;
@@ -257,13 +436,13 @@ namespace SharpAV1
             clip_to_restricted_range = 0;
         }
 
-        private void LoadGrainParams(int p) 
+        private void load_grain_params(int p) 
         {
             /* load_grain_params(idx) is a function call that indicates that all the syntax elements read in film_grain_params should be
             set equal to the values stored in an area of memory indexed by idx. */
         }
 
-        private void SetupPastIndependence() 
+        private void setup_past_independence() 
         {
             for (int r = AV1RefFrames.LAST_FRAME; r <= AV1RefFrames.ALTREF_FRAME; r++)
             {
@@ -273,7 +452,7 @@ namespace SharpAV1
                 }
             }
         }
-        private void LoadCdfs(int value) 
+        private void load_cdfs(int value) 
         {
             /* load_cdfs( ctx ) is a function call that indicates that the CDF tables are loaded from frame context number ctx in the
             range 0 to (NUM_REF_FRAMES - 1). When this function is invoked, a copy of each CDF array mentioned in the
@@ -282,7 +461,7 @@ namespace SharpAV1
             loaded, the last entry in each array, representing the symbol count for that context, is set to 0. */
         }
 
-        private void LoadPrevious() 
+        private void load_previous() 
         {
             prevFrame = ref_frame_idx[primary_ref_frame];
 
@@ -290,11 +469,11 @@ namespace SharpAV1
             // wrote its defaults over what that reference frame had saved.
             for (int r = AV1RefFrames.LAST_FRAME; r <= AV1RefFrames.ALTREF_FRAME; r++)
                 Array.Copy(SavedGmParams[prevFrame][r], PrevGmParams[r], 6);
-            LoadLoopFilterParams(prevFrame);
-            LoadSegmentationParams(prevFrame);
+            load_loop_filter_params(prevFrame);
+            load_segmentation_params(prevFrame);
         }
 
-        private void LoadSegmentationParams(int i)
+        private void load_segmentation_params(int i)
         {
             /*
             load_segmentation_params( i ) is a function call that indicates that the values of FeatureEnabled[ j ][ k ] and FeatureData[ j ][ k ] 
@@ -310,7 +489,7 @@ namespace SharpAV1
             }
         }
 
-        private void SaveSegmentationParams(int i)
+        private void save_segmentation_params(int i)
         {
             for (int j = 0; j < AV1Constants.MAX_SEGMENTS; j++)
             {
@@ -322,7 +501,7 @@ namespace SharpAV1
             }
         }
 
-        private void LoadLoopFilterParams(int i)
+        private void load_loop_filter_params(int i)
         {
             /*
             load_loop_filter_params( i ) is a function call that indicates that the values of loop_filter_ref_deltas[ j ] for j = 0 ..
@@ -339,7 +518,7 @@ namespace SharpAV1
             }
         }
 
-        private void SaveLoopFilterParams(int i)
+        private void save_loop_filter_params(int i)
         {
             for (int j = 0; j < AV1Constants.TOTAL_REFS_PER_FRAME; j++)
             {
@@ -351,23 +530,26 @@ namespace SharpAV1
             }
         }
 
-        private void MotionFieldEstimation() 
+        private void motion_field_estimation() 
         {
             /* nothing - needed for the decoding */
         }
 
-        private void InitCoeffCdfs() 
+        private void init_coeff_cdfs() 
         {
             /* nothing - needed for the decoding */ 
         }
 
-        private void InitNonCoeffCdfs()
+        private void init_non_coeff_cdfs()
         {
             /* nothing - needed for the decoding */
         }
 
-        /// <summary>The ITU-T T.35 payload of the last metadata OBU that had one - HDR10+, for one.</summary>
-        public byte[] ItutT35Payload { get; private set; }
+        /// <summary>
+        /// The ITU-T T.35 payload of the last metadata OBU that had one - HDR10+, for one. Set on the state
+        /// of an OBU being changed (<see cref="AV1Obu.Edit"/>), it is the payload written.
+        /// </summary>
+        public byte[] ItutT35Payload { get; set; }
 
         /// <summary>
         /// itu_t_t35_payload_bytes: the rest of the OBU, up to its trailing bits. The syntax gives
@@ -377,15 +559,33 @@ namespace SharpAV1
         /// </summary>
         private void ItutT35PayloadBytes()
         {
+            if (_writing)
+            {
+                ItutT35Payload = WritePayload("itu_t_t35_payload_bytes", _original?.ItutT35Payload, _edited?.ItutT35Payload);
+                return;
+            }
             stream.ReadBytes(PayloadBytesBeforeTrailingBits() * 8, out byte[] payload, "itu_t_t35_payload_bytes");
             ItutT35Payload = payload;
         }
 
-        /// <summary>The payload of the last metadata OBU of a type the syntax does not know.</summary>
-        public byte[] UnknownMetadataPayload { get; private set; }
+        /// <summary>A payload that runs to the trailing bits: as it was read, or as it was changed to.</summary>
+        private byte[] WritePayload(string name, byte[] original, byte[] edited)
+        {
+            byte[] payload = stream.Pick(name, original, _edited != null ? edited : original) ?? Array.Empty<byte>();
+            stream.WriteBytes(payload.Length * 8, payload, name);
+            return payload;
+        }
+
+        /// <summary>The payload of the last metadata OBU of a type the syntax does not know; set, as ItutT35Payload is.</summary>
+        public byte[] UnknownMetadataPayload { get; set; }
 
         private void MetadataUnknownPayload()
         {
+            if (_writing)
+            {
+                UnknownMetadataPayload = WritePayload("payload", _original?.UnknownMetadataPayload, _edited?.UnknownMetadataPayload);
+                return;
+            }
             stream.ReadBytes(PayloadBytesBeforeTrailingBits() * 8, out byte[] payload, "payload");
             UnknownMetadataPayload = payload;
         }
@@ -393,10 +593,14 @@ namespace SharpAV1
         /// <summary>
         /// How many whole bytes the OBU has left before its trailing bits: up to the last byte that
         /// is not zero, which - what comes before being whole bytes - is the 0x80 its trailing one
-        /// bit starts. Worked out by reading ahead, without reading on.
+        /// bit starts. Worked out by reading ahead, without reading on. Written, only padding_obu asks:
+        /// as many bytes as it was read with.
         /// </summary>
         private int PayloadBytesBeforeTrailingBits()
         {
+            if (_writing)
+                return stream.Source?["obu_padding_byte"].Count ?? 0;
+
             long remainingBits = (long)obu_size * 8 - (stream.GetPosition() - startPosition);
             var baseStream = stream.Bitstream.BaseStream;
             if (remainingBits <= 0 || stream.GetPosition() % 8 != 0 || !baseStream.CanSeek)
@@ -425,7 +629,7 @@ namespace SharpAV1
         /// used to copy one the size of the current frame from arrays sized for none, and to
         /// overwrite the size recorded for the reference frame with the current one's.
         /// </summary>
-        private void LoadPreviousSegmentIds()
+        private void load_previous_segment_ids()
         {
             prevFrame = ref_frame_idx[primary_ref_frame];
         }
@@ -461,7 +665,7 @@ namespace SharpAV1
             }
         }
 
-        private void DecodeFrameWrapup()
+        private void decode_frame_wrapup()
         {
             // A key frame shown again is loaded first (7.21), and every reference then refreshed
             // from it. Without the loading, every slot took the order hint, size and parameters of
@@ -477,9 +681,10 @@ namespace SharpAV1
                 RenderHeight = RefRenderHeight[shown];
                 OrderHint = RefOrderHint[shown];
                 for (int ri = AV1RefFrames.LAST_FRAME; ri <= AV1RefFrames.ALTREF_FRAME; ri++)
-                    Array.Copy(SavedGmParams[shown][ri], gm_params[ri], 6);
-                LoadLoopFilterParams(shown);
-                LoadSegmentationParams(shown);
+                    for (int k = 0; k < 6; k++)
+                        gm_params[ri][k] = SavedGmParams[shown][ri][k];
+                load_loop_filter_params(shown);
+                load_segmentation_params(shown);
             }
 
             if (referencesRefreshed)
@@ -513,27 +718,22 @@ namespace SharpAV1
                         }
                     }
 
-                    SaveLoopFilterParams(i);
-                    SaveSegmentationParams(i);
+                    save_loop_filter_params(i);
+                    save_segmentation_params(i);
 
                     RefOrderHint[i] = OrderHint;
                 }
             }            
         }
         
-        private int ChooseOperatingPoint()
+        private int choose_operating_point()
         {
             return SelectedOperatingPoint;
         }
 
-        private void SkipObu()
-        {
-            long totalObuSizeBits = obu_size << 3;
-            int currentBits = stream.GetPosition() - startPosition;
-            stream.Skip(totalObuSizeBits - currentBits);
-        }
+        private void skip_obu() => RestOfObu("obu_rest");
 
-        private void FrameHeaderCopy()
+        private void frame_header_copy()
         {
             if (LastObuFrameHeader == null)
                 throw new InvalidDataException("A redundant frame header with no frame header before it.");
@@ -541,6 +741,7 @@ namespace SharpAV1
             // With Strict, the references were refreshed when the header ended: read again against
             // them, the header would not take the bits it took. The copy is the header's bits.
             int bits = lastFrameHeaderBits;
+            bool writing = _writing;
             if (!Strict)
             {
                 using var aomStream = new AomStream(new MemoryStream(LastObuFrameHeader));
@@ -550,12 +751,14 @@ namespace SharpAV1
                 SeenFrameHeader = 0;
                 this.stream = aomStream;
                 readingCopy = true;
+                _writing = false;
                 try
                 {
                     FrameHeaderObu();
                 }
                 finally
                 {
+                    _writing = writing;
                     readingCopy = false;
                     SeenFrameHeader = oldSeenFrameHeader;
                     _ObuType = oldObuType;
@@ -567,9 +770,22 @@ namespace SharpAV1
             // The copy is in this OBU too, as many bits as the header it copies: read over them.
             // Left where they were, they were read as the OBU's trailing bits.
             byte[] copy = [];
+            int rest = 0;
+            if (writing)
+            {
+                // The header it repeats, as recorded: or, where it was not, the one this context wrote
+                byte[] header = LastObuFrameHeader ?? [];
+                byte[] headerBytes = new byte[Math.Min(bits / 8, header.Length)];
+                Array.Copy(header, headerBytes, headerBytes.Length);
+                int headerRest = bits % 8 > 0 && bits / 8 < header.Length ? header[bits / 8] >> (8 - bits % 8) : 0;
+                if (bits >= 8)
+                    this.stream.WriteBytes(bits / 8 * 8, copy = this.stream.Pick("frame_header_copy", headerBytes, headerBytes), "frame_header_copy");
+                if (bits % 8 > 0)
+                    this.stream.WriteFixed(bits % 8, rest = this.stream.Pick("frame_header_copy", headerRest, headerRest), "frame_header_copy");
+                return;
+            }
             if (bits >= 8)
                 this.stream.ReadBytes(bits / 8 * 8, out copy, "frame_header_copy");
-            int rest = 0;
             if (bits % 8 > 0)
                 this.stream.ReadFixed(bits % 8, out rest, "frame_header_copy");
 

@@ -8,6 +8,13 @@ namespace SharpAV2
 
     public partial class AV2Context : IAomContext
     {
+        /// <summary>
+        /// Writing, the state the OBU's syntax elements were read into, and the same state as it was
+        /// changed: an element whose value the two give alike is written as it was read.
+        /// </summary>
+        private AV2Context _original;
+        private AV2Context _edited;
+
     /*
 open_bitstream_unit( sz ) {
 obu_header()	
@@ -187,6 +194,118 @@ save_xlayer_context( obu_xlayer_id )
 			SaveXlayerContext(obu_xlayer_id); 
         }
 
+        private void WriteOpenBitstreamUnit(int sz)
+        {
+			int obuPayloadSize = 0;
+			int startPosition = 0;
+			int usedArith = 0;
+			int currentPosition = 0;
+			int parsedPayloadBits = 0;
+			int remainingPayloadBits = 0;
+			WriteObuHeader(); 
+			obuPayloadSize = ((sz - 1) - obu_header_extension_flag);
+			startPosition = get_position();
+			LoadXlayerContext(obu_xlayer_id); 
+
+			if ((obu_type == OBU_SEQUENCE_HEADER))
+			{
+				WriteSequenceHeaderObu(); 
+			}
+			else if ((obu_type == OBU_TEMPORAL_DELIMITER))
+			{
+				FirstPictureInTU = 1;
+				TemporalDelimiterObu(); 
+			}
+			else if ((obu_type == OBU_MSDO))
+			{
+				WriteMultistreamDecoderOperationObu(); 
+			}
+			else if ((obu_type == OBU_MULTI_FRAME_HEADER))
+			{
+				WriteMultiFrameHeaderObu(); 
+			}
+			else if ((((IsSef() != 0) || (IsTipFrame() != 0)) || (obu_type == OBU_BRIDGE_FRAME)))
+			{
+				WriteFrameHeader(1); 
+			}
+			else if ((obu_type == OBU_METADATA_SHORT))
+			{
+				WriteMetadataShortObu(obuPayloadSize); 
+			}
+			else if ((obu_type == OBU_METADATA_GROUP))
+			{
+				WriteMetadataGroupObu(); 
+			}
+			else if ((IsTileGroup() != 0))
+			{
+				WriteTileGroupObu(obuPayloadSize); 
+			}
+			else if ((obu_type == OBU_LAYER_CONFIGURATION_RECORD))
+			{
+				WriteLayerConfigRecordObu(); 
+			}
+			else if ((obu_type == OBU_ATLAS_SEGMENT))
+			{
+				WriteAtlasSegmentInfoObu(); 
+			}
+			else if ((obu_type == OBU_OPERATING_POINT_SET))
+			{
+				WriteOperatingPointSetObu(); 
+			}
+			else if ((obu_type == OBU_BUFFER_REMOVAL_TIMING))
+			{
+				WriteBufferRemovalTimingObu(); 
+			}
+			else if ((obu_type == OBU_QUANTIZATION_MATRIX))
+			{
+				WriteQuantizerMatrixObu(); 
+			}
+			else if ((obu_type == OBU_FILM_GRAIN))
+			{
+				WriteFilmGrainObu(); 
+			}
+			else if ((obu_type == OBU_CONTENT_INTERPRETATION))
+			{
+				WriteContentInterpretationObu(); 
+			}
+			else if ((obu_type == OBU_PADDING))
+			{
+				WritePaddingObu(); 
+			}
+			else 
+			{
+				ReservedObu(); 
+			}
+			usedArith = IsTileGroup();
+			currentPosition = get_position();
+			parsedPayloadBits = (currentPosition - startPosition);
+			remainingPayloadBits = ((obuPayloadSize * 8) - parsedPayloadBits);
+
+			if (((obuPayloadSize > 0) && !(usedArith != 0)))
+			{
+
+				if ((IsExtensibleObu() != 0))
+				{
+					this.obu_extension_flag = stream.Pick("obu_extension_flag", _original != null ? _original.obu_extension_flag : this.obu_extension_flag, _edited != null ? _edited.obu_extension_flag : _original != null ? _original.obu_extension_flag : this.obu_extension_flag);
+					stream.WriteFixed(1, this.obu_extension_flag, "obu_extension_flag"); 
+
+					if ((obu_extension_flag != 0))
+					{
+						WriteObuExtensionData((remainingPayloadBits - 1)); 
+					}
+					else 
+					{
+						WriteTrailingBits((remainingPayloadBits - 1)); 
+					}
+				}
+				else 
+				{
+					WriteTrailingBits(remainingPayloadBits); 
+				}
+			}
+			SaveXlayerContext(obu_xlayer_id); 
+        }
+
     /*
 obu_extension_data( sz ) {
 for ( i = 0; i < sz; i++ ) {	
@@ -205,6 +324,17 @@ obu_extension_data_bit	f(1)
 			for (i = 0; (i < sz); i++)
 			{
 				stream.ReadFixed(1, out this.obu_extension_data_bit, "obu_extension_data_bit"); 
+			}
+        }
+
+        private void WriteObuExtensionData(int sz)
+        {
+			int i = 0;
+
+			for (i = 0; (i < sz); i++)
+			{
+				this.obu_extension_data_bit = stream.Pick("obu_extension_data_bit", _original != null ? _original.obu_extension_data_bit : this.obu_extension_data_bit, _edited != null ? _edited.obu_extension_data_bit : _original != null ? _original.obu_extension_data_bit : this.obu_extension_data_bit);
+				stream.WriteFixed(1, this.obu_extension_data_bit, "obu_extension_data_bit"); 
 			}
         }
 
@@ -251,6 +381,29 @@ obu_xlayer_id = ( obu_type == OBU_MSDO || obu_type == OBU_TEMPORAL_DELIMITER ) ?
 			}
         }
 
+        private void WriteObuHeader()
+        {
+			this.obu_header_extension_flag = stream.Pick("obu_header_extension_flag", _original != null ? _original.obu_header_extension_flag : this.obu_header_extension_flag, _edited != null ? _edited.obu_header_extension_flag : _original != null ? _original.obu_header_extension_flag : this.obu_header_extension_flag);
+			stream.WriteFixed(1, this.obu_header_extension_flag, "obu_header_extension_flag"); 
+			this.obu_type = stream.Pick("obu_type", _original != null ? _original.obu_type : this.obu_type, _edited != null ? _edited.obu_type : _original != null ? _original.obu_type : this.obu_type);
+			stream.WriteFixed(5, this.obu_type, "obu_type"); 
+			this.obu_tlayer_id = stream.Pick("obu_tlayer_id", _original != null ? _original.obu_tlayer_id : this.obu_tlayer_id, _edited != null ? _edited.obu_tlayer_id : _original != null ? _original.obu_tlayer_id : this.obu_tlayer_id);
+			stream.WriteFixed(2, this.obu_tlayer_id, "obu_tlayer_id"); 
+
+			if ((obu_header_extension_flag == 1))
+			{
+				this.obu_mlayer_id = stream.Pick("obu_mlayer_id", _original != null ? _original.obu_mlayer_id : this.obu_mlayer_id, _edited != null ? _edited.obu_mlayer_id : _original != null ? _original.obu_mlayer_id : this.obu_mlayer_id);
+				stream.WriteFixed(3, this.obu_mlayer_id, "obu_mlayer_id"); 
+				this.obu_xlayer_id = stream.Pick("obu_xlayer_id", _original != null ? _original.obu_xlayer_id : this.obu_xlayer_id, _edited != null ? _edited.obu_xlayer_id : _original != null ? _original.obu_xlayer_id : this.obu_xlayer_id);
+				stream.WriteFixed(5, this.obu_xlayer_id, "obu_xlayer_id"); 
+			}
+			else 
+			{
+				obu_mlayer_id = 0;
+				obu_xlayer_id = (((obu_type == OBU_MSDO) || (obu_type == OBU_TEMPORAL_DELIMITER)) ? GLOBAL_XLAYER_ID : 0);
+			}
+        }
+
     /*
 trailing_bits( nbBits ) {
 trailing_one_bit	f(1)
@@ -280,6 +433,20 @@ nbBits--
 			}
         }
 
+        private void WriteTrailingBits(long nbBits)
+        {
+			this.trailing_one_bit = stream.Pick("trailing_one_bit", _original != null ? _original.trailing_one_bit : this.trailing_one_bit, _edited != null ? _edited.trailing_one_bit : _original != null ? _original.trailing_one_bit : this.trailing_one_bit);
+			stream.WriteFixed(1, this.trailing_one_bit, "trailing_one_bit"); 
+			nbBits--;
+
+			while ((nbBits > 0))
+			{
+				this.trailing_zero_bit = stream.Pick("trailing_zero_bit", _original != null ? _original.trailing_zero_bit : this.trailing_zero_bit, _edited != null ? _edited.trailing_zero_bit : _original != null ? _original.trailing_zero_bit : this.trailing_zero_bit);
+				stream.WriteFixed(1, this.trailing_zero_bit, "trailing_zero_bit"); 
+				nbBits--;
+			}
+        }
+
     /*
 byte_alignment() {
 while ( get_position() & 7 ) {	
@@ -296,6 +463,16 @@ zero_bit	f(1)
 			while (((get_position() & 7) != 0))
 			{
 				stream.ReadFixed(1, out this.zero_bit, "zero_bit"); 
+			}
+        }
+
+        private void WriteByteAlignment()
+        {
+
+			while (((get_position() & 7) != 0))
+			{
+				this.zero_bit = stream.Pick("zero_bit", _original != null ? _original.zero_bit : this.zero_bit, _edited != null ? _edited.zero_bit : _original != null ? _original.zero_bit : this.zero_bit);
+				stream.WriteFixed(1, this.zero_bit, "zero_bit"); 
 			}
         }
 
@@ -748,6 +925,255 @@ save_sequence_header()
 			save_sequence_header(); 
         }
 
+        private void WriteSequenceHeaderObu()
+        {
+			int mLayer = 0;
+			int currTLayer = 0;
+			int refTLayer = 0;
+			int currLayer = 0;
+			int refLayer = 0;
+			int mlayerId = 0;
+			int refMlayer = 0;
+			int depMLayerId = 0;
+			int n = 0;
+			this.seq_header_id = stream.Pick("seq_header_id", _original != null ? _original.seq_header_id : this.seq_header_id, _edited != null ? _edited.seq_header_id : _original != null ? _original.seq_header_id : this.seq_header_id);
+			stream.WriteUvlc( this.seq_header_id, "seq_header_id"); 
+			this.seq_profile_idc = stream.Pick("seq_profile_idc", _original != null ? _original.seq_profile_idc : this.seq_profile_idc, _edited != null ? _edited.seq_profile_idc : _original != null ? _original.seq_profile_idc : this.seq_profile_idc);
+			stream.WriteFixed(5, this.seq_profile_idc, "seq_profile_idc"); 
+			this.single_picture_header_flag = stream.Pick("single_picture_header_flag", _original != null ? _original.single_picture_header_flag : this.single_picture_header_flag, _edited != null ? _edited.single_picture_header_flag : _original != null ? _original.single_picture_header_flag : this.single_picture_header_flag);
+			stream.WriteFixed(1, this.single_picture_header_flag, "single_picture_header_flag"); 
+			this.seq_level_idx = stream.Pick("seq_level_idx", _original != null ? _original.seq_level_idx : this.seq_level_idx, _edited != null ? _edited.seq_level_idx : _original != null ? _original.seq_level_idx : this.seq_level_idx);
+			stream.WriteFixed(5, this.seq_level_idx, "seq_level_idx"); 
+
+			if (((seq_level_idx > 3) && !(single_picture_header_flag != 0)))
+			{
+				this.seq_tier = stream.Pick("seq_tier", _original != null ? _original.seq_tier : this.seq_tier, _edited != null ? _edited.seq_tier : _original != null ? _original.seq_tier : this.seq_tier);
+				stream.WriteFixed(1, this.seq_tier, "seq_tier"); 
+			}
+			else 
+			{
+				seq_tier = 0;
+			}
+			this.chroma_format_idc = stream.Pick("chroma_format_idc", _original != null ? _original.chroma_format_idc : this.chroma_format_idc, _edited != null ? _edited.chroma_format_idc : _original != null ? _original.chroma_format_idc : this.chroma_format_idc);
+			stream.WriteUvlc( this.chroma_format_idc, "chroma_format_idc"); 
+			this.bit_depth_idc = stream.Pick("bit_depth_idc", _original != null ? _original.bit_depth_idc : this.bit_depth_idc, _edited != null ? _edited.bit_depth_idc : _original != null ? _original.bit_depth_idc : this.bit_depth_idc);
+			stream.WriteUvlc( this.bit_depth_idc, "bit_depth_idc"); 
+			SetChromaFormatAndBitDepth(); 
+
+			if ((single_picture_header_flag != 0))
+			{
+				seq_lcr_id = 0;
+				still_picture = 1;
+				max_tlayer_id = 0;
+				max_mlayer_id = 0;
+				SeqMaxMlayerCnt = 1;
+				monotonic_output_order_flag = 1;
+			}
+			else 
+			{
+				this.seq_lcr_id = stream.Pick("seq_lcr_id", _original != null ? _original.seq_lcr_id : this.seq_lcr_id, _edited != null ? _edited.seq_lcr_id : _original != null ? _original.seq_lcr_id : this.seq_lcr_id);
+				stream.WriteFixed(3, this.seq_lcr_id, "seq_lcr_id"); 
+				this.still_picture = stream.Pick("still_picture", _original != null ? _original.still_picture : this.still_picture, _edited != null ? _edited.still_picture : _original != null ? _original.still_picture : this.still_picture);
+				stream.WriteFixed(1, this.still_picture, "still_picture"); 
+				this.max_tlayer_id = stream.Pick("max_tlayer_id", _original != null ? _original.max_tlayer_id : this.max_tlayer_id, _edited != null ? _edited.max_tlayer_id : _original != null ? _original.max_tlayer_id : this.max_tlayer_id);
+				stream.WriteFixed(2, this.max_tlayer_id, "max_tlayer_id"); 
+				this.max_mlayer_id = stream.Pick("max_mlayer_id", _original != null ? _original.max_mlayer_id : this.max_mlayer_id, _edited != null ? _edited.max_mlayer_id : _original != null ? _original.max_mlayer_id : this.max_mlayer_id);
+				stream.WriteFixed(3, this.max_mlayer_id, "max_mlayer_id"); 
+
+				if ((max_mlayer_id > 0))
+				{
+					n = CeilLog2((max_mlayer_id + 1));
+					this.seq_max_mlayer_cnt_minus_1 = stream.Pick("seq_max_mlayer_cnt_minus_1", _original != null ? _original.seq_max_mlayer_cnt_minus_1 : this.seq_max_mlayer_cnt_minus_1, _edited != null ? _edited.seq_max_mlayer_cnt_minus_1 : _original != null ? _original.seq_max_mlayer_cnt_minus_1 : this.seq_max_mlayer_cnt_minus_1);
+					stream.WriteVariable(n, this.seq_max_mlayer_cnt_minus_1, "seq_max_mlayer_cnt_minus_1"); 
+					SeqMaxMlayerCnt = (seq_max_mlayer_cnt_minus_1 + 1);
+				}
+				else 
+				{
+					SeqMaxMlayerCnt = 1;
+				}
+				this.monotonic_output_order_flag = stream.Pick("monotonic_output_order_flag", _original != null ? _original.monotonic_output_order_flag : this.monotonic_output_order_flag, _edited != null ? _edited.monotonic_output_order_flag : _original != null ? _original.monotonic_output_order_flag : this.monotonic_output_order_flag);
+				stream.WriteFixed(1, this.monotonic_output_order_flag, "monotonic_output_order_flag"); 
+			}
+			this.frame_width_bits_minus_1 = stream.Pick("frame_width_bits_minus_1", _original != null ? _original.frame_width_bits_minus_1 : this.frame_width_bits_minus_1, _edited != null ? _edited.frame_width_bits_minus_1 : _original != null ? _original.frame_width_bits_minus_1 : this.frame_width_bits_minus_1);
+			stream.WriteFixed(4, this.frame_width_bits_minus_1, "frame_width_bits_minus_1"); 
+			this.frame_height_bits_minus_1 = stream.Pick("frame_height_bits_minus_1", _original != null ? _original.frame_height_bits_minus_1 : this.frame_height_bits_minus_1, _edited != null ? _edited.frame_height_bits_minus_1 : _original != null ? _original.frame_height_bits_minus_1 : this.frame_height_bits_minus_1);
+			stream.WriteFixed(4, this.frame_height_bits_minus_1, "frame_height_bits_minus_1"); 
+			n = (frame_width_bits_minus_1 + 1);
+			this.max_frame_width_minus_1 = stream.Pick("max_frame_width_minus_1", _original != null ? _original.max_frame_width_minus_1 : this.max_frame_width_minus_1, _edited != null ? _edited.max_frame_width_minus_1 : _original != null ? _original.max_frame_width_minus_1 : this.max_frame_width_minus_1);
+			stream.WriteVariable(n, this.max_frame_width_minus_1, "max_frame_width_minus_1"); 
+			n = (frame_height_bits_minus_1 + 1);
+			this.max_frame_height_minus_1 = stream.Pick("max_frame_height_minus_1", _original != null ? _original.max_frame_height_minus_1 : this.max_frame_height_minus_1, _edited != null ? _edited.max_frame_height_minus_1 : _original != null ? _original.max_frame_height_minus_1 : this.max_frame_height_minus_1);
+			stream.WriteVariable(n, this.max_frame_height_minus_1, "max_frame_height_minus_1"); 
+			this.seq_cropping_window_present_flag = stream.Pick("seq_cropping_window_present_flag", _original != null ? _original.seq_cropping_window_present_flag : this.seq_cropping_window_present_flag, _edited != null ? _edited.seq_cropping_window_present_flag : _original != null ? _original.seq_cropping_window_present_flag : this.seq_cropping_window_present_flag);
+			stream.WriteFixed(1, this.seq_cropping_window_present_flag, "seq_cropping_window_present_flag"); 
+
+			if ((seq_cropping_window_present_flag != 0))
+			{
+				this.seq_cropping_win_left_offset = stream.Pick("seq_cropping_win_left_offset", _original != null ? _original.seq_cropping_win_left_offset : this.seq_cropping_win_left_offset, _edited != null ? _edited.seq_cropping_win_left_offset : _original != null ? _original.seq_cropping_win_left_offset : this.seq_cropping_win_left_offset);
+				stream.WriteUvlc( this.seq_cropping_win_left_offset, "seq_cropping_win_left_offset"); 
+				this.seq_cropping_win_right_offset = stream.Pick("seq_cropping_win_right_offset", _original != null ? _original.seq_cropping_win_right_offset : this.seq_cropping_win_right_offset, _edited != null ? _edited.seq_cropping_win_right_offset : _original != null ? _original.seq_cropping_win_right_offset : this.seq_cropping_win_right_offset);
+				stream.WriteUvlc( this.seq_cropping_win_right_offset, "seq_cropping_win_right_offset"); 
+				this.seq_cropping_win_top_offset = stream.Pick("seq_cropping_win_top_offset", _original != null ? _original.seq_cropping_win_top_offset : this.seq_cropping_win_top_offset, _edited != null ? _edited.seq_cropping_win_top_offset : _original != null ? _original.seq_cropping_win_top_offset : this.seq_cropping_win_top_offset);
+				stream.WriteUvlc( this.seq_cropping_win_top_offset, "seq_cropping_win_top_offset"); 
+				this.seq_cropping_win_bottom_offset = stream.Pick("seq_cropping_win_bottom_offset", _original != null ? _original.seq_cropping_win_bottom_offset : this.seq_cropping_win_bottom_offset, _edited != null ? _edited.seq_cropping_win_bottom_offset : _original != null ? _original.seq_cropping_win_bottom_offset : this.seq_cropping_win_bottom_offset);
+				stream.WriteUvlc( this.seq_cropping_win_bottom_offset, "seq_cropping_win_bottom_offset"); 
+			}
+			else 
+			{
+				seq_cropping_win_left_offset = 0;
+				seq_cropping_win_right_offset = 0;
+				seq_cropping_win_top_offset = 0;
+				seq_cropping_win_bottom_offset = 0;
+			}
+
+			if ((single_picture_header_flag != 0))
+			{
+				decoder_model_info_present_flag = 0;
+			}
+			else 
+			{
+				this.seq_initial_display_delay_present_flag = stream.Pick("seq_initial_display_delay_present_flag", _original != null ? _original.seq_initial_display_delay_present_flag : this.seq_initial_display_delay_present_flag, _edited != null ? _edited.seq_initial_display_delay_present_flag : _original != null ? _original.seq_initial_display_delay_present_flag : this.seq_initial_display_delay_present_flag);
+				stream.WriteFixed(1, this.seq_initial_display_delay_present_flag, "seq_initial_display_delay_present_flag"); 
+
+				if ((seq_initial_display_delay_present_flag != 0))
+				{
+					this.seq_initial_display_delay_minus_1 = stream.Pick("seq_initial_display_delay_minus_1", _original != null ? _original.seq_initial_display_delay_minus_1 : this.seq_initial_display_delay_minus_1, _edited != null ? _edited.seq_initial_display_delay_minus_1 : _original != null ? _original.seq_initial_display_delay_minus_1 : this.seq_initial_display_delay_minus_1);
+					stream.WriteFixed(4, this.seq_initial_display_delay_minus_1, "seq_initial_display_delay_minus_1"); 
+				}
+				this.decoder_model_info_present_flag = stream.Pick("decoder_model_info_present_flag", _original != null ? _original.decoder_model_info_present_flag : this.decoder_model_info_present_flag, _edited != null ? _edited.decoder_model_info_present_flag : _original != null ? _original.decoder_model_info_present_flag : this.decoder_model_info_present_flag);
+				stream.WriteFixed(1, this.decoder_model_info_present_flag, "decoder_model_info_present_flag"); 
+
+				if ((decoder_model_info_present_flag != 0))
+				{
+					this.num_units_in_decoding_tick = stream.Pick("num_units_in_decoding_tick", _original != null ? _original.num_units_in_decoding_tick : this.num_units_in_decoding_tick, _edited != null ? _edited.num_units_in_decoding_tick : _original != null ? _original.num_units_in_decoding_tick : this.num_units_in_decoding_tick);
+					stream.WriteFixed(32, this.num_units_in_decoding_tick, "num_units_in_decoding_tick"); 
+					this.seq_decoder_model_info_present_flag = stream.Pick("seq_decoder_model_info_present_flag", _original != null ? _original.seq_decoder_model_info_present_flag : this.seq_decoder_model_info_present_flag, _edited != null ? _edited.seq_decoder_model_info_present_flag : _original != null ? _original.seq_decoder_model_info_present_flag : this.seq_decoder_model_info_present_flag);
+					stream.WriteFixed(1, this.seq_decoder_model_info_present_flag, "seq_decoder_model_info_present_flag"); 
+
+					if ((seq_decoder_model_info_present_flag != 0))
+					{
+						WriteSeqDecoderModelInfo(); 
+					}
+				}
+			}
+
+			for (mLayer = 0; (mLayer < MAX_NUM_MLAYERS); mLayer++)
+			{
+
+				for (currTLayer = 0; (currTLayer < MAX_NUM_TLAYERS); currTLayer++)
+				{
+
+					for (refTLayer = 0; (refTLayer < MAX_NUM_TLAYERS); refTLayer++)
+					{
+						TLayerDependencyMap[mLayer][currTLayer][refTLayer] = ((((refTLayer <= currTLayer) && (currTLayer <= max_tlayer_id)) && (mLayer <= max_mlayer_id)) ? 1 : 0);
+					}
+				}
+			}
+
+			for (currLayer = 0; (currLayer < MAX_NUM_MLAYERS); currLayer++)
+			{
+
+				for (refLayer = 0; (refLayer < MAX_NUM_MLAYERS); refLayer++)
+				{
+					MLayerDependencyMap[currLayer][refLayer] = (((refLayer <= currLayer) && (currLayer <= max_mlayer_id)) ? 1 : 0);
+				}
+			}
+
+			if ((max_mlayer_id > 0))
+			{
+				this.mlayer_dependency_present_flag = stream.Pick("mlayer_dependency_present_flag", _original != null ? _original.mlayer_dependency_present_flag : this.mlayer_dependency_present_flag, _edited != null ? _edited.mlayer_dependency_present_flag : _original != null ? _original.mlayer_dependency_present_flag : this.mlayer_dependency_present_flag);
+				stream.WriteFixed(1, this.mlayer_dependency_present_flag, "mlayer_dependency_present_flag"); 
+
+				if ((mlayer_dependency_present_flag != 0))
+				{
+
+					for (currLayer = 1; (currLayer <= max_mlayer_id); currLayer++)
+					{
+
+						for (refLayer = currLayer; (refLayer >= 0); refLayer--)
+						{
+							this.mlayer_dependency_map = stream.Pick("mlayer_dependency_map", _original != null ? _original.MLayerDependencyMap[currLayer][refLayer] : this.mlayer_dependency_map, _edited != null ? _edited.MLayerDependencyMap[currLayer][refLayer] : _original != null ? _original.MLayerDependencyMap[currLayer][refLayer] : this.mlayer_dependency_map);
+							stream.WriteFixed(1, this.mlayer_dependency_map, "mlayer_dependency_map"); 
+							MLayerDependencyMap[currLayer][refLayer] = mlayer_dependency_map;
+						}
+					}
+				}
+			}
+
+			if ((max_tlayer_id > 0))
+			{
+				this.tlayer_dependency_present_flag = stream.Pick("tlayer_dependency_present_flag", _original != null ? _original.tlayer_dependency_present_flag : this.tlayer_dependency_present_flag, _edited != null ? _edited.tlayer_dependency_present_flag : _original != null ? _original.tlayer_dependency_present_flag : this.tlayer_dependency_present_flag);
+				stream.WriteFixed(1, this.tlayer_dependency_present_flag, "tlayer_dependency_present_flag"); 
+
+				if ((tlayer_dependency_present_flag != 0))
+				{
+
+					if ((max_mlayer_id > 0))
+					{
+						this.multi_tlayer_dependency_map_present_flag = stream.Pick("multi_tlayer_dependency_map_present_flag", _original != null ? _original.multi_tlayer_dependency_map_present_flag : this.multi_tlayer_dependency_map_present_flag, _edited != null ? _edited.multi_tlayer_dependency_map_present_flag : _original != null ? _original.multi_tlayer_dependency_map_present_flag : this.multi_tlayer_dependency_map_present_flag);
+						stream.WriteFixed(1, this.multi_tlayer_dependency_map_present_flag, "multi_tlayer_dependency_map_present_flag"); 
+					}
+					else 
+					{
+						multi_tlayer_dependency_map_present_flag = 0;
+					}
+
+					for (mLayer = 0; (mLayer <= max_mlayer_id); mLayer++)
+					{
+
+						for (currTLayer = 1; (currTLayer <= max_tlayer_id); currTLayer++)
+						{
+
+							for (refTLayer = currTLayer; (refTLayer >= 0); refTLayer--)
+							{
+
+								if (((multi_tlayer_dependency_map_present_flag > 0) || (mLayer == 0)))
+								{
+									this.tlayer_dependency_map = stream.Pick("tlayer_dependency_map", _original != null ? _original.TLayerDependencyMap[mLayer][currTLayer][refTLayer] : this.tlayer_dependency_map, _edited != null ? _edited.TLayerDependencyMap[mLayer][currTLayer][refTLayer] : _original != null ? _original.TLayerDependencyMap[mLayer][currTLayer][refTLayer] : this.tlayer_dependency_map);
+									stream.WriteFixed(1, this.tlayer_dependency_map, "tlayer_dependency_map"); 
+									TLayerDependencyMap[mLayer][currTLayer][refTLayer] = tlayer_dependency_map;
+								}
+								else 
+								{
+									TLayerDependencyMap[mLayer][currTLayer][refTLayer] = TLayerDependencyMap[0][currTLayer][refTLayer];
+								}
+							}
+						}
+					}
+				}
+			}
+
+			for (mlayerId = 0; (mlayerId < MAX_NUM_MLAYERS); mlayerId++)
+			{
+
+				for (refMlayer = 0; (refMlayer < MAX_NUM_MLAYERS); refMlayer++)
+				{
+					MLayerPresenceMap[mlayerId][refMlayer] = 0;
+
+					if (((mlayerId == refMlayer) || (MLayerDependencyMap[mlayerId][refMlayer] != 0)))
+					{
+						MLayerPresenceMap[mlayerId][refMlayer] = 1;
+
+						for (depMLayerId = 0; (depMLayerId < refMlayer); depMLayerId++)
+						{
+							MLayerPresenceMap[mlayerId][depMLayerId] |= MLayerPresenceMap[refMlayer][depMLayerId];
+						}
+					}
+				}
+			}
+			WriteSequencePartitionConfig(); 
+			WriteSequenceSegmentConfig(); 
+			WriteSequenceIntraConfig(); 
+			WriteSequenceInterConfig(); 
+			WriteSequenceSccConfig(); 
+			WriteSequenceTransformQuantEntropyConfig(); 
+			WriteSequenceFilterConfig(); 
+			WriteSequenceTileConfig(); 
+			this.film_grain_params_present = stream.Pick("film_grain_params_present", _original != null ? _original.film_grain_params_present : this.film_grain_params_present, _edited != null ? _edited.film_grain_params_present : _original != null ? _original.film_grain_params_present : this.film_grain_params_present);
+			stream.WriteFixed(1, this.film_grain_params_present, "film_grain_params_present"); 
+			save_sequence_header(); 
+        }
+
     /*
 sequence_tile_config() {
 seq_tile_info_present_flag	f(1)
@@ -792,6 +1218,22 @@ seqSbSize = get_seq_sb_size()
 				stream.ReadFixed(1, out this.allow_tile_info_change, "allow_tile_info_change"); 
 				seqSbSize = GetSeqSbSize();
 				(SeqSbRowStarts, SeqSbRows, SeqTileRows, SeqTileRowsLog2, SeqSbColStarts, SeqSbCols, SeqTileCols, SeqTileColsLog2, SeqUniformTileSpacingFlag, sbShift) = TileParams((max_frame_width_minus_1 + 1), (max_frame_height_minus_1 + 1), seqSbSize, seqSbSize, 0);
+			}
+        }
+
+        private void WriteSequenceTileConfig()
+        {
+			int seqSbSize = 0;
+			int sbShift = 0;
+			this.seq_tile_info_present_flag = stream.Pick("seq_tile_info_present_flag", _original != null ? _original.seq_tile_info_present_flag : this.seq_tile_info_present_flag, _edited != null ? _edited.seq_tile_info_present_flag : _original != null ? _original.seq_tile_info_present_flag : this.seq_tile_info_present_flag);
+			stream.WriteFixed(1, this.seq_tile_info_present_flag, "seq_tile_info_present_flag"); 
+
+			if ((seq_tile_info_present_flag != 0))
+			{
+				this.allow_tile_info_change = stream.Pick("allow_tile_info_change", _original != null ? _original.allow_tile_info_change : this.allow_tile_info_change, _edited != null ? _edited.allow_tile_info_change : _original != null ? _original.allow_tile_info_change : this.allow_tile_info_change);
+				stream.WriteFixed(1, this.allow_tile_info_change, "allow_tile_info_change"); 
+				seqSbSize = GetSeqSbSize();
+				(SeqSbRowStarts, SeqSbRows, SeqTileRows, SeqTileRowsLog2, SeqSbColStarts, SeqSbCols, SeqTileCols, SeqTileColsLog2, SeqUniformTileSpacingFlag, sbShift) = WriteTileParams((max_frame_width_minus_1 + 1), (max_frame_height_minus_1 + 1), seqSbSize, seqSbSize, 0);
 			}
         }
 
@@ -894,6 +1336,63 @@ MaxPbAspectRatio = 8
 			}
         }
 
+        private void WriteSequencePartitionConfig()
+        {
+			this.use_256x256_superblock = stream.Pick("use_256x256_superblock", _original != null ? _original.use_256x256_superblock : this.use_256x256_superblock, _edited != null ? _edited.use_256x256_superblock : _original != null ? _original.use_256x256_superblock : this.use_256x256_superblock);
+			stream.WriteFixed(1, this.use_256x256_superblock, "use_256x256_superblock"); 
+
+			if (!(use_256x256_superblock != 0))
+			{
+				this.use_128x128_superblock = stream.Pick("use_128x128_superblock", _original != null ? _original.use_128x128_superblock : this.use_128x128_superblock, _edited != null ? _edited.use_128x128_superblock : _original != null ? _original.use_128x128_superblock : this.use_128x128_superblock);
+				stream.WriteFixed(1, this.use_128x128_superblock, "use_128x128_superblock"); 
+			}
+
+			if ((Monochrome != 0))
+			{
+				enable_sdp = 0;
+			}
+			else 
+			{
+				this.enable_sdp = stream.Pick("enable_sdp", _original != null ? _original.enable_sdp : this.enable_sdp, _edited != null ? _edited.enable_sdp : _original != null ? _original.enable_sdp : this.enable_sdp);
+				stream.WriteFixed(1, this.enable_sdp, "enable_sdp"); 
+			}
+
+			if (((enable_sdp != 0) && !(single_picture_header_flag != 0)))
+			{
+				this.enable_extended_sdp = stream.Pick("enable_extended_sdp", _original != null ? _original.enable_extended_sdp : this.enable_extended_sdp, _edited != null ? _edited.enable_extended_sdp : _original != null ? _original.enable_extended_sdp : this.enable_extended_sdp);
+				stream.WriteFixed(1, this.enable_extended_sdp, "enable_extended_sdp"); 
+			}
+			else 
+			{
+				enable_extended_sdp = 0;
+			}
+			this.enable_ext_partitions = stream.Pick("enable_ext_partitions", _original != null ? _original.enable_ext_partitions : this.enable_ext_partitions, _edited != null ? _edited.enable_ext_partitions : _original != null ? _original.enable_ext_partitions : this.enable_ext_partitions);
+			stream.WriteFixed(1, this.enable_ext_partitions, "enable_ext_partitions"); 
+
+			if ((enable_ext_partitions != 0))
+			{
+				this.enable_uneven_4way_partitions = stream.Pick("enable_uneven_4way_partitions", _original != null ? _original.enable_uneven_4way_partitions : this.enable_uneven_4way_partitions, _edited != null ? _edited.enable_uneven_4way_partitions : _original != null ? _original.enable_uneven_4way_partitions : this.enable_uneven_4way_partitions);
+				stream.WriteFixed(1, this.enable_uneven_4way_partitions, "enable_uneven_4way_partitions"); 
+			}
+			else 
+			{
+				enable_uneven_4way_partitions = 0;
+			}
+			this.reduce_pb_aspect_ratio = stream.Pick("reduce_pb_aspect_ratio", _original != null ? _original.reduce_pb_aspect_ratio : this.reduce_pb_aspect_ratio, _edited != null ? _edited.reduce_pb_aspect_ratio : _original != null ? _original.reduce_pb_aspect_ratio : this.reduce_pb_aspect_ratio);
+			stream.WriteFixed(1, this.reduce_pb_aspect_ratio, "reduce_pb_aspect_ratio"); 
+
+			if ((reduce_pb_aspect_ratio != 0))
+			{
+				this.max_pb_aspect_ratio_log2_minus_1 = stream.Pick("max_pb_aspect_ratio_log2_minus_1", _original != null ? _original.max_pb_aspect_ratio_log2_minus_1 : this.max_pb_aspect_ratio_log2_minus_1, _edited != null ? _edited.max_pb_aspect_ratio_log2_minus_1 : _original != null ? _original.max_pb_aspect_ratio_log2_minus_1 : this.max_pb_aspect_ratio_log2_minus_1);
+				stream.WriteFixed(1, this.max_pb_aspect_ratio_log2_minus_1, "max_pb_aspect_ratio_log2_minus_1"); 
+				MaxPbAspectRatio = (1 << (max_pb_aspect_ratio_log2_minus_1 + 1));
+			}
+			else 
+			{
+				MaxPbAspectRatio = 8;
+			}
+        }
+
     /*
 sequence_segment_config() {
 enable_ext_seg	f(1)
@@ -928,6 +1427,22 @@ seq_allow_seg_info_change	f(1)
 			{
 				stream.ReadFixed(1, out this.seq_allow_seg_info_change, "seq_allow_seg_info_change"); 
 				(SeqFeatureEnabled, SeqFeatureData) = SegInfo(MaxSegments);
+			}
+        }
+
+        private void WriteSequenceSegmentConfig()
+        {
+			this.enable_ext_seg = stream.Pick("enable_ext_seg", _original != null ? _original.enable_ext_seg : this.enable_ext_seg, _edited != null ? _edited.enable_ext_seg : _original != null ? _original.enable_ext_seg : this.enable_ext_seg);
+			stream.WriteFixed(1, this.enable_ext_seg, "enable_ext_seg"); 
+			MaxSegments = ((enable_ext_seg != 0) ? 16 : 8);
+			this.seq_seg_info_present_flag = stream.Pick("seq_seg_info_present_flag", _original != null ? _original.seq_seg_info_present_flag : this.seq_seg_info_present_flag, _edited != null ? _edited.seq_seg_info_present_flag : _original != null ? _original.seq_seg_info_present_flag : this.seq_seg_info_present_flag);
+			stream.WriteFixed(1, this.seq_seg_info_present_flag, "seq_seg_info_present_flag"); 
+
+			if ((seq_seg_info_present_flag != 0))
+			{
+				this.seq_allow_seg_info_change = stream.Pick("seq_allow_seg_info_change", _original != null ? _original.seq_allow_seg_info_change : this.seq_allow_seg_info_change, _edited != null ? _edited.seq_allow_seg_info_change : _original != null ? _original.seq_allow_seg_info_change : this.seq_allow_seg_info_change);
+				stream.WriteFixed(1, this.seq_allow_seg_info_change, "seq_allow_seg_info_change"); 
+				(SeqFeatureEnabled, SeqFeatureData) = WriteSegInfo(MaxSegments);
 			}
         }
 
@@ -978,6 +1493,32 @@ enable_ibp	f(1)
 			}
 			stream.ReadFixed(1, out this.enable_mhccp, "enable_mhccp"); 
 			stream.ReadFixed(1, out this.enable_ibp, "enable_ibp"); 
+        }
+
+        private void WriteSequenceIntraConfig()
+        {
+			this.enable_dip = stream.Pick("enable_dip", _original != null ? _original.enable_dip : this.enable_dip, _edited != null ? _edited.enable_dip : _original != null ? _original.enable_dip : this.enable_dip);
+			stream.WriteFixed(1, this.enable_dip, "enable_dip"); 
+			this.enable_intra_edge_filter = stream.Pick("enable_intra_edge_filter", _original != null ? _original.enable_intra_edge_filter : this.enable_intra_edge_filter, _edited != null ? _edited.enable_intra_edge_filter : _original != null ? _original.enable_intra_edge_filter : this.enable_intra_edge_filter);
+			stream.WriteFixed(1, this.enable_intra_edge_filter, "enable_intra_edge_filter"); 
+			this.enable_mrls = stream.Pick("enable_mrls", _original != null ? _original.enable_mrls : this.enable_mrls, _edited != null ? _edited.enable_mrls : _original != null ? _original.enable_mrls : this.enable_mrls);
+			stream.WriteFixed(1, this.enable_mrls, "enable_mrls"); 
+			this.enable_cfl_intra = stream.Pick("enable_cfl_intra", _original != null ? _original.enable_cfl_intra : this.enable_cfl_intra, _edited != null ? _edited.enable_cfl_intra : _original != null ? _original.enable_cfl_intra : this.enable_cfl_intra);
+			stream.WriteFixed(1, this.enable_cfl_intra, "enable_cfl_intra"); 
+
+			if ((Monochrome != 0))
+			{
+				cfl_ds_filter_index = 0;
+			}
+			else 
+			{
+				this.cfl_ds_filter_index = stream.Pick("cfl_ds_filter_index", _original != null ? _original.cfl_ds_filter_index : this.cfl_ds_filter_index, _edited != null ? _edited.cfl_ds_filter_index : _original != null ? _original.cfl_ds_filter_index : this.cfl_ds_filter_index);
+				stream.WriteFixed(2, this.cfl_ds_filter_index, "cfl_ds_filter_index"); 
+			}
+			this.enable_mhccp = stream.Pick("enable_mhccp", _original != null ? _original.enable_mhccp : this.enable_mhccp, _edited != null ? _edited.enable_mhccp : _original != null ? _original.enable_mhccp : this.enable_mhccp);
+			stream.WriteFixed(1, this.enable_mhccp, "enable_mhccp"); 
+			this.enable_ibp = stream.Pick("enable_ibp", _original != null ? _original.enable_ibp : this.enable_ibp, _edited != null ? _edited.enable_ibp : _original != null ? _original.enable_ibp : this.enable_ibp);
+			stream.WriteFixed(1, this.enable_ibp, "enable_ibp"); 
         }
 
     /*
@@ -1354,6 +1895,218 @@ enable_short_refresh_frame_flags	f(1)
 			}
         }
 
+        private void WriteSequenceInterConfig()
+        {
+			int i = 0;
+			int mode = 0;
+			int n = 0;
+			int motionModeEnabled = 0;
+
+			if ((single_picture_header_flag != 0))
+			{
+
+				for (i = 0; (i < MOTION_MODES); i++)
+				{
+					seq_enabled_motion_modes[i] = 0;
+				}
+				enable_six_param_warp_delta = 0;
+				enable_masked_compound = 0;
+				enable_ref_frame_mvs = 0;
+				reduced_ref_frame_mvs_mode = 0;
+				OrderHintBits = 0;
+				enable_opfl_refine = REFINE_NONE;
+				this.enable_refmvbank = stream.Pick("enable_refmvbank", _original != null ? _original.enable_refmvbank : this.enable_refmvbank, _edited != null ? _edited.enable_refmvbank : _original != null ? _original.enable_refmvbank : this.enable_refmvbank);
+				stream.WriteFixed(1, this.enable_refmvbank, "enable_refmvbank"); 
+				this.disable_drl_reorder = stream.Pick("disable_drl_reorder", _original != null ? _original.disable_drl_reorder : this.disable_drl_reorder, _edited != null ? _edited.disable_drl_reorder : _original != null ? _original.disable_drl_reorder : this.disable_drl_reorder);
+				stream.WriteFixed(1, this.disable_drl_reorder, "disable_drl_reorder"); 
+
+				if ((disable_drl_reorder != 0))
+				{
+					DrlReorder = DRL_REORDER_DISABLED;
+				}
+				else 
+				{
+					this.constrain_drl_reorder = stream.Pick("constrain_drl_reorder", _original != null ? _original.constrain_drl_reorder : this.constrain_drl_reorder, _edited != null ? _edited.constrain_drl_reorder : _original != null ? _original.constrain_drl_reorder : this.constrain_drl_reorder);
+					stream.WriteFixed(1, this.constrain_drl_reorder, "constrain_drl_reorder"); 
+					DrlReorder = ((constrain_drl_reorder != 0) ? DRL_REORDER_CONSTRAINT : DRL_REORDER_ALWAYS);
+				}
+				n = (MAX_REF_BV_STACK_SIZE - 1);
+				this.seq_max_bvp_drl_bits_minus_1 = stream.Pick("seq_max_bvp_drl_bits_minus_1", _original != null ? _original.seq_max_bvp_drl_bits_minus_1 : this.seq_max_bvp_drl_bits_minus_1, _edited != null ? _edited.seq_max_bvp_drl_bits_minus_1 : _original != null ? _original.seq_max_bvp_drl_bits_minus_1 : this.seq_max_bvp_drl_bits_minus_1);
+				stream.Write_ns(n, this.seq_max_bvp_drl_bits_minus_1, "seq_max_bvp_drl_bits_minus_1"); 
+				this.allow_frame_max_bvp_drl_bits = stream.Pick("allow_frame_max_bvp_drl_bits", _original != null ? _original.allow_frame_max_bvp_drl_bits : this.allow_frame_max_bvp_drl_bits, _edited != null ? _edited.allow_frame_max_bvp_drl_bits : _original != null ? _original.allow_frame_max_bvp_drl_bits : this.allow_frame_max_bvp_drl_bits);
+				stream.WriteFixed(1, this.allow_frame_max_bvp_drl_bits, "allow_frame_max_bvp_drl_bits"); 
+				this.enable_bawp = stream.Pick("enable_bawp", _original != null ? _original.enable_bawp : this.enable_bawp, _edited != null ? _edited.enable_bawp : _original != null ? _original.enable_bawp : this.enable_bawp);
+				stream.WriteFixed(1, this.enable_bawp, "enable_bawp"); 
+				enable_mv_traj = 0;
+				enable_imp_msk_bld = 0;
+				NumRefFrames = 2;
+				long_term_frame_id_bits = 0;
+			}
+			else 
+			{
+				motionModeEnabled = 0;
+
+				for (mode = INTERINTRA; (mode < MOTION_MODES); mode++)
+				{
+					this.seq_enabled_motion_modes[mode] = stream.Pick("seq_enabled_motion_modes", _original != null ? _original.seq_enabled_motion_modes[mode] : this.seq_enabled_motion_modes[mode], _edited != null ? _edited.seq_enabled_motion_modes[mode] : _original != null ? _original.seq_enabled_motion_modes[mode] : this.seq_enabled_motion_modes[mode]);
+					stream.WriteFixed(1, this.seq_enabled_motion_modes[mode], "seq_enabled_motion_modes"); 
+					motionModeEnabled |= seq_enabled_motion_modes[mode];
+				}
+
+				if ((motionModeEnabled != 0))
+				{
+					this.seq_frame_motion_modes_present_flag = stream.Pick("seq_frame_motion_modes_present_flag", _original != null ? _original.seq_frame_motion_modes_present_flag : this.seq_frame_motion_modes_present_flag, _edited != null ? _edited.seq_frame_motion_modes_present_flag : _original != null ? _original.seq_frame_motion_modes_present_flag : this.seq_frame_motion_modes_present_flag);
+					stream.WriteFixed(1, this.seq_frame_motion_modes_present_flag, "seq_frame_motion_modes_present_flag"); 
+				}
+				else 
+				{
+					seq_frame_motion_modes_present_flag = 0;
+				}
+
+				if ((seq_enabled_motion_modes[DELTAWARP] != 0))
+				{
+					this.enable_six_param_warp_delta = stream.Pick("enable_six_param_warp_delta", _original != null ? _original.enable_six_param_warp_delta : this.enable_six_param_warp_delta, _edited != null ? _edited.enable_six_param_warp_delta : _original != null ? _original.enable_six_param_warp_delta : this.enable_six_param_warp_delta);
+					stream.WriteFixed(1, this.enable_six_param_warp_delta, "enable_six_param_warp_delta"); 
+				}
+				else 
+				{
+					enable_six_param_warp_delta = 0;
+				}
+				this.enable_masked_compound = stream.Pick("enable_masked_compound", _original != null ? _original.enable_masked_compound : this.enable_masked_compound, _edited != null ? _edited.enable_masked_compound : _original != null ? _original.enable_masked_compound : this.enable_masked_compound);
+				stream.WriteFixed(1, this.enable_masked_compound, "enable_masked_compound"); 
+				this.enable_ref_frame_mvs = stream.Pick("enable_ref_frame_mvs", _original != null ? _original.enable_ref_frame_mvs : this.enable_ref_frame_mvs, _edited != null ? _edited.enable_ref_frame_mvs : _original != null ? _original.enable_ref_frame_mvs : this.enable_ref_frame_mvs);
+				stream.WriteFixed(1, this.enable_ref_frame_mvs, "enable_ref_frame_mvs"); 
+
+				if ((enable_ref_frame_mvs != 0))
+				{
+					this.reduced_ref_frame_mvs_mode = stream.Pick("reduced_ref_frame_mvs_mode", _original != null ? _original.reduced_ref_frame_mvs_mode : this.reduced_ref_frame_mvs_mode, _edited != null ? _edited.reduced_ref_frame_mvs_mode : _original != null ? _original.reduced_ref_frame_mvs_mode : this.reduced_ref_frame_mvs_mode);
+					stream.WriteFixed(1, this.reduced_ref_frame_mvs_mode, "reduced_ref_frame_mvs_mode"); 
+				}
+				else 
+				{
+					reduced_ref_frame_mvs_mode = 0;
+				}
+				this.order_hint_bits_minus_1 = stream.Pick("order_hint_bits_minus_1", _original != null ? _original.order_hint_bits_minus_1 : this.order_hint_bits_minus_1, _edited != null ? _edited.order_hint_bits_minus_1 : _original != null ? _original.order_hint_bits_minus_1 : this.order_hint_bits_minus_1);
+				stream.WriteFixed(4, this.order_hint_bits_minus_1, "order_hint_bits_minus_1"); 
+				OrderHintBits = (order_hint_bits_minus_1 + 1);
+				this.enable_refmvbank = stream.Pick("enable_refmvbank", _original != null ? _original.enable_refmvbank : this.enable_refmvbank, _edited != null ? _edited.enable_refmvbank : _original != null ? _original.enable_refmvbank : this.enable_refmvbank);
+				stream.WriteFixed(1, this.enable_refmvbank, "enable_refmvbank"); 
+				this.disable_drl_reorder = stream.Pick("disable_drl_reorder", _original != null ? _original.disable_drl_reorder : this.disable_drl_reorder, _edited != null ? _edited.disable_drl_reorder : _original != null ? _original.disable_drl_reorder : this.disable_drl_reorder);
+				stream.WriteFixed(1, this.disable_drl_reorder, "disable_drl_reorder"); 
+
+				if ((disable_drl_reorder != 0))
+				{
+					DrlReorder = DRL_REORDER_DISABLED;
+				}
+				else 
+				{
+					this.constrain_drl_reorder = stream.Pick("constrain_drl_reorder", _original != null ? _original.constrain_drl_reorder : this.constrain_drl_reorder, _edited != null ? _edited.constrain_drl_reorder : _original != null ? _original.constrain_drl_reorder : this.constrain_drl_reorder);
+					stream.WriteFixed(1, this.constrain_drl_reorder, "constrain_drl_reorder"); 
+					DrlReorder = ((constrain_drl_reorder != 0) ? DRL_REORDER_CONSTRAINT : DRL_REORDER_ALWAYS);
+				}
+				this.explicit_ref_frame_map = stream.Pick("explicit_ref_frame_map", _original != null ? _original.explicit_ref_frame_map : this.explicit_ref_frame_map, _edited != null ? _edited.explicit_ref_frame_map : _original != null ? _original.explicit_ref_frame_map : this.explicit_ref_frame_map);
+				stream.WriteFixed(1, this.explicit_ref_frame_map, "explicit_ref_frame_map"); 
+				this.explicit_num_ref_frames = stream.Pick("explicit_num_ref_frames", _original != null ? _original.explicit_num_ref_frames : this.explicit_num_ref_frames, _edited != null ? _edited.explicit_num_ref_frames : _original != null ? _original.explicit_num_ref_frames : this.explicit_num_ref_frames);
+				stream.WriteFixed(1, this.explicit_num_ref_frames, "explicit_num_ref_frames"); 
+
+				if ((explicit_num_ref_frames != 0))
+				{
+					this.num_ref_frames_minus_1 = stream.Pick("num_ref_frames_minus_1", _original != null ? _original.num_ref_frames_minus_1 : this.num_ref_frames_minus_1, _edited != null ? _edited.num_ref_frames_minus_1 : _original != null ? _original.num_ref_frames_minus_1 : this.num_ref_frames_minus_1);
+					stream.WriteFixed(4, this.num_ref_frames_minus_1, "num_ref_frames_minus_1"); 
+					NumRefFrames = (num_ref_frames_minus_1 + 1);
+				}
+				else 
+				{
+					NumRefFrames = 8;
+				}
+				ActiveNumRefFrames = Min(REFS_PER_FRAME, NumRefFrames);
+				this.long_term_frame_id_bits = stream.Pick("long_term_frame_id_bits", _original != null ? _original.long_term_frame_id_bits : this.long_term_frame_id_bits, _edited != null ? _edited.long_term_frame_id_bits : _original != null ? _original.long_term_frame_id_bits : this.long_term_frame_id_bits);
+				stream.WriteFixed(3, this.long_term_frame_id_bits, "long_term_frame_id_bits"); 
+				n = (MAX_REF_MV_STACK_SIZE - 1);
+				this.seq_max_drl_bits_minus_1 = stream.Pick("seq_max_drl_bits_minus_1", _original != null ? _original.seq_max_drl_bits_minus_1 : this.seq_max_drl_bits_minus_1, _edited != null ? _edited.seq_max_drl_bits_minus_1 : _original != null ? _original.seq_max_drl_bits_minus_1 : this.seq_max_drl_bits_minus_1);
+				stream.Write_ns(n, this.seq_max_drl_bits_minus_1, "seq_max_drl_bits_minus_1"); 
+				this.allow_frame_max_drl_bits = stream.Pick("allow_frame_max_drl_bits", _original != null ? _original.allow_frame_max_drl_bits : this.allow_frame_max_drl_bits, _edited != null ? _edited.allow_frame_max_drl_bits : _original != null ? _original.allow_frame_max_drl_bits : this.allow_frame_max_drl_bits);
+				stream.WriteFixed(1, this.allow_frame_max_drl_bits, "allow_frame_max_drl_bits"); 
+				n = (MAX_REF_BV_STACK_SIZE - 1);
+				this.seq_max_bvp_drl_bits_minus_1 = stream.Pick("seq_max_bvp_drl_bits_minus_1", _original != null ? _original.seq_max_bvp_drl_bits_minus_1 : this.seq_max_bvp_drl_bits_minus_1, _edited != null ? _edited.seq_max_bvp_drl_bits_minus_1 : _original != null ? _original.seq_max_bvp_drl_bits_minus_1 : this.seq_max_bvp_drl_bits_minus_1);
+				stream.Write_ns(n, this.seq_max_bvp_drl_bits_minus_1, "seq_max_bvp_drl_bits_minus_1"); 
+				this.allow_frame_max_bvp_drl_bits = stream.Pick("allow_frame_max_bvp_drl_bits", _original != null ? _original.allow_frame_max_bvp_drl_bits : this.allow_frame_max_bvp_drl_bits, _edited != null ? _edited.allow_frame_max_bvp_drl_bits : _original != null ? _original.allow_frame_max_bvp_drl_bits : this.allow_frame_max_bvp_drl_bits);
+				stream.WriteFixed(1, this.allow_frame_max_bvp_drl_bits, "allow_frame_max_bvp_drl_bits"); 
+				this.num_same_ref_compound = stream.Pick("num_same_ref_compound", _original != null ? _original.num_same_ref_compound : this.num_same_ref_compound, _edited != null ? _edited.num_same_ref_compound : _original != null ? _original.num_same_ref_compound : this.num_same_ref_compound);
+				stream.WriteFixed(2, this.num_same_ref_compound, "num_same_ref_compound"); 
+				this.enable_tip = stream.Pick("enable_tip", _original != null ? _original.enable_tip : this.enable_tip, _edited != null ? _edited.enable_tip : _original != null ? _original.enable_tip : this.enable_tip);
+				stream.WriteFixed(1, this.enable_tip, "enable_tip"); 
+
+				if ((enable_tip != 0))
+				{
+					this.disable_tip_output = stream.Pick("disable_tip_output", _original != null ? _original.disable_tip_output : this.disable_tip_output, _edited != null ? _edited.disable_tip_output : _original != null ? _original.disable_tip_output : this.disable_tip_output);
+					stream.WriteFixed(1, this.disable_tip_output, "disable_tip_output"); 
+					EnableTipOutput = (!(disable_tip_output != 0) ? 1 : 0);
+					this.enable_tip_hole_fill = stream.Pick("enable_tip_hole_fill", _original != null ? _original.enable_tip_hole_fill : this.enable_tip_hole_fill, _edited != null ? _edited.enable_tip_hole_fill : _original != null ? _original.enable_tip_hole_fill : this.enable_tip_hole_fill);
+					stream.WriteFixed(1, this.enable_tip_hole_fill, "enable_tip_hole_fill"); 
+				}
+				else 
+				{
+					enable_tip_hole_fill = 0;
+					EnableTipOutput = 0;
+				}
+				this.enable_mv_traj = stream.Pick("enable_mv_traj", _original != null ? _original.enable_mv_traj : this.enable_mv_traj, _edited != null ? _edited.enable_mv_traj : _original != null ? _original.enable_mv_traj : this.enable_mv_traj);
+				stream.WriteFixed(1, this.enable_mv_traj, "enable_mv_traj"); 
+				this.enable_bawp = stream.Pick("enable_bawp", _original != null ? _original.enable_bawp : this.enable_bawp, _edited != null ? _edited.enable_bawp : _original != null ? _original.enable_bawp : this.enable_bawp);
+				stream.WriteFixed(1, this.enable_bawp, "enable_bawp"); 
+				this.enable_cwp = stream.Pick("enable_cwp", _original != null ? _original.enable_cwp : this.enable_cwp, _edited != null ? _edited.enable_cwp : _original != null ? _original.enable_cwp : this.enable_cwp);
+				stream.WriteFixed(1, this.enable_cwp, "enable_cwp"); 
+				this.enable_imp_msk_bld = stream.Pick("enable_imp_msk_bld", _original != null ? _original.enable_imp_msk_bld : this.enable_imp_msk_bld, _edited != null ? _edited.enable_imp_msk_bld : _original != null ? _original.enable_imp_msk_bld : this.enable_imp_msk_bld);
+				stream.WriteFixed(1, this.enable_imp_msk_bld, "enable_imp_msk_bld"); 
+				this.enable_df_sub_pu = stream.Pick("enable_df_sub_pu", _original != null ? _original.enable_df_sub_pu : this.enable_df_sub_pu, _edited != null ? _edited.enable_df_sub_pu : _original != null ? _original.enable_df_sub_pu : this.enable_df_sub_pu);
+				stream.WriteFixed(1, this.enable_df_sub_pu, "enable_df_sub_pu"); 
+
+				if (((EnableTipOutput != 0) && (enable_df_sub_pu != 0)))
+				{
+					this.enable_tip_explicit_qp = stream.Pick("enable_tip_explicit_qp", _original != null ? _original.enable_tip_explicit_qp : this.enable_tip_explicit_qp, _edited != null ? _edited.enable_tip_explicit_qp : _original != null ? _original.enable_tip_explicit_qp : this.enable_tip_explicit_qp);
+					stream.WriteFixed(1, this.enable_tip_explicit_qp, "enable_tip_explicit_qp"); 
+				}
+				else 
+				{
+					enable_tip_explicit_qp = 0;
+				}
+				this.enable_opfl_refine = stream.Pick("enable_opfl_refine", _original != null ? _original.enable_opfl_refine : this.enable_opfl_refine, _edited != null ? _edited.enable_opfl_refine : _original != null ? _original.enable_opfl_refine : this.enable_opfl_refine);
+				stream.WriteFixed(2, this.enable_opfl_refine, "enable_opfl_refine"); 
+				this.enable_refinemv = stream.Pick("enable_refinemv", _original != null ? _original.enable_refinemv : this.enable_refinemv, _edited != null ? _edited.enable_refinemv : _original != null ? _original.enable_refinemv : this.enable_refinemv);
+				stream.WriteFixed(1, this.enable_refinemv, "enable_refinemv"); 
+
+				if (((enable_tip != 0) && ((enable_opfl_refine != 0) || (enable_refinemv != 0))))
+				{
+					this.enable_tip_refinemv = stream.Pick("enable_tip_refinemv", _original != null ? _original.enable_tip_refinemv : this.enable_tip_refinemv, _edited != null ? _edited.enable_tip_refinemv : _original != null ? _original.enable_tip_refinemv : this.enable_tip_refinemv);
+					stream.WriteFixed(1, this.enable_tip_refinemv, "enable_tip_refinemv"); 
+				}
+				else 
+				{
+					enable_tip_refinemv = 0;
+				}
+				this.enable_bru = stream.Pick("enable_bru", _original != null ? _original.enable_bru : this.enable_bru, _edited != null ? _edited.enable_bru : _original != null ? _original.enable_bru : this.enable_bru);
+				stream.WriteFixed(1, this.enable_bru, "enable_bru"); 
+				this.enable_adaptive_mvd = stream.Pick("enable_adaptive_mvd", _original != null ? _original.enable_adaptive_mvd : this.enable_adaptive_mvd, _edited != null ? _edited.enable_adaptive_mvd : _original != null ? _original.enable_adaptive_mvd : this.enable_adaptive_mvd);
+				stream.WriteFixed(1, this.enable_adaptive_mvd, "enable_adaptive_mvd"); 
+				this.enable_mvd_sign_derive = stream.Pick("enable_mvd_sign_derive", _original != null ? _original.enable_mvd_sign_derive : this.enable_mvd_sign_derive, _edited != null ? _edited.enable_mvd_sign_derive : _original != null ? _original.enable_mvd_sign_derive : this.enable_mvd_sign_derive);
+				stream.WriteFixed(1, this.enable_mvd_sign_derive, "enable_mvd_sign_derive"); 
+				this.enable_flex_mvres = stream.Pick("enable_flex_mvres", _original != null ? _original.enable_flex_mvres : this.enable_flex_mvres, _edited != null ? _edited.enable_flex_mvres : _original != null ? _original.enable_flex_mvres : this.enable_flex_mvres);
+				stream.WriteFixed(1, this.enable_flex_mvres, "enable_flex_mvres"); 
+
+				if ((single_picture_header_flag != 0))
+				{
+					enable_global_motion = 0;
+				}
+				else 
+				{
+					this.enable_global_motion = stream.Pick("enable_global_motion", _original != null ? _original.enable_global_motion : this.enable_global_motion, _edited != null ? _edited.enable_global_motion : _original != null ? _original.enable_global_motion : this.enable_global_motion);
+					stream.WriteFixed(1, this.enable_global_motion, "enable_global_motion"); 
+				}
+				this.enable_short_refresh_frame_flags = stream.Pick("enable_short_refresh_frame_flags", _original != null ? _original.enable_short_refresh_frame_flags : this.enable_short_refresh_frame_flags, _edited != null ? _edited.enable_short_refresh_frame_flags : _original != null ? _original.enable_short_refresh_frame_flags : this.enable_short_refresh_frame_flags);
+				stream.WriteFixed(1, this.enable_short_refresh_frame_flags, "enable_short_refresh_frame_flags"); 
+			}
+        }
+
     /*
 sequence_scc_config() {
 if ( single_picture_header_flag ) {	
@@ -1420,6 +2173,51 @@ seq_force_integer_mv = SELECT_INTEGER_MV
 					else 
 					{
 						stream.ReadFixed(1, out this.seq_force_integer_mv, "seq_force_integer_mv"); 
+					}
+				}
+				else 
+				{
+					seq_force_integer_mv = SELECT_INTEGER_MV;
+				}
+			}
+        }
+
+        private void WriteSequenceSccConfig()
+        {
+
+			if ((single_picture_header_flag != 0))
+			{
+				seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS;
+				seq_force_integer_mv = SELECT_INTEGER_MV;
+			}
+			else 
+			{
+				this.seq_choose_screen_content_tools = stream.Pick("seq_choose_screen_content_tools", _original != null ? (_original.seq_force_screen_content_tools == SELECT_SCREEN_CONTENT_TOOLS ? 1 : 0) : this.seq_choose_screen_content_tools, _edited != null ? (_edited.seq_force_screen_content_tools == SELECT_SCREEN_CONTENT_TOOLS ? 1 : 0) : _original != null ? (_original.seq_force_screen_content_tools == SELECT_SCREEN_CONTENT_TOOLS ? 1 : 0) : this.seq_choose_screen_content_tools);
+				stream.WriteFixed(1, this.seq_choose_screen_content_tools, "seq_choose_screen_content_tools"); 
+
+				if ((seq_choose_screen_content_tools != 0))
+				{
+					seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS;
+				}
+				else 
+				{
+					this.seq_force_screen_content_tools = stream.Pick("seq_force_screen_content_tools", _original != null ? _original.seq_force_screen_content_tools : this.seq_force_screen_content_tools, _edited != null ? _edited.seq_force_screen_content_tools : _original != null ? _original.seq_force_screen_content_tools : this.seq_force_screen_content_tools);
+					stream.WriteFixed(1, this.seq_force_screen_content_tools, "seq_force_screen_content_tools"); 
+				}
+
+				if ((seq_force_screen_content_tools > 0))
+				{
+					this.seq_choose_integer_mv = stream.Pick("seq_choose_integer_mv", _original != null ? (_original.seq_force_integer_mv == SELECT_INTEGER_MV ? 1 : 0) : this.seq_choose_integer_mv, _edited != null ? (_edited.seq_force_integer_mv == SELECT_INTEGER_MV ? 1 : 0) : _original != null ? (_original.seq_force_integer_mv == SELECT_INTEGER_MV ? 1 : 0) : this.seq_choose_integer_mv);
+					stream.WriteFixed(1, this.seq_choose_integer_mv, "seq_choose_integer_mv"); 
+
+					if ((seq_choose_integer_mv != 0))
+					{
+						seq_force_integer_mv = SELECT_INTEGER_MV;
+					}
+					else 
+					{
+						this.seq_force_integer_mv = stream.Pick("seq_force_integer_mv", _original != null ? _original.seq_force_integer_mv : this.seq_force_integer_mv, _edited != null ? _edited.seq_force_integer_mv : _original != null ? _original.seq_force_integer_mv : this.seq_force_integer_mv);
+						stream.WriteFixed(1, this.seq_force_integer_mv, "seq_force_integer_mv"); 
 					}
 				}
 				else 
@@ -1670,6 +2468,143 @@ BaseUVDcDeltaQ = BaseUVAcDeltaQ
 			}
         }
 
+        private void WriteSequenceTransformQuantEntropyConfig()
+        {
+			this.enable_fsc = stream.Pick("enable_fsc", _original != null ? (_original.enable_idtx_intra == 1 ? 1 : 0) : this.enable_fsc, _edited != null ? (_edited.enable_idtx_intra == 1 ? 1 : 0) : _original != null ? (_original.enable_idtx_intra == 1 ? 1 : 0) : this.enable_fsc);
+			stream.WriteFixed(1, this.enable_fsc, "enable_fsc"); 
+
+			if ((enable_fsc != 0))
+			{
+				enable_idtx_intra = 1;
+			}
+			else 
+			{
+				this.enable_idtx_intra = stream.Pick("enable_idtx_intra", _original != null ? _original.enable_idtx_intra : this.enable_idtx_intra, _edited != null ? _edited.enable_idtx_intra : _original != null ? _original.enable_idtx_intra : this.enable_idtx_intra);
+				stream.WriteFixed(1, this.enable_idtx_intra, "enable_idtx_intra"); 
+			}
+			this.enable_intra_ist = stream.Pick("enable_intra_ist", _original != null ? _original.enable_intra_ist : this.enable_intra_ist, _edited != null ? _edited.enable_intra_ist : _original != null ? _original.enable_intra_ist : this.enable_intra_ist);
+			stream.WriteFixed(1, this.enable_intra_ist, "enable_intra_ist"); 
+			this.enable_inter_ist = stream.Pick("enable_inter_ist", _original != null ? _original.enable_inter_ist : this.enable_inter_ist, _edited != null ? _edited.enable_inter_ist : _original != null ? _original.enable_inter_ist : this.enable_inter_ist);
+			stream.WriteFixed(1, this.enable_inter_ist, "enable_inter_ist"); 
+
+			if ((Monochrome != 0))
+			{
+				enable_chroma_dctonly = 0;
+			}
+			else 
+			{
+				this.enable_chroma_dctonly = stream.Pick("enable_chroma_dctonly", _original != null ? _original.enable_chroma_dctonly : this.enable_chroma_dctonly, _edited != null ? _edited.enable_chroma_dctonly : _original != null ? _original.enable_chroma_dctonly : this.enable_chroma_dctonly);
+				stream.WriteFixed(1, this.enable_chroma_dctonly, "enable_chroma_dctonly"); 
+			}
+
+			if (!(single_picture_header_flag != 0))
+			{
+				this.enable_inter_ddt = stream.Pick("enable_inter_ddt", _original != null ? _original.enable_inter_ddt : this.enable_inter_ddt, _edited != null ? _edited.enable_inter_ddt : _original != null ? _original.enable_inter_ddt : this.enable_inter_ddt);
+				stream.WriteFixed(1, this.enable_inter_ddt, "enable_inter_ddt"); 
+			}
+			this.reduced_tx_part_set = stream.Pick("reduced_tx_part_set", _original != null ? _original.reduced_tx_part_set : this.reduced_tx_part_set, _edited != null ? _edited.reduced_tx_part_set : _original != null ? _original.reduced_tx_part_set : this.reduced_tx_part_set);
+			stream.WriteFixed(1, this.reduced_tx_part_set, "reduced_tx_part_set"); 
+
+			if ((Monochrome != 0))
+			{
+				enable_cctx = 0;
+			}
+			else 
+			{
+				this.enable_cctx = stream.Pick("enable_cctx", _original != null ? _original.enable_cctx : this.enable_cctx, _edited != null ? _edited.enable_cctx : _original != null ? _original.enable_cctx : this.enable_cctx);
+				stream.WriteFixed(1, this.enable_cctx, "enable_cctx"); 
+			}
+			this.enable_tcq = stream.Pick("enable_tcq", _original != null ? _original.enable_tcq : this.enable_tcq, _edited != null ? _edited.enable_tcq : _original != null ? _original.enable_tcq : this.enable_tcq);
+			stream.WriteFixed(1, this.enable_tcq, "enable_tcq"); 
+
+			if (((enable_tcq != 0) && !(single_picture_header_flag != 0)))
+			{
+				this.choose_tcq_per_frame = stream.Pick("choose_tcq_per_frame", _original != null ? _original.choose_tcq_per_frame : this.choose_tcq_per_frame, _edited != null ? _edited.choose_tcq_per_frame : _original != null ? _original.choose_tcq_per_frame : this.choose_tcq_per_frame);
+				stream.WriteFixed(1, this.choose_tcq_per_frame, "choose_tcq_per_frame"); 
+			}
+			else 
+			{
+				choose_tcq_per_frame = 0;
+			}
+
+			if (((enable_tcq != 0) && !(choose_tcq_per_frame != 0)))
+			{
+				enable_parity_hiding = 0;
+			}
+			else 
+			{
+				this.enable_parity_hiding = stream.Pick("enable_parity_hiding", _original != null ? _original.enable_parity_hiding : this.enable_parity_hiding, _edited != null ? _edited.enable_parity_hiding : _original != null ? _original.enable_parity_hiding : this.enable_parity_hiding);
+				stream.WriteFixed(1, this.enable_parity_hiding, "enable_parity_hiding"); 
+			}
+
+			if ((single_picture_header_flag != 0))
+			{
+				enable_avg_cdf = 1;
+				avg_cdf_type = 1;
+			}
+			else 
+			{
+				this.enable_avg_cdf = stream.Pick("enable_avg_cdf", _original != null ? _original.enable_avg_cdf : this.enable_avg_cdf, _edited != null ? _edited.enable_avg_cdf : _original != null ? _original.enable_avg_cdf : this.enable_avg_cdf);
+				stream.WriteFixed(1, this.enable_avg_cdf, "enable_avg_cdf"); 
+
+				if ((enable_avg_cdf != 0))
+				{
+					this.avg_cdf_type = stream.Pick("avg_cdf_type", _original != null ? _original.avg_cdf_type : this.avg_cdf_type, _edited != null ? _edited.avg_cdf_type : _original != null ? _original.avg_cdf_type : this.avg_cdf_type);
+					stream.WriteFixed(1, this.avg_cdf_type, "avg_cdf_type"); 
+				}
+			}
+
+			if ((Monochrome != 0))
+			{
+				separate_uv_delta_q = 0;
+			}
+			else 
+			{
+				this.separate_uv_delta_q = stream.Pick("separate_uv_delta_q", _original != null ? _original.separate_uv_delta_q : this.separate_uv_delta_q, _edited != null ? _edited.separate_uv_delta_q : _original != null ? _original.separate_uv_delta_q : this.separate_uv_delta_q);
+				stream.WriteFixed(1, this.separate_uv_delta_q, "separate_uv_delta_q"); 
+			}
+			BaseYDcDeltaQ = 0;
+			BaseUVDcDeltaQ = 0;
+			BaseUVAcDeltaQ = 0;
+			y_dc_delta_q_enabled = 0;
+			uv_dc_delta_q_enabled = 0;
+			uv_ac_delta_q_enabled = 0;
+			this.equal_ac_dc_q = stream.Pick("equal_ac_dc_q", _original != null ? _original.equal_ac_dc_q : this.equal_ac_dc_q, _edited != null ? _edited.equal_ac_dc_q : _original != null ? _original.equal_ac_dc_q : this.equal_ac_dc_q);
+			stream.WriteFixed(1, this.equal_ac_dc_q, "equal_ac_dc_q"); 
+
+			if (!(equal_ac_dc_q != 0))
+			{
+				this.base_y_dc_delta_q = stream.Pick("base_y_dc_delta_q", _original != null ? _original.base_y_dc_delta_q : this.base_y_dc_delta_q, _edited != null ? _edited.base_y_dc_delta_q : _original != null ? _original.base_y_dc_delta_q : this.base_y_dc_delta_q);
+				stream.WriteFixed(5, this.base_y_dc_delta_q, "base_y_dc_delta_q"); 
+				BaseYDcDeltaQ = (DELTA_DCQUANT_MIN + base_y_dc_delta_q);
+				this.y_dc_delta_q_enabled = stream.Pick("y_dc_delta_q_enabled", _original != null ? _original.y_dc_delta_q_enabled : this.y_dc_delta_q_enabled, _edited != null ? _edited.y_dc_delta_q_enabled : _original != null ? _original.y_dc_delta_q_enabled : this.y_dc_delta_q_enabled);
+				stream.WriteFixed(1, this.y_dc_delta_q_enabled, "y_dc_delta_q_enabled"); 
+			}
+
+			if (!(Monochrome != 0))
+			{
+
+				if (!(equal_ac_dc_q != 0))
+				{
+					this.base_uv_dc_delta_q = stream.Pick("base_uv_dc_delta_q", _original != null ? _original.base_uv_dc_delta_q : this.base_uv_dc_delta_q, _edited != null ? _edited.base_uv_dc_delta_q : _original != null ? _original.base_uv_dc_delta_q : this.base_uv_dc_delta_q);
+					stream.WriteFixed(5, this.base_uv_dc_delta_q, "base_uv_dc_delta_q"); 
+					BaseUVDcDeltaQ = (DELTA_DCQUANT_MIN + base_uv_dc_delta_q);
+					this.uv_dc_delta_q_enabled = stream.Pick("uv_dc_delta_q_enabled", _original != null ? _original.uv_dc_delta_q_enabled : this.uv_dc_delta_q_enabled, _edited != null ? _edited.uv_dc_delta_q_enabled : _original != null ? _original.uv_dc_delta_q_enabled : this.uv_dc_delta_q_enabled);
+					stream.WriteFixed(1, this.uv_dc_delta_q_enabled, "uv_dc_delta_q_enabled"); 
+				}
+				this.base_uv_ac_delta_q = stream.Pick("base_uv_ac_delta_q", _original != null ? _original.base_uv_ac_delta_q : this.base_uv_ac_delta_q, _edited != null ? _edited.base_uv_ac_delta_q : _original != null ? _original.base_uv_ac_delta_q : this.base_uv_ac_delta_q);
+				stream.WriteFixed(5, this.base_uv_ac_delta_q, "base_uv_ac_delta_q"); 
+				BaseUVAcDeltaQ = (DELTA_DCQUANT_MIN + base_uv_ac_delta_q);
+				this.uv_ac_delta_q_enabled = stream.Pick("uv_ac_delta_q_enabled", _original != null ? _original.uv_ac_delta_q_enabled : this.uv_ac_delta_q_enabled, _edited != null ? _edited.uv_ac_delta_q_enabled : _original != null ? _original.uv_ac_delta_q_enabled : this.uv_ac_delta_q_enabled);
+				stream.WriteFixed(1, this.uv_ac_delta_q_enabled, "uv_ac_delta_q_enabled"); 
+
+				if ((equal_ac_dc_q != 0))
+				{
+					BaseUVDcDeltaQ = BaseUVAcDeltaQ;
+				}
+			}
+        }
+
     /*
 seg_info( numSegments ) {
 for ( i = 0; i < numSegments; i++ ) {	
@@ -1737,6 +2672,52 @@ return (enabled, data)
 						else 
 						{
 							stream.ReadVariable(bitsToRead, out this.feature_value, "feature_value"); 
+							clippedValue = Clip3(0, limit, feature_value);
+						}
+					}
+					data[i][j] = clippedValue;
+				}
+			}
+			return (enabled, data);
+        }
+
+        private (AomArray<AomArray<int>>, AomArray<AomArray<int>>) WriteSegInfo(int numSegments)
+        {
+			int i = 0;
+			int j = 0;
+			AomArray<AomArray<int>> enabled = new AomArray<AomArray<int>>(() => new AomArray<int>());
+			int clippedValue = 0;
+			int bitsToRead = 0;
+			int limit = 0;
+			int n = 0;
+			AomArray<AomArray<int>> data = new AomArray<AomArray<int>>(() => new AomArray<int>());
+
+			for (i = 0; (i < numSegments); i++)
+			{
+
+				for (j = 0; (j < SEG_LVL_MAX); j++)
+				{
+					this.feature_enabled = stream.Pick("feature_enabled", _original != null ? _original.feature_enabled : this.feature_enabled, _edited != null ? _edited.feature_enabled : _original != null ? _original.feature_enabled : this.feature_enabled);
+					stream.WriteFixed(1, this.feature_enabled, "feature_enabled"); 
+					enabled[i][j] = feature_enabled;
+					clippedValue = 0;
+
+					if ((feature_enabled == 1))
+					{
+						bitsToRead = Segmentation_Feature_Bits[j];
+						limit = Segmentation_Feature_Max[j];
+
+						if ((Segmentation_Feature_Signed[j] == 1))
+						{
+							n = (1 + bitsToRead);
+							this.feature_value = stream.Pick("feature_value", _original != null ? _original.feature_value : this.feature_value, _edited != null ? _edited.feature_value : _original != null ? _original.feature_value : this.feature_value);
+							stream.WriteSignedIntVar(n, this.feature_value, "feature_value"); 
+							clippedValue = Clip3(-limit, limit, feature_value);
+						}
+						else 
+						{
+							this.feature_value = stream.Pick("feature_value", _original != null ? _original.feature_value : this.feature_value, _edited != null ? _edited.feature_value : _original != null ? _original.feature_value : this.feature_value);
+							stream.WriteVariable(bitsToRead, this.feature_value, "feature_value"); 
 							clippedValue = Clip3(0, limit, feature_value);
 						}
 					}
@@ -1879,6 +2860,84 @@ df_par_bits_minus_2	f(2)
 				}
 			}
 			stream.ReadFixed(2, out this.df_par_bits_minus_2, "df_par_bits_minus_2"); 
+        }
+
+        private void WriteSequenceFilterConfig()
+        {
+			this.disable_loopfilters_across_tiles = stream.Pick("disable_loopfilters_across_tiles", _original != null ? _original.disable_loopfilters_across_tiles : this.disable_loopfilters_across_tiles, _edited != null ? _edited.disable_loopfilters_across_tiles : _original != null ? _original.disable_loopfilters_across_tiles : this.disable_loopfilters_across_tiles);
+			stream.WriteFixed(1, this.disable_loopfilters_across_tiles, "disable_loopfilters_across_tiles"); 
+			this.enable_cdef = stream.Pick("enable_cdef", _original != null ? _original.enable_cdef : this.enable_cdef, _edited != null ? _edited.enable_cdef : _original != null ? _original.enable_cdef : this.enable_cdef);
+			stream.WriteFixed(1, this.enable_cdef, "enable_cdef"); 
+			this.enable_gdf = stream.Pick("enable_gdf", _original != null ? _original.enable_gdf : this.enable_gdf, _edited != null ? _edited.enable_gdf : _original != null ? _original.enable_gdf : this.enable_gdf);
+			stream.WriteFixed(1, this.enable_gdf, "enable_gdf"); 
+
+			if (((enable_gdf != 0) && (GetSeqSbSize() == BLOCK_64X64)))
+			{
+				this.gdf_unit_matches_sb_size = stream.Pick("gdf_unit_matches_sb_size", _original != null ? _original.gdf_unit_matches_sb_size : this.gdf_unit_matches_sb_size, _edited != null ? _edited.gdf_unit_matches_sb_size : _original != null ? _original.gdf_unit_matches_sb_size : this.gdf_unit_matches_sb_size);
+				stream.WriteFixed(1, this.gdf_unit_matches_sb_size, "gdf_unit_matches_sb_size"); 
+			}
+			else 
+			{
+				gdf_unit_matches_sb_size = 0;
+			}
+			this.enable_restoration = stream.Pick("enable_restoration", _original != null ? _original.enable_restoration : this.enable_restoration, _edited != null ? _edited.enable_restoration : _original != null ? _original.enable_restoration : this.enable_restoration);
+			stream.WriteFixed(1, this.enable_restoration, "enable_restoration"); 
+
+			if ((enable_restoration != 0))
+			{
+				this.lr_tools_disable[0][RESTORE_PC_WIENER] = stream.Pick("lr_tools_disable", _original != null ? _original.lr_tools_disable[0][RESTORE_PC_WIENER] : this.lr_tools_disable[0][RESTORE_PC_WIENER], _edited != null ? _edited.lr_tools_disable[0][RESTORE_PC_WIENER] : _original != null ? _original.lr_tools_disable[0][RESTORE_PC_WIENER] : this.lr_tools_disable[0][RESTORE_PC_WIENER]);
+				stream.WriteFixed(1, this.lr_tools_disable[0][RESTORE_PC_WIENER], "lr_tools_disable"); 
+				this.lr_tools_disable[0][RESTORE_WIENER_NONSEP] = stream.Pick("lr_tools_disable", _original != null ? _original.lr_tools_disable[0][RESTORE_WIENER_NONSEP] : this.lr_tools_disable[0][RESTORE_WIENER_NONSEP], _edited != null ? _edited.lr_tools_disable[0][RESTORE_WIENER_NONSEP] : _original != null ? _original.lr_tools_disable[0][RESTORE_WIENER_NONSEP] : this.lr_tools_disable[0][RESTORE_WIENER_NONSEP]);
+				stream.WriteFixed(1, this.lr_tools_disable[0][RESTORE_WIENER_NONSEP], "lr_tools_disable"); 
+				lr_tools_disable[1][RESTORE_PC_WIENER] = 1;
+				this.lr_tools_uv_present = stream.Pick("lr_tools_uv_present", _original != null ? _original.lr_tools_uv_present : this.lr_tools_uv_present, _edited != null ? _edited.lr_tools_uv_present : _original != null ? _original.lr_tools_uv_present : this.lr_tools_uv_present);
+				stream.WriteFixed(1, this.lr_tools_uv_present, "lr_tools_uv_present"); 
+
+				if ((lr_tools_uv_present != 0))
+				{
+					this.lr_tools_disable[1][RESTORE_WIENER_NONSEP] = stream.Pick("lr_tools_disable", _original != null ? _original.lr_tools_disable[1][RESTORE_WIENER_NONSEP] : this.lr_tools_disable[1][RESTORE_WIENER_NONSEP], _edited != null ? _edited.lr_tools_disable[1][RESTORE_WIENER_NONSEP] : _original != null ? _original.lr_tools_disable[1][RESTORE_WIENER_NONSEP] : this.lr_tools_disable[1][RESTORE_WIENER_NONSEP]);
+					stream.WriteFixed(1, this.lr_tools_disable[1][RESTORE_WIENER_NONSEP], "lr_tools_disable"); 
+				}
+				else 
+				{
+					lr_tools_disable[1][RESTORE_WIENER_NONSEP] = lr_tools_disable[0][RESTORE_WIENER_NONSEP];
+				}
+			}
+			this.enable_ccso = stream.Pick("enable_ccso", _original != null ? _original.enable_ccso : this.enable_ccso, _edited != null ? _edited.enable_ccso : _original != null ? _original.enable_ccso : this.enable_ccso);
+			stream.WriteFixed(1, this.enable_ccso, "enable_ccso"); 
+
+			if ((enable_ccso != 0))
+			{
+				this.ccso_unit_matches_sb_size = stream.Pick("ccso_unit_matches_sb_size", _original != null ? _original.ccso_unit_matches_sb_size : this.ccso_unit_matches_sb_size, _edited != null ? _edited.ccso_unit_matches_sb_size : _original != null ? _original.ccso_unit_matches_sb_size : this.ccso_unit_matches_sb_size);
+				stream.WriteFixed(1, this.ccso_unit_matches_sb_size, "ccso_unit_matches_sb_size"); 
+			}
+			else 
+			{
+				ccso_unit_matches_sb_size = 0;
+			}
+
+			if ((single_picture_header_flag != 0))
+			{
+				CdefOnSkipTxfm = CDEF_ON_SKIP_TXFM_ADAPTIVE;
+			}
+			else 
+			{
+				this.cdef_on_skip_txfm_always_on = stream.Pick("cdef_on_skip_txfm_always_on", _original != null ? _original.cdef_on_skip_txfm_always_on : this.cdef_on_skip_txfm_always_on, _edited != null ? _edited.cdef_on_skip_txfm_always_on : _original != null ? _original.cdef_on_skip_txfm_always_on : this.cdef_on_skip_txfm_always_on);
+				stream.WriteFixed(1, this.cdef_on_skip_txfm_always_on, "cdef_on_skip_txfm_always_on"); 
+
+				if ((cdef_on_skip_txfm_always_on != 0))
+				{
+					CdefOnSkipTxfm = CDEF_ON_SKIP_TXFM_ALWAYS_ON;
+				}
+				else 
+				{
+					this.cdef_on_skip_txfm_disabled = stream.Pick("cdef_on_skip_txfm_disabled", _original != null ? _original.cdef_on_skip_txfm_disabled : this.cdef_on_skip_txfm_disabled, _edited != null ? _edited.cdef_on_skip_txfm_disabled : _original != null ? _original.cdef_on_skip_txfm_disabled : this.cdef_on_skip_txfm_disabled);
+					stream.WriteFixed(1, this.cdef_on_skip_txfm_disabled, "cdef_on_skip_txfm_disabled"); 
+					CdefOnSkipTxfm = ((cdef_on_skip_txfm_disabled != 0) ? CDEF_ON_SKIP_TXFM_DISABLED : CDEF_ON_SKIP_TXFM_ADAPTIVE);
+				}
+			}
+			this.df_par_bits_minus_2 = stream.Pick("df_par_bits_minus_2", _original != null ? _original.df_par_bits_minus_2 : this.df_par_bits_minus_2, _edited != null ? _edited.df_par_bits_minus_2 : _original != null ? _original.df_par_bits_minus_2 : this.df_par_bits_minus_2);
+			stream.WriteFixed(2, this.df_par_bits_minus_2, "df_par_bits_minus_2"); 
         }
 
     /*
@@ -2049,6 +3108,106 @@ UserQm[ level ][ t ][ plane ][ row ][ col ] = quant
 			}
         }
 
+        private void WriteUserDefinedQm(int level, int t, int plane)
+        {
+			int i = 0;
+			int j = 0;
+			int c = 0;
+			int txSz = 0;
+			int w = 0;
+			int h = 0;
+			AomArray<int> scan = new AomArray<int>();
+			int quant = 0;
+			int coefRepeat = 0;
+			int pos = 0;
+			int row = 0;
+			int col = 0;
+			int quant2 = 0;
+			txSz = Fundamental_Tx_Size[t];
+			w = Tx_Width[txSz];
+			h = Tx_Height[txSz];
+
+			if ((plane > 0))
+			{
+				this.qm_copy_from_previous_plane = stream.Pick("qm_copy_from_previous_plane", _original != null ? _original.qm_copy_from_previous_plane : this.qm_copy_from_previous_plane, _edited != null ? _edited.qm_copy_from_previous_plane : _original != null ? _original.qm_copy_from_previous_plane : this.qm_copy_from_previous_plane);
+				stream.WriteFixed(1, this.qm_copy_from_previous_plane, "qm_copy_from_previous_plane"); 
+
+				if ((qm_copy_from_previous_plane != 0))
+				{
+
+					for (i = 0; (i < h); i++)
+					{
+
+						for (j = 0; (j < w); j++)
+						{
+							UserQm[level][t][plane][i][j] = UserQm[level][t][(plane - 1)][i][j];
+						}
+					}
+					return;
+				}
+			}
+
+			if ((t == 0))
+			{
+				this.qm_8x8_is_symmetric = stream.Pick("qm_8x8_is_symmetric", _original != null ? _original.qm_8x8_is_symmetric : this.qm_8x8_is_symmetric, _edited != null ? _edited.qm_8x8_is_symmetric : _original != null ? _original.qm_8x8_is_symmetric : this.qm_8x8_is_symmetric);
+				stream.WriteFixed(1, this.qm_8x8_is_symmetric, "qm_8x8_is_symmetric"); 
+			}
+			else if ((t == 2))
+			{
+				this.qm_4x8_is_transpose_of_8x4 = stream.Pick("qm_4x8_is_transpose_of_8x4", _original != null ? _original.qm_4x8_is_transpose_of_8x4 : this.qm_4x8_is_transpose_of_8x4, _edited != null ? _edited.qm_4x8_is_transpose_of_8x4 : _original != null ? _original.qm_4x8_is_transpose_of_8x4 : this.qm_4x8_is_transpose_of_8x4);
+				stream.WriteFixed(1, this.qm_4x8_is_transpose_of_8x4, "qm_4x8_is_transpose_of_8x4"); 
+
+				if ((qm_4x8_is_transpose_of_8x4 != 0))
+				{
+
+					for (i = 0; (i < h); i++)
+					{
+
+						for (j = 0; (j < w); j++)
+						{
+							UserQm[level][t][plane][i][j] = UserQm[level][1][plane][j][i];
+						}
+					}
+					return;
+				}
+			}
+			scan = GetScan(txSz, TX_CLASS_2D);
+			quant = 32;
+			coefRepeat = 0;
+
+			for (c = 0; (c < (w * h)); c++)
+			{
+				pos = scan[c];
+				(row, col) = GetTxRowCol(pos, txSz);
+
+				if ((((t == 0) && (qm_8x8_is_symmetric != 0)) && (col > row)))
+				{
+					quant = UserQm[level][t][plane][col][row];
+					UserQm[level][t][plane][row][col] = quant;
+				}
+				else if ((coefRepeat != 0))
+				{
+					UserQm[level][t][plane][row][col] = quant;
+				}
+				else 
+				{
+					this.quant_delta = stream.Pick("quant_delta", _original != null ? _original.quant_delta : this.quant_delta, _edited != null ? _edited.quant_delta : _original != null ? _original.quant_delta : this.quant_delta);
+					stream.WriteSvlc( this.quant_delta, "quant_delta"); 
+					quant2 = ((quant + quant_delta) & 255);
+
+					if ((quant2 == 0))
+					{
+						coefRepeat = 1;
+					}
+					else 
+					{
+						quant = quant2;
+					}
+					UserQm[level][t][plane][row][col] = quant;
+				}
+			}
+        }
+
     /*
 timing_info() {
 num_units_in_display_tick	f(32)
@@ -2080,6 +3239,22 @@ num_ticks_per_picture_minus_1	uvlc()
 			}
         }
 
+        private void WriteTimingInfo()
+        {
+			this.num_units_in_display_tick = stream.Pick("num_units_in_display_tick", _original != null ? _original.num_units_in_display_tick : this.num_units_in_display_tick, _edited != null ? _edited.num_units_in_display_tick : _original != null ? _original.num_units_in_display_tick : this.num_units_in_display_tick);
+			stream.WriteFixed(32, this.num_units_in_display_tick, "num_units_in_display_tick"); 
+			this.time_scale = stream.Pick("time_scale", _original != null ? _original.time_scale : this.time_scale, _edited != null ? _edited.time_scale : _original != null ? _original.time_scale : this.time_scale);
+			stream.WriteFixed(32, this.time_scale, "time_scale"); 
+			this.equal_picture_interval = stream.Pick("equal_picture_interval", _original != null ? _original.equal_picture_interval : this.equal_picture_interval, _edited != null ? _edited.equal_picture_interval : _original != null ? _original.equal_picture_interval : this.equal_picture_interval);
+			stream.WriteFixed(1, this.equal_picture_interval, "equal_picture_interval"); 
+
+			if ((equal_picture_interval != 0))
+			{
+				this.num_ticks_per_picture_minus_1 = stream.Pick("num_ticks_per_picture_minus_1", _original != null ? _original.num_ticks_per_picture_minus_1 : this.num_ticks_per_picture_minus_1, _edited != null ? _edited.num_ticks_per_picture_minus_1 : _original != null ? _original.num_ticks_per_picture_minus_1 : this.num_ticks_per_picture_minus_1);
+				stream.WriteUvlc( this.num_ticks_per_picture_minus_1, "num_ticks_per_picture_minus_1"); 
+			}
+        }
+
     /*
 seq_decoder_model_info() {
 decoder_buffer_delay	uvlc()
@@ -2099,6 +3274,16 @@ low_delay_mode_flag	f(1)
 			stream.ReadUvlc( out this.decoder_buffer_delay, "decoder_buffer_delay"); 
 			stream.ReadUvlc( out this.encoder_buffer_delay, "encoder_buffer_delay"); 
 			stream.ReadFixed(1, out this.low_delay_mode_flag, "low_delay_mode_flag"); 
+        }
+
+        private void WriteSeqDecoderModelInfo()
+        {
+			this.decoder_buffer_delay = stream.Pick("decoder_buffer_delay", _original != null ? _original.decoder_buffer_delay : this.decoder_buffer_delay, _edited != null ? _edited.decoder_buffer_delay : _original != null ? _original.decoder_buffer_delay : this.decoder_buffer_delay);
+			stream.WriteUvlc( this.decoder_buffer_delay, "decoder_buffer_delay"); 
+			this.encoder_buffer_delay = stream.Pick("encoder_buffer_delay", _original != null ? _original.encoder_buffer_delay : this.encoder_buffer_delay, _edited != null ? _edited.encoder_buffer_delay : _original != null ? _original.encoder_buffer_delay : this.encoder_buffer_delay);
+			stream.WriteUvlc( this.encoder_buffer_delay, "encoder_buffer_delay"); 
+			this.low_delay_mode_flag = stream.Pick("low_delay_mode_flag", _original != null ? _original.low_delay_mode_flag : this.low_delay_mode_flag, _edited != null ? _edited.low_delay_mode_flag : _original != null ? _original.low_delay_mode_flag : this.low_delay_mode_flag);
+			stream.WriteFixed(1, this.low_delay_mode_flag, "low_delay_mode_flag"); 
         }
 
     /*
@@ -2189,6 +3374,41 @@ multistream_doh_constraint_flag	f(1)
 				stream.ReadFixed(1, out this.sub_stream_max_tier[i], "sub_stream_max_tier"); 
 			}
 			stream.ReadFixed(1, out this.multistream_doh_constraint_flag, "multistream_doh_constraint_flag"); 
+        }
+
+        private void WriteMultistreamDecoderOperationObu()
+        {
+			int i = 0;
+			this.num_streams_minus_2 = stream.Pick("num_streams_minus_2", _original != null ? _original.num_streams_minus_2 : this.num_streams_minus_2, _edited != null ? _edited.num_streams_minus_2 : _original != null ? _original.num_streams_minus_2 : this.num_streams_minus_2);
+			stream.WriteFixed(3, this.num_streams_minus_2, "num_streams_minus_2"); 
+			this.multistream_profile_idc = stream.Pick("multistream_profile_idc", _original != null ? _original.multistream_profile_idc : this.multistream_profile_idc, _edited != null ? _edited.multistream_profile_idc : _original != null ? _original.multistream_profile_idc : this.multistream_profile_idc);
+			stream.WriteFixed(5, this.multistream_profile_idc, "multistream_profile_idc"); 
+			this.multistream_level_idx = stream.Pick("multistream_level_idx", _original != null ? _original.multistream_level_idx : this.multistream_level_idx, _edited != null ? _edited.multistream_level_idx : _original != null ? _original.multistream_level_idx : this.multistream_level_idx);
+			stream.WriteFixed(5, this.multistream_level_idx, "multistream_level_idx"); 
+			this.multistream_tier = stream.Pick("multistream_tier", _original != null ? _original.multistream_tier : this.multistream_tier, _edited != null ? _edited.multistream_tier : _original != null ? _original.multistream_tier : this.multistream_tier);
+			stream.WriteFixed(1, this.multistream_tier, "multistream_tier"); 
+			this.multistream_even_allocation_flag = stream.Pick("multistream_even_allocation_flag", _original != null ? _original.multistream_even_allocation_flag : this.multistream_even_allocation_flag, _edited != null ? _edited.multistream_even_allocation_flag : _original != null ? _original.multistream_even_allocation_flag : this.multistream_even_allocation_flag);
+			stream.WriteFixed(1, this.multistream_even_allocation_flag, "multistream_even_allocation_flag"); 
+
+			if (!(multistream_even_allocation_flag != 0))
+			{
+				this.multistream_large_picture_idc = stream.Pick("multistream_large_picture_idc", _original != null ? _original.multistream_large_picture_idc : this.multistream_large_picture_idc, _edited != null ? _edited.multistream_large_picture_idc : _original != null ? _original.multistream_large_picture_idc : this.multistream_large_picture_idc);
+				stream.WriteFixed(3, this.multistream_large_picture_idc, "multistream_large_picture_idc"); 
+			}
+
+			for (i = 0; (i < (num_streams_minus_2 + 2)); i++)
+			{
+				this.sub_xlayer_id[i] = stream.Pick("sub_xlayer_id", _original != null ? _original.sub_xlayer_id[i] : this.sub_xlayer_id[i], _edited != null ? _edited.sub_xlayer_id[i] : _original != null ? _original.sub_xlayer_id[i] : this.sub_xlayer_id[i]);
+				stream.WriteFixed(5, this.sub_xlayer_id[i], "sub_xlayer_id"); 
+				this.sub_stream_max_profile[i] = stream.Pick("sub_stream_max_profile", _original != null ? _original.sub_stream_max_profile[i] : this.sub_stream_max_profile[i], _edited != null ? _edited.sub_stream_max_profile[i] : _original != null ? _original.sub_stream_max_profile[i] : this.sub_stream_max_profile[i]);
+				stream.WriteFixed(5, this.sub_stream_max_profile[i], "sub_stream_max_profile"); 
+				this.sub_stream_max_level[i] = stream.Pick("sub_stream_max_level", _original != null ? _original.sub_stream_max_level[i] : this.sub_stream_max_level[i], _edited != null ? _edited.sub_stream_max_level[i] : _original != null ? _original.sub_stream_max_level[i] : this.sub_stream_max_level[i]);
+				stream.WriteFixed(5, this.sub_stream_max_level[i], "sub_stream_max_level"); 
+				this.sub_stream_max_tier[i] = stream.Pick("sub_stream_max_tier", _original != null ? _original.sub_stream_max_tier[i] : this.sub_stream_max_tier[i], _edited != null ? _edited.sub_stream_max_tier[i] : _original != null ? _original.sub_stream_max_tier[i] : this.sub_stream_max_tier[i]);
+				stream.WriteFixed(1, this.sub_stream_max_tier[i], "sub_stream_max_tier"); 
+			}
+			this.multistream_doh_constraint_flag = stream.Pick("multistream_doh_constraint_flag", _original != null ? _original.multistream_doh_constraint_flag : this.multistream_doh_constraint_flag, _edited != null ? _edited.multistream_doh_constraint_flag : _original != null ? _original.multistream_doh_constraint_flag : this.multistream_doh_constraint_flag);
+			stream.WriteFixed(1, this.multistream_doh_constraint_flag, "multistream_doh_constraint_flag"); 
         }
 
     /*
@@ -2300,6 +3520,60 @@ seg_info( mfh_ext_seg_flag[ mfhId ] ? 16 : 8 )
 			}
         }
 
+        private void WriteMultiFrameHeaderObu()
+        {
+			int i = 0;
+			int mfhId = 0;
+			int n = 0;
+			this.mfh_seq_header_id = stream.Pick("mfh_seq_header_id", _original != null ? _original.MfhSeqHeaderId[mfhId] : this.mfh_seq_header_id, _edited != null ? _edited.MfhSeqHeaderId[mfhId] : _original != null ? _original.MfhSeqHeaderId[mfhId] : this.mfh_seq_header_id);
+			stream.WriteUvlc( this.mfh_seq_header_id, "mfh_seq_header_id"); 
+			this.mfh_id_minus_1 = stream.Pick("mfh_id_minus_1", _original != null ? _original.mfh_id_minus_1 : this.mfh_id_minus_1, _edited != null ? _edited.mfh_id_minus_1 : _original != null ? _original.mfh_id_minus_1 : this.mfh_id_minus_1);
+			stream.WriteUvlc( this.mfh_id_minus_1, "mfh_id_minus_1"); 
+			mfhId = (mfh_id_minus_1 + 1);
+			MfhSeqHeaderId[mfhId] = mfh_seq_header_id;
+			MfhTLayerId[mfhId] = obu_tlayer_id;
+			MfhMLayerId[mfhId] = obu_mlayer_id;
+			this.mfh_frame_size_present_flag[mfhId] = stream.Pick("mfh_frame_size_present_flag", _original != null ? _original.mfh_frame_size_present_flag[mfhId] : this.mfh_frame_size_present_flag[mfhId], _edited != null ? _edited.mfh_frame_size_present_flag[mfhId] : _original != null ? _original.mfh_frame_size_present_flag[mfhId] : this.mfh_frame_size_present_flag[mfhId]);
+			stream.WriteFixed(1, this.mfh_frame_size_present_flag[mfhId], "mfh_frame_size_present_flag"); 
+
+			if ((mfh_frame_size_present_flag[mfhId] != 0))
+			{
+				this.mfh_frame_width_bits_minus_1 = stream.Pick("mfh_frame_width_bits_minus_1", _original != null ? _original.mfh_frame_width_bits_minus_1 : this.mfh_frame_width_bits_minus_1, _edited != null ? _edited.mfh_frame_width_bits_minus_1 : _original != null ? _original.mfh_frame_width_bits_minus_1 : this.mfh_frame_width_bits_minus_1);
+				stream.WriteFixed(4, this.mfh_frame_width_bits_minus_1, "mfh_frame_width_bits_minus_1"); 
+				this.mfh_frame_height_bits_minus_1 = stream.Pick("mfh_frame_height_bits_minus_1", _original != null ? _original.mfh_frame_height_bits_minus_1 : this.mfh_frame_height_bits_minus_1, _edited != null ? _edited.mfh_frame_height_bits_minus_1 : _original != null ? _original.mfh_frame_height_bits_minus_1 : this.mfh_frame_height_bits_minus_1);
+				stream.WriteFixed(4, this.mfh_frame_height_bits_minus_1, "mfh_frame_height_bits_minus_1"); 
+				n = (mfh_frame_width_bits_minus_1 + 1);
+				this.mfh_frame_width_minus_1[mfhId] = stream.Pick("mfh_frame_width_minus_1", _original != null ? _original.mfh_frame_width_minus_1[mfhId] : this.mfh_frame_width_minus_1[mfhId], _edited != null ? _edited.mfh_frame_width_minus_1[mfhId] : _original != null ? _original.mfh_frame_width_minus_1[mfhId] : this.mfh_frame_width_minus_1[mfhId]);
+				stream.WriteVariable(n, this.mfh_frame_width_minus_1[mfhId], "mfh_frame_width_minus_1"); 
+				n = (mfh_frame_height_bits_minus_1 + 1);
+				this.mfh_frame_height_minus_1[mfhId] = stream.Pick("mfh_frame_height_minus_1", _original != null ? _original.mfh_frame_height_minus_1[mfhId] : this.mfh_frame_height_minus_1[mfhId], _edited != null ? _edited.mfh_frame_height_minus_1[mfhId] : _original != null ? _original.mfh_frame_height_minus_1[mfhId] : this.mfh_frame_height_minus_1[mfhId]);
+				stream.WriteVariable(n, this.mfh_frame_height_minus_1[mfhId], "mfh_frame_height_minus_1"); 
+			}
+			this.mfh_deblocking_filter_update[mfhId] = stream.Pick("mfh_deblocking_filter_update", _original != null ? _original.mfh_deblocking_filter_update[mfhId] : this.mfh_deblocking_filter_update[mfhId], _edited != null ? _edited.mfh_deblocking_filter_update[mfhId] : _original != null ? _original.mfh_deblocking_filter_update[mfhId] : this.mfh_deblocking_filter_update[mfhId]);
+			stream.WriteFixed(1, this.mfh_deblocking_filter_update[mfhId], "mfh_deblocking_filter_update"); 
+
+			if ((mfh_deblocking_filter_update[mfhId] != 0))
+			{
+
+				for (i = 0; (i < 4); i++)
+				{
+					this.mfh_apply_deblocking_filter[mfhId][i] = stream.Pick("mfh_apply_deblocking_filter", _original != null ? _original.mfh_apply_deblocking_filter[mfhId][i] : this.mfh_apply_deblocking_filter[mfhId][i], _edited != null ? _edited.mfh_apply_deblocking_filter[mfhId][i] : _original != null ? _original.mfh_apply_deblocking_filter[mfhId][i] : this.mfh_apply_deblocking_filter[mfhId][i]);
+					stream.WriteFixed(1, this.mfh_apply_deblocking_filter[mfhId][i], "mfh_apply_deblocking_filter"); 
+				}
+			}
+			this.mfh_seg_info_present_flag[mfhId] = stream.Pick("mfh_seg_info_present_flag", _original != null ? _original.mfh_seg_info_present_flag[mfhId] : this.mfh_seg_info_present_flag[mfhId], _edited != null ? _edited.mfh_seg_info_present_flag[mfhId] : _original != null ? _original.mfh_seg_info_present_flag[mfhId] : this.mfh_seg_info_present_flag[mfhId]);
+			stream.WriteFixed(1, this.mfh_seg_info_present_flag[mfhId], "mfh_seg_info_present_flag"); 
+
+			if ((mfh_seg_info_present_flag[mfhId] != 0))
+			{
+				this.mfh_ext_seg_flag[mfhId] = stream.Pick("mfh_ext_seg_flag", _original != null ? _original.mfh_ext_seg_flag[mfhId] : this.mfh_ext_seg_flag[mfhId], _edited != null ? _edited.mfh_ext_seg_flag[mfhId] : _original != null ? _original.mfh_ext_seg_flag[mfhId] : this.mfh_ext_seg_flag[mfhId]);
+				stream.WriteFixed(1, this.mfh_ext_seg_flag[mfhId], "mfh_ext_seg_flag"); 
+				this.mfh_allow_seg_info_change[mfhId] = stream.Pick("mfh_allow_seg_info_change", _original != null ? _original.mfh_allow_seg_info_change[mfhId] : this.mfh_allow_seg_info_change[mfhId], _edited != null ? _edited.mfh_allow_seg_info_change[mfhId] : _original != null ? _original.mfh_allow_seg_info_change[mfhId] : this.mfh_allow_seg_info_change[mfhId]);
+				stream.WriteFixed(1, this.mfh_allow_seg_info_change[mfhId], "mfh_allow_seg_info_change"); 
+				(MfhFeatureEnabled[mfhId], MfhFeatureData[mfhId]) = WriteSegInfo(((mfh_ext_seg_flag[mfhId] != 0) ? 16 : 8));
+			}
+        }
+
     /*
 layer_config_record_obu() {
 if ( obu_xlayer_id == GLOBAL_XLAYER_ID ) {	
@@ -2320,6 +3594,19 @@ lcr_local_info( obu_xlayer_id )
 			else 
 			{
 				LcrLocalInfo(obu_xlayer_id); 
+			}
+        }
+
+        private void WriteLayerConfigRecordObu()
+        {
+
+			if ((obu_xlayer_id == GLOBAL_XLAYER_ID))
+			{
+				WriteLcrGlobalInfo(); 
+			}
+			else 
+			{
+				WriteLcrLocalInfo(obu_xlayer_id); 
 			}
         }
 
@@ -2457,6 +3744,80 @@ lcr_global_payload( LcrXLayerID[ i ], lcr_data_size [ i ] )
 			}
         }
 
+        private void WriteLcrGlobalInfo()
+        {
+			int i = 0;
+			this.lcr_global_config_record_id = stream.Pick("lcr_global_config_record_id", _original != null ? _original.lcr_global_config_record_id : this.lcr_global_config_record_id, _edited != null ? _edited.lcr_global_config_record_id : _original != null ? _original.lcr_global_config_record_id : this.lcr_global_config_record_id);
+			stream.WriteFixed(3, this.lcr_global_config_record_id, "lcr_global_config_record_id"); 
+			this.lcr_xlayer_map = stream.Pick("lcr_xlayer_map", _original != null ? _original.lcr_xlayer_map : this.lcr_xlayer_map, _edited != null ? _edited.lcr_xlayer_map : _original != null ? _original.lcr_xlayer_map : this.lcr_xlayer_map);
+			stream.WriteFixed(31, this.lcr_xlayer_map, "lcr_xlayer_map"); 
+			LcrMaxNumXLayerCount = 0;
+
+			for (i = 0; (i < 31); i++)
+			{
+
+				if (((lcr_xlayer_map & (1 << i)) != 0))
+				{
+					LcrXLayerID[LcrMaxNumXLayerCount] = i;
+					LcrMaxNumXLayerCount++;
+				}
+			}
+			this.lcr_aggregate_info_present_flag = stream.Pick("lcr_aggregate_info_present_flag", _original != null ? _original.lcr_aggregate_info_present_flag : this.lcr_aggregate_info_present_flag, _edited != null ? _edited.lcr_aggregate_info_present_flag : _original != null ? _original.lcr_aggregate_info_present_flag : this.lcr_aggregate_info_present_flag);
+			stream.WriteFixed(1, this.lcr_aggregate_info_present_flag, "lcr_aggregate_info_present_flag"); 
+			this.lcr_seq_profile_tier_level_info_present_flag = stream.Pick("lcr_seq_profile_tier_level_info_present_flag", _original != null ? _original.lcr_seq_profile_tier_level_info_present_flag : this.lcr_seq_profile_tier_level_info_present_flag, _edited != null ? _edited.lcr_seq_profile_tier_level_info_present_flag : _original != null ? _original.lcr_seq_profile_tier_level_info_present_flag : this.lcr_seq_profile_tier_level_info_present_flag);
+			stream.WriteFixed(1, this.lcr_seq_profile_tier_level_info_present_flag, "lcr_seq_profile_tier_level_info_present_flag"); 
+			this.lcr_global_payload_present_flag = stream.Pick("lcr_global_payload_present_flag", _original != null ? _original.lcr_global_payload_present_flag : this.lcr_global_payload_present_flag, _edited != null ? _edited.lcr_global_payload_present_flag : _original != null ? _original.lcr_global_payload_present_flag : this.lcr_global_payload_present_flag);
+			stream.WriteFixed(1, this.lcr_global_payload_present_flag, "lcr_global_payload_present_flag"); 
+			this.lcr_dependent_xlayers_flag = stream.Pick("lcr_dependent_xlayers_flag", _original != null ? _original.lcr_dependent_xlayers_flag : this.lcr_dependent_xlayers_flag, _edited != null ? _edited.lcr_dependent_xlayers_flag : _original != null ? _original.lcr_dependent_xlayers_flag : this.lcr_dependent_xlayers_flag);
+			stream.WriteFixed(1, this.lcr_dependent_xlayers_flag, "lcr_dependent_xlayers_flag"); 
+			this.lcr_global_atlas_id_present_flag = stream.Pick("lcr_global_atlas_id_present_flag", _original != null ? _original.lcr_global_atlas_id_present_flag : this.lcr_global_atlas_id_present_flag, _edited != null ? _edited.lcr_global_atlas_id_present_flag : _original != null ? _original.lcr_global_atlas_id_present_flag : this.lcr_global_atlas_id_present_flag);
+			stream.WriteFixed(1, this.lcr_global_atlas_id_present_flag, "lcr_global_atlas_id_present_flag"); 
+			this.lcr_global_purpose_id = stream.Pick("lcr_global_purpose_id", _original != null ? _original.lcr_global_purpose_id : this.lcr_global_purpose_id, _edited != null ? _edited.lcr_global_purpose_id : _original != null ? _original.lcr_global_purpose_id : this.lcr_global_purpose_id);
+			stream.WriteFixed(7, this.lcr_global_purpose_id, "lcr_global_purpose_id"); 
+			this.lcr_doh_constraint_flag = stream.Pick("lcr_doh_constraint_flag", _original != null ? _original.lcr_doh_constraint_flag : this.lcr_doh_constraint_flag, _edited != null ? _edited.lcr_doh_constraint_flag : _original != null ? _original.lcr_doh_constraint_flag : this.lcr_doh_constraint_flag);
+			stream.WriteFixed(1, this.lcr_doh_constraint_flag, "lcr_doh_constraint_flag"); 
+			this.lcr_enforce_tile_alignment_flag = stream.Pick("lcr_enforce_tile_alignment_flag", _original != null ? _original.lcr_enforce_tile_alignment_flag : this.lcr_enforce_tile_alignment_flag, _edited != null ? _edited.lcr_enforce_tile_alignment_flag : _original != null ? _original.lcr_enforce_tile_alignment_flag : this.lcr_enforce_tile_alignment_flag);
+			stream.WriteFixed(1, this.lcr_enforce_tile_alignment_flag, "lcr_enforce_tile_alignment_flag"); 
+
+			if ((lcr_global_atlas_id_present_flag != 0))
+			{
+				this.lcr_global_atlas_id = stream.Pick("lcr_global_atlas_id", _original != null ? _original.lcr_global_atlas_id : this.lcr_global_atlas_id, _edited != null ? _edited.lcr_global_atlas_id : _original != null ? _original.lcr_global_atlas_id : this.lcr_global_atlas_id);
+				stream.WriteFixed(3, this.lcr_global_atlas_id, "lcr_global_atlas_id"); 
+			}
+			else 
+			{
+				this.lcr_global_reserved_zero_3bits = stream.Pick("lcr_global_reserved_zero_3bits", _original != null ? _original.lcr_global_reserved_zero_3bits : this.lcr_global_reserved_zero_3bits, _edited != null ? _edited.lcr_global_reserved_zero_3bits : _original != null ? _original.lcr_global_reserved_zero_3bits : this.lcr_global_reserved_zero_3bits);
+				stream.WriteFixed(3, this.lcr_global_reserved_zero_3bits, "lcr_global_reserved_zero_3bits"); 
+			}
+			this.lcr_global_reserved_zero_5bits = stream.Pick("lcr_global_reserved_zero_5bits", _original != null ? _original.lcr_global_reserved_zero_5bits : this.lcr_global_reserved_zero_5bits, _edited != null ? _edited.lcr_global_reserved_zero_5bits : _original != null ? _original.lcr_global_reserved_zero_5bits : this.lcr_global_reserved_zero_5bits);
+			stream.WriteFixed(5, this.lcr_global_reserved_zero_5bits, "lcr_global_reserved_zero_5bits"); 
+
+			if ((lcr_aggregate_info_present_flag != 0))
+			{
+				WriteLcrAggregateInfo(); 
+			}
+
+			if ((lcr_seq_profile_tier_level_info_present_flag != 0))
+			{
+
+				for (i = 0; (i < LcrMaxNumXLayerCount); i++)
+				{
+					WriteLcrSeqProfileTierLevelInfo(LcrXLayerID[i]); 
+				}
+			}
+
+			if ((lcr_global_payload_present_flag != 0))
+			{
+
+				for (i = 0; (i < LcrMaxNumXLayerCount); i++)
+				{
+					this.lcr_data_size[i] = stream.Pick("lcr_data_size", _original != null ? _original.lcr_data_size[i] : this.lcr_data_size[i], _edited != null ? _edited.lcr_data_size[i] : _original != null ? _original.lcr_data_size[i] : this.lcr_data_size[i]);
+					stream.WriteLeb128( this.lcr_data_size[i], "lcr_data_size"); 
+					WriteLcrGlobalPayload(LcrXLayerID[i], lcr_data_size[i]); 
+				}
+			}
+        }
+
     /*
 lcr_local_info( xlayerId ) {
 lcr_global_id[ xlayerId ]	f(3)
@@ -2516,6 +3877,37 @@ lcr_xlayer_info( 0, xlayerId )
 			LcrXlayerInfo(0, xlayerId); 
         }
 
+        private void WriteLcrLocalInfo(int xlayerId)
+        {
+			this.lcr_global_id[xlayerId] = stream.Pick("lcr_global_id", _original != null ? _original.lcr_global_id[xlayerId] : this.lcr_global_id[xlayerId], _edited != null ? _edited.lcr_global_id[xlayerId] : _original != null ? _original.lcr_global_id[xlayerId] : this.lcr_global_id[xlayerId]);
+			stream.WriteFixed(3, this.lcr_global_id[xlayerId], "lcr_global_id"); 
+			this.lcr_local_id[xlayerId] = stream.Pick("lcr_local_id", _original != null ? _original.lcr_local_id[xlayerId] : this.lcr_local_id[xlayerId], _edited != null ? _edited.lcr_local_id[xlayerId] : _original != null ? _original.lcr_local_id[xlayerId] : this.lcr_local_id[xlayerId]);
+			stream.WriteFixed(3, this.lcr_local_id[xlayerId], "lcr_local_id"); 
+			this.lcr_profile_tier_level_info_present_flag[xlayerId] = stream.Pick("lcr_profile_tier_level_info_present_flag", _original != null ? _original.lcr_profile_tier_level_info_present_flag[xlayerId] : this.lcr_profile_tier_level_info_present_flag[xlayerId], _edited != null ? _edited.lcr_profile_tier_level_info_present_flag[xlayerId] : _original != null ? _original.lcr_profile_tier_level_info_present_flag[xlayerId] : this.lcr_profile_tier_level_info_present_flag[xlayerId]);
+			stream.WriteFixed(1, this.lcr_profile_tier_level_info_present_flag[xlayerId], "lcr_profile_tier_level_info_present_flag"); 
+			this.lcr_local_atlas_id_present_flag[xlayerId] = stream.Pick("lcr_local_atlas_id_present_flag", _original != null ? _original.lcr_local_atlas_id_present_flag[xlayerId] : this.lcr_local_atlas_id_present_flag[xlayerId], _edited != null ? _edited.lcr_local_atlas_id_present_flag[xlayerId] : _original != null ? _original.lcr_local_atlas_id_present_flag[xlayerId] : this.lcr_local_atlas_id_present_flag[xlayerId]);
+			stream.WriteFixed(1, this.lcr_local_atlas_id_present_flag[xlayerId], "lcr_local_atlas_id_present_flag"); 
+
+			if ((lcr_profile_tier_level_info_present_flag[xlayerId] != 0))
+			{
+				WriteLcrSeqProfileTierLevelInfo(xlayerId); 
+			}
+
+			if ((lcr_local_atlas_id_present_flag[xlayerId] != 0))
+			{
+				this.lcr_local_atlas_id[xlayerId] = stream.Pick("lcr_local_atlas_id", _original != null ? _original.lcr_local_atlas_id[xlayerId] : this.lcr_local_atlas_id[xlayerId], _edited != null ? _edited.lcr_local_atlas_id[xlayerId] : _original != null ? _original.lcr_local_atlas_id[xlayerId] : this.lcr_local_atlas_id[xlayerId]);
+				stream.WriteFixed(3, this.lcr_local_atlas_id[xlayerId], "lcr_local_atlas_id"); 
+			}
+			else 
+			{
+				this.lcr_local_reserved_zero_3bits[xlayerId] = stream.Pick("lcr_local_reserved_zero_3bits", _original != null ? _original.lcr_local_reserved_zero_3bits[xlayerId] : this.lcr_local_reserved_zero_3bits[xlayerId], _edited != null ? _edited.lcr_local_reserved_zero_3bits[xlayerId] : _original != null ? _original.lcr_local_reserved_zero_3bits[xlayerId] : this.lcr_local_reserved_zero_3bits[xlayerId]);
+				stream.WriteFixed(3, this.lcr_local_reserved_zero_3bits[xlayerId], "lcr_local_reserved_zero_3bits"); 
+			}
+			this.lcr_local_reserved_zero_5bits[xlayerId] = stream.Pick("lcr_local_reserved_zero_5bits", _original != null ? _original.lcr_local_reserved_zero_5bits[xlayerId] : this.lcr_local_reserved_zero_5bits[xlayerId], _edited != null ? _edited.lcr_local_reserved_zero_5bits[xlayerId] : _original != null ? _original.lcr_local_reserved_zero_5bits[xlayerId] : this.lcr_local_reserved_zero_5bits[xlayerId]);
+			stream.WriteFixed(5, this.lcr_local_reserved_zero_5bits[xlayerId], "lcr_local_reserved_zero_5bits"); 
+			WriteLcrXlayerInfo(0, xlayerId); 
+        }
+
     /*
 lcr_aggregate_info() {
 lcr_config_idc	f(6)
@@ -2539,6 +3931,18 @@ lcr_max_interop	f(4)
 			stream.ReadFixed(5, out this.lcr_aggregate_level_idx, "lcr_aggregate_level_idx"); 
 			stream.ReadFixed(1, out this.lcr_max_tier_flag, "lcr_max_tier_flag"); 
 			stream.ReadFixed(4, out this.lcr_max_interop, "lcr_max_interop"); 
+        }
+
+        private void WriteLcrAggregateInfo()
+        {
+			this.lcr_config_idc = stream.Pick("lcr_config_idc", _original != null ? _original.lcr_config_idc : this.lcr_config_idc, _edited != null ? _edited.lcr_config_idc : _original != null ? _original.lcr_config_idc : this.lcr_config_idc);
+			stream.WriteFixed(6, this.lcr_config_idc, "lcr_config_idc"); 
+			this.lcr_aggregate_level_idx = stream.Pick("lcr_aggregate_level_idx", _original != null ? _original.lcr_aggregate_level_idx : this.lcr_aggregate_level_idx, _edited != null ? _edited.lcr_aggregate_level_idx : _original != null ? _original.lcr_aggregate_level_idx : this.lcr_aggregate_level_idx);
+			stream.WriteFixed(5, this.lcr_aggregate_level_idx, "lcr_aggregate_level_idx"); 
+			this.lcr_max_tier_flag = stream.Pick("lcr_max_tier_flag", _original != null ? _original.lcr_max_tier_flag : this.lcr_max_tier_flag, _edited != null ? _edited.lcr_max_tier_flag : _original != null ? _original.lcr_max_tier_flag : this.lcr_max_tier_flag);
+			stream.WriteFixed(1, this.lcr_max_tier_flag, "lcr_max_tier_flag"); 
+			this.lcr_max_interop = stream.Pick("lcr_max_interop", _original != null ? _original.lcr_max_interop : this.lcr_max_interop, _edited != null ? _edited.lcr_max_interop : _original != null ? _original.lcr_max_interop : this.lcr_max_interop);
+			stream.WriteFixed(4, this.lcr_max_interop, "lcr_max_interop"); 
         }
 
     /*
@@ -2568,6 +3972,20 @@ lsptli_reserved_2bits	f(2)
 			stream.ReadFixed(1, out this.lcr_tier_flag[i], "lcr_tier_flag"); 
 			stream.ReadFixed(3, out this.lcr_max_mlayer_count[i], "lcr_max_mlayer_count"); 
 			stream.ReadFixed(2, out this.lsptli_reserved_2bits, "lsptli_reserved_2bits"); 
+        }
+
+        private void WriteLcrSeqProfileTierLevelInfo(int i)
+        {
+			this.lcr_seq_profile_idc[i] = stream.Pick("lcr_seq_profile_idc", _original != null ? _original.lcr_seq_profile_idc[i] : this.lcr_seq_profile_idc[i], _edited != null ? _edited.lcr_seq_profile_idc[i] : _original != null ? _original.lcr_seq_profile_idc[i] : this.lcr_seq_profile_idc[i]);
+			stream.WriteFixed(5, this.lcr_seq_profile_idc[i], "lcr_seq_profile_idc"); 
+			this.lcr_max_level_idx[i] = stream.Pick("lcr_max_level_idx", _original != null ? _original.lcr_max_level_idx[i] : this.lcr_max_level_idx[i], _edited != null ? _edited.lcr_max_level_idx[i] : _original != null ? _original.lcr_max_level_idx[i] : this.lcr_max_level_idx[i]);
+			stream.WriteFixed(5, this.lcr_max_level_idx[i], "lcr_max_level_idx"); 
+			this.lcr_tier_flag[i] = stream.Pick("lcr_tier_flag", _original != null ? _original.lcr_tier_flag[i] : this.lcr_tier_flag[i], _edited != null ? _edited.lcr_tier_flag[i] : _original != null ? _original.lcr_tier_flag[i] : this.lcr_tier_flag[i]);
+			stream.WriteFixed(1, this.lcr_tier_flag[i], "lcr_tier_flag"); 
+			this.lcr_max_mlayer_count[i] = stream.Pick("lcr_max_mlayer_count", _original != null ? _original.lcr_max_mlayer_count[i] : this.lcr_max_mlayer_count[i], _edited != null ? _edited.lcr_max_mlayer_count[i] : _original != null ? _original.lcr_max_mlayer_count[i] : this.lcr_max_mlayer_count[i]);
+			stream.WriteFixed(3, this.lcr_max_mlayer_count[i], "lcr_max_mlayer_count"); 
+			this.lsptli_reserved_2bits = stream.Pick("lsptli_reserved_2bits", _original != null ? _original.lsptli_reserved_2bits : this.lsptli_reserved_2bits, _edited != null ? _edited.lsptli_reserved_2bits : _original != null ? _original.lsptli_reserved_2bits : this.lsptli_reserved_2bits);
+			stream.WriteFixed(2, this.lsptli_reserved_2bits, "lsptli_reserved_2bits"); 
         }
 
     /*
@@ -2613,6 +4031,31 @@ lcr_remaining_payload_bit	f(1)
 			for (j = 0; (j < RemainingLcrPayloadBits); j++)
 			{
 				stream.ReadFixed(1, out this.lcr_remaining_payload_bit, "lcr_remaining_payload_bit"); 
+			}
+        }
+
+        private void WriteLcrGlobalPayload(int n, int sz)
+        {
+			int j = 0;
+			int startPosition = 0;
+			int currentPosition = 0;
+			int parsedPayloadBits = 0;
+			startPosition = get_position();
+
+			if (((lcr_dependent_xlayers_flag != 0) && (n > 0)))
+			{
+				this.lcr_num_dependent_xlayer_map[n] = stream.Pick("lcr_num_dependent_xlayer_map", _original != null ? _original.lcr_num_dependent_xlayer_map[n] : this.lcr_num_dependent_xlayer_map[n], _edited != null ? _edited.lcr_num_dependent_xlayer_map[n] : _original != null ? _original.lcr_num_dependent_xlayer_map[n] : this.lcr_num_dependent_xlayer_map[n]);
+				stream.WriteVariable(n, this.lcr_num_dependent_xlayer_map[n], "lcr_num_dependent_xlayer_map"); 
+			}
+			WriteLcrXlayerInfo(1, n); 
+			currentPosition = get_position();
+			parsedPayloadBits = (currentPosition - startPosition);
+			RemainingLcrPayloadBits = ((sz * 8) - parsedPayloadBits);
+
+			for (j = 0; (j < RemainingLcrPayloadBits); j++)
+			{
+				this.lcr_remaining_payload_bit = stream.Pick("lcr_remaining_payload_bit", _original != null ? _original.lcr_remaining_payload_bit : this.lcr_remaining_payload_bit, _edited != null ? _edited.lcr_remaining_payload_bit : _original != null ? _original.lcr_remaining_payload_bit : this.lcr_remaining_payload_bit);
+				stream.WriteFixed(1, this.lcr_remaining_payload_bit, "lcr_remaining_payload_bit"); 
 			}
         }
 
@@ -2703,6 +4146,53 @@ lcr_xlayer_rendering_method[ xId ]	f(8)
 			}
         }
 
+        private void WriteLcrXlayerInfo(int isGlobal, int xId)
+        {
+			this.lcr_rep_info_present_flag[isGlobal][xId] = stream.Pick("lcr_rep_info_present_flag", _original != null ? _original.lcr_rep_info_present_flag[isGlobal][xId] : this.lcr_rep_info_present_flag[isGlobal][xId], _edited != null ? _edited.lcr_rep_info_present_flag[isGlobal][xId] : _original != null ? _original.lcr_rep_info_present_flag[isGlobal][xId] : this.lcr_rep_info_present_flag[isGlobal][xId]);
+			stream.WriteFixed(1, this.lcr_rep_info_present_flag[isGlobal][xId], "lcr_rep_info_present_flag"); 
+			this.lcr_xlayer_purpose_present_flag[isGlobal][xId] = stream.Pick("lcr_xlayer_purpose_present_flag", _original != null ? _original.lcr_xlayer_purpose_present_flag[isGlobal][xId] : this.lcr_xlayer_purpose_present_flag[isGlobal][xId], _edited != null ? _edited.lcr_xlayer_purpose_present_flag[isGlobal][xId] : _original != null ? _original.lcr_xlayer_purpose_present_flag[isGlobal][xId] : this.lcr_xlayer_purpose_present_flag[isGlobal][xId]);
+			stream.WriteFixed(1, this.lcr_xlayer_purpose_present_flag[isGlobal][xId], "lcr_xlayer_purpose_present_flag"); 
+			this.lcr_xlayer_color_info_present_flag[isGlobal][xId] = stream.Pick("lcr_xlayer_color_info_present_flag", _original != null ? _original.lcr_xlayer_color_info_present_flag[isGlobal][xId] : this.lcr_xlayer_color_info_present_flag[isGlobal][xId], _edited != null ? _edited.lcr_xlayer_color_info_present_flag[isGlobal][xId] : _original != null ? _original.lcr_xlayer_color_info_present_flag[isGlobal][xId] : this.lcr_xlayer_color_info_present_flag[isGlobal][xId]);
+			stream.WriteFixed(1, this.lcr_xlayer_color_info_present_flag[isGlobal][xId], "lcr_xlayer_color_info_present_flag"); 
+			this.lcr_embedded_layer_info_present_flag[isGlobal][xId] = stream.Pick("lcr_embedded_layer_info_present_flag", _original != null ? _original.lcr_embedded_layer_info_present_flag[isGlobal][xId] : this.lcr_embedded_layer_info_present_flag[isGlobal][xId], _edited != null ? _edited.lcr_embedded_layer_info_present_flag[isGlobal][xId] : _original != null ? _original.lcr_embedded_layer_info_present_flag[isGlobal][xId] : this.lcr_embedded_layer_info_present_flag[isGlobal][xId]);
+			stream.WriteFixed(1, this.lcr_embedded_layer_info_present_flag[isGlobal][xId], "lcr_embedded_layer_info_present_flag"); 
+
+			if ((lcr_rep_info_present_flag[isGlobal][xId] != 0))
+			{
+				WriteLcrRepInfo(isGlobal, xId); 
+			}
+
+			if ((lcr_xlayer_purpose_present_flag[isGlobal][xId] != 0))
+			{
+				this.lcr_xlayer_purpose_id[isGlobal][xId] = stream.Pick("lcr_xlayer_purpose_id", _original != null ? _original.lcr_xlayer_purpose_id[isGlobal][xId] : this.lcr_xlayer_purpose_id[isGlobal][xId], _edited != null ? _edited.lcr_xlayer_purpose_id[isGlobal][xId] : _original != null ? _original.lcr_xlayer_purpose_id[isGlobal][xId] : this.lcr_xlayer_purpose_id[isGlobal][xId]);
+				stream.WriteFixed(7, this.lcr_xlayer_purpose_id[isGlobal][xId], "lcr_xlayer_purpose_id"); 
+			}
+
+			if ((lcr_xlayer_color_info_present_flag[isGlobal][xId] != 0))
+			{
+				WriteLcrXlayerColorInfo(isGlobal, xId); 
+			}
+			WriteByteAlignment(); 
+
+			if ((lcr_embedded_layer_info_present_flag[isGlobal][xId] != 0))
+			{
+				WriteLcrEmbeddedLayerInfo(isGlobal, xId); 
+			}
+			else 
+			{
+
+				if (((isGlobal != 0) && (lcr_global_atlas_id_present_flag != 0)))
+				{
+					this.lcr_xlayer_atlas_segment_id[xId] = stream.Pick("lcr_xlayer_atlas_segment_id", _original != null ? _original.lcr_xlayer_atlas_segment_id[xId] : this.lcr_xlayer_atlas_segment_id[xId], _edited != null ? _edited.lcr_xlayer_atlas_segment_id[xId] : _original != null ? _original.lcr_xlayer_atlas_segment_id[xId] : this.lcr_xlayer_atlas_segment_id[xId]);
+					stream.WriteFixed(8, this.lcr_xlayer_atlas_segment_id[xId], "lcr_xlayer_atlas_segment_id"); 
+					this.lcr_xlayer_priority_order[xId] = stream.Pick("lcr_xlayer_priority_order", _original != null ? _original.lcr_xlayer_priority_order[xId] : this.lcr_xlayer_priority_order[xId], _edited != null ? _edited.lcr_xlayer_priority_order[xId] : _original != null ? _original.lcr_xlayer_priority_order[xId] : this.lcr_xlayer_priority_order[xId]);
+					stream.WriteFixed(8, this.lcr_xlayer_priority_order[xId], "lcr_xlayer_priority_order"); 
+					this.lcr_xlayer_rendering_method[xId] = stream.Pick("lcr_xlayer_rendering_method", _original != null ? _original.lcr_xlayer_rendering_method[xId] : this.lcr_xlayer_rendering_method[xId], _edited != null ? _edited.lcr_xlayer_rendering_method[xId] : _original != null ? _original.lcr_xlayer_rendering_method[xId] : this.lcr_xlayer_rendering_method[xId]);
+					stream.WriteFixed(8, this.lcr_xlayer_rendering_method[xId], "lcr_xlayer_rendering_method"); 
+				}
+			}
+        }
+
     /*
 lcr_rep_info( isGlobal, xId ) {
 lcr_max_pic_width[ isGlobal ][ xId ]	uvlc()
@@ -2761,6 +4251,38 @@ lcr_cropping_win_bottom_offset[ isGlobal ][ xId ]	uvlc()
 				stream.ReadUvlc( out this.lcr_cropping_win_right_offset[isGlobal][xId], "lcr_cropping_win_right_offset"); 
 				stream.ReadUvlc( out this.lcr_cropping_win_top_offset[isGlobal][xId], "lcr_cropping_win_top_offset"); 
 				stream.ReadUvlc( out this.lcr_cropping_win_bottom_offset[isGlobal][xId], "lcr_cropping_win_bottom_offset"); 
+			}
+        }
+
+        private void WriteLcrRepInfo(int isGlobal, int xId)
+        {
+			this.lcr_max_pic_width[isGlobal][xId] = stream.Pick("lcr_max_pic_width", _original != null ? _original.lcr_max_pic_width[isGlobal][xId] : this.lcr_max_pic_width[isGlobal][xId], _edited != null ? _edited.lcr_max_pic_width[isGlobal][xId] : _original != null ? _original.lcr_max_pic_width[isGlobal][xId] : this.lcr_max_pic_width[isGlobal][xId]);
+			stream.WriteUvlc( this.lcr_max_pic_width[isGlobal][xId], "lcr_max_pic_width"); 
+			this.lcr_max_pic_height[isGlobal][xId] = stream.Pick("lcr_max_pic_height", _original != null ? _original.lcr_max_pic_height[isGlobal][xId] : this.lcr_max_pic_height[isGlobal][xId], _edited != null ? _edited.lcr_max_pic_height[isGlobal][xId] : _original != null ? _original.lcr_max_pic_height[isGlobal][xId] : this.lcr_max_pic_height[isGlobal][xId]);
+			stream.WriteUvlc( this.lcr_max_pic_height[isGlobal][xId], "lcr_max_pic_height"); 
+			this.lcr_format_info_present_flag[isGlobal][xId] = stream.Pick("lcr_format_info_present_flag", _original != null ? _original.lcr_format_info_present_flag[isGlobal][xId] : this.lcr_format_info_present_flag[isGlobal][xId], _edited != null ? _edited.lcr_format_info_present_flag[isGlobal][xId] : _original != null ? _original.lcr_format_info_present_flag[isGlobal][xId] : this.lcr_format_info_present_flag[isGlobal][xId]);
+			stream.WriteFixed(1, this.lcr_format_info_present_flag[isGlobal][xId], "lcr_format_info_present_flag"); 
+			this.lcr_cropping_window_present_flag[isGlobal][xId] = stream.Pick("lcr_cropping_window_present_flag", _original != null ? _original.lcr_cropping_window_present_flag[isGlobal][xId] : this.lcr_cropping_window_present_flag[isGlobal][xId], _edited != null ? _edited.lcr_cropping_window_present_flag[isGlobal][xId] : _original != null ? _original.lcr_cropping_window_present_flag[isGlobal][xId] : this.lcr_cropping_window_present_flag[isGlobal][xId]);
+			stream.WriteFixed(1, this.lcr_cropping_window_present_flag[isGlobal][xId], "lcr_cropping_window_present_flag"); 
+
+			if ((lcr_format_info_present_flag[isGlobal][xId] != 0))
+			{
+				this.lcr_bit_depth_idc[isGlobal][xId] = stream.Pick("lcr_bit_depth_idc", _original != null ? _original.lcr_bit_depth_idc[isGlobal][xId] : this.lcr_bit_depth_idc[isGlobal][xId], _edited != null ? _edited.lcr_bit_depth_idc[isGlobal][xId] : _original != null ? _original.lcr_bit_depth_idc[isGlobal][xId] : this.lcr_bit_depth_idc[isGlobal][xId]);
+				stream.WriteUvlc( this.lcr_bit_depth_idc[isGlobal][xId], "lcr_bit_depth_idc"); 
+				this.lcr_chroma_format_idc[isGlobal][xId] = stream.Pick("lcr_chroma_format_idc", _original != null ? _original.lcr_chroma_format_idc[isGlobal][xId] : this.lcr_chroma_format_idc[isGlobal][xId], _edited != null ? _edited.lcr_chroma_format_idc[isGlobal][xId] : _original != null ? _original.lcr_chroma_format_idc[isGlobal][xId] : this.lcr_chroma_format_idc[isGlobal][xId]);
+				stream.WriteUvlc( this.lcr_chroma_format_idc[isGlobal][xId], "lcr_chroma_format_idc"); 
+			}
+
+			if ((lcr_cropping_window_present_flag[isGlobal][xId] != 0))
+			{
+				this.lcr_cropping_win_left_offset[isGlobal][xId] = stream.Pick("lcr_cropping_win_left_offset", _original != null ? _original.lcr_cropping_win_left_offset[isGlobal][xId] : this.lcr_cropping_win_left_offset[isGlobal][xId], _edited != null ? _edited.lcr_cropping_win_left_offset[isGlobal][xId] : _original != null ? _original.lcr_cropping_win_left_offset[isGlobal][xId] : this.lcr_cropping_win_left_offset[isGlobal][xId]);
+				stream.WriteUvlc( this.lcr_cropping_win_left_offset[isGlobal][xId], "lcr_cropping_win_left_offset"); 
+				this.lcr_cropping_win_right_offset[isGlobal][xId] = stream.Pick("lcr_cropping_win_right_offset", _original != null ? _original.lcr_cropping_win_right_offset[isGlobal][xId] : this.lcr_cropping_win_right_offset[isGlobal][xId], _edited != null ? _edited.lcr_cropping_win_right_offset[isGlobal][xId] : _original != null ? _original.lcr_cropping_win_right_offset[isGlobal][xId] : this.lcr_cropping_win_right_offset[isGlobal][xId]);
+				stream.WriteUvlc( this.lcr_cropping_win_right_offset[isGlobal][xId], "lcr_cropping_win_right_offset"); 
+				this.lcr_cropping_win_top_offset[isGlobal][xId] = stream.Pick("lcr_cropping_win_top_offset", _original != null ? _original.lcr_cropping_win_top_offset[isGlobal][xId] : this.lcr_cropping_win_top_offset[isGlobal][xId], _edited != null ? _edited.lcr_cropping_win_top_offset[isGlobal][xId] : _original != null ? _original.lcr_cropping_win_top_offset[isGlobal][xId] : this.lcr_cropping_win_top_offset[isGlobal][xId]);
+				stream.WriteUvlc( this.lcr_cropping_win_top_offset[isGlobal][xId], "lcr_cropping_win_top_offset"); 
+				this.lcr_cropping_win_bottom_offset[isGlobal][xId] = stream.Pick("lcr_cropping_win_bottom_offset", _original != null ? _original.lcr_cropping_win_bottom_offset[isGlobal][xId] : this.lcr_cropping_win_bottom_offset[isGlobal][xId], _edited != null ? _edited.lcr_cropping_win_bottom_offset[isGlobal][xId] : _original != null ? _original.lcr_cropping_win_bottom_offset[isGlobal][xId] : this.lcr_cropping_win_bottom_offset[isGlobal][xId]);
+				stream.WriteUvlc( this.lcr_cropping_win_bottom_offset[isGlobal][xId], "lcr_cropping_win_bottom_offset"); 
 			}
         }
 
@@ -2878,6 +4400,70 @@ byte_alignment()
 			}
         }
 
+        private void WriteLcrEmbeddedLayerInfo(int isGlobal, int xId)
+        {
+			int j = 0;
+			int n = 0;
+			int atlasSegmentPresent = 0;
+			this.lcr_mlayer_map[isGlobal][xId] = stream.Pick("lcr_mlayer_map", _original != null ? _original.lcr_mlayer_map[isGlobal][xId] : this.lcr_mlayer_map[isGlobal][xId], _edited != null ? _edited.lcr_mlayer_map[isGlobal][xId] : _original != null ? _original.lcr_mlayer_map[isGlobal][xId] : this.lcr_mlayer_map[isGlobal][xId]);
+			stream.WriteFixed(8, this.lcr_mlayer_map[isGlobal][xId], "lcr_mlayer_map"); 
+
+			for (j = 0; (j < 8); j++)
+			{
+
+				if (((lcr_mlayer_map[isGlobal][xId] & (1 << j)) != 0))
+				{
+					n = MAX_NUM_TLAYERS;
+					this.lcr_tlayer_map[isGlobal][xId][j] = stream.Pick("lcr_tlayer_map", _original != null ? _original.lcr_tlayer_map[isGlobal][xId][j] : this.lcr_tlayer_map[isGlobal][xId][j], _edited != null ? _edited.lcr_tlayer_map[isGlobal][xId][j] : _original != null ? _original.lcr_tlayer_map[isGlobal][xId][j] : this.lcr_tlayer_map[isGlobal][xId][j]);
+					stream.WriteVariable(n, this.lcr_tlayer_map[isGlobal][xId][j], "lcr_tlayer_map"); 
+					atlasSegmentPresent = ((isGlobal != 0) ? lcr_global_atlas_id_present_flag : lcr_local_atlas_id_present_flag[xId]);
+
+					if ((atlasSegmentPresent != 0))
+					{
+						this.lcr_layer_atlas_segment_id[isGlobal][xId][j] = stream.Pick("lcr_layer_atlas_segment_id", _original != null ? _original.lcr_layer_atlas_segment_id[isGlobal][xId][j] : this.lcr_layer_atlas_segment_id[isGlobal][xId][j], _edited != null ? _edited.lcr_layer_atlas_segment_id[isGlobal][xId][j] : _original != null ? _original.lcr_layer_atlas_segment_id[isGlobal][xId][j] : this.lcr_layer_atlas_segment_id[isGlobal][xId][j]);
+						stream.WriteFixed(8, this.lcr_layer_atlas_segment_id[isGlobal][xId][j], "lcr_layer_atlas_segment_id"); 
+						this.lcr_priority_order[isGlobal][xId][j] = stream.Pick("lcr_priority_order", _original != null ? _original.lcr_priority_order[isGlobal][xId][j] : this.lcr_priority_order[isGlobal][xId][j], _edited != null ? _edited.lcr_priority_order[isGlobal][xId][j] : _original != null ? _original.lcr_priority_order[isGlobal][xId][j] : this.lcr_priority_order[isGlobal][xId][j]);
+						stream.WriteFixed(8, this.lcr_priority_order[isGlobal][xId][j], "lcr_priority_order"); 
+						this.lcr_rendering_method[isGlobal][xId][j] = stream.Pick("lcr_rendering_method", _original != null ? _original.lcr_rendering_method[isGlobal][xId][j] : this.lcr_rendering_method[isGlobal][xId][j], _edited != null ? _edited.lcr_rendering_method[isGlobal][xId][j] : _original != null ? _original.lcr_rendering_method[isGlobal][xId][j] : this.lcr_rendering_method[isGlobal][xId][j]);
+						stream.WriteFixed(8, this.lcr_rendering_method[isGlobal][xId][j], "lcr_rendering_method"); 
+					}
+					this.lcr_layer_type[isGlobal][xId][j] = stream.Pick("lcr_layer_type", _original != null ? _original.lcr_layer_type[isGlobal][xId][j] : this.lcr_layer_type[isGlobal][xId][j], _edited != null ? _edited.lcr_layer_type[isGlobal][xId][j] : _original != null ? _original.lcr_layer_type[isGlobal][xId][j] : this.lcr_layer_type[isGlobal][xId][j]);
+					stream.WriteFixed(8, this.lcr_layer_type[isGlobal][xId][j], "lcr_layer_type"); 
+
+					if ((lcr_layer_type[isGlobal][xId][j] == AUX_LAYER))
+					{
+						this.lcr_auxiliary_type[isGlobal][xId][j] = stream.Pick("lcr_auxiliary_type", _original != null ? _original.lcr_auxiliary_type[isGlobal][xId][j] : this.lcr_auxiliary_type[isGlobal][xId][j], _edited != null ? _edited.lcr_auxiliary_type[isGlobal][xId][j] : _original != null ? _original.lcr_auxiliary_type[isGlobal][xId][j] : this.lcr_auxiliary_type[isGlobal][xId][j]);
+						stream.WriteFixed(8, this.lcr_auxiliary_type[isGlobal][xId][j], "lcr_auxiliary_type"); 
+					}
+					this.lcr_view_type[isGlobal][xId][j] = stream.Pick("lcr_view_type", _original != null ? _original.lcr_view_type[isGlobal][xId][j] : this.lcr_view_type[isGlobal][xId][j], _edited != null ? _edited.lcr_view_type[isGlobal][xId][j] : _original != null ? _original.lcr_view_type[isGlobal][xId][j] : this.lcr_view_type[isGlobal][xId][j]);
+					stream.WriteFixed(8, this.lcr_view_type[isGlobal][xId][j], "lcr_view_type"); 
+
+					if ((lcr_view_type[isGlobal][xId][j] == VIEW_EXPLICIT))
+					{
+						this.lcr_view_id[isGlobal][xId][j] = stream.Pick("lcr_view_id", _original != null ? _original.lcr_view_id[isGlobal][xId][j] : this.lcr_view_id[isGlobal][xId][j], _edited != null ? _edited.lcr_view_id[isGlobal][xId][j] : _original != null ? _original.lcr_view_id[isGlobal][xId][j] : this.lcr_view_id[isGlobal][xId][j]);
+						stream.WriteFixed(8, this.lcr_view_id[isGlobal][xId][j], "lcr_view_id"); 
+					}
+
+					if ((j > 0))
+					{
+						this.lcr_dependent_layer_map[isGlobal][xId][j] = stream.Pick("lcr_dependent_layer_map", _original != null ? _original.lcr_dependent_layer_map[isGlobal][xId][j] : this.lcr_dependent_layer_map[isGlobal][xId][j], _edited != null ? _edited.lcr_dependent_layer_map[isGlobal][xId][j] : _original != null ? _original.lcr_dependent_layer_map[isGlobal][xId][j] : this.lcr_dependent_layer_map[isGlobal][xId][j]);
+						stream.WriteVariable(j, this.lcr_dependent_layer_map[isGlobal][xId][j], "lcr_dependent_layer_map"); 
+					}
+					this.lcr_same_sh_max_resolution_flag[isGlobal][xId][j] = stream.Pick("lcr_same_sh_max_resolution_flag", _original != null ? _original.lcr_same_sh_max_resolution_flag[isGlobal][xId][j] : this.lcr_same_sh_max_resolution_flag[isGlobal][xId][j], _edited != null ? _edited.lcr_same_sh_max_resolution_flag[isGlobal][xId][j] : _original != null ? _original.lcr_same_sh_max_resolution_flag[isGlobal][xId][j] : this.lcr_same_sh_max_resolution_flag[isGlobal][xId][j]);
+					stream.WriteFixed(1, this.lcr_same_sh_max_resolution_flag[isGlobal][xId][j], "lcr_same_sh_max_resolution_flag"); 
+
+					if (!(lcr_same_sh_max_resolution_flag[isGlobal][xId][j] != 0))
+					{
+						this.lcr_max_expected_width[isGlobal][xId][j] = stream.Pick("lcr_max_expected_width", _original != null ? _original.lcr_max_expected_width[isGlobal][xId][j] : this.lcr_max_expected_width[isGlobal][xId][j], _edited != null ? _edited.lcr_max_expected_width[isGlobal][xId][j] : _original != null ? _original.lcr_max_expected_width[isGlobal][xId][j] : this.lcr_max_expected_width[isGlobal][xId][j]);
+						stream.WriteUvlc( this.lcr_max_expected_width[isGlobal][xId][j], "lcr_max_expected_width"); 
+						this.lcr_max_expected_height[isGlobal][xId][j] = stream.Pick("lcr_max_expected_height", _original != null ? _original.lcr_max_expected_height[isGlobal][xId][j] : this.lcr_max_expected_height[isGlobal][xId][j], _edited != null ? _edited.lcr_max_expected_height[isGlobal][xId][j] : _original != null ? _original.lcr_max_expected_height[isGlobal][xId][j] : this.lcr_max_expected_height[isGlobal][xId][j]);
+						stream.WriteUvlc( this.lcr_max_expected_height[isGlobal][xId][j], "lcr_max_expected_height"); 
+					}
+					WriteByteAlignment(); 
+				}
+			}
+        }
+
     /*
 lcr_xlayer_color_info( isGlobal, xId ) {
 layer_color_description_idc[ isGlobal ][ xId ]	rg(2)
@@ -2911,6 +4497,24 @@ layer_full_range_flag[ isGlobal ][ xId ]	f(1)
 				stream.ReadFixed(8, out this.layer_matrix_coefficients[isGlobal][xId], "layer_matrix_coefficients"); 
 			}
 			stream.ReadFixed(1, out this.layer_full_range_flag[isGlobal][xId], "layer_full_range_flag"); 
+        }
+
+        private void WriteLcrXlayerColorInfo(int isGlobal, int xId)
+        {
+			this.layer_color_description_idc[isGlobal][xId] = stream.Pick("layer_color_description_idc", _original != null ? _original.layer_color_description_idc[isGlobal][xId] : this.layer_color_description_idc[isGlobal][xId], _edited != null ? _edited.layer_color_description_idc[isGlobal][xId] : _original != null ? _original.layer_color_description_idc[isGlobal][xId] : this.layer_color_description_idc[isGlobal][xId]);
+			stream.WriteRg(2, this.layer_color_description_idc[isGlobal][xId], "layer_color_description_idc"); 
+
+			if ((layer_color_description_idc[isGlobal][xId] == 0))
+			{
+				this.layer_color_primaries[isGlobal][xId] = stream.Pick("layer_color_primaries", _original != null ? _original.layer_color_primaries[isGlobal][xId] : this.layer_color_primaries[isGlobal][xId], _edited != null ? _edited.layer_color_primaries[isGlobal][xId] : _original != null ? _original.layer_color_primaries[isGlobal][xId] : this.layer_color_primaries[isGlobal][xId]);
+				stream.WriteFixed(8, this.layer_color_primaries[isGlobal][xId], "layer_color_primaries"); 
+				this.layer_transfer_characteristics[isGlobal][xId] = stream.Pick("layer_transfer_characteristics", _original != null ? _original.layer_transfer_characteristics[isGlobal][xId] : this.layer_transfer_characteristics[isGlobal][xId], _edited != null ? _edited.layer_transfer_characteristics[isGlobal][xId] : _original != null ? _original.layer_transfer_characteristics[isGlobal][xId] : this.layer_transfer_characteristics[isGlobal][xId]);
+				stream.WriteFixed(8, this.layer_transfer_characteristics[isGlobal][xId], "layer_transfer_characteristics"); 
+				this.layer_matrix_coefficients[isGlobal][xId] = stream.Pick("layer_matrix_coefficients", _original != null ? _original.layer_matrix_coefficients[isGlobal][xId] : this.layer_matrix_coefficients[isGlobal][xId], _edited != null ? _edited.layer_matrix_coefficients[isGlobal][xId] : _original != null ? _original.layer_matrix_coefficients[isGlobal][xId] : this.layer_matrix_coefficients[isGlobal][xId]);
+				stream.WriteFixed(8, this.layer_matrix_coefficients[isGlobal][xId], "layer_matrix_coefficients"); 
+			}
+			this.layer_full_range_flag[isGlobal][xId] = stream.Pick("layer_full_range_flag", _original != null ? _original.layer_full_range_flag[isGlobal][xId] : this.layer_full_range_flag[isGlobal][xId], _edited != null ? _edited.layer_full_range_flag[isGlobal][xId] : _original != null ? _original.layer_full_range_flag[isGlobal][xId] : this.layer_full_range_flag[isGlobal][xId]);
+			stream.WriteFixed(1, this.layer_full_range_flag[isGlobal][xId], "layer_full_range_flag"); 
         }
 
     /*
@@ -2977,6 +4581,43 @@ ats_label_segment_info( obu_xlayer_id, xAId, numSegments )
 			AtsLabelSegmentInfo(obu_xlayer_id, xAId, numSegments); 
         }
 
+        private void WriteAtlasSegmentInfoObu()
+        {
+			int xAId = 0;
+			int numSegments = 0;
+			this.atlas_segment_id[obu_xlayer_id] = stream.Pick("atlas_segment_id", _original != null ? _original.atlas_segment_id[obu_xlayer_id] : this.atlas_segment_id[obu_xlayer_id], _edited != null ? _edited.atlas_segment_id[obu_xlayer_id] : _original != null ? _original.atlas_segment_id[obu_xlayer_id] : this.atlas_segment_id[obu_xlayer_id]);
+			stream.WriteFixed(3, this.atlas_segment_id[obu_xlayer_id], "atlas_segment_id"); 
+			xAId = atlas_segment_id[obu_xlayer_id];
+			this.ats_atlas_segment_mode_idc[xAId] = stream.Pick("ats_atlas_segment_mode_idc", _original != null ? _original.ats_atlas_segment_mode_idc[xAId] : this.ats_atlas_segment_mode_idc[xAId], _edited != null ? _edited.ats_atlas_segment_mode_idc[xAId] : _original != null ? _original.ats_atlas_segment_mode_idc[xAId] : this.ats_atlas_segment_mode_idc[xAId]);
+			stream.WriteUvlc( this.ats_atlas_segment_mode_idc[xAId], "ats_atlas_segment_mode_idc"); 
+
+			if ((ats_atlas_segment_mode_idc[xAId] == ENHANCED_ATLAS))
+			{
+				numSegments = WriteAtsEnhancedAtlasInfo(xAId);
+			}
+			else if ((ats_atlas_segment_mode_idc[xAId] == BASIC_ATLAS))
+			{
+				numSegments = WriteAtsBasicInfo(xAId);
+			}
+			else if ((ats_atlas_segment_mode_idc[xAId] == SINGLE_ATLAS))
+			{
+				numSegments = 1;
+				this.ats_nominal_width_minus_1[xAId] = stream.Pick("ats_nominal_width_minus_1", _original != null ? _original.ats_nominal_width_minus_1[xAId] : this.ats_nominal_width_minus_1[xAId], _edited != null ? _edited.ats_nominal_width_minus_1[xAId] : _original != null ? _original.ats_nominal_width_minus_1[xAId] : this.ats_nominal_width_minus_1[xAId]);
+				stream.WriteUvlc( this.ats_nominal_width_minus_1[xAId], "ats_nominal_width_minus_1"); 
+				this.ats_nominal_height_minus_1[xAId] = stream.Pick("ats_nominal_height_minus_1", _original != null ? _original.ats_nominal_height_minus_1[xAId] : this.ats_nominal_height_minus_1[xAId], _edited != null ? _edited.ats_nominal_height_minus_1[xAId] : _original != null ? _original.ats_nominal_height_minus_1[xAId] : this.ats_nominal_height_minus_1[xAId]);
+				stream.WriteUvlc( this.ats_nominal_height_minus_1[xAId], "ats_nominal_height_minus_1"); 
+			}
+			else if ((ats_atlas_segment_mode_idc[xAId] == MULTISTREAM_ATLAS))
+			{
+				numSegments = WriteAtsMultistreamInfo(obu_xlayer_id, xAId);
+			}
+			else if ((ats_atlas_segment_mode_idc[xAId] == MULTISTREAM_ALPHA_ATLAS))
+			{
+				numSegments = WriteAtsMultistreamWithAlphaInfo(obu_xlayer_id, xAId);
+			}
+			WriteAtsLabelSegmentInfo(obu_xlayer_id, xAId, numSegments); 
+        }
+
     /*
 ats_label_segment_info( xlayerId, xAId, numSegments ) {
 ats_signaled_atlas_segment_ids_flag[ xlayerId ][ xAId ]	f(1)
@@ -3035,6 +4676,35 @@ AtlasSegmentIndexToID[ xlayerId ][ xAId ][ i ] = i
 			}
         }
 
+        private void WriteAtsLabelSegmentInfo(int xlayerId, int xAId, int numSegments)
+        {
+			int i = 0;
+			this.ats_signaled_atlas_segment_ids_flag[xlayerId][xAId] = stream.Pick("ats_signaled_atlas_segment_ids_flag", _original != null ? _original.ats_signaled_atlas_segment_ids_flag[xlayerId][xAId] : this.ats_signaled_atlas_segment_ids_flag[xlayerId][xAId], _edited != null ? _edited.ats_signaled_atlas_segment_ids_flag[xlayerId][xAId] : _original != null ? _original.ats_signaled_atlas_segment_ids_flag[xlayerId][xAId] : this.ats_signaled_atlas_segment_ids_flag[xlayerId][xAId]);
+			stream.WriteFixed(1, this.ats_signaled_atlas_segment_ids_flag[xlayerId][xAId], "ats_signaled_atlas_segment_ids_flag"); 
+
+			if ((ats_signaled_atlas_segment_ids_flag[xlayerId][xAId] != 0))
+			{
+
+				for (i = 0; (i < numSegments); i++)
+				{
+					this.ats_atlas_segment_id[xlayerId][xAId][i] = stream.Pick("ats_atlas_segment_id", _original != null ? _original.ats_atlas_segment_id[xlayerId][xAId][i] : this.ats_atlas_segment_id[xlayerId][xAId][i], _edited != null ? _edited.ats_atlas_segment_id[xlayerId][xAId][i] : _original != null ? _original.ats_atlas_segment_id[xlayerId][xAId][i] : this.ats_atlas_segment_id[xlayerId][xAId][i]);
+					stream.WriteFixed(8, this.ats_atlas_segment_id[xlayerId][xAId][i], "ats_atlas_segment_id"); 
+					AtlasSegmentIDToIndex[xlayerId][xAId][ats_atlas_segment_id[xlayerId][xAId][i]] = i;
+					AtlasSegmentIndexToID[xlayerId][xAId][i] = ats_atlas_segment_id[xlayerId][xAId][i];
+				}
+			}
+			else 
+			{
+
+				for (i = 0; (i < numSegments); i++)
+				{
+					ats_atlas_segment_id[xlayerId][xAId][i] = i;
+					AtlasSegmentIDToIndex[xlayerId][xAId][i] = i;
+					AtlasSegmentIndexToID[xlayerId][xAId][i] = i;
+				}
+			}
+        }
+
     /*
 ats_enhanced_atlas_info( xAId ) {
 ats_region_info( xAId )	
@@ -3048,6 +4718,14 @@ return numSegments
 			int numSegments = 0;
 			AtsRegionInfo(xAId); 
 			numSegments = AtsRegionToSegmentMapping(xAId);
+			return numSegments;
+        }
+
+        private int WriteAtsEnhancedAtlasInfo(int xAId)
+        {
+			int numSegments = 0;
+			WriteAtsRegionInfo(xAId); 
+			numSegments = WriteAtsRegionToSegmentMapping(xAId);
 			return numSegments;
         }
 
@@ -3135,6 +4813,47 @@ NumRegionsInAtlas[ xAId ] =
 			NumRegionsInAtlas[xAId] = ((ats_num_region_columns_minus_1[xAId] + 1) * (ats_num_region_rows_minus_1[xAId] + 1));
         }
 
+        private void WriteAtsRegionInfo(int xAId)
+        {
+			int i = 0;
+			this.ats_num_region_columns_minus_1[xAId] = stream.Pick("ats_num_region_columns_minus_1", _original != null ? _original.ats_num_region_columns_minus_1[xAId] : this.ats_num_region_columns_minus_1[xAId], _edited != null ? _edited.ats_num_region_columns_minus_1[xAId] : _original != null ? _original.ats_num_region_columns_minus_1[xAId] : this.ats_num_region_columns_minus_1[xAId]);
+			stream.WriteUvlc( this.ats_num_region_columns_minus_1[xAId], "ats_num_region_columns_minus_1"); 
+			this.ats_num_region_rows_minus_1[xAId] = stream.Pick("ats_num_region_rows_minus_1", _original != null ? _original.ats_num_region_rows_minus_1[xAId] : this.ats_num_region_rows_minus_1[xAId], _edited != null ? _edited.ats_num_region_rows_minus_1[xAId] : _original != null ? _original.ats_num_region_rows_minus_1[xAId] : this.ats_num_region_rows_minus_1[xAId]);
+			stream.WriteUvlc( this.ats_num_region_rows_minus_1[xAId], "ats_num_region_rows_minus_1"); 
+			this.ats_uniform_spacing_flag[xAId] = stream.Pick("ats_uniform_spacing_flag", _original != null ? _original.ats_uniform_spacing_flag[xAId] : this.ats_uniform_spacing_flag[xAId], _edited != null ? _edited.ats_uniform_spacing_flag[xAId] : _original != null ? _original.ats_uniform_spacing_flag[xAId] : this.ats_uniform_spacing_flag[xAId]);
+			stream.WriteFixed(1, this.ats_uniform_spacing_flag[xAId], "ats_uniform_spacing_flag"); 
+			AtlasWidth = 0;
+			AtlasHeight = 0;
+
+			if (!(ats_uniform_spacing_flag[xAId] != 0))
+			{
+
+				for (i = 0; (i < (ats_num_region_columns_minus_1[xAId] + 1)); i++)
+				{
+					this.ats_column_width_minus_1[xAId][i] = stream.Pick("ats_column_width_minus_1", _original != null ? _original.ats_column_width_minus_1[xAId][i] : this.ats_column_width_minus_1[xAId][i], _edited != null ? _edited.ats_column_width_minus_1[xAId][i] : _original != null ? _original.ats_column_width_minus_1[xAId][i] : this.ats_column_width_minus_1[xAId][i]);
+					stream.WriteUvlc( this.ats_column_width_minus_1[xAId][i], "ats_column_width_minus_1"); 
+					AtlasWidth += (ats_column_width_minus_1[xAId][i] + 1);
+				}
+
+				for (i = 0; (i < (ats_num_region_rows_minus_1[xAId] + 1)); i++)
+				{
+					this.ats_row_height_minus_1[xAId][i] = stream.Pick("ats_row_height_minus_1", _original != null ? _original.ats_row_height_minus_1[xAId][i] : this.ats_row_height_minus_1[xAId][i], _edited != null ? _edited.ats_row_height_minus_1[xAId][i] : _original != null ? _original.ats_row_height_minus_1[xAId][i] : this.ats_row_height_minus_1[xAId][i]);
+					stream.WriteUvlc( this.ats_row_height_minus_1[xAId][i], "ats_row_height_minus_1"); 
+					AtlasHeight += (ats_row_height_minus_1[xAId][i] + 1);
+				}
+			}
+			else 
+			{
+				this.ats_region_width_minus_1[xAId] = stream.Pick("ats_region_width_minus_1", _original != null ? _original.ats_region_width_minus_1[xAId] : this.ats_region_width_minus_1[xAId], _edited != null ? _edited.ats_region_width_minus_1[xAId] : _original != null ? _original.ats_region_width_minus_1[xAId] : this.ats_region_width_minus_1[xAId]);
+				stream.WriteUvlc( this.ats_region_width_minus_1[xAId], "ats_region_width_minus_1"); 
+				this.ats_region_height_minus_1[xAId] = stream.Pick("ats_region_height_minus_1", _original != null ? _original.ats_region_height_minus_1[xAId] : this.ats_region_height_minus_1[xAId], _edited != null ? _edited.ats_region_height_minus_1[xAId] : _original != null ? _original.ats_region_height_minus_1[xAId] : this.ats_region_height_minus_1[xAId]);
+				stream.WriteUvlc( this.ats_region_height_minus_1[xAId], "ats_region_height_minus_1"); 
+				AtlasWidth = ((ats_region_width_minus_1[xAId] + 1) * (ats_num_region_columns_minus_1[xAId] + 1));
+				AtlasHeight = ((ats_region_height_minus_1[xAId] + 1) * (ats_num_region_rows_minus_1[xAId] + 1));
+			}
+			NumRegionsInAtlas[xAId] = ((ats_num_region_columns_minus_1[xAId] + 1) * (ats_num_region_rows_minus_1[xAId] + 1));
+        }
+
     /*
 ats_region_to_segment_mapping( xAId ) {
 ats_single_region_per_atlas_segment_flag[ xAId ]	f(1)
@@ -3181,6 +4900,36 @@ return ats_num_atlas_segments_minus_1[ xAId ] + 1
 					stream.ReadUvlc( out this.ats_top_left_region_row[xAId][i], "ats_top_left_region_row"); 
 					stream.ReadUvlc( out this.ats_bottom_right_region_column_off[xAId][i], "ats_bottom_right_region_column_off"); 
 					stream.ReadUvlc( out this.ats_bottom_right_region_row_off[xAId][i], "ats_bottom_right_region_row_off"); 
+				}
+			}
+			else 
+			{
+				ats_num_atlas_segments_minus_1[xAId] = (NumRegionsInAtlas[xAId] - 1);
+			}
+			return (ats_num_atlas_segments_minus_1[xAId] + 1);
+        }
+
+        private int WriteAtsRegionToSegmentMapping(int xAId)
+        {
+			int i = 0;
+			this.ats_single_region_per_atlas_segment_flag[xAId] = stream.Pick("ats_single_region_per_atlas_segment_flag", _original != null ? _original.ats_single_region_per_atlas_segment_flag[xAId] : this.ats_single_region_per_atlas_segment_flag[xAId], _edited != null ? _edited.ats_single_region_per_atlas_segment_flag[xAId] : _original != null ? _original.ats_single_region_per_atlas_segment_flag[xAId] : this.ats_single_region_per_atlas_segment_flag[xAId]);
+			stream.WriteFixed(1, this.ats_single_region_per_atlas_segment_flag[xAId], "ats_single_region_per_atlas_segment_flag"); 
+
+			if (!(ats_single_region_per_atlas_segment_flag[xAId] != 0))
+			{
+				this.ats_num_atlas_segments_minus_1[xAId] = stream.Pick("ats_num_atlas_segments_minus_1", _original != null ? _original.ats_num_atlas_segments_minus_1[xAId] : this.ats_num_atlas_segments_minus_1[xAId], _edited != null ? _edited.ats_num_atlas_segments_minus_1[xAId] : _original != null ? _original.ats_num_atlas_segments_minus_1[xAId] : this.ats_num_atlas_segments_minus_1[xAId]);
+				stream.WriteUvlc( this.ats_num_atlas_segments_minus_1[xAId], "ats_num_atlas_segments_minus_1"); 
+
+				for (i = 0; (i <= ats_num_atlas_segments_minus_1[xAId]); i++)
+				{
+					this.ats_top_left_region_column[xAId][i] = stream.Pick("ats_top_left_region_column", _original != null ? _original.ats_top_left_region_column[xAId][i] : this.ats_top_left_region_column[xAId][i], _edited != null ? _edited.ats_top_left_region_column[xAId][i] : _original != null ? _original.ats_top_left_region_column[xAId][i] : this.ats_top_left_region_column[xAId][i]);
+					stream.WriteUvlc( this.ats_top_left_region_column[xAId][i], "ats_top_left_region_column"); 
+					this.ats_top_left_region_row[xAId][i] = stream.Pick("ats_top_left_region_row", _original != null ? _original.ats_top_left_region_row[xAId][i] : this.ats_top_left_region_row[xAId][i], _edited != null ? _edited.ats_top_left_region_row[xAId][i] : _original != null ? _original.ats_top_left_region_row[xAId][i] : this.ats_top_left_region_row[xAId][i]);
+					stream.WriteUvlc( this.ats_top_left_region_row[xAId][i], "ats_top_left_region_row"); 
+					this.ats_bottom_right_region_column_off[xAId][i] = stream.Pick("ats_bottom_right_region_column_off", _original != null ? _original.ats_bottom_right_region_column_off[xAId][i] : this.ats_bottom_right_region_column_off[xAId][i], _edited != null ? _edited.ats_bottom_right_region_column_off[xAId][i] : _original != null ? _original.ats_bottom_right_region_column_off[xAId][i] : this.ats_bottom_right_region_column_off[xAId][i]);
+					stream.WriteUvlc( this.ats_bottom_right_region_column_off[xAId][i], "ats_bottom_right_region_column_off"); 
+					this.ats_bottom_right_region_row_off[xAId][i] = stream.Pick("ats_bottom_right_region_row_off", _original != null ? _original.ats_bottom_right_region_row_off[xAId][i] : this.ats_bottom_right_region_row_off[xAId][i], _edited != null ? _edited.ats_bottom_right_region_row_off[xAId][i] : _original != null ? _original.ats_bottom_right_region_row_off[xAId][i] : this.ats_bottom_right_region_row_off[xAId][i]);
+					stream.WriteUvlc( this.ats_bottom_right_region_row_off[xAId][i], "ats_bottom_right_region_row_off"); 
 				}
 			}
 			else 
@@ -3266,6 +5015,46 @@ return ats_msi_num_atlas_segments_minus_1[ xlayerId ][ xAId ] + 1
 			return (ats_msi_num_atlas_segments_minus_1[xlayerId][xAId] + 1);
         }
 
+        private int WriteAtsMultistreamInfo(int xlayerId, int xAId)
+        {
+			int i = 0;
+			this.ats_msi_width[xlayerId][xAId] = stream.Pick("ats_msi_width", _original != null ? _original.AtlasWidth : this.ats_msi_width[xlayerId][xAId], _edited != null ? _edited.AtlasWidth : _original != null ? _original.AtlasWidth : this.ats_msi_width[xlayerId][xAId]);
+			stream.WriteUvlc( this.ats_msi_width[xlayerId][xAId], "ats_msi_width"); 
+			this.ats_msi_height[xlayerId][xAId] = stream.Pick("ats_msi_height", _original != null ? _original.AtlasHeight : this.ats_msi_height[xlayerId][xAId], _edited != null ? _edited.AtlasHeight : _original != null ? _original.AtlasHeight : this.ats_msi_height[xlayerId][xAId]);
+			stream.WriteUvlc( this.ats_msi_height[xlayerId][xAId], "ats_msi_height"); 
+			AtlasWidth = ats_msi_width[xlayerId][xAId];
+			AtlasHeight = ats_msi_height[xlayerId][xAId];
+			this.ats_msi_num_atlas_segments_minus_1[xlayerId][xAId] = stream.Pick("ats_msi_num_atlas_segments_minus_1", _original != null ? _original.ats_msi_num_atlas_segments_minus_1[xlayerId][xAId] : this.ats_msi_num_atlas_segments_minus_1[xlayerId][xAId], _edited != null ? _edited.ats_msi_num_atlas_segments_minus_1[xlayerId][xAId] : _original != null ? _original.ats_msi_num_atlas_segments_minus_1[xlayerId][xAId] : this.ats_msi_num_atlas_segments_minus_1[xlayerId][xAId]);
+			stream.WriteUvlc( this.ats_msi_num_atlas_segments_minus_1[xlayerId][xAId], "ats_msi_num_atlas_segments_minus_1"); 
+			this.ats_msi_background_info_present_flag[xlayerId][xAId] = stream.Pick("ats_msi_background_info_present_flag", _original != null ? _original.ats_msi_background_info_present_flag[xlayerId][xAId] : this.ats_msi_background_info_present_flag[xlayerId][xAId], _edited != null ? _edited.ats_msi_background_info_present_flag[xlayerId][xAId] : _original != null ? _original.ats_msi_background_info_present_flag[xlayerId][xAId] : this.ats_msi_background_info_present_flag[xlayerId][xAId]);
+			stream.WriteFixed(1, this.ats_msi_background_info_present_flag[xlayerId][xAId], "ats_msi_background_info_present_flag"); 
+
+			if ((ats_msi_background_info_present_flag[xlayerId][xAId] != 0))
+			{
+				this.ats_msi_background_red_value[xlayerId][xAId] = stream.Pick("ats_msi_background_red_value", _original != null ? _original.ats_msi_background_red_value[xlayerId][xAId] : this.ats_msi_background_red_value[xlayerId][xAId], _edited != null ? _edited.ats_msi_background_red_value[xlayerId][xAId] : _original != null ? _original.ats_msi_background_red_value[xlayerId][xAId] : this.ats_msi_background_red_value[xlayerId][xAId]);
+				stream.WriteFixed(8, this.ats_msi_background_red_value[xlayerId][xAId], "ats_msi_background_red_value"); 
+				this.ats_msi_background_green_value[xlayerId][xAId] = stream.Pick("ats_msi_background_green_value", _original != null ? _original.ats_msi_background_green_value[xlayerId][xAId] : this.ats_msi_background_green_value[xlayerId][xAId], _edited != null ? _edited.ats_msi_background_green_value[xlayerId][xAId] : _original != null ? _original.ats_msi_background_green_value[xlayerId][xAId] : this.ats_msi_background_green_value[xlayerId][xAId]);
+				stream.WriteFixed(8, this.ats_msi_background_green_value[xlayerId][xAId], "ats_msi_background_green_value"); 
+				this.ats_msi_background_blue_value[xlayerId][xAId] = stream.Pick("ats_msi_background_blue_value", _original != null ? _original.ats_msi_background_blue_value[xlayerId][xAId] : this.ats_msi_background_blue_value[xlayerId][xAId], _edited != null ? _edited.ats_msi_background_blue_value[xlayerId][xAId] : _original != null ? _original.ats_msi_background_blue_value[xlayerId][xAId] : this.ats_msi_background_blue_value[xlayerId][xAId]);
+				stream.WriteFixed(8, this.ats_msi_background_blue_value[xlayerId][xAId], "ats_msi_background_blue_value"); 
+			}
+
+			for (i = 0; (i <= ats_msi_num_atlas_segments_minus_1[xlayerId][xAId]); i++)
+			{
+				this.ats_msi_input_stream_id[xlayerId][xAId][i] = stream.Pick("ats_msi_input_stream_id", _original != null ? _original.ats_msi_input_stream_id[xlayerId][xAId][i] : this.ats_msi_input_stream_id[xlayerId][xAId][i], _edited != null ? _edited.ats_msi_input_stream_id[xlayerId][xAId][i] : _original != null ? _original.ats_msi_input_stream_id[xlayerId][xAId][i] : this.ats_msi_input_stream_id[xlayerId][xAId][i]);
+				stream.WriteFixed(5, this.ats_msi_input_stream_id[xlayerId][xAId][i], "ats_msi_input_stream_id"); 
+				this.ats_msi_segment_top_left_pos_x[xlayerId][xAId][i] = stream.Pick("ats_msi_segment_top_left_pos_x", _original != null ? _original.ats_msi_segment_top_left_pos_x[xlayerId][xAId][i] : this.ats_msi_segment_top_left_pos_x[xlayerId][xAId][i], _edited != null ? _edited.ats_msi_segment_top_left_pos_x[xlayerId][xAId][i] : _original != null ? _original.ats_msi_segment_top_left_pos_x[xlayerId][xAId][i] : this.ats_msi_segment_top_left_pos_x[xlayerId][xAId][i]);
+				stream.WriteUvlc( this.ats_msi_segment_top_left_pos_x[xlayerId][xAId][i], "ats_msi_segment_top_left_pos_x"); 
+				this.ats_msi_segment_top_left_pos_y[xlayerId][xAId][i] = stream.Pick("ats_msi_segment_top_left_pos_y", _original != null ? _original.ats_msi_segment_top_left_pos_y[xlayerId][xAId][i] : this.ats_msi_segment_top_left_pos_y[xlayerId][xAId][i], _edited != null ? _edited.ats_msi_segment_top_left_pos_y[xlayerId][xAId][i] : _original != null ? _original.ats_msi_segment_top_left_pos_y[xlayerId][xAId][i] : this.ats_msi_segment_top_left_pos_y[xlayerId][xAId][i]);
+				stream.WriteUvlc( this.ats_msi_segment_top_left_pos_y[xlayerId][xAId][i], "ats_msi_segment_top_left_pos_y"); 
+				this.ats_msi_segment_width[xlayerId][xAId][i] = stream.Pick("ats_msi_segment_width", _original != null ? _original.ats_msi_segment_width[xlayerId][xAId][i] : this.ats_msi_segment_width[xlayerId][xAId][i], _edited != null ? _edited.ats_msi_segment_width[xlayerId][xAId][i] : _original != null ? _original.ats_msi_segment_width[xlayerId][xAId][i] : this.ats_msi_segment_width[xlayerId][xAId][i]);
+				stream.WriteUvlc( this.ats_msi_segment_width[xlayerId][xAId][i], "ats_msi_segment_width"); 
+				this.ats_msi_segment_height[xlayerId][xAId][i] = stream.Pick("ats_msi_segment_height", _original != null ? _original.ats_msi_segment_height[xlayerId][xAId][i] : this.ats_msi_segment_height[xlayerId][xAId][i], _edited != null ? _edited.ats_msi_segment_height[xlayerId][xAId][i] : _original != null ? _original.ats_msi_segment_height[xlayerId][xAId][i] : this.ats_msi_segment_height[xlayerId][xAId][i]);
+				stream.WriteUvlc( this.ats_msi_segment_height[xlayerId][xAId][i], "ats_msi_segment_height"); 
+			}
+			return (ats_msi_num_atlas_segments_minus_1[xlayerId][xAId] + 1);
+        }
+
     /*
 ats_multistream_with_alpha_info( xlayerId, xAId ) {
 ats_msi_width[ xlayerId ][ xAId ]	uvlc()
@@ -3339,6 +5128,58 @@ return ats_msi_num_atlas_segments_minus_1[ xlayerId ][ xAId ] + 1
 			return (ats_msi_num_atlas_segments_minus_1[xlayerId][xAId] + 1);
         }
 
+        private int WriteAtsMultistreamWithAlphaInfo(int xlayerId, int xAId)
+        {
+			int i = 0;
+			this.ats_msi_width[xlayerId][xAId] = stream.Pick("ats_msi_width", _original != null ? _original.AtlasWidth : this.ats_msi_width[xlayerId][xAId], _edited != null ? _edited.AtlasWidth : _original != null ? _original.AtlasWidth : this.ats_msi_width[xlayerId][xAId]);
+			stream.WriteUvlc( this.ats_msi_width[xlayerId][xAId], "ats_msi_width"); 
+			this.ats_msi_height[xlayerId][xAId] = stream.Pick("ats_msi_height", _original != null ? _original.AtlasHeight : this.ats_msi_height[xlayerId][xAId], _edited != null ? _edited.AtlasHeight : _original != null ? _original.AtlasHeight : this.ats_msi_height[xlayerId][xAId]);
+			stream.WriteUvlc( this.ats_msi_height[xlayerId][xAId], "ats_msi_height"); 
+			AtlasWidth = ats_msi_width[xlayerId][xAId];
+			AtlasHeight = ats_msi_height[xlayerId][xAId];
+			this.ats_msi_num_atlas_segments_minus_1[xlayerId][xAId] = stream.Pick("ats_msi_num_atlas_segments_minus_1", _original != null ? _original.ats_msi_num_atlas_segments_minus_1[xlayerId][xAId] : this.ats_msi_num_atlas_segments_minus_1[xlayerId][xAId], _edited != null ? _edited.ats_msi_num_atlas_segments_minus_1[xlayerId][xAId] : _original != null ? _original.ats_msi_num_atlas_segments_minus_1[xlayerId][xAId] : this.ats_msi_num_atlas_segments_minus_1[xlayerId][xAId]);
+			stream.WriteUvlc( this.ats_msi_num_atlas_segments_minus_1[xlayerId][xAId], "ats_msi_num_atlas_segments_minus_1"); 
+			this.ats_msi_alpha_segments_present_flag[xlayerId][xAId] = stream.Pick("ats_msi_alpha_segments_present_flag", _original != null ? _original.ats_msi_alpha_segments_present_flag[xlayerId][xAId] : this.ats_msi_alpha_segments_present_flag[xlayerId][xAId], _edited != null ? _edited.ats_msi_alpha_segments_present_flag[xlayerId][xAId] : _original != null ? _original.ats_msi_alpha_segments_present_flag[xlayerId][xAId] : this.ats_msi_alpha_segments_present_flag[xlayerId][xAId]);
+			stream.WriteFixed(1, this.ats_msi_alpha_segments_present_flag[xlayerId][xAId], "ats_msi_alpha_segments_present_flag"); 
+			this.ats_msi_background_info_present_flag[xlayerId][xAId] = stream.Pick("ats_msi_background_info_present_flag", _original != null ? _original.ats_msi_background_info_present_flag[xlayerId][xAId] : this.ats_msi_background_info_present_flag[xlayerId][xAId], _edited != null ? _edited.ats_msi_background_info_present_flag[xlayerId][xAId] : _original != null ? _original.ats_msi_background_info_present_flag[xlayerId][xAId] : this.ats_msi_background_info_present_flag[xlayerId][xAId]);
+			stream.WriteFixed(1, this.ats_msi_background_info_present_flag[xlayerId][xAId], "ats_msi_background_info_present_flag"); 
+
+			if ((ats_msi_background_info_present_flag[xlayerId][xAId] != 0))
+			{
+				this.ats_msi_background_red_value[xlayerId][xAId] = stream.Pick("ats_msi_background_red_value", _original != null ? _original.ats_msi_background_red_value[xlayerId][xAId] : this.ats_msi_background_red_value[xlayerId][xAId], _edited != null ? _edited.ats_msi_background_red_value[xlayerId][xAId] : _original != null ? _original.ats_msi_background_red_value[xlayerId][xAId] : this.ats_msi_background_red_value[xlayerId][xAId]);
+				stream.WriteFixed(8, this.ats_msi_background_red_value[xlayerId][xAId], "ats_msi_background_red_value"); 
+				this.ats_msi_background_green_value[xlayerId][xAId] = stream.Pick("ats_msi_background_green_value", _original != null ? _original.ats_msi_background_green_value[xlayerId][xAId] : this.ats_msi_background_green_value[xlayerId][xAId], _edited != null ? _edited.ats_msi_background_green_value[xlayerId][xAId] : _original != null ? _original.ats_msi_background_green_value[xlayerId][xAId] : this.ats_msi_background_green_value[xlayerId][xAId]);
+				stream.WriteFixed(8, this.ats_msi_background_green_value[xlayerId][xAId], "ats_msi_background_green_value"); 
+				this.ats_msi_background_blue_value[xlayerId][xAId] = stream.Pick("ats_msi_background_blue_value", _original != null ? _original.ats_msi_background_blue_value[xlayerId][xAId] : this.ats_msi_background_blue_value[xlayerId][xAId], _edited != null ? _edited.ats_msi_background_blue_value[xlayerId][xAId] : _original != null ? _original.ats_msi_background_blue_value[xlayerId][xAId] : this.ats_msi_background_blue_value[xlayerId][xAId]);
+				stream.WriteFixed(8, this.ats_msi_background_blue_value[xlayerId][xAId], "ats_msi_background_blue_value"); 
+			}
+
+			for (i = 0; (i <= ats_msi_num_atlas_segments_minus_1[xlayerId][xAId]); i++)
+			{
+				this.ats_msi_input_stream_id[xlayerId][xAId][i] = stream.Pick("ats_msi_input_stream_id", _original != null ? _original.ats_msi_input_stream_id[xlayerId][xAId][i] : this.ats_msi_input_stream_id[xlayerId][xAId][i], _edited != null ? _edited.ats_msi_input_stream_id[xlayerId][xAId][i] : _original != null ? _original.ats_msi_input_stream_id[xlayerId][xAId][i] : this.ats_msi_input_stream_id[xlayerId][xAId][i]);
+				stream.WriteFixed(5, this.ats_msi_input_stream_id[xlayerId][xAId][i], "ats_msi_input_stream_id"); 
+				this.ats_msi_segment_top_left_pos_x[xlayerId][xAId][i] = stream.Pick("ats_msi_segment_top_left_pos_x", _original != null ? _original.ats_msi_segment_top_left_pos_x[xlayerId][xAId][i] : this.ats_msi_segment_top_left_pos_x[xlayerId][xAId][i], _edited != null ? _edited.ats_msi_segment_top_left_pos_x[xlayerId][xAId][i] : _original != null ? _original.ats_msi_segment_top_left_pos_x[xlayerId][xAId][i] : this.ats_msi_segment_top_left_pos_x[xlayerId][xAId][i]);
+				stream.WriteUvlc( this.ats_msi_segment_top_left_pos_x[xlayerId][xAId][i], "ats_msi_segment_top_left_pos_x"); 
+				this.ats_msi_segment_top_left_pos_y[xlayerId][xAId][i] = stream.Pick("ats_msi_segment_top_left_pos_y", _original != null ? _original.ats_msi_segment_top_left_pos_y[xlayerId][xAId][i] : this.ats_msi_segment_top_left_pos_y[xlayerId][xAId][i], _edited != null ? _edited.ats_msi_segment_top_left_pos_y[xlayerId][xAId][i] : _original != null ? _original.ats_msi_segment_top_left_pos_y[xlayerId][xAId][i] : this.ats_msi_segment_top_left_pos_y[xlayerId][xAId][i]);
+				stream.WriteUvlc( this.ats_msi_segment_top_left_pos_y[xlayerId][xAId][i], "ats_msi_segment_top_left_pos_y"); 
+				this.ats_msi_segment_width[xlayerId][xAId][i] = stream.Pick("ats_msi_segment_width", _original != null ? _original.ats_msi_segment_width[xlayerId][xAId][i] : this.ats_msi_segment_width[xlayerId][xAId][i], _edited != null ? _edited.ats_msi_segment_width[xlayerId][xAId][i] : _original != null ? _original.ats_msi_segment_width[xlayerId][xAId][i] : this.ats_msi_segment_width[xlayerId][xAId][i]);
+				stream.WriteUvlc( this.ats_msi_segment_width[xlayerId][xAId][i], "ats_msi_segment_width"); 
+				this.ats_msi_segment_height[xlayerId][xAId][i] = stream.Pick("ats_msi_segment_height", _original != null ? _original.ats_msi_segment_height[xlayerId][xAId][i] : this.ats_msi_segment_height[xlayerId][xAId][i], _edited != null ? _edited.ats_msi_segment_height[xlayerId][xAId][i] : _original != null ? _original.ats_msi_segment_height[xlayerId][xAId][i] : this.ats_msi_segment_height[xlayerId][xAId][i]);
+				stream.WriteUvlc( this.ats_msi_segment_height[xlayerId][xAId][i], "ats_msi_segment_height"); 
+
+				if (((ats_msi_alpha_segments_present_flag[xlayerId][xAId] != 0) && (i != ats_msi_num_atlas_segments_minus_1[xlayerId][xAId])))
+				{
+					this.ats_msi_alpha_segment_flag[xlayerId][xAId][i] = stream.Pick("ats_msi_alpha_segment_flag", _original != null ? _original.ats_msi_alpha_segment_flag[xlayerId][xAId][i] : this.ats_msi_alpha_segment_flag[xlayerId][xAId][i], _edited != null ? _edited.ats_msi_alpha_segment_flag[xlayerId][xAId][i] : _original != null ? _original.ats_msi_alpha_segment_flag[xlayerId][xAId][i] : this.ats_msi_alpha_segment_flag[xlayerId][xAId][i]);
+					stream.WriteFixed(1, this.ats_msi_alpha_segment_flag[xlayerId][xAId][i], "ats_msi_alpha_segment_flag"); 
+				}
+				else 
+				{
+					ats_msi_alpha_segment_flag[xlayerId][xAId][i] = 0;
+				}
+			}
+			return (ats_msi_num_atlas_segments_minus_1[xlayerId][xAId] + 1);
+        }
+
     /*
 ats_basic_info( xAId ) {
 ats_stream_id_present[ xAId ]	f(1)
@@ -3397,6 +5238,40 @@ return ats_num_atlas_segments_minus_1[ xAId ] + 1
 				stream.ReadUvlc( out this.ats_segment_top_left_pos_y[xAId][i], "ats_segment_top_left_pos_y"); 
 				stream.ReadUvlc( out this.ats_segment_width[xAId][i], "ats_segment_width"); 
 				stream.ReadUvlc( out this.ats_segment_height[xAId][i], "ats_segment_height"); 
+			}
+			return (ats_num_atlas_segments_minus_1[xAId] + 1);
+        }
+
+        private int WriteAtsBasicInfo(int xAId)
+        {
+			int i = 0;
+			this.ats_stream_id_present[xAId] = stream.Pick("ats_stream_id_present", _original != null ? _original.ats_stream_id_present[xAId] : this.ats_stream_id_present[xAId], _edited != null ? _edited.ats_stream_id_present[xAId] : _original != null ? _original.ats_stream_id_present[xAId] : this.ats_stream_id_present[xAId]);
+			stream.WriteFixed(1, this.ats_stream_id_present[xAId], "ats_stream_id_present"); 
+			this.ats_width[xAId] = stream.Pick("ats_width", _original != null ? _original.AtlasWidth : this.ats_width[xAId], _edited != null ? _edited.AtlasWidth : _original != null ? _original.AtlasWidth : this.ats_width[xAId]);
+			stream.WriteUvlc( this.ats_width[xAId], "ats_width"); 
+			this.ats_height[xAId] = stream.Pick("ats_height", _original != null ? _original.AtlasHeight : this.ats_height[xAId], _edited != null ? _edited.AtlasHeight : _original != null ? _original.AtlasHeight : this.ats_height[xAId]);
+			stream.WriteUvlc( this.ats_height[xAId], "ats_height"); 
+			this.ats_num_atlas_segments_minus_1[xAId] = stream.Pick("ats_num_atlas_segments_minus_1", _original != null ? _original.ats_num_atlas_segments_minus_1[xAId] : this.ats_num_atlas_segments_minus_1[xAId], _edited != null ? _edited.ats_num_atlas_segments_minus_1[xAId] : _original != null ? _original.ats_num_atlas_segments_minus_1[xAId] : this.ats_num_atlas_segments_minus_1[xAId]);
+			stream.WriteUvlc( this.ats_num_atlas_segments_minus_1[xAId], "ats_num_atlas_segments_minus_1"); 
+			AtlasWidth = ats_width[xAId];
+			AtlasHeight = ats_height[xAId];
+
+			for (i = 0; (i <= ats_num_atlas_segments_minus_1[xAId]); i++)
+			{
+
+				if ((ats_stream_id_present[xAId] != 0))
+				{
+					this.ats_input_stream_id[xAId][i] = stream.Pick("ats_input_stream_id", _original != null ? _original.ats_input_stream_id[xAId][i] : this.ats_input_stream_id[xAId][i], _edited != null ? _edited.ats_input_stream_id[xAId][i] : _original != null ? _original.ats_input_stream_id[xAId][i] : this.ats_input_stream_id[xAId][i]);
+					stream.WriteFixed(5, this.ats_input_stream_id[xAId][i], "ats_input_stream_id"); 
+				}
+				this.ats_segment_top_left_pos_x[xAId][i] = stream.Pick("ats_segment_top_left_pos_x", _original != null ? _original.ats_segment_top_left_pos_x[xAId][i] : this.ats_segment_top_left_pos_x[xAId][i], _edited != null ? _edited.ats_segment_top_left_pos_x[xAId][i] : _original != null ? _original.ats_segment_top_left_pos_x[xAId][i] : this.ats_segment_top_left_pos_x[xAId][i]);
+				stream.WriteUvlc( this.ats_segment_top_left_pos_x[xAId][i], "ats_segment_top_left_pos_x"); 
+				this.ats_segment_top_left_pos_y[xAId][i] = stream.Pick("ats_segment_top_left_pos_y", _original != null ? _original.ats_segment_top_left_pos_y[xAId][i] : this.ats_segment_top_left_pos_y[xAId][i], _edited != null ? _edited.ats_segment_top_left_pos_y[xAId][i] : _original != null ? _original.ats_segment_top_left_pos_y[xAId][i] : this.ats_segment_top_left_pos_y[xAId][i]);
+				stream.WriteUvlc( this.ats_segment_top_left_pos_y[xAId][i], "ats_segment_top_left_pos_y"); 
+				this.ats_segment_width[xAId][i] = stream.Pick("ats_segment_width", _original != null ? _original.ats_segment_width[xAId][i] : this.ats_segment_width[xAId][i], _edited != null ? _edited.ats_segment_width[xAId][i] : _original != null ? _original.ats_segment_width[xAId][i] : this.ats_segment_width[xAId][i]);
+				stream.WriteUvlc( this.ats_segment_width[xAId][i], "ats_segment_width"); 
+				this.ats_segment_height[xAId][i] = stream.Pick("ats_segment_height", _original != null ? _original.ats_segment_height[xAId][i] : this.ats_segment_height[xAId][i], _edited != null ? _edited.ats_segment_height[xAId][i] : _original != null ? _original.ats_segment_height[xAId][i] : this.ats_segment_height[xAId][i]);
+				stream.WriteUvlc( this.ats_segment_height[xAId][i], "ats_segment_height"); 
 			}
 			return (ats_num_atlas_segments_minus_1[xAId] + 1);
         }
@@ -3474,6 +5349,49 @@ operating_point_payload( obu_xlayer_id, opsID, i )
 				for (i = 0; (i < ops_cnt[obu_xlayer_id][opsID]); i++)
 				{
 					OperatingPointPayload(obu_xlayer_id, opsID, i); 
+				}
+			}
+        }
+
+        private void WriteOperatingPointSetObu()
+        {
+			int i = 0;
+			int opsID = 0;
+			this.ops_reset_flag[obu_xlayer_id] = stream.Pick("ops_reset_flag", _original != null ? _original.ops_reset_flag[obu_xlayer_id] : this.ops_reset_flag[obu_xlayer_id], _edited != null ? _edited.ops_reset_flag[obu_xlayer_id] : _original != null ? _original.ops_reset_flag[obu_xlayer_id] : this.ops_reset_flag[obu_xlayer_id]);
+			stream.WriteFixed(1, this.ops_reset_flag[obu_xlayer_id], "ops_reset_flag"); 
+			this.ops_id[obu_xlayer_id] = stream.Pick("ops_id", _original != null ? _original.ops_id[obu_xlayer_id] : this.ops_id[obu_xlayer_id], _edited != null ? _edited.ops_id[obu_xlayer_id] : _original != null ? _original.ops_id[obu_xlayer_id] : this.ops_id[obu_xlayer_id]);
+			stream.WriteFixed(4, this.ops_id[obu_xlayer_id], "ops_id"); 
+			opsID = ops_id[obu_xlayer_id];
+			this.ops_cnt[obu_xlayer_id][opsID] = stream.Pick("ops_cnt", _original != null ? _original.ops_cnt[obu_xlayer_id][opsID] : this.ops_cnt[obu_xlayer_id][opsID], _edited != null ? _edited.ops_cnt[obu_xlayer_id][opsID] : _original != null ? _original.ops_cnt[obu_xlayer_id][opsID] : this.ops_cnt[obu_xlayer_id][opsID]);
+			stream.WriteFixed(3, this.ops_cnt[obu_xlayer_id][opsID], "ops_cnt"); 
+
+			if ((ops_cnt[obu_xlayer_id][opsID] > 0))
+			{
+				this.ops_priority[obu_xlayer_id][opsID] = stream.Pick("ops_priority", _original != null ? _original.ops_priority[obu_xlayer_id][opsID] : this.ops_priority[obu_xlayer_id][opsID], _edited != null ? _edited.ops_priority[obu_xlayer_id][opsID] : _original != null ? _original.ops_priority[obu_xlayer_id][opsID] : this.ops_priority[obu_xlayer_id][opsID]);
+				stream.WriteFixed(4, this.ops_priority[obu_xlayer_id][opsID], "ops_priority"); 
+				this.ops_intent[obu_xlayer_id][opsID] = stream.Pick("ops_intent", _original != null ? _original.ops_intent[obu_xlayer_id][opsID] : this.ops_intent[obu_xlayer_id][opsID], _edited != null ? _edited.ops_intent[obu_xlayer_id][opsID] : _original != null ? _original.ops_intent[obu_xlayer_id][opsID] : this.ops_intent[obu_xlayer_id][opsID]);
+				stream.WriteFixed(7, this.ops_intent[obu_xlayer_id][opsID], "ops_intent"); 
+				this.ops_intent_present_flag[obu_xlayer_id][opsID] = stream.Pick("ops_intent_present_flag", _original != null ? _original.ops_intent_present_flag[obu_xlayer_id][opsID] : this.ops_intent_present_flag[obu_xlayer_id][opsID], _edited != null ? _edited.ops_intent_present_flag[obu_xlayer_id][opsID] : _original != null ? _original.ops_intent_present_flag[obu_xlayer_id][opsID] : this.ops_intent_present_flag[obu_xlayer_id][opsID]);
+				stream.WriteFixed(1, this.ops_intent_present_flag[obu_xlayer_id][opsID], "ops_intent_present_flag"); 
+				this.ops_ptl_present_flag[obu_xlayer_id][opsID] = stream.Pick("ops_ptl_present_flag", _original != null ? _original.ops_ptl_present_flag[obu_xlayer_id][opsID] : this.ops_ptl_present_flag[obu_xlayer_id][opsID], _edited != null ? _edited.ops_ptl_present_flag[obu_xlayer_id][opsID] : _original != null ? _original.ops_ptl_present_flag[obu_xlayer_id][opsID] : this.ops_ptl_present_flag[obu_xlayer_id][opsID]);
+				stream.WriteFixed(1, this.ops_ptl_present_flag[obu_xlayer_id][opsID], "ops_ptl_present_flag"); 
+				this.ops_color_info_present_flag[obu_xlayer_id][opsID] = stream.Pick("ops_color_info_present_flag", _original != null ? _original.ops_color_info_present_flag[obu_xlayer_id][opsID] : this.ops_color_info_present_flag[obu_xlayer_id][opsID], _edited != null ? _edited.ops_color_info_present_flag[obu_xlayer_id][opsID] : _original != null ? _original.ops_color_info_present_flag[obu_xlayer_id][opsID] : this.ops_color_info_present_flag[obu_xlayer_id][opsID]);
+				stream.WriteFixed(1, this.ops_color_info_present_flag[obu_xlayer_id][opsID], "ops_color_info_present_flag"); 
+
+				if ((obu_xlayer_id == GLOBAL_XLAYER_ID))
+				{
+					this.ops_mlayer_info_idc[opsID] = stream.Pick("ops_mlayer_info_idc", _original != null ? _original.ops_mlayer_info_idc[opsID] : this.ops_mlayer_info_idc[opsID], _edited != null ? _edited.ops_mlayer_info_idc[opsID] : _original != null ? _original.ops_mlayer_info_idc[opsID] : this.ops_mlayer_info_idc[opsID]);
+					stream.WriteFixed(2, this.ops_mlayer_info_idc[opsID], "ops_mlayer_info_idc"); 
+				}
+				else 
+				{
+					this.ops_reserved_2bits = stream.Pick("ops_reserved_2bits", _original != null ? _original.ops_reserved_2bits : this.ops_reserved_2bits, _edited != null ? _edited.ops_reserved_2bits : _original != null ? _original.ops_reserved_2bits : this.ops_reserved_2bits);
+					stream.WriteFixed(2, this.ops_reserved_2bits, "ops_reserved_2bits"); 
+				}
+
+				for (i = 0; (i < ops_cnt[obu_xlayer_id][opsID]); i++)
+				{
+					WriteOperatingPointPayload(obu_xlayer_id, opsID, i); 
 				}
 			}
         }
@@ -3658,6 +5576,111 @@ opsBytes = (get_position() - startPos) >> 3
 			opsBytes = ((get_position() - startPos) >> 3);
         }
 
+        private void WriteOperatingPointPayload(int xId, int opsID, int i)
+        {
+			int j = 0;
+			int startPos = 0;
+			int k = 0;
+			int idc = 0;
+			int opsBytes = 0;
+			this.ops_data_size[xId][opsID][i] = stream.Pick("ops_data_size", _original != null ? _original.ops_data_size[xId][opsID][i] : this.ops_data_size[xId][opsID][i], _edited != null ? _edited.ops_data_size[xId][opsID][i] : _original != null ? _original.ops_data_size[xId][opsID][i] : this.ops_data_size[xId][opsID][i]);
+			stream.WriteLeb128( this.ops_data_size[xId][opsID][i], "ops_data_size"); 
+			startPos = get_position();
+
+			if ((ops_intent_present_flag[xId][opsID] != 0))
+			{
+				this.ops_op_intent[xId][opsID][i] = stream.Pick("ops_op_intent", _original != null ? _original.ops_op_intent[xId][opsID][i] : this.ops_op_intent[xId][opsID][i], _edited != null ? _edited.ops_op_intent[xId][opsID][i] : _original != null ? _original.ops_op_intent[xId][opsID][i] : this.ops_op_intent[xId][opsID][i]);
+				stream.WriteFixed(7, this.ops_op_intent[xId][opsID][i], "ops_op_intent"); 
+			}
+
+			if ((ops_ptl_present_flag[xId][opsID] != 0))
+			{
+
+				if ((xId == GLOBAL_XLAYER_ID))
+				{
+					WriteOpsAggregateInfo(opsID, i); 
+				}
+				else 
+				{
+					WriteOpsSeqProfileTierLevelInfo(xId, opsID, i, xId); 
+				}
+			}
+
+			if ((ops_color_info_present_flag[xId][opsID] != 0))
+			{
+				WriteOpsColorInfo(opsID, i); 
+			}
+			this.ops_decoder_model_info_for_this_op_present_flag[xId][opsID][i] = stream.Pick("ops_decoder_model_info_for_this_op_present_flag", _original != null ? _original.ops_decoder_model_info_for_this_op_present_flag[xId][opsID][i] : this.ops_decoder_model_info_for_this_op_present_flag[xId][opsID][i], _edited != null ? _edited.ops_decoder_model_info_for_this_op_present_flag[xId][opsID][i] : _original != null ? _original.ops_decoder_model_info_for_this_op_present_flag[xId][opsID][i] : this.ops_decoder_model_info_for_this_op_present_flag[xId][opsID][i]);
+			stream.WriteFixed(1, this.ops_decoder_model_info_for_this_op_present_flag[xId][opsID][i], "ops_decoder_model_info_for_this_op_present_flag"); 
+
+			if ((ops_decoder_model_info_for_this_op_present_flag[xId][opsID][i] != 0))
+			{
+				WriteOpsDecoderModelInfo(opsID, i); 
+			}
+			this.ops_initial_display_delay_present_flag[xId][opsID][i] = stream.Pick("ops_initial_display_delay_present_flag", _original != null ? _original.ops_initial_display_delay_present_flag[xId][opsID][i] : this.ops_initial_display_delay_present_flag[xId][opsID][i], _edited != null ? _edited.ops_initial_display_delay_present_flag[xId][opsID][i] : _original != null ? _original.ops_initial_display_delay_present_flag[xId][opsID][i] : this.ops_initial_display_delay_present_flag[xId][opsID][i]);
+			stream.WriteFixed(1, this.ops_initial_display_delay_present_flag[xId][opsID][i], "ops_initial_display_delay_present_flag"); 
+
+			if ((ops_initial_display_delay_present_flag[xId][opsID][i] != 0))
+			{
+				this.ops_initial_display_delay_minus_1[xId][opsID][i] = stream.Pick("ops_initial_display_delay_minus_1", _original != null ? _original.ops_initial_display_delay_minus_1[xId][opsID][i] : this.ops_initial_display_delay_minus_1[xId][opsID][i], _edited != null ? _edited.ops_initial_display_delay_minus_1[xId][opsID][i] : _original != null ? _original.ops_initial_display_delay_minus_1[xId][opsID][i] : this.ops_initial_display_delay_minus_1[xId][opsID][i]);
+				stream.WriteFixed(4, this.ops_initial_display_delay_minus_1[xId][opsID][i], "ops_initial_display_delay_minus_1"); 
+			}
+
+			if ((xId == GLOBAL_XLAYER_ID))
+			{
+				this.ops_xlayer_map[opsID][i] = stream.Pick("ops_xlayer_map", _original != null ? _original.ops_xlayer_map[opsID][i] : this.ops_xlayer_map[opsID][i], _edited != null ? _edited.ops_xlayer_map[opsID][i] : _original != null ? _original.ops_xlayer_map[opsID][i] : this.ops_xlayer_map[opsID][i]);
+				stream.WriteFixed(31, this.ops_xlayer_map[opsID][i], "ops_xlayer_map"); 
+				k = 0;
+
+				for (j = 0; (j < 31); j++)
+				{
+
+					if (((ops_xlayer_map[opsID][i] & (1 << j)) != 0))
+					{
+						OpsxLayerId[xId][opsID][i][k] = j;
+						k++;
+
+						if ((ops_ptl_present_flag[xId][opsID] != 0))
+						{
+							WriteOpsSeqProfileTierLevelInfo(xId, opsID, i, j); 
+						}
+						idc = ops_mlayer_info_idc[opsID];
+
+						if ((idc == 1))
+						{
+							WriteOpsMlayerInfo(xId, opsID, i, j); 
+						}
+						else if ((idc == 2))
+						{
+							this.ops_mlayer_explicit_info_flag[opsID][i][j] = stream.Pick("ops_mlayer_explicit_info_flag", _original != null ? _original.ops_mlayer_explicit_info_flag[opsID][i][j] : this.ops_mlayer_explicit_info_flag[opsID][i][j], _edited != null ? _edited.ops_mlayer_explicit_info_flag[opsID][i][j] : _original != null ? _original.ops_mlayer_explicit_info_flag[opsID][i][j] : this.ops_mlayer_explicit_info_flag[opsID][i][j]);
+							stream.WriteFixed(1, this.ops_mlayer_explicit_info_flag[opsID][i][j], "ops_mlayer_explicit_info_flag"); 
+
+							if ((ops_mlayer_explicit_info_flag[opsID][i][j] != 0))
+							{
+								WriteOpsMlayerInfo(xId, opsID, i, j); 
+							}
+							else 
+							{
+								this.ops_embedded_ops_id[opsID][i][j] = stream.Pick("ops_embedded_ops_id", _original != null ? _original.ops_embedded_ops_id[opsID][i][j] : this.ops_embedded_ops_id[opsID][i][j], _edited != null ? _edited.ops_embedded_ops_id[opsID][i][j] : _original != null ? _original.ops_embedded_ops_id[opsID][i][j] : this.ops_embedded_ops_id[opsID][i][j]);
+								stream.WriteFixed(4, this.ops_embedded_ops_id[opsID][i][j], "ops_embedded_ops_id"); 
+								this.ops_embedded_op_index[opsID][i][j] = stream.Pick("ops_embedded_op_index", _original != null ? _original.ops_embedded_op_index[opsID][i][j] : this.ops_embedded_op_index[opsID][i][j], _edited != null ? _edited.ops_embedded_op_index[opsID][i][j] : _original != null ? _original.ops_embedded_op_index[opsID][i][j] : this.ops_embedded_op_index[opsID][i][j]);
+								stream.WriteFixed(3, this.ops_embedded_op_index[opsID][i][j], "ops_embedded_op_index"); 
+							}
+						}
+					}
+				}
+				XCount[xId][opsID][i] = k;
+			}
+			else 
+			{
+				XCount[xId][opsID][i] = 1;
+				OpsxLayerId[xId][opsID][i][0] = xId;
+				WriteOpsMlayerInfo(xId, opsID, i, xId); 
+			}
+			WriteByteAlignment(); 
+			opsBytes = ((get_position() - startPos) >> 3);
+        }
+
     /*
 ops_aggregate_info( opsID, i ) {
 ops_config_idc[ opsID ][ i ]	f(6)
@@ -3681,6 +5704,18 @@ ops_max_interop[ opsID ][ i ]	f(4)
 			stream.ReadFixed(5, out this.ops_aggregate_level_idx[opsID][i], "ops_aggregate_level_idx"); 
 			stream.ReadFixed(1, out this.ops_max_tier_flag[opsID][i], "ops_max_tier_flag"); 
 			stream.ReadFixed(4, out this.ops_max_interop[opsID][i], "ops_max_interop"); 
+        }
+
+        private void WriteOpsAggregateInfo(int opsID, int i)
+        {
+			this.ops_config_idc[opsID][i] = stream.Pick("ops_config_idc", _original != null ? _original.ops_config_idc[opsID][i] : this.ops_config_idc[opsID][i], _edited != null ? _edited.ops_config_idc[opsID][i] : _original != null ? _original.ops_config_idc[opsID][i] : this.ops_config_idc[opsID][i]);
+			stream.WriteFixed(6, this.ops_config_idc[opsID][i], "ops_config_idc"); 
+			this.ops_aggregate_level_idx[opsID][i] = stream.Pick("ops_aggregate_level_idx", _original != null ? _original.ops_aggregate_level_idx[opsID][i] : this.ops_aggregate_level_idx[opsID][i], _edited != null ? _edited.ops_aggregate_level_idx[opsID][i] : _original != null ? _original.ops_aggregate_level_idx[opsID][i] : this.ops_aggregate_level_idx[opsID][i]);
+			stream.WriteFixed(5, this.ops_aggregate_level_idx[opsID][i], "ops_aggregate_level_idx"); 
+			this.ops_max_tier_flag[opsID][i] = stream.Pick("ops_max_tier_flag", _original != null ? _original.ops_max_tier_flag[opsID][i] : this.ops_max_tier_flag[opsID][i], _edited != null ? _edited.ops_max_tier_flag[opsID][i] : _original != null ? _original.ops_max_tier_flag[opsID][i] : this.ops_max_tier_flag[opsID][i]);
+			stream.WriteFixed(1, this.ops_max_tier_flag[opsID][i], "ops_max_tier_flag"); 
+			this.ops_max_interop[opsID][i] = stream.Pick("ops_max_interop", _original != null ? _original.ops_max_interop[opsID][i] : this.ops_max_interop[opsID][i], _edited != null ? _edited.ops_max_interop[opsID][i] : _original != null ? _original.ops_max_interop[opsID][i] : this.ops_max_interop[opsID][i]);
+			stream.WriteFixed(4, this.ops_max_interop[opsID][i], "ops_max_interop"); 
         }
 
     /*
@@ -3712,6 +5747,20 @@ ops_ptl_reserved_2bits	f(2)
 			stream.ReadFixed(2, out this.ops_ptl_reserved_2bits, "ops_ptl_reserved_2bits"); 
         }
 
+        private void WriteOpsSeqProfileTierLevelInfo(int xId, int opsID, int i, int j)
+        {
+			this.ops_seq_profile_idc[xId][opsID][i][j] = stream.Pick("ops_seq_profile_idc", _original != null ? _original.ops_seq_profile_idc[xId][opsID][i][j] : this.ops_seq_profile_idc[xId][opsID][i][j], _edited != null ? _edited.ops_seq_profile_idc[xId][opsID][i][j] : _original != null ? _original.ops_seq_profile_idc[xId][opsID][i][j] : this.ops_seq_profile_idc[xId][opsID][i][j]);
+			stream.WriteFixed(5, this.ops_seq_profile_idc[xId][opsID][i][j], "ops_seq_profile_idc"); 
+			this.ops_level_idx[xId][opsID][i][j] = stream.Pick("ops_level_idx", _original != null ? _original.ops_level_idx[xId][opsID][i][j] : this.ops_level_idx[xId][opsID][i][j], _edited != null ? _edited.ops_level_idx[xId][opsID][i][j] : _original != null ? _original.ops_level_idx[xId][opsID][i][j] : this.ops_level_idx[xId][opsID][i][j]);
+			stream.WriteFixed(5, this.ops_level_idx[xId][opsID][i][j], "ops_level_idx"); 
+			this.ops_tier_flag[xId][opsID][i][j] = stream.Pick("ops_tier_flag", _original != null ? _original.ops_tier_flag[xId][opsID][i][j] : this.ops_tier_flag[xId][opsID][i][j], _edited != null ? _edited.ops_tier_flag[xId][opsID][i][j] : _original != null ? _original.ops_tier_flag[xId][opsID][i][j] : this.ops_tier_flag[xId][opsID][i][j]);
+			stream.WriteFixed(1, this.ops_tier_flag[xId][opsID][i][j], "ops_tier_flag"); 
+			this.ops_mlayer_count[xId][opsID][i][j] = stream.Pick("ops_mlayer_count", _original != null ? _original.ops_mlayer_count[xId][opsID][i][j] : this.ops_mlayer_count[xId][opsID][i][j], _edited != null ? _edited.ops_mlayer_count[xId][opsID][i][j] : _original != null ? _original.ops_mlayer_count[xId][opsID][i][j] : this.ops_mlayer_count[xId][opsID][i][j]);
+			stream.WriteFixed(3, this.ops_mlayer_count[xId][opsID][i][j], "ops_mlayer_count"); 
+			this.ops_ptl_reserved_2bits = stream.Pick("ops_ptl_reserved_2bits", _original != null ? _original.ops_ptl_reserved_2bits : this.ops_ptl_reserved_2bits, _edited != null ? _edited.ops_ptl_reserved_2bits : _original != null ? _original.ops_ptl_reserved_2bits : this.ops_ptl_reserved_2bits);
+			stream.WriteFixed(2, this.ops_ptl_reserved_2bits, "ops_ptl_reserved_2bits"); 
+        }
+
     /*
 ops_decoder_model_info( opsID, i ) {
 ops_decoder_buffer_delay[ obu_xlayer_id ][ opsID ][ i ]	uvlc()
@@ -3731,6 +5780,16 @@ ops_low_delay_mode_flag[ obu_xlayer_id ][ opsID ][ i ]	f(1)
 			stream.ReadUvlc( out this.ops_decoder_buffer_delay[obu_xlayer_id][opsID][i], "ops_decoder_buffer_delay"); 
 			stream.ReadUvlc( out this.ops_encoder_buffer_delay[obu_xlayer_id][opsID][i], "ops_encoder_buffer_delay"); 
 			stream.ReadFixed(1, out this.ops_low_delay_mode_flag[obu_xlayer_id][opsID][i], "ops_low_delay_mode_flag"); 
+        }
+
+        private void WriteOpsDecoderModelInfo(int opsID, int i)
+        {
+			this.ops_decoder_buffer_delay[obu_xlayer_id][opsID][i] = stream.Pick("ops_decoder_buffer_delay", _original != null ? _original.ops_decoder_buffer_delay[obu_xlayer_id][opsID][i] : this.ops_decoder_buffer_delay[obu_xlayer_id][opsID][i], _edited != null ? _edited.ops_decoder_buffer_delay[obu_xlayer_id][opsID][i] : _original != null ? _original.ops_decoder_buffer_delay[obu_xlayer_id][opsID][i] : this.ops_decoder_buffer_delay[obu_xlayer_id][opsID][i]);
+			stream.WriteUvlc( this.ops_decoder_buffer_delay[obu_xlayer_id][opsID][i], "ops_decoder_buffer_delay"); 
+			this.ops_encoder_buffer_delay[obu_xlayer_id][opsID][i] = stream.Pick("ops_encoder_buffer_delay", _original != null ? _original.ops_encoder_buffer_delay[obu_xlayer_id][opsID][i] : this.ops_encoder_buffer_delay[obu_xlayer_id][opsID][i], _edited != null ? _edited.ops_encoder_buffer_delay[obu_xlayer_id][opsID][i] : _original != null ? _original.ops_encoder_buffer_delay[obu_xlayer_id][opsID][i] : this.ops_encoder_buffer_delay[obu_xlayer_id][opsID][i]);
+			stream.WriteUvlc( this.ops_encoder_buffer_delay[obu_xlayer_id][opsID][i], "ops_encoder_buffer_delay"); 
+			this.ops_low_delay_mode_flag[obu_xlayer_id][opsID][i] = stream.Pick("ops_low_delay_mode_flag", _original != null ? _original.ops_low_delay_mode_flag[obu_xlayer_id][opsID][i] : this.ops_low_delay_mode_flag[obu_xlayer_id][opsID][i], _edited != null ? _edited.ops_low_delay_mode_flag[obu_xlayer_id][opsID][i] : _original != null ? _original.ops_low_delay_mode_flag[obu_xlayer_id][opsID][i] : this.ops_low_delay_mode_flag[obu_xlayer_id][opsID][i]);
+			stream.WriteFixed(1, this.ops_low_delay_mode_flag[obu_xlayer_id][opsID][i], "ops_low_delay_mode_flag"); 
         }
 
     /*
@@ -3766,6 +5825,24 @@ ops_full_range_flag[ obu_xlayer_id ][ opsID ][ i ]	f(1)
 				stream.ReadFixed(8, out this.ops_matrix_coefficients[obu_xlayer_id][opsID][i], "ops_matrix_coefficients"); 
 			}
 			stream.ReadFixed(1, out this.ops_full_range_flag[obu_xlayer_id][opsID][i], "ops_full_range_flag"); 
+        }
+
+        private void WriteOpsColorInfo(int opsID, int i)
+        {
+			this.ops_color_description_idc[obu_xlayer_id][opsID][i] = stream.Pick("ops_color_description_idc", _original != null ? _original.ops_color_description_idc[obu_xlayer_id][opsID][i] : this.ops_color_description_idc[obu_xlayer_id][opsID][i], _edited != null ? _edited.ops_color_description_idc[obu_xlayer_id][opsID][i] : _original != null ? _original.ops_color_description_idc[obu_xlayer_id][opsID][i] : this.ops_color_description_idc[obu_xlayer_id][opsID][i]);
+			stream.WriteRg(2, this.ops_color_description_idc[obu_xlayer_id][opsID][i], "ops_color_description_idc"); 
+
+			if ((ops_color_description_idc[obu_xlayer_id][opsID][i] == 0))
+			{
+				this.ops_color_primaries[obu_xlayer_id][opsID][i] = stream.Pick("ops_color_primaries", _original != null ? _original.ops_color_primaries[obu_xlayer_id][opsID][i] : this.ops_color_primaries[obu_xlayer_id][opsID][i], _edited != null ? _edited.ops_color_primaries[obu_xlayer_id][opsID][i] : _original != null ? _original.ops_color_primaries[obu_xlayer_id][opsID][i] : this.ops_color_primaries[obu_xlayer_id][opsID][i]);
+				stream.WriteFixed(8, this.ops_color_primaries[obu_xlayer_id][opsID][i], "ops_color_primaries"); 
+				this.ops_transfer_characteristics[obu_xlayer_id][opsID][i] = stream.Pick("ops_transfer_characteristics", _original != null ? _original.ops_transfer_characteristics[obu_xlayer_id][opsID][i] : this.ops_transfer_characteristics[obu_xlayer_id][opsID][i], _edited != null ? _edited.ops_transfer_characteristics[obu_xlayer_id][opsID][i] : _original != null ? _original.ops_transfer_characteristics[obu_xlayer_id][opsID][i] : this.ops_transfer_characteristics[obu_xlayer_id][opsID][i]);
+				stream.WriteFixed(8, this.ops_transfer_characteristics[obu_xlayer_id][opsID][i], "ops_transfer_characteristics"); 
+				this.ops_matrix_coefficients[obu_xlayer_id][opsID][i] = stream.Pick("ops_matrix_coefficients", _original != null ? _original.ops_matrix_coefficients[obu_xlayer_id][opsID][i] : this.ops_matrix_coefficients[obu_xlayer_id][opsID][i], _edited != null ? _edited.ops_matrix_coefficients[obu_xlayer_id][opsID][i] : _original != null ? _original.ops_matrix_coefficients[obu_xlayer_id][opsID][i] : this.ops_matrix_coefficients[obu_xlayer_id][opsID][i]);
+				stream.WriteFixed(8, this.ops_matrix_coefficients[obu_xlayer_id][opsID][i], "ops_matrix_coefficients"); 
+			}
+			this.ops_full_range_flag[obu_xlayer_id][opsID][i] = stream.Pick("ops_full_range_flag", _original != null ? _original.ops_full_range_flag[obu_xlayer_id][opsID][i] : this.ops_full_range_flag[obu_xlayer_id][opsID][i], _edited != null ? _edited.ops_full_range_flag[obu_xlayer_id][opsID][i] : _original != null ? _original.ops_full_range_flag[obu_xlayer_id][opsID][i] : this.ops_full_range_flag[obu_xlayer_id][opsID][i]);
+			stream.WriteFixed(1, this.ops_full_range_flag[obu_xlayer_id][opsID][i], "ops_full_range_flag"); 
         }
 
     /*
@@ -3814,6 +5891,38 @@ mCount++
 				if (((ops_mlayer_map[obuXLId][opsID][opIndex][xLId] & (1 << j)) != 0))
 				{
 					stream.ReadFixed(4, out this.ops_tlayer_map[obuXLId][opsID][opIndex][xLId][j], "ops_tlayer_map"); 
+					tCount = 0;
+
+					for (k = 0; (k < 4); k++)
+					{
+
+						if (((ops_tlayer_map[obuXLId][opsID][opIndex][xLId][j] & (1 << k)) != 0))
+						{
+							tCount++;
+						}
+					}
+					mCount++;
+				}
+			}
+        }
+
+        private void WriteOpsMlayerInfo(int obuXLId, int opsID, int opIndex, int xLId)
+        {
+			int j = 0;
+			int k = 0;
+			int mCount = 0;
+			int tCount = 0;
+			this.ops_mlayer_map[obuXLId][opsID][opIndex][xLId] = stream.Pick("ops_mlayer_map", _original != null ? _original.ops_mlayer_map[obuXLId][opsID][opIndex][xLId] : this.ops_mlayer_map[obuXLId][opsID][opIndex][xLId], _edited != null ? _edited.ops_mlayer_map[obuXLId][opsID][opIndex][xLId] : _original != null ? _original.ops_mlayer_map[obuXLId][opsID][opIndex][xLId] : this.ops_mlayer_map[obuXLId][opsID][opIndex][xLId]);
+			stream.WriteFixed(8, this.ops_mlayer_map[obuXLId][opsID][opIndex][xLId], "ops_mlayer_map"); 
+			mCount = 0;
+
+			for (j = 0; (j < 8); j++)
+			{
+
+				if (((ops_mlayer_map[obuXLId][opsID][opIndex][xLId] & (1 << j)) != 0))
+				{
+					this.ops_tlayer_map[obuXLId][opsID][opIndex][xLId][j] = stream.Pick("ops_tlayer_map", _original != null ? _original.ops_tlayer_map[obuXLId][opsID][opIndex][xLId][j] : this.ops_tlayer_map[obuXLId][opsID][opIndex][xLId][j], _edited != null ? _edited.ops_tlayer_map[obuXLId][opsID][opIndex][xLId][j] : _original != null ? _original.ops_tlayer_map[obuXLId][opsID][opIndex][xLId][j] : this.ops_tlayer_map[obuXLId][opsID][opIndex][xLId][j]);
+					stream.WriteFixed(4, this.ops_tlayer_map[obuXLId][opsID][opIndex][xLId][j], "ops_tlayer_map"); 
 					tCount = 0;
 
 					for (k = 0; (k < 4); k++)
@@ -3882,6 +5991,38 @@ br_time	rg(4)
 			else 
 			{
 				stream.ReadRg(4, out this.br_time, "br_time"); 
+			}
+        }
+
+        private void WriteBufferRemovalTimingObu()
+        {
+			int i = 0;
+			this.br_ops_dependent_flag = stream.Pick("br_ops_dependent_flag", _original != null ? _original.br_ops_dependent_flag : this.br_ops_dependent_flag, _edited != null ? _edited.br_ops_dependent_flag : _original != null ? _original.br_ops_dependent_flag : this.br_ops_dependent_flag);
+			stream.WriteFixed(1, this.br_ops_dependent_flag, "br_ops_dependent_flag"); 
+
+			if ((br_ops_dependent_flag != 0))
+			{
+				this.br_ops_id = stream.Pick("br_ops_id", _original != null ? _original.br_ops_id : this.br_ops_id, _edited != null ? _edited.br_ops_id : _original != null ? _original.br_ops_id : this.br_ops_id);
+				stream.WriteFixed(4, this.br_ops_id, "br_ops_id"); 
+				this.br_ops_cnt[br_ops_id] = stream.Pick("br_ops_cnt", _original != null ? _original.br_ops_cnt[br_ops_id] : this.br_ops_cnt[br_ops_id], _edited != null ? _edited.br_ops_cnt[br_ops_id] : _original != null ? _original.br_ops_cnt[br_ops_id] : this.br_ops_cnt[br_ops_id]);
+				stream.WriteFixed(3, this.br_ops_cnt[br_ops_id], "br_ops_cnt"); 
+
+				for (i = 0; (i < br_ops_cnt[br_ops_id]); i++)
+				{
+					this.br_decoder_model_present_op_flag[br_ops_id][i] = stream.Pick("br_decoder_model_present_op_flag", _original != null ? _original.br_decoder_model_present_op_flag[br_ops_id][i] : this.br_decoder_model_present_op_flag[br_ops_id][i], _edited != null ? _edited.br_decoder_model_present_op_flag[br_ops_id][i] : _original != null ? _original.br_decoder_model_present_op_flag[br_ops_id][i] : this.br_decoder_model_present_op_flag[br_ops_id][i]);
+					stream.WriteFixed(1, this.br_decoder_model_present_op_flag[br_ops_id][i], "br_decoder_model_present_op_flag"); 
+
+					if ((br_decoder_model_present_op_flag[br_ops_id][i] != 0))
+					{
+						this.br_time_op[br_ops_id][i] = stream.Pick("br_time_op", _original != null ? _original.br_time_op[br_ops_id][i] : this.br_time_op[br_ops_id][i], _edited != null ? _edited.br_time_op[br_ops_id][i] : _original != null ? _original.br_time_op[br_ops_id][i] : this.br_time_op[br_ops_id][i]);
+						stream.WriteRg(4, this.br_time_op[br_ops_id][i], "br_time_op"); 
+					}
+				}
+			}
+			else 
+			{
+				this.br_time = stream.Pick("br_time", _original != null ? _original.br_time : this.br_time, _edited != null ? _edited.br_time : _original != null ? _original.br_time : this.br_time);
+				stream.WriteRg(4, this.br_time, "br_time"); 
 			}
         }
 
@@ -3998,6 +6139,68 @@ user_defined_qm( level, t, plane )
 			}
         }
 
+        private void WriteQuantizerMatrixObu()
+        {
+			int level = 0;
+			int t = 0;
+			int plane = 0;
+			int numPlanes = 0;
+			this.qm_bit_map = stream.Pick("qm_bit_map", _original != null ? _original.qm_bit_map : this.qm_bit_map, _edited != null ? _edited.qm_bit_map : _original != null ? _original.qm_bit_map : this.qm_bit_map);
+			stream.WriteFixed(15, this.qm_bit_map, "qm_bit_map"); 
+			this.qm_chroma_info_present_flag = stream.Pick("qm_chroma_info_present_flag", _original != null ? _original.qm_chroma_info_present_flag : this.qm_chroma_info_present_flag, _edited != null ? _edited.qm_chroma_info_present_flag : _original != null ? _original.qm_chroma_info_present_flag : this.qm_chroma_info_present_flag);
+			stream.WriteFixed(1, this.qm_chroma_info_present_flag, "qm_chroma_info_present_flag"); 
+			numPlanes = ((qm_chroma_info_present_flag != 0) ? 3 : 1);
+
+			if ((qm_bit_map == 0))
+			{
+
+				for (level = 0; (level < NUM_CUSTOM_QMS); level++)
+				{
+					QmProtected[level] = 1;
+					QmNumPlanes[level] = numPlanes;
+					QmDataPresent[level] = 0;
+					QmMLayerId[level] = -1;
+					QmTLayerId[level] = -1;
+				}
+			}
+			else 
+			{
+
+				for (level = 0; (level < 15); level++)
+				{
+
+					if (((qm_bit_map & (1 << level)) != 0))
+					{
+						QmSeen[level] = 1;
+						QmProtected[level] = 1;
+						QmNumPlanes[level] = numPlanes;
+						QmMLayerId[level] = obu_mlayer_id;
+						QmTLayerId[level] = obu_tlayer_id;
+						QmDataPresent[level] = 1;
+						this.qm_is_default_flag = stream.Pick("qm_is_default_flag", _original != null ? _original.qm_is_default_flag : this.qm_is_default_flag, _edited != null ? _edited.qm_is_default_flag : _original != null ? _original.qm_is_default_flag : this.qm_is_default_flag);
+						stream.WriteFixed(1, this.qm_is_default_flag, "qm_is_default_flag"); 
+
+						if ((qm_is_default_flag != 0))
+						{
+							QmDataPresent[level] = 0;
+						}
+						else 
+						{
+
+							for (t = 0; (t < 3); t++)
+							{
+
+								for (plane = 0; (plane < numPlanes); plane++)
+								{
+									WriteUserDefinedQm(level, t, plane); 
+								}
+							}
+						}
+					}
+				}
+			}
+        }
+
     /*
 film_grain_obu() {
 fgm_update_flags	f(8)
@@ -4079,6 +6282,54 @@ FgmChromaIdc[ i ] = fgm_chroma_idc
 				{
 					FilmGrainPresent[i] = 1;
 					FilmGrainModel(monochrome, subX, subY); 
+					save_grain_model(i); 
+					FgmTLayerId[i] = obu_tlayer_id;
+					FgmMLayerId[i] = obu_mlayer_id;
+					FgmChromaIdc[i] = fgm_chroma_idc;
+				}
+			}
+        }
+
+        private void WriteFilmGrainObu()
+        {
+			int i = 0;
+			int subX = 0;
+			int subY = 0;
+			int monochrome = 0;
+			this.fgm_update_flags = stream.Pick("fgm_update_flags", _original != null ? _original.fgm_update_flags : this.fgm_update_flags, _edited != null ? _edited.fgm_update_flags : _original != null ? _original.fgm_update_flags : this.fgm_update_flags);
+			stream.WriteFixed(8, this.fgm_update_flags, "fgm_update_flags"); 
+			this.fgm_chroma_idc = stream.Pick("fgm_chroma_idc", _original != null ? _original.fgm_chroma_idc : this.fgm_chroma_idc, _edited != null ? _edited.fgm_chroma_idc : _original != null ? _original.fgm_chroma_idc : this.fgm_chroma_idc);
+			stream.WriteUvlc( this.fgm_chroma_idc, "fgm_chroma_idc"); 
+
+			if ((fgm_chroma_idc == CHROMA_FORMAT_420))
+			{
+				subX = 1;
+				subY = 1;
+			}
+			else if ((fgm_chroma_idc == CHROMA_FORMAT_444))
+			{
+				subX = 0;
+				subY = 0;
+			}
+			else if ((fgm_chroma_idc == CHROMA_FORMAT_422))
+			{
+				subX = 1;
+				subY = 0;
+			}
+			else if ((fgm_chroma_idc == CHROMA_FORMAT_400))
+			{
+				subX = 1;
+				subY = 1;
+			}
+			monochrome = ((fgm_chroma_idc == CHROMA_FORMAT_400) ? 1 : 0);
+
+			for (i = 0; (i < MAX_FILM_GRAIN); i++)
+			{
+
+				if (((fgm_update_flags & (1 << i)) != 0))
+				{
+					FilmGrainPresent[i] = 1;
+					WriteFilmGrainModel(monochrome, subX, subY); 
 					save_grain_model(i); 
 					FgmTLayerId[i] = obu_tlayer_id;
 					FgmMLayerId[i] = obu_mlayer_id;
@@ -4234,6 +6485,89 @@ timing_info()
 			}
         }
 
+        private void WriteContentInterpretationObu()
+        {
+			this.ci_scan_type_idc = stream.Pick("ci_scan_type_idc", _original != null ? _original.ci_scan_type_idc : this.ci_scan_type_idc, _edited != null ? _edited.ci_scan_type_idc : _original != null ? _original.ci_scan_type_idc : this.ci_scan_type_idc);
+			stream.WriteFixed(2, this.ci_scan_type_idc, "ci_scan_type_idc"); 
+			this.ci_color_description_present_flag = stream.Pick("ci_color_description_present_flag", _original != null ? _original.ci_color_description_present_flag : this.ci_color_description_present_flag, _edited != null ? _edited.ci_color_description_present_flag : _original != null ? _original.ci_color_description_present_flag : this.ci_color_description_present_flag);
+			stream.WriteFixed(1, this.ci_color_description_present_flag, "ci_color_description_present_flag"); 
+			this.ci_chroma_sample_position_present_flag = stream.Pick("ci_chroma_sample_position_present_flag", _original != null ? _original.ci_chroma_sample_position_present_flag : this.ci_chroma_sample_position_present_flag, _edited != null ? _edited.ci_chroma_sample_position_present_flag : _original != null ? _original.ci_chroma_sample_position_present_flag : this.ci_chroma_sample_position_present_flag);
+			stream.WriteFixed(1, this.ci_chroma_sample_position_present_flag, "ci_chroma_sample_position_present_flag"); 
+			this.ci_aspect_ratio_info_present_flag = stream.Pick("ci_aspect_ratio_info_present_flag", _original != null ? _original.ci_aspect_ratio_info_present_flag : this.ci_aspect_ratio_info_present_flag, _edited != null ? _edited.ci_aspect_ratio_info_present_flag : _original != null ? _original.ci_aspect_ratio_info_present_flag : this.ci_aspect_ratio_info_present_flag);
+			stream.WriteFixed(1, this.ci_aspect_ratio_info_present_flag, "ci_aspect_ratio_info_present_flag"); 
+			this.ci_timing_info_present_flag = stream.Pick("ci_timing_info_present_flag", _original != null ? _original.ci_timing_info_present_flag : this.ci_timing_info_present_flag, _edited != null ? _edited.ci_timing_info_present_flag : _original != null ? _original.ci_timing_info_present_flag : this.ci_timing_info_present_flag);
+			stream.WriteFixed(1, this.ci_timing_info_present_flag, "ci_timing_info_present_flag"); 
+			this.ci_reserved_2bit = stream.Pick("ci_reserved_2bit", _original != null ? _original.ci_reserved_2bit : this.ci_reserved_2bit, _edited != null ? _edited.ci_reserved_2bit : _original != null ? _original.ci_reserved_2bit : this.ci_reserved_2bit);
+			stream.WriteFixed(2, this.ci_reserved_2bit, "ci_reserved_2bit"); 
+			ci_color_primaries = CP_UNSPECIFIED;
+			ci_transfer_characteristics = TC_UNSPECIFIED;
+			ci_matrix_coefficients = MC_UNSPECIFIED;
+			ci_full_range_flag = 0;
+
+			if ((ci_color_description_present_flag != 0))
+			{
+				this.ci_color_description_idc = stream.Pick("ci_color_description_idc", _original != null ? _original.ci_color_description_idc : this.ci_color_description_idc, _edited != null ? _edited.ci_color_description_idc : _original != null ? _original.ci_color_description_idc : this.ci_color_description_idc);
+				stream.WriteRg(2, this.ci_color_description_idc, "ci_color_description_idc"); 
+
+				if ((ci_color_description_idc == 0))
+				{
+					this.ci_color_primaries = stream.Pick("ci_color_primaries", _original != null ? _original.ci_color_primaries : this.ci_color_primaries, _edited != null ? _edited.ci_color_primaries : _original != null ? _original.ci_color_primaries : this.ci_color_primaries);
+					stream.WriteFixed(8, this.ci_color_primaries, "ci_color_primaries"); 
+					this.ci_transfer_characteristics = stream.Pick("ci_transfer_characteristics", _original != null ? _original.ci_transfer_characteristics : this.ci_transfer_characteristics, _edited != null ? _edited.ci_transfer_characteristics : _original != null ? _original.ci_transfer_characteristics : this.ci_transfer_characteristics);
+					stream.WriteFixed(8, this.ci_transfer_characteristics, "ci_transfer_characteristics"); 
+					this.ci_matrix_coefficients = stream.Pick("ci_matrix_coefficients", _original != null ? _original.ci_matrix_coefficients : this.ci_matrix_coefficients, _edited != null ? _edited.ci_matrix_coefficients : _original != null ? _original.ci_matrix_coefficients : this.ci_matrix_coefficients);
+					stream.WriteFixed(8, this.ci_matrix_coefficients, "ci_matrix_coefficients"); 
+				}
+				this.ci_full_range_flag = stream.Pick("ci_full_range_flag", _original != null ? _original.ci_full_range_flag : this.ci_full_range_flag, _edited != null ? _edited.ci_full_range_flag : _original != null ? _original.ci_full_range_flag : this.ci_full_range_flag);
+				stream.WriteFixed(1, this.ci_full_range_flag, "ci_full_range_flag"); 
+			}
+
+			if ((ci_chroma_sample_position_present_flag != 0))
+			{
+				this.ci_chroma_sample_position_top = stream.Pick("ci_chroma_sample_position_top", _original != null ? _original.ci_chroma_sample_position_top : this.ci_chroma_sample_position_top, _edited != null ? _edited.ci_chroma_sample_position_top : _original != null ? _original.ci_chroma_sample_position_top : this.ci_chroma_sample_position_top);
+				stream.WriteUvlc( this.ci_chroma_sample_position_top, "ci_chroma_sample_position_top"); 
+
+				if ((ci_scan_type_idc != 1))
+				{
+					this.ci_chroma_sample_position_bottom = stream.Pick("ci_chroma_sample_position_bottom", _original != null ? _original.ci_chroma_sample_position_bottom : this.ci_chroma_sample_position_bottom, _edited != null ? _edited.ci_chroma_sample_position_bottom : _original != null ? _original.ci_chroma_sample_position_bottom : this.ci_chroma_sample_position_bottom);
+					stream.WriteUvlc( this.ci_chroma_sample_position_bottom, "ci_chroma_sample_position_bottom"); 
+				}
+				else 
+				{
+					ci_chroma_sample_position_bottom = ci_chroma_sample_position_top;
+				}
+			}
+			else 
+			{
+				ci_chroma_sample_position_top = CSP_UNSPECIFIED;
+				ci_chroma_sample_position_bottom = CSP_UNSPECIFIED;
+			}
+
+			if ((ci_aspect_ratio_info_present_flag != 0))
+			{
+				this.ci_aspect_ratio_idc = stream.Pick("ci_aspect_ratio_idc", _original != null ? _original.ci_aspect_ratio_idc : this.ci_aspect_ratio_idc, _edited != null ? _edited.ci_aspect_ratio_idc : _original != null ? _original.ci_aspect_ratio_idc : this.ci_aspect_ratio_idc);
+				stream.WriteFixed(8, this.ci_aspect_ratio_idc, "ci_aspect_ratio_idc"); 
+
+				if ((ci_aspect_ratio_idc == 255))
+				{
+					this.ci_sar_width = stream.Pick("ci_sar_width", _original != null ? _original.ci_sar_width : this.ci_sar_width, _edited != null ? _edited.ci_sar_width : _original != null ? _original.ci_sar_width : this.ci_sar_width);
+					stream.WriteUvlc( this.ci_sar_width, "ci_sar_width"); 
+					this.ci_sar_height = stream.Pick("ci_sar_height", _original != null ? _original.ci_sar_height : this.ci_sar_height, _edited != null ? _edited.ci_sar_height : _original != null ? _original.ci_sar_height : this.ci_sar_height);
+					stream.WriteUvlc( this.ci_sar_height, "ci_sar_height"); 
+				}
+				else 
+				{
+					ci_sar_width = Aspect_Ratio_Width[ci_aspect_ratio_idc];
+					ci_sar_height = Aspect_Ratio_Height[ci_aspect_ratio_idc];
+				}
+			}
+
+			if ((ci_timing_info_present_flag != 0))
+			{
+				WriteTimingInfo(); 
+			}
+        }
+
     /*
 padding_obu() {
 for ( i = 0; i < obu_padding_length; i++ ) {	
@@ -4251,6 +6585,17 @@ obu_padding_byte	f(8)
 			for (i = 0; (i < obu_padding_length); i++)
 			{
 				stream.ReadFixed(8, out this.obu_padding_byte, "obu_padding_byte"); 
+			}
+        }
+
+        private void WritePaddingObu()
+        {
+			int i = 0;
+
+			for (i = 0; (i < obu_padding_length); i++)
+			{
+				this.obu_padding_byte = stream.Pick("obu_padding_byte", _original != null ? _original.obu_padding_byte : this.obu_padding_byte, _edited != null ? _edited.obu_padding_byte : _original != null ? _original.obu_padding_byte : this.obu_padding_byte);
+				stream.WriteFixed(8, this.obu_padding_byte, "obu_padding_byte"); 
 			}
         }
 
@@ -4350,6 +6695,66 @@ metadata_unit_remaining_bit	f(1)
 			}
         }
 
+        private void WriteMetadataUnit(int metadataPayloadSize)
+        {
+			int j = 0;
+			int startPosition = 0;
+			int currentPosition = 0;
+			int parsedPayloadBits = 0;
+			int remainingMuPayloadBits = 0;
+			startPosition = get_position();
+
+			if ((metadata_type == METADATA_TYPE_ITUT_T35))
+			{
+				WriteMetadataItutT35(metadataPayloadSize); 
+			}
+			else if ((metadata_type == METADATA_TYPE_HDR_CLL))
+			{
+				WriteMetadataHdrCll(); 
+			}
+			else if ((metadata_type == METADATA_TYPE_HDR_MDCV))
+			{
+				WriteMetadataHdrMdcv(); 
+			}
+			else if ((metadata_type == METADATA_TYPE_TIMECODE))
+			{
+				WriteMetadataTimecode(); 
+			}
+			else if ((metadata_type == METADATA_TYPE_BANDING_HINTS))
+			{
+				WriteMetadataBandingHints(); 
+			}
+			else if ((metadata_type == METADATA_TYPE_ICC_PROFILE))
+			{
+				WriteMetadataIccProfile(metadataPayloadSize); 
+			}
+			else if ((metadata_type == METADATA_TYPE_SCAN_TYPE))
+			{
+				WriteMetadataScanType(); 
+			}
+			else if ((metadata_type == METADATA_TYPE_TEMPORAL_POINT_INFO))
+			{
+				WriteMetadataTemporalPointInfo(); 
+			}
+			else if ((metadata_type == METADATA_TYPE_DECODED_FRAME_HASH))
+			{
+				WriteMetadataDecodedFrameHash(); 
+			}
+			else if ((metadata_type == METADATA_TYPE_USER_DATA_UNREGISTERED))
+			{
+				WriteMetadataUserDataUnregistered(metadataPayloadSize); 
+			}
+			currentPosition = get_position();
+			parsedPayloadBits = (currentPosition - startPosition);
+			remainingMuPayloadBits = ((metadataPayloadSize * 8) - parsedPayloadBits);
+
+			for (j = 0; (j < remainingMuPayloadBits); j++)
+			{
+				this.metadata_unit_remaining_bit = stream.Pick("metadata_unit_remaining_bit", _original != null ? _original.metadata_unit_remaining_bit : this.metadata_unit_remaining_bit, _edited != null ? _edited.metadata_unit_remaining_bit : _original != null ? _original.metadata_unit_remaining_bit : this.metadata_unit_remaining_bit);
+				stream.WriteFixed(1, this.metadata_unit_remaining_bit, "metadata_unit_remaining_bit"); 
+			}
+        }
+
     /*
 metadata_short_obu( obuPayloadSize ) {
 metadata_is_suffix	f(1)
@@ -4404,6 +6809,31 @@ metadata_unit( metadataPayloadSize )
 			}
 			metadataPayloadSize = ((obuPayloadSize - 2) - Leb128Bytes);
 			MetadataUnit(metadataPayloadSize); 
+        }
+
+        private void WriteMetadataShortObu(int obuPayloadSize)
+        {
+			int metadataPayloadSize = 0;
+			this.metadata_is_suffix = stream.Pick("metadata_is_suffix", _original != null ? _original.metadata_is_suffix : this.metadata_is_suffix, _edited != null ? _edited.metadata_is_suffix : _original != null ? _original.metadata_is_suffix : this.metadata_is_suffix);
+			stream.WriteFixed(1, this.metadata_is_suffix, "metadata_is_suffix"); 
+			metadata_necessity_idc = 0;
+			metadata_application_id = 0;
+			this.muh_layer_idc = stream.Pick("muh_layer_idc", _original != null ? _original.muh_layer_idc : this.muh_layer_idc, _edited != null ? _edited.muh_layer_idc : _original != null ? _original.muh_layer_idc : this.muh_layer_idc);
+			stream.WriteFixed(3, this.muh_layer_idc, "muh_layer_idc"); 
+			this.muh_cancel_flag = stream.Pick("muh_cancel_flag", _original != null ? _original.muh_cancel_flag : this.muh_cancel_flag, _edited != null ? _edited.muh_cancel_flag : _original != null ? _original.muh_cancel_flag : this.muh_cancel_flag);
+			stream.WriteFixed(1, this.muh_cancel_flag, "muh_cancel_flag"); 
+			this.muh_persistence_idc = stream.Pick("muh_persistence_idc", _original != null ? _original.muh_persistence_idc : this.muh_persistence_idc, _edited != null ? _edited.muh_persistence_idc : _original != null ? _original.muh_persistence_idc : this.muh_persistence_idc);
+			stream.WriteFixed(3, this.muh_persistence_idc, "muh_persistence_idc"); 
+			muh_priority = 0;
+			this.metadata_type = stream.Pick("metadata_type", _original != null ? _original.metadata_type : this.metadata_type, _edited != null ? _edited.metadata_type : _original != null ? _original.metadata_type : this.metadata_type);
+			stream.WriteLeb128( this.metadata_type, "metadata_type"); 
+
+			if ((muh_cancel_flag != 0))
+			{
+				return;
+			}
+			metadataPayloadSize = ((obuPayloadSize - 2) - Leb128Bytes);
+			WriteMetadataUnit(metadataPayloadSize); 
         }
 
     /*
@@ -4531,6 +6961,88 @@ metadata_unit( muh_payload_size )
 			}
         }
 
+        private void WriteMetadataGroupObu()
+        {
+			int i = 0;
+			int n = 0;
+			int j = 0;
+			int headerRemainingBytes = 0;
+			this.metadata_is_suffix = stream.Pick("metadata_is_suffix", _original != null ? _original.metadata_is_suffix : this.metadata_is_suffix, _edited != null ? _edited.metadata_is_suffix : _original != null ? _original.metadata_is_suffix : this.metadata_is_suffix);
+			stream.WriteFixed(1, this.metadata_is_suffix, "metadata_is_suffix"); 
+			this.metadata_necessity_idc = stream.Pick("metadata_necessity_idc", _original != null ? _original.metadata_necessity_idc : this.metadata_necessity_idc, _edited != null ? _edited.metadata_necessity_idc : _original != null ? _original.metadata_necessity_idc : this.metadata_necessity_idc);
+			stream.WriteFixed(2, this.metadata_necessity_idc, "metadata_necessity_idc"); 
+			this.metadata_application_id = stream.Pick("metadata_application_id", _original != null ? _original.metadata_application_id : this.metadata_application_id, _edited != null ? _edited.metadata_application_id : _original != null ? _original.metadata_application_id : this.metadata_application_id);
+			stream.WriteFixed(5, this.metadata_application_id, "metadata_application_id"); 
+			this.metadata_unit_cnt_minus_1 = stream.Pick("metadata_unit_cnt_minus_1", _original != null ? _original.metadata_unit_cnt_minus_1 : this.metadata_unit_cnt_minus_1, _edited != null ? _edited.metadata_unit_cnt_minus_1 : _original != null ? _original.metadata_unit_cnt_minus_1 : this.metadata_unit_cnt_minus_1);
+			stream.WriteLeb128( this.metadata_unit_cnt_minus_1, "metadata_unit_cnt_minus_1"); 
+
+			for (i = 0; (i <= metadata_unit_cnt_minus_1); i++)
+			{
+				this.metadata_type = stream.Pick("metadata_type", _original != null ? _original.metadata_type : this.metadata_type, _edited != null ? _edited.metadata_type : _original != null ? _original.metadata_type : this.metadata_type);
+				stream.WriteLeb128( this.metadata_type, "metadata_type"); 
+				this.muh_header_size = stream.Pick("muh_header_size", _original != null ? _original.muh_header_size : this.muh_header_size, _edited != null ? _edited.muh_header_size : _original != null ? _original.muh_header_size : this.muh_header_size);
+				stream.WriteFixed(7, this.muh_header_size, "muh_header_size"); 
+				this.muh_cancel_flag = stream.Pick("muh_cancel_flag", _original != null ? _original.muh_cancel_flag : this.muh_cancel_flag, _edited != null ? _edited.muh_cancel_flag : _original != null ? _original.muh_cancel_flag : this.muh_cancel_flag);
+				stream.WriteFixed(1, this.muh_cancel_flag, "muh_cancel_flag"); 
+				headerRemainingBytes = muh_header_size;
+
+				if (!(muh_cancel_flag != 0))
+				{
+					this.muh_payload_size = stream.Pick("muh_payload_size", _original != null ? _original.muh_payload_size : this.muh_payload_size, _edited != null ? _edited.muh_payload_size : _original != null ? _original.muh_payload_size : this.muh_payload_size);
+					stream.WriteLeb128( this.muh_payload_size, "muh_payload_size"); 
+					headerRemainingBytes -= Leb128Bytes;
+					this.muh_layer_idc = stream.Pick("muh_layer_idc", _original != null ? _original.muh_layer_idc : this.muh_layer_idc, _edited != null ? _edited.muh_layer_idc : _original != null ? _original.muh_layer_idc : this.muh_layer_idc);
+					stream.WriteFixed(3, this.muh_layer_idc, "muh_layer_idc"); 
+					this.muh_persistence_idc = stream.Pick("muh_persistence_idc", _original != null ? _original.muh_persistence_idc : this.muh_persistence_idc, _edited != null ? _edited.muh_persistence_idc : _original != null ? _original.muh_persistence_idc : this.muh_persistence_idc);
+					stream.WriteFixed(3, this.muh_persistence_idc, "muh_persistence_idc"); 
+					this.muh_priority = stream.Pick("muh_priority", _original != null ? _original.muh_priority : this.muh_priority, _edited != null ? _edited.muh_priority : _original != null ? _original.muh_priority : this.muh_priority);
+					stream.WriteFixed(8, this.muh_priority, "muh_priority"); 
+					this.muh_reserved_zero_2bits = stream.Pick("muh_reserved_zero_2bits", _original != null ? _original.muh_reserved_zero_2bits : this.muh_reserved_zero_2bits, _edited != null ? _edited.muh_reserved_zero_2bits : _original != null ? _original.muh_reserved_zero_2bits : this.muh_reserved_zero_2bits);
+					stream.WriteFixed(2, this.muh_reserved_zero_2bits, "muh_reserved_zero_2bits"); 
+					headerRemainingBytes -= 2;
+
+					if ((muh_layer_idc == LAYER_VALUES))
+					{
+
+						if ((obu_xlayer_id == GLOBAL_XLAYER_ID))
+						{
+							this.muh_xlayer_map = stream.Pick("muh_xlayer_map", _original != null ? _original.muh_xlayer_map : this.muh_xlayer_map, _edited != null ? _edited.muh_xlayer_map : _original != null ? _original.muh_xlayer_map : this.muh_xlayer_map);
+							stream.WriteFixed(32, this.muh_xlayer_map, "muh_xlayer_map"); 
+							headerRemainingBytes -= 4;
+
+							for (n = 0; (n < 31); n++)
+							{
+
+								if (((muh_xlayer_map & (0x1 << n)) != 0))
+								{
+									this.muh_mlayer_map = stream.Pick("muh_mlayer_map", _original != null ? _original.muh_mlayer_map : this.muh_mlayer_map, _edited != null ? _edited.muh_mlayer_map : _original != null ? _original.muh_mlayer_map : this.muh_mlayer_map);
+									stream.WriteFixed(8, this.muh_mlayer_map, "muh_mlayer_map"); 
+									headerRemainingBytes -= 1;
+								}
+							}
+						}
+						else 
+						{
+							this.muh_mlayer_map = stream.Pick("muh_mlayer_map", _original != null ? _original.muh_mlayer_map : this.muh_mlayer_map, _edited != null ? _edited.muh_mlayer_map : _original != null ? _original.muh_mlayer_map : this.muh_mlayer_map);
+							stream.WriteFixed(8, this.muh_mlayer_map, "muh_mlayer_map"); 
+							headerRemainingBytes -= 1;
+						}
+					}
+				}
+
+				for (j = 0; (j < headerRemainingBytes); j++)
+				{
+					this.muh_header_extension_byte = stream.Pick("muh_header_extension_byte", _original != null ? _original.muh_header_extension_byte : this.muh_header_extension_byte, _edited != null ? _edited.muh_header_extension_byte : _original != null ? _original.muh_header_extension_byte : this.muh_header_extension_byte);
+					stream.WriteFixed(8, this.muh_header_extension_byte, "muh_header_extension_byte"); 
+				}
+
+				if (!(muh_cancel_flag != 0))
+				{
+					WriteMetadataUnit(muh_payload_size); 
+				}
+			}
+        }
+
     /*
 metadata_itut_t35( metadataPayloadSize ) {
 itu_t_t35_country_code	f(8)
@@ -4563,6 +7075,23 @@ itu_t_t35_payload_bytes	le(t35PayloadSize)
 			stream.ReadLe(t35PayloadSize, out this.itu_t_t35_payload_bytes, "itu_t_t35_payload_bytes"); 
         }
 
+        private void WriteMetadataItutT35(int metadataPayloadSize)
+        {
+			int t35PayloadSize = 0;
+			this.itu_t_t35_country_code = stream.Pick("itu_t_t35_country_code", _original != null ? _original.itu_t_t35_country_code : this.itu_t_t35_country_code, _edited != null ? _edited.itu_t_t35_country_code : _original != null ? _original.itu_t_t35_country_code : this.itu_t_t35_country_code);
+			stream.WriteFixed(8, this.itu_t_t35_country_code, "itu_t_t35_country_code"); 
+			t35PayloadSize = (metadataPayloadSize - 1);
+
+			if ((itu_t_t35_country_code == 0xFF))
+			{
+				this.itu_t_t35_country_code_extension_byte = stream.Pick("itu_t_t35_country_code_extension_byte", _original != null ? _original.itu_t_t35_country_code_extension_byte : this.itu_t_t35_country_code_extension_byte, _edited != null ? _edited.itu_t_t35_country_code_extension_byte : _original != null ? _original.itu_t_t35_country_code_extension_byte : this.itu_t_t35_country_code_extension_byte);
+				stream.WriteFixed(8, this.itu_t_t35_country_code_extension_byte, "itu_t_t35_country_code_extension_byte"); 
+				t35PayloadSize--;
+			}
+			this.itu_t_t35_payload_bytes = stream.Pick("itu_t_t35_payload_bytes", _original != null ? _original.itu_t_t35_payload_bytes : this.itu_t_t35_payload_bytes, _edited != null ? _edited.itu_t_t35_payload_bytes : _original != null ? _original.itu_t_t35_payload_bytes : this.itu_t_t35_payload_bytes);
+			stream.WriteLe(t35PayloadSize, this.itu_t_t35_payload_bytes, "itu_t_t35_payload_bytes"); 
+        }
+
     /*
 metadata_hdr_cll() {
 max_cll	f(16)
@@ -4578,6 +7107,14 @@ max_fall	f(16)
         {
 			stream.ReadFixed(16, out this.max_cll, "max_cll"); 
 			stream.ReadFixed(16, out this.max_fall, "max_fall"); 
+        }
+
+        private void WriteMetadataHdrCll()
+        {
+			this.max_cll = stream.Pick("max_cll", _original != null ? _original.max_cll : this.max_cll, _edited != null ? _edited.max_cll : _original != null ? _original.max_cll : this.max_cll);
+			stream.WriteFixed(16, this.max_cll, "max_cll"); 
+			this.max_fall = stream.Pick("max_fall", _original != null ? _original.max_fall : this.max_fall, _edited != null ? _edited.max_fall : _original != null ? _original.max_fall : this.max_fall);
+			stream.WriteFixed(16, this.max_fall, "max_fall"); 
         }
 
     /*
@@ -4618,6 +7155,27 @@ luminance_min	f(32)
 			stream.ReadFixed(16, out this.white_point_chromaticity_y, "white_point_chromaticity_y"); 
 			stream.ReadFixed(32, out this.luminance_max, "luminance_max"); 
 			stream.ReadFixed(32, out this.luminance_min, "luminance_min"); 
+        }
+
+        private void WriteMetadataHdrMdcv()
+        {
+			int i = 0;
+
+			for (i = 0; (i < 3); i++)
+			{
+				this.primary_chromaticity_x[i] = stream.Pick("primary_chromaticity_x", _original != null ? _original.primary_chromaticity_x[i] : this.primary_chromaticity_x[i], _edited != null ? _edited.primary_chromaticity_x[i] : _original != null ? _original.primary_chromaticity_x[i] : this.primary_chromaticity_x[i]);
+				stream.WriteFixed(16, this.primary_chromaticity_x[i], "primary_chromaticity_x"); 
+				this.primary_chromaticity_y[i] = stream.Pick("primary_chromaticity_y", _original != null ? _original.primary_chromaticity_y[i] : this.primary_chromaticity_y[i], _edited != null ? _edited.primary_chromaticity_y[i] : _original != null ? _original.primary_chromaticity_y[i] : this.primary_chromaticity_y[i]);
+				stream.WriteFixed(16, this.primary_chromaticity_y[i], "primary_chromaticity_y"); 
+			}
+			this.white_point_chromaticity_x = stream.Pick("white_point_chromaticity_x", _original != null ? _original.white_point_chromaticity_x : this.white_point_chromaticity_x, _edited != null ? _edited.white_point_chromaticity_x : _original != null ? _original.white_point_chromaticity_x : this.white_point_chromaticity_x);
+			stream.WriteFixed(16, this.white_point_chromaticity_x, "white_point_chromaticity_x"); 
+			this.white_point_chromaticity_y = stream.Pick("white_point_chromaticity_y", _original != null ? _original.white_point_chromaticity_y : this.white_point_chromaticity_y, _edited != null ? _edited.white_point_chromaticity_y : _original != null ? _original.white_point_chromaticity_y : this.white_point_chromaticity_y);
+			stream.WriteFixed(16, this.white_point_chromaticity_y, "white_point_chromaticity_y"); 
+			this.luminance_max = stream.Pick("luminance_max", _original != null ? _original.luminance_max : this.luminance_max, _edited != null ? _edited.luminance_max : _original != null ? _original.luminance_max : this.luminance_max);
+			stream.WriteFixed(32, this.luminance_max, "luminance_max"); 
+			this.luminance_min = stream.Pick("luminance_min", _original != null ? _original.luminance_min : this.luminance_min, _edited != null ? _edited.luminance_min : _original != null ? _original.luminance_min : this.luminance_min);
+			stream.WriteFixed(32, this.luminance_min, "luminance_min"); 
         }
 
     /*
@@ -4718,6 +7276,65 @@ time_offset_value	f(time_offset_length)
 			if ((time_offset_length > 0))
 			{
 				stream.ReadVariable(time_offset_length, out this.time_offset_value, "time_offset_value"); 
+			}
+        }
+
+        private void WriteMetadataTimecode()
+        {
+			this.counting_type = stream.Pick("counting_type", _original != null ? _original.counting_type : this.counting_type, _edited != null ? _edited.counting_type : _original != null ? _original.counting_type : this.counting_type);
+			stream.WriteFixed(5, this.counting_type, "counting_type"); 
+			this.full_timestamp_flag = stream.Pick("full_timestamp_flag", _original != null ? _original.full_timestamp_flag : this.full_timestamp_flag, _edited != null ? _edited.full_timestamp_flag : _original != null ? _original.full_timestamp_flag : this.full_timestamp_flag);
+			stream.WriteFixed(1, this.full_timestamp_flag, "full_timestamp_flag"); 
+			this.discontinuity_flag = stream.Pick("discontinuity_flag", _original != null ? _original.discontinuity_flag : this.discontinuity_flag, _edited != null ? _edited.discontinuity_flag : _original != null ? _original.discontinuity_flag : this.discontinuity_flag);
+			stream.WriteFixed(1, this.discontinuity_flag, "discontinuity_flag"); 
+			this.cnt_dropped_flag = stream.Pick("cnt_dropped_flag", _original != null ? _original.cnt_dropped_flag : this.cnt_dropped_flag, _edited != null ? _edited.cnt_dropped_flag : _original != null ? _original.cnt_dropped_flag : this.cnt_dropped_flag);
+			stream.WriteFixed(1, this.cnt_dropped_flag, "cnt_dropped_flag"); 
+			this.n_frames = stream.Pick("n_frames", _original != null ? _original.n_frames : this.n_frames, _edited != null ? _edited.n_frames : _original != null ? _original.n_frames : this.n_frames);
+			stream.WriteFixed(9, this.n_frames, "n_frames"); 
+
+			if ((full_timestamp_flag != 0))
+			{
+				this.seconds_value = stream.Pick("seconds_value", _original != null ? _original.seconds_value : this.seconds_value, _edited != null ? _edited.seconds_value : _original != null ? _original.seconds_value : this.seconds_value);
+				stream.WriteFixed(6, this.seconds_value, "seconds_value"); 
+				this.minutes_value = stream.Pick("minutes_value", _original != null ? _original.minutes_value : this.minutes_value, _edited != null ? _edited.minutes_value : _original != null ? _original.minutes_value : this.minutes_value);
+				stream.WriteFixed(6, this.minutes_value, "minutes_value"); 
+				this.hours_value = stream.Pick("hours_value", _original != null ? _original.hours_value : this.hours_value, _edited != null ? _edited.hours_value : _original != null ? _original.hours_value : this.hours_value);
+				stream.WriteFixed(5, this.hours_value, "hours_value"); 
+			}
+			else 
+			{
+				this.seconds_flag = stream.Pick("seconds_flag", _original != null ? _original.seconds_flag : this.seconds_flag, _edited != null ? _edited.seconds_flag : _original != null ? _original.seconds_flag : this.seconds_flag);
+				stream.WriteFixed(1, this.seconds_flag, "seconds_flag"); 
+
+				if ((seconds_flag != 0))
+				{
+					this.seconds_value = stream.Pick("seconds_value", _original != null ? _original.seconds_value : this.seconds_value, _edited != null ? _edited.seconds_value : _original != null ? _original.seconds_value : this.seconds_value);
+					stream.WriteFixed(6, this.seconds_value, "seconds_value"); 
+					this.minutes_flag = stream.Pick("minutes_flag", _original != null ? _original.minutes_flag : this.minutes_flag, _edited != null ? _edited.minutes_flag : _original != null ? _original.minutes_flag : this.minutes_flag);
+					stream.WriteFixed(1, this.minutes_flag, "minutes_flag"); 
+
+					if ((minutes_flag != 0))
+					{
+						this.minutes_value = stream.Pick("minutes_value", _original != null ? _original.minutes_value : this.minutes_value, _edited != null ? _edited.minutes_value : _original != null ? _original.minutes_value : this.minutes_value);
+						stream.WriteFixed(6, this.minutes_value, "minutes_value"); 
+						this.hours_flag = stream.Pick("hours_flag", _original != null ? _original.hours_flag : this.hours_flag, _edited != null ? _edited.hours_flag : _original != null ? _original.hours_flag : this.hours_flag);
+						stream.WriteFixed(1, this.hours_flag, "hours_flag"); 
+
+						if ((hours_flag != 0))
+						{
+							this.hours_value = stream.Pick("hours_value", _original != null ? _original.hours_value : this.hours_value, _edited != null ? _edited.hours_value : _original != null ? _original.hours_value : this.hours_value);
+							stream.WriteFixed(5, this.hours_value, "hours_value"); 
+						}
+					}
+				}
+			}
+			this.time_offset_length = stream.Pick("time_offset_length", _original != null ? _original.time_offset_length : this.time_offset_length, _edited != null ? _edited.time_offset_length : _original != null ? _original.time_offset_length : this.time_offset_length);
+			stream.WriteFixed(5, this.time_offset_length, "time_offset_length"); 
+
+			if ((time_offset_length > 0))
+			{
+				this.time_offset_value = stream.Pick("time_offset_value", _original != null ? _original.time_offset_value : this.time_offset_value, _edited != null ? _edited.time_offset_value : _original != null ? _original.time_offset_value : this.time_offset_value);
+				stream.WriteVariable(time_offset_length, this.time_offset_value, "time_offset_value"); 
 			}
         }
 
@@ -4857,6 +7474,85 @@ banding_in_band_unit_present_flag	f(1)
 			}
         }
 
+        private void WriteMetadataBandingHints()
+        {
+			int plane = 0;
+			int r = 0;
+			int c = 0;
+			int numComponents = 0;
+			this.coding_banding_present_flag = stream.Pick("coding_banding_present_flag", _original != null ? _original.coding_banding_present_flag : this.coding_banding_present_flag, _edited != null ? _edited.coding_banding_present_flag : _original != null ? _original.coding_banding_present_flag : this.coding_banding_present_flag);
+			stream.WriteFixed(1, this.coding_banding_present_flag, "coding_banding_present_flag"); 
+			this.source_banding_present_flag = stream.Pick("source_banding_present_flag", _original != null ? _original.source_banding_present_flag : this.source_banding_present_flag, _edited != null ? _edited.source_banding_present_flag : _original != null ? _original.source_banding_present_flag : this.source_banding_present_flag);
+			stream.WriteFixed(1, this.source_banding_present_flag, "source_banding_present_flag"); 
+
+			if ((coding_banding_present_flag != 0))
+			{
+				this.banding_hints_flag = stream.Pick("banding_hints_flag", _original != null ? _original.banding_hints_flag : this.banding_hints_flag, _edited != null ? _edited.banding_hints_flag : _original != null ? _original.banding_hints_flag : this.banding_hints_flag);
+				stream.WriteFixed(1, this.banding_hints_flag, "banding_hints_flag"); 
+
+				if ((banding_hints_flag != 0))
+				{
+					this.three_color_components_flag = stream.Pick("three_color_components_flag", _original != null ? _original.three_color_components_flag : this.three_color_components_flag, _edited != null ? _edited.three_color_components_flag : _original != null ? _original.three_color_components_flag : this.three_color_components_flag);
+					stream.WriteFixed(1, this.three_color_components_flag, "three_color_components_flag"); 
+					numComponents = ((three_color_components_flag != 0) ? 3 : 1);
+
+					for (plane = 0; (plane < numComponents); plane++)
+					{
+						this.banding_in_component_present_flag = stream.Pick("banding_in_component_present_flag", _original != null ? _original.banding_in_component_present_flag : this.banding_in_component_present_flag, _edited != null ? _edited.banding_in_component_present_flag : _original != null ? _original.banding_in_component_present_flag : this.banding_in_component_present_flag);
+						stream.WriteFixed(1, this.banding_in_component_present_flag, "banding_in_component_present_flag"); 
+
+						if ((banding_in_component_present_flag != 0))
+						{
+							this.max_band_width_minus_4 = stream.Pick("max_band_width_minus_4", _original != null ? _original.max_band_width_minus_4 : this.max_band_width_minus_4, _edited != null ? _edited.max_band_width_minus_4 : _original != null ? _original.max_band_width_minus_4 : this.max_band_width_minus_4);
+							stream.WriteFixed(6, this.max_band_width_minus_4, "max_band_width_minus_4"); 
+							this.max_band_step_minus_1 = stream.Pick("max_band_step_minus_1", _original != null ? _original.max_band_step_minus_1 : this.max_band_step_minus_1, _edited != null ? _edited.max_band_step_minus_1 : _original != null ? _original.max_band_step_minus_1 : this.max_band_step_minus_1);
+							stream.WriteFixed(4, this.max_band_step_minus_1, "max_band_step_minus_1"); 
+						}
+					}
+					this.band_units_information_present_flag = stream.Pick("band_units_information_present_flag", _original != null ? _original.band_units_information_present_flag : this.band_units_information_present_flag, _edited != null ? _edited.band_units_information_present_flag : _original != null ? _original.band_units_information_present_flag : this.band_units_information_present_flag);
+					stream.WriteFixed(1, this.band_units_information_present_flag, "band_units_information_present_flag"); 
+
+					if ((band_units_information_present_flag != 0))
+					{
+						this.num_band_units_rows_minus_1 = stream.Pick("num_band_units_rows_minus_1", _original != null ? _original.num_band_units_rows_minus_1 : this.num_band_units_rows_minus_1, _edited != null ? _edited.num_band_units_rows_minus_1 : _original != null ? _original.num_band_units_rows_minus_1 : this.num_band_units_rows_minus_1);
+						stream.WriteFixed(5, this.num_band_units_rows_minus_1, "num_band_units_rows_minus_1"); 
+						this.num_band_units_cols_minus_1 = stream.Pick("num_band_units_cols_minus_1", _original != null ? _original.num_band_units_cols_minus_1 : this.num_band_units_cols_minus_1, _edited != null ? _edited.num_band_units_cols_minus_1 : _original != null ? _original.num_band_units_cols_minus_1 : this.num_band_units_cols_minus_1);
+						stream.WriteFixed(5, this.num_band_units_cols_minus_1, "num_band_units_cols_minus_1"); 
+						this.varying_size_band_units_flag = stream.Pick("varying_size_band_units_flag", _original != null ? _original.varying_size_band_units_flag : this.varying_size_band_units_flag, _edited != null ? _edited.varying_size_band_units_flag : _original != null ? _original.varying_size_band_units_flag : this.varying_size_band_units_flag);
+						stream.WriteFixed(1, this.varying_size_band_units_flag, "varying_size_band_units_flag"); 
+
+						if ((varying_size_band_units_flag != 0))
+						{
+							this.band_block_in_luma_samples = stream.Pick("band_block_in_luma_samples", _original != null ? _original.band_block_in_luma_samples : this.band_block_in_luma_samples, _edited != null ? _edited.band_block_in_luma_samples : _original != null ? _original.band_block_in_luma_samples : this.band_block_in_luma_samples);
+							stream.WriteFixed(3, this.band_block_in_luma_samples, "band_block_in_luma_samples"); 
+
+							for (r = 0; (r <= num_band_units_rows_minus_1); r++)
+							{
+								this.vert_size_in_band_blocks_minus_1 = stream.Pick("vert_size_in_band_blocks_minus_1", _original != null ? _original.vert_size_in_band_blocks_minus_1 : this.vert_size_in_band_blocks_minus_1, _edited != null ? _edited.vert_size_in_band_blocks_minus_1 : _original != null ? _original.vert_size_in_band_blocks_minus_1 : this.vert_size_in_band_blocks_minus_1);
+								stream.WriteFixed(5, this.vert_size_in_band_blocks_minus_1, "vert_size_in_band_blocks_minus_1"); 
+							}
+
+							for (c = 0; (c <= num_band_units_cols_minus_1); c++)
+							{
+								this.horz_size_in_band_blocks_minus_1 = stream.Pick("horz_size_in_band_blocks_minus_1", _original != null ? _original.horz_size_in_band_blocks_minus_1 : this.horz_size_in_band_blocks_minus_1, _edited != null ? _edited.horz_size_in_band_blocks_minus_1 : _original != null ? _original.horz_size_in_band_blocks_minus_1 : this.horz_size_in_band_blocks_minus_1);
+								stream.WriteFixed(5, this.horz_size_in_band_blocks_minus_1, "horz_size_in_band_blocks_minus_1"); 
+							}
+						}
+
+						for (r = 0; (r <= num_band_units_rows_minus_1); r++)
+						{
+
+							for (c = 0; (c <= num_band_units_cols_minus_1); c++)
+							{
+								this.banding_in_band_unit_present_flag = stream.Pick("banding_in_band_unit_present_flag", _original != null ? _original.banding_in_band_unit_present_flag : this.banding_in_band_unit_present_flag, _edited != null ? _edited.banding_in_band_unit_present_flag : _original != null ? _original.banding_in_band_unit_present_flag : this.banding_in_band_unit_present_flag);
+								stream.WriteFixed(1, this.banding_in_band_unit_present_flag, "banding_in_band_unit_present_flag"); 
+							}
+						}
+					}
+				}
+			}
+        }
+
     /*
 metadata_icc_profile( metadataPayloadSize ) {
 icc_profile_data_payload_bytes	le(metadataPayloadSize)
@@ -4868,6 +7564,12 @@ icc_profile_data_payload_bytes	le(metadataPayloadSize)
         private void MetadataIccProfile(int metadataPayloadSize)
         {
 			stream.ReadLe(metadataPayloadSize, out this.icc_profile_data_payload_bytes, "icc_profile_data_payload_bytes"); 
+        }
+
+        private void WriteMetadataIccProfile(int metadataPayloadSize)
+        {
+			this.icc_profile_data_payload_bytes = stream.Pick("icc_profile_data_payload_bytes", _original != null ? _original.icc_profile_data_payload_bytes : this.icc_profile_data_payload_bytes, _edited != null ? _edited.icc_profile_data_payload_bytes : _original != null ? _original.icc_profile_data_payload_bytes : this.icc_profile_data_payload_bytes);
+			stream.WriteLe(metadataPayloadSize, this.icc_profile_data_payload_bytes, "icc_profile_data_payload_bytes"); 
         }
 
     /*
@@ -4891,6 +7593,16 @@ mps_duplicate_flag	f(1)
 			stream.ReadFixed(1, out this.mps_duplicate_flag, "mps_duplicate_flag"); 
         }
 
+        private void WriteMetadataScanType()
+        {
+			this.mps_pic_struct_type = stream.Pick("mps_pic_struct_type", _original != null ? _original.mps_pic_struct_type : this.mps_pic_struct_type, _edited != null ? _edited.mps_pic_struct_type : _original != null ? _original.mps_pic_struct_type : this.mps_pic_struct_type);
+			stream.WriteFixed(5, this.mps_pic_struct_type, "mps_pic_struct_type"); 
+			this.mps_source_scan_type_idc = stream.Pick("mps_source_scan_type_idc", _original != null ? _original.mps_source_scan_type_idc : this.mps_source_scan_type_idc, _edited != null ? _edited.mps_source_scan_type_idc : _original != null ? _original.mps_source_scan_type_idc : this.mps_source_scan_type_idc);
+			stream.WriteFixed(2, this.mps_source_scan_type_idc, "mps_source_scan_type_idc"); 
+			this.mps_duplicate_flag = stream.Pick("mps_duplicate_flag", _original != null ? _original.mps_duplicate_flag : this.mps_duplicate_flag, _edited != null ? _edited.mps_duplicate_flag : _original != null ? _original.mps_duplicate_flag : this.mps_duplicate_flag);
+			stream.WriteFixed(1, this.mps_duplicate_flag, "mps_duplicate_flag"); 
+        }
+
     /*
 metadata_temporal_point_info() {
 frame_presentation_time	leb128()
@@ -4902,6 +7614,12 @@ frame_presentation_time	leb128()
         private void MetadataTemporalPointInfo()
         {
 			stream.ReadLeb128( out this.frame_presentation_time, "frame_presentation_time"); 
+        }
+
+        private void WriteMetadataTemporalPointInfo()
+        {
+			this.frame_presentation_time = stream.Pick("frame_presentation_time", _original != null ? _original.frame_presentation_time : this.frame_presentation_time, _edited != null ? _edited.frame_presentation_time : _original != null ? _original.frame_presentation_time : this.frame_presentation_time);
+			stream.WriteLeb128( this.frame_presentation_time, "frame_presentation_time"); 
         }
 
     /*
@@ -4961,6 +7679,38 @@ frame_hash	le(16)
 			}
         }
 
+        private void WriteMetadataDecodedFrameHash()
+        {
+			int i = 0;
+			int numPlanes = 0;
+			this.hash_type = stream.Pick("hash_type", _original != null ? _original.hash_type : this.hash_type, _edited != null ? _edited.hash_type : _original != null ? _original.hash_type : this.hash_type);
+			stream.WriteFixed(4, this.hash_type, "hash_type"); 
+			this.per_plane = stream.Pick("per_plane", _original != null ? _original.per_plane : this.per_plane, _edited != null ? _edited.per_plane : _original != null ? _original.per_plane : this.per_plane);
+			stream.WriteFixed(1, this.per_plane, "per_plane"); 
+			this.has_grain = stream.Pick("has_grain", _original != null ? _original.has_grain : this.has_grain, _edited != null ? _edited.has_grain : _original != null ? _original.has_grain : this.has_grain);
+			stream.WriteFixed(1, this.has_grain, "has_grain"); 
+			this.is_monochrome = stream.Pick("is_monochrome", _original != null ? _original.is_monochrome : this.is_monochrome, _edited != null ? _edited.is_monochrome : _original != null ? _original.is_monochrome : this.is_monochrome);
+			stream.WriteFixed(1, this.is_monochrome, "is_monochrome"); 
+			this.reserved = stream.Pick("reserved", _original != null ? _original.reserved : this.reserved, _edited != null ? _edited.reserved : _original != null ? _original.reserved : this.reserved);
+			stream.WriteFixed(1, this.reserved, "reserved"); 
+
+			if ((per_plane != 0))
+			{
+				numPlanes = ((is_monochrome != 0) ? 1 : 3);
+
+				for (i = 0; (i < numPlanes); i++)
+				{
+					this.plane_hash[i] = stream.Pick("plane_hash", _original != null ? _original.plane_hash[i] : this.plane_hash[i], _edited != null ? _edited.plane_hash[i] : _original != null ? _original.plane_hash[i] : this.plane_hash[i]);
+					stream.WriteBytes(128, this.plane_hash[i], "plane_hash"); 
+				}
+			}
+			else 
+			{
+				this.frame_hash = stream.Pick("frame_hash", _original != null ? _original.frame_hash : this.frame_hash, _edited != null ? _edited.frame_hash : _original != null ? _original.frame_hash : this.frame_hash);
+				stream.WriteBytes(128, this.frame_hash, "frame_hash"); 
+			}
+        }
+
     /*
 metadata_user_data_unregistered( metadataPayloadSize ) {
 uuid_iso_iec_11578	f(128)
@@ -4982,6 +7732,19 @@ user_data_payload_byte	f(8)
 			for (i = 16; (i < metadataPayloadSize); i++)
 			{
 				stream.ReadFixed(8, out this.user_data_payload_byte, "user_data_payload_byte"); 
+			}
+        }
+
+        private void WriteMetadataUserDataUnregistered(int metadataPayloadSize)
+        {
+			int i = 0;
+			this.uuid_iso_iec_11578 = stream.Pick("uuid_iso_iec_11578", _original != null ? _original.uuid_iso_iec_11578 : this.uuid_iso_iec_11578, _edited != null ? _edited.uuid_iso_iec_11578 : _original != null ? _original.uuid_iso_iec_11578 : this.uuid_iso_iec_11578);
+			stream.WriteBytes(128, this.uuid_iso_iec_11578, "uuid_iso_iec_11578"); 
+
+			for (i = 16; (i < metadataPayloadSize); i++)
+			{
+				this.user_data_payload_byte = stream.Pick("user_data_payload_byte", _original != null ? _original.user_data_payload_byte : this.user_data_payload_byte, _edited != null ? _edited.user_data_payload_byte : _original != null ? _original.user_data_payload_byte : this.user_data_payload_byte);
+				stream.WriteFixed(8, this.user_data_payload_byte, "user_data_payload_byte"); 
 			}
         }
 
@@ -5071,6 +7834,45 @@ frame_header_copy()
 			}
         }
 
+        private void WriteFrameHeader(int isFirst)
+        {
+			int startBitPos = 0;
+
+			if ((isFirst != 0))
+			{
+				SeenFrameHeader = 1;
+				CountFrameHeaderForLevelConstraint = 1;
+				FrameSymbolCount = 0;
+				startBitPos = get_position();
+				WriteFrameHeaderInfo(); 
+				NumFrameHeaderBits = (get_position() - startBitPos);
+				FirstPictureInTU = 0;
+
+				if ((IsBridge != 0))
+				{
+					NumTiles = (TileCols * TileRows);
+					tg_start = 0;
+					tg_end = (NumTiles - 1);
+					WriteTileGroupPayload(0); 
+				}
+				else if ((((ShowExistingFrame != 0) || (TipFrameMode == TIP_FRAME_AS_OUTPUT)) || (bru_inactive != 0)))
+				{
+					decode_frame_wrapup(); 
+					SeenFrameHeader = 0;
+					CountFrameHeaderForLevelConstraint = 0;
+				}
+				else 
+				{
+					TileNum = 0;
+				}
+			}
+			else 
+			{
+				CountFrameHeaderForLevelConstraint = 0;
+				WriteFrameHeaderCopy(); 
+			}
+        }
+
     /*
 frame_header_copy() {
 for ( i = 0; i < NumFrameHeaderBits; i++ ) {	
@@ -5088,6 +7890,17 @@ header_bit[ i ]	f(1)
 			for (i = 0; (i < NumFrameHeaderBits); i++)
 			{
 				stream.ReadFixed(1, out this.header_bit[i], "header_bit"); 
+			}
+        }
+
+        private void WriteFrameHeaderCopy()
+        {
+			int i = 0;
+
+			for (i = 0; (i < NumFrameHeaderBits); i++)
+			{
+				this.header_bit[i] = stream.Pick("header_bit", _original != null ? _original.header_bit[i] : this.header_bit[i], _edited != null ? _edited.header_bit[i] : _original != null ? _original.header_bit[i] : this.header_bit[i]);
+				stream.WriteFixed(1, this.header_bit[i], "header_bit"); 
 			}
         }
 
@@ -6946,6 +9759,1060 @@ film_grain_config()
 			FilmGrainConfig(); 
         }
 
+        private void WriteFrameHeaderInfo()
+        {
+			int i = 0;
+			int mode = 0;
+			int row = 0;
+			int col = 0;
+			int refc = 0;
+			int plane = 0;
+			int j = 0;
+			int segmentId = 0;
+			int keyFrame = 0;
+			int startCVS = 0;
+			int allowedFrames = 0;
+			int n = 0;
+			int allFrames = 0;
+			int explicitRefFrameMap = 0;
+			int refFrame = 0;
+			int hint = 0;
+			int usesEqualWeight = 0;
+			int refIdx = 0;
+			int slot0 = 0;
+			int slot1 = 0;
+			int qindex = 0;
+			int qmNum = 0;
+			int qmIndexBits = 0;
+			keyFrame = (((obu_type == OBU_CLOSED_LOOP_KEY) || (obu_type == OBU_OPEN_LOOP_KEY)) ? 1 : 0);
+			IsRegular = ((((((((obu_type == OBU_OPEN_LOOP_KEY) || (obu_type == OBU_REGULAR_TILE_GROUP)) || (obu_type == OBU_REGULAR_TIP)) || (obu_type == OBU_REGULAR_SEF)) || (obu_type == OBU_SWITCH)) || (obu_type == OBU_RAS_FRAME)) || (obu_type == OBU_BRIDGE_FRAME)) ? 1 : 0);
+
+			for (i = 0; (i < NUM_CUSTOM_QMS); i++)
+			{
+				QmSeen[i] = 0;
+			}
+			startCVS = (((obu_type == OBU_CLOSED_LOOP_KEY) && (FirstPictureInTU != 0)) ? 1 : 0);
+
+			if ((startCVS != 0))
+			{
+				OlkEncountered = 0;
+
+				for (i = 0; (i < MAX_NUM_MLAYERS); i++)
+				{
+					OlkRefresh[i] = 0;
+				}
+				flush_implicit_output_frames(0); 
+			}
+
+			if ((((OlkEncountered != 0) && (IsRegular != 0)) && (FirstPictureInTU != 0)))
+			{
+				flush_implicit_output_frames(1); 
+				OlkEncountered = 0;
+				allowedFrames = 0;
+
+				for (i = 0; (i < MAX_NUM_MLAYERS); i++)
+				{
+					allowedFrames |= OlkRefresh[i];
+					OlkRefresh[i] = 0;
+				}
+
+				for (i = 0; (i < NUM_REF_FRAMES); i++)
+				{
+
+					if ((((allowedFrames & (1 << i)) == 0) && (RefLongTermId[i] == -1)))
+					{
+						RefValid[i] = 0;
+					}
+				}
+			}
+			IsBridge = ((obu_type == OBU_BRIDGE_FRAME) ? 1 : 0);
+
+			if ((IsBridge != 0))
+			{
+				cur_mfh_id = 0;
+			}
+			else 
+			{
+				this.cur_mfh_id = stream.Pick("cur_mfh_id", _original != null ? _original.cur_mfh_id : this.cur_mfh_id, _edited != null ? _edited.cur_mfh_id : _original != null ? _original.cur_mfh_id : this.cur_mfh_id);
+				stream.WriteUvlc( this.cur_mfh_id, "cur_mfh_id"); 
+			}
+
+			if ((cur_mfh_id == 0))
+			{
+				this.seq_header_id_in_frame_header = stream.Pick("seq_header_id_in_frame_header", _original != null ? _original.seq_header_id_in_frame_header : this.seq_header_id_in_frame_header, _edited != null ? _edited.seq_header_id_in_frame_header : _original != null ? _original.seq_header_id_in_frame_header : this.seq_header_id_in_frame_header);
+				stream.WriteUvlc( this.seq_header_id_in_frame_header, "seq_header_id_in_frame_header"); 
+				load_sequence_header(seq_header_id_in_frame_header); 
+				mfh_deblocking_filter_update[cur_mfh_id] = 0;
+			}
+			else 
+			{
+				load_sequence_header(MfhSeqHeaderId[cur_mfh_id]); 
+			}
+
+			if ((keyFrame != 0))
+			{
+
+				if ((seq_lcr_id != 0))
+				{
+					activate_layer_configuration_record(seq_lcr_id); 
+				}
+			}
+
+			if (((cur_mfh_id == 0) || !(mfh_frame_size_present_flag[cur_mfh_id] != 0)))
+			{
+				mfh_frame_width_minus_1[cur_mfh_id] = max_frame_width_minus_1;
+				mfh_frame_height_minus_1[cur_mfh_id] = max_frame_height_minus_1;
+			}
+
+			if (((keyFrame != 0) && (FirstPictureInTU != 0)))
+			{
+				ResetQm(); 
+			}
+
+			if ((IsBridge != 0))
+			{
+				n = CeilLog2(NumRefFrames);
+				this.bridge_frame_ref_idx = stream.Pick("bridge_frame_ref_idx", _original != null ? _original.bridge_frame_ref_idx : this.bridge_frame_ref_idx, _edited != null ? _edited.bridge_frame_ref_idx : _original != null ? _original.bridge_frame_ref_idx : this.bridge_frame_ref_idx);
+				stream.WriteVariable(n, this.bridge_frame_ref_idx, "bridge_frame_ref_idx"); 
+			}
+			allFrames = ((1 << NumRefFrames) - 1);
+			use_bru = 0;
+			bru_inactive = 0;
+
+			if ((single_picture_header_flag != 0))
+			{
+				ShowExistingFrame = 0;
+				FrameType = KEY_FRAME;
+				FrameIsIntra = 1;
+				immediate_output_frame = 1;
+				implicit_output_frame = 0;
+			}
+			else 
+			{
+				ShowExistingFrame = IsSef();
+
+				if ((ShowExistingFrame == 1))
+				{
+					n = CeilLog2(NumRefFrames);
+					this.frame_to_show_map_idx = stream.Pick("frame_to_show_map_idx", _original != null ? _original.frame_to_show_map_idx : this.frame_to_show_map_idx, _edited != null ? _edited.frame_to_show_map_idx : _original != null ? _original.frame_to_show_map_idx : this.frame_to_show_map_idx);
+					stream.WriteVariable(n, this.frame_to_show_map_idx, "frame_to_show_map_idx"); 
+					this.derive_sef_order_hint = stream.Pick("derive_sef_order_hint", _original != null ? _original.derive_sef_order_hint : this.derive_sef_order_hint, _edited != null ? _edited.derive_sef_order_hint : _original != null ? _original.derive_sef_order_hint : this.derive_sef_order_hint);
+					stream.WriteFixed(1, this.derive_sef_order_hint, "derive_sef_order_hint"); 
+
+					if ((derive_sef_order_hint == 0))
+					{
+						this.sef_order_hint = stream.Pick("sef_order_hint", _original != null ? _original.OrderHintLsbs : this.sef_order_hint, _edited != null ? _edited.OrderHintLsbs : _original != null ? _original.OrderHintLsbs : this.sef_order_hint);
+						stream.WriteVariable(OrderHintBits, this.sef_order_hint, "sef_order_hint"); 
+						OrderHintLsbs = sef_order_hint;
+						OrderHint = GetDispOrderHint();
+					}
+					else 
+					{
+						OrderHint = RefOrderHint[frame_to_show_map_idx];
+					}
+
+					if ((((IsRegular != 0) && (OlkEncountered != 0)) && !(FirstPictureInTU != 0)))
+					{
+						OlkTUOrderHint = ((derive_sef_order_hint != 0) ? RefOrderHint[frame_to_show_map_idx] : OrderHint);
+					}
+					refresh_frame_flags = 0;
+					FrameType = RefFrameType[frame_to_show_map_idx];
+					immediate_output_frame = 1;
+					WriteFilmGrainConfig(); 
+
+					if ((derive_sef_order_hint != 0))
+					{
+						save_grain_params(frame_to_show_map_idx); 
+					}
+					TipFrameMode = TIP_FRAME_DISABLED;
+					return;
+				}
+
+				if ((IsBridge != 0))
+				{
+					FrameType = INTER_FRAME;
+				}
+				else if (((obu_type == OBU_SWITCH) || (obu_type == OBU_RAS_FRAME)))
+				{
+					this.restricted_prediction_switch = stream.Pick("restricted_prediction_switch", _original != null ? _original.restricted_prediction_switch : this.restricted_prediction_switch, _edited != null ? _edited.restricted_prediction_switch : _original != null ? _original.restricted_prediction_switch : this.restricted_prediction_switch);
+					stream.WriteFixed(1, this.restricted_prediction_switch, "restricted_prediction_switch"); 
+					FrameType = SWITCH_FRAME;
+				}
+				else if ((IsTipFrame() != 0))
+				{
+					FrameType = INTER_FRAME;
+				}
+				else if (((obu_type == OBU_CLOSED_LOOP_KEY) || (obu_type == OBU_OPEN_LOOP_KEY)))
+				{
+					FrameType = KEY_FRAME;
+				}
+				else 
+				{
+					this.frame_is_inter = stream.Pick("frame_is_inter", _original != null ? _original.frame_is_inter : this.frame_is_inter, _edited != null ? _edited.frame_is_inter : _original != null ? _original.frame_is_inter : this.frame_is_inter);
+					stream.WriteFixed(1, this.frame_is_inter, "frame_is_inter"); 
+					FrameType = ((frame_is_inter != 0) ? INTER_FRAME : INTRA_ONLY_FRAME);
+				}
+				LongTermId = -1;
+
+				if ((FrameType == KEY_FRAME))
+				{
+					this.long_term_id_plus_1 = stream.Pick("long_term_id_plus_1", _original != null ? _original.long_term_id_plus_1 : this.long_term_id_plus_1, _edited != null ? _edited.long_term_id_plus_1 : _original != null ? _original.long_term_id_plus_1 : this.long_term_id_plus_1);
+					stream.WriteVariable(long_term_frame_id_bits, this.long_term_id_plus_1, "long_term_id_plus_1"); 
+					LongTermId = (long_term_id_plus_1 - 1);
+				}
+				num_key_ref_frames = 0;
+
+				if ((((obu_type == OBU_RAS_FRAME) || (obu_type == OBU_OPEN_LOOP_KEY)) && (long_term_frame_id_bits != 0)))
+				{
+					this.num_key_ref_frames = stream.Pick("num_key_ref_frames", _original != null ? _original.num_key_ref_frames : this.num_key_ref_frames, _edited != null ? _edited.num_key_ref_frames : _original != null ? _original.num_key_ref_frames : this.num_key_ref_frames);
+					stream.WriteFixed(3, this.num_key_ref_frames, "num_key_ref_frames"); 
+
+					for (i = 0; (i < num_key_ref_frames); i++)
+					{
+						this.ref_long_term_id[i] = stream.Pick("ref_long_term_id", _original != null ? _original.ref_long_term_id[i] : this.ref_long_term_id[i], _edited != null ? _edited.ref_long_term_id[i] : _original != null ? _original.ref_long_term_id[i] : this.ref_long_term_id[i]);
+						stream.WriteVariable(long_term_frame_id_bits, this.ref_long_term_id[i], "ref_long_term_id"); 
+					}
+				}
+
+				if (((FrameType == SWITCH_FRAME) && (restricted_prediction_switch != 0)))
+				{
+
+					for (i = 0; (i < NUM_REF_FRAMES); i++)
+					{
+
+						if ((MLayerPresenceMap[RefMLayerId[i]][obu_mlayer_id] != 0))
+						{
+
+							if ((is_frame_eligible_for_output(i) != 0))
+							{
+								output_frame_buffers(i); 
+							}
+							RefOrderHint[i] = RESTRICTED_OH;
+						}
+					}
+				}
+
+				if (((obu_type == OBU_RAS_FRAME) || ((obu_type == OBU_SWITCH) && (restricted_prediction_switch != 0))))
+				{
+					ResetQm(); 
+				}
+				FrameIsIntra = (((FrameType == INTRA_ONLY_FRAME) || (FrameType == KEY_FRAME)) ? 1 : 0);
+
+				if (((IsBridge != 0) || (obu_type == OBU_OPEN_LOOP_KEY)))
+				{
+					immediate_output_frame = 0;
+				}
+				else 
+				{
+					this.immediate_output_frame = stream.Pick("immediate_output_frame", _original != null ? _original.immediate_output_frame : this.immediate_output_frame, _edited != null ? _edited.immediate_output_frame : _original != null ? _original.immediate_output_frame : this.immediate_output_frame);
+					stream.WriteFixed(1, this.immediate_output_frame, "immediate_output_frame"); 
+				}
+
+				if ((((IsBridge != 0) || (immediate_output_frame != 0)) || (monotonic_output_order_flag != 0)))
+				{
+					implicit_output_frame = 0;
+				}
+				else 
+				{
+					this.implicit_output_frame = stream.Pick("implicit_output_frame", _original != null ? _original.implicit_output_frame : this.implicit_output_frame, _edited != null ? _edited.implicit_output_frame : _original != null ? _original.implicit_output_frame : this.implicit_output_frame);
+					stream.WriteFixed(1, this.implicit_output_frame, "implicit_output_frame"); 
+				}
+			}
+
+			if ((use_256x256_superblock != 0))
+			{
+				SbSize = ((FrameIsIntra != 0) ? BLOCK_128X128 : BLOCK_256X256);
+			}
+			else if ((use_128x128_superblock != 0))
+			{
+				SbSize = BLOCK_128X128;
+			}
+			else 
+			{
+				SbSize = BLOCK_64X64;
+			}
+
+			if (((FrameType == KEY_FRAME) && (immediate_output_frame != 0)))
+			{
+
+				for (i = 0; (i < REFS_PER_FRAME); i++)
+				{
+					OrderHints[i] = 0;
+				}
+			}
+			disable_cross_frame_cdf_init = 0;
+
+			if ((IsBridge != 0))
+			{
+				primary_ref_frame = PRIMARY_REF_NONE;
+				OrderHintLsbs = RefOrderHintLsbs[bridge_frame_ref_idx];
+				OrderHint = RefOrderHint[bridge_frame_ref_idx];
+			}
+			else 
+			{
+
+				if ((FrameType == SWITCH_FRAME))
+				{
+					frame_size_override_flag = 1;
+				}
+				else if ((single_picture_header_flag != 0))
+				{
+					frame_size_override_flag = 0;
+				}
+				else 
+				{
+					this.frame_size_override_flag = stream.Pick("frame_size_override_flag", _original != null ? _original.frame_size_override_flag : this.frame_size_override_flag, _edited != null ? _edited.frame_size_override_flag : _original != null ? _original.frame_size_override_flag : this.frame_size_override_flag);
+					stream.WriteFixed(1, this.frame_size_override_flag, "frame_size_override_flag"); 
+				}
+				this.order_hint = stream.Pick("order_hint", _original != null ? _original.OrderHintLsbs : this.order_hint, _edited != null ? _edited.OrderHintLsbs : _original != null ? _original.OrderHintLsbs : this.order_hint);
+				stream.WriteVariable(OrderHintBits, this.order_hint, "order_hint"); 
+				OrderHintLsbs = order_hint;
+				OrderHint = GetDispOrderHint();
+
+				if (((FrameIsIntra != 0) || (FrameType == SWITCH_FRAME)))
+				{
+					primary_ref_frame = PRIMARY_REF_NONE;
+				}
+				else 
+				{
+					this.signal_primary_ref_frame = stream.Pick("signal_primary_ref_frame", _original != null ? _original.signal_primary_ref_frame : this.signal_primary_ref_frame, _edited != null ? _edited.signal_primary_ref_frame : _original != null ? _original.signal_primary_ref_frame : this.signal_primary_ref_frame);
+					stream.WriteFixed(1, this.signal_primary_ref_frame, "signal_primary_ref_frame"); 
+
+					if (!(IsTipFrame() != 0))
+					{
+						this.disable_cross_frame_cdf_init = stream.Pick("disable_cross_frame_cdf_init", _original != null ? _original.disable_cross_frame_cdf_init : this.disable_cross_frame_cdf_init, _edited != null ? _edited.disable_cross_frame_cdf_init : _original != null ? _original.disable_cross_frame_cdf_init : this.disable_cross_frame_cdf_init);
+						stream.WriteFixed(1, this.disable_cross_frame_cdf_init, "disable_cross_frame_cdf_init"); 
+					}
+
+					if ((signal_primary_ref_frame != 0))
+					{
+						this.primary_ref_frame = stream.Pick("primary_ref_frame", _original != null ? _original.primary_ref_frame : this.primary_ref_frame, _edited != null ? _edited.primary_ref_frame : _original != null ? _original.primary_ref_frame : this.primary_ref_frame);
+						stream.WriteFixed(3, this.primary_ref_frame, "primary_ref_frame"); 
+					}
+					else 
+					{
+						primary_ref_frame = PRIMARY_REF_CHOOSE;
+					}
+				}
+			}
+			FrameMvPrecision = MV_PRECISION_ONE_PEL;
+			MvPrecision = FrameMvPrecision;
+			allow_high_precision_mv = 0;
+			use_ref_frame_mvs = 0;
+			allow_intrabc = 0;
+			allow_global_intrabc = 0;
+			allow_local_intrabc = 0;
+			allow_high_precision_mv = 0;
+			allow_df_sub_pu = 0;
+
+			if ((IsBridge != 0))
+			{
+				this.bridge_frame_overwrite_flag = stream.Pick("bridge_frame_overwrite_flag", _original != null ? _original.bridge_frame_overwrite_flag : this.bridge_frame_overwrite_flag, _edited != null ? _edited.bridge_frame_overwrite_flag : _original != null ? _original.bridge_frame_overwrite_flag : this.bridge_frame_overwrite_flag);
+				stream.WriteFixed(1, this.bridge_frame_overwrite_flag, "bridge_frame_overwrite_flag"); 
+			}
+
+			if ((FrameType == KEY_FRAME))
+			{
+
+				if (((obu_type == OBU_CLOSED_LOOP_KEY) && (max_mlayer_id == 0)))
+				{
+					refresh_frame_flags = allFrames;
+				}
+				else if ((enable_short_refresh_frame_flags != 0))
+				{
+					n = CeilLog2(NumRefFrames);
+					this.frame_to_refresh = stream.Pick("frame_to_refresh", _original != null ? _original.frame_to_refresh : this.frame_to_refresh, _edited != null ? _edited.frame_to_refresh : _original != null ? _original.frame_to_refresh : this.frame_to_refresh);
+					stream.WriteVariable(n, this.frame_to_refresh, "frame_to_refresh"); 
+					refresh_frame_flags = (1 << frame_to_refresh);
+				}
+				else 
+				{
+					this.refresh_frame_flags = stream.Pick("refresh_frame_flags", _original != null ? _original.refresh_frame_flags : this.refresh_frame_flags, _edited != null ? _edited.refresh_frame_flags : _original != null ? _original.refresh_frame_flags : this.refresh_frame_flags);
+					stream.WriteVariable(NumRefFrames, this.refresh_frame_flags, "refresh_frame_flags"); 
+				}
+
+				if (((obu_type == OBU_CLOSED_LOOP_KEY) && (FirstPictureInTU != 0)))
+				{
+
+					for (i = 0; (i < NumRefFrames); i++)
+					{
+						RefValid[i] = 0;
+					}
+				}
+
+				if ((obu_type == OBU_CLOSED_LOOP_KEY))
+				{
+					OlkEncountered = 0;
+
+					for (i = 0; (i < MAX_NUM_MLAYERS); i++)
+					{
+						OlkRefresh[i] = 0;
+					}
+				}
+
+				if ((obu_type == OBU_OPEN_LOOP_KEY))
+				{
+					OlkEncountered = 1;
+					OlkRefresh[obu_mlayer_id] = refresh_frame_flags;
+
+					if ((implicit_output_frame != 0))
+					{
+						OlkTUOrderHint = OrderHint;
+					}
+				}
+			}
+			else if (((IsBridge != 0) && !(bridge_frame_overwrite_flag != 0)))
+			{
+				refresh_frame_flags = (1 << bridge_frame_ref_idx);
+			}
+			else if (((obu_type == OBU_RAS_FRAME) && (max_mlayer_id == 0)))
+			{
+				refresh_frame_flags = 0;
+
+				for (i = 0; (i < NumRefFrames); i++)
+				{
+
+					if ((!(RefValid[i] != 0) || !(LongTermIdInUse(RefLongTermId[i]) != 0)))
+					{
+						refresh_frame_flags |= (1 << i);
+					}
+				}
+			}
+			else if ((FrameType == SWITCH_FRAME))
+			{
+				this.refresh_frame_flags = stream.Pick("refresh_frame_flags", _original != null ? _original.refresh_frame_flags : this.refresh_frame_flags, _edited != null ? _edited.refresh_frame_flags : _original != null ? _original.refresh_frame_flags : this.refresh_frame_flags);
+				stream.WriteVariable(NumRefFrames, this.refresh_frame_flags, "refresh_frame_flags"); 
+			}
+			else if ((((enable_short_refresh_frame_flags != 0) && (FrameType != SWITCH_FRAME)) && (FrameType != KEY_FRAME)))
+			{
+				this.has_refresh_frame_flags = stream.Pick("has_refresh_frame_flags", _original != null ? _original.has_refresh_frame_flags : this.has_refresh_frame_flags, _edited != null ? _edited.has_refresh_frame_flags : _original != null ? _original.has_refresh_frame_flags : this.has_refresh_frame_flags);
+				stream.WriteFixed(1, this.has_refresh_frame_flags, "has_refresh_frame_flags"); 
+
+				if ((has_refresh_frame_flags != 0))
+				{
+					n = CeilLog2(NumRefFrames);
+					this.frame_to_refresh = stream.Pick("frame_to_refresh", _original != null ? _original.frame_to_refresh : this.frame_to_refresh, _edited != null ? _edited.frame_to_refresh : _original != null ? _original.frame_to_refresh : this.frame_to_refresh);
+					stream.WriteVariable(n, this.frame_to_refresh, "frame_to_refresh"); 
+					refresh_frame_flags = (1 << frame_to_refresh);
+				}
+				else 
+				{
+					refresh_frame_flags = 0;
+				}
+			}
+			else 
+			{
+				this.refresh_frame_flags = stream.Pick("refresh_frame_flags", _original != null ? _original.refresh_frame_flags : this.refresh_frame_flags, _edited != null ? _edited.refresh_frame_flags : _original != null ? _original.refresh_frame_flags : this.refresh_frame_flags);
+				stream.WriteVariable(NumRefFrames, this.refresh_frame_flags, "refresh_frame_flags"); 
+			}
+			AllowedFrames = -1;
+
+			if ((((IsRegular != 0) && (OlkEncountered != 0)) && !(FirstPictureInTU != 0)))
+			{
+				AllowedFrames = 0;
+
+				for (i = 0; (i < MAX_NUM_MLAYERS); i++)
+				{
+					AllowedFrames |= OlkRefresh[i];
+				}
+				OlkRefresh[obu_mlayer_id] |= refresh_frame_flags;
+
+				if (((immediate_output_frame != 0) || (implicit_output_frame != 0)))
+				{
+					OlkTUOrderHint = OrderHint;
+				}
+			}
+
+			if ((FrameIsIntra != 0))
+			{
+				WriteFrameSize(); 
+				WriteScreenContentParams(); 
+				WriteIntrabcParams(); 
+				NumTotalRefs = 0;
+				TipFrameMode = TIP_FRAME_DISABLED;
+			}
+			else 
+			{
+
+				if (((FrameType == SWITCH_FRAME) || (IsBridge != 0)))
+				{
+					explicitRefFrameMap = 1;
+				}
+				else if ((explicit_ref_frame_map != 0))
+				{
+					this.frame_explicit_ref_frame_map = stream.Pick("frame_explicit_ref_frame_map", _original != null ? _original.frame_explicit_ref_frame_map : this.frame_explicit_ref_frame_map, _edited != null ? _edited.frame_explicit_ref_frame_map : _original != null ? _original.frame_explicit_ref_frame_map : this.frame_explicit_ref_frame_map);
+					stream.WriteFixed(1, this.frame_explicit_ref_frame_map, "frame_explicit_ref_frame_map"); 
+					explicitRefFrameMap = frame_explicit_ref_frame_map;
+				}
+				else 
+				{
+					explicitRefFrameMap = 0;
+				}
+
+				if ((IsBridge != 0))
+				{
+					NumTotalRefs = 1;
+				}
+				else if ((explicitRefFrameMap != 0))
+				{
+					this.num_total_refs = stream.Pick("num_total_refs", _original != null ? _original.NumTotalRefs : this.num_total_refs, _edited != null ? _edited.NumTotalRefs : _original != null ? _original.NumTotalRefs : this.num_total_refs);
+					stream.WriteFixed(3, this.num_total_refs, "num_total_refs"); 
+					NumTotalRefs = num_total_refs;
+				}
+				else 
+				{
+					GetRefFrames(0); 
+				}
+
+				for (i = 0; (i < NumTotalRefs); i++)
+				{
+
+					if ((IsBridge != 0))
+					{
+						ref_frame_idx[i] = bridge_frame_ref_idx;
+					}
+					else if ((explicitRefFrameMap != 0))
+					{
+						n = CeilLog2(NumRefFrames);
+						this.ref_frame_idx[i] = stream.Pick("ref_frame_idx", _original != null ? _original.ref_frame_idx[i] : this.ref_frame_idx[i], _edited != null ? _edited.ref_frame_idx[i] : _original != null ? _original.ref_frame_idx[i] : this.ref_frame_idx[i]);
+						stream.WriteVariable(n, this.ref_frame_idx[i], "ref_frame_idx"); 
+					}
+				}
+
+				if ((IsBridge != 0))
+				{
+					WriteFrameSizeWithBridge(); 
+				}
+				else if (((frame_size_override_flag != 0) && (FrameType != SWITCH_FRAME)))
+				{
+					WriteFrameSizeWithRefs(); 
+				}
+				else 
+				{
+					WriteFrameSize(); 
+				}
+
+				if (!(explicitRefFrameMap != 0))
+				{
+					GetRefFrames(1); 
+				}
+				NumSameRefCompound = Min(num_same_ref_compound, NumTotalRefs);
+
+				if (((((enable_bru != 0) && (FrameType == INTER_FRAME)) && !(IsTipFrame() != 0)) && !(IsBridge != 0)))
+				{
+					this.use_bru = stream.Pick("use_bru", _original != null ? _original.use_bru : this.use_bru, _edited != null ? _edited.use_bru : _original != null ? _original.use_bru : this.use_bru);
+					stream.WriteFixed(1, this.use_bru, "use_bru"); 
+
+					if ((use_bru != 0))
+					{
+						n = CeilLog2(NumTotalRefs);
+						this.bru_ref = stream.Pick("bru_ref", _original != null ? _original.bru_ref : this.bru_ref, _edited != null ? _edited.bru_ref : _original != null ? _original.bru_ref : this.bru_ref);
+						stream.WriteVariable(n, this.bru_ref, "bru_ref"); 
+						this.bru_inactive = stream.Pick("bru_inactive", _original != null ? _original.bru_inactive : this.bru_inactive, _edited != null ? _edited.bru_inactive : _original != null ? _original.bru_inactive : this.bru_inactive);
+						stream.WriteFixed(1, this.bru_inactive, "bru_inactive"); 
+					}
+				}
+
+				if ((explicitRefFrameMap != 0))
+				{
+
+					for (i = 0; (i < NumTotalRefs); i++)
+					{
+						ScoresDistance[i] = GetRelativeDist(OrderHint, RefOrderHint[ref_frame_idx[i]]);
+					}
+				}
+				GetPastFutureCurRefLists(); 
+
+				if (((((FrameType == SWITCH_FRAME) || !(enable_ref_frame_mvs != 0)) || (IsBridge != 0)) || (bru_inactive != 0)))
+				{
+					use_ref_frame_mvs = 0;
+				}
+				else 
+				{
+					this.use_ref_frame_mvs = stream.Pick("use_ref_frame_mvs", _original != null ? _original.use_ref_frame_mvs : this.use_ref_frame_mvs, _edited != null ? _edited.use_ref_frame_mvs : _original != null ? _original.use_ref_frame_mvs : this.use_ref_frame_mvs);
+					stream.WriteFixed(1, this.use_ref_frame_mvs, "use_ref_frame_mvs"); 
+				}
+
+				if ((((use_ref_frame_mvs != 0) && (NumTotalRefs > 1)) && (SbSize != BLOCK_64X64)))
+				{
+					this.tmvp_sample_step_minus_1 = stream.Pick("tmvp_sample_step_minus_1", _original != null ? _original.tmvp_sample_step_minus_1 : this.tmvp_sample_step_minus_1, _edited != null ? _edited.tmvp_sample_step_minus_1 : _original != null ? _original.tmvp_sample_step_minus_1 : this.tmvp_sample_step_minus_1);
+					stream.WriteFixed(1, this.tmvp_sample_step_minus_1, "tmvp_sample_step_minus_1"); 
+					ProjStep = (tmvp_sample_step_minus_1 + 1);
+				}
+				else 
+				{
+					ProjStep = 1;
+				}
+
+				for (i = 0; (i < NumTotalRefs); i++)
+				{
+					FrameDistance[i] = GetRelativeDist(OrderHint, RefOrderHint[ref_frame_idx[i]]);
+
+					if ((RefOrderHint[ref_frame_idx[i]] == RESTRICTED_OH))
+					{
+						FrameDistance[i] = -FrameDistance[i];
+					}
+				}
+
+				for (i = 0; (i < NumTotalRefs); i++)
+				{
+					refFrame = i;
+					hint = RefOrderHint[ref_frame_idx[i]];
+					OrderHints[refFrame] = hint;
+				}
+
+				if ((((enable_tip != 0) && ((use_ref_frame_mvs != 0) && (NumTotalRefs >= 2))) && !(bru_inactive != 0)))
+				{
+					TipInterpFilter = EIGHTTAP_SHARP;
+					TipGlobalMv[0] = 0;
+					TipGlobalMv[1] = 0;
+
+					if (((EnableTipOutput != 0) && (IsTipFrame() != 0)))
+					{
+						TipFrameMode = TIP_FRAME_AS_OUTPUT;
+					}
+					else 
+					{
+						this.tip_frame_mode = stream.Pick("tip_frame_mode", _original != null ? _original.TipFrameMode : this.tip_frame_mode, _edited != null ? _edited.TipFrameMode : _original != null ? _original.TipFrameMode : this.tip_frame_mode);
+						stream.WriteFixed(1, this.tip_frame_mode, "tip_frame_mode"); 
+						TipFrameMode = tip_frame_mode;
+					}
+					WriteFrameOpflRefineType(); 
+
+					if (((TipFrameMode != TIP_FRAME_DISABLED) && (enable_tip_hole_fill != 0)))
+					{
+						this.allow_tip_hole_fill = stream.Pick("allow_tip_hole_fill", _original != null ? _original.allow_tip_hole_fill : this.allow_tip_hole_fill, _edited != null ? _edited.allow_tip_hole_fill : _original != null ? _original.allow_tip_hole_fill : this.allow_tip_hole_fill);
+						stream.WriteFixed(1, this.allow_tip_hole_fill, "allow_tip_hole_fill"); 
+					}
+					else 
+					{
+						allow_tip_hole_fill = 0;
+					}
+					usesEqualWeight = (((((enable_tip_refinemv != 0) && (NumFutureRefs > 0)) && (NumPastRefs > 0)) && ((opfl_refine_type != REFINE_NONE) || (enable_refinemv != 0))) ? 1 : 0);
+
+					if (((TipFrameMode == TIP_FRAME_DISABLED) || (usesEqualWeight != 0)))
+					{
+						tip_global_wtd_index = 0;
+					}
+					else 
+					{
+						this.tip_global_wtd_index = stream.Pick("tip_global_wtd_index", _original != null ? _original.tip_global_wtd_index : this.tip_global_wtd_index, _edited != null ? _edited.tip_global_wtd_index : _original != null ? _original.tip_global_wtd_index : this.tip_global_wtd_index);
+						stream.WriteFixed(3, this.tip_global_wtd_index, "tip_global_wtd_index"); 
+					}
+
+					if ((TipFrameMode == TIP_FRAME_AS_OUTPUT))
+					{
+						this.tip_mv_zero = stream.Pick("tip_mv_zero", _original != null ? _original.tip_mv_zero : this.tip_mv_zero, _edited != null ? _edited.tip_mv_zero : _original != null ? _original.tip_mv_zero : this.tip_mv_zero);
+						stream.WriteFixed(1, this.tip_mv_zero, "tip_mv_zero"); 
+
+						if (!(tip_mv_zero != 0))
+						{
+							this.tip_mv_row = stream.Pick("tip_mv_row", _original != null ? _original.tip_mv_row : this.tip_mv_row, _edited != null ? _edited.tip_mv_row : _original != null ? _original.tip_mv_row : this.tip_mv_row);
+							stream.WriteFixed(4, this.tip_mv_row, "tip_mv_row"); 
+							this.tip_mv_col = stream.Pick("tip_mv_col", _original != null ? _original.tip_mv_col : this.tip_mv_col, _edited != null ? _edited.tip_mv_col : _original != null ? _original.tip_mv_col : this.tip_mv_col);
+							stream.WriteFixed(4, this.tip_mv_col, "tip_mv_col"); 
+
+							if ((tip_mv_row != 0))
+							{
+								this.tip_mv_row_sign = stream.Pick("tip_mv_row_sign", _original != null ? _original.tip_mv_row_sign : this.tip_mv_row_sign, _edited != null ? _edited.tip_mv_row_sign : _original != null ? _original.tip_mv_row_sign : this.tip_mv_row_sign);
+								stream.WriteFixed(1, this.tip_mv_row_sign, "tip_mv_row_sign"); 
+								TipGlobalMv[0] = ((tip_mv_row_sign != 0) ? -tip_mv_row : tip_mv_row);
+							}
+
+							if ((tip_mv_col != 0))
+							{
+								this.tip_mv_col_sign = stream.Pick("tip_mv_col_sign", _original != null ? _original.tip_mv_col_sign : this.tip_mv_col_sign, _edited != null ? _edited.tip_mv_col_sign : _original != null ? _original.tip_mv_col_sign : this.tip_mv_col_sign);
+								stream.WriteFixed(1, this.tip_mv_col_sign, "tip_mv_col_sign"); 
+								TipGlobalMv[1] = ((tip_mv_col_sign != 0) ? -tip_mv_col : tip_mv_col);
+							}
+						}
+						this.tip_sharp = stream.Pick("tip_sharp", _original != null ? _original.tip_sharp : this.tip_sharp, _edited != null ? _edited.tip_sharp : _original != null ? _original.tip_sharp : this.tip_sharp);
+						stream.WriteFixed(1, this.tip_sharp, "tip_sharp"); 
+
+						if ((tip_sharp != 0))
+						{
+							TipInterpFilter = EIGHTTAP_SHARP;
+						}
+						else 
+						{
+							this.tip_regular = stream.Pick("tip_regular", _original != null ? _original.tip_regular : this.tip_regular, _edited != null ? _edited.tip_regular : _original != null ? _original.tip_regular : this.tip_regular);
+							stream.WriteFixed(1, this.tip_regular, "tip_regular"); 
+							TipInterpFilter = ((tip_regular != 0) ? EIGHTTAP : EIGHTTAP_SMOOTH);
+						}
+					}
+				}
+				else 
+				{
+					TipFrameMode = TIP_FRAME_DISABLED;
+
+					if ((!(bru_inactive != 0) && !(IsBridge != 0)))
+					{
+						WriteFrameOpflRefineType(); 
+					}
+				}
+
+				if ((((TipFrameMode != TIP_FRAME_AS_OUTPUT) && !(bru_inactive != 0)) && !(IsBridge != 0)))
+				{
+					WriteScreenContentParams(); 
+					WriteIntrabcParams(); 
+					max_drl_bits_minus_1 = seq_max_drl_bits_minus_1;
+
+					if ((allow_frame_max_drl_bits != 0))
+					{
+						this.change_drl = stream.Pick("change_drl", _original != null ? _original.change_drl : this.change_drl, _edited != null ? _edited.change_drl : _original != null ? _original.change_drl : this.change_drl);
+						stream.WriteFixed(1, this.change_drl, "change_drl"); 
+
+						if ((change_drl != 0))
+						{
+							n = (MAX_REF_MV_STACK_SIZE - 2);
+							this.max_drl_bits_minus_1 = stream.Pick("max_drl_bits_minus_1", _original != null ? _original.max_drl_bits_minus_1 : this.max_drl_bits_minus_1, _edited != null ? _edited.max_drl_bits_minus_1 : _original != null ? _original.max_drl_bits_minus_1 : this.max_drl_bits_minus_1);
+							stream.Write_ns(n, this.max_drl_bits_minus_1, "max_drl_bits_minus_1"); 
+
+							if ((max_drl_bits_minus_1 >= seq_max_drl_bits_minus_1))
+							{
+								max_drl_bits_minus_1 += 1;
+							}
+						}
+					}
+
+					if ((force_integer_mv != 0))
+					{
+						FrameMvPrecision = MV_PRECISION_ONE_PEL;
+						UsePerBlockMvPrecision = 0;
+					}
+					else 
+					{
+						this.use_qtr_precision_mv = stream.Pick("use_qtr_precision_mv", _original != null ? _original.use_qtr_precision_mv : this.use_qtr_precision_mv, _edited != null ? _edited.use_qtr_precision_mv : _original != null ? _original.use_qtr_precision_mv : this.use_qtr_precision_mv);
+						stream.WriteFixed(1, this.use_qtr_precision_mv, "use_qtr_precision_mv"); 
+
+						if ((use_qtr_precision_mv != 0))
+						{
+							FrameMvPrecision = MV_PRECISION_QUARTER_PEL;
+						}
+						else 
+						{
+							this.allow_high_precision_mv = stream.Pick("allow_high_precision_mv", _original != null ? _original.allow_high_precision_mv : this.allow_high_precision_mv, _edited != null ? _edited.allow_high_precision_mv : _original != null ? _original.allow_high_precision_mv : this.allow_high_precision_mv);
+							stream.WriteFixed(1, this.allow_high_precision_mv, "allow_high_precision_mv"); 
+							FrameMvPrecision = ((allow_high_precision_mv != 0) ? MV_PRECISION_EIGHTH_PEL : MV_PRECISION_HALF_PEL);
+						}
+						UsePerBlockMvPrecision = enable_flex_mvres;
+					}
+					MvPrecision = FrameMvPrecision;
+					WriteReadInterpolationFilter(); 
+
+					for (mode = INTERINTRA; (mode < MOTION_MODES); mode++)
+					{
+
+						if (!(seq_frame_motion_modes_present_flag != 0))
+						{
+							frame_enabled_motion_modes[mode] = seq_enabled_motion_modes[mode];
+						}
+						else if ((seq_enabled_motion_modes[mode] != 0))
+						{
+							this.frame_enabled_motion_modes[mode] = stream.Pick("frame_enabled_motion_modes", _original != null ? _original.frame_enabled_motion_modes[mode] : this.frame_enabled_motion_modes[mode], _edited != null ? _edited.frame_enabled_motion_modes[mode] : _original != null ? _original.frame_enabled_motion_modes[mode] : this.frame_enabled_motion_modes[mode]);
+							stream.WriteFixed(1, this.frame_enabled_motion_modes[mode], "frame_enabled_motion_modes"); 
+						}
+						else 
+						{
+							frame_enabled_motion_modes[mode] = 0;
+						}
+					}
+				}
+			}
+
+			if ((TipFrameMode == TIP_FRAME_AS_OUTPUT))
+			{
+
+				if ((enable_tip_explicit_qp != 0))
+				{
+					WriteQuantizationParams(); 
+				}
+
+				if ((enable_df_sub_pu != 0))
+				{
+					this.allow_df_sub_pu = stream.Pick("allow_df_sub_pu", _original != null ? _original.allow_df_sub_pu : this.allow_df_sub_pu, _edited != null ? _edited.allow_df_sub_pu : _original != null ? _original.allow_df_sub_pu : this.allow_df_sub_pu);
+					stream.WriteFixed(1, this.allow_df_sub_pu, "allow_df_sub_pu"); 
+				}
+
+				if ((allow_df_sub_pu != 0))
+				{
+					this.apply_deblocking_filter_tip = stream.Pick("apply_deblocking_filter_tip", _original != null ? _original.apply_deblocking_filter_tip : this.apply_deblocking_filter_tip, _edited != null ? _edited.apply_deblocking_filter_tip : _original != null ? _original.apply_deblocking_filter_tip : this.apply_deblocking_filter_tip);
+					stream.WriteFixed(1, this.apply_deblocking_filter_tip, "apply_deblocking_filter_tip"); 
+				}
+				else 
+				{
+					apply_deblocking_filter_tip = 0;
+				}
+			}
+
+			if ((((TipFrameMode == TIP_FRAME_AS_OUTPUT) || (bru_inactive != 0)) || (IsBridge != 0)))
+			{
+
+				for (i = 0; (i < 3); i++)
+				{
+					frame_filters_on[i] = 0;
+				}
+
+				if (((bru_inactive != 0) || (IsBridge != 0)))
+				{
+
+					if ((IsBridge != 0))
+					{
+						WriteTileInfo(); 
+						refIdx = bridge_frame_ref_idx;
+					}
+					else 
+					{
+						refIdx = ref_frame_idx[bru_ref];
+					}
+					base_q_idx = RefBaseQIdx[refIdx];
+					DeltaQUAc = RefDeltaQUAc[refIdx];
+					DeltaQVAc = RefDeltaQVAc[refIdx];
+					SetPrimaryRefFrameAndCtx(0); 
+				}
+				else if ((apply_deblocking_filter_tip != 0))
+				{
+					WriteTileInfo(); 
+				}
+				WriteFilmGrainConfig(); 
+
+				if (((bru_inactive != 0) || (IsBridge != 0)))
+				{
+					SetPrimaryRefFrameAndCtx(1); 
+				}
+
+				for (row = 0; (row < MiRows); row++)
+				{
+
+					for (col = 0; (col < MiCols); col++)
+					{
+						SegmentIds[row][col] = 0;
+					}
+				}
+
+				for (refc = 0; (refc < REFS_PER_FRAME); refc++)
+				{
+
+					for (i = 0; (i < 6); i++)
+					{
+						gm_params[refc][i] = Default_Warp_Params[i];
+					}
+				}
+			}
+			else 
+			{
+				this.disable_cdf_update = stream.Pick("disable_cdf_update", _original != null ? _original.disable_cdf_update : this.disable_cdf_update, _edited != null ? _edited.disable_cdf_update : _original != null ? _original.disable_cdf_update : this.disable_cdf_update);
+				stream.WriteFixed(1, this.disable_cdf_update, "disable_cdf_update"); 
+			}
+
+			if (((bru_inactive != 0) || (IsBridge != 0)))
+			{
+				apply_deblocking_filter[0] = 0;
+				apply_deblocking_filter[1] = 0;
+				cdef_frame_enable = 0;
+
+				for (plane = 0; (plane < NumPlanes); plane++)
+				{
+					ccso_planes[plane] = 0;
+				}
+				FrameRestorationType[0] = RESTORE_NONE;
+				FrameRestorationType[1] = RESTORE_NONE;
+				FrameRestorationType[2] = RESTORE_NONE;
+				gdf_frame_enable = 0;
+				segmentation_enabled = 0;
+
+				for (i = 0; (i < MAX_SEGMENTS); i++)
+				{
+
+					for (j = 0; (j < SEG_LVL_MAX); j++)
+					{
+						FeatureEnabled[i][j] = 0;
+						FeatureData[i][j] = 0;
+					}
+				}
+
+				if (((primary_ref_frame == PRIMARY_REF_NONE) || (disable_cross_frame_cdf_init != 0)))
+				{
+					init_coeff_cdfs(); 
+				}
+				return;
+			}
+
+			if ((use_ref_frame_mvs == 1))
+			{
+				HasBothRefs = (((ClosestFuture != NONE) && (ClosestPast != NONE)) ? 1 : 0);
+				MotionFieldEstimation(); 
+
+				if ((TipFrameMode == TIP_FRAME_AS_OUTPUT))
+				{
+
+					if (!(enable_tip_explicit_qp != 0))
+					{
+						slot0 = ref_frame_idx[ClosestPast];
+						slot1 = ref_frame_idx[ClosestFuture];
+						base_q_idx = Round2((RefBaseQIdx[slot0] + RefBaseQIdx[slot1]), 1);
+						DeltaQUAc = Round2((RefDeltaQUAc[slot0] + RefDeltaQUAc[slot1]), 1);
+						DeltaQVAc = Round2((RefDeltaQVAc[slot0] + RefDeltaQVAc[slot1]), 1);
+					}
+					SetPrimaryRefFrameAndCtx(1); 
+
+					for (i = 0; (i < MAX_SEGMENTS); i++)
+					{
+
+						for (j = 0; (j < SEG_LVL_MAX); j++)
+						{
+							FeatureData[i][j] = 0;
+							FeatureEnabled[i][j] = 0;
+						}
+					}
+
+					for (row = 0; (row < MiRows); row++)
+					{
+
+						for (col = 0; (col < MiCols); col++)
+						{
+							PrevSegmentIds[row][col] = 0;
+						}
+					}
+
+					for (plane = 0; (plane < 3); plane++)
+					{
+						ccso_planes[plane] = 0;
+					}
+
+					if (((primary_ref_frame == PRIMARY_REF_NONE) || (disable_cross_frame_cdf_init != 0)))
+					{
+						init_coeff_cdfs(); 
+					}
+				}
+
+				if ((TipFrameMode == TIP_FRAME_DISABLED))
+				{
+					fill_tpl_mvs_sample_gap(); 
+				}
+			}
+
+			if ((TipFrameMode != TIP_FRAME_DISABLED))
+			{
+				setup_tip_motion_field(); 
+			}
+
+			if ((TipFrameMode == TIP_FRAME_AS_OUTPUT))
+			{
+				return;
+			}
+			WriteTileInfo(); 
+			WriteQuantizationParams(); 
+			SetPrimaryRefFrameAndCtx(1); 
+			WriteSegmentationParams(); 
+			WriteSetupQmParams(); 
+			WriteDeltaqParams(); 
+
+			if (((primary_ref_frame == PRIMARY_REF_NONE) || (disable_cross_frame_cdf_init != 0)))
+			{
+				init_coeff_cdfs(); 
+			}
+
+			if ((DerivedPrimaryRefFrame != PRIMARY_REF_NONE))
+			{
+				load_previous_segment_ids(); 
+			}
+			CodedLossless = 1;
+			HasLosslessSegment = 0;
+
+			for (segmentId = 0; (segmentId < MaxSegments); segmentId++)
+			{
+				qindex = get_qindex(1, segmentId);
+				LosslessArray[segmentId] = ((((((((qindex == 0) && (delta_q_present == 0)) && ((DeltaQYDc + BaseYDcDeltaQ) <= 0)) && ((DeltaQUDc + BaseUVDcDeltaQ) <= 0)) && ((DeltaQVDc + BaseUVDcDeltaQ) <= 0)) && ((DeltaQUAc + BaseUVAcDeltaQ) <= 0)) && ((DeltaQVAc + BaseUVAcDeltaQ) <= 0)) ? 1 : 0);
+
+				if ((LosslessArray[segmentId] != 0))
+				{
+					HasLosslessSegment = 1;
+				}
+				else 
+				{
+					CodedLossless = 0;
+				}
+
+				if ((using_qmatrix != 0))
+				{
+
+					if ((LosslessArray[segmentId] != 0))
+					{
+						SegQMLevel[0][segmentId] = 15;
+						SegQMLevel[1][segmentId] = 15;
+						SegQMLevel[2][segmentId] = 15;
+					}
+					else 
+					{
+						qmNum = (pic_qm_num_minus_1 + 1);
+						qmIndexBits = CeilLog2(qmNum);
+						this.qm_index = stream.Pick("qm_index", _original != null ? _original.qm_index : this.qm_index, _edited != null ? _edited.qm_index : _original != null ? _original.qm_index : this.qm_index);
+						stream.WriteVariable(qmIndexBits, this.qm_index, "qm_index"); 
+						SegQMLevel[0][segmentId] = qm_y[qm_index];
+						SegQMLevel[1][segmentId] = qm_u[qm_index];
+						SegQMLevel[2][segmentId] = qm_v[qm_index];
+					}
+				}
+			}
+
+			if ((CodedLossless != 0))
+			{
+				allow_tcq = 0;
+			}
+			else if ((choose_tcq_per_frame != 0))
+			{
+				this.allow_tcq = stream.Pick("allow_tcq", _original != null ? _original.allow_tcq : this.allow_tcq, _edited != null ? _edited.allow_tcq : _original != null ? _original.allow_tcq : this.allow_tcq);
+				stream.WriteFixed(1, this.allow_tcq, "allow_tcq"); 
+			}
+			else 
+			{
+				allow_tcq = enable_tcq;
+			}
+
+			if ((((CodedLossless != 0) || !(enable_parity_hiding != 0)) || (allow_tcq != 0)))
+			{
+				allow_parity_hiding = 0;
+			}
+			else 
+			{
+				this.allow_parity_hiding = stream.Pick("allow_parity_hiding", _original != null ? _original.allow_parity_hiding : this.allow_parity_hiding, _edited != null ? _edited.allow_parity_hiding : _original != null ? _original.allow_parity_hiding : this.allow_parity_hiding);
+				stream.WriteFixed(1, this.allow_parity_hiding, "allow_parity_hiding"); 
+			}
+			WriteDeblockingFilterParams(); 
+			WriteGdfParams(); 
+			WriteCdefParams(); 
+			WriteLrParams(); 
+			WriteCcsoParams(); 
+			WriteReadTxMode(); 
+			WriteFrameReferenceMode(); 
+			WriteSkipModeParams(); 
+
+			if ((!(FrameIsIntra != 0) && (enable_bawp != 0)))
+			{
+				this.allow_bawp = stream.Pick("allow_bawp", _original != null ? _original.allow_bawp : this.allow_bawp, _edited != null ? _edited.allow_bawp : _original != null ? _original.allow_bawp : this.allow_bawp);
+				stream.WriteFixed(1, this.allow_bawp, "allow_bawp"); 
+			}
+			else 
+			{
+				allow_bawp = 0;
+			}
+
+			if ((!(FrameIsIntra != 0) && (frame_enabled_motion_modes[DELTAWARP] != 0)))
+			{
+				this.allow_warpmv_mode = stream.Pick("allow_warpmv_mode", _original != null ? _original.allow_warpmv_mode : this.allow_warpmv_mode, _edited != null ? _edited.allow_warpmv_mode : _original != null ? _original.allow_warpmv_mode : this.allow_warpmv_mode);
+				stream.WriteFixed(1, this.allow_warpmv_mode, "allow_warpmv_mode"); 
+			}
+			else 
+			{
+				allow_warpmv_mode = 0;
+			}
+			this.reduced_tx_set = stream.Pick("reduced_tx_set", _original != null ? _original.reduced_tx_set : this.reduced_tx_set, _edited != null ? _edited.reduced_tx_set : _original != null ? _original.reduced_tx_set : this.reduced_tx_set);
+			stream.WriteFixed(2, this.reduced_tx_set, "reduced_tx_set"); 
+			WriteGlobalMotionParams(); 
+			WriteFilmGrainConfig(); 
+        }
+
     /*
 frame_opfl_refine_type() {
 if ( TipFrameMode == TIP_FRAME_AS_OUTPUT ) {	
@@ -6982,6 +10849,31 @@ opfl_refine_type = enable_opfl_refine
 				if ((opfl_refine_type != REFINE_SWITCHABLE))
 				{
 					stream.ReadFixed(1, out this.opfl_refine_all, "opfl_refine_all"); 
+					opfl_refine_type = ((opfl_refine_all != 0) ? REFINE_ALL : REFINE_NONE);
+				}
+			}
+			else 
+			{
+				opfl_refine_type = enable_opfl_refine;
+			}
+        }
+
+        private void WriteFrameOpflRefineType()
+        {
+
+			if ((TipFrameMode == TIP_FRAME_AS_OUTPUT))
+			{
+				opfl_refine_type = ((!(enable_tip_refinemv != 0) || (enable_opfl_refine == REFINE_NONE)) ? REFINE_NONE : REFINE_ALL);
+			}
+			else if ((enable_opfl_refine == REFINE_AUTO))
+			{
+				this.opfl_refine_type = stream.Pick("opfl_refine_type", _original != null ? _original.opfl_refine_type : this.opfl_refine_type, _edited != null ? _edited.opfl_refine_type : _original != null ? _original.opfl_refine_type : this.opfl_refine_type);
+				stream.WriteFixed(1, this.opfl_refine_type, "opfl_refine_type"); 
+
+				if ((opfl_refine_type != REFINE_SWITCHABLE))
+				{
+					this.opfl_refine_all = stream.Pick("opfl_refine_all", _original != null ? _original.opfl_refine_all : this.opfl_refine_all, _edited != null ? _edited.opfl_refine_all : _original != null ? _original.opfl_refine_all : this.opfl_refine_all);
+					stream.WriteFixed(1, this.opfl_refine_all, "opfl_refine_all"); 
 					opfl_refine_type = ((opfl_refine_all != 0) ? REFINE_ALL : REFINE_NONE);
 				}
 			}
@@ -7032,6 +10924,38 @@ force_integer_mv = 0
 				if ((seq_force_integer_mv == SELECT_INTEGER_MV))
 				{
 					stream.ReadFixed(1, out this.force_integer_mv, "force_integer_mv"); 
+				}
+				else 
+				{
+					force_integer_mv = seq_force_integer_mv;
+				}
+			}
+			else 
+			{
+				force_integer_mv = 0;
+			}
+        }
+
+        private void WriteScreenContentParams()
+        {
+
+			if ((seq_force_screen_content_tools == SELECT_SCREEN_CONTENT_TOOLS))
+			{
+				this.allow_screen_content_tools = stream.Pick("allow_screen_content_tools", _original != null ? _original.allow_screen_content_tools : this.allow_screen_content_tools, _edited != null ? _edited.allow_screen_content_tools : _original != null ? _original.allow_screen_content_tools : this.allow_screen_content_tools);
+				stream.WriteFixed(1, this.allow_screen_content_tools, "allow_screen_content_tools"); 
+			}
+			else 
+			{
+				allow_screen_content_tools = seq_force_screen_content_tools;
+			}
+
+			if ((allow_screen_content_tools != 0))
+			{
+
+				if ((seq_force_integer_mv == SELECT_INTEGER_MV))
+				{
+					this.force_integer_mv = stream.Pick("force_integer_mv", _original != null ? _original.force_integer_mv : this.force_integer_mv, _edited != null ? _edited.force_integer_mv : _original != null ? _original.force_integer_mv : this.force_integer_mv);
+					stream.WriteFixed(1, this.force_integer_mv, "force_integer_mv"); 
 				}
 				else 
 				{
@@ -7122,6 +11046,55 @@ max_bvp_drl_bits_minus_1 += 1
 			}
         }
 
+        private void WriteIntrabcParams()
+        {
+			this.allow_intrabc = stream.Pick("allow_intrabc", _original != null ? _original.allow_intrabc : this.allow_intrabc, _edited != null ? _edited.allow_intrabc : _original != null ? _original.allow_intrabc : this.allow_intrabc);
+			stream.WriteFixed(1, this.allow_intrabc, "allow_intrabc"); 
+
+			if ((allow_intrabc != 0))
+			{
+
+				if ((FrameIsIntra != 0))
+				{
+					this.allow_global_intrabc = stream.Pick("allow_global_intrabc", _original != null ? _original.allow_global_intrabc : this.allow_global_intrabc, _edited != null ? _edited.allow_global_intrabc : _original != null ? _original.allow_global_intrabc : this.allow_global_intrabc);
+					stream.WriteFixed(1, this.allow_global_intrabc, "allow_global_intrabc"); 
+
+					if ((allow_global_intrabc != 0))
+					{
+						this.allow_local_intrabc = stream.Pick("allow_local_intrabc", _original != null ? _original.allow_local_intrabc : this.allow_local_intrabc, _edited != null ? _edited.allow_local_intrabc : _original != null ? _original.allow_local_intrabc : this.allow_local_intrabc);
+						stream.WriteFixed(1, this.allow_local_intrabc, "allow_local_intrabc"); 
+					}
+					else 
+					{
+						allow_local_intrabc = 1;
+					}
+				}
+				else 
+				{
+					allow_global_intrabc = 0;
+					allow_local_intrabc = 1;
+				}
+				max_bvp_drl_bits_minus_1 = seq_max_bvp_drl_bits_minus_1;
+
+				if ((allow_frame_max_bvp_drl_bits != 0))
+				{
+					this.change_bvp_drl = stream.Pick("change_bvp_drl", _original != null ? _original.change_bvp_drl : this.change_bvp_drl, _edited != null ? _edited.change_bvp_drl : _original != null ? _original.change_bvp_drl : this.change_bvp_drl);
+					stream.WriteFixed(1, this.change_bvp_drl, "change_bvp_drl"); 
+
+					if ((change_bvp_drl != 0))
+					{
+						this.max_bvp_drl_bits_minus_1 = stream.Pick("max_bvp_drl_bits_minus_1", _original != null ? _original.max_bvp_drl_bits_minus_1 : this.max_bvp_drl_bits_minus_1, _edited != null ? _edited.max_bvp_drl_bits_minus_1 : _original != null ? _original.max_bvp_drl_bits_minus_1 : this.max_bvp_drl_bits_minus_1);
+						stream.Write_ns(2, this.max_bvp_drl_bits_minus_1, "max_bvp_drl_bits_minus_1"); 
+
+						if ((max_bvp_drl_bits_minus_1 >= seq_max_bvp_drl_bits_minus_1))
+						{
+							max_bvp_drl_bits_minus_1 += 1;
+						}
+					}
+				}
+			}
+        }
+
     /*
 frame_size() {
 if ( frame_size_override_flag ) {	
@@ -7168,6 +11141,29 @@ compute_image_size()
 			ComputeImageSize(); 
         }
 
+        private void WriteFrameSize()
+        {
+			int n = 0;
+
+			if ((frame_size_override_flag != 0))
+			{
+				n = (frame_width_bits_minus_1 + 1);
+				this.frame_width_minus_1 = stream.Pick("frame_width_minus_1", _original != null ? _original.frame_width_minus_1 : this.frame_width_minus_1, _edited != null ? _edited.frame_width_minus_1 : _original != null ? _original.frame_width_minus_1 : this.frame_width_minus_1);
+				stream.WriteVariable(n, this.frame_width_minus_1, "frame_width_minus_1"); 
+				n = (frame_height_bits_minus_1 + 1);
+				this.frame_height_minus_1 = stream.Pick("frame_height_minus_1", _original != null ? _original.frame_height_minus_1 : this.frame_height_minus_1, _edited != null ? _edited.frame_height_minus_1 : _original != null ? _original.frame_height_minus_1 : this.frame_height_minus_1);
+				stream.WriteVariable(n, this.frame_height_minus_1, "frame_height_minus_1"); 
+				FrameWidth = (frame_width_minus_1 + 1);
+				FrameHeight = (frame_height_minus_1 + 1);
+			}
+			else 
+			{
+				FrameWidth = (mfh_frame_width_minus_1[cur_mfh_id] + 1);
+				FrameHeight = (mfh_frame_height_minus_1[cur_mfh_id] + 1);
+			}
+			ComputeImageSize(); 
+        }
+
     /*
 frame_size_with_bridge() {
 n = frame_width_bits_minus_1 + 1	
@@ -7193,6 +11189,20 @@ compute_image_size()
 			stream.ReadVariable(n, out this.bridge_frame_width_minus_1, "bridge_frame_width_minus_1"); 
 			n = (frame_height_bits_minus_1 + 1);
 			stream.ReadVariable(n, out this.bridge_frame_height_minus_1, "bridge_frame_height_minus_1"); 
+			FrameWidth = Min(RefFrameWidth[bridge_frame_ref_idx], (bridge_frame_width_minus_1 + 1));
+			FrameHeight = Min(RefFrameHeight[bridge_frame_ref_idx], (bridge_frame_height_minus_1 + 1));
+			ComputeImageSize(); 
+        }
+
+        private void WriteFrameSizeWithBridge()
+        {
+			int n = 0;
+			n = (frame_width_bits_minus_1 + 1);
+			this.bridge_frame_width_minus_1 = stream.Pick("bridge_frame_width_minus_1", _original != null ? _original.bridge_frame_width_minus_1 : this.bridge_frame_width_minus_1, _edited != null ? _edited.bridge_frame_width_minus_1 : _original != null ? _original.bridge_frame_width_minus_1 : this.bridge_frame_width_minus_1);
+			stream.WriteVariable(n, this.bridge_frame_width_minus_1, "bridge_frame_width_minus_1"); 
+			n = (frame_height_bits_minus_1 + 1);
+			this.bridge_frame_height_minus_1 = stream.Pick("bridge_frame_height_minus_1", _original != null ? _original.bridge_frame_height_minus_1 : this.bridge_frame_height_minus_1, _edited != null ? _edited.bridge_frame_height_minus_1 : _original != null ? _original.bridge_frame_height_minus_1 : this.bridge_frame_height_minus_1);
+			stream.WriteVariable(n, this.bridge_frame_height_minus_1, "bridge_frame_height_minus_1"); 
 			FrameWidth = Min(RefFrameWidth[bridge_frame_ref_idx], (bridge_frame_width_minus_1 + 1));
 			FrameHeight = Min(RefFrameHeight[bridge_frame_ref_idx], (bridge_frame_height_minus_1 + 1));
 			ComputeImageSize(); 
@@ -7244,6 +11254,33 @@ compute_image_size()
 			}
         }
 
+        private void WriteFrameSizeWithRefs()
+        {
+			int i = 0;
+
+			for (i = 0; (i < NumTotalRefs); i++)
+			{
+				this.found_ref = stream.Pick("found_ref", _original != null ? (_original.FrameWidth == RefFrameWidth[ref_frame_idx[i]] && _original.FrameHeight == RefFrameHeight[ref_frame_idx[i]] ? 1 : 0) : this.found_ref, _edited != null ? (_edited.FrameWidth == RefFrameWidth[ref_frame_idx[i]] && _edited.FrameHeight == RefFrameHeight[ref_frame_idx[i]] ? 1 : 0) : _original != null ? (_original.FrameWidth == RefFrameWidth[ref_frame_idx[i]] && _original.FrameHeight == RefFrameHeight[ref_frame_idx[i]] ? 1 : 0) : this.found_ref);
+				stream.WriteFixed(1, this.found_ref, "found_ref"); 
+
+				if ((found_ref == 1))
+				{
+					FrameWidth = RefFrameWidth[ref_frame_idx[i]];
+					FrameHeight = RefFrameHeight[ref_frame_idx[i]];
+					break;
+				}
+			}
+
+			if (((NumTotalRefs == 0) || (found_ref == 0)))
+			{
+				WriteFrameSize(); 
+			}
+			else 
+			{
+				ComputeImageSize(); 
+			}
+        }
+
     /*
 read_interpolation_filter() {
 is_filter_switchable	f(1)
@@ -7270,6 +11307,22 @@ interpolation_filter	f(2)
 			else 
 			{
 				stream.ReadFixed(2, out this.interpolation_filter, "interpolation_filter"); 
+			}
+        }
+
+        private void WriteReadInterpolationFilter()
+        {
+			this.is_filter_switchable = stream.Pick("is_filter_switchable", _original != null ? _original.is_filter_switchable : this.is_filter_switchable, _edited != null ? _edited.is_filter_switchable : _original != null ? _original.is_filter_switchable : this.is_filter_switchable);
+			stream.WriteFixed(1, this.is_filter_switchable, "is_filter_switchable"); 
+
+			if ((is_filter_switchable == 1))
+			{
+				interpolation_filter = SWITCHABLE;
+			}
+			else 
+			{
+				this.interpolation_filter = stream.Pick("interpolation_filter", _original != null ? _original.interpolation_filter : this.interpolation_filter, _edited != null ? _edited.interpolation_filter : _original != null ? _original.interpolation_filter : this.interpolation_filter);
+				stream.WriteFixed(2, this.interpolation_filter, "interpolation_filter"); 
 			}
         }
 
@@ -7412,6 +11465,94 @@ DfDeltaQ[ i ] = 0
 			}
         }
 
+        private void WriteDeblockingFilterParams()
+        {
+			int i = 0;
+			int dfParBits = 0;
+
+			if ((CodedLossless != 0))
+			{
+				apply_deblocking_filter[0] = 0;
+				apply_deblocking_filter[1] = 0;
+				return;
+			}
+
+			if (((enable_df_sub_pu != 0) && (FrameType == INTER_FRAME)))
+			{
+				this.allow_df_sub_pu = stream.Pick("allow_df_sub_pu", _original != null ? _original.allow_df_sub_pu : this.allow_df_sub_pu, _edited != null ? _edited.allow_df_sub_pu : _original != null ? _original.allow_df_sub_pu : this.allow_df_sub_pu);
+				stream.WriteFixed(1, this.allow_df_sub_pu, "allow_df_sub_pu"); 
+			}
+			else 
+			{
+				allow_df_sub_pu = 0;
+			}
+
+			if ((mfh_deblocking_filter_update[cur_mfh_id] != 0))
+			{
+				apply_deblocking_filter[0] = mfh_apply_deblocking_filter[cur_mfh_id][0];
+				apply_deblocking_filter[1] = mfh_apply_deblocking_filter[cur_mfh_id][1];
+				apply_deblocking_filter[2] = 0;
+				apply_deblocking_filter[3] = 0;
+
+				if ((NumPlanes > 1))
+				{
+
+					if (((apply_deblocking_filter[0] != 0) || (apply_deblocking_filter[1] != 0)))
+					{
+						apply_deblocking_filter[2] = mfh_apply_deblocking_filter[cur_mfh_id][2];
+						apply_deblocking_filter[3] = mfh_apply_deblocking_filter[cur_mfh_id][3];
+					}
+				}
+			}
+			else 
+			{
+				this.apply_deblocking_filter[0] = stream.Pick("apply_deblocking_filter", _original != null ? _original.apply_deblocking_filter[0] : this.apply_deblocking_filter[0], _edited != null ? _edited.apply_deblocking_filter[0] : _original != null ? _original.apply_deblocking_filter[0] : this.apply_deblocking_filter[0]);
+				stream.WriteFixed(1, this.apply_deblocking_filter[0], "apply_deblocking_filter"); 
+				this.apply_deblocking_filter[1] = stream.Pick("apply_deblocking_filter", _original != null ? _original.apply_deblocking_filter[1] : this.apply_deblocking_filter[1], _edited != null ? _edited.apply_deblocking_filter[1] : _original != null ? _original.apply_deblocking_filter[1] : this.apply_deblocking_filter[1]);
+				stream.WriteFixed(1, this.apply_deblocking_filter[1], "apply_deblocking_filter"); 
+				apply_deblocking_filter[2] = 0;
+				apply_deblocking_filter[3] = 0;
+
+				if ((NumPlanes > 1))
+				{
+
+					if (((apply_deblocking_filter[0] != 0) || (apply_deblocking_filter[1] != 0)))
+					{
+						this.apply_deblocking_filter[2] = stream.Pick("apply_deblocking_filter", _original != null ? _original.apply_deblocking_filter[2] : this.apply_deblocking_filter[2], _edited != null ? _edited.apply_deblocking_filter[2] : _original != null ? _original.apply_deblocking_filter[2] : this.apply_deblocking_filter[2]);
+						stream.WriteFixed(1, this.apply_deblocking_filter[2], "apply_deblocking_filter"); 
+						this.apply_deblocking_filter[3] = stream.Pick("apply_deblocking_filter", _original != null ? _original.apply_deblocking_filter[3] : this.apply_deblocking_filter[3], _edited != null ? _edited.apply_deblocking_filter[3] : _original != null ? _original.apply_deblocking_filter[3] : this.apply_deblocking_filter[3]);
+						stream.WriteFixed(1, this.apply_deblocking_filter[3], "apply_deblocking_filter"); 
+					}
+				}
+			}
+
+			for (i = 0; (i < 4); i++)
+			{
+
+				if ((apply_deblocking_filter[i] != 0))
+				{
+					this.df_delta_q_present[i] = stream.Pick("df_delta_q_present", _original != null ? _original.df_delta_q_present[i] : this.df_delta_q_present[i], _edited != null ? _edited.df_delta_q_present[i] : _original != null ? _original.df_delta_q_present[i] : this.df_delta_q_present[i]);
+					stream.WriteFixed(1, this.df_delta_q_present[i], "df_delta_q_present"); 
+
+					if ((df_delta_q_present[i] != 0))
+					{
+						dfParBits = (df_par_bits_minus_2 + 2);
+						this.df_delta_q[i] = stream.Pick("df_delta_q", _original != null ? _original.df_delta_q[i] : this.df_delta_q[i], _edited != null ? _edited.df_delta_q[i] : _original != null ? _original.df_delta_q[i] : this.df_delta_q[i]);
+						stream.WriteVariable(dfParBits, this.df_delta_q[i], "df_delta_q"); 
+						DfDeltaQ[i] = (df_delta_q[i] - (1 << (dfParBits - 1)));
+					}
+					else 
+					{
+						DfDeltaQ[i] = ((i == 1) ? DfDeltaQ[0] : 0);
+					}
+				}
+				else 
+				{
+					DfDeltaQ[i] = 0;
+				}
+			}
+        }
+
     /*
 quantization_params() {
 n = BitDepth == 8 ? 8 : 9	
@@ -7538,6 +11679,77 @@ DeltaQVAc = DeltaQUAc
 			}
         }
 
+        private void WriteQuantizationParams()
+        {
+			int n = 0;
+			n = ((BitDepth == 8) ? 8 : 9);
+			this.base_q_idx = stream.Pick("base_q_idx", _original != null ? _original.base_q_idx : this.base_q_idx, _edited != null ? _edited.base_q_idx : _original != null ? _original.base_q_idx : this.base_q_idx);
+			stream.WriteVariable(n, this.base_q_idx, "base_q_idx"); 
+			DeltaQYDc = 0;
+			DeltaQUDc = 0;
+			DeltaQUAc = 0;
+			DeltaQVDc = 0;
+			DeltaQVAc = 0;
+
+			if (((TipFrameMode != TIP_FRAME_AS_OUTPUT) && (y_dc_delta_q_enabled != 0)))
+			{
+				DeltaQYDc = WriteReadDeltaq();
+			}
+
+			if (((NumPlanes > 1) && ((uv_ac_delta_q_enabled != 0) || ((TipFrameMode != TIP_FRAME_AS_OUTPUT) && (uv_dc_delta_q_enabled != 0)))))
+			{
+
+				if ((separate_uv_delta_q != 0))
+				{
+					this.diff_uv_delta = stream.Pick("diff_uv_delta", _original != null ? _original.diff_uv_delta : this.diff_uv_delta, _edited != null ? _edited.diff_uv_delta : _original != null ? _original.diff_uv_delta : this.diff_uv_delta);
+					stream.WriteFixed(1, this.diff_uv_delta, "diff_uv_delta"); 
+				}
+				else 
+				{
+					diff_uv_delta = 0;
+				}
+
+				if (((TipFrameMode != TIP_FRAME_AS_OUTPUT) && (uv_dc_delta_q_enabled != 0)))
+				{
+					DeltaQUDc = WriteReadDeltaq();
+				}
+
+				if ((uv_ac_delta_q_enabled != 0))
+				{
+					DeltaQUAc = WriteReadDeltaq();
+				}
+
+				if ((equal_ac_dc_q != 0))
+				{
+					DeltaQUDc = DeltaQUAc;
+				}
+
+				if ((diff_uv_delta != 0))
+				{
+
+					if (((TipFrameMode != TIP_FRAME_AS_OUTPUT) && (uv_dc_delta_q_enabled != 0)))
+					{
+						DeltaQVDc = WriteReadDeltaq();
+					}
+
+					if ((uv_ac_delta_q_enabled != 0))
+					{
+						DeltaQVAc = WriteReadDeltaq();
+					}
+
+					if ((equal_ac_dc_q != 0))
+					{
+						DeltaQVDc = DeltaQVAc;
+					}
+				}
+				else 
+				{
+					DeltaQVDc = DeltaQUDc;
+					DeltaQVAc = DeltaQUAc;
+				}
+			}
+        }
+
     /*
 setup_qm_params() {
 using_qmatrix	f(1)
@@ -7631,6 +11843,62 @@ qm_v[ i ]	f(4)
 			}
         }
 
+        private void WriteSetupQmParams()
+        {
+			int i = 0;
+			int qmNum = 0;
+			this.using_qmatrix = stream.Pick("using_qmatrix", _original != null ? _original.using_qmatrix : this.using_qmatrix, _edited != null ? _edited.using_qmatrix : _original != null ? _original.using_qmatrix : this.using_qmatrix);
+			stream.WriteFixed(1, this.using_qmatrix, "using_qmatrix"); 
+
+			if ((using_qmatrix != 0))
+			{
+
+				if ((segmentation_enabled != 0))
+				{
+					this.pic_qm_num_minus_1 = stream.Pick("pic_qm_num_minus_1", _original != null ? _original.pic_qm_num_minus_1 : this.pic_qm_num_minus_1, _edited != null ? _edited.pic_qm_num_minus_1 : _original != null ? _original.pic_qm_num_minus_1 : this.pic_qm_num_minus_1);
+					stream.WriteFixed(2, this.pic_qm_num_minus_1, "pic_qm_num_minus_1"); 
+				}
+				else 
+				{
+					pic_qm_num_minus_1 = 0;
+				}
+				qmNum = (pic_qm_num_minus_1 + 1);
+
+				for (i = 0; (i < qmNum); i++)
+				{
+					this.qm_y[i] = stream.Pick("qm_y", _original != null ? _original.qm_y[i] : this.qm_y[i], _edited != null ? _edited.qm_y[i] : _original != null ? _original.qm_y[i] : this.qm_y[i]);
+					stream.WriteFixed(4, this.qm_y[i], "qm_y"); 
+
+					if ((NumPlanes > 1))
+					{
+						this.qm_uv_same_as_y = stream.Pick("qm_uv_same_as_y", _original != null ? _original.qm_uv_same_as_y : this.qm_uv_same_as_y, _edited != null ? _edited.qm_uv_same_as_y : _original != null ? _original.qm_uv_same_as_y : this.qm_uv_same_as_y);
+						stream.WriteFixed(1, this.qm_uv_same_as_y, "qm_uv_same_as_y"); 
+
+						if ((qm_uv_same_as_y != 0))
+						{
+							qm_u[i] = qm_y[i];
+							qm_v[i] = qm_y[i];
+						}
+						else 
+						{
+							this.qm_u[i] = stream.Pick("qm_u", _original != null ? _original.qm_u[i] : this.qm_u[i], _edited != null ? _edited.qm_u[i] : _original != null ? _original.qm_u[i] : this.qm_u[i]);
+							stream.WriteFixed(4, this.qm_u[i], "qm_u"); 
+
+							if (!(separate_uv_delta_q != 0))
+							{
+								qm_v[i] = qm_u[i];
+							}
+							else 
+							{
+								this.qm_v[i] = stream.Pick("qm_v", _original != null ? _original.qm_v[i] : this.qm_v[i], _edited != null ? _edited.qm_v[i] : _original != null ? _original.qm_v[i] : this.qm_v[i]);
+								stream.WriteFixed(4, this.qm_v[i], "qm_v"); 
+							}
+						}
+					}
+				}
+			}
+        }
+
     /*
 read_delta_q() {
 delta_coded	f(1)
@@ -7654,6 +11922,23 @@ return delta_q
 			if ((delta_coded != 0))
 			{
 				stream.ReadSignedIntVar(7, out this.delta_q, "delta_q"); 
+			}
+			else 
+			{
+				delta_q = 0;
+			}
+			return delta_q;
+        }
+
+        private int WriteReadDeltaq()
+        {
+			this.delta_coded = stream.Pick("delta_coded", _original != null ? _original.delta_coded : this.delta_coded, _edited != null ? _edited.delta_coded : _original != null ? _original.delta_coded : this.delta_coded);
+			stream.WriteFixed(1, this.delta_coded, "delta_coded"); 
+
+			if ((delta_coded != 0))
+			{
+				this.delta_q = stream.Pick("delta_q", _original != null ? _original.delta_q : this.delta_q, _edited != null ? _edited.delta_q : _original != null ? _original.delta_q : this.delta_q);
+				stream.WriteSignedIntVar(7, this.delta_q, "delta_q"); 
 			}
 			else 
 			{
@@ -7864,6 +12149,130 @@ SegIdPreSkip = 1
 			}
         }
 
+        private void WriteSegmentationParams()
+        {
+			int i = 0;
+			int j = 0;
+			int haveSegParams = 0;
+			int allowChange = 0;
+			int mfhId = 0;
+			this.segmentation_enabled = stream.Pick("segmentation_enabled", _original != null ? _original.segmentation_enabled : this.segmentation_enabled, _edited != null ? _edited.segmentation_enabled : _original != null ? _original.segmentation_enabled : this.segmentation_enabled);
+			stream.WriteFixed(1, this.segmentation_enabled, "segmentation_enabled"); 
+
+			if ((segmentation_enabled == 1))
+			{
+
+				if (((cur_mfh_id > 0) && (mfh_seg_info_present_flag[cur_mfh_id] != 0)))
+				{
+					haveSegParams = ((mfh_ext_seg_flag[cur_mfh_id] == enable_ext_seg) ? 1 : 0);
+					allowChange = (((haveSegParams != 0) && (mfh_allow_seg_info_change[cur_mfh_id] != 0)) ? 1 : 0);
+					mfhId = cur_mfh_id;
+				}
+				else if ((seq_seg_info_present_flag != 0))
+				{
+					haveSegParams = 1;
+					allowChange = seq_allow_seg_info_change;
+					mfhId = 0;
+				}
+				else 
+				{
+					haveSegParams = 0;
+					allowChange = 0;
+				}
+
+				if ((allowChange != 0))
+				{
+					this.reuse_seg_info = stream.Pick("reuse_seg_info", _original != null ? _original.reuse_seg_info : this.reuse_seg_info, _edited != null ? _edited.reuse_seg_info : _original != null ? _original.reuse_seg_info : this.reuse_seg_info);
+					stream.WriteFixed(1, this.reuse_seg_info, "reuse_seg_info"); 
+				}
+				else 
+				{
+					reuse_seg_info = haveSegParams;
+				}
+
+				if ((reuse_seg_info != 0))
+				{
+
+					for (i = 0; (i < MAX_SEGMENTS); i++)
+					{
+
+						for (j = 0; (j < SEG_LVL_MAX); j++)
+						{
+
+							if ((mfhId == 0))
+							{
+								FeatureData[i][j] = SeqFeatureData[i][j];
+								FeatureEnabled[i][j] = SeqFeatureEnabled[i][j];
+							}
+							else 
+							{
+								FeatureData[i][j] = MfhFeatureData[mfhId][i][j];
+								FeatureEnabled[i][j] = MfhFeatureEnabled[mfhId][i][j];
+							}
+						}
+					}
+				}
+				else 
+				{
+					(FeatureEnabled, FeatureData) = WriteSegInfo(MaxSegments);
+				}
+
+				if ((DerivedPrimaryRefFrame == PRIMARY_REF_NONE))
+				{
+					segmentation_update_map = 1;
+					segmentation_temporal_update = 0;
+				}
+				else 
+				{
+					this.segmentation_update_map = stream.Pick("segmentation_update_map", _original != null ? _original.segmentation_update_map : this.segmentation_update_map, _edited != null ? _edited.segmentation_update_map : _original != null ? _original.segmentation_update_map : this.segmentation_update_map);
+					stream.WriteFixed(1, this.segmentation_update_map, "segmentation_update_map"); 
+
+					if (((segmentation_update_map == 1) && (FrameType != SWITCH_FRAME)))
+					{
+						this.segmentation_temporal_update = stream.Pick("segmentation_temporal_update", _original != null ? _original.segmentation_temporal_update : this.segmentation_temporal_update, _edited != null ? _edited.segmentation_temporal_update : _original != null ? _original.segmentation_temporal_update : this.segmentation_temporal_update);
+						stream.WriteFixed(1, this.segmentation_temporal_update, "segmentation_temporal_update"); 
+					}
+					else 
+					{
+						segmentation_temporal_update = 0;
+					}
+				}
+			}
+			else 
+			{
+
+				for (i = 0; (i < MAX_SEGMENTS); i++)
+				{
+
+					for (j = 0; (j < SEG_LVL_MAX); j++)
+					{
+						FeatureEnabled[i][j] = 0;
+						FeatureData[i][j] = 0;
+					}
+				}
+			}
+			SegIdPreSkip = 0;
+			LastActiveSegId = 0;
+
+			for (i = 0; (i < MaxSegments); i++)
+			{
+
+				for (j = 0; (j < SEG_LVL_MAX); j++)
+				{
+
+					if ((FeatureEnabled[i][j] != 0))
+					{
+						LastActiveSegId = i;
+
+						if ((j >= SEG_LVL_SKIP))
+						{
+							SegIdPreSkip = 1;
+						}
+					}
+				}
+			}
+        }
+
     /*
 tile_info () {
 sb4x4 = Num_4x4_Blocks_Wide[ SbSize ]	
@@ -8017,6 +12426,93 @@ context_update_tile_id = 0
 					stream.ReadVariable(n, out this.context_update_tile_id, "context_update_tile_id"); 
 				}
 				stream.ReadFixed(2, out this.tile_size_bytes_minus_1, "tile_size_bytes_minus_1"); 
+				TileSizeBytes = (tile_size_bytes_minus_1 + 1);
+			}
+			else 
+			{
+				context_update_tile_id = 0;
+			}
+        }
+
+        private void WriteTileInfo()
+        {
+			int i = 0;
+			int sb4x4 = 0;
+			int sbShift = 0;
+			int sbCols = 0;
+			int sbRows = 0;
+			int haveTileParams = 0;
+			int seqSbSize = 0;
+			AomArray<int> sbRowStarts = new AomArray<int>();
+			AomArray<int> sbColStarts = new AomArray<int>();
+			int sbShift2 = 0;
+			int uniformSpacing = 0;
+			int n = 0;
+			sb4x4 = Num_4x4_Blocks_Wide[SbSize];
+			sbShift = Mi_Width_Log2[SbSize];
+			sbCols = (((MiCols + sb4x4) - 1) >> sbShift);
+			sbRows = (((MiRows + sb4x4) - 1) >> sbShift);
+
+			if ((IsBridge != 0))
+			{
+				haveTileParams = 0;
+			}
+			else 
+			{
+				haveTileParams = seq_tile_info_present_flag;
+			}
+
+			if (((haveTileParams != 0) && (((SeqUniformTileSpacingFlag != 0) ? (((UniformEligible(SeqTileRowsLog2, sbRows) != 0) && (UniformEligible(SeqTileColsLog2, sbCols) != 0)) ? 1 : 0) : (((SeqSbCols == sbCols) && (SeqSbRows == sbRows)) ? 1 : 0)) != 0)))
+			{
+
+				if ((allow_tile_info_change != 0))
+				{
+					this.reuse_tile_info = stream.Pick("reuse_tile_info", _original != null ? _original.reuse_tile_info : this.reuse_tile_info, _edited != null ? _edited.reuse_tile_info : _original != null ? _original.reuse_tile_info : this.reuse_tile_info);
+					stream.WriteFixed(1, this.reuse_tile_info, "reuse_tile_info"); 
+				}
+				else 
+				{
+					reuse_tile_info = 1;
+				}
+			}
+			else 
+			{
+				reuse_tile_info = 0;
+			}
+			seqSbSize = GetSeqSbSize();
+
+			if ((reuse_tile_info != 0))
+			{
+				(sbRowStarts, TileRows, TileRowsLog2, sbColStarts, TileCols, TileColsLog2, sbShift2) = ReuseTileParams(SeqUniformTileSpacingFlag, SeqSbRowStarts, SeqTileRows, SeqTileRowsLog2, SeqSbColStarts, SeqTileCols, SeqTileColsLog2, seqSbSize, SbSize);
+			}
+			else 
+			{
+				(sbRowStarts, sbRows, TileRows, TileRowsLog2, sbColStarts, sbCols, TileCols, TileColsLog2, uniformSpacing, sbShift2) = WriteTileParams(FrameWidth, FrameHeight, seqSbSize, SbSize, IsBridge);
+			}
+
+			for (i = 0; (i < TileCols); i++)
+			{
+				MiColStarts[i] = (sbColStarts[i] << sbShift2);
+			}
+
+			for (i = 0; (i < TileRows); i++)
+			{
+				MiRowStarts[i] = (sbRowStarts[i] << sbShift2);
+			}
+			MiColStarts[TileCols] = MiCols;
+			MiRowStarts[TileRows] = MiRows;
+
+			if (((((TileCols > 1) || (TileRows > 1)) && !(IsBridge != 0)) && (TipFrameMode != TIP_FRAME_AS_OUTPUT)))
+			{
+
+				if ((!(enable_avg_cdf != 0) || !(avg_cdf_type != 0)))
+				{
+					n = (TileRowsLog2 + TileColsLog2);
+					this.context_update_tile_id = stream.Pick("context_update_tile_id", _original != null ? _original.context_update_tile_id : this.context_update_tile_id, _edited != null ? _edited.context_update_tile_id : _original != null ? _original.context_update_tile_id : this.context_update_tile_id);
+					stream.WriteVariable(n, this.context_update_tile_id, "context_update_tile_id"); 
+				}
+				this.tile_size_bytes_minus_1 = stream.Pick("tile_size_bytes_minus_1", _original != null ? _original.tile_size_bytes_minus_1 : this.tile_size_bytes_minus_1, _edited != null ? _edited.tile_size_bytes_minus_1 : _original != null ? _original.tile_size_bytes_minus_1 : this.tile_size_bytes_minus_1);
+				stream.WriteFixed(2, this.tile_size_bytes_minus_1, "tile_size_bytes_minus_1"); 
 				TileSizeBytes = (tile_size_bytes_minus_1 + 1);
 			}
 			else 
@@ -8284,6 +12780,158 @@ tileCols, tileColsLog2, uniform_tile_spacing_flag, sbShift)
 			return (sbRowStarts, sbRows, tileRows, tileRowsLog2, sbColStarts, sbCols, tileCols, tileColsLog2, uniform_tile_spacing_flag, sbShift);
         }
 
+        private (AomArray<int>, int, int, int, AomArray<int>, int, int, int, int, int) WriteTileParams(int frameWidth, int frameHeight, int uniformSbSize, int sbSize, int isBridge)
+        {
+			int i = 0;
+			int miCols = 0;
+			int miRows = 0;
+			int sb4x4 = 0;
+			int sbShift = 0;
+			int sbCols = 0;
+			int sbRows = 0;
+			int maxTileWidthSb = 0;
+			int maxTileAreaSb = 0;
+			int minLog2TileCols = 0;
+			int maxLog2TileCols = 0;
+			int maxLog2TileRows = 0;
+			int minLog2Tiles = 0;
+			int tileColsLog2 = 0;
+			AomArray<int> sbColStarts = new AomArray<int>();
+			int tileCols = 0;
+			int minLog2TileRows = 0;
+			int tileRowsLog2 = 0;
+			AomArray<int> sbRowStarts = new AomArray<int>();
+			int tileRows = 0;
+			int widestTileSb = 0;
+			int startSb = 0;
+			int n = 0;
+			int sizeSb = 0;
+			int maxTileHeightSb = 0;
+			int maxHeight = 0;
+			miCols = (2 * ((frameWidth + 7) >> 3));
+			miRows = (2 * ((frameHeight + 7) >> 3));
+			sb4x4 = Num_4x4_Blocks_Wide[sbSize];
+			sbShift = Mi_Width_Log2[sbSize];
+			sbCols = (((miCols + sb4x4) - 1) >> sbShift);
+			sbRows = (((miRows + sb4x4) - 1) >> sbShift);
+
+			if ((seq_level_idx != 31))
+			{
+				maxTileWidthSb = ((Tile_Width_Scaling_Factor[seq_tier][seq_level_idx] * MAX_TILE_WIDTH) >> (sbShift + 4));
+				maxTileAreaSb = ((Tile_Area_Scaling_Factor[seq_tier][seq_level_idx] * MAX_TILE_AREA) >> ((2 * (sbShift + 2)) + 2));
+			}
+			else 
+			{
+				maxTileWidthSb = sbCols;
+				maxTileAreaSb = (sbCols * sbRows);
+			}
+			minLog2TileCols = TileLog2(maxTileWidthSb, sbCols);
+			maxLog2TileCols = TileLog2(1, Min(sbCols, MAX_TILE_COLS));
+			maxLog2TileRows = TileLog2(1, Min(sbRows, MAX_TILE_ROWS));
+			minLog2Tiles = Max(minLog2TileCols, TileLog2(maxTileAreaSb, (sbRows * sbCols)));
+
+			if ((isBridge != 0))
+			{
+				uniform_tile_spacing_flag = 1;
+			}
+			else 
+			{
+				this.uniform_tile_spacing_flag = stream.Pick("uniform_tile_spacing_flag", _original != null ? _original.uniform_tile_spacing_flag : this.uniform_tile_spacing_flag, _edited != null ? _edited.uniform_tile_spacing_flag : _original != null ? _original.uniform_tile_spacing_flag : this.uniform_tile_spacing_flag);
+				stream.WriteFixed(1, this.uniform_tile_spacing_flag, "uniform_tile_spacing_flag"); 
+			}
+
+			if ((uniform_tile_spacing_flag != 0))
+			{
+				sbShift = Mi_Width_Log2[uniformSbSize];
+				tileColsLog2 = minLog2TileCols;
+
+				if (!(isBridge != 0))
+				{
+
+					while ((tileColsLog2 < maxLog2TileCols))
+					{
+						this.increment_tile_cols_log2 = stream.Pick("increment_tile_cols_log2", _original != null ? ((obu_type == OBU_SEQUENCE_HEADER ? _original.SeqTileColsLog2 : _original.TileColsLog2) > tileColsLog2 ? 1 : 0) : this.increment_tile_cols_log2, _edited != null ? ((obu_type == OBU_SEQUENCE_HEADER ? _edited.SeqTileColsLog2 : _edited.TileColsLog2) > tileColsLog2 ? 1 : 0) : _original != null ? ((obu_type == OBU_SEQUENCE_HEADER ? _original.SeqTileColsLog2 : _original.TileColsLog2) > tileColsLog2 ? 1 : 0) : this.increment_tile_cols_log2);
+						stream.WriteFixed(1, this.increment_tile_cols_log2, "increment_tile_cols_log2"); 
+
+						if ((increment_tile_cols_log2 == 1))
+						{
+							tileColsLog2 += 1;
+						}
+						else 
+						{
+							break;
+						}
+					}
+				}
+				(sbColStarts, tileCols) = UniformSpacing(tileColsLog2, miCols, uniformSbSize);
+				tileColsLog2 = TileLog2(1, tileCols);
+				minLog2TileRows = Max((minLog2Tiles - tileColsLog2), 0);
+				tileRowsLog2 = minLog2TileRows;
+
+				if (!(isBridge != 0))
+				{
+
+					while ((tileRowsLog2 < maxLog2TileRows))
+					{
+						this.increment_tile_rows_log2 = stream.Pick("increment_tile_rows_log2", _original != null ? ((obu_type == OBU_SEQUENCE_HEADER ? _original.SeqTileRowsLog2 : _original.TileRowsLog2) > tileRowsLog2 ? 1 : 0) : this.increment_tile_rows_log2, _edited != null ? ((obu_type == OBU_SEQUENCE_HEADER ? _edited.SeqTileRowsLog2 : _edited.TileRowsLog2) > tileRowsLog2 ? 1 : 0) : _original != null ? ((obu_type == OBU_SEQUENCE_HEADER ? _original.SeqTileRowsLog2 : _original.TileRowsLog2) > tileRowsLog2 ? 1 : 0) : this.increment_tile_rows_log2);
+						stream.WriteFixed(1, this.increment_tile_rows_log2, "increment_tile_rows_log2"); 
+
+						if ((increment_tile_rows_log2 == 1))
+						{
+							tileRowsLog2++;
+						}
+						else 
+						{
+							break;
+						}
+					}
+				}
+				(sbRowStarts, tileRows) = UniformSpacing(tileRowsLog2, miRows, uniformSbSize);
+			}
+			else 
+			{
+				widestTileSb = 1;
+				startSb = 0;
+
+				for (i = 0; (startSb < sbCols); i++)
+				{
+					sbColStarts[i] = startSb;
+					n = Min((sbCols - startSb), maxTileWidthSb);
+					this.width_in_sbs_minus_1 = stream.Pick("width_in_sbs_minus_1", _original != null ? _original.width_in_sbs_minus_1 : this.width_in_sbs_minus_1, _edited != null ? _edited.width_in_sbs_minus_1 : _original != null ? _original.width_in_sbs_minus_1 : this.width_in_sbs_minus_1);
+					stream.Write_ns(n, this.width_in_sbs_minus_1, "width_in_sbs_minus_1"); 
+					sizeSb = (width_in_sbs_minus_1 + 1);
+					widestTileSb = Max(sizeSb, widestTileSb);
+					startSb += sizeSb;
+				}
+				tileCols = i;
+				tileColsLog2 = TileLog2(1, tileCols);
+
+				if ((minLog2Tiles > 0))
+				{
+					maxTileAreaSb = ((sbRows * sbCols) >> (minLog2Tiles + 1));
+				}
+				else 
+				{
+					maxTileAreaSb = (sbRows * sbCols);
+				}
+				maxTileHeightSb = Max((maxTileAreaSb / widestTileSb), 1);
+				startSb = 0;
+
+				for (i = 0; (startSb < sbRows); i++)
+				{
+					sbRowStarts[i] = startSb;
+					maxHeight = Min((sbRows - startSb), maxTileHeightSb);
+					this.height_in_sbs_minus_1 = stream.Pick("height_in_sbs_minus_1", _original != null ? _original.height_in_sbs_minus_1 : this.height_in_sbs_minus_1, _edited != null ? _edited.height_in_sbs_minus_1 : _original != null ? _original.height_in_sbs_minus_1 : this.height_in_sbs_minus_1);
+					stream.Write_ns(maxHeight, this.height_in_sbs_minus_1, "height_in_sbs_minus_1"); 
+					sizeSb = (height_in_sbs_minus_1 + 1);
+					startSb = (startSb + sizeSb);
+				}
+				tileRows = i;
+			}
+			tileRowsLog2 = TileLog2(1, tileRows);
+			return (sbRowStarts, sbRows, tileRows, tileRowsLog2, sbColStarts, sbCols, tileCols, tileColsLog2, uniform_tile_spacing_flag, sbShift);
+        }
+
     /*
 delta_q_params() {
 delta_q_res = 0	
@@ -8314,6 +12962,24 @@ delta_q_res	f(2)
 			if ((delta_q_present != 0))
 			{
 				stream.ReadFixed(2, out this.delta_q_res, "delta_q_res"); 
+			}
+        }
+
+        private void WriteDeltaqParams()
+        {
+			delta_q_res = 0;
+			delta_q_present = 0;
+
+			if ((base_q_idx > 0))
+			{
+				this.delta_q_present = stream.Pick("delta_q_present", _original != null ? _original.delta_q_present : this.delta_q_present, _edited != null ? _edited.delta_q_present : _original != null ? _original.delta_q_present : this.delta_q_present);
+				stream.WriteFixed(1, this.delta_q_present, "delta_q_present"); 
+			}
+
+			if ((delta_q_present != 0))
+			{
+				this.delta_q_res = stream.Pick("delta_q_res", _original != null ? _original.delta_q_res : this.delta_q_res, _edited != null ? _edited.delta_q_res : _original != null ? _original.delta_q_res : this.delta_q_res);
+				stream.WriteFixed(2, this.delta_q_res, "delta_q_res"); 
 			}
         }
 
@@ -8434,6 +13100,77 @@ GdfPixScale = 1 + gdf_pic_scale_idx
 				}
 				stream.ReadFixed(2, out this.gdf_pic_qc_idx, "gdf_pic_qc_idx"); 
 				stream.ReadFixed(2, out this.gdf_pic_scale_idx, "gdf_pic_scale_idx"); 
+				GdfPixScale = (1 + gdf_pic_scale_idx);
+			}
+        }
+
+        private void WriteGdfParams()
+        {
+			int i = 0;
+			int gdfBlkSize = 0;
+			int a = 0;
+
+			if (((CodedLossless != 0) || !(enable_gdf != 0)))
+			{
+				gdf_frame_enable = 0;
+			}
+			else 
+			{
+
+				if ((single_picture_header_flag != 0))
+				{
+					gdf_frame_enable = 1;
+				}
+				else 
+				{
+					this.gdf_frame_enable = stream.Pick("gdf_frame_enable", _original != null ? _original.gdf_frame_enable : this.gdf_frame_enable, _edited != null ? _edited.gdf_frame_enable : _original != null ? _original.gdf_frame_enable : this.gdf_frame_enable);
+					stream.WriteFixed(1, this.gdf_frame_enable, "gdf_frame_enable"); 
+				}
+
+				if (!(gdf_frame_enable != 0))
+				{
+					return;
+				}
+				gdfBlkSize = Max(Block_Width[SbSize], GDF_MIN_SIZE);
+
+				if ((gdf_unit_matches_sb_size != 0))
+				{
+					gdfBlkSize = Block_Width[SbSize];
+				}
+				else if ((SbSize == BLOCK_64X64))
+				{
+					a = 0;
+
+					for (i = 0; (i < TileCols); i++)
+					{
+						a = (a | MiColStarts[i]);
+					}
+
+					for (i = 0; (i < TileRows); i++)
+					{
+						a = (a | MiRowStarts[i]);
+					}
+
+					if (((a & 16) != 0))
+					{
+						gdfBlkSize = 64;
+					}
+				}
+				GdfBlkSize = gdfBlkSize;
+
+				if (((((MiCols * MI_SIZE) > gdfBlkSize) || ((MiRows * MI_SIZE) > gdfBlkSize)) || ((disable_loopfilters_across_tiles != 0) && ((TileRows > 1) || (TileCols > 1)))))
+				{
+					this.gdf_per_block = stream.Pick("gdf_per_block", _original != null ? _original.gdf_per_block : this.gdf_per_block, _edited != null ? _edited.gdf_per_block : _original != null ? _original.gdf_per_block : this.gdf_per_block);
+					stream.WriteFixed(1, this.gdf_per_block, "gdf_per_block"); 
+				}
+				else 
+				{
+					gdf_per_block = 0;
+				}
+				this.gdf_pic_qc_idx = stream.Pick("gdf_pic_qc_idx", _original != null ? _original.gdf_pic_qc_idx : this.gdf_pic_qc_idx, _edited != null ? _edited.gdf_pic_qc_idx : _original != null ? _original.gdf_pic_qc_idx : this.gdf_pic_qc_idx);
+				stream.WriteFixed(2, this.gdf_pic_qc_idx, "gdf_pic_qc_idx"); 
+				this.gdf_pic_scale_idx = stream.Pick("gdf_pic_scale_idx", _original != null ? _original.gdf_pic_scale_idx : this.gdf_pic_scale_idx, _edited != null ? _edited.gdf_pic_scale_idx : _original != null ? _original.gdf_pic_scale_idx : this.gdf_pic_scale_idx);
+				stream.WriteFixed(2, this.gdf_pic_scale_idx, "gdf_pic_scale_idx"); 
 				GdfPixScale = (1 + gdf_pic_scale_idx);
 			}
         }
@@ -8586,6 +13323,98 @@ cdef_uv_sec_strength[ i ] += 1
 						stream.ReadFixed(4, out this.cdef_uv_pri_strength[i], "cdef_uv_pri_strength"); 
 					}
 					stream.ReadFixed(2, out this.cdef_uv_sec_strength[i], "cdef_uv_sec_strength"); 
+
+					if ((cdef_uv_sec_strength[i] == 3))
+					{
+						cdef_uv_sec_strength[i] += 1;
+					}
+				}
+			}
+        }
+
+        private void WriteCdefParams()
+        {
+			int i = 0;
+
+			if (((CodedLossless != 0) || !(enable_cdef != 0)))
+			{
+				cdef_frame_enable = 0;
+				return;
+			}
+
+			if ((single_picture_header_flag != 0))
+			{
+				cdef_frame_enable = 1;
+			}
+			else 
+			{
+				this.cdef_frame_enable = stream.Pick("cdef_frame_enable", _original != null ? _original.cdef_frame_enable : this.cdef_frame_enable, _edited != null ? _edited.cdef_frame_enable : _original != null ? _original.cdef_frame_enable : this.cdef_frame_enable);
+				stream.WriteFixed(1, this.cdef_frame_enable, "cdef_frame_enable"); 
+			}
+
+			if (!(cdef_frame_enable != 0))
+			{
+				return;
+			}
+			this.cdef_damping_minus_3 = stream.Pick("cdef_damping_minus_3", _original != null ? _original.cdef_damping_minus_3 : this.cdef_damping_minus_3, _edited != null ? _edited.cdef_damping_minus_3 : _original != null ? _original.cdef_damping_minus_3 : this.cdef_damping_minus_3);
+			stream.WriteFixed(2, this.cdef_damping_minus_3, "cdef_damping_minus_3"); 
+			CdefDamping = (cdef_damping_minus_3 + 3);
+			this.cdef_strengths_minus_1 = stream.Pick("cdef_strengths_minus_1", _original != null ? _original.cdef_strengths_minus_1 : this.cdef_strengths_minus_1, _edited != null ? _edited.cdef_strengths_minus_1 : _original != null ? _original.cdef_strengths_minus_1 : this.cdef_strengths_minus_1);
+			stream.WriteFixed(3, this.cdef_strengths_minus_1, "cdef_strengths_minus_1"); 
+			CdefStrengths = (cdef_strengths_minus_1 + 1);
+
+			if ((CdefOnSkipTxfm == CDEF_ON_SKIP_TXFM_ADAPTIVE))
+			{
+				this.cdef_on_skip_txfm_frame_enable = stream.Pick("cdef_on_skip_txfm_frame_enable", _original != null ? _original.cdef_on_skip_txfm_frame_enable : this.cdef_on_skip_txfm_frame_enable, _edited != null ? _edited.cdef_on_skip_txfm_frame_enable : _original != null ? _original.cdef_on_skip_txfm_frame_enable : this.cdef_on_skip_txfm_frame_enable);
+				stream.WriteFixed(1, this.cdef_on_skip_txfm_frame_enable, "cdef_on_skip_txfm_frame_enable"); 
+			}
+			else if ((CdefOnSkipTxfm == CDEF_ON_SKIP_TXFM_ALWAYS_ON))
+			{
+				cdef_on_skip_txfm_frame_enable = 1;
+			}
+			else 
+			{
+				cdef_on_skip_txfm_frame_enable = 0;
+			}
+
+			for (i = 0; (i < CdefStrengths); i++)
+			{
+				this.cdef_y_pri_zero = stream.Pick("cdef_y_pri_zero", _original != null ? (_original.cdef_y_pri_strength[i] == 0 ? 1 : 0) : this.cdef_y_pri_zero, _edited != null ? (_edited.cdef_y_pri_strength[i] == 0 ? 1 : 0) : _original != null ? (_original.cdef_y_pri_strength[i] == 0 ? 1 : 0) : this.cdef_y_pri_zero);
+				stream.WriteFixed(1, this.cdef_y_pri_zero, "cdef_y_pri_zero"); 
+
+				if ((cdef_y_pri_zero != 0))
+				{
+					cdef_y_pri_strength[i] = 0;
+				}
+				else 
+				{
+					this.cdef_y_pri_strength[i] = stream.Pick("cdef_y_pri_strength", _original != null ? _original.cdef_y_pri_strength[i] : this.cdef_y_pri_strength[i], _edited != null ? _edited.cdef_y_pri_strength[i] : _original != null ? _original.cdef_y_pri_strength[i] : this.cdef_y_pri_strength[i]);
+					stream.WriteFixed(4, this.cdef_y_pri_strength[i], "cdef_y_pri_strength"); 
+				}
+				this.cdef_y_sec_strength[i] = stream.Pick("cdef_y_sec_strength", _original != null ? (_original.cdef_y_sec_strength[i] == 4 ? 3 : _original.cdef_y_sec_strength[i]) : this.cdef_y_sec_strength[i], _edited != null ? (_edited.cdef_y_sec_strength[i] == 4 ? 3 : _edited.cdef_y_sec_strength[i]) : _original != null ? (_original.cdef_y_sec_strength[i] == 4 ? 3 : _original.cdef_y_sec_strength[i]) : this.cdef_y_sec_strength[i]);
+				stream.WriteFixed(2, this.cdef_y_sec_strength[i], "cdef_y_sec_strength"); 
+
+				if ((cdef_y_sec_strength[i] == 3))
+				{
+					cdef_y_sec_strength[i] += 1;
+				}
+
+				if ((NumPlanes > 1))
+				{
+					this.cdef_uv_pri_zero = stream.Pick("cdef_uv_pri_zero", _original != null ? (_original.cdef_uv_pri_strength[i] == 0 ? 1 : 0) : this.cdef_uv_pri_zero, _edited != null ? (_edited.cdef_uv_pri_strength[i] == 0 ? 1 : 0) : _original != null ? (_original.cdef_uv_pri_strength[i] == 0 ? 1 : 0) : this.cdef_uv_pri_zero);
+					stream.WriteFixed(1, this.cdef_uv_pri_zero, "cdef_uv_pri_zero"); 
+
+					if ((cdef_uv_pri_zero != 0))
+					{
+						cdef_uv_pri_strength[i] = 0;
+					}
+					else 
+					{
+						this.cdef_uv_pri_strength[i] = stream.Pick("cdef_uv_pri_strength", _original != null ? _original.cdef_uv_pri_strength[i] : this.cdef_uv_pri_strength[i], _edited != null ? _edited.cdef_uv_pri_strength[i] : _original != null ? _original.cdef_uv_pri_strength[i] : this.cdef_uv_pri_strength[i]);
+						stream.WriteFixed(4, this.cdef_uv_pri_strength[i], "cdef_uv_pri_strength"); 
+					}
+					this.cdef_uv_sec_strength[i] = stream.Pick("cdef_uv_sec_strength", _original != null ? (_original.cdef_uv_sec_strength[i] == 4 ? 3 : _original.cdef_uv_sec_strength[i]) : this.cdef_uv_sec_strength[i], _edited != null ? (_edited.cdef_uv_sec_strength[i] == 4 ? 3 : _edited.cdef_uv_sec_strength[i]) : _original != null ? (_original.cdef_uv_sec_strength[i] == 4 ? 3 : _original.cdef_uv_sec_strength[i]) : this.cdef_uv_sec_strength[i]);
+					stream.WriteFixed(2, this.cdef_uv_sec_strength[i], "cdef_uv_sec_strength"); 
 
 					if ((cdef_uv_sec_strength[i] == 3))
 					{
@@ -8991,6 +13820,242 @@ read_wienerns_filter(plane, 0, 0, 1)
 			}
         }
 
+        private void WriteLrParams()
+        {
+			int i = 0;
+			int plane = 0;
+			int c = 0;
+			int usesLumaLr = 0;
+			int usesChromaLr = 0;
+			int toolsCount = 0;
+			AomArray<int> indexToTool = new AomArray<int>();
+			int allowSwitchable = 0;
+			int n = 0;
+			int r = 0;
+			int numRefFrames = 0;
+			int refIdx = 0;
+			int refPlane = 0;
+			int qindex = 0;
+			int index = 0;
+			int shift = 0;
+
+			if (((CodedLossless != 0) || !(enable_restoration != 0)))
+			{
+				FrameRestorationType[0] = RESTORE_NONE;
+				FrameRestorationType[1] = RESTORE_NONE;
+				FrameRestorationType[2] = RESTORE_NONE;
+				UsesLr = 0;
+
+				for (i = 0; (i < 3); i++)
+				{
+					frame_filters_on[i] = 0;
+				}
+				return;
+			}
+			usesLumaLr = 0;
+			usesChromaLr = 0;
+
+			for (plane = 0; (plane < NumPlanes); plane++)
+			{
+				toolsCount = 1;
+				indexToTool[0] = RESTORE_NONE;
+
+				for (i = 1; (i < RESTORE_SWITCHABLE_TYPES); i++)
+				{
+
+					if (!(lr_tools_disable[((plane > 0) ? 1 : 0)][i] != 0))
+					{
+						indexToTool[toolsCount] = i;
+						toolsCount += 1;
+					}
+				}
+				indexToTool[toolsCount] = RESTORE_SWITCHABLE;
+				allowSwitchable = ((toolsCount > 2) ? 1 : 0);
+				n = (toolsCount + allowSwitchable);
+				this.tool_index = stream.Pick("tool_index", _original != null ? _original.tool_index : this.tool_index, _edited != null ? _edited.tool_index : _original != null ? _original.tool_index : this.tool_index);
+				stream.Write_ns(n, this.tool_index, "tool_index"); 
+				FrameRestorationType[plane] = indexToTool[tool_index];
+
+				if ((FrameRestorationType[plane] != RESTORE_NONE))
+				{
+
+					if ((plane == 0))
+					{
+						usesLumaLr = 1;
+					}
+					else 
+					{
+						usesChromaLr = 1;
+					}
+				}
+				r = FrameRestorationType[plane];
+
+				if ((plane == 0))
+				{
+					NumFilterClasses = 1;
+				}
+				frame_filters_on[plane] = 0;
+				temporal_pred_flag[plane] = 0;
+
+				if (((r == RESTORE_WIENER_NONSEP) || (r == RESTORE_SWITCHABLE)))
+				{
+					this.frame_filters_on[plane] = stream.Pick("frame_filters_on", _original != null ? _original.frame_filters_on[plane] : this.frame_filters_on[plane], _edited != null ? _edited.frame_filters_on[plane] : _original != null ? _original.frame_filters_on[plane] : this.frame_filters_on[plane]);
+					stream.WriteFixed(1, this.frame_filters_on[plane], "frame_filters_on"); 
+
+					if ((frame_filters_on[plane] != 0))
+					{
+						numRefFrames = (((FrameIsIntra != 0) || (FrameType == SWITCH_FRAME)) ? 0 : NumTotalRefs);
+
+						if ((numRefFrames > 0))
+						{
+							this.temporal_pred_flag[plane] = stream.Pick("temporal_pred_flag", _original != null ? _original.temporal_pred_flag[plane] : this.temporal_pred_flag[plane], _edited != null ? _edited.temporal_pred_flag[plane] : _original != null ? _original.temporal_pred_flag[plane] : this.temporal_pred_flag[plane]);
+							stream.WriteFixed(1, this.temporal_pred_flag[plane], "temporal_pred_flag"); 
+						}
+
+						if (((temporal_pred_flag[plane] != 0) && (numRefFrames > 1)))
+						{
+							n = CeilLog2(numRefFrames);
+							this.rst_ref_pic_idx = stream.Pick("rst_ref_pic_idx", _original != null ? _original.rst_ref_pic_idx : this.rst_ref_pic_idx, _edited != null ? _edited.rst_ref_pic_idx : _original != null ? _original.rst_ref_pic_idx : this.rst_ref_pic_idx);
+							stream.WriteVariable(n, this.rst_ref_pic_idx, "rst_ref_pic_idx"); 
+						}
+						else 
+						{
+							rst_ref_pic_idx = 0;
+						}
+
+						if ((temporal_pred_flag[plane] != 0))
+						{
+							refIdx = ref_frame_idx[rst_ref_pic_idx];
+							refPlane = plane;
+
+							if (((plane > 0) && !(RefFrameFiltersOn[refIdx][plane] != 0)))
+							{
+								refPlane = ((plane == 1) ? 2 : 1);
+							}
+
+							if ((plane == 0))
+							{
+								NumFilterClasses = RefNumFilterClasses[refIdx];
+							}
+
+							for (c = 0; (c < WIENER_NS_CLASSES); c++)
+							{
+
+								for (i = 0; (i < WIENER_NS_CHROMA_COEFFS); i++)
+								{
+									FrameLrWienerNs[plane][c][i] = RefFrameLrWienerNs[refIdx][refPlane][c][i];
+								}
+							}
+						}
+					}
+
+					if (((plane == 0) && (frame_filters_on[0] != 0)))
+					{
+
+						if ((temporal_pred_flag[plane] != 0))
+						{
+							num_filter_classes_idx = Encode_Num_Filter_Classes[NumFilterClasses];
+						}
+						else 
+						{
+							this.num_filter_classes_idx = stream.Pick("num_filter_classes_idx", _original != null ? AomArray.IndexOf(Decode_Num_Filter_Classes, _original.NumFilterClasses) : this.num_filter_classes_idx, _edited != null ? AomArray.IndexOf(Decode_Num_Filter_Classes, _edited.NumFilterClasses) : _original != null ? AomArray.IndexOf(Decode_Num_Filter_Classes, _original.NumFilterClasses) : this.num_filter_classes_idx);
+							stream.WriteFixed(3, this.num_filter_classes_idx, "num_filter_classes_idx"); 
+							NumFilterClasses = Decode_Num_Filter_Classes[num_filter_classes_idx];
+						}
+						qindex = base_q_idx;
+						index = GetFilterSetIndex(qindex);
+						SubclassLookup = Pc_Wiener_Sub_Classify2[index][num_filter_classes_idx];
+					}
+				}
+			}
+			UsesLr = (((usesLumaLr != 0) || (usesChromaLr != 0)) ? 1 : 0);
+			LoopRestorationSize[0] = (RESTORATION_TILESIZE_MAX >> 3);
+			LoopRestorationSize[1] = (RESTORATION_TILESIZE_MAX >> (3 + Max(SubsamplingX, SubsamplingY)));
+
+			if ((usesLumaLr != 0))
+			{
+				this.lr_luma_use_half_size = stream.Pick("lr_luma_use_half_size", _original != null ? _original.lr_luma_use_half_size : this.lr_luma_use_half_size, _edited != null ? _edited.lr_luma_use_half_size : _original != null ? _original.lr_luma_use_half_size : this.lr_luma_use_half_size);
+				stream.WriteFixed(1, this.lr_luma_use_half_size, "lr_luma_use_half_size"); 
+
+				if ((lr_luma_use_half_size != 0))
+				{
+					shift = 1;
+				}
+				else if ((SbSize == BLOCK_256X256))
+				{
+					shift = 0;
+				}
+				else 
+				{
+					this.lr_luma_use_max_size = stream.Pick("lr_luma_use_max_size", _original != null ? _original.lr_luma_use_max_size : this.lr_luma_use_max_size, _edited != null ? _edited.lr_luma_use_max_size : _original != null ? _original.lr_luma_use_max_size : this.lr_luma_use_max_size);
+					stream.WriteFixed(1, this.lr_luma_use_max_size, "lr_luma_use_max_size"); 
+
+					if ((lr_luma_use_max_size != 0))
+					{
+						shift = 0;
+					}
+					else if ((SbSize == BLOCK_128X128))
+					{
+						shift = 2;
+					}
+					else 
+					{
+						this.lr_luma_use_quarter_size = stream.Pick("lr_luma_use_quarter_size", _original != null ? _original.lr_luma_use_quarter_size : this.lr_luma_use_quarter_size, _edited != null ? _edited.lr_luma_use_quarter_size : _original != null ? _original.lr_luma_use_quarter_size : this.lr_luma_use_quarter_size);
+						stream.WriteFixed(1, this.lr_luma_use_quarter_size, "lr_luma_use_quarter_size"); 
+						shift = ((lr_luma_use_quarter_size != 0) ? 2 : 3);
+					}
+				}
+				LoopRestorationSize[0] = (RESTORATION_TILESIZE_MAX >> shift);
+			}
+
+			if ((usesChromaLr != 0))
+			{
+				LoopRestorationSize[1] = (RESTORATION_TILESIZE_MAX >> Max(SubsamplingX, SubsamplingY));
+				this.lr_chroma_use_half_size = stream.Pick("lr_chroma_use_half_size", _original != null ? _original.lr_chroma_use_half_size : this.lr_chroma_use_half_size, _edited != null ? _edited.lr_chroma_use_half_size : _original != null ? _original.lr_chroma_use_half_size : this.lr_chroma_use_half_size);
+				stream.WriteFixed(1, this.lr_chroma_use_half_size, "lr_chroma_use_half_size"); 
+
+				if ((lr_chroma_use_half_size != 0))
+				{
+					shift = 1;
+				}
+				else if ((SbSize == BLOCK_256X256))
+				{
+					shift = 0;
+				}
+				else 
+				{
+					this.lr_chroma_use_max_size = stream.Pick("lr_chroma_use_max_size", _original != null ? _original.lr_chroma_use_max_size : this.lr_chroma_use_max_size, _edited != null ? _edited.lr_chroma_use_max_size : _original != null ? _original.lr_chroma_use_max_size : this.lr_chroma_use_max_size);
+					stream.WriteFixed(1, this.lr_chroma_use_max_size, "lr_chroma_use_max_size"); 
+
+					if ((lr_chroma_use_max_size != 0))
+					{
+						shift = 0;
+					}
+					else if ((SbSize == BLOCK_128X128))
+					{
+						shift = 2;
+					}
+					else 
+					{
+						this.lr_chroma_use_quarter_size = stream.Pick("lr_chroma_use_quarter_size", _original != null ? _original.lr_chroma_use_quarter_size : this.lr_chroma_use_quarter_size, _edited != null ? _edited.lr_chroma_use_quarter_size : _original != null ? _original.lr_chroma_use_quarter_size : this.lr_chroma_use_quarter_size);
+						stream.WriteFixed(1, this.lr_chroma_use_quarter_size, "lr_chroma_use_quarter_size"); 
+						shift = ((lr_chroma_use_quarter_size != 0) ? 2 : 3);
+					}
+				}
+				LoopRestorationSize[1] = (LoopRestorationSize[1] >> shift);
+			}
+			LoopRestorationSize[2] = LoopRestorationSize[1];
+
+			for (plane = 0; (plane < NumPlanes); plane++)
+			{
+
+				if (((frame_filters_on[plane] != 0) && !(temporal_pred_flag[plane] != 0)))
+				{
+					WriteReadWienernsFilter(plane, 0, 0, 1); 
+				}
+			}
+        }
+
     /*
 ccso_params() {
 for ( plane = 0; plane < NumPlanes; plane++ ) {	
@@ -9262,6 +14327,169 @@ CcsoFilterOffset[ plane ][ band ][ d0 ][ d1 ] = offset
 			}
         }
 
+        private void WriteCcsoParams()
+        {
+			int plane = 0;
+			int i = 0;
+			int d0 = 0;
+			int d1 = 0;
+			int band = 0;
+			int a = 0;
+			int n = 0;
+			int idx = 0;
+			int tmpCcsoLumaSizeLog2 = 0;
+			int quantStep = 0;
+			int maxEdgeInterval = 0;
+			int maxBand = 0;
+			int offset = 0;
+
+			for (plane = 0; (plane < NumPlanes); plane++)
+			{
+				ccso_planes[plane] = 0;
+			}
+
+			if (((CodedLossless != 0) || !(enable_ccso != 0)))
+			{
+				return;
+			}
+			a = 0;
+
+			for (i = 0; (i < TileCols); i++)
+			{
+				a = (a | MiColStarts[i]);
+			}
+
+			for (i = 0; (i < TileRows); i++)
+			{
+				a = (a | MiRowStarts[i]);
+			}
+
+			if ((ccso_unit_matches_sb_size != 0))
+			{
+				CcsoLumaSizeLog2 = (Mi_Width_Log2[SbSize] + MI_SIZE_LOG2);
+			}
+			else if (((a & 63) == 0))
+			{
+				CcsoLumaSizeLog2 = 8;
+			}
+			else if (((a & 31) == 0))
+			{
+				CcsoLumaSizeLog2 = 7;
+			}
+			else 
+			{
+				CcsoLumaSizeLog2 = 6;
+			}
+
+			if ((single_picture_header_flag != 0))
+			{
+				ccso_frame_flag = 1;
+			}
+			else 
+			{
+				this.ccso_frame_flag = stream.Pick("ccso_frame_flag", _original != null ? _original.ccso_frame_flag : this.ccso_frame_flag, _edited != null ? _edited.ccso_frame_flag : _original != null ? _original.ccso_frame_flag : this.ccso_frame_flag);
+				stream.WriteFixed(1, this.ccso_frame_flag, "ccso_frame_flag"); 
+			}
+
+			if (!(ccso_frame_flag != 0))
+			{
+				return;
+			}
+
+			for (plane = 0; (plane < NumPlanes); plane++)
+			{
+				this.ccso_planes[plane] = stream.Pick("ccso_planes", _original != null ? _original.ccso_planes[plane] : this.ccso_planes[plane], _edited != null ? _edited.ccso_planes[plane] : _original != null ? _original.ccso_planes[plane] : this.ccso_planes[plane]);
+				stream.WriteFixed(1, this.ccso_planes[plane], "ccso_planes"); 
+
+				if ((ccso_planes[plane] != 0))
+				{
+
+					if (((FrameIsIntra != 0) || (FrameType == SWITCH_FRAME)))
+					{
+						reuse_ccso[plane] = 0;
+						sb_reuse_ccso[plane] = 0;
+					}
+					else 
+					{
+						this.reuse_ccso[plane] = stream.Pick("reuse_ccso", _original != null ? _original.reuse_ccso[plane] : this.reuse_ccso[plane], _edited != null ? _edited.reuse_ccso[plane] : _original != null ? _original.reuse_ccso[plane] : this.reuse_ccso[plane]);
+						stream.WriteFixed(1, this.reuse_ccso[plane], "reuse_ccso"); 
+						this.sb_reuse_ccso[plane] = stream.Pick("sb_reuse_ccso", _original != null ? _original.sb_reuse_ccso[plane] : this.sb_reuse_ccso[plane], _edited != null ? _edited.sb_reuse_ccso[plane] : _original != null ? _original.sb_reuse_ccso[plane] : this.sb_reuse_ccso[plane]);
+						stream.WriteFixed(1, this.sb_reuse_ccso[plane], "sb_reuse_ccso"); 
+					}
+
+					if (((reuse_ccso[plane] != 0) || (sb_reuse_ccso[plane] != 0)))
+					{
+						n = CeilLog2(NumTotalRefs);
+						this.ccso_ref_idx[plane] = stream.Pick("ccso_ref_idx", _original != null ? _original.ccso_ref_idx[plane] : this.ccso_ref_idx[plane], _edited != null ? _edited.ccso_ref_idx[plane] : _original != null ? _original.ccso_ref_idx[plane] : this.ccso_ref_idx[plane]);
+						stream.WriteVariable(n, this.ccso_ref_idx[plane], "ccso_ref_idx"); 
+						idx = ref_frame_idx[ccso_ref_idx[plane]];
+						tmpCcsoLumaSizeLog2 = CcsoLumaSizeLog2;
+						load_ccso_params(idx, plane); 
+						CcsoLumaSizeLog2 = tmpCcsoLumaSizeLog2;
+					}
+				}
+
+				if (((ccso_planes[plane] != 0) && !(reuse_ccso[plane] != 0)))
+				{
+					this.ccso_bo_only[plane] = stream.Pick("ccso_bo_only", _original != null ? _original.ccso_bo_only[plane] : this.ccso_bo_only[plane], _edited != null ? _edited.ccso_bo_only[plane] : _original != null ? _original.ccso_bo_only[plane] : this.ccso_bo_only[plane]);
+					stream.WriteFixed(1, this.ccso_bo_only[plane], "ccso_bo_only"); 
+					this.ccso_scale_idx[plane] = stream.Pick("ccso_scale_idx", _original != null ? _original.ccso_scale_idx[plane] : this.ccso_scale_idx[plane], _edited != null ? _edited.ccso_scale_idx[plane] : _original != null ? _original.ccso_scale_idx[plane] : this.ccso_scale_idx[plane]);
+					stream.WriteFixed(2, this.ccso_scale_idx[plane], "ccso_scale_idx"); 
+
+					if ((ccso_bo_only[plane] != 0))
+					{
+						ccso_quant_idx[plane] = 0;
+						ccso_ext_filter[plane] = 0;
+						ccso_edge_clf[plane] = 0;
+					}
+					else 
+					{
+						this.ccso_quant_idx[plane] = stream.Pick("ccso_quant_idx", _original != null ? _original.ccso_quant_idx[plane] : this.ccso_quant_idx[plane], _edited != null ? _edited.ccso_quant_idx[plane] : _original != null ? _original.ccso_quant_idx[plane] : this.ccso_quant_idx[plane]);
+						stream.WriteFixed(2, this.ccso_quant_idx[plane], "ccso_quant_idx"); 
+						this.ccso_ext_filter[plane] = stream.Pick("ccso_ext_filter", _original != null ? _original.ccso_ext_filter[plane] : this.ccso_ext_filter[plane], _edited != null ? _edited.ccso_ext_filter[plane] : _original != null ? _original.ccso_ext_filter[plane] : this.ccso_ext_filter[plane]);
+						stream.WriteFixed(3, this.ccso_ext_filter[plane], "ccso_ext_filter"); 
+						quantStep = CCSO_Quant_Sz[ccso_scale_idx[plane]][ccso_quant_idx[plane]];
+
+						if ((quantStep == 0))
+						{
+							ccso_edge_clf[plane] = 0;
+						}
+						else 
+						{
+							this.ccso_edge_clf[plane] = stream.Pick("ccso_edge_clf", _original != null ? _original.ccso_edge_clf[plane] : this.ccso_edge_clf[plane], _edited != null ? _edited.ccso_edge_clf[plane] : _original != null ? _original.ccso_edge_clf[plane] : this.ccso_edge_clf[plane]);
+							stream.WriteFixed(1, this.ccso_edge_clf[plane], "ccso_edge_clf"); 
+						}
+					}
+					n = (2 + ccso_bo_only[plane]);
+					this.ccso_max_band_log2[plane] = stream.Pick("ccso_max_band_log2", _original != null ? _original.ccso_max_band_log2[plane] : this.ccso_max_band_log2[plane], _edited != null ? _edited.ccso_max_band_log2[plane] : _original != null ? _original.ccso_max_band_log2[plane] : this.ccso_max_band_log2[plane]);
+					stream.WriteVariable(n, this.ccso_max_band_log2[plane], "ccso_max_band_log2"); 
+					maxEdgeInterval = (CCSO_INPUT_INTERVAL - ccso_edge_clf[plane]);
+
+					if ((ccso_bo_only[plane] != 0))
+					{
+						maxEdgeInterval = 1;
+					}
+					maxBand = (1 << ccso_max_band_log2[plane]);
+
+					for (d0 = 0; (d0 < maxEdgeInterval); d0++)
+					{
+
+						for (d1 = 0; (d1 < maxEdgeInterval); d1++)
+						{
+
+							for (band = 0; (band < maxBand); band++)
+							{
+								this.ccso_offset_idx = stream.Pick("ccso_offset_idx", _original != null ? ccso_offset_index(_original.CcsoFilterOffset[plane][band][d0][d1], ccso_scale_idx[plane] + 1) : this.ccso_offset_idx, _edited != null ? ccso_offset_index(_edited.CcsoFilterOffset[plane][band][d0][d1], ccso_scale_idx[plane] + 1) : _original != null ? ccso_offset_index(_original.CcsoFilterOffset[plane][band][d0][d1], ccso_scale_idx[plane] + 1) : this.ccso_offset_idx);
+								stream.WriteTu(7, this.ccso_offset_idx, "ccso_offset_idx"); 
+								offset = (Ccso_Offset[ccso_offset_idx] * (ccso_scale_idx[plane] + 1));
+								CcsoFilterOffset[plane][band][d0][d1] = offset;
+							}
+						}
+					}
+				}
+			}
+        }
+
     /*
 read_tx_mode() {
 if ( CodedLossless == 1 ) {	
@@ -9291,6 +14519,29 @@ TxMode = TX_MODE_LARGEST
 			else 
 			{
 				stream.ReadFixed(1, out this.tx_mode_select, "tx_mode_select"); 
+
+				if ((tx_mode_select != 0))
+				{
+					TxMode = TX_MODE_SELECT;
+				}
+				else 
+				{
+					TxMode = TX_MODE_LARGEST;
+				}
+			}
+        }
+
+        private void WriteReadTxMode()
+        {
+
+			if ((CodedLossless == 1))
+			{
+				TxMode = ONLY_4X4;
+			}
+			else 
+			{
+				this.tx_mode_select = stream.Pick("tx_mode_select", _original != null ? _original.tx_mode_select : this.tx_mode_select, _edited != null ? _edited.tx_mode_select : _original != null ? _original.tx_mode_select : this.tx_mode_select);
+				stream.WriteFixed(1, this.tx_mode_select, "tx_mode_select"); 
 
 				if ((tx_mode_select != 0))
 				{
@@ -9387,6 +14638,55 @@ skip_mode_present = 0
 			}
         }
 
+        private void WriteSkipModeParams()
+        {
+			int skipModeAllowed = 0;
+			int curToRef0 = 0;
+			int curToRef1 = 0;
+
+			if (((FrameIsIntra != 0) || (FrameType == SWITCH_FRAME)))
+			{
+				skipModeAllowed = 0;
+			}
+			else 
+			{
+				skipModeAllowed = 1;
+				SkipModeFrame[0] = 0;
+				SkipModeFrame[1] = ((NumTotalRefs > 1) ? 1 : 0);
+
+				if ((NumTotalRefs > 1))
+				{
+					curToRef0 = Abs(GetRelativeDist(OrderHint, RefOrderHint[ref_frame_idx[0]]));
+					curToRef1 = Abs(GetRelativeDist(OrderHint, RefOrderHint[ref_frame_idx[1]]));
+
+					if ((OrderHints[0] == RESTRICTED_OH))
+					{
+						curToRef0 = 0;
+					}
+
+					if ((OrderHints[1] == RESTRICTED_OH))
+					{
+						curToRef1 = 0;
+					}
+
+					if ((Abs((curToRef0 - curToRef1)) > 1))
+					{
+						SkipModeFrame[1] = 0;
+					}
+				}
+			}
+
+			if ((skipModeAllowed != 0))
+			{
+				this.skip_mode_present = stream.Pick("skip_mode_present", _original != null ? _original.skip_mode_present : this.skip_mode_present, _edited != null ? _edited.skip_mode_present : _original != null ? _original.skip_mode_present : this.skip_mode_present);
+				stream.WriteFixed(1, this.skip_mode_present, "skip_mode_present"); 
+			}
+			else 
+			{
+				skip_mode_present = 0;
+			}
+        }
+
     /*
 frame_reference_mode() {
 if ( FrameIsIntra ) {	
@@ -9409,6 +14709,20 @@ reference_select	f(1)
 			else 
 			{
 				stream.ReadFixed(1, out this.reference_select, "reference_select"); 
+			}
+        }
+
+        private void WriteFrameReferenceMode()
+        {
+
+			if ((FrameIsIntra != 0))
+			{
+				reference_select = 0;
+			}
+			else 
+			{
+				this.reference_select = stream.Pick("reference_select", _original != null ? _original.reference_select : this.reference_select, _edited != null ? _edited.reference_select : _original != null ? _original.reference_select : this.reference_select);
+				stream.WriteFixed(1, this.reference_select, "reference_select"); 
 			}
         }
 
@@ -9636,6 +14950,141 @@ read_global_param(refc,1)
 			}
         }
 
+        private void WriteGlobalMotionParams()
+        {
+			int refc = 0;
+			int i = 0;
+			AomArray<int> baseParams = new AomArray<int>();
+			int baseDistance = 0;
+			int n = 0;
+			int refIdx = 0;
+			int dist = 0;
+			AomArray<int> paramsc = new AomArray<int>();
+			int type = 0;
+
+			for (refc = 0; (refc < REFS_PER_FRAME); refc++)
+			{
+				GmType[refc] = IDENTITY;
+
+				for (i = 0; (i < 6); i++)
+				{
+					gm_params[refc][i] = (((i % 3) == 2) ? (1 << WARPEDMODEL_PREC_BITS) : 0);
+				}
+			}
+
+			if (((FrameIsIntra != 0) || !(enable_global_motion != 0)))
+			{
+				return;
+			}
+			this.use_global_motion = stream.Pick("use_global_motion", _original != null ? _original.use_global_motion : this.use_global_motion, _edited != null ? _edited.use_global_motion : _original != null ? _original.use_global_motion : this.use_global_motion);
+			stream.WriteFixed(1, this.use_global_motion, "use_global_motion"); 
+
+			if (!(use_global_motion != 0))
+			{
+				return;
+			}
+
+			for (i = 0; (i < 6); i++)
+			{
+				baseParams[i] = Default_Warp_Params[i];
+			}
+			baseDistance = 1;
+
+			if ((FrameType == SWITCH_FRAME))
+			{
+				our_ref = NumTotalRefs;
+			}
+			else 
+			{
+				n = (NumTotalRefs + 1);
+				this.our_ref = stream.Pick("our_ref", _original != null ? _original.our_ref : this.our_ref, _edited != null ? _edited.our_ref : _original != null ? _original.our_ref : this.our_ref);
+				stream.Write_ns(n, this.our_ref, "our_ref"); 
+			}
+
+			if ((our_ref != NumTotalRefs))
+			{
+				refIdx = ref_frame_idx[our_ref];
+
+				if ((RefNumTotalRefs[refIdx] > 0))
+				{
+					n = RefNumTotalRefs[refIdx];
+					this.their_ref = stream.Pick("their_ref", _original != null ? _original.their_ref : this.their_ref, _edited != null ? _edited.their_ref : _original != null ? _original.their_ref : this.their_ref);
+					stream.Write_ns(n, this.their_ref, "their_ref"); 
+
+					for (i = 0; (i < 6); i++)
+					{
+						baseParams[i] = SavedGmParams[refIdx][their_ref][i];
+					}
+					baseDistance = GetRelativeDist(OrderHints[our_ref], SavedOrderHints[refIdx][their_ref]);
+				}
+			}
+
+			for (refc = 0; (refc < NumTotalRefs); refc++)
+			{
+				dist = GetRelativeDist(OrderHint, OrderHints[refc]);
+
+				if (((dist == 0) || (OrderHints[refc] == RESTRICTED_OH)))
+				{
+
+					for (i = 0; (i < 6); i++)
+					{
+						gm_params[refc][i] = Default_Warp_Params[i];
+					}
+					GmType[refc] = IDENTITY;
+				}
+				else 
+				{
+
+					for (i = 0; (i < 6); i++)
+					{
+						paramsc = ScaleWarpModel(baseParams, baseDistance, dist);
+						PrevGmParams[refc][i] = paramsc[i];
+					}
+					this.is_global = stream.Pick("is_global", _original != null ? _original.is_global : this.is_global, _edited != null ? _edited.is_global : _original != null ? _original.is_global : this.is_global);
+					stream.WriteFixed(1, this.is_global, "is_global"); 
+
+					if ((is_global != 0))
+					{
+						this.is_rot_zoom = stream.Pick("is_rot_zoom", _original != null ? _original.is_rot_zoom : this.is_rot_zoom, _edited != null ? _edited.is_rot_zoom : _original != null ? _original.is_rot_zoom : this.is_rot_zoom);
+						stream.WriteFixed(1, this.is_rot_zoom, "is_rot_zoom"); 
+
+						if ((is_rot_zoom != 0))
+						{
+							type = ROTZOOM;
+						}
+						else 
+						{
+							type = AFFINE;
+						}
+					}
+					else 
+					{
+						type = IDENTITY;
+					}
+					GmType[refc] = type;
+
+					if ((type >= ROTZOOM))
+					{
+						WriteReadGlobalParam(refc, 2); 
+						WriteReadGlobalParam(refc, 3); 
+
+						if ((type == AFFINE))
+						{
+							WriteReadGlobalParam(refc, 4); 
+							WriteReadGlobalParam(refc, 5); 
+						}
+						else 
+						{
+							gm_params[refc][4] = -gm_params[refc][3];
+							gm_params[refc][5] = gm_params[refc][2];
+						}
+						WriteReadGlobalParam(refc, 0); 
+						WriteReadGlobalParam(refc, 1); 
+					}
+				}
+			}
+        }
+
     /*
 read_global_param( refc, idx ) {
 precBits = GM_ALPHA_PREC_BITS	
@@ -9678,6 +15127,29 @@ gm_params[ refc ][ idx ] =
 			gm_params[refc][idx] = ((DecodeSignedSubexpWithRef(-mx, (mx + 1), r, 3) << precDiff) + round);
         }
 
+        private void WriteReadGlobalParam(int refc, int idx)
+        {
+			int precBits = 0;
+			int mx = 0;
+			int precDiff = 0;
+			int round = 0;
+			int sub = 0;
+			int r = 0;
+			precBits = GM_ALPHA_PREC_BITS;
+			mx = GM_ALPHA_MAX;
+
+			if ((idx < 2))
+			{
+				precBits = GM_TRANS_PREC_BITS;
+				mx = GM_TRANS_MAX;
+			}
+			precDiff = (WARPEDMODEL_PREC_BITS - precBits);
+			round = (((idx % 3) == 2) ? (1 << WARPEDMODEL_PREC_BITS) : 0);
+			sub = (((idx % 3) == 2) ? (1 << precBits) : 0);
+			r = ((PrevGmParams[refc][idx] >> precDiff) - sub);
+			gm_params[refc][idx] = ((WriteDecodeSignedSubexpWithRef(-mx, (mx + 1), r, 3) << precDiff) + round);
+        }
+
     /*
 decode_signed_subexp_with_ref( low, high, r, k ) {
 x = decode_unsigned_subexp_with_ref(high - low, r - low, k)	
@@ -9693,6 +15165,13 @@ return x + low
         {
 			int x = 0;
 			x = DecodeUnsignedSubexpWithRef((high - low), (r - low), k);
+			return (x + low);
+        }
+
+        private int WriteDecodeSignedSubexpWithRef(int low, int high, int r, int k)
+        {
+			int x = 0;
+			x = WriteDecodeUnsignedSubexpWithRef((high - low), (r - low), k);
 			return (x + low);
         }
 
@@ -9713,6 +15192,21 @@ return mx - 1 - inverse_recenter(mx - 1 - r, v)
         {
 			int v = 0;
 			v = DecodeSubexp(mx, k);
+
+			if (((r << 1) <= mx))
+			{
+				return InverseRecenter(r, v);
+			}
+			else 
+			{
+				return ((mx - 1) - InverseRecenter(((mx - 1) - r), v));
+			}
+        }
+
+        private int WriteDecodeUnsignedSubexpWithRef(int mx, int r, int k)
+        {
+			int v = 0;
+			v = WriteDecodeSubexp(mx, k);
 
 			if (((r << 1) <= mx))
 			{
@@ -9796,6 +15290,48 @@ return subexp_bits + mk
 			}
         }
 
+        private int WriteDecodeSubexp(int numSyms, int k)
+        {
+			int i = 0;
+			int mk = 0;
+			int b2 = 0;
+			int a = 0;
+			int n = 0;
+			i = 0;
+			mk = 0;
+
+			while ((1 != 0))
+			{
+				b2 = ((i != 0) ? ((k + i) - 1) : k);
+				a = (1 << b2);
+
+				if ((numSyms <= (mk + (3 * a))))
+				{
+					n = (numSyms - mk);
+					this.subexp_final_bits = stream.Pick("subexp_final_bits", _original != null ? _original.subexp_final_bits : this.subexp_final_bits, _edited != null ? _edited.subexp_final_bits : _original != null ? _original.subexp_final_bits : this.subexp_final_bits);
+					stream.Write_ns(n, this.subexp_final_bits, "subexp_final_bits"); 
+					return (subexp_final_bits + mk);
+				}
+				else 
+				{
+					this.subexp_more_bits = stream.Pick("subexp_more_bits", _original != null ? _original.subexp_more_bits : this.subexp_more_bits, _edited != null ? _edited.subexp_more_bits : _original != null ? _original.subexp_more_bits : this.subexp_more_bits);
+					stream.WriteFixed(1, this.subexp_more_bits, "subexp_more_bits"); 
+
+					if ((subexp_more_bits != 0))
+					{
+						i++;
+						mk += a;
+					}
+					else 
+					{
+						this.subexp_bits = stream.Pick("subexp_bits", _original != null ? _original.subexp_bits : this.subexp_bits, _edited != null ? _edited.subexp_bits : _original != null ? _original.subexp_bits : this.subexp_bits);
+						stream.WriteVariable(b2, this.subexp_bits, "subexp_bits"); 
+						return (subexp_bits + mk);
+					}
+				}
+			}
+        }
+
     /*
 film_grain_config() {
 if ( !film_grain_params_present || ( !immediate_output_frame && !implicit_output_frame ) ) {	
@@ -9840,6 +15376,33 @@ grain_seed	f(16)
 				stream.ReadFixed(3, out this.fgm_id, "fgm_id"); 
 				load_grain_model(fgm_id); 
 				stream.ReadFixed(16, out this.grain_seed, "grain_seed"); 
+			}
+        }
+
+        private void WriteFilmGrainConfig()
+        {
+
+			if ((!(film_grain_params_present != 0) || (!(immediate_output_frame != 0) && !(implicit_output_frame != 0))))
+			{
+				apply_grain = 0;
+			}
+			else if ((single_picture_header_flag != 0))
+			{
+				apply_grain = 1;
+			}
+			else 
+			{
+				this.apply_grain = stream.Pick("apply_grain", _original != null ? _original.apply_grain : this.apply_grain, _edited != null ? _edited.apply_grain : _original != null ? _original.apply_grain : this.apply_grain);
+				stream.WriteFixed(1, this.apply_grain, "apply_grain"); 
+			}
+
+			if ((apply_grain != 0))
+			{
+				this.fgm_id = stream.Pick("fgm_id", _original != null ? _original.fgm_id : this.fgm_id, _edited != null ? _edited.fgm_id : _original != null ? _original.fgm_id : this.fgm_id);
+				stream.WriteFixed(3, this.fgm_id, "fgm_id"); 
+				load_grain_model(fgm_id); 
+				this.grain_seed = stream.Pick("grain_seed", _original != null ? _original.grain_seed : this.grain_seed, _edited != null ? _edited.grain_seed : _original != null ? _original.grain_seed : this.grain_seed);
+				stream.WriteFixed(16, this.grain_seed, "grain_seed"); 
 			}
         }
 
@@ -10180,6 +15743,202 @@ film_grain_block_size	f(1)
 			stream.ReadFixed(1, out this.film_grain_block_size, "film_grain_block_size"); 
         }
 
+        private void WriteFilmGrainModel(int monochrome, int subX, int subY)
+        {
+			int i = 0;
+			int bitsIncr = 0;
+			int bitsScal = 0;
+			int numPosLuma = 0;
+			int bitsCoef = 0;
+			int numPosChroma = 0;
+
+			if ((monochrome != 0))
+			{
+				chroma_scaling_from_luma = 0;
+			}
+			else 
+			{
+				this.chroma_scaling_from_luma = stream.Pick("chroma_scaling_from_luma", _original != null ? _original.chroma_scaling_from_luma : this.chroma_scaling_from_luma, _edited != null ? _edited.chroma_scaling_from_luma : _original != null ? _original.chroma_scaling_from_luma : this.chroma_scaling_from_luma);
+				stream.WriteFixed(1, this.chroma_scaling_from_luma, "chroma_scaling_from_luma"); 
+			}
+			this.num_y_points = stream.Pick("num_y_points", _original != null ? _original.num_y_points : this.num_y_points, _edited != null ? _edited.num_y_points : _original != null ? _original.num_y_points : this.num_y_points);
+			stream.WriteFixed(4, this.num_y_points, "num_y_points"); 
+
+			if ((num_y_points > 0))
+			{
+				this.point_value_increment_bits_minus_1 = stream.Pick("point_value_increment_bits_minus_1", _original != null ? _original.point_value_increment_bits_minus_1 : this.point_value_increment_bits_minus_1, _edited != null ? _edited.point_value_increment_bits_minus_1 : _original != null ? _original.point_value_increment_bits_minus_1 : this.point_value_increment_bits_minus_1);
+				stream.WriteFixed(3, this.point_value_increment_bits_minus_1, "point_value_increment_bits_minus_1"); 
+				bitsIncr = (point_value_increment_bits_minus_1 + 1);
+				this.point_scaling_bits_minus_5 = stream.Pick("point_scaling_bits_minus_5", _original != null ? _original.point_scaling_bits_minus_5 : this.point_scaling_bits_minus_5, _edited != null ? _edited.point_scaling_bits_minus_5 : _original != null ? _original.point_scaling_bits_minus_5 : this.point_scaling_bits_minus_5);
+				stream.WriteFixed(2, this.point_scaling_bits_minus_5, "point_scaling_bits_minus_5"); 
+				bitsScal = (point_scaling_bits_minus_5 + 5);
+			}
+
+			for (i = 0; (i < num_y_points); i++)
+			{
+				this.point_y_value[i] = stream.Pick("point_y_value", _original != null ? ((i > 0) ? _original.point_y_value[i] - (point_y_value[(i - 1)]) : _original.point_y_value[i]) : this.point_y_value[i], _edited != null ? ((i > 0) ? _edited.point_y_value[i] - (point_y_value[(i - 1)]) : _edited.point_y_value[i]) : _original != null ? ((i > 0) ? _original.point_y_value[i] - (point_y_value[(i - 1)]) : _original.point_y_value[i]) : this.point_y_value[i]);
+				stream.WriteVariable(bitsIncr, this.point_y_value[i], "point_y_value"); 
+
+				if ((i > 0))
+				{
+					point_y_value[i] += point_y_value[(i - 1)];
+				}
+				this.point_y_scaling[i] = stream.Pick("point_y_scaling", _original != null ? _original.point_y_scaling[i] : this.point_y_scaling[i], _edited != null ? _edited.point_y_scaling[i] : _original != null ? _original.point_y_scaling[i] : this.point_y_scaling[i]);
+				stream.WriteVariable(bitsScal, this.point_y_scaling[i], "point_y_scaling"); 
+			}
+
+			if (((monochrome != 0) || (chroma_scaling_from_luma != 0)))
+			{
+				num_cb_points = 0;
+				num_cr_points = 0;
+			}
+			else 
+			{
+				this.num_cb_points = stream.Pick("num_cb_points", _original != null ? _original.num_cb_points : this.num_cb_points, _edited != null ? _edited.num_cb_points : _original != null ? _original.num_cb_points : this.num_cb_points);
+				stream.WriteFixed(4, this.num_cb_points, "num_cb_points"); 
+
+				if ((num_cb_points > 0))
+				{
+					this.point_value_increment_bits_minus_1 = stream.Pick("point_value_increment_bits_minus_1", _original != null ? _original.point_value_increment_bits_minus_1 : this.point_value_increment_bits_minus_1, _edited != null ? _edited.point_value_increment_bits_minus_1 : _original != null ? _original.point_value_increment_bits_minus_1 : this.point_value_increment_bits_minus_1);
+					stream.WriteFixed(3, this.point_value_increment_bits_minus_1, "point_value_increment_bits_minus_1"); 
+					bitsIncr = (point_value_increment_bits_minus_1 + 1);
+					this.point_scaling_bits_minus_5 = stream.Pick("point_scaling_bits_minus_5", _original != null ? _original.point_scaling_bits_minus_5 : this.point_scaling_bits_minus_5, _edited != null ? _edited.point_scaling_bits_minus_5 : _original != null ? _original.point_scaling_bits_minus_5 : this.point_scaling_bits_minus_5);
+					stream.WriteFixed(2, this.point_scaling_bits_minus_5, "point_scaling_bits_minus_5"); 
+					bitsScal = (point_scaling_bits_minus_5 + 5);
+				}
+
+				for (i = 0; (i < num_cb_points); i++)
+				{
+					this.point_cb_value[i] = stream.Pick("point_cb_value", _original != null ? ((i > 0) ? _original.point_cb_value[i] - (point_cb_value[(i - 1)]) : _original.point_cb_value[i]) : this.point_cb_value[i], _edited != null ? ((i > 0) ? _edited.point_cb_value[i] - (point_cb_value[(i - 1)]) : _edited.point_cb_value[i]) : _original != null ? ((i > 0) ? _original.point_cb_value[i] - (point_cb_value[(i - 1)]) : _original.point_cb_value[i]) : this.point_cb_value[i]);
+					stream.WriteVariable(bitsIncr, this.point_cb_value[i], "point_cb_value"); 
+
+					if ((i > 0))
+					{
+						point_cb_value[i] += point_cb_value[(i - 1)];
+					}
+					this.point_cb_scaling[i] = stream.Pick("point_cb_scaling", _original != null ? _original.point_cb_scaling[i] : this.point_cb_scaling[i], _edited != null ? _edited.point_cb_scaling[i] : _original != null ? _original.point_cb_scaling[i] : this.point_cb_scaling[i]);
+					stream.WriteVariable(bitsScal, this.point_cb_scaling[i], "point_cb_scaling"); 
+				}
+				this.num_cr_points = stream.Pick("num_cr_points", _original != null ? _original.num_cr_points : this.num_cr_points, _edited != null ? _edited.num_cr_points : _original != null ? _original.num_cr_points : this.num_cr_points);
+				stream.WriteFixed(4, this.num_cr_points, "num_cr_points"); 
+
+				if ((num_cr_points > 0))
+				{
+					this.point_value_increment_bits_minus_1 = stream.Pick("point_value_increment_bits_minus_1", _original != null ? _original.point_value_increment_bits_minus_1 : this.point_value_increment_bits_minus_1, _edited != null ? _edited.point_value_increment_bits_minus_1 : _original != null ? _original.point_value_increment_bits_minus_1 : this.point_value_increment_bits_minus_1);
+					stream.WriteFixed(3, this.point_value_increment_bits_minus_1, "point_value_increment_bits_minus_1"); 
+					bitsIncr = (point_value_increment_bits_minus_1 + 1);
+					this.point_scaling_bits_minus_5 = stream.Pick("point_scaling_bits_minus_5", _original != null ? _original.point_scaling_bits_minus_5 : this.point_scaling_bits_minus_5, _edited != null ? _edited.point_scaling_bits_minus_5 : _original != null ? _original.point_scaling_bits_minus_5 : this.point_scaling_bits_minus_5);
+					stream.WriteFixed(2, this.point_scaling_bits_minus_5, "point_scaling_bits_minus_5"); 
+					bitsScal = (point_scaling_bits_minus_5 + 5);
+				}
+
+				for (i = 0; (i < num_cr_points); i++)
+				{
+					this.point_cr_value[i] = stream.Pick("point_cr_value", _original != null ? ((i > 0) ? _original.point_cr_value[i] - (point_cr_value[(i - 1)]) : _original.point_cr_value[i]) : this.point_cr_value[i], _edited != null ? ((i > 0) ? _edited.point_cr_value[i] - (point_cr_value[(i - 1)]) : _edited.point_cr_value[i]) : _original != null ? ((i > 0) ? _original.point_cr_value[i] - (point_cr_value[(i - 1)]) : _original.point_cr_value[i]) : this.point_cr_value[i]);
+					stream.WriteVariable(bitsIncr, this.point_cr_value[i], "point_cr_value"); 
+
+					if ((i > 0))
+					{
+						point_cr_value[i] += point_cr_value[(i - 1)];
+					}
+					this.point_cr_scaling[i] = stream.Pick("point_cr_scaling", _original != null ? _original.point_cr_scaling[i] : this.point_cr_scaling[i], _edited != null ? _edited.point_cr_scaling[i] : _original != null ? _original.point_cr_scaling[i] : this.point_cr_scaling[i]);
+					stream.WriteVariable(bitsScal, this.point_cr_scaling[i], "point_cr_scaling"); 
+				}
+			}
+			this.grain_scaling_minus_8 = stream.Pick("grain_scaling_minus_8", _original != null ? _original.grain_scaling_minus_8 : this.grain_scaling_minus_8, _edited != null ? _edited.grain_scaling_minus_8 : _original != null ? _original.grain_scaling_minus_8 : this.grain_scaling_minus_8);
+			stream.WriteFixed(2, this.grain_scaling_minus_8, "grain_scaling_minus_8"); 
+			this.ar_coeff_lag = stream.Pick("ar_coeff_lag", _original != null ? _original.ar_coeff_lag : this.ar_coeff_lag, _edited != null ? _edited.ar_coeff_lag : _original != null ? _original.ar_coeff_lag : this.ar_coeff_lag);
+			stream.WriteFixed(2, this.ar_coeff_lag, "ar_coeff_lag"); 
+			numPosLuma = ((2 * ar_coeff_lag) * (ar_coeff_lag + 1));
+
+			if ((num_y_points != 0))
+			{
+				this.bits_per_ar_coeff_y_minus_5 = stream.Pick("bits_per_ar_coeff_y_minus_5", _original != null ? _original.bits_per_ar_coeff_y_minus_5 : this.bits_per_ar_coeff_y_minus_5, _edited != null ? _edited.bits_per_ar_coeff_y_minus_5 : _original != null ? _original.bits_per_ar_coeff_y_minus_5 : this.bits_per_ar_coeff_y_minus_5);
+				stream.WriteFixed(2, this.bits_per_ar_coeff_y_minus_5, "bits_per_ar_coeff_y_minus_5"); 
+				bitsCoef = (bits_per_ar_coeff_y_minus_5 + 5);
+				numPosChroma = (numPosLuma + 1);
+
+				for (i = 0; (i < numPosLuma); i++)
+				{
+					this.ar_coeffs_y[i] = stream.Pick("ar_coeffs_y", _original != null ? (_original.ar_coeffs_y[i] + ((1 << (bitsCoef - 1)))) : this.ar_coeffs_y[i], _edited != null ? (_edited.ar_coeffs_y[i] + ((1 << (bitsCoef - 1)))) : _original != null ? (_original.ar_coeffs_y[i] + ((1 << (bitsCoef - 1)))) : this.ar_coeffs_y[i]);
+					stream.WriteVariable(bitsCoef, this.ar_coeffs_y[i], "ar_coeffs_y"); 
+					ar_coeffs_y[i] -= (1 << (bitsCoef - 1));
+				}
+			}
+			else 
+			{
+				numPosChroma = numPosLuma;
+			}
+
+			if (((chroma_scaling_from_luma != 0) || (num_cb_points != 0)))
+			{
+				this.bits_per_ar_coeff_cb_minus_5 = stream.Pick("bits_per_ar_coeff_cb_minus_5", _original != null ? _original.bits_per_ar_coeff_cb_minus_5 : this.bits_per_ar_coeff_cb_minus_5, _edited != null ? _edited.bits_per_ar_coeff_cb_minus_5 : _original != null ? _original.bits_per_ar_coeff_cb_minus_5 : this.bits_per_ar_coeff_cb_minus_5);
+				stream.WriteFixed(2, this.bits_per_ar_coeff_cb_minus_5, "bits_per_ar_coeff_cb_minus_5"); 
+				bitsCoef = (bits_per_ar_coeff_cb_minus_5 + 5);
+
+				for (i = 0; (i < numPosChroma); i++)
+				{
+					this.ar_coeffs_cb[i] = stream.Pick("ar_coeffs_cb", _original != null ? (_original.ar_coeffs_cb[i] + ((1 << (bitsCoef - 1)))) : this.ar_coeffs_cb[i], _edited != null ? (_edited.ar_coeffs_cb[i] + ((1 << (bitsCoef - 1)))) : _original != null ? (_original.ar_coeffs_cb[i] + ((1 << (bitsCoef - 1)))) : this.ar_coeffs_cb[i]);
+					stream.WriteVariable(bitsCoef, this.ar_coeffs_cb[i], "ar_coeffs_cb"); 
+					ar_coeffs_cb[i] -= (1 << (bitsCoef - 1));
+				}
+			}
+
+			if (((chroma_scaling_from_luma != 0) || (num_cr_points != 0)))
+			{
+				this.bits_per_ar_coeff_cr_minus_5 = stream.Pick("bits_per_ar_coeff_cr_minus_5", _original != null ? _original.bits_per_ar_coeff_cr_minus_5 : this.bits_per_ar_coeff_cr_minus_5, _edited != null ? _edited.bits_per_ar_coeff_cr_minus_5 : _original != null ? _original.bits_per_ar_coeff_cr_minus_5 : this.bits_per_ar_coeff_cr_minus_5);
+				stream.WriteFixed(2, this.bits_per_ar_coeff_cr_minus_5, "bits_per_ar_coeff_cr_minus_5"); 
+				bitsCoef = (bits_per_ar_coeff_cr_minus_5 + 5);
+
+				for (i = 0; (i < numPosChroma); i++)
+				{
+					this.ar_coeffs_cr[i] = stream.Pick("ar_coeffs_cr", _original != null ? (_original.ar_coeffs_cr[i] + ((1 << (bitsCoef - 1)))) : this.ar_coeffs_cr[i], _edited != null ? (_edited.ar_coeffs_cr[i] + ((1 << (bitsCoef - 1)))) : _original != null ? (_original.ar_coeffs_cr[i] + ((1 << (bitsCoef - 1)))) : this.ar_coeffs_cr[i]);
+					stream.WriteVariable(bitsCoef, this.ar_coeffs_cr[i], "ar_coeffs_cr"); 
+					ar_coeffs_cr[i] -= (1 << (bitsCoef - 1));
+				}
+			}
+			this.ar_coeff_shift_minus_6 = stream.Pick("ar_coeff_shift_minus_6", _original != null ? _original.ar_coeff_shift_minus_6 : this.ar_coeff_shift_minus_6, _edited != null ? _edited.ar_coeff_shift_minus_6 : _original != null ? _original.ar_coeff_shift_minus_6 : this.ar_coeff_shift_minus_6);
+			stream.WriteFixed(2, this.ar_coeff_shift_minus_6, "ar_coeff_shift_minus_6"); 
+			this.grain_scale_shift = stream.Pick("grain_scale_shift", _original != null ? _original.grain_scale_shift : this.grain_scale_shift, _edited != null ? _edited.grain_scale_shift : _original != null ? _original.grain_scale_shift : this.grain_scale_shift);
+			stream.WriteFixed(2, this.grain_scale_shift, "grain_scale_shift"); 
+
+			if ((num_cb_points != 0))
+			{
+				this.cb_mult = stream.Pick("cb_mult", _original != null ? _original.cb_mult : this.cb_mult, _edited != null ? _edited.cb_mult : _original != null ? _original.cb_mult : this.cb_mult);
+				stream.WriteFixed(8, this.cb_mult, "cb_mult"); 
+				this.cb_luma_mult = stream.Pick("cb_luma_mult", _original != null ? _original.cb_luma_mult : this.cb_luma_mult, _edited != null ? _edited.cb_luma_mult : _original != null ? _original.cb_luma_mult : this.cb_luma_mult);
+				stream.WriteFixed(8, this.cb_luma_mult, "cb_luma_mult"); 
+				this.cb_offset = stream.Pick("cb_offset", _original != null ? _original.cb_offset : this.cb_offset, _edited != null ? _edited.cb_offset : _original != null ? _original.cb_offset : this.cb_offset);
+				stream.WriteFixed(9, this.cb_offset, "cb_offset"); 
+			}
+
+			if ((num_cr_points != 0))
+			{
+				this.cr_mult = stream.Pick("cr_mult", _original != null ? _original.cr_mult : this.cr_mult, _edited != null ? _edited.cr_mult : _original != null ? _original.cr_mult : this.cr_mult);
+				stream.WriteFixed(8, this.cr_mult, "cr_mult"); 
+				this.cr_luma_mult = stream.Pick("cr_luma_mult", _original != null ? _original.cr_luma_mult : this.cr_luma_mult, _edited != null ? _edited.cr_luma_mult : _original != null ? _original.cr_luma_mult : this.cr_luma_mult);
+				stream.WriteFixed(8, this.cr_luma_mult, "cr_luma_mult"); 
+				this.cr_offset = stream.Pick("cr_offset", _original != null ? _original.cr_offset : this.cr_offset, _edited != null ? _edited.cr_offset : _original != null ? _original.cr_offset : this.cr_offset);
+				stream.WriteFixed(9, this.cr_offset, "cr_offset"); 
+			}
+			this.overlap_flag = stream.Pick("overlap_flag", _original != null ? _original.overlap_flag : this.overlap_flag, _edited != null ? _edited.overlap_flag : _original != null ? _original.overlap_flag : this.overlap_flag);
+			stream.WriteFixed(1, this.overlap_flag, "overlap_flag"); 
+			this.clip_to_restricted_range = stream.Pick("clip_to_restricted_range", _original != null ? _original.clip_to_restricted_range : this.clip_to_restricted_range, _edited != null ? _edited.clip_to_restricted_range : _original != null ? _original.clip_to_restricted_range : this.clip_to_restricted_range);
+			stream.WriteFixed(1, this.clip_to_restricted_range, "clip_to_restricted_range"); 
+
+			if ((clip_to_restricted_range != 0))
+			{
+				this.fg_mc_identity = stream.Pick("fg_mc_identity", _original != null ? _original.fg_mc_identity : this.fg_mc_identity, _edited != null ? _edited.fg_mc_identity : _original != null ? _original.fg_mc_identity : this.fg_mc_identity);
+				stream.WriteFixed(1, this.fg_mc_identity, "fg_mc_identity"); 
+			}
+			else 
+			{
+				fg_mc_identity = 0;
+			}
+			this.film_grain_block_size = stream.Pick("film_grain_block_size", _original != null ? _original.film_grain_block_size : this.film_grain_block_size, _edited != null ? _edited.film_grain_block_size : _original != null ? _original.film_grain_block_size : this.film_grain_block_size);
+			stream.WriteFixed(1, this.film_grain_block_size, "film_grain_block_size"); 
+        }
+
     /*
 tile_group_obu( sz ) {
 startBitPos = get_position()	
@@ -10322,6 +16081,93 @@ tile_group_payload( sz )
 			TileGroupPayload(sz); 
         }
 
+        private void WriteTileGroupObu(int sz)
+        {
+			int TileNum = 0;
+			int startBitPos = 0;
+			int headerBits = 0;
+			int remainingBits = 0;
+			int tileBits = 0;
+			int tileRow = 0;
+			int tileCol = 0;
+			int endBitPos = 0;
+			int headerBytes = 0;
+			startBitPos = get_position();
+			this.is_first_tile_group = stream.Pick("is_first_tile_group", _original != null ? (_original.frame_header_present_flag == 1 ? 1 : 0) : this.is_first_tile_group, _edited != null ? (_edited.frame_header_present_flag == 1 ? 1 : 0) : _original != null ? (_original.frame_header_present_flag == 1 ? 1 : 0) : this.is_first_tile_group);
+			stream.WriteFixed(1, this.is_first_tile_group, "is_first_tile_group"); 
+
+			if ((is_first_tile_group != 0))
+			{
+				frame_header_present_flag = 1;
+			}
+			else 
+			{
+				this.frame_header_present_flag = stream.Pick("frame_header_present_flag", _original != null ? _original.frame_header_present_flag : this.frame_header_present_flag, _edited != null ? _edited.frame_header_present_flag : _original != null ? _original.frame_header_present_flag : this.frame_header_present_flag);
+				stream.WriteFixed(1, this.frame_header_present_flag, "frame_header_present_flag"); 
+			}
+
+			if ((frame_header_present_flag != 0))
+			{
+				WriteFrameHeader(is_first_tile_group); 
+			}
+
+			if ((bru_inactive != 0))
+			{
+				headerBits = (get_position() - startBitPos);
+				remainingBits = ((sz * 8) - headerBits);
+				WriteTrailingBits(remainingBits); 
+				return;
+			}
+			NumTiles = (TileCols * TileRows);
+			tile_start_and_end_present_flag = 0;
+
+			if ((NumTiles > 1))
+			{
+				this.tile_start_and_end_present_flag = stream.Pick("tile_start_and_end_present_flag", _original != null ? _original.tile_start_and_end_present_flag : this.tile_start_and_end_present_flag, _edited != null ? _edited.tile_start_and_end_present_flag : _original != null ? _original.tile_start_and_end_present_flag : this.tile_start_and_end_present_flag);
+				stream.WriteFixed(1, this.tile_start_and_end_present_flag, "tile_start_and_end_present_flag"); 
+			}
+
+			if (((NumTiles == 1) || !(tile_start_and_end_present_flag != 0)))
+			{
+				tg_start = 0;
+				tg_end = (NumTiles - 1);
+			}
+			else 
+			{
+				tileBits = (TileColsLog2 + TileRowsLog2);
+				this.tg_start = stream.Pick("tg_start", _original != null ? _original.tg_start : this.tg_start, _edited != null ? _edited.tg_start : _original != null ? _original.tg_start : this.tg_start);
+				stream.WriteVariable(tileBits, this.tg_start, "tg_start"); 
+				this.tg_end = stream.Pick("tg_end", _original != null ? _original.tg_end : this.tg_end, _edited != null ? _edited.tg_end : _original != null ? _original.tg_end : this.tg_end);
+				stream.WriteVariable(tileBits, this.tg_end, "tg_end"); 
+			}
+
+			if ((use_bru != 0))
+			{
+
+				if ((NumTiles > 1))
+				{
+
+					for (TileNum = tg_start; (TileNum <= tg_end); TileNum++)
+					{
+						tileRow = (TileNum / TileCols);
+						tileCol = (TileNum % TileCols);
+						this.bru_tile_active = stream.Pick("bru_tile_active", _original != null ? _original.BruTileActives[tileRow][tileCol] : this.bru_tile_active, _edited != null ? _edited.BruTileActives[tileRow][tileCol] : _original != null ? _original.BruTileActives[tileRow][tileCol] : this.bru_tile_active);
+						stream.WriteFixed(1, this.bru_tile_active, "bru_tile_active"); 
+						BruTileActives[tileRow][tileCol] = bru_tile_active;
+					}
+				}
+				else 
+				{
+					BruTileActives[0][0] = 1;
+				}
+			}
+			WriteByteAlignment(); 
+			endBitPos = get_position();
+			headerBytes = ((endBitPos - startBitPos) / 8);
+			sz -= headerBytes;
+			WriteTileGroupPayload(sz); 
+        }
+
     /*
 tile_group_payload( sz ) {
 for ( TileNum = tg_start; TileNum <= tg_end; TileNum++ ) {	
@@ -10409,6 +16255,77 @@ SeenFrameHeader = 0
 				else if (!(IsBridge != 0))
 				{
 					stream.ReadLe(TileSizeBytes, out this.tile_size_minus_1, "tile_size_minus_1"); 
+					tileSize = (tile_size_minus_1 + 1);
+					sz -= (tileSize + TileSizeBytes);
+				}
+				MiRowStart = MiRowStarts[tileRow];
+				MiRowEnd = MiRowStarts[(tileRow + 1)];
+				MiColStart = MiColStarts[tileCol];
+				MiColEnd = MiColStarts[(tileCol + 1)];
+				BruTileActive = ((use_bru != 0) ? BruTileActives[tileRow][tileCol] : 0);
+				align = Num_4x4_Blocks_High[SbSize];
+				shift = Mi_Height_Log2[SbSize];
+
+				for (r = MiRowStart; (r < ((((MiRowEnd + align) - 1) >> shift) << shift)); r++)
+				{
+
+					for (c = MiColStart; (c < ((((MiColEnd + align) - 1) >> shift) << shift)); c++)
+					{
+						IBCCoded[r][c] = 0;
+					}
+				}
+				CurrentQIndex = base_q_idx;
+
+				if (!(IsBridge != 0))
+				{
+					init_symbol(tileSize); 
+				}
+				decode_tile(); 
+
+				if (!(IsBridge != 0))
+				{
+					exit_symbol(); 
+				}
+			}
+
+			if ((tg_end == (NumTiles - 1)))
+			{
+
+				if (!(IsBridge != 0))
+				{
+					frame_end_update_cdf(); 
+				}
+				decode_frame_wrapup(); 
+				SeenFrameHeader = 0;
+			}
+        }
+
+        private void WriteTileGroupPayload(int sz)
+        {
+			int TileNum = 0;
+			int r = 0;
+			int c = 0;
+			int tileRow = 0;
+			int tileCol = 0;
+			int lastTile = 0;
+			int tileSize = 0;
+			int align = 0;
+			int shift = 0;
+
+			for (TileNum = tg_start; (TileNum <= tg_end); TileNum++)
+			{
+				tileRow = (TileNum / TileCols);
+				tileCol = (TileNum % TileCols);
+				lastTile = ((TileNum == tg_end) ? 1 : 0);
+
+				if ((lastTile != 0))
+				{
+					tileSize = sz;
+				}
+				else if (!(IsBridge != 0))
+				{
+					this.tile_size_minus_1 = stream.Pick("tile_size_minus_1", _original != null ? _original.tile_size_minus_1 : this.tile_size_minus_1, _edited != null ? _edited.tile_size_minus_1 : _original != null ? _original.tile_size_minus_1 : this.tile_size_minus_1);
+					stream.WriteLe(TileSizeBytes, this.tile_size_minus_1, "tile_size_minus_1"); 
 					tileSize = (tile_size_minus_1 + 1);
 					sz -= (tileSize + TileSizeBytes);
 				}
@@ -11894,6 +17811,299 @@ j++
 							if ((readFrameFilters != 0))
 							{
 								v = DecodeSignedSubexpWithRef(min, (min + (1 << k)), v, (k - 3));
+							}
+							else 
+							{
+								v = DecodeSigned4part(min, k, v);
+							}
+						}
+						else 
+						{
+							v = 0;
+						}
+					}
+
+					if ((readFrameFilters != 0))
+					{
+						FrameLrWienerNs[plane][c][j] = v;
+
+						if ((((!(merged[c] != 0) && (plane > 0)) && (j >= WIENER_NS_SHORT_COEFFS)) && (wiener_ns_uv_sym != 0)))
+						{
+							FrameLrWienerNs[plane][c][(j + 1)] = v;
+							j++;
+						}
+					}
+					else 
+					{
+						LrWienerNs[plane][unitRow][unitCol][j] = v;
+
+						if (!(merged[c] != 0))
+						{
+							RefLrWienerNs[plane][c][WienerNsPtr[plane][c]][j] = v;
+						}
+
+						if ((((!(merged[c] != 0) && (plane > 0)) && (j >= WIENER_NS_SHORT_COEFFS)) && (wiener_ns_uv_sym != 0)))
+						{
+							LrWienerNs[plane][unitRow][unitCol][(j + 1)] = v;
+							RefLrWienerNs[plane][c][WienerNsPtr[plane][c]][(j + 1)] = v;
+							j++;
+						}
+					}
+				}
+			}
+        }
+
+        private void WriteReadWienernsFilter(int plane, int unitRow, int unitCol, int readFrameFilters)
+        {
+			int i = 0;
+			int c = 0;
+			int k = 0;
+			int subset = 0;
+			int j = 0;
+			int numClasses = 0;
+			int numRefFilters = 0;
+			int nopcw = 0;
+			AomArray<int> groupCounts = new AomArray<int>();
+			AomArray<int> groupHits = new AomArray<int>();
+			AomArray<int> groupBase = new AomArray<int>();
+			int predGroup = 0;
+			int numZeros = 0;
+			int altGroup = 0;
+			int group = 0;
+			int n = 0;
+			int refc = 0;
+			AomArray<int> matchIndices = new AomArray<int>();
+			AomArray<int> merged = new AomArray<int>();
+			AomArray<int> refBank = new AomArray<int>();
+			int nCoeffs = 0;
+			int numSubsets = 0;
+			int min = 0;
+			int v = 0;
+/*  AV2 specification v1.0.0, 5.20.10.6 Read Wiener NS syntax  */
+
+			numClasses = 1;
+
+			if ((frame_filters_on[plane] != 0))
+			{
+
+				if (!(readFrameFilters != 0))
+				{
+					return;
+				}
+				(numClasses, numRefFilters, _, _, _) = SearchFrameFilters(plane, -1);
+				nopcw = lr_tools_disable[0][RESTORE_PC_WIENER];
+				groupCounts[0] = numClasses;
+				groupCounts[1] = numRefFilters;
+				groupCounts[2] = (((plane > 0) || (nopcw != 0)) ? 0 : ((64 - numClasses) - numRefFilters));
+
+				for (i = 0; (i < 3); i++)
+				{
+					groupHits[i] = 0;
+				}
+				groupBase[0] = 0;
+
+				for (i = 1; (i < 3); i++)
+				{
+					groupBase[i] = (groupBase[(i - 1)] + groupCounts[(i - 1)]);
+				}
+
+				for (c = 0; (c < numClasses); c++)
+				{
+					groupCounts[0] = (c + 1);
+
+					if ((c == 0))
+					{
+						predGroup = ((groupCounts[1] > 2) ? 1 : PredictGroup(groupCounts));
+					}
+					else 
+					{
+						predGroup = PredictGroup(groupHits);
+					}
+					numZeros = 0;
+					altGroup = 0;
+
+					for (i = 0; (i < 3); i++)
+					{
+
+						if ((i != predGroup))
+						{
+
+							if ((groupCounts[i] == 0))
+							{
+								numZeros += 1;
+							}
+							else 
+							{
+								altGroup = i;
+							}
+						}
+					}
+
+					if ((numZeros == 2))
+					{
+						use_alt_group = 0;
+					}
+					else 
+					{
+						this.use_alt_group = stream.Pick("use_alt_group", _original != null ? _original.use_alt_group : this.use_alt_group, _edited != null ? _edited.use_alt_group : _original != null ? _original.use_alt_group : this.use_alt_group);
+						stream.WriteFixed(1, this.use_alt_group, "use_alt_group"); 
+					}
+
+					if ((use_alt_group != 0))
+					{
+
+						if ((numZeros == 1))
+						{
+							group = altGroup;
+						}
+						else 
+						{
+							this.group_bit = stream.Pick("group_bit", _original != null ? _original.group_bit : this.group_bit, _edited != null ? _edited.group_bit : _original != null ? _original.group_bit : this.group_bit);
+							stream.WriteFixed(1, this.group_bit, "group_bit"); 
+							group = ((predGroup <= group_bit) ? (group_bit + 1) : group_bit);
+						}
+					}
+					else 
+					{
+						group = predGroup;
+					}
+					n = groupCounts[group];
+					refc = (groupBase[group] + (n >> 1));
+
+					if ((n == 1))
+					{
+						matchIndices[c] = groupBase[group];
+					}
+					else 
+					{
+						matchIndices[c] = WriteDecodeSignedSubexpWithRef(groupBase[group], (groupBase[group] + n), refc, 4);
+					}
+					groupHits[group]++;
+				}
+			}
+
+			for (c = 0; (c < numClasses); c++)
+			{
+
+				if ((readFrameFilters != 0))
+				{
+					this.merged_param = stream.Pick("merged_param", _original != null ? _original.merged_param : this.merged_param, _edited != null ? _edited.merged_param : _original != null ? _original.merged_param : this.merged_param);
+					stream.WriteFixed(1, this.merged_param, "merged_param"); 
+				}
+				else 
+				{
+					this.merged_param = stream.Pick("merged_param", _original != null ? _original.merged_param : this.merged_param, _edited != null ? _edited.merged_param : _original != null ? _original.merged_param : this.merged_param);
+					WriteArithmetic( this.merged_param, "merged_param"); 
+				}
+				merged[c] = merged_param;
+
+				if ((readFrameFilters != 0))
+				{
+					refBank[c] = 0;
+				}
+				else 
+				{
+
+					for (k = 0; (k < (WienerNsBankSize[plane][c] - 1)); k++)
+					{
+						this.use_bank = stream.Pick("use_bank", _original != null ? _original.use_bank : this.use_bank, _edited != null ? _edited.use_bank : _original != null ? _original.use_bank : this.use_bank);
+						WriteArithmetic( this.use_bank, "use_bank"); 
+
+						if ((use_bank != 0))
+						{
+							break;
+						}
+					}
+					refBank[c] = (((WienerNsPtr[plane][c] - k) + LR_BANK_SIZE) % LR_BANK_SIZE);
+				}
+			}
+
+			for (c = 0; (c < numClasses); c++)
+			{
+
+				if ((frame_filters_on[plane] != 0))
+				{
+					FillFirstSlotOfBankWithFilterMatch(c, plane, matchIndices[c]); 
+				}
+				nCoeffs = ((plane > 0) ? WIENER_NS_CHROMA_COEFFS : WIENER_NS_LUMA_COEFFS);
+
+				if ((merged[c] != 0))
+				{
+
+					if ((WienerNsBankSize[plane][c] == 0))
+					{
+						WienerNsBankSize[plane][c] = 1;
+					}
+				}
+				else 
+				{
+
+					if ((WienerNsBankSize[plane][c] < LR_BANK_SIZE))
+					{
+						WienerNsPtr[plane][c] = WienerNsBankSize[plane][c];
+						WienerNsBankSize[plane][c] += 1;
+					}
+					else 
+					{
+						WienerNsPtr[plane][c] = ((WienerNsPtr[plane][c] + 1) % LR_BANK_SIZE);
+					}
+					numSubsets = ((plane == 0) ? 4 : 3);
+
+					for (subset = 0; (subset < (numSubsets - 1)); subset++)
+					{
+
+						if ((readFrameFilters != 0))
+						{
+							this.wiener_ns_length = stream.Pick("wiener_ns_length", _original != null ? _original.wiener_ns_length : this.wiener_ns_length, _edited != null ? _edited.wiener_ns_length : _original != null ? _original.wiener_ns_length : this.wiener_ns_length);
+							stream.WriteFixed(1, this.wiener_ns_length, "wiener_ns_length"); 
+						}
+						else 
+						{
+							this.wiener_ns_length = stream.Pick("wiener_ns_length", _original != null ? _original.wiener_ns_length : this.wiener_ns_length, _edited != null ? _edited.wiener_ns_length : _original != null ? _original.wiener_ns_length : this.wiener_ns_length);
+							WriteArithmetic( this.wiener_ns_length, "wiener_ns_length"); 
+						}
+
+						if ((wiener_ns_length == 0))
+						{
+							break;
+						}
+					}
+
+					if (((plane > 0) && (subset > 0)))
+					{
+
+						if ((readFrameFilters != 0))
+						{
+							this.wiener_ns_uv_sym = stream.Pick("wiener_ns_uv_sym", _original != null ? _original.wiener_ns_uv_sym : this.wiener_ns_uv_sym, _edited != null ? _edited.wiener_ns_uv_sym : _original != null ? _original.wiener_ns_uv_sym : this.wiener_ns_uv_sym);
+							stream.WriteFixed(1, this.wiener_ns_uv_sym, "wiener_ns_uv_sym"); 
+						}
+						else 
+						{
+							this.wiener_ns_uv_sym = stream.Pick("wiener_ns_uv_sym", _original != null ? _original.wiener_ns_uv_sym : this.wiener_ns_uv_sym, _edited != null ? _edited.wiener_ns_uv_sym : _original != null ? _original.wiener_ns_uv_sym : this.wiener_ns_uv_sym);
+							WriteArithmetic( this.wiener_ns_uv_sym, "wiener_ns_uv_sym"); 
+						}
+					}
+					else 
+					{
+						wiener_ns_uv_sym = 0;
+					}
+				}
+
+				for (j = 0; (j < nCoeffs); j++)
+				{
+					min = Wiener_Ns_Taps_Min[((plane != 0) ? 1 : 0)][j];
+					k = Wiener_Ns_Taps_K[((plane != 0) ? 1 : 0)][j];
+					v = RefLrWienerNs[plane][c][refBank[c]][j];
+
+					if (!(merged[c] != 0))
+					{
+
+						if ((Wiener_Ns_Taps_Present[((plane != 0) ? 1 : 0)][subset][j] != 0))
+						{
+
+							if ((readFrameFilters != 0))
+							{
+								v = WriteDecodeSignedSubexpWithRef(min, (min + (1 << k)), v, (k - 3));
 							}
 							else 
 							{
@@ -15446,7 +21656,7 @@ return 0
 			state.frame_enabled_motion_modes = this.frame_enabled_motion_modes?.Clone();
 			state.frame_explicit_ref_frame_map = this.frame_explicit_ref_frame_map;
 			state.frame_filters_on = this.frame_filters_on?.Clone();
-			state.frame_hash = (byte[])this.frame_hash?.Clone();
+			state.frame_hash = ((byte[])this.frame_hash?.Clone());
 			state.frame_header_present_flag = this.frame_header_present_flag;
 			state.frame_height_bits_minus_1 = this.frame_height_bits_minus_1;
 			state.frame_height_minus_1 = this.frame_height_minus_1;
@@ -15869,7 +22079,7 @@ return 0
 			state.use_ref_frame_mvs = this.use_ref_frame_mvs;
 			state.user_data_payload_byte = this.user_data_payload_byte;
 			state.using_qmatrix = this.using_qmatrix;
-			state.uuid_iso_iec_11578 = (byte[])this.uuid_iso_iec_11578?.Clone();
+			state.uuid_iso_iec_11578 = ((byte[])this.uuid_iso_iec_11578?.Clone());
 			state.uv_ac_delta_q_enabled = this.uv_ac_delta_q_enabled;
 			state.uv_dc_delta_q_enabled = this.uv_dc_delta_q_enabled;
 			state.v = this.v;
@@ -15890,21 +22100,21 @@ return 0
 			return state;
 		}
 
-		private void LoadContext(ContextState state)
+		private void LoadContext(ContextState state, bool copy = true)
 		{
 			this.ActiveNumRefFrames = state.ActiveNumRefFrames;
 			this.AllowedFrames = state.AllowedFrames;
 			this.AtlasHeight = state.AtlasHeight;
-			this.AtlasSegmentIDToIndex = state.AtlasSegmentIDToIndex?.Clone();
-			this.AtlasSegmentIndexToID = state.AtlasSegmentIndexToID?.Clone();
+			this.AtlasSegmentIDToIndex = copy ? state.AtlasSegmentIDToIndex?.Clone() : state.AtlasSegmentIDToIndex;
+			this.AtlasSegmentIndexToID = copy ? state.AtlasSegmentIndexToID?.Clone() : state.AtlasSegmentIndexToID;
 			this.AtlasWidth = state.AtlasWidth;
 			this.BaseUVAcDeltaQ = state.BaseUVAcDeltaQ;
 			this.BaseUVDcDeltaQ = state.BaseUVDcDeltaQ;
 			this.BaseYDcDeltaQ = state.BaseYDcDeltaQ;
 			this.BitDepth = state.BitDepth;
 			this.BruTileActive = state.BruTileActive;
-			this.BruTileActives = state.BruTileActives?.Clone();
-			this.CcsoFilterOffset = state.CcsoFilterOffset?.Clone();
+			this.BruTileActives = copy ? state.BruTileActives?.Clone() : state.BruTileActives;
+			this.CcsoFilterOffset = copy ? state.CcsoFilterOffset?.Clone() : state.CcsoFilterOffset;
 			this.CcsoLumaSizeLog2 = state.CcsoLumaSizeLog2;
 			this.CdefDamping = state.CdefDamping;
 			this.CdefOnSkipTxfm = state.CdefOnSkipTxfm;
@@ -15924,65 +22134,65 @@ return 0
 			this.DeltaQVDc = state.DeltaQVDc;
 			this.DeltaQYDc = state.DeltaQYDc;
 			this.DerivedPrimaryRefFrame = state.DerivedPrimaryRefFrame;
-			this.DfDeltaQ = state.DfDeltaQ?.Clone();
+			this.DfDeltaQ = copy ? state.DfDeltaQ?.Clone() : state.DfDeltaQ;
 			this.DrlReorder = state.DrlReorder;
 			this.EnableTipOutput = state.EnableTipOutput;
-			this.FeatureData = state.FeatureData?.Clone();
-			this.FeatureEnabled = state.FeatureEnabled?.Clone();
-			this.FgmChromaIdc = state.FgmChromaIdc?.Clone();
-			this.FgmMLayerId = state.FgmMLayerId?.Clone();
-			this.FgmTLayerId = state.FgmTLayerId?.Clone();
-			this.FilmGrainPresent = state.FilmGrainPresent?.Clone();
+			this.FeatureData = copy ? state.FeatureData?.Clone() : state.FeatureData;
+			this.FeatureEnabled = copy ? state.FeatureEnabled?.Clone() : state.FeatureEnabled;
+			this.FgmChromaIdc = copy ? state.FgmChromaIdc?.Clone() : state.FgmChromaIdc;
+			this.FgmMLayerId = copy ? state.FgmMLayerId?.Clone() : state.FgmMLayerId;
+			this.FgmTLayerId = copy ? state.FgmTLayerId?.Clone() : state.FgmTLayerId;
+			this.FilmGrainPresent = copy ? state.FilmGrainPresent?.Clone() : state.FilmGrainPresent;
 			this.FirstPictureInTU = state.FirstPictureInTU;
-			this.FrameDistance = state.FrameDistance?.Clone();
+			this.FrameDistance = copy ? state.FrameDistance?.Clone() : state.FrameDistance;
 			this.FrameHeight = state.FrameHeight;
 			this.FrameIsIntra = state.FrameIsIntra;
-			this.FrameLrWienerNs = state.FrameLrWienerNs?.Clone();
+			this.FrameLrWienerNs = copy ? state.FrameLrWienerNs?.Clone() : state.FrameLrWienerNs;
 			this.FrameMvPrecision = state.FrameMvPrecision;
-			this.FrameRestorationType = state.FrameRestorationType?.Clone();
+			this.FrameRestorationType = copy ? state.FrameRestorationType?.Clone() : state.FrameRestorationType;
 			this.FrameSymbolCount = state.FrameSymbolCount;
 			this.FrameType = state.FrameType;
 			this.FrameWidth = state.FrameWidth;
 			this.FurthestFuture = state.FurthestFuture;
 			this.GdfBlkSize = state.GdfBlkSize;
 			this.GdfPixScale = state.GdfPixScale;
-			this.GmType = state.GmType?.Clone();
+			this.GmType = copy ? state.GmType?.Clone() : state.GmType;
 			this.HasBothRefs = state.HasBothRefs;
 			this.HasLosslessSegment = state.HasLosslessSegment;
-			this.IBCCoded = state.IBCCoded?.Clone();
+			this.IBCCoded = copy ? state.IBCCoded?.Clone() : state.IBCCoded;
 			this.IsBridge = state.IsBridge;
 			this.IsRegular = state.IsRegular;
 			this.LastActiveSegId = state.LastActiveSegId;
 			this.LcrMaxNumXLayerCount = state.LcrMaxNumXLayerCount;
-			this.LcrXLayerID = state.LcrXLayerID?.Clone();
+			this.LcrXLayerID = copy ? state.LcrXLayerID?.Clone() : state.LcrXLayerID;
 			this.LongTermId = state.LongTermId;
-			this.LoopRestorationSize = state.LoopRestorationSize?.Clone();
-			this.LosslessArray = state.LosslessArray?.Clone();
-			this.LrWienerNs = state.LrWienerNs?.Clone();
-			this.MLayerDependencyMap = state.MLayerDependencyMap?.Clone();
-			this.MLayerPresenceMap = state.MLayerPresenceMap?.Clone();
+			this.LoopRestorationSize = copy ? state.LoopRestorationSize?.Clone() : state.LoopRestorationSize;
+			this.LosslessArray = copy ? state.LosslessArray?.Clone() : state.LosslessArray;
+			this.LrWienerNs = copy ? state.LrWienerNs?.Clone() : state.LrWienerNs;
+			this.MLayerDependencyMap = copy ? state.MLayerDependencyMap?.Clone() : state.MLayerDependencyMap;
+			this.MLayerPresenceMap = copy ? state.MLayerPresenceMap?.Clone() : state.MLayerPresenceMap;
 			this.MaxPbAspectRatio = state.MaxPbAspectRatio;
 			this.MaxQ = state.MaxQ;
 			this.MaxSegments = state.MaxSegments;
-			this.MfhFeatureData = state.MfhFeatureData?.Clone();
-			this.MfhFeatureEnabled = state.MfhFeatureEnabled?.Clone();
-			this.MfhMLayerId = state.MfhMLayerId?.Clone();
-			this.MfhSeqHeaderId = state.MfhSeqHeaderId?.Clone();
-			this.MfhTLayerId = state.MfhTLayerId?.Clone();
+			this.MfhFeatureData = copy ? state.MfhFeatureData?.Clone() : state.MfhFeatureData;
+			this.MfhFeatureEnabled = copy ? state.MfhFeatureEnabled?.Clone() : state.MfhFeatureEnabled;
+			this.MfhMLayerId = copy ? state.MfhMLayerId?.Clone() : state.MfhMLayerId;
+			this.MfhSeqHeaderId = copy ? state.MfhSeqHeaderId?.Clone() : state.MfhSeqHeaderId;
+			this.MfhTLayerId = copy ? state.MfhTLayerId?.Clone() : state.MfhTLayerId;
 			this.MiColEnd = state.MiColEnd;
 			this.MiColStart = state.MiColStart;
-			this.MiColStarts = state.MiColStarts?.Clone();
+			this.MiColStarts = copy ? state.MiColStarts?.Clone() : state.MiColStarts;
 			this.MiCols = state.MiCols;
 			this.MiRowEnd = state.MiRowEnd;
 			this.MiRowStart = state.MiRowStart;
-			this.MiRowStarts = state.MiRowStarts?.Clone();
+			this.MiRowStarts = copy ? state.MiRowStarts?.Clone() : state.MiRowStarts;
 			this.MiRows = state.MiRows;
 			this.Monochrome = state.Monochrome;
-			this.MotionFieldChecked = state.MotionFieldChecked?.Clone();
-			this.MotionFieldDepth = state.MotionFieldDepth?.Clone();
-			this.MotionFieldStack = state.MotionFieldStack?.Clone();
+			this.MotionFieldChecked = copy ? state.MotionFieldChecked?.Clone() : state.MotionFieldChecked;
+			this.MotionFieldDepth = copy ? state.MotionFieldDepth?.Clone() : state.MotionFieldDepth;
+			this.MotionFieldStack = copy ? state.MotionFieldStack?.Clone() : state.MotionFieldStack;
 			this.MotionFieldStackCount = state.MotionFieldStackCount;
-			this.MotionFieldVisited = state.MotionFieldVisited?.Clone();
+			this.MotionFieldVisited = copy ? state.MotionFieldVisited?.Clone() : state.MotionFieldVisited;
 			this.MvPrecision = state.MvPrecision;
 			this.NRanked = state.NRanked;
 			this.NumFilterClasses = state.NumFilterClasses;
@@ -15991,50 +22201,50 @@ return 0
 			this.NumPastRefs = state.NumPastRefs;
 			this.NumPlanes = state.NumPlanes;
 			this.NumRefFrames = state.NumRefFrames;
-			this.NumRegionsInAtlas = state.NumRegionsInAtlas?.Clone();
+			this.NumRegionsInAtlas = copy ? state.NumRegionsInAtlas?.Clone() : state.NumRegionsInAtlas;
 			this.NumSameRefCompound = state.NumSameRefCompound;
 			this.NumTiles = state.NumTiles;
 			this.NumTotalRefs = state.NumTotalRefs;
 			this.OlkEncountered = state.OlkEncountered;
-			this.OlkRefresh = state.OlkRefresh?.Clone();
+			this.OlkRefresh = copy ? state.OlkRefresh?.Clone() : state.OlkRefresh;
 			this.OlkTUOrderHint = state.OlkTUOrderHint;
-			this.OpsxLayerId = state.OpsxLayerId?.Clone();
+			this.OpsxLayerId = copy ? state.OpsxLayerId?.Clone() : state.OpsxLayerId;
 			this.OrderHint = state.OrderHint;
 			this.OrderHintBits = state.OrderHintBits;
 			this.OrderHintLsbs = state.OrderHintLsbs;
-			this.OrderHints = state.OrderHints?.Clone();
+			this.OrderHints = copy ? state.OrderHints?.Clone() : state.OrderHints;
 			this.OrigClosestFuture = state.OrigClosestFuture;
 			this.OrigClosestPast = state.OrigClosestPast;
-			this.PrevGmParams = state.PrevGmParams?.Clone();
-			this.PrevSegmentIds = state.PrevSegmentIds?.Clone();
+			this.PrevGmParams = copy ? state.PrevGmParams?.Clone() : state.PrevGmParams;
+			this.PrevSegmentIds = copy ? state.PrevSegmentIds?.Clone() : state.PrevSegmentIds;
 			this.ProjStep = state.ProjStep;
-			this.QmDataPresent = state.QmDataPresent?.Clone();
-			this.QmMLayerId = state.QmMLayerId?.Clone();
-			this.QmNumPlanes = state.QmNumPlanes?.Clone();
-			this.QmProtected = state.QmProtected?.Clone();
-			this.QmSeen = state.QmSeen?.Clone();
-			this.QmTLayerId = state.QmTLayerId?.Clone();
-			this.RefLrWienerNs = state.RefLrWienerNs?.Clone();
-			this.RefOrderHint = state.RefOrderHint?.Clone();
-			this.RefValid = state.RefValid?.Clone();
+			this.QmDataPresent = copy ? state.QmDataPresent?.Clone() : state.QmDataPresent;
+			this.QmMLayerId = copy ? state.QmMLayerId?.Clone() : state.QmMLayerId;
+			this.QmNumPlanes = copy ? state.QmNumPlanes?.Clone() : state.QmNumPlanes;
+			this.QmProtected = copy ? state.QmProtected?.Clone() : state.QmProtected;
+			this.QmSeen = copy ? state.QmSeen?.Clone() : state.QmSeen;
+			this.QmTLayerId = copy ? state.QmTLayerId?.Clone() : state.QmTLayerId;
+			this.RefLrWienerNs = copy ? state.RefLrWienerNs?.Clone() : state.RefLrWienerNs;
+			this.RefOrderHint = copy ? state.RefOrderHint?.Clone() : state.RefOrderHint;
+			this.RefValid = copy ? state.RefValid?.Clone() : state.RefValid;
 			this.RemainingLcrPayloadBits = state.RemainingLcrPayloadBits;
 			this.SbSize = state.SbSize;
-			this.ScoresBaseQIdx = state.ScoresBaseQIdx?.Clone();
-			this.ScoresDistance = state.ScoresDistance?.Clone();
-			this.ScoresIndex = state.ScoresIndex?.Clone();
-			this.ScoresLayer = state.ScoresLayer?.Clone();
-			this.ScoresOrderHint = state.ScoresOrderHint?.Clone();
-			this.ScoresScore = state.ScoresScore?.Clone();
+			this.ScoresBaseQIdx = copy ? state.ScoresBaseQIdx?.Clone() : state.ScoresBaseQIdx;
+			this.ScoresDistance = copy ? state.ScoresDistance?.Clone() : state.ScoresDistance;
+			this.ScoresIndex = copy ? state.ScoresIndex?.Clone() : state.ScoresIndex;
+			this.ScoresLayer = copy ? state.ScoresLayer?.Clone() : state.ScoresLayer;
+			this.ScoresOrderHint = copy ? state.ScoresOrderHint?.Clone() : state.ScoresOrderHint;
+			this.ScoresScore = copy ? state.ScoresScore?.Clone() : state.ScoresScore;
 			this.SeenFrameHeader = state.SeenFrameHeader;
 			this.SegIdPreSkip = state.SegIdPreSkip;
-			this.SegQMLevel = state.SegQMLevel?.Clone();
-			this.SegmentIds = state.SegmentIds?.Clone();
-			this.SeqFeatureData = state.SeqFeatureData?.Clone();
-			this.SeqFeatureEnabled = state.SeqFeatureEnabled?.Clone();
+			this.SegQMLevel = copy ? state.SegQMLevel?.Clone() : state.SegQMLevel;
+			this.SegmentIds = copy ? state.SegmentIds?.Clone() : state.SegmentIds;
+			this.SeqFeatureData = copy ? state.SeqFeatureData?.Clone() : state.SeqFeatureData;
+			this.SeqFeatureEnabled = copy ? state.SeqFeatureEnabled?.Clone() : state.SeqFeatureEnabled;
 			this.SeqMaxMlayerCnt = state.SeqMaxMlayerCnt;
-			this.SeqSbColStarts = state.SeqSbColStarts?.Clone();
+			this.SeqSbColStarts = copy ? state.SeqSbColStarts?.Clone() : state.SeqSbColStarts;
 			this.SeqSbCols = state.SeqSbCols;
-			this.SeqSbRowStarts = state.SeqSbRowStarts?.Clone();
+			this.SeqSbRowStarts = copy ? state.SeqSbRowStarts?.Clone() : state.SeqSbRowStarts;
 			this.SeqSbRows = state.SeqSbRows;
 			this.SeqTileCols = state.SeqTileCols;
 			this.SeqTileColsLog2 = state.SeqTileColsLog2;
@@ -16042,12 +22252,12 @@ return 0
 			this.SeqTileRowsLog2 = state.SeqTileRowsLog2;
 			this.SeqUniformTileSpacingFlag = state.SeqUniformTileSpacingFlag;
 			this.ShowExistingFrame = state.ShowExistingFrame;
-			this.SkipModeFrame = state.SkipModeFrame?.Clone();
+			this.SkipModeFrame = copy ? state.SkipModeFrame?.Clone() : state.SkipModeFrame;
 			this.SkipSegFrame = state.SkipSegFrame;
-			this.SubclassLookup = state.SubclassLookup?.Clone();
+			this.SubclassLookup = copy ? state.SubclassLookup?.Clone() : state.SubclassLookup;
 			this.SubsamplingX = state.SubsamplingX;
 			this.SubsamplingY = state.SubsamplingY;
-			this.TLayerDependencyMap = state.TLayerDependencyMap?.Clone();
+			this.TLayerDependencyMap = copy ? state.TLayerDependencyMap?.Clone() : state.TLayerDependencyMap;
 			this.TileCols = state.TileCols;
 			this.TileColsLog2 = state.TileColsLog2;
 			this.TileNum = state.TileNum;
@@ -16055,15 +22265,15 @@ return 0
 			this.TileRowsLog2 = state.TileRowsLog2;
 			this.TileSizeBytes = state.TileSizeBytes;
 			this.TipFrameMode = state.TipFrameMode;
-			this.TipGlobalMv = state.TipGlobalMv?.Clone();
+			this.TipGlobalMv = copy ? state.TipGlobalMv?.Clone() : state.TipGlobalMv;
 			this.TipInterpFilter = state.TipInterpFilter;
 			this.TxMode = state.TxMode;
 			this.UsePerBlockMvPrecision = state.UsePerBlockMvPrecision;
-			this.UserQm = state.UserQm?.Clone();
+			this.UserQm = copy ? state.UserQm?.Clone() : state.UserQm;
 			this.UsesLr = state.UsesLr;
-			this.WienerNsBankSize = state.WienerNsBankSize?.Clone();
-			this.WienerNsPtr = state.WienerNsPtr?.Clone();
-			this.XCount = state.XCount?.Clone();
+			this.WienerNsBankSize = copy ? state.WienerNsBankSize?.Clone() : state.WienerNsBankSize;
+			this.WienerNsPtr = copy ? state.WienerNsPtr?.Clone() : state.WienerNsPtr;
+			this.XCount = copy ? state.XCount?.Clone() : state.XCount;
 			this.a = state.a;
 			this.allow_bawp = state.allow_bawp;
 			this.allow_df_sub_pu = state.allow_df_sub_pu;
@@ -16079,55 +22289,55 @@ return 0
 			this.allow_tile_info_change = state.allow_tile_info_change;
 			this.allow_tip_hole_fill = state.allow_tip_hole_fill;
 			this.allow_warpmv_mode = state.allow_warpmv_mode;
-			this.apply_deblocking_filter = state.apply_deblocking_filter?.Clone();
+			this.apply_deblocking_filter = copy ? state.apply_deblocking_filter?.Clone() : state.apply_deblocking_filter;
 			this.apply_deblocking_filter_tip = state.apply_deblocking_filter_tip;
 			this.apply_grain = state.apply_grain;
 			this.ar_coeff_lag = state.ar_coeff_lag;
 			this.ar_coeff_shift_minus_6 = state.ar_coeff_shift_minus_6;
-			this.ar_coeffs_cb = state.ar_coeffs_cb?.Clone();
-			this.ar_coeffs_cr = state.ar_coeffs_cr?.Clone();
-			this.ar_coeffs_y = state.ar_coeffs_y?.Clone();
-			this.atlas_segment_id = state.atlas_segment_id?.Clone();
-			this.ats_atlas_segment_id = state.ats_atlas_segment_id?.Clone();
-			this.ats_atlas_segment_mode_idc = state.ats_atlas_segment_mode_idc?.Clone();
-			this.ats_bottom_right_region_column_off = state.ats_bottom_right_region_column_off?.Clone();
-			this.ats_bottom_right_region_row_off = state.ats_bottom_right_region_row_off?.Clone();
-			this.ats_column_width_minus_1 = state.ats_column_width_minus_1?.Clone();
-			this.ats_height = state.ats_height?.Clone();
-			this.ats_input_stream_id = state.ats_input_stream_id?.Clone();
-			this.ats_msi_alpha_segment_flag = state.ats_msi_alpha_segment_flag?.Clone();
-			this.ats_msi_alpha_segments_present_flag = state.ats_msi_alpha_segments_present_flag?.Clone();
-			this.ats_msi_background_blue_value = state.ats_msi_background_blue_value?.Clone();
-			this.ats_msi_background_green_value = state.ats_msi_background_green_value?.Clone();
-			this.ats_msi_background_info_present_flag = state.ats_msi_background_info_present_flag?.Clone();
-			this.ats_msi_background_red_value = state.ats_msi_background_red_value?.Clone();
-			this.ats_msi_height = state.ats_msi_height?.Clone();
-			this.ats_msi_input_stream_id = state.ats_msi_input_stream_id?.Clone();
-			this.ats_msi_num_atlas_segments_minus_1 = state.ats_msi_num_atlas_segments_minus_1?.Clone();
-			this.ats_msi_segment_height = state.ats_msi_segment_height?.Clone();
-			this.ats_msi_segment_top_left_pos_x = state.ats_msi_segment_top_left_pos_x?.Clone();
-			this.ats_msi_segment_top_left_pos_y = state.ats_msi_segment_top_left_pos_y?.Clone();
-			this.ats_msi_segment_width = state.ats_msi_segment_width?.Clone();
-			this.ats_msi_width = state.ats_msi_width?.Clone();
-			this.ats_nominal_height_minus_1 = state.ats_nominal_height_minus_1?.Clone();
-			this.ats_nominal_width_minus_1 = state.ats_nominal_width_minus_1?.Clone();
-			this.ats_num_atlas_segments_minus_1 = state.ats_num_atlas_segments_minus_1?.Clone();
-			this.ats_num_region_columns_minus_1 = state.ats_num_region_columns_minus_1?.Clone();
-			this.ats_num_region_rows_minus_1 = state.ats_num_region_rows_minus_1?.Clone();
-			this.ats_region_height_minus_1 = state.ats_region_height_minus_1?.Clone();
-			this.ats_region_width_minus_1 = state.ats_region_width_minus_1?.Clone();
-			this.ats_row_height_minus_1 = state.ats_row_height_minus_1?.Clone();
-			this.ats_segment_height = state.ats_segment_height?.Clone();
-			this.ats_segment_top_left_pos_x = state.ats_segment_top_left_pos_x?.Clone();
-			this.ats_segment_top_left_pos_y = state.ats_segment_top_left_pos_y?.Clone();
-			this.ats_segment_width = state.ats_segment_width?.Clone();
-			this.ats_signaled_atlas_segment_ids_flag = state.ats_signaled_atlas_segment_ids_flag?.Clone();
-			this.ats_single_region_per_atlas_segment_flag = state.ats_single_region_per_atlas_segment_flag?.Clone();
-			this.ats_stream_id_present = state.ats_stream_id_present?.Clone();
-			this.ats_top_left_region_column = state.ats_top_left_region_column?.Clone();
-			this.ats_top_left_region_row = state.ats_top_left_region_row?.Clone();
-			this.ats_uniform_spacing_flag = state.ats_uniform_spacing_flag?.Clone();
-			this.ats_width = state.ats_width?.Clone();
+			this.ar_coeffs_cb = copy ? state.ar_coeffs_cb?.Clone() : state.ar_coeffs_cb;
+			this.ar_coeffs_cr = copy ? state.ar_coeffs_cr?.Clone() : state.ar_coeffs_cr;
+			this.ar_coeffs_y = copy ? state.ar_coeffs_y?.Clone() : state.ar_coeffs_y;
+			this.atlas_segment_id = copy ? state.atlas_segment_id?.Clone() : state.atlas_segment_id;
+			this.ats_atlas_segment_id = copy ? state.ats_atlas_segment_id?.Clone() : state.ats_atlas_segment_id;
+			this.ats_atlas_segment_mode_idc = copy ? state.ats_atlas_segment_mode_idc?.Clone() : state.ats_atlas_segment_mode_idc;
+			this.ats_bottom_right_region_column_off = copy ? state.ats_bottom_right_region_column_off?.Clone() : state.ats_bottom_right_region_column_off;
+			this.ats_bottom_right_region_row_off = copy ? state.ats_bottom_right_region_row_off?.Clone() : state.ats_bottom_right_region_row_off;
+			this.ats_column_width_minus_1 = copy ? state.ats_column_width_minus_1?.Clone() : state.ats_column_width_minus_1;
+			this.ats_height = copy ? state.ats_height?.Clone() : state.ats_height;
+			this.ats_input_stream_id = copy ? state.ats_input_stream_id?.Clone() : state.ats_input_stream_id;
+			this.ats_msi_alpha_segment_flag = copy ? state.ats_msi_alpha_segment_flag?.Clone() : state.ats_msi_alpha_segment_flag;
+			this.ats_msi_alpha_segments_present_flag = copy ? state.ats_msi_alpha_segments_present_flag?.Clone() : state.ats_msi_alpha_segments_present_flag;
+			this.ats_msi_background_blue_value = copy ? state.ats_msi_background_blue_value?.Clone() : state.ats_msi_background_blue_value;
+			this.ats_msi_background_green_value = copy ? state.ats_msi_background_green_value?.Clone() : state.ats_msi_background_green_value;
+			this.ats_msi_background_info_present_flag = copy ? state.ats_msi_background_info_present_flag?.Clone() : state.ats_msi_background_info_present_flag;
+			this.ats_msi_background_red_value = copy ? state.ats_msi_background_red_value?.Clone() : state.ats_msi_background_red_value;
+			this.ats_msi_height = copy ? state.ats_msi_height?.Clone() : state.ats_msi_height;
+			this.ats_msi_input_stream_id = copy ? state.ats_msi_input_stream_id?.Clone() : state.ats_msi_input_stream_id;
+			this.ats_msi_num_atlas_segments_minus_1 = copy ? state.ats_msi_num_atlas_segments_minus_1?.Clone() : state.ats_msi_num_atlas_segments_minus_1;
+			this.ats_msi_segment_height = copy ? state.ats_msi_segment_height?.Clone() : state.ats_msi_segment_height;
+			this.ats_msi_segment_top_left_pos_x = copy ? state.ats_msi_segment_top_left_pos_x?.Clone() : state.ats_msi_segment_top_left_pos_x;
+			this.ats_msi_segment_top_left_pos_y = copy ? state.ats_msi_segment_top_left_pos_y?.Clone() : state.ats_msi_segment_top_left_pos_y;
+			this.ats_msi_segment_width = copy ? state.ats_msi_segment_width?.Clone() : state.ats_msi_segment_width;
+			this.ats_msi_width = copy ? state.ats_msi_width?.Clone() : state.ats_msi_width;
+			this.ats_nominal_height_minus_1 = copy ? state.ats_nominal_height_minus_1?.Clone() : state.ats_nominal_height_minus_1;
+			this.ats_nominal_width_minus_1 = copy ? state.ats_nominal_width_minus_1?.Clone() : state.ats_nominal_width_minus_1;
+			this.ats_num_atlas_segments_minus_1 = copy ? state.ats_num_atlas_segments_minus_1?.Clone() : state.ats_num_atlas_segments_minus_1;
+			this.ats_num_region_columns_minus_1 = copy ? state.ats_num_region_columns_minus_1?.Clone() : state.ats_num_region_columns_minus_1;
+			this.ats_num_region_rows_minus_1 = copy ? state.ats_num_region_rows_minus_1?.Clone() : state.ats_num_region_rows_minus_1;
+			this.ats_region_height_minus_1 = copy ? state.ats_region_height_minus_1?.Clone() : state.ats_region_height_minus_1;
+			this.ats_region_width_minus_1 = copy ? state.ats_region_width_minus_1?.Clone() : state.ats_region_width_minus_1;
+			this.ats_row_height_minus_1 = copy ? state.ats_row_height_minus_1?.Clone() : state.ats_row_height_minus_1;
+			this.ats_segment_height = copy ? state.ats_segment_height?.Clone() : state.ats_segment_height;
+			this.ats_segment_top_left_pos_x = copy ? state.ats_segment_top_left_pos_x?.Clone() : state.ats_segment_top_left_pos_x;
+			this.ats_segment_top_left_pos_y = copy ? state.ats_segment_top_left_pos_y?.Clone() : state.ats_segment_top_left_pos_y;
+			this.ats_segment_width = copy ? state.ats_segment_width?.Clone() : state.ats_segment_width;
+			this.ats_signaled_atlas_segment_ids_flag = copy ? state.ats_signaled_atlas_segment_ids_flag?.Clone() : state.ats_signaled_atlas_segment_ids_flag;
+			this.ats_single_region_per_atlas_segment_flag = copy ? state.ats_single_region_per_atlas_segment_flag?.Clone() : state.ats_single_region_per_atlas_segment_flag;
+			this.ats_stream_id_present = copy ? state.ats_stream_id_present?.Clone() : state.ats_stream_id_present;
+			this.ats_top_left_region_column = copy ? state.ats_top_left_region_column?.Clone() : state.ats_top_left_region_column;
+			this.ats_top_left_region_row = copy ? state.ats_top_left_region_row?.Clone() : state.ats_top_left_region_row;
+			this.ats_uniform_spacing_flag = copy ? state.ats_uniform_spacing_flag?.Clone() : state.ats_uniform_spacing_flag;
+			this.ats_width = copy ? state.ats_width?.Clone() : state.ats_width;
 			this.avg_cdf_type = state.avg_cdf_type;
 			this.b = state.b;
 			this.band_block_in_luma_samples = state.band_block_in_luma_samples;
@@ -16136,7 +22346,7 @@ return 0
 			this.banding_in_band_unit_present_flag = state.banding_in_band_unit_present_flag;
 			this.banding_in_component_present_flag = state.banding_in_component_present_flag;
 			this.baseDistance = state.baseDistance;
-			this.baseParams = state.baseParams?.Clone();
+			this.baseParams = copy ? state.baseParams?.Clone() : state.baseParams;
 			this.base_q_idx = state.base_q_idx;
 			this.base_qindex = state.base_qindex;
 			this.base_uv_ac_delta_q = state.base_uv_ac_delta_q;
@@ -16149,12 +22359,12 @@ return 0
 			this.bits_per_ar_coeff_cr_minus_5 = state.bits_per_ar_coeff_cr_minus_5;
 			this.bits_per_ar_coeff_y_minus_5 = state.bits_per_ar_coeff_y_minus_5;
 			this.blkSize = state.blkSize;
-			this.br_decoder_model_present_op_flag = state.br_decoder_model_present_op_flag?.Clone();
-			this.br_ops_cnt = state.br_ops_cnt?.Clone();
+			this.br_decoder_model_present_op_flag = copy ? state.br_decoder_model_present_op_flag?.Clone() : state.br_decoder_model_present_op_flag;
+			this.br_ops_cnt = copy ? state.br_ops_cnt?.Clone() : state.br_ops_cnt;
 			this.br_ops_dependent_flag = state.br_ops_dependent_flag;
 			this.br_ops_id = state.br_ops_id;
 			this.br_time = state.br_time;
-			this.br_time_op = state.br_time_op?.Clone();
+			this.br_time_op = copy ? state.br_time_op?.Clone() : state.br_time_op;
 			this.bridge_frame_height_minus_1 = state.bridge_frame_height_minus_1;
 			this.bridge_frame_overwrite_flag = state.bridge_frame_overwrite_flag;
 			this.bridge_frame_ref_idx = state.bridge_frame_ref_idx;
@@ -16165,16 +22375,16 @@ return 0
 			this.cb_luma_mult = state.cb_luma_mult;
 			this.cb_mult = state.cb_mult;
 			this.cb_offset = state.cb_offset;
-			this.ccso_bo_only = state.ccso_bo_only?.Clone();
-			this.ccso_edge_clf = state.ccso_edge_clf?.Clone();
-			this.ccso_ext_filter = state.ccso_ext_filter?.Clone();
+			this.ccso_bo_only = copy ? state.ccso_bo_only?.Clone() : state.ccso_bo_only;
+			this.ccso_edge_clf = copy ? state.ccso_edge_clf?.Clone() : state.ccso_edge_clf;
+			this.ccso_ext_filter = copy ? state.ccso_ext_filter?.Clone() : state.ccso_ext_filter;
 			this.ccso_frame_flag = state.ccso_frame_flag;
-			this.ccso_max_band_log2 = state.ccso_max_band_log2?.Clone();
+			this.ccso_max_band_log2 = copy ? state.ccso_max_band_log2?.Clone() : state.ccso_max_band_log2;
 			this.ccso_offset_idx = state.ccso_offset_idx;
-			this.ccso_planes = state.ccso_planes?.Clone();
-			this.ccso_quant_idx = state.ccso_quant_idx?.Clone();
-			this.ccso_ref_idx = state.ccso_ref_idx?.Clone();
-			this.ccso_scale_idx = state.ccso_scale_idx?.Clone();
+			this.ccso_planes = copy ? state.ccso_planes?.Clone() : state.ccso_planes;
+			this.ccso_quant_idx = copy ? state.ccso_quant_idx?.Clone() : state.ccso_quant_idx;
+			this.ccso_ref_idx = copy ? state.ccso_ref_idx?.Clone() : state.ccso_ref_idx;
+			this.ccso_scale_idx = copy ? state.ccso_scale_idx?.Clone() : state.ccso_scale_idx;
 			this.ccso_unit_matches_sb_size = state.ccso_unit_matches_sb_size;
 			this.cdef_damping_minus_3 = state.cdef_damping_minus_3;
 			this.cdef_frame_enable = state.cdef_frame_enable;
@@ -16182,12 +22392,12 @@ return 0
 			this.cdef_on_skip_txfm_disabled = state.cdef_on_skip_txfm_disabled;
 			this.cdef_on_skip_txfm_frame_enable = state.cdef_on_skip_txfm_frame_enable;
 			this.cdef_strengths_minus_1 = state.cdef_strengths_minus_1;
-			this.cdef_uv_pri_strength = state.cdef_uv_pri_strength?.Clone();
+			this.cdef_uv_pri_strength = copy ? state.cdef_uv_pri_strength?.Clone() : state.cdef_uv_pri_strength;
 			this.cdef_uv_pri_zero = state.cdef_uv_pri_zero;
-			this.cdef_uv_sec_strength = state.cdef_uv_sec_strength?.Clone();
-			this.cdef_y_pri_strength = state.cdef_y_pri_strength?.Clone();
+			this.cdef_uv_sec_strength = copy ? state.cdef_uv_sec_strength?.Clone() : state.cdef_uv_sec_strength;
+			this.cdef_y_pri_strength = copy ? state.cdef_y_pri_strength?.Clone() : state.cdef_y_pri_strength;
 			this.cdef_y_pri_zero = state.cdef_y_pri_zero;
-			this.cdef_y_sec_strength = state.cdef_y_sec_strength?.Clone();
+			this.cdef_y_sec_strength = copy ? state.cdef_y_sec_strength?.Clone() : state.cdef_y_sec_strength;
 			this.cfl_ds_filter_index = state.cfl_ds_filter_index;
 			this.change_bvp_drl = state.change_bvp_drl;
 			this.change_drl = state.change_drl;
@@ -16217,7 +22427,7 @@ return 0
 			this.constrain_drl_reorder = state.constrain_drl_reorder;
 			this.context_update_tile_id = state.context_update_tile_id;
 			this.counting_type = state.counting_type;
-			this.counts = state.counts?.Clone();
+			this.counts = copy ? state.counts?.Clone() : state.counts;
 			this.cr_luma_mult = state.cr_luma_mult;
 			this.cr_mult = state.cr_mult;
 			this.cr_offset = state.cr_offset;
@@ -16230,8 +22440,8 @@ return 0
 			this.delta_q_present = state.delta_q_present;
 			this.delta_q_res = state.delta_q_res;
 			this.derive_sef_order_hint = state.derive_sef_order_hint;
-			this.df_delta_q = state.df_delta_q?.Clone();
-			this.df_delta_q_present = state.df_delta_q_present?.Clone();
+			this.df_delta_q = copy ? state.df_delta_q?.Clone() : state.df_delta_q;
+			this.df_delta_q_present = copy ? state.df_delta_q_present?.Clone() : state.df_delta_q_present;
 			this.df_par_bits_minus_2 = state.df_par_bits_minus_2;
 			this.diff_uv_delta = state.diff_uv_delta;
 			this.disable_cdf_update = state.disable_cdf_update;
@@ -16305,10 +22515,10 @@ return 0
 			this.found_ref = state.found_ref;
 			this.frameHeight = state.frameHeight;
 			this.frameWidth = state.frameWidth;
-			this.frame_enabled_motion_modes = state.frame_enabled_motion_modes?.Clone();
+			this.frame_enabled_motion_modes = copy ? state.frame_enabled_motion_modes?.Clone() : state.frame_enabled_motion_modes;
 			this.frame_explicit_ref_frame_map = state.frame_explicit_ref_frame_map;
-			this.frame_filters_on = state.frame_filters_on?.Clone();
-			this.frame_hash = (byte[])state.frame_hash?.Clone();
+			this.frame_filters_on = copy ? state.frame_filters_on?.Clone() : state.frame_filters_on;
+			this.frame_hash = copy ? ((byte[])state.frame_hash?.Clone()) : state.frame_hash;
 			this.frame_header_present_flag = state.frame_header_present_flag;
 			this.frame_height_bits_minus_1 = state.frame_height_bits_minus_1;
 			this.frame_height_minus_1 = state.frame_height_minus_1;
@@ -16325,7 +22535,7 @@ return 0
 			this.gdf_pic_qc_idx = state.gdf_pic_qc_idx;
 			this.gdf_pic_scale_idx = state.gdf_pic_scale_idx;
 			this.gdf_unit_matches_sb_size = state.gdf_unit_matches_sb_size;
-			this.gm_params = state.gm_params?.Clone();
+			this.gm_params = copy ? state.gm_params?.Clone() : state.gm_params;
 			this.grain_scale_shift = state.grain_scale_shift;
 			this.grain_scaling_minus_8 = state.grain_scaling_minus_8;
 			this.grain_seed = state.grain_seed;
@@ -16333,7 +22543,7 @@ return 0
 			this.has_grain = state.has_grain;
 			this.has_refresh_frame_flags = state.has_refresh_frame_flags;
 			this.hash_type = state.hash_type;
-			this.header_bit = state.header_bit?.Clone();
+			this.header_bit = copy ? state.header_bit?.Clone() : state.header_bit;
 			this.height_in_sbs_minus_1 = state.height_in_sbs_minus_1;
 			this.high = state.high;
 			this.horz_size_in_band_blocks_minus_1 = state.horz_size_in_band_blocks_minus_1;
@@ -16357,73 +22567,73 @@ return 0
 			this.itu_t_t35_country_code = state.itu_t_t35_country_code;
 			this.itu_t_t35_country_code_extension_byte = state.itu_t_t35_country_code_extension_byte;
 			this.itu_t_t35_payload_bytes = state.itu_t_t35_payload_bytes;
-			this.layer_color_description_idc = state.layer_color_description_idc?.Clone();
-			this.layer_color_primaries = state.layer_color_primaries?.Clone();
-			this.layer_full_range_flag = state.layer_full_range_flag?.Clone();
-			this.layer_matrix_coefficients = state.layer_matrix_coefficients?.Clone();
-			this.layer_transfer_characteristics = state.layer_transfer_characteristics?.Clone();
+			this.layer_color_description_idc = copy ? state.layer_color_description_idc?.Clone() : state.layer_color_description_idc;
+			this.layer_color_primaries = copy ? state.layer_color_primaries?.Clone() : state.layer_color_primaries;
+			this.layer_full_range_flag = copy ? state.layer_full_range_flag?.Clone() : state.layer_full_range_flag;
+			this.layer_matrix_coefficients = copy ? state.layer_matrix_coefficients?.Clone() : state.layer_matrix_coefficients;
+			this.layer_transfer_characteristics = copy ? state.layer_transfer_characteristics?.Clone() : state.layer_transfer_characteristics;
 			this.lcr_aggregate_info_present_flag = state.lcr_aggregate_info_present_flag;
 			this.lcr_aggregate_level_idx = state.lcr_aggregate_level_idx;
-			this.lcr_auxiliary_type = state.lcr_auxiliary_type?.Clone();
-			this.lcr_bit_depth_idc = state.lcr_bit_depth_idc?.Clone();
-			this.lcr_chroma_format_idc = state.lcr_chroma_format_idc?.Clone();
+			this.lcr_auxiliary_type = copy ? state.lcr_auxiliary_type?.Clone() : state.lcr_auxiliary_type;
+			this.lcr_bit_depth_idc = copy ? state.lcr_bit_depth_idc?.Clone() : state.lcr_bit_depth_idc;
+			this.lcr_chroma_format_idc = copy ? state.lcr_chroma_format_idc?.Clone() : state.lcr_chroma_format_idc;
 			this.lcr_config_idc = state.lcr_config_idc;
-			this.lcr_cropping_win_bottom_offset = state.lcr_cropping_win_bottom_offset?.Clone();
-			this.lcr_cropping_win_left_offset = state.lcr_cropping_win_left_offset?.Clone();
-			this.lcr_cropping_win_right_offset = state.lcr_cropping_win_right_offset?.Clone();
-			this.lcr_cropping_win_top_offset = state.lcr_cropping_win_top_offset?.Clone();
-			this.lcr_cropping_window_present_flag = state.lcr_cropping_window_present_flag?.Clone();
-			this.lcr_data_size = state.lcr_data_size?.Clone();
-			this.lcr_dependent_layer_map = state.lcr_dependent_layer_map?.Clone();
+			this.lcr_cropping_win_bottom_offset = copy ? state.lcr_cropping_win_bottom_offset?.Clone() : state.lcr_cropping_win_bottom_offset;
+			this.lcr_cropping_win_left_offset = copy ? state.lcr_cropping_win_left_offset?.Clone() : state.lcr_cropping_win_left_offset;
+			this.lcr_cropping_win_right_offset = copy ? state.lcr_cropping_win_right_offset?.Clone() : state.lcr_cropping_win_right_offset;
+			this.lcr_cropping_win_top_offset = copy ? state.lcr_cropping_win_top_offset?.Clone() : state.lcr_cropping_win_top_offset;
+			this.lcr_cropping_window_present_flag = copy ? state.lcr_cropping_window_present_flag?.Clone() : state.lcr_cropping_window_present_flag;
+			this.lcr_data_size = copy ? state.lcr_data_size?.Clone() : state.lcr_data_size;
+			this.lcr_dependent_layer_map = copy ? state.lcr_dependent_layer_map?.Clone() : state.lcr_dependent_layer_map;
 			this.lcr_dependent_xlayers_flag = state.lcr_dependent_xlayers_flag;
 			this.lcr_doh_constraint_flag = state.lcr_doh_constraint_flag;
-			this.lcr_embedded_layer_info_present_flag = state.lcr_embedded_layer_info_present_flag?.Clone();
+			this.lcr_embedded_layer_info_present_flag = copy ? state.lcr_embedded_layer_info_present_flag?.Clone() : state.lcr_embedded_layer_info_present_flag;
 			this.lcr_enforce_tile_alignment_flag = state.lcr_enforce_tile_alignment_flag;
-			this.lcr_format_info_present_flag = state.lcr_format_info_present_flag?.Clone();
+			this.lcr_format_info_present_flag = copy ? state.lcr_format_info_present_flag?.Clone() : state.lcr_format_info_present_flag;
 			this.lcr_global_atlas_id = state.lcr_global_atlas_id;
 			this.lcr_global_atlas_id_present_flag = state.lcr_global_atlas_id_present_flag;
 			this.lcr_global_config_record_id = state.lcr_global_config_record_id;
-			this.lcr_global_id = state.lcr_global_id?.Clone();
+			this.lcr_global_id = copy ? state.lcr_global_id?.Clone() : state.lcr_global_id;
 			this.lcr_global_payload_present_flag = state.lcr_global_payload_present_flag;
 			this.lcr_global_purpose_id = state.lcr_global_purpose_id;
 			this.lcr_global_reserved_zero_3bits = state.lcr_global_reserved_zero_3bits;
 			this.lcr_global_reserved_zero_5bits = state.lcr_global_reserved_zero_5bits;
-			this.lcr_layer_atlas_segment_id = state.lcr_layer_atlas_segment_id?.Clone();
-			this.lcr_layer_type = state.lcr_layer_type?.Clone();
-			this.lcr_local_atlas_id = state.lcr_local_atlas_id?.Clone();
-			this.lcr_local_atlas_id_present_flag = state.lcr_local_atlas_id_present_flag?.Clone();
-			this.lcr_local_id = state.lcr_local_id?.Clone();
-			this.lcr_local_reserved_zero_3bits = state.lcr_local_reserved_zero_3bits?.Clone();
-			this.lcr_local_reserved_zero_5bits = state.lcr_local_reserved_zero_5bits?.Clone();
-			this.lcr_max_expected_height = state.lcr_max_expected_height?.Clone();
-			this.lcr_max_expected_width = state.lcr_max_expected_width?.Clone();
+			this.lcr_layer_atlas_segment_id = copy ? state.lcr_layer_atlas_segment_id?.Clone() : state.lcr_layer_atlas_segment_id;
+			this.lcr_layer_type = copy ? state.lcr_layer_type?.Clone() : state.lcr_layer_type;
+			this.lcr_local_atlas_id = copy ? state.lcr_local_atlas_id?.Clone() : state.lcr_local_atlas_id;
+			this.lcr_local_atlas_id_present_flag = copy ? state.lcr_local_atlas_id_present_flag?.Clone() : state.lcr_local_atlas_id_present_flag;
+			this.lcr_local_id = copy ? state.lcr_local_id?.Clone() : state.lcr_local_id;
+			this.lcr_local_reserved_zero_3bits = copy ? state.lcr_local_reserved_zero_3bits?.Clone() : state.lcr_local_reserved_zero_3bits;
+			this.lcr_local_reserved_zero_5bits = copy ? state.lcr_local_reserved_zero_5bits?.Clone() : state.lcr_local_reserved_zero_5bits;
+			this.lcr_max_expected_height = copy ? state.lcr_max_expected_height?.Clone() : state.lcr_max_expected_height;
+			this.lcr_max_expected_width = copy ? state.lcr_max_expected_width?.Clone() : state.lcr_max_expected_width;
 			this.lcr_max_interop = state.lcr_max_interop;
-			this.lcr_max_level_idx = state.lcr_max_level_idx?.Clone();
-			this.lcr_max_mlayer_count = state.lcr_max_mlayer_count?.Clone();
-			this.lcr_max_pic_height = state.lcr_max_pic_height?.Clone();
-			this.lcr_max_pic_width = state.lcr_max_pic_width?.Clone();
+			this.lcr_max_level_idx = copy ? state.lcr_max_level_idx?.Clone() : state.lcr_max_level_idx;
+			this.lcr_max_mlayer_count = copy ? state.lcr_max_mlayer_count?.Clone() : state.lcr_max_mlayer_count;
+			this.lcr_max_pic_height = copy ? state.lcr_max_pic_height?.Clone() : state.lcr_max_pic_height;
+			this.lcr_max_pic_width = copy ? state.lcr_max_pic_width?.Clone() : state.lcr_max_pic_width;
 			this.lcr_max_tier_flag = state.lcr_max_tier_flag;
-			this.lcr_mlayer_map = state.lcr_mlayer_map?.Clone();
-			this.lcr_num_dependent_xlayer_map = state.lcr_num_dependent_xlayer_map?.Clone();
-			this.lcr_priority_order = state.lcr_priority_order?.Clone();
-			this.lcr_profile_tier_level_info_present_flag = state.lcr_profile_tier_level_info_present_flag?.Clone();
+			this.lcr_mlayer_map = copy ? state.lcr_mlayer_map?.Clone() : state.lcr_mlayer_map;
+			this.lcr_num_dependent_xlayer_map = copy ? state.lcr_num_dependent_xlayer_map?.Clone() : state.lcr_num_dependent_xlayer_map;
+			this.lcr_priority_order = copy ? state.lcr_priority_order?.Clone() : state.lcr_priority_order;
+			this.lcr_profile_tier_level_info_present_flag = copy ? state.lcr_profile_tier_level_info_present_flag?.Clone() : state.lcr_profile_tier_level_info_present_flag;
 			this.lcr_remaining_payload_bit = state.lcr_remaining_payload_bit;
-			this.lcr_rendering_method = state.lcr_rendering_method?.Clone();
-			this.lcr_rep_info_present_flag = state.lcr_rep_info_present_flag?.Clone();
-			this.lcr_same_sh_max_resolution_flag = state.lcr_same_sh_max_resolution_flag?.Clone();
-			this.lcr_seq_profile_idc = state.lcr_seq_profile_idc?.Clone();
+			this.lcr_rendering_method = copy ? state.lcr_rendering_method?.Clone() : state.lcr_rendering_method;
+			this.lcr_rep_info_present_flag = copy ? state.lcr_rep_info_present_flag?.Clone() : state.lcr_rep_info_present_flag;
+			this.lcr_same_sh_max_resolution_flag = copy ? state.lcr_same_sh_max_resolution_flag?.Clone() : state.lcr_same_sh_max_resolution_flag;
+			this.lcr_seq_profile_idc = copy ? state.lcr_seq_profile_idc?.Clone() : state.lcr_seq_profile_idc;
 			this.lcr_seq_profile_tier_level_info_present_flag = state.lcr_seq_profile_tier_level_info_present_flag;
-			this.lcr_tier_flag = state.lcr_tier_flag?.Clone();
-			this.lcr_tlayer_map = state.lcr_tlayer_map?.Clone();
-			this.lcr_view_id = state.lcr_view_id?.Clone();
-			this.lcr_view_type = state.lcr_view_type?.Clone();
-			this.lcr_xlayer_atlas_segment_id = state.lcr_xlayer_atlas_segment_id?.Clone();
-			this.lcr_xlayer_color_info_present_flag = state.lcr_xlayer_color_info_present_flag?.Clone();
+			this.lcr_tier_flag = copy ? state.lcr_tier_flag?.Clone() : state.lcr_tier_flag;
+			this.lcr_tlayer_map = copy ? state.lcr_tlayer_map?.Clone() : state.lcr_tlayer_map;
+			this.lcr_view_id = copy ? state.lcr_view_id?.Clone() : state.lcr_view_id;
+			this.lcr_view_type = copy ? state.lcr_view_type?.Clone() : state.lcr_view_type;
+			this.lcr_xlayer_atlas_segment_id = copy ? state.lcr_xlayer_atlas_segment_id?.Clone() : state.lcr_xlayer_atlas_segment_id;
+			this.lcr_xlayer_color_info_present_flag = copy ? state.lcr_xlayer_color_info_present_flag?.Clone() : state.lcr_xlayer_color_info_present_flag;
 			this.lcr_xlayer_map = state.lcr_xlayer_map;
-			this.lcr_xlayer_priority_order = state.lcr_xlayer_priority_order?.Clone();
-			this.lcr_xlayer_purpose_id = state.lcr_xlayer_purpose_id?.Clone();
-			this.lcr_xlayer_purpose_present_flag = state.lcr_xlayer_purpose_present_flag?.Clone();
-			this.lcr_xlayer_rendering_method = state.lcr_xlayer_rendering_method?.Clone();
+			this.lcr_xlayer_priority_order = copy ? state.lcr_xlayer_priority_order?.Clone() : state.lcr_xlayer_priority_order;
+			this.lcr_xlayer_purpose_id = copy ? state.lcr_xlayer_purpose_id?.Clone() : state.lcr_xlayer_purpose_id;
+			this.lcr_xlayer_purpose_present_flag = copy ? state.lcr_xlayer_purpose_present_flag?.Clone() : state.lcr_xlayer_purpose_present_flag;
+			this.lcr_xlayer_rendering_method = copy ? state.lcr_xlayer_rendering_method?.Clone() : state.lcr_xlayer_rendering_method;
 			this.level = state.level;
 			this.loadCdfs = state.loadCdfs;
 			this.longTermId = state.longTermId;
@@ -16437,7 +22647,7 @@ return 0
 			this.lr_luma_use_half_size = state.lr_luma_use_half_size;
 			this.lr_luma_use_max_size = state.lr_luma_use_max_size;
 			this.lr_luma_use_quarter_size = state.lr_luma_use_quarter_size;
-			this.lr_tools_disable = state.lr_tools_disable?.Clone();
+			this.lr_tools_disable = copy ? state.lr_tools_disable?.Clone() : state.lr_tools_disable;
 			this.lr_tools_uv_present = state.lr_tools_uv_present;
 			this.lsptli_reserved_2bits = state.lsptli_reserved_2bits;
 			this.luminance_max = state.luminance_max;
@@ -16462,17 +22672,17 @@ return 0
 			this.metadata_type = state.metadata_type;
 			this.metadata_unit_cnt_minus_1 = state.metadata_unit_cnt_minus_1;
 			this.metadata_unit_remaining_bit = state.metadata_unit_remaining_bit;
-			this.mfh_allow_seg_info_change = state.mfh_allow_seg_info_change?.Clone();
-			this.mfh_apply_deblocking_filter = state.mfh_apply_deblocking_filter?.Clone();
-			this.mfh_deblocking_filter_update = state.mfh_deblocking_filter_update?.Clone();
-			this.mfh_ext_seg_flag = state.mfh_ext_seg_flag?.Clone();
+			this.mfh_allow_seg_info_change = copy ? state.mfh_allow_seg_info_change?.Clone() : state.mfh_allow_seg_info_change;
+			this.mfh_apply_deblocking_filter = copy ? state.mfh_apply_deblocking_filter?.Clone() : state.mfh_apply_deblocking_filter;
+			this.mfh_deblocking_filter_update = copy ? state.mfh_deblocking_filter_update?.Clone() : state.mfh_deblocking_filter_update;
+			this.mfh_ext_seg_flag = copy ? state.mfh_ext_seg_flag?.Clone() : state.mfh_ext_seg_flag;
 			this.mfh_frame_height_bits_minus_1 = state.mfh_frame_height_bits_minus_1;
-			this.mfh_frame_height_minus_1 = state.mfh_frame_height_minus_1?.Clone();
-			this.mfh_frame_size_present_flag = state.mfh_frame_size_present_flag?.Clone();
+			this.mfh_frame_height_minus_1 = copy ? state.mfh_frame_height_minus_1?.Clone() : state.mfh_frame_height_minus_1;
+			this.mfh_frame_size_present_flag = copy ? state.mfh_frame_size_present_flag?.Clone() : state.mfh_frame_size_present_flag;
 			this.mfh_frame_width_bits_minus_1 = state.mfh_frame_width_bits_minus_1;
-			this.mfh_frame_width_minus_1 = state.mfh_frame_width_minus_1?.Clone();
+			this.mfh_frame_width_minus_1 = copy ? state.mfh_frame_width_minus_1?.Clone() : state.mfh_frame_width_minus_1;
 			this.mfh_id_minus_1 = state.mfh_id_minus_1;
-			this.mfh_seg_info_present_flag = state.mfh_seg_info_present_flag?.Clone();
+			this.mfh_seg_info_present_flag = copy ? state.mfh_seg_info_present_flag?.Clone() : state.mfh_seg_info_present_flag;
 			this.mfh_seq_header_id = state.mfh_seq_header_id;
 			this.minutes_flag = state.minutes_flag;
 			this.minutes_value = state.minutes_value;
@@ -16536,44 +22746,44 @@ return 0
 			this.opfl_refine_all = state.opfl_refine_all;
 			this.opfl_refine_type = state.opfl_refine_type;
 			this.opsID = state.opsID;
-			this.ops_aggregate_level_idx = state.ops_aggregate_level_idx?.Clone();
-			this.ops_cnt = state.ops_cnt?.Clone();
-			this.ops_color_description_idc = state.ops_color_description_idc?.Clone();
-			this.ops_color_info_present_flag = state.ops_color_info_present_flag?.Clone();
-			this.ops_color_primaries = state.ops_color_primaries?.Clone();
-			this.ops_config_idc = state.ops_config_idc?.Clone();
-			this.ops_data_size = state.ops_data_size?.Clone();
-			this.ops_decoder_buffer_delay = state.ops_decoder_buffer_delay?.Clone();
-			this.ops_decoder_model_info_for_this_op_present_flag = state.ops_decoder_model_info_for_this_op_present_flag?.Clone();
-			this.ops_embedded_op_index = state.ops_embedded_op_index?.Clone();
-			this.ops_embedded_ops_id = state.ops_embedded_ops_id?.Clone();
-			this.ops_encoder_buffer_delay = state.ops_encoder_buffer_delay?.Clone();
-			this.ops_full_range_flag = state.ops_full_range_flag?.Clone();
-			this.ops_id = state.ops_id?.Clone();
-			this.ops_initial_display_delay_minus_1 = state.ops_initial_display_delay_minus_1?.Clone();
-			this.ops_initial_display_delay_present_flag = state.ops_initial_display_delay_present_flag?.Clone();
-			this.ops_intent = state.ops_intent?.Clone();
-			this.ops_intent_present_flag = state.ops_intent_present_flag?.Clone();
-			this.ops_level_idx = state.ops_level_idx?.Clone();
-			this.ops_low_delay_mode_flag = state.ops_low_delay_mode_flag?.Clone();
-			this.ops_matrix_coefficients = state.ops_matrix_coefficients?.Clone();
-			this.ops_max_interop = state.ops_max_interop?.Clone();
-			this.ops_max_tier_flag = state.ops_max_tier_flag?.Clone();
-			this.ops_mlayer_count = state.ops_mlayer_count?.Clone();
-			this.ops_mlayer_explicit_info_flag = state.ops_mlayer_explicit_info_flag?.Clone();
-			this.ops_mlayer_info_idc = state.ops_mlayer_info_idc?.Clone();
-			this.ops_mlayer_map = state.ops_mlayer_map?.Clone();
-			this.ops_op_intent = state.ops_op_intent?.Clone();
-			this.ops_priority = state.ops_priority?.Clone();
-			this.ops_ptl_present_flag = state.ops_ptl_present_flag?.Clone();
+			this.ops_aggregate_level_idx = copy ? state.ops_aggregate_level_idx?.Clone() : state.ops_aggregate_level_idx;
+			this.ops_cnt = copy ? state.ops_cnt?.Clone() : state.ops_cnt;
+			this.ops_color_description_idc = copy ? state.ops_color_description_idc?.Clone() : state.ops_color_description_idc;
+			this.ops_color_info_present_flag = copy ? state.ops_color_info_present_flag?.Clone() : state.ops_color_info_present_flag;
+			this.ops_color_primaries = copy ? state.ops_color_primaries?.Clone() : state.ops_color_primaries;
+			this.ops_config_idc = copy ? state.ops_config_idc?.Clone() : state.ops_config_idc;
+			this.ops_data_size = copy ? state.ops_data_size?.Clone() : state.ops_data_size;
+			this.ops_decoder_buffer_delay = copy ? state.ops_decoder_buffer_delay?.Clone() : state.ops_decoder_buffer_delay;
+			this.ops_decoder_model_info_for_this_op_present_flag = copy ? state.ops_decoder_model_info_for_this_op_present_flag?.Clone() : state.ops_decoder_model_info_for_this_op_present_flag;
+			this.ops_embedded_op_index = copy ? state.ops_embedded_op_index?.Clone() : state.ops_embedded_op_index;
+			this.ops_embedded_ops_id = copy ? state.ops_embedded_ops_id?.Clone() : state.ops_embedded_ops_id;
+			this.ops_encoder_buffer_delay = copy ? state.ops_encoder_buffer_delay?.Clone() : state.ops_encoder_buffer_delay;
+			this.ops_full_range_flag = copy ? state.ops_full_range_flag?.Clone() : state.ops_full_range_flag;
+			this.ops_id = copy ? state.ops_id?.Clone() : state.ops_id;
+			this.ops_initial_display_delay_minus_1 = copy ? state.ops_initial_display_delay_minus_1?.Clone() : state.ops_initial_display_delay_minus_1;
+			this.ops_initial_display_delay_present_flag = copy ? state.ops_initial_display_delay_present_flag?.Clone() : state.ops_initial_display_delay_present_flag;
+			this.ops_intent = copy ? state.ops_intent?.Clone() : state.ops_intent;
+			this.ops_intent_present_flag = copy ? state.ops_intent_present_flag?.Clone() : state.ops_intent_present_flag;
+			this.ops_level_idx = copy ? state.ops_level_idx?.Clone() : state.ops_level_idx;
+			this.ops_low_delay_mode_flag = copy ? state.ops_low_delay_mode_flag?.Clone() : state.ops_low_delay_mode_flag;
+			this.ops_matrix_coefficients = copy ? state.ops_matrix_coefficients?.Clone() : state.ops_matrix_coefficients;
+			this.ops_max_interop = copy ? state.ops_max_interop?.Clone() : state.ops_max_interop;
+			this.ops_max_tier_flag = copy ? state.ops_max_tier_flag?.Clone() : state.ops_max_tier_flag;
+			this.ops_mlayer_count = copy ? state.ops_mlayer_count?.Clone() : state.ops_mlayer_count;
+			this.ops_mlayer_explicit_info_flag = copy ? state.ops_mlayer_explicit_info_flag?.Clone() : state.ops_mlayer_explicit_info_flag;
+			this.ops_mlayer_info_idc = copy ? state.ops_mlayer_info_idc?.Clone() : state.ops_mlayer_info_idc;
+			this.ops_mlayer_map = copy ? state.ops_mlayer_map?.Clone() : state.ops_mlayer_map;
+			this.ops_op_intent = copy ? state.ops_op_intent?.Clone() : state.ops_op_intent;
+			this.ops_priority = copy ? state.ops_priority?.Clone() : state.ops_priority;
+			this.ops_ptl_present_flag = copy ? state.ops_ptl_present_flag?.Clone() : state.ops_ptl_present_flag;
 			this.ops_ptl_reserved_2bits = state.ops_ptl_reserved_2bits;
 			this.ops_reserved_2bits = state.ops_reserved_2bits;
-			this.ops_reset_flag = state.ops_reset_flag?.Clone();
-			this.ops_seq_profile_idc = state.ops_seq_profile_idc?.Clone();
-			this.ops_tier_flag = state.ops_tier_flag?.Clone();
-			this.ops_tlayer_map = state.ops_tlayer_map?.Clone();
-			this.ops_transfer_characteristics = state.ops_transfer_characteristics?.Clone();
-			this.ops_xlayer_map = state.ops_xlayer_map?.Clone();
+			this.ops_reset_flag = copy ? state.ops_reset_flag?.Clone() : state.ops_reset_flag;
+			this.ops_seq_profile_idc = copy ? state.ops_seq_profile_idc?.Clone() : state.ops_seq_profile_idc;
+			this.ops_tier_flag = copy ? state.ops_tier_flag?.Clone() : state.ops_tier_flag;
+			this.ops_tlayer_map = copy ? state.ops_tlayer_map?.Clone() : state.ops_tlayer_map;
+			this.ops_transfer_characteristics = copy ? state.ops_transfer_characteristics?.Clone() : state.ops_transfer_characteristics;
+			this.ops_xlayer_map = copy ? state.ops_xlayer_map?.Clone() : state.ops_xlayer_map;
 			this.order_hint = state.order_hint;
 			this.order_hint_bits_minus_1 = state.order_hint_bits_minus_1;
 			this.our_ref = state.our_ref;
@@ -16581,18 +22791,18 @@ return 0
 			this.per_plane = state.per_plane;
 			this.pic_qm_num_minus_1 = state.pic_qm_num_minus_1;
 			this.plane = state.plane;
-			this.plane_hash = state.plane_hash?.Clone();
-			this.point_cb_scaling = state.point_cb_scaling?.Clone();
-			this.point_cb_value = state.point_cb_value?.Clone();
-			this.point_cr_scaling = state.point_cr_scaling?.Clone();
-			this.point_cr_value = state.point_cr_value?.Clone();
+			this.plane_hash = copy ? state.plane_hash?.Clone() : state.plane_hash;
+			this.point_cb_scaling = copy ? state.point_cb_scaling?.Clone() : state.point_cb_scaling;
+			this.point_cb_value = copy ? state.point_cb_value?.Clone() : state.point_cb_value;
+			this.point_cr_scaling = copy ? state.point_cr_scaling?.Clone() : state.point_cr_scaling;
+			this.point_cr_value = copy ? state.point_cr_value?.Clone() : state.point_cr_value;
 			this.point_scaling_bits_minus_5 = state.point_scaling_bits_minus_5;
 			this.point_value_increment_bits_minus_1 = state.point_value_increment_bits_minus_1;
-			this.point_y_scaling = state.point_y_scaling?.Clone();
-			this.point_y_value = state.point_y_value?.Clone();
+			this.point_y_scaling = copy ? state.point_y_scaling?.Clone() : state.point_y_scaling;
+			this.point_y_value = copy ? state.point_y_value?.Clone() : state.point_y_value;
 			this.pos = state.pos;
-			this.primary_chromaticity_x = state.primary_chromaticity_x?.Clone();
-			this.primary_chromaticity_y = state.primary_chromaticity_y?.Clone();
+			this.primary_chromaticity_x = copy ? state.primary_chromaticity_x?.Clone() : state.primary_chromaticity_x;
+			this.primary_chromaticity_y = copy ? state.primary_chromaticity_y?.Clone() : state.primary_chromaticity_y;
 			this.primary_ref_frame = state.primary_ref_frame;
 			this.qThresh = state.qThresh;
 			this.qm_4x8_is_transpose_of_8x4 = state.qm_4x8_is_transpose_of_8x4;
@@ -16602,10 +22812,10 @@ return 0
 			this.qm_copy_from_previous_plane = state.qm_copy_from_previous_plane;
 			this.qm_index = state.qm_index;
 			this.qm_is_default_flag = state.qm_is_default_flag;
-			this.qm_u = state.qm_u?.Clone();
+			this.qm_u = copy ? state.qm_u?.Clone() : state.qm_u;
 			this.qm_uv_same_as_y = state.qm_uv_same_as_y;
-			this.qm_v = state.qm_v?.Clone();
-			this.qm_y = state.qm_y?.Clone();
+			this.qm_v = copy ? state.qm_v?.Clone() : state.qm_v;
+			this.qm_y = copy ? state.qm_y?.Clone() : state.qm_y;
 			this.quant_delta = state.quant_delta;
 			this.readFrameFilters = state.readFrameFilters;
 			this.reduce_pb_aspect_ratio = state.reduce_pb_aspect_ratio;
@@ -16614,21 +22824,21 @@ return 0
 			this.reduced_tx_set = state.reduced_tx_set;
 			this.refDisp = state.refDisp;
 			this.refRatio = state.refRatio;
-			this.ref_frame_idx = state.ref_frame_idx?.Clone();
-			this.ref_long_term_id = state.ref_long_term_id?.Clone();
+			this.ref_frame_idx = copy ? state.ref_frame_idx?.Clone() : state.ref_frame_idx;
+			this.ref_long_term_id = copy ? state.ref_long_term_id?.Clone() : state.ref_long_term_id;
 			this.reference_select = state.reference_select;
 			this.refresh_frame_flags = state.refresh_frame_flags;
 			this.reserved = state.reserved;
 			this.restricted_prediction_switch = state.restricted_prediction_switch;
-			this.reuse_ccso = state.reuse_ccso?.Clone();
+			this.reuse_ccso = copy ? state.reuse_ccso?.Clone() : state.reuse_ccso;
 			this.reuse_seg_info = state.reuse_seg_info;
 			this.reuse_tile_info = state.reuse_tile_info;
 			this.rst_ref_pic_idx = state.rst_ref_pic_idx;
-			this.sbColStarts = state.sbColStarts?.Clone();
+			this.sbColStarts = copy ? state.sbColStarts?.Clone() : state.sbColStarts;
 			this.sbNum = state.sbNum;
-			this.sbRowStarts = state.sbRowStarts?.Clone();
+			this.sbRowStarts = copy ? state.sbRowStarts?.Clone() : state.sbRowStarts;
 			this.sbSize = state.sbSize;
-			this.sb_reuse_ccso = state.sb_reuse_ccso?.Clone();
+			this.sb_reuse_ccso = copy ? state.sb_reuse_ccso?.Clone() : state.sb_reuse_ccso;
 			this.score = state.score;
 			this.seconds_flag = state.seconds_flag;
 			this.seconds_value = state.seconds_value;
@@ -16647,7 +22857,7 @@ return 0
 			this.seq_cropping_win_top_offset = state.seq_cropping_win_top_offset;
 			this.seq_cropping_window_present_flag = state.seq_cropping_window_present_flag;
 			this.seq_decoder_model_info_present_flag = state.seq_decoder_model_info_present_flag;
-			this.seq_enabled_motion_modes = state.seq_enabled_motion_modes?.Clone();
+			this.seq_enabled_motion_modes = copy ? state.seq_enabled_motion_modes?.Clone() : state.seq_enabled_motion_modes;
 			this.seq_force_integer_mv = state.seq_force_integer_mv;
 			this.seq_force_screen_content_tools = state.seq_force_screen_content_tools;
 			this.seq_frame_motion_modes_present_flag = state.seq_frame_motion_modes_present_flag;
@@ -16672,17 +22882,17 @@ return 0
 			this.still_picture = state.still_picture;
 			this.subX = state.subX;
 			this.subY = state.subY;
-			this.sub_stream_max_level = state.sub_stream_max_level?.Clone();
-			this.sub_stream_max_profile = state.sub_stream_max_profile?.Clone();
-			this.sub_stream_max_tier = state.sub_stream_max_tier?.Clone();
-			this.sub_xlayer_id = state.sub_xlayer_id?.Clone();
+			this.sub_stream_max_level = copy ? state.sub_stream_max_level?.Clone() : state.sub_stream_max_level;
+			this.sub_stream_max_profile = copy ? state.sub_stream_max_profile?.Clone() : state.sub_stream_max_profile;
+			this.sub_stream_max_tier = copy ? state.sub_stream_max_tier?.Clone() : state.sub_stream_max_tier;
+			this.sub_xlayer_id = copy ? state.sub_xlayer_id?.Clone() : state.sub_xlayer_id;
 			this.subexp_bits = state.subexp_bits;
 			this.subexp_final_bits = state.subexp_final_bits;
 			this.subexp_more_bits = state.subexp_more_bits;
 			this.sz = state.sz;
 			this.t = state.t;
 			this.target = state.target;
-			this.temporal_pred_flag = state.temporal_pred_flag?.Clone();
+			this.temporal_pred_flag = copy ? state.temporal_pred_flag?.Clone() : state.temporal_pred_flag;
 			this.tg_end = state.tg_end;
 			this.tg_start = state.tg_start;
 			this.their_ref = state.their_ref;
@@ -16731,7 +22941,7 @@ return 0
 			this.use_ref_frame_mvs = state.use_ref_frame_mvs;
 			this.user_data_payload_byte = state.user_data_payload_byte;
 			this.using_qmatrix = state.using_qmatrix;
-			this.uuid_iso_iec_11578 = (byte[])state.uuid_iso_iec_11578?.Clone();
+			this.uuid_iso_iec_11578 = copy ? ((byte[])state.uuid_iso_iec_11578?.Clone()) : state.uuid_iso_iec_11578;
 			this.uv_ac_delta_q_enabled = state.uv_ac_delta_q_enabled;
 			this.uv_dc_delta_q_enabled = state.uv_dc_delta_q_enabled;
 			this.v = state.v;

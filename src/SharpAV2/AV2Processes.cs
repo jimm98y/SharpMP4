@@ -97,12 +97,25 @@ namespace SharpAV2
             return base_q_idx;
         }
 
+        // obu_padding_length of the OBU being read or written; -1 until it is asked for.
+        private int _paddingLength = -1;
+
         /// <summary>
-        /// obu_padding_length (5.16): not coded, the payload before its trailing bits.
+        /// obu_padding_length (5.16): not coded, the payload before its trailing bits - as many bytes as
+        /// were read, written. Found once: padding_obu asks for it after each byte it reads.
         /// </summary>
         private int obu_padding_length
         {
             get
+            {
+                if (_paddingLength < 0)
+                    _paddingLength = _writing ? stream.Source?["obu_padding_byte"].Count ?? 0 : PaddingLength();
+                return _paddingLength;
+            }
+        }
+
+        private int PaddingLength()
+        {
             {
                 long remainingBits = ObuEndPosition - stream.GetPosition();
                 var baseStream = stream.Bitstream.BaseStream;
@@ -131,6 +144,18 @@ namespace SharpAV2
         /// MSDO OBU. Here: 1 from the first MSDO OBU read.
         /// </summary>
         private int MultiStreamDecoderMode { get; set; }
+
+        /// <summary>
+        /// The index of Ccso_Offset that, scaled, is the offset: what an encoder writes as ccso_offset_idx
+        /// for a CcsoFilterOffset it chose (5.18.7.12). 0 for an offset that no index gives.
+        /// </summary>
+        private static int ccso_offset_index(int offset, int scale)
+        {
+            for (int i = 0; i < Ccso_Offset.Length; i++)
+                if (Ccso_Offset[i] * scale == offset)
+                    return i;
+            return 0;
+        }
 
         #endregion
 
@@ -457,11 +482,24 @@ namespace SharpAV2
         /// <summary>init_symbol( sz ) (8.2.2): the tile's sz bytes are skipped whole by exit_symbol.</summary>
         private void init_symbol(int sz) => _tileEnd = stream.GetPosition() + (long)sz * 8;
 
-        /// <summary>exit_symbol( ) (8.2.4): to the end of the tile.</summary>
+        /// <summary>
+        /// exit_symbol( ) (8.2.4): to the end of the tile. Its bytes are kept where the OBU is recorded, and
+        /// written as they were.
+        /// </summary>
         private void exit_symbol()
         {
             long left = _tileEnd - stream.GetPosition();
-            if (left > 0)
+            if (left <= 0)
+                return;
+            if (_writing)
+            {
+                byte[] tile = stream.Pick("tile_data", (byte[])null, null)
+                    ?? throw new InvalidOperationException("The tile data was not recorded: SharpAV2 writes tiles as they were read.");
+                stream.WriteBytes((int)left, tile, "tile_data");
+            }
+            else if (stream.Record != null)
+                stream.ReadBytes((int)left, out _, "tile_data");
+            else
                 stream.Skip(left);
         }
 

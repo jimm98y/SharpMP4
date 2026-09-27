@@ -67,4 +67,42 @@ public class AV1ObuTests
 
         Assert.AreEqual(5 * 8, context.ObuSizeLen);
     }
+
+    private static byte[] WriteAgain(byte[] obu, Action<AV1Obu>? change = null)
+    {
+        var reader = new AV1Context { RecordSyntax = true };
+        using (var stream = new AomStream(new MemoryStream(obu), new DefaultMp4Logger()))
+            reader.Read(stream, obu.Length);
+        change?.Invoke(reader.LastObu);
+
+        var written = new MemoryStream();
+        using (var stream = new AomStream(written, new DefaultMp4Logger()))
+            new AV1Context().Write(stream, reader.LastObu);
+        return written.ToArray();
+    }
+
+    /// <summary>
+    /// An OBU is written again as it was read: its leb128s as long as they were coded - obu_size in
+    /// 5 bytes and metadata_type in 8 where 1 each would do - and its payload.
+    /// </summary>
+    [TestMethod]
+    public void WritesAnObuAsItWasRead()
+    {
+        CollectionAssert.AreEqual(ItutT35Obu, WriteAgain(ItutT35Obu));
+        CollectionAssert.AreEqual(MetadataObu, WriteAgain(MetadataObu));
+    }
+
+    /// <summary>A payload changed in the state it was read into is written in its place.</summary>
+    [TestMethod]
+    public void WritesAChangedT35Payload()
+    {
+        byte[] payload = Convert.FromHexString("0102030405060708090a0b0c0d0e0f101112131415");
+        byte[] written = WriteAgain(ItutT35Obu, obu => obu.Edit().ItutT35Payload = payload);
+
+        var context = new AV1Context();
+        using var stream = new AomStream(new MemoryStream(written), new DefaultMp4Logger());
+        context.Read(stream, written.Length);
+        CollectionAssert.AreEqual(payload, context.ItutT35Payload);
+        Assert.AreEqual(ItutT35Obu.Length, written.Length);
+    }
 }

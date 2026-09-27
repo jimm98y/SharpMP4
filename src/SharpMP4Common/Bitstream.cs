@@ -90,6 +90,39 @@ namespace SharpMP4.Common
             return 8;
         }
 
+        /// <summary>
+        /// Reads whole bytes at a byte boundary straight from the stream, rather than bit by bit: what a
+        /// payload of megabytes takes to read. The next bit read is the first after them.
+        /// </summary>
+        public virtual void ReadAlignedBytes(byte[] buffer, int offset, int count)
+        {
+            if (_bitsPosition % 8 != 0)
+                throw new InvalidOperationException("Not at a byte boundary.");
+
+            int read = 0;
+            while (read < count)
+            {
+                int n = _stream.Read(buffer, offset + read, count - read);
+                if (n <= 0)
+                    throw new EndOfStreamException();
+                read += n;
+            }
+            _bitsPosition += (long)count * 8;
+        }
+
+        /// <summary>Writes whole bytes at a byte boundary straight to the stream; the next bit written is the first after them.</summary>
+        public virtual void WriteAlignedBytes(byte[] buffer, int offset, int count)
+        {
+            if (_bitsPosition % 8 != 0)
+                throw new InvalidOperationException("Not at a byte boundary.");
+
+            _stream.Write(buffer, offset, count);
+            _bitsPosition += (long)count * 8;
+            // The byte the next bit goes in, as WriteBit keeps it
+            _currentBytePosition = _bitsPosition >> 3;
+            _currentByte = 0;
+        }
+
         public virtual ulong ReadBits(uint count, out uint value)
         {
             if (count > 32)

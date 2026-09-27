@@ -9,22 +9,17 @@ namespace AomGenerator.CSharp
     public interface ICustomGenerator
     {
         string PreprocessDefinitionsFile(string definitions);
-        string GetFieldDefaultValue(AomField field);
-        string FixCondition(string condition);
-        string FixStatement(string fieldValue);
-        string GetCtorParameterType(string parameter);
-        string AppendMethod(AomCode field, string spacing, string retm);
 
-        /// <summary>
-        /// Translates the specification's expressions, where the generator writes them itself; null, the
-        /// expressions are fixed up as they are (FixStatement, FixCondition).
-        /// </summary>
+        /// <summary>The descriptor a structure's parameter is taken to have: su(32), or su(64) for a count of bits.</summary>
+        string GetCtorParameterType(string parameter);
+
+        /// <summary>Translates the specification's expressions.</summary>
         AomExpressions Expressions { get; }
 
-        /// <summary>The C# type of a field; null, the generator's own mapping.</summary>
+        /// <summary>The C# type of a field.</summary>
         string GetFieldType(AomField field);
 
-        /// <summary>The start of the call that reads a field; null, the generator's own.</summary>
+        /// <summary>The start of the call that reads a field.</summary>
         string GetReadMethod(AomField field);
 
         /// <summary>
@@ -42,6 +37,13 @@ namespace AomGenerator.CSharp
 
         /// <summary>The C# type a structure returns, if it returns a value; null, the generator's own.</summary>
         string GetReturnType(AomMethod method);
+
+        /// <summary>
+        /// What an encoder writes for an element, from a state - {state} - where the statements after its
+        /// read do not show it: a choice the state makes (found_ref), a table the value was looked up in.
+        /// Null, the generator's own.
+        /// </summary>
+        string GetInverse(AomField element);
     }
 
     public class CSharpGenerator
@@ -63,7 +65,7 @@ namespace AomGenerator.CSharp
 using System.Collections.Generic;
 using System.Numerics;
 using SharpAVX;
-
+{string.Concat((specificGenerator as CSharpGeneratorAom)?.StaticUsings.Select(u => $"using static {u};\r\n") ?? Enumerable.Empty<string>())}
 namespace Sharp{type}
 {{
 ";
@@ -74,6 +76,17 @@ namespace Sharp{type}
             specificGenerator.Prepare(aomClasses);
             foreach (var aomClass in aomClasses)
                 FindSyntaxElements(aomClass.Fields);
+            FindReadingStructures(aomClasses);
+            specificGenerator.Expressions.ReadingStructures = _readingStructures;
+
+            resultCode += $@"
+        /// <summary>
+        /// Writing, the state the OBU's syntax elements were read into, and the same state as it was
+        /// changed: an element whose value the two give alike is written as it was read.
+        /// </summary>
+        private {type}Context _original;
+        private {type}Context _edited;
+";
 
             foreach (var aomClass in aomClasses)
             {
@@ -87,6 +100,62 @@ namespace Sharp{type}
 }}
 ";
             return resultCode;
+        }
+
+        // The structures that read the bitstream, themselves or through a structure they call: each has a Write method.
+        private readonly HashSet<string> _readingStructures = new HashSet<string>();
+
+        // True while a Write method is generated.
+        private bool _writing;
+
+        private void FindReadingStructures(IEnumerable<AomMethod> aomClasses)
+        {
+            var names = new HashSet<string>(aomClasses.Select(c => c.MethodName));
+            var calls = new Dictionary<string, HashSet<string>>();
+            foreach (var aomClass in aomClasses)
+            {
+                if (HasDescriptor(aomClass.Fields))
+                    _readingStructures.Add(aomClass.MethodName);
+                // Its calls, wherever they are: statements, conditions, arguments and values
+                var called = new HashSet<string>();
+                foreach (System.Text.RegularExpressions.Match m in System.Text.RegularExpressions.Regex.Matches(aomClass.Syntax, @"\b([A-Za-z_]\w*)\s*\("))
+                {
+                    string name = m.Groups[1].Value;
+                    if (name != aomClass.MethodName && names.Contains(name))
+                        called.Add(name);
+                }
+                calls[aomClass.MethodName] = called;
+            }
+
+            bool changed = true;
+            while (changed)
+            {
+                changed = false;
+                foreach (var entry in calls)
+                {
+                    if (!_readingStructures.Contains(entry.Key) && entry.Value.Any(_readingStructures.Contains))
+                        changed |= _readingStructures.Add(entry.Key);
+                }
+            }
+        }
+
+        private static bool HasDescriptor(IEnumerable<AomCode> code)
+        {
+            foreach (var c in code)
+            {
+                if (c is AomField f && f.Type != null)
+                    return true;
+                if (c is AomBlock block && HasDescriptor(block.Content))
+                    return true;
+                if (c is AomBlockIfThenElse ifThenElse)
+                {
+                    if (HasDescriptor(((AomBlock)ifThenElse.BlockIf).Content) ||
+                        ifThenElse.BlockElseIf.Any(e => HasDescriptor(((AomBlock)e).Content)) ||
+                        ifThenElse.BlockElse != null && HasDescriptor(((AomBlock)ifThenElse.BlockElse).Content))
+                        return true;
+                }
+            }
+            return false;
         }
 
         // What each syntax structure assigns, and which it calls.
@@ -160,7 +229,7 @@ namespace Sharp{type}
 
                 string name2 = all ? "Context" : structure.ToPropertyCase();
                 string copy(string value, string type) =>
-                    type.StartsWith("AomArray<") ? $"{value}?.Clone()" : type == "byte[]" ? $"(byte[]){value}?.Clone()" : value;
+                    type.StartsWith("AomArray<") ? $"{value}?.Clone()" : type.EndsWith("[]") ? ArrayCopy(value, type, 0) : value;
 
                 result.Append($"\r\n\t\t/// <summary>What {(all ? "the context holds" : structure + " and the structures it calls assign")}, as Save{name2} keeps it.</summary>\r\n");
                 result.Append($"\t\tprivate sealed partial class {name2}State\r\n\t\t{{\r\n");
@@ -175,9 +244,17 @@ namespace Sharp{type}
                     result.Append("\t\t\tSaveContextExtra(state);\r\n");
                 result.Append("\t\t\treturn state;\r\n\t\t}\r\n");
 
-                result.Append($"\r\n\t\tprivate void Load{name2}({name2}State state)\r\n\t\t{{\r\n");
+                // The whole context may take a state just saved as it is, rather than copy it again: a copy of
+                // the context is a state saved and loaded.
+                string loadParameters = all ? $"{name2}State state, bool copy = true" : $"{name2}State state";
+                result.Append($"\r\n\t\tprivate void Load{name2}({loadParameters})\r\n\t\t{{\r\n");
                 foreach (string field in fields)
-                    result.Append($"\t\t\tthis.{field} = {copy("state." + field, _fieldTypes[field])};\r\n");
+                {
+                    string copied = copy("state." + field, _fieldTypes[field]);
+                    result.Append(all && copied != "state." + field
+                        ? $"\t\t\tthis.{field} = copy ? {copied} : state.{field};\r\n"
+                        : $"\t\t\tthis.{field} = {copied};\r\n");
+                }
                 if (all)
                     result.Append("\t\t\tLoadContextExtra(state);\r\n");
                 result.Append("\t\t}\r\n");
@@ -189,6 +266,15 @@ namespace Sharp{type}
                 }
             }
             return result.ToString();
+        }
+
+        /// <summary>A copy of an array, and of the arrays in it: int[][] element by element.</summary>
+        private static string ArrayCopy(string value, string type, int depth)
+        {
+            string element = type.Substring(0, type.Length - 2);
+            return element.EndsWith("[]")
+                ? $"({value} == null ? null : Array.ConvertAll({value}, e{depth} => {ArrayCopy("e" + depth, element, depth + 1)}))"
+                : $"(({type}){value}?.Clone())";
         }
 
         private string GenerateMethods(AomMethod aomClass)
@@ -215,38 +301,55 @@ namespace Sharp{type}
                 retType = specificGenerator.GetReturnType(aomClass) ?? GetReturnType(aomClass) ?? "int";
             }
 
-            resultCode += $@"
-        private {retType} {aomClass.MethodName.ToPropertyCase()}({ituClassParameters})
+            // Read, and written as it is read: the same statements, each element written where it is read.
+            var addedFields = aomClass.AddedFields.ToList();
+            foreach (bool writing in _readingStructures.Contains(aomClass.MethodName) ? new[] { false, true } : new[] { false })
+            {
+                _writing = writing;
+                specificGenerator.Expressions.Writing = writing;
+                // The variables a method declares where it first assigns them, declared again in the other
+                var declared = aomClass.AddedFields.ToList();
+                aomClass.AddedFields.Clear();
+                aomClass.AddedFields.AddRange(addedFields);
+
+                string methodName = (writing ? "Write" : "") + aomClass.MethodName.ToPropertyCase();
+                resultCode += $@"
+        private {retType} {methodName}({ituClassParameters})
         {{";
-
-            // A process's lower case variables are its own (4.9 in AV1's and AV2's specifications): its
-            // loop counters are locals, or a function called in a loop over i would move the caller's i.
-            // AV1's syntax structures keep theirs as fields, as they always have; its functions do not.
-            if (specificGenerator.Expressions != null || aomClass.HasReturn)
-            {
-                foreach (var counter in aomClass.RequiresDefinition.Where(v => !ctorParameters.Contains(v.Name)).Select(v => v.Name).Distinct())
-                    resultCode += $"\r\n\t\t\tint {counter} = 0;";
+                resultCode += GenerateMethodBody(aomClass, ctorParameters);
+                resultCode += $@"
+        }}
+";
+                foreach (var field in declared.Where(f => !aomClass.AddedFields.Contains(f)))
+                    aomClass.AddedFields.Add(field);
             }
+            _writing = false;
+            specificGenerator.Expressions.Writing = false;
 
-            // In AV2 every such variable is: startBitPos of tile_group_obu is not frame_header's.
-            if (specificGenerator.Expressions != null)
+            return resultCode;
+        }
+
+        private string GenerateMethodBody(AomMethod aomClass, string[] ctorParameters)
+        {
+            string resultCode = "";
+
+            // A process's lower case variables are its own (4.8 in AV1's specification, 4.9 in AV2's): its
+            // loop counters are locals, or a function called in a loop over i would move the caller's i, and
+            // so is every such variable - startBitPos of AV2's tile_group_obu is not frame_header's.
+            foreach (var counter in aomClass.RequiresDefinition.Where(v => !ctorParameters.Contains(v.Name)).Select(v => v.Name).Distinct())
+                resultCode += $"\r\n\t\t\tint {counter} = 0;";
+
+            var counters = new HashSet<string>(aomClass.RequiresDefinition.Select(v => v.Name));
+            foreach (var local in aomClass.FlattenedFields.Where(f => IsLocal(f) && !ctorParameters.Contains(f.Name) && !counters.Contains(f.Name)))
             {
-                var counters = new HashSet<string>(aomClass.RequiresDefinition.Select(v => v.Name));
-                foreach (var local in aomClass.FlattenedFields.Where(f => IsLocal(f) && !ctorParameters.Contains(f.Name) && !counters.Contains(f.Name)))
-                {
-                    string type = GetCSharpType(local);
-                    string value = type.StartsWith("AomArray<") ? NewAomArray(type) : type == "byte[]" ? "null" : "0";
-                    resultCode += $"\r\n\t\t\t{type} {local.Name} = {value};";
-                }
+                string type = GetCSharpType(local);
+                string value = type.StartsWith("AomArray<") ? NewAomArray(type) : type == "byte[]" ? "null" : "0";
+                resultCode += $"\r\n\t\t\t{type} {local.Name} = {value};";
             }
             foreach (var field in aomClass.Fields)
             {
                 resultCode += "\r\n" + BuildMethod(aomClass, null, field, 3);
             }
-            resultCode += $@"
-        }}
-";
-
             return resultCode;
         }
 
@@ -284,12 +387,12 @@ namespace Sharp{type}
         }
 
         /// <summary>" ( a, f( b ) ) " to "a" and "f( b )".</summary>
-        private static List<string> SplitTopLevel(string parenthesized) => CSharpGeneratorAV2.SplitArguments(parenthesized);
+        private static List<string> SplitTopLevel(string parenthesized) => CSharpGeneratorAom.SplitArguments(parenthesized);
 
         /// <summary>"[ a ][ b ]" with each index translated.</summary>
         private string TranslateIndices(string indices)
         {
-            if (string.IsNullOrEmpty(indices) || specificGenerator.Expressions == null)
+            if (string.IsNullOrEmpty(indices))
                 return indices;
 
             var result = new StringBuilder();
@@ -315,12 +418,14 @@ namespace Sharp{type}
         private readonly HashSet<string> _syntaxElements = new HashSet<string>();
 
         /// <summary>
-        /// A variable of the process it is in, in AV2: a lower case name with no underscore (4.9), assigned
-        /// rather than read from the bitstream. It is a local, not a field of the context.
+        /// A variable of the process it is in: a lower case name with no underscore (4.8 in AV1's
+        /// specification, 4.9 in AV2's), assigned rather than read from the bitstream. It is a local, not a
+        /// field of the context.
         /// </summary>
         private bool IsLocal(AomField field) =>
-            specificGenerator.Expressions != null && field.Type == null && !_syntaxElements.Contains(field.Name) &&
-            System.Text.RegularExpressions.Regex.IsMatch(field.Name, "^[a-z][A-Za-z0-9]*$");
+            field.Type == null && !_syntaxElements.Contains(field.Name) &&
+            System.Text.RegularExpressions.Regex.IsMatch(field.Name, "^[a-z][A-Za-z0-9]*$") &&
+            (specificGenerator as CSharpGeneratorAom)?.KeptVariables.Contains(field.Name) != true;
 
         private void FindSyntaxElements(IEnumerable<AomCode> code)
         {
@@ -410,7 +515,7 @@ namespace Sharp{type}
 
                     // A call - process( a ) - assigns nothing to be kept; its name is a method's
                     bool isCall = field.Type == null && string.IsNullOrWhiteSpace(field.Value) && string.IsNullOrWhiteSpace(field.Increment) && field.Parameter != null;
-                    if (!(isCall && specificGenerator.Expressions != null))
+                    if (!isCall)
                         AddAndResolveDuplicates(b, ret, field);
                 }
                 else if (code is AomBlock block)
@@ -474,7 +579,7 @@ namespace Sharp{type}
                         }
                     }
                 }
-                else if(code is AomReturn rt && !string.IsNullOrEmpty(rt.Parameter) && (specificGenerator.Expressions == null || !string.IsNullOrWhiteSpace(rt.Parameter)))
+                else if (code is AomReturn rt && !string.IsNullOrWhiteSpace(rt.Parameter))
                 {
                     b.HasReturn = true;
                 }
@@ -613,10 +718,7 @@ namespace Sharp{type}
                     type = GetCSharpTypeMapping()[ituClass.AddedFields.FirstOrDefault(x => x.Name == field.Name).Type];
             }
 
-            string defaultInitializer = specificGenerator.GetFieldDefaultValue(field);
-            string initializer = string.IsNullOrEmpty(defaultInitializer) ? "" : $"= {defaultInitializer}";
-            if (string.IsNullOrEmpty(initializer) && type.StartsWith("AomArray<"))
-                initializer = $" = {NewAomArray(type)}";
+            string initializer = type.StartsWith("AomArray<") ? $" = {NewAomArray(type)}" : "";
 
             if (IsLocal(field))
                 return "";
@@ -701,7 +803,7 @@ namespace Sharp{type}
             if (field is AomTuple tuple)
             {
                 // C#'s deconstruction assigns the values in order, as the specification does
-                string value = specificGenerator.Expressions != null ? specificGenerator.Expressions.Int(tuple.Value) : tuple.Value;
+                string value = specificGenerator.Expressions.Int(tuple.Value);
                 var targets = tuple.Targets.Select(t => t.Contains("[") ? t.Substring(0, t.IndexOf('[')).Trim() + TranslateIndices(t.Substring(t.IndexOf('['))) : t);
                 return $"{spacing}({string.Join(", ", targets)}) = {value};";
             }
@@ -724,16 +826,25 @@ namespace Sharp{type}
 
             string retm = "";
 
-            if ((field as AomField).Type != null)
+            if ((field as AomField).Type != null && _writing)
+            {
+                // The value of this occurrence, then written as it would be read
+                string target = $"this.{name}{typedef}";
+                var siblings = (parent != null ? parent.Content : b.Fields).ToList();
+                string Of(string state) => Inverse(siblings, siblings.IndexOf(field), (AomField)field, state) ?? $"{state}.{name}{typedef}";
+                string original = $"_original != null ? {Of("_original")} : {target}";
+                string edited = $"_edited != null ? {Of("_edited")} : _original != null ? {Of("_original")} : {target}";
+                retm = $"{spacing}{target} = stream.Pick(\"{name}\", {original}, {edited});\r\n{spacing}{WriteMethod(m)} {target}, \"{name}\"); {fieldComment}";
+            }
+            else if ((field as AomField).Type != null)
             {
                 retm = $"{spacing}{m} out this.{name}{typedef}, \"{name}\"); {fieldComment}";
             }
             else
             {
+                // A structure: written, one that reads is its Write method, as the expressions name it
                 retm = $"{spacing}{m}; {fieldComment}";
             }
-
-            retm = specificGenerator.AppendMethod(field, spacing, retm);
 
             return retm;
         }
@@ -741,76 +852,26 @@ namespace Sharp{type}
         private string BuildReturn(AomMethod b, AomBlock parent, AomReturn retrn, int level)
         {
             var expressions = specificGenerator.Expressions;
-            if (expressions != null)
-            {
-                if (string.IsNullOrWhiteSpace(retrn.Parameter))
-                    return $"{GetSpacing(level)}return;";
+            if (string.IsNullOrWhiteSpace(retrn.Parameter))
+                return $"{GetSpacing(level)}return;";
 
-                var values = SplitTopLevel(retrn.Parameter);
-                string returned = retrn.Parameter.Trim().StartsWith("(") && values.Count > 1
-                    ? $"({string.Join(", ", values.Select(expressions.Int))})"
-                    : expressions.Int(retrn.Parameter);
-                return $"{GetSpacing(level)}return {returned};";
-            }
-
-            string p = "";
-            if (!string.IsNullOrEmpty(retrn.Parameter))
-                p = specificGenerator.FixStatement(retrn.Parameter);
-
-            return $"{GetSpacing(level)}return" + p + ";";
+            var values = SplitTopLevel(retrn.Parameter);
+            string returned = retrn.Parameter.Trim().StartsWith("(") && values.Count > 1
+                ? $"({string.Join(", ", values.Select(expressions.Int))})"
+                : expressions.Int(retrn.Parameter);
+            return $"{GetSpacing(level)}return {returned};";
         }
 
         private string BuildStatement(AomMethod b, AomBlock parent, AomField field, int level)
         {
-            var expressions = specificGenerator.Expressions;
-            if (expressions != null)
-            {
-                // name[ i ] op= value, or name++
-                string assigned = $"{field.Name}{TranslateIndices(field.FieldArray)}";
-                if (!string.IsNullOrWhiteSpace(field.Increment))
-                    return $"{GetSpacing(level)}{assigned}{field.Increment};";
+            // name[ i ] op= value, or name++
+            string assigned = $"{field.Name}{TranslateIndices(field.FieldArray)}";
+            if (!string.IsNullOrWhiteSpace(field.Increment))
+                return $"{GetSpacing(level)}{assigned}{field.Increment};";
 
-                string value = field.Value.Trim();
-                int operatorEnd = value.IndexOf('=') + 1;
-                return $"{GetSpacing(level)}{assigned} {value.Substring(0, operatorEnd)} {expressions.Int(value.Substring(operatorEnd))};";
-            }
-
-            string fieldValue = field.Value;
-            string fieldArray = field.FieldArray;
-
-            if (!string.IsNullOrEmpty(fieldArray))
-                fieldArray = specificGenerator.FixStatement(fieldArray);
-
-            if (!string.IsNullOrEmpty(fieldValue))
-            {
-                fieldValue = specificGenerator.FixStatement(fieldValue);
-
-                string trimmed = fieldValue.TrimStart(new char[] { ' ', '=' });
-                if (trimmed.StartsWith("!"))
-                {
-                    fieldValue = $"= {trimmed.Substring(1)} == 0";
-                }
-
-                if (fieldValue.Contains("flag") && !fieldValue.Contains(")"))
-                    fieldValue = fieldValue.Replace("||", "|").Replace("&&", "&");
-            }
-
-            if (b.FlattenedFields.FirstOrDefault(x => x.Name == field.Name) != null || parent != null)
-            {
-                return $"{GetSpacing(level)}{field.Name}{fieldArray}{field.Increment}{fieldValue}".TrimEnd() + ";";
-            }
-            else
-            {
-                if (b.AddedFields.FirstOrDefault(x => x.Name == field.Name) == null && b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
-                {
-                    b.AddedFields.Add(new AomField() { Name = field.Name, Value = fieldValue });
-                    return $"{GetSpacing(level)}int {field.Name}{fieldArray}{fieldValue}".TrimEnd() + ";";
-                }
-                else
-                {
-                    return $"{GetSpacing(level)}{field.Name}{fieldArray}{field.Increment}{fieldValue}".TrimEnd() + ";";
-                }
-            }
+            string value = field.Value.Trim();
+            int operatorEnd = value.IndexOf('=') + 1;
+            return $"{GetSpacing(level)}{assigned} {value.Substring(0, operatorEnd)} {specificGenerator.Expressions.Int(value.Substring(operatorEnd))};";
         }
 
         private string BuildComment(AomMethod b, AomComment comment, int level)
@@ -826,27 +887,8 @@ namespace Sharp{type}
             string condition = block.Condition;
             string blockType = block.Type;
 
-            if (specificGenerator.Expressions != null)
-            {
-                if (!string.IsNullOrEmpty(condition))
-                    condition = TranslateCondition(blockType, condition);
-            }
-            else if (!string.IsNullOrEmpty(condition))
-            {
-                if (blockType == "if" || blockType == "else if" || blockType == "while")
-                {
-                    condition = FixCondition(b, condition);
-                }
-                else if (blockType == "for")
-                {
-                    condition = specificGenerator.FixCondition(condition);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(condition) && specificGenerator.Expressions == null)
-            {
-                condition = condition.Replace("<<", "<< (int)");
-            }
+            if (!string.IsNullOrEmpty(condition))
+                condition = TranslateCondition(blockType, condition);
 
             ret += $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
 
@@ -889,345 +931,156 @@ namespace Sharp{type}
             return $"({Assignments(parts[0])}; {expressions.Bool(parts[1])}; {Assignments(parts[2])})";
         }
 
-        private string FixCondition(AomMethod b, string condition)
+        private string GetCSharpType(AomField field) => specificGenerator.GetFieldType(field);
+
+        /// <summary>The types of the descriptors the generator gives structure parameters and loop counters.</summary>
+        private static Dictionary<string, string> GetCSharpTypeMapping() => new Dictionary<string, string>
         {
-            string[] parts = condition.Substring(1, condition.Length - 2).Split(new string[] { "||", "&&" }, StringSplitOptions.RemoveEmptyEntries);
+            { "su(32)", "int" },
+            { "su(64)", "long" },
+        };
 
-            for (int i = 0; i < parts.Length; i++)
-            {
-                parts[i] = parts[i].Trim();
-
-                if (parts[i].StartsWith("!"))
-                {
-                    string trimmed = parts[i].Trim(new char[] { ' ', '(', ')' });
-                    if (!trimmed.Contains("(") && !parts[i].Contains("()")) 
-                    {
-                        // we don't have bool anymore, so in this case it's easy fix
-                        condition = condition.Replace(parts[i].TrimEnd(')'), parts[i].TrimEnd(')').Substring(1, parts[i].TrimEnd(')').Length - 1) + "== 0");
-                    }
-                }
-                else if (!parts[i].Contains('=') && !parts[i].Contains('>') && !parts[i].Contains('<'))
-                {
-                    string trimmed = parts[i].Trim(new char[] { ' ', '(', ')' });
-                    if (!trimmed.Contains("(") && !parts[i].Contains("()")) 
-                    {
-                        if (trimmed.StartsWith("!"))
-                        {
-                            if (condition.Contains($"{trimmed} != 0"))
-                                condition = condition.Replace($"{trimmed} != 0", $"{trimmed.Substring(1)} == 0");
-                            else
-                                condition = condition.Replace(trimmed, trimmed.Substring(1) + " == 0");
-                        }
-                        else
-                            condition = condition.Replace(trimmed, trimmed + " != 0");
-                    }
-                }
-            }
-
-            condition = specificGenerator.FixCondition(condition);
-
-            return condition;
-        }
-
-        private string GetCSharpType(AomField field)
+        /// <summary>
+        /// The value an element read at siblings[ index ] had, as the statements after it leave it in a
+        /// state - the state the OBU was read into, or that state changed - where they change it, or keep it
+        /// elsewhere: what an encoder writes from its state. Null where the element is kept as it is read.
+        /// </summary>
+        private string Inverse(IList<AomCode> siblings, int index, AomField element, string state)
         {
-            string custom = specificGenerator.GetFieldType(field);
+            var expressions = specificGenerator.Expressions;
+            if (index < 0)
+                return null;
+
+            string custom = specificGenerator.GetInverse(element);
             if (custom != null)
-                return custom;
+                return custom.Replace("{state}", state);
 
-            Dictionary<string, string> map = GetCSharpTypeMapping();
+            string Normalized(string text) => System.Text.RegularExpressions.Regex.Replace(text ?? "", @"\s+", "");
+            string indices = element.FieldArray ?? "";
+            string self = Normalized(element.Name + indices);
+            string translated = TranslateIndices(indices);
+            string kept = $"{state}.{element.Name}{translated}";
 
-            if (string.IsNullOrWhiteSpace(field.Type))
+            for (int i = index + 1; i < siblings.Count; i++)
             {
-                if (
-                    field.ClassType == "operating_point_idc" ||
-                    field.ClassType == "decoder_model_present_for_this_op" ||
-                    field.ClassType == "initial_display_delay_present_for_this_op" ||
-                    field.ClassType == "decoder_model_present_for_this_op" ||
-                    field.ClassType == "seq_tier" ||
-                    field.ClassType == "cdef_y_pri_strength" ||
-                    field.ClassType == "cdef_y_sec_strength" ||
-                    field.ClassType == "cdef_uv_pri_strength" ||
-                    field.ClassType == "cdef_uv_sec_strength" ||
-                    field.ClassType == "cdef_damping_minus_3" ||
-                    field.ClassType == "loop_filter_level" ||
-                    field.ClassType == "loop_filter_ref_deltas" ||
-                    field.ClassType == "GmType" ||
-                    field.ClassType == "tile_size_minus_1" ||
-                    field.ClassType == "initial_display_delay_minus_1" ||
-                    field.ClassType == "RefValid" ||
-                    field.ClassType == "RefOrderHint" ||
-                    field.ClassType == "OrderHints" ||
-                    field.ClassType == "ref_order_hint" ||
-                    field.ClassType == "expectedFrameId" ||
-                    field.ClassType == "RefFrameSignBias" ||
-                    field.ClassType == "LoopRestorationSize" ||
-                    field.ClassType == "FrameRestorationType" ||
-                    field.ClassType == "MiColStarts" ||
-                    field.ClassType == "MiRowStarts" ||
-                    field.ClassType == "loop_filter_mode_deltas" ||
-                    field.ClassType == "LosslessArray" ||
-                    field.ClassType == "SkipModeFrame" ||
-                    field.ClassType == "usedFrame" ||
-                    field.ClassType == "shiftedOrderHints"
-                    )
-                {
-                    return map["su(32)[]"];
-                }
-                else if(
-                    field.ClassType == "FeatureEnabled" ||
-                    field.ClassType == "FeatureData" ||
-                    field.ClassType == "gm_params" ||
-                    field.ClassType == "SegQMLevel" 
-                    )
-                {
-                    return map["su(32)[][]"];
-                }
+                var next = siblings[i];
 
-                return map["su(32)"];
-            }
+                // Only the first statement after it that uses it says what became of it: past one that is
+                // none of these, what a later one says is of the value as that one left it, or of another
+                // case - reduced_still_picture_header sets nine elements, then frame_id_numbers_present_flag.
+                if (!Mentions(next, element.Name))
+                    continue;
 
-            int arrayDimensions = 0;
-            if (!string.IsNullOrEmpty(field.FieldArray))
-            {
-                int level = 0;
-                for (int i = 0; i < field.FieldArray.Length; i++)
+                // x op= E: x as read is x as kept, E undone (E is the writer's, where the reader's was)
+                if (next is AomField statement && statement.Type == null && Normalized(statement.Name + statement.FieldArray) == self && statement.Value != null)
                 {
-                    if (field.FieldArray[i] == '[')
+                    string value = statement.Value.Trim();
+                    if (value.StartsWith("+=") || value.StartsWith("-="))
                     {
-                        if (level == 0)
-                            arrayDimensions++;
-
-                        level++;
+                        string e = expressions.Int(value.Substring(2));
+                        return value.StartsWith("+=") ? $"({kept} - ({e}))" : $"({kept} + ({e}))";
                     }
-                    else if (field.FieldArray[i] == ']')
+                    return null;
+                }
+
+                // T = Table[ x ]: x is where T is in the table - a constant table, named as the specification
+                // names them (Remap_Lr_Type), not a variable's values (RefFrameType[ x ] is x's frame's type)
+                var lookup = next is AomField l && l.Type == null && l.Value != null
+                    ? System.Text.RegularExpressions.Regex.Match(Normalized(l.Value), @"^=([A-Z][a-z0-9]*(?:_[A-Za-z0-9]+)+)\[" + System.Text.RegularExpressions.Regex.Escape(self) + @"\]$") : null;
+                if (lookup != null && lookup.Success && _fieldTypes.ContainsKey(((AomField)next).Name))
+                {
+                    var table = (AomField)next;
+                    return $"AomArray.IndexOf({lookup.Groups[1].Value}, {state}.{table.Name}{TranslateIndices(table.FieldArray)})";
+                }
+
+                // T = x: x is kept as T, where T is kept in the state
+                if (next is AomField copy && copy.Type == null && copy.Value != null && Normalized(copy.Value) == "=" + self
+                    && copy.Name != element.Name && _fieldTypes.ContainsKey(copy.Name) && !IsLocal(copy))
+                    return $"{state}.{copy.Name}{TranslateIndices(copy.FieldArray)}";
+
+                if (next is AomBlockIfThenElse choice)
+                {
+                    var then = (AomBlock)choice.BlockIf;
+                    string condition = Normalized(then.Condition);
+                    var thenContent = then.Content.ToList();
+                    bool onlyIf = !choice.BlockElseIf.Any();
+
+                    // if ( x == C ) { x += D }: C + D kept is C read
+                    var m = System.Text.RegularExpressions.Regex.Match(condition, @"^\(" + System.Text.RegularExpressions.Regex.Escape(self) + @"==(\d+)\)$");
+                    if (m.Success && onlyIf && choice.BlockElse == null && thenContent.Count == 1
+                        && thenContent[0] is AomField increment && Normalized(increment.Name + increment.FieldArray) == self
+                        && increment.Value != null && System.Text.RegularExpressions.Regex.IsMatch(Normalized(increment.Value), @"^\+=\d+$"))
                     {
-                        level--;
+                        int c = int.Parse(m.Groups[1].Value);
+                        int d = int.Parse(Normalized(increment.Value).Substring(2));
+                        return $"({kept} == {c + d} ? {c} : {kept})";
+                    }
+
+                    // if ( update_x == 1 ) T f(n): x says T is coded, which an encoder does where T changes - where
+                    // it is kept other than the writer has it before it is written. Only for the flags the
+                    // specification names update_: a flag that says whether T is present at all (hours_flag) does
+                    // not say T changed.
+                    if (element.Name.StartsWith("update_") && (condition == $"({self})" || condition == $"({self}==1)") && onlyIf && choice.BlockElse == null && thenContent.Count == 1
+                        && thenContent[0] is AomField updated && updated.Type != null && updated.Name != element.Name && _fieldTypes.ContainsKey(updated.Name))
+                    {
+                        string indices2 = TranslateIndices(updated.FieldArray);
+                        return $"({state}.{updated.Name}{indices2} != {updated.Name}{indices2} ? 1 : 0)";
+                    }
+
+                    // if ( condition ) { x op= E }, the condition not of x: undone where the condition holds
+                    if (onlyIf && choice.BlockElse == null && thenContent.Count == 1 && !condition.Contains(self)
+                        && thenContent[0] is AomField change && change.Type == null && Normalized(change.Name + change.FieldArray) == self
+                        && change.Value != null && (change.Value.Trim().StartsWith("+=") || change.Value.Trim().StartsWith("-=")))
+                    {
+                        string value = change.Value.Trim();
+                        string e = expressions.Int(value.Substring(2));
+                        string undone = value.StartsWith("+=") ? $"{kept} - ({e})" : $"{kept} + ({e})";
+                        return $"({expressions.Bool(then.Condition.Trim().Substring(1, then.Condition.Trim().Length - 2))} ? {undone} : {kept})";
+                    }
+
+                    // if ( x ) { T = K } else { T f(n) }: x is whether T is K
+                    if (condition == $"({self})" && onlyIf && choice.BlockElse != null && thenContent.Count == 1
+                        && thenContent[0] is AomField preset && preset.Type == null && preset.Value != null
+                        && System.Text.RegularExpressions.Regex.IsMatch(Normalized(preset.Value), @"^=-?\w+$")
+                        && ((AomBlock)choice.BlockElse).Content.FirstOrDefault() is AomField coded && coded.Type != null
+                        && Normalized(coded.Name + coded.FieldArray) == Normalized(preset.Name + preset.FieldArray) && !IsLocal(preset))
+                    {
+                        string k = expressions.Int(Normalized(preset.Value).Substring(1));
+                        return $"({state}.{preset.Name}{TranslateIndices(preset.FieldArray)} == {k} ? 1 : 0)";
                     }
                 }
-            }
 
-            string arraySuffix = "";
-            for (int i = 0; i < arrayDimensions; i++)
-            {
-                arraySuffix += "[]";
+                return null;
             }
-
-            return map[field.Type] + arraySuffix;
+            return null;
         }
 
-        private static Dictionary<string, string> GetCSharpTypeMapping()
+        /// <summary>Whether a statement, or a block and all in it, names a variable.</summary>
+        private static bool Mentions(AomCode code, string name)
         {
-            Dictionary<string, string> map = new Dictionary<string, string>()
+            bool In(string text) => text != null && System.Text.RegularExpressions.Regex.IsMatch(text, $@"\b{System.Text.RegularExpressions.Regex.Escape(name)}\b");
+            switch (code)
             {
-                { "f(1)",                       "int" },
-                { "f(2)",                       "int" },
-                { "f(3)",                       "int" },
-                { "f(4)",                       "int" },
-                { "f(5)",                       "int" },
-                { "f(6)",                       "int" },
-                { "f(8)",                       "int" },
-                { "f(9)",                       "int" },
-                { "f(12)",                      "int" },
-                { "f(16)",                      "int" },
-                { "f(32)",                      "int" },
-                { "f(32)[]",                    "int[]" },
-                { "f(b2)",                      "int" },
-                { "f(bitsToRead)",              "int" },
-                { "f(idLen)",                   "int" },
-                { "f(N)",                       "byte[]" },
-                { "f(n)",                       "int" },
-                { "f(OrderHintBits)",           "int" },
-                { "f(SUPERRES_DENOM_BITS)",     "int" },
-                { "f(tileBits)",                "int" },
-                { "f(TileRowsLog2+TileColsLog2)", "int" },
-                { "f(time_offset_length)",      "int" },
-                { "L(1)",                       "int" },
-                { "L(2)",                       "int" },
-                { "L(3)",                       "int" },
-                { "L(b2)",                      "int" },
-                { "L(BitDepth)",                "int" },
-                { "L(cdef_bits)",               "int" },
-                { "L(delta_q_rem_bits)",        "int" },
-                { "L(n)",                       "int" },
-                { "L(paletteBits)",             "int" },
-                { "L(SGRPROJ_PARAMS_BITS)",     "int" },
-                { "le(TileSizeBytes)",          "int" },
-                { "leb128()",                   "int" },
-                { "uint(32)",                   "uint" },
-                { "ns(maxWidth)",               "uint" },
-                { "ns(maxHeight)",              "uint" },
-                { "ns(numSyms - mk)",           "uint" },
-                { "NS(numSyms - mk)",           "uint" },
-                { "NS(PaletteSizeUV)",          "uint" },
-                { "S()",                        "uint" },
-                { "su(32)",                     "int" },
-                { "su(32)[]",                   "int[]" },
-                { "su(32)[][]",                 "int[][]" },
-                { "su(64)",                     "long" },
-                { "su(1+6)",                    "int" },
-                { "su(1+bitsToRead)",           "int" },
-                { "uvlc()",                     "uint" },
-            };
-            return map;
-        }
-
-        private string GetReadMethod(AomMethod b, AomField aomField)
-        {
-            string custom = specificGenerator.GetReadMethod(aomField);
-            if (custom != null)
-                return custom;
-
-            switch (aomField.Type)
-            {
-                case "f(1)":
-                    return "stream.ReadFixed(1,";
-                
-                case "f(2)":
-                    return "stream.ReadFixed(2,";
-                
-                case "f(3)":
-                    return "stream.ReadFixed(3,";
-
-                case "f(4)":
-                    return "stream.ReadFixed(4,";
-
-                case "f(5)":
-                    return "stream.ReadFixed(5,";
-
-                case "f(6)":
-                    return "stream.ReadFixed(6,";
-
-                case "f(8)":
-                    return "stream.ReadFixed(8,";
-
-                case "f(9)":
-                    return "stream.ReadFixed(9,";
-
-                case "f(12)":
-                    return "stream.ReadFixed(12,";
-
-                case "f(16)":
-                    return "stream.ReadFixed(16,";
-
-                case "f(32)":
-                    return "stream.ReadFixed(32,";
-
-                case "f(b2)":
-                    return "stream.ReadVariable(b2,";
-
-                case "f(bitsToRead)":
-                    return "stream.ReadVariable(bitsToRead,";
-
-                case "f(idLen)":
-                    return "stream.ReadVariable(idLen,";
-
-                case "f(N)":
-                    return "stream.ReadBytes(N,";
-
-                case "f(n)":
-                    return "stream.ReadVariable(n,";
-
-                case "f(OrderHintBits)":
-                    return "stream.ReadVariable(OrderHintBits,";
-
-                case "f(SUPERRES_DENOM_BITS)":
-                    return "stream.ReadVariable(AV1Constants.SUPERRES_DENOM_BITS,";
-
-                case "f(tileBits)":
-                    return "stream.ReadVariable(tileBits,";
-
-                case "f(TileRowsLog2+TileColsLog2)":
-                    return "stream.ReadVariable(TileRowsLog2+TileColsLog2,";
-
-                case "f(time_offset_length)":
-                    return "stream.ReadVariable(time_offset_length,";
-
-                case "L(1)":
-                    return "stream.ReadL(1,";
-
-                case "L(2)":
-                    return "stream.ReadL(2,";
-
-                case "L(3)":
-                    return "stream.ReadL(3,";
-
-                case "L(b2)":
-                    return "stream.ReadL(b2,";
-
-                case "L(BitDepth)":
-                    return "stream.ReadL(BitDepth,";
-
-                case "L(cdef_bits)":
-                    return "stream.ReadL(cdef_bits,";
-
-                case "L(delta_q_rem_bits)":
-                    return "stream.ReadL(delta_q_rem_bits,";
-
-                case "L(n)":
-                    return "stream.ReadL(n,";
-
-                case "L(paletteBits)":
-                    return "stream.ReadL(paletteBits,";
-
-                case "L(SGRPROJ_PARAMS_BITS)":
-                    return "stream.ReadL(SGRPROJ_PARAMS_BITS,";
-
-                case "le(TileSizeBytes)":
-                    return "stream.ReadLeVar(TileSizeBytes,";
-
-                case "leb128()":
-                    // Only obu_size's length is kept - it says where the payload starts. Every
-                    // leb128 used to set it, so a metadata_type after it made the OBU header out
-                    // by the difference in their lengths.
-                    return aomField.Name == "obu_size" ? "obu_size_len = (int)stream.ReadLeb128(" : "stream.ReadLeb128(";
-
-                case "uint(32)":
-                    return "stream.ReadUnsignedInt32(size,";
-
-                case "ns(maxHeight)":
-                    return "stream.Read_ns(maxHeight,";
-
-                case "ns(maxWidth)":
-                    return "stream.Read_ns(maxWidth,";
-
-                case "ns(numSyms - mk)":
-                    return "stream.Read_ns(numSyms - mk,";
-
-                case "NS(numSyms - mk)":
-                    return "stream.Read_NS(numSyms - mk,";
-
-                case "NS(PaletteSizeUV)":
-                    return "stream.Read_NS(PaletteSizeUV,";
-
-                case "S()":
-                    return "stream.ReadS(size,";
-
-                case "su(32)":
-                    return "stream.ReadSignedInt32(size,";
-
-                case "su(32)[]":
-                    return "stream.ReadSignedInt32(size,";
-
-                case "su(32)[][]":
-                    return "stream.ReadSignedInt32(size,";
-
-                case "su(1+6)":
-                    return "stream.ReadSignedIntVar(1+6,";
-
-                case "su(1+bitsToRead)":
-                    return "stream.ReadSignedIntVar(1+bitsToRead,";
-
-                case "uvlc()":
-                    return "stream.ReadUvlc(";
-
+                case AomField f:
+                    return f.Name == name || In(f.FieldArray) || In(f.Value) || In(f.Parameter) || In(f.Type);
+                case AomTuple t:
+                    return t.Targets.Any(In) || In(t.Value);
+                case AomReturn r:
+                    return In(r.Parameter);
+                case AomBlock b:
+                    return In(b.Condition) || b.Content.Any(c => Mentions(c, name));
+                case AomBlockIfThenElse ite:
+                    return Mentions((AomBlock)ite.BlockIf, name) || ite.BlockElseIf.Any(e => Mentions((AomBlock)e, name))
+                        || ite.BlockElse != null && Mentions((AomBlock)ite.BlockElse, name);
                 default:
-                    if (aomField.Type == null)
-                    {
-                        return $"{aomField.ClassType.ToPropertyCase()}{aomField.Parameter}";
-                    }
-                    throw new NotImplementedException();
+                    return false;
             }
         }
+
+        /// <summary>The start of the call that writes what the read method's start reads: stream.ReadFixed(3, as stream.WriteFixed(3,.</summary>
+        private static string WriteMethod(string readMethod) =>
+            readMethod.Replace("stream.Read", "stream.Write").Replace("ReadArithmetic(", "WriteArithmetic(");
+
+        private string GetReadMethod(AomMethod b, AomField aomField) => specificGenerator.GetReadMethod(aomField);
     }
 }
