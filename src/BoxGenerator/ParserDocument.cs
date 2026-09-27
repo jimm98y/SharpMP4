@@ -172,7 +172,7 @@ namespace BoxGenerator
             {
             "mp4v","s263","drmi","encv","resv","icpv","hvc1","hvc2","hvc3","lhv1","lhe1","hev1","hev2","hev3","avcp","mvc1","mvc2","mvc3","mvc4","mvd1","mvd2",
             "mvd3","mvd4","a3d1","a3d2","a3d3","a3d4","svc1","svc2","hvt1","lht1","hvt3","hvt2","vvc1","vvi1","vvs1","vvcN","evc1","evs1","evs2","av01","avc1",
-            "avc2","avc3","avc4","vp08","vp09","vp10","apcn","dvhe","dvav","mjpg","uncv","j2ki",
+            "avc2","avc3","avc4","vp08","vp09","vp10","av02","apcn","dvhe","dvav","mjpg","uncv","j2ki",
             // quicktime https://developer.apple.com/documentation/quicktime-file-format/video_sample_description
             "cvid","jpeg","smc ","rle ","rpza","kpcd","png ","mjpa","mjpb","SVQ1","SVQ3","dvc ","dvcp","gif ","h263","tiff","raw ","2vuY","yuv2","v308","v408",
             "v216","v410","v210","qhvc",
@@ -411,7 +411,7 @@ namespace BoxGenerator
                             continue;
                         if (condition.Contains(prefix + ff.Name + suffix) && !condition.Contains(prefix + ff.Name + "["))
                         {
-                            condition = condition.Replace(prefix + ff.Name + suffix, prefix + ff.Name + str + suffix);
+                            condition = IndexVariable(condition, prefix, ff.Name, suffix, str);
                         }
                     }
                     else if (f is PseudoBlock bb)
@@ -424,7 +424,7 @@ namespace BoxGenerator
                                     continue;
                                 if (condition.Contains(prefix + ffff.Name + suffix) && !condition.Contains(prefix + ffff.Name + "["))
                                 {
-                                    condition = condition.Replace(prefix + ffff.Name + suffix, prefix + ffff.Name + str + suffix);
+                                    condition = IndexVariable(condition, prefix, ffff.Name, suffix, str);
                                 }
                             }
                         }
@@ -435,6 +435,16 @@ namespace BoxGenerator
             }
 
             return condition;
+        }
+
+        /// <summary>
+        /// A variable indexed by the loops it is in: name as a whole word, so that channel_label is not
+        /// found inside channel_label_flag and made channel_label[i]_flag.
+        /// </summary>
+        private static string IndexVariable(string condition, string prefix, string name, string suffix, string indices)
+        {
+            string pattern = (prefix.Length == 0 ? @"(?<!\w)" : "") + System.Text.RegularExpressions.Regex.Escape(prefix + name) + @"(?!\w)" + System.Text.RegularExpressions.Regex.Escape(suffix);
+            return System.Text.RegularExpressions.Regex.Replace(condition, pattern, m => prefix + name + indices + suffix);
         }
 
         public string GetFieldTypeDef(PseudoCode field)

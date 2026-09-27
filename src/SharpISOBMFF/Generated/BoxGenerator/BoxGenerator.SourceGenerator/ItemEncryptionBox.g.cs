@@ -94,7 +94,7 @@ public partial class ItemEncryptionBox : ItemFullProperty
 			if (Per_Sample_IV_Size[i] == 0)
 			{
 				boxSize += stream.ReadUInt8(boxSize, readSize,  out this.constant_IV_size[i], "constant_IV_size"); 
-				boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(IsoStream.GetInt(constant_IV_size)),  out this.constant_IV[i], "constant_IV"); 
+				boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(IsoStream.GetInt(constant_IV_size[i])),  out this.constant_IV[i], "constant_IV"); 
 			}
 		}
 		return boxSize;
@@ -127,7 +127,7 @@ public partial class ItemEncryptionBox : ItemFullProperty
 			if (Per_Sample_IV_Size[i] == 0)
 			{
 				boxSize += stream.WriteUInt8( this.constant_IV_size[i], "constant_IV_size"); 
-				boxSize += stream.WriteUInt8Array((uint)(IsoStream.GetInt(constant_IV_size)),  this.constant_IV[i], "constant_IV"); 
+				boxSize += stream.WriteUInt8Array((uint)(IsoStream.GetInt(constant_IV_size[i])),  this.constant_IV[i], "constant_IV"); 
 			}
 		}
 		return boxSize;
@@ -160,7 +160,7 @@ public partial class ItemEncryptionBox : ItemFullProperty
 			if (Per_Sample_IV_Size[i] == 0)
 			{
 				boxSize += 8; // constant_IV_size
-				boxSize += ((ulong)(IsoStream.GetInt(constant_IV_size)) * 8); // constant_IV
+				boxSize += ((ulong)(IsoStream.GetInt(constant_IV_size[i])) * 8); // constant_IV
 			}
 		}
 		return boxSize;

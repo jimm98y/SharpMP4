@@ -231,6 +231,54 @@ public class ConformanceTests
         Assert.AreEqual(0, failing, summary);
     }
 
+    /// <summary>
+    /// Reads every AV1 conformance stream and writes each OBU again with a context that has only
+    /// written, which must give the stream's bytes: its syntax elements, their lengths - a leb128
+    /// padded, a uvlc long - and the tile data. Needs no ffmpeg.
+    /// </summary>
+    [TestMethod]
+    public void AV1ObusWriteBackAsTheyWere()
+    {
+        string? root = ConformanceCorpus.Locate();
+        if (root == null)
+            Assert.Inconclusive("no conformance bitstreams; run DownloadConformance.ps1, or set SHARPMP4_CONFORMANCE");
+
+        var streams = ConformanceCorpus.Streams(root, "av1");
+        if (streams.Count == 0)
+            Assert.Inconclusive($"no av1 bitstreams under {root}");
+
+        var results = new ConcurrentBag<StreamResult>();
+        Parallel.ForEach(streams, new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, Environment.ProcessorCount / 2) }, path =>
+        {
+            StreamResult result;
+            try
+            {
+                result = AomRoundTrip.CheckAv1(path);
+            }
+            catch (Exception ex)
+            {
+                result = new StreamResult
+                {
+                    Path = path,
+                    Outcome = Outcome.SharpFailed,
+                    Detail = ex.ToString(),
+                    Key = $"harness: {ex.GetType().Name}",
+                };
+            }
+            results.Add(result);
+        });
+
+        var ordered = results.OrderBy(r => r.Path, StringComparer.Ordinal).ToList();
+        string summary = Summarise("av1 round trip", root, ordered);
+        var recordOnly = new StringBuilder("\nOnly in the record - elements the state they were read into does not give back:\n");
+        foreach (var (name, total) in AomRoundTrip.RecordOnly.OrderByDescending(e => e.Value.Streams))
+            recordOnly.Append($"  {name}: {total.Occurrences} occurrences in {total.Streams} streams\n");
+        File.WriteAllText(Path.Combine(root, "report-av1-roundtrip.txt"), summary + recordOnly + Details(root, ordered));
+
+        int failing = ordered.Count(r => r.Outcome is Outcome.Diverged or Outcome.SharpFailed);
+        Assert.AreEqual(0, failing, summary);
+    }
+
     /// <param name="ffmpegFormat">ffmpeg's demuxer for a stream, by its path.</param>
     /// <param name="read">How SharpMP4 reads a stream.</param>
     /// <param name="ffmpegInput">What to give ffmpeg instead of the stream, if anything: a file it

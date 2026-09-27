@@ -11,6 +11,7 @@
 
 	<ItemGroup>
 		<AdditionalFiles Include="AV1.js" />
+		<AdditionalFiles Include="AV1.Functions.js" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(AutoGenerateCode) == 'true'">
@@ -24,6 +25,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\SharpAVX\SharpAVX.csproj" />
 	  <ProjectReference Include="..\SharpMP4Common\SharpMP4Common.csproj" />
 	</ItemGroup>
 	<PropertyGroup Condition="$(AutoGenerateCode) == 'true'">

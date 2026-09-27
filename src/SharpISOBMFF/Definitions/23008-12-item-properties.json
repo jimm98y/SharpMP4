@@ -120,7 +120,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class PixelInformationProperty\r\nextends ItemFullProperty('pixi', version = 0, flags = 0){\r\n\tunsigned int(8) num_channels;\r\n\tfor (i=0; i<num_channels; i++) {\r\n\t\tunsigned int(8) bits_per_channel;\r\n\t}\r\n}"
+      "syntax": "aligned(8) class PixelInformationProperty\r\nextends ItemFullProperty('pixi', version = 0, flags){\r\n\tunsigned int(8) num_channels;\r\n\tfor (i=0; i<num_channels; i++) {\r\n\t\tunsigned int(8) bits_per_channel;\r\n\t}\r\n\tif (flags \u0026 1) {\r\n\t\tfor (i=0; i<num_channels; i++) {\r\n\t\t\tunsigned int(3) channel_idc;\r\n\t\t\tunsigned int(1) reserved = 0;\r\n\t\t\tunsigned int(2) component_format;\r\n\t\t\tunsigned int(1) subsampling_flag;\r\n\t\t\tunsigned int(1) channel_label_flag;\r\n\t\t\tif (subsampling_flag) {\r\n\t\t\t\tunsigned int(4) subsampling_type;\r\n\t\t\t\tunsigned int(4) subsampling_location;\r\n\t\t\t}\r\n\t\t\tif (channel_label_flag) {\r\n\t\t\t\tutf8string channel_label;\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "fourcc": "rloc",

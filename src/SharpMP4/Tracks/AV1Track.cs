@@ -1,5 +1,6 @@
 ﻿using SharpISOBMFF;
 using SharpAV1;
+using SharpAVX;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;

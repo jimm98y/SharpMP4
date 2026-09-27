@@ -63,7 +63,7 @@ public partial class ItemProtectionBox : FullBox
 
 		for (int i=0; i<protection_count; i++)
 		{
-			// boxSize += IsoStream.CalculateBoxSize(protection_information); // protection_information
+			// boxSize += IsoStream.CalculateBoxSize(protection_information[i]); // protection_information
 		}
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;

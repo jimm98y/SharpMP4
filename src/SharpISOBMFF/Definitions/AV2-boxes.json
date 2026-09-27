@@ -1,0 +1,18 @@
+{
+  "name": "Boxes",
+  "description": "AV2 Codec ISO Media File Format Binding, working group draft (https://github.com/AOMediaCodec/av2-isobmff, index.bs at 425f676749f89bd4db72f2c531cd035d0085b61b)",
+  "entries": [
+    {
+      "fourcc": "av02",
+      "containers": [ "stsd" ],
+      "type": "Box",
+      "syntax": "class AV2SampleEntry extends VisualSampleEntry('av02') {\r\n  AV2CodecConfigurationBox config;\r\n}\r\n"
+    },
+    {
+      "fourcc": "av2C",
+      "containers": [ "av02" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AV2CodecConfigurationBox extends Box('av2C')\r\n{\r\n  unsigned int(8) reserved1 = 0;\r\n  unsigned int(8) config_obus_count_minus1;\r\n  for (i = 0; i < config_obus_count_minus1 + 1; ++i) {\r\n    unsigned int(8) config_obu[];\r\n  }\r\n}\r\n"
+    }
+  ]
+}

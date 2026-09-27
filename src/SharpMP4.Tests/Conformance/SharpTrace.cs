@@ -112,7 +112,7 @@ public static partial class SharpTrace
 
                     // Each OBU is read from where it starts, whatever the one before left.
                     capture.Fields = [];
-                    using var reader = new SharpAV1.AomStream(new MemoryStream(temporalUnit, offset, left), capture);
+                    using var reader = new SharpAVX.AomStream(new MemoryStream(temporalUnit, offset, left), capture);
                     Exception? error = null;
                     try
                     {
@@ -290,7 +290,7 @@ public static partial class SharpTrace
     /// The OBUs of an Annex B stream, one at a time: temporal units and frame units behind their
     /// sizes, and each OBU behind its obu_length - which it need not repeat in an obu_size.
     /// </summary>
-    private static IEnumerable<byte[]> AnnexBObus(string path)
+    internal static IEnumerable<byte[]> AnnexBObus(string path)
     {
         var bytes = File.ReadAllBytes(path);
         int position = 0;
@@ -329,7 +329,7 @@ public static partial class SharpTrace
     }
 
     /// <summary>The frames of an IVF file: a 32 byte header, then each frame behind its size and time.</summary>
-    private static IEnumerable<byte[]> IvfFrames(string path)
+    internal static IEnumerable<byte[]> IvfFrames(string path)
     {
         using var file = File.OpenRead(path);
         using var reader = new BinaryReader(file);

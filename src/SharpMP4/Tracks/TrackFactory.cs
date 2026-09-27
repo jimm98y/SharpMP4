@@ -51,6 +51,9 @@ namespace SharpMP4.Tracks
                 case "av1C":
                     return new AV1Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
+                case "av2C":
+                    return new AV2Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
+
                 default:
                     throw new NotSupportedException($"Unsupported video codec: {IsoStream.ToFourCC(sampleEntry.FourCC)}");
             }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SharpAV1
+namespace SharpAVX
 {
     public static class MathEx
     {

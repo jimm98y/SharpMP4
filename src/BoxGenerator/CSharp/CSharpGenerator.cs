@@ -1012,10 +1012,17 @@ namespace SharpISOBMFF
                     m = parserDocument.FixNestedInLoopVariables(field, m, "(", ",");
                     m = parserDocument.FixNestedInLoopVariables(field, m, ")", ","); // when casting
                     m = parserDocument.FixNestedInLoopVariables(field, m, "", " ");
+                    // a length of the loop's element, in a call: GetInt(constant_IV_size[ i ])
+                    m = parserDocument.FixNestedInLoopVariables(field, m, "(", ")");
                 }
                 else
                 {
                     m = parserDocument.FixNestedInLoopVariables(field, m, "", " ");
+                    // An array read in a loop is sized by the loop's element, as it is read and written:
+                    // config_obu[ i ].Length, not config_obu.Length, the count of the elements
+                    m = parserDocument.FixNestedInLoopVariables(field, m, "", ".Length");
+                    // and one sized by a call: CalculateStringSize(channel_label[ i ])
+                    m = parserDocument.FixNestedInLoopVariables(field, m, "(", ")");
                 }
             }
 
