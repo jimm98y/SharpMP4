@@ -1,6 +1,6 @@
 ﻿<#
 .SYNOPSIS
-Downloads the conformance bitstreams the codec parsers are tested against.
+Downloads the conformance bitstreams and files the parsers are tested against.
 
 .DESCRIPTION
 Fetches the published conformance suites for H.264, H.265, H.266 and AV1 into the
@@ -24,6 +24,8 @@ Sources:
     H.266  ITU-T JVET    https://www.itu.int/wftp3/av-arch/jvet-site/bitstream_exchange/VVC/FDIS_r1/
     AV1    libaom test vectors  https://storage.googleapis.com/aom-test-data/ (av1-1-*)
     AV1    Argon Streams        https://aomedia.org/av1-video-decoder-verification-tool/
+    ISOBMFF  MPEG file format conformance (ISO/IEC 14496-32)
+                                https://github.com/MPEGGroup/FileFormatConformance
 
 Only files directly in each set's folder are fetched: the subfolders the ITU keeps
 beside them hold superseded versions of the same streams.
@@ -34,7 +36,8 @@ Works in Windows PowerShell 5.1 and PowerShell 7.
 Where the suites go. The conformance folder next to this script by default.
 
 .PARAMETER Codec
-Which codecs to fetch: any of H264, H265, H266 and AV1. All of them by default.
+Which suites to fetch: any of H264, H265, H266, AV1 and IsoBmff (the file format
+conformance files, each with GPAC's dump of its boxes). All of them by default.
 
 .PARAMETER IncludeSvc
 Also fetches the H.264 scalable video coding set, 12.9 GB.
@@ -64,8 +67,8 @@ Everything, about 25 GB.
 param(
     [string]$Destination = (Join-Path $PSScriptRoot 'conformance'),
 
-    [ValidateSet('H264', 'H265', 'H266', 'AV1')]
-    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1'),
+    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff')]
+    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff'),
 
     [switch]$IncludeSvc,
     [switch]$IncludeArgon,
@@ -334,6 +337,52 @@ function Get-Argon {
     Expand-Stream $archive
 }
 
+# MPEG's file format conformance files: every published file with its description and GPAC's
+# dump of its boxes (*_gpac.json). Listed through GitHub's tree API; the files themselves are in
+# Git LFS, served without git-lfs from media.githubusercontent.com, and checked against the MD5
+# their description gives.
+function Get-FileFormatConformance {
+    $repository = 'MPEGGroup/FileFormatConformance'
+    $prefix = 'data/file_features/published/'
+    $target = Join-Path $Destination 'isobmff'
+
+    $tree = Invoke-RestMethod -Uri "https://api.github.com/repos/$repository/git/trees/main?recursive=1" -Headers @{ 'User-Agent' = 'DownloadConformance' }
+    $blobs = @($tree.tree | Where-Object { $_.type -eq 'blob' -and $_.path.StartsWith($prefix) -and $_.path -notmatch '/(README\.md|\.cfignore)$' })
+    Write-Host "isobmff: $($blobs.Count) files"
+
+    foreach ($blob in $blobs) {
+        $relative = $blob.path.Substring($prefix.Length)
+        $path = Join-Path $target $relative.Replace('/', [IO.Path]::DirectorySeparatorChar)
+        if ($relative.EndsWith('.json')) {
+            [void](Save-File "https://raw.githubusercontent.com/$repository/main/$($blob.path)" $path)
+            continue
+        }
+
+        $known = Test-Path -LiteralPath $path
+        if ((Save-File "https://media.githubusercontent.com/media/$repository/main/$($blob.path)" $path) -and -not $known) {
+            # The description beside a file is named after it without its extension.
+            $description = [IO.Path]::Combine((Split-Path -Parent $path), [IO.Path]::GetFileNameWithoutExtension($path) + '.json')
+            if ($relative.EndsWith('.zip')) {
+                $description = [IO.Path]::Combine((Split-Path -Parent $path), [IO.Path]::GetFileNameWithoutExtension([IO.Path]::GetFileNameWithoutExtension($path)) + '.json')
+            }
+            $expected = $null
+            if (Test-Path -LiteralPath $description) {
+                $expected = (Get-Content -LiteralPath $description -Raw | ConvertFrom-Json).md5
+            }
+            if ($expected -and -not $relative.EndsWith('.zip')) {
+                $actual = (Get-FileHash -LiteralPath $path -Algorithm MD5).Hash.ToLowerInvariant()
+                if ($actual -ne $expected.ToLowerInvariant()) {
+                    Write-Warning "  $relative does not match its MD5; removed"
+                    Remove-Item -LiteralPath $path -Force
+                    $script:failed.Add($blob.path)
+                    continue
+                }
+            }
+            if ($relative.EndsWith('.zip')) { Expand-Stream $path }
+        }
+    }
+}
+
 New-Item -ItemType Directory -Force -Path $Destination | Out-Null
 Write-Host "Downloading into $Destination"
 
@@ -342,6 +391,9 @@ foreach ($c in $Codec) {
     if ($c -eq 'AV1') {
         Get-LibaomVectors
         if ($IncludeArgon) { Get-Argon }
+    }
+    elseif ($c -eq 'IsoBmff') {
+        Get-FileFormatConformance
     }
     else {
         foreach ($set in $ituSets[$c]) { Get-ItuSet $folders[$c] $set }

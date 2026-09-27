@@ -124,6 +124,45 @@ namespace SharpISOBMFF
             _stream.SeekFromBeginning(offset);
         }
 
+        /// <summary>
+        /// Whether the 'meta' box about to be read starts with a version and flags, as ISOBMFF's
+        /// MetaBox does, or goes straight to its first box, as the QuickTime 'meta' atom does:
+        /// the first has its 'hdlr' at bytes 8 to 12, the second at bytes 4 to 8. Null where the
+        /// stream cannot be read ahead, or neither is there.
+        /// </summary>
+        public bool? PeekMetaHasFullBoxHeader()
+        {
+            if (!CanStreamSeek())
+                return null;
+
+            long start = GetCurrentOffset();
+            if (start < 0 || GetStreamLength() - start < 12)
+                return null;
+
+            var bytes = new byte[12];
+            try
+            {
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    int b = ReadByteInternal();
+                    if (b < 0)
+                        return null;
+                    bytes[i] = (byte)b;
+                }
+            }
+            finally
+            {
+                SeekFromBeginning(start);
+            }
+
+            bool At(int offset) => bytes[offset] == 'h' && bytes[offset + 1] == 'd' && bytes[offset + 2] == 'l' && bytes[offset + 3] == 'r';
+            if (At(8))
+                return true;
+            if (At(4))
+                return false;
+            return null;
+        }
+
         #endregion // Stream operations
 
         #region Basic read/write operations
@@ -1602,6 +1641,9 @@ namespace SharpISOBMFF
         /// Verifies that an array of <paramref name="count"/> entries, each consuming at least <paramref name="minBitsPerEntry"/> bits,
         /// can fit into the remaining data before the array is allocated.
         /// </summary>
+        /// <summary>A count of entries allocated without checking they fit: at most half a megabyte of references.</summary>
+        private const ulong SmallArrayCount = 1 << 16;
+
         private void CheckArrayAllocation(ulong boxSize, ulong readSize, ulong count, ulong minBitsPerEntry, string name)
         {
             // What is left of the box, and what is left of the stream. The first comes out of the
@@ -1627,6 +1669,14 @@ namespace SharpISOBMFF
             if (remaining == ulong.MaxValue)
             {
                 return; // unbounded, non-seekable: nothing to check against
+            }
+
+            // Entries can take no bits at all - an iloc extent's offset and length when
+            // offset_size and length_size are 0 - so a count that costs little to allocate is let
+            // through whatever is left: the check is there to stop a very large one.
+            if (count <= SmallArrayCount)
+            {
+                return;
             }
 
             // division instead of multiplication to avoid the overflow

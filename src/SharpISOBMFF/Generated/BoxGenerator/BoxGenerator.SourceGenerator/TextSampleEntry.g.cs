@@ -6,8 +6,7 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class TextSampleEntry() extends FullBox('enct') {
- unsigned int(16) dataReferenceIndex;
+aligned(8) class TextSampleEntry() extends SampleEntry('enct') {
  unsigned int(32) displayFlags;
  unsigned int(8) horizontalJustification;
  unsigned int(8) verticalJustification;
@@ -17,13 +16,10 @@ aligned(8) class TextSampleEntry() extends FullBox('enct') {
  }
  
 */
-public partial class TextSampleEntry : FullBox
+public partial class TextSampleEntry : SampleEntry
 {
 	public const string TYPE = "enct";
 	public override string DisplayName { get { return "TextSampleEntry"; } }
-
-	protected ushort dataReferenceIndex; 
-	public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
 
 	protected uint displayFlags; 
 	public uint DisplayFlags { get { return this.displayFlags; } set { this.displayFlags = value; } }
@@ -52,7 +48,6 @@ public partial class TextSampleEntry : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.dataReferenceIndex, "dataReferenceIndex"); 
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.displayFlags, "displayFlags"); 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.horizontalJustification, "horizontalJustification"); 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.verticalJustification, "verticalJustification"); 
@@ -68,7 +63,6 @@ public partial class TextSampleEntry : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt16( this.dataReferenceIndex, "dataReferenceIndex"); 
 		boxSize += stream.WriteUInt32( this.displayFlags, "displayFlags"); 
 		boxSize += stream.WriteUInt8( this.horizontalJustification, "horizontalJustification"); 
 		boxSize += stream.WriteUInt8( this.verticalJustification, "verticalJustification"); 
@@ -84,7 +78,6 @@ public partial class TextSampleEntry : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += 16; // dataReferenceIndex
 		boxSize += 32; // displayFlags
 		boxSize += 8; // horizontalJustification
 		boxSize += 8; // verticalJustification

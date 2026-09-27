@@ -169,6 +169,12 @@ namespace SharpISOBMFF
         {
             if (uuid != null) fourCC = $""{fourCC} {ConvertEx.ToHexString(uuid).ToLowerInvariant()}"";
 
+            // Every box in a TrackReferenceBox is a TrackReferenceTypeBox, whatever its type
+            // (ISO/IEC 14496-12 8.3.3): 'mpod', 'dpnd', 'sync' and the like mean other things
+            // elsewhere, and were read as those.
+            if (parent == ""tref"")
+                return new TrackReferenceTypeBox(IsoStream.FromFourCC(fourCC));
+
             switch(fourCC)
             {
 ");
@@ -219,16 +225,26 @@ namespace SharpISOBMFF
                         item.Value.First().BoxName == "SegmentIndexBox" ||
                         item.Value.First().BoxName == "TrackHintInformation" ||
                         item.Value.First().BoxName == "ViewPriorityBox" ||
-                        item.Value.First().BoxName == "RtpMovieHintInformation" ||
                         item.Value.First().BoxName == "AppleName2Box"
                         )
                     {
                         string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
                         factory.Append($"               case \"{item.Key}\": return new {item.Value.First().BoxName}();{comment}\r\n");
                     }
+                    else if (item.Key == "rtp ")
+                    {
+                        // A sample description holds the hint track's sample entry (14496-12 9.1.2.1); anywhere
+                        // else, in an 'hnti', 'rtp ' is the session's SDP (9.1.4.1).
+                        factory.Append($"               case \"{item.Key}\": if(parent == \"stsd\") return new RtpHintSampleEntry(); else return new RtpMovieHintInformation();\r\n");
+                    }
                     else if (item.Key == "cprt")
                     {
                         factory.Append($"               case \"{item.Key}\": if(parent == \"ilst\") return new AppleCopyrightBox(); else return new CopyrightBox();\r\n");
+                    }
+                    else if (item.Key == "rtng")
+                    {
+                        // In a user data box, 'rtng' is the 3GPP rating (TS 26.244); in iTunes metadata, Apple's.
+                        factory.Append($"               case \"{item.Key}\": if(parent == \"udta\") return new ThreeGPPRatingBox(); else return new AppleRatingBox();\r\n");
                     }
                     else if (item.Key == "ster")
                     {
@@ -485,7 +501,11 @@ namespace SharpISOBMFF
                 //  see: https://www.academia.edu/66625880/Forensic_Analysis_of_Video_Files_Using_Metadata
                 //  see: https://web.archive.org/web/20220126080109/https://leo-van-stee.github.io/
                 // TODO: maybe instead of lookahead, we just have to check the parents
-                cls.Append("\r\npublic bool IsQuickTime { get { return (GetParent() == null || (((Box)GetParent()).FourCC == IsoStream.FromFourCC(\"udta\") || ((Box)GetParent()).FourCC == IsoStream.FromFourCC(\"trak\"))); } }");
+                //  Where the stream can be read ahead, the box itself says which it is: see IsoStream.PeekMetaHasFullBoxHeader.
+                //  By its parent alone, an ISOBMFF 'meta' in 'moov' was taken for a QuickTime one.
+                //  IsQuickTime is true when the box has the version and flags of a FullBox.
+                cls.Append("\r\npublic bool? HasFullBoxHeader { get; set; }");
+                cls.Append("\r\npublic bool IsQuickTime { get { return HasFullBoxHeader ?? (GetParent() == null || (((Box)GetParent()).FourCC == IsoStream.FromFourCC(\"udta\") || ((Box)GetParent()).FourCC == IsoStream.FromFourCC(\"trak\"))); } }");
             }
             else if (b.BoxName == "AVCDecoderConfigurationRecord")
             {
@@ -566,7 +586,7 @@ namespace SharpISOBMFF
                 string baseRead = "\r\n\t\tboxSize += base.Read(stream, readSize);";
                 if (b.BoxName == "MetaBox")
                 {
-                    baseRead = "\r\n\t\tif(IsQuickTime) boxSize += base.Read(stream, readSize);";
+                    baseRead = "\r\n\t\tHasFullBoxHeader = stream.PeekMetaHasFullBoxHeader();\r\n\t\tif(IsQuickTime) boxSize += base.Read(stream, readSize);";
                 }
                 cls.Append(baseRead);
             }

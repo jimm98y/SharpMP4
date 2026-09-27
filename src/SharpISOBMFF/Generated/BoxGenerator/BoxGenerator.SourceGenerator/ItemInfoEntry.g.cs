@@ -17,7 +17,11 @@ aligned(8) class ItemInfoEntry
 	}
 	if (version == 1) {
 		unsigned int(32) extension_type; //optional
-		ItemInfoExtension(extension_type); //optional
+		if (extension_type == 'fdel') {
+			FDItemInfoExtension() fdItemInfoExtension;
+		} else {
+			ItemInfoExtension(extension_type); //optional
+		}
 	}
 	if (version >= 2) {
 		if (version == 2) {
@@ -60,6 +64,9 @@ public partial class ItemInfoEntry : FullBox
 	protected uint extension_type;  // optional
 	public uint ExtensionType { get { return this.extension_type; } set { this.extension_type = value; } }
 
+	protected FDItemInfoExtension fdItemInfoExtension; 
+	public FDItemInfoExtension FdItemInfoExtension { get { return this.fdItemInfoExtension; } set { this.fdItemInfoExtension = value; } }
+
 	protected ItemInfoExtension ItemInfoExtension;  // optional
 	public ItemInfoExtension _ItemInfoExtension { get { return this.ItemInfoExtension; } set { this.ItemInfoExtension = value; } }
 
@@ -90,7 +97,16 @@ public partial class ItemInfoEntry : FullBox
 		if (version == 1)
 		{
 			if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt32(boxSize, readSize,  out this.extension_type, "extension_type"); //optional
-			if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadClass(boxSize, readSize, this, () => new ItemInfoExtension(extension_type),  out this.ItemInfoExtension, "ItemInfoExtension"); //optional
+
+			if (extension_type == IsoStream.FromFourCC("fdel"))
+			{
+				boxSize += stream.ReadClass(boxSize, readSize, this, () => new FDItemInfoExtension(),  out this.fdItemInfoExtension, "fdItemInfoExtension"); 
+			}
+
+			else 
+			{
+				if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadClass(boxSize, readSize, this, () => new ItemInfoExtension(extension_type),  out this.ItemInfoExtension, "ItemInfoExtension"); //optional
+			}
 		}
 
 		if (version >= 2)
@@ -141,7 +157,16 @@ public partial class ItemInfoEntry : FullBox
 		if (version == 1)
 		{
 			boxSize += stream.WriteUInt32( this.extension_type, "extension_type"); //optional
-			boxSize += stream.WriteClass( this.ItemInfoExtension, "ItemInfoExtension"); //optional
+
+			if (extension_type == IsoStream.FromFourCC("fdel"))
+			{
+				boxSize += stream.WriteClass( this.fdItemInfoExtension, "fdItemInfoExtension"); 
+			}
+
+			else 
+			{
+				boxSize += stream.WriteClass( this.ItemInfoExtension, "ItemInfoExtension"); //optional
+			}
 		}
 
 		if (version >= 2)
@@ -192,7 +217,16 @@ public partial class ItemInfoEntry : FullBox
 		if (version == 1)
 		{
 			boxSize += 32; // extension_type
-			boxSize += IsoStream.CalculateClassSize(ItemInfoExtension); // ItemInfoExtension
+
+			if (extension_type == IsoStream.FromFourCC("fdel"))
+			{
+				boxSize += IsoStream.CalculateClassSize(fdItemInfoExtension); // fdItemInfoExtension
+			}
+
+			else 
+			{
+				boxSize += IsoStream.CalculateClassSize(ItemInfoExtension); // ItemInfoExtension
+			}
 		}
 
 		if (version >= 2)

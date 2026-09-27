@@ -34,7 +34,8 @@ public partial class MetaBox : FullBox
 	public ItemReferenceBox ItemRefs { get { return this.children.OfType<ItemReferenceBox>().FirstOrDefault(); } }
 	public ItemDataBox ItemData { get { return this.children.OfType<ItemDataBox>().FirstOrDefault(); } }
 	public IEnumerable<Box> OtherBoxes { get { return this.children.OfType<Box>(); } }
-public bool IsQuickTime { get { return (GetParent() == null || (((Box)GetParent()).FourCC == IsoStream.FromFourCC("udta") || ((Box)GetParent()).FourCC == IsoStream.FromFourCC("trak"))); } }
+public bool? HasFullBoxHeader { get; set; }
+public bool IsQuickTime { get { return HasFullBoxHeader ?? (GetParent() == null || (((Box)GetParent()).FourCC == IsoStream.FromFourCC("udta") || ((Box)GetParent()).FourCC == IsoStream.FromFourCC("trak"))); } }
 
 	public MetaBox(uint handler_type = 0): base(IsoStream.FromFourCC("meta"), 0, 0)
 	{
@@ -43,6 +44,7 @@ public bool IsQuickTime { get { return (GetParent() == null || (((Box)GetParent(
 	public override ulong Read(IsoStream stream, ulong readSize)
 	{
 		ulong boxSize = 0;
+		HasFullBoxHeader = stream.PeekMetaHasFullBoxHeader();
 		if(IsQuickTime) boxSize += base.Read(stream, readSize);
 		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.theHandler, "theHandler"); 
 		// if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.primary_resource, "primary_resource"); // optional

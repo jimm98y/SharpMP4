@@ -86,4 +86,35 @@ public static class ConformanceCorpus
             .OrderBy(path => path, StringComparer.Ordinal)
             .ToList();
     }
+
+    /// <summary>
+    /// Every file format conformance file that has GPAC's dump of its boxes beside it, in a stable
+    /// order: name_gpac.json goes with name.ext, or with name.ext\name.ext where the file came
+    /// zipped. SHARPMP4_CONFORMANCE_FILTER narrows them as it does the bitstreams.
+    /// </summary>
+    public static IReadOnlyList<(string File, string Dump)> FileFormatFiles(string root)
+    {
+        string folder = Path.Combine(root, "isobmff");
+        if (!Directory.Exists(folder))
+            return [];
+
+        string? filter = Environment.GetEnvironmentVariable("SHARPMP4_CONFORMANCE_FILTER");
+        var files = new List<(string File, string Dump)>();
+        foreach (string dump in Directory.EnumerateFiles(folder, "*_gpac.json", SearchOption.AllDirectories))
+        {
+            string directory = Path.GetDirectoryName(dump)!;
+            string name = Path.GetFileName(dump)[..^"_gpac.json".Length];
+
+            string? file = Directory.EnumerateFiles(directory, name + ".*")
+                .FirstOrDefault(f => !f.EndsWith(".json", StringComparison.OrdinalIgnoreCase) && !f.EndsWith(".zip", StringComparison.OrdinalIgnoreCase));
+            file ??= Directory.EnumerateDirectories(directory, name + ".*")
+                .Select(unzipped => Path.Combine(unzipped, Path.GetFileName(unzipped)))
+                .FirstOrDefault(File.Exists);
+
+            if (file != null && (string.IsNullOrEmpty(filter) || file.Contains(filter, StringComparison.OrdinalIgnoreCase)))
+                files.Add((file, dump));
+        }
+
+        return files.OrderBy(f => f.File, StringComparer.Ordinal).ToList();
+    }
 }

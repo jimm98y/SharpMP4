@@ -384,6 +384,11 @@
       "syntax": "aligned(8) class AppleRatingBox() extends Box('rtng') {\r\n Box boxes[];\r\n } "
     },
     {
+      "containers": [ "udta" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ThreeGPPRatingBox() extends FullBox('rtng', version = 0, 0) {\r\n\tunsigned int(32) rating_entity;\r\n\tunsigned int(32) rating_criteria;\r\n\tbit(1) pad = 0;\r\n unsigned int(5)[3] language;\r\n\tstring rating_info;\r\n} "
+    },
+    {
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class AppleRating2Box() extends Box('rati') {\r\n Box boxes[];\r\n } "
@@ -640,8 +645,8 @@
     },
     {
       "containers": [ "*" ],
-      "type": "Box",
-      "syntax": "aligned(8) class IOD_Descriptor extends BaseDescriptor : bit(8) tag=MP4_IOD_Tag {\r\nunsigned int(16) odid; unsigned int(8) odProfileLevel;\r\n unsigned int(8) sceneProfileLevel;\r\n\tunsigned int(8) audioProfileId;\r\n\tunsigned int(8) videoProfileId;\r\n\tunsigned int(8) graphicsProfileLevel;\r\n\tIodsSample samples[];\r\n }\r\n aligned(8) class IodsSample() {\r\n\tunsigned int(8) incTag;\r\n\tunsigned int(8) length;\r\n\tunsigned int(32) trackId;\r\n } "
+      "type": "Descriptor",
+      "syntax": "aligned(8) class IOD_Descriptor extends BaseDescriptor : bit(8) tag=MP4_IOD_Tag {\r\n unsigned int(16) odid;\r\n unsigned int(8) odProfileLevel;\r\n unsigned int(8) sceneProfileLevel;\r\n unsigned int(8) audioProfileId;\r\n unsigned int(8) videoProfileId;\r\n unsigned int(8) graphicsProfileLevel;\r\n ES_ID_Inc esIdInc[1 .. 255];\r\n }\r\n class ES_ID_Inc extends BaseDescriptor : bit(8) tag=ES_ID_IncTag {\r\n bit(32) Track_ID;\r\n }\r\n class ES_ID_Ref extends BaseDescriptor : bit(8) tag=ES_ID_RefTag {\r\n bit(16) ref_index;\r\n }"
     },
     {
       "containers": [ "*" ],
@@ -1134,7 +1139,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class TextSampleEntry() extends FullBox('enct') {\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(32) displayFlags;\r\n unsigned int(8) horizontalJustification;\r\n unsigned int(8) verticalJustification;\r\n unsigned int(8) backgroundColorRgba[4];\r\n RectRecord rectRecord;\r\n StyleRecord styleRecord; Box boxes[];\r\n }\r\n aligned(8) class TextSampleEntry() extends FullBox('tx3g') {\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(32) displayFlags;\r\n unsigned int(8) horizontalJustification;\r\n unsigned int(8) verticalJustification;\r\n unsigned int(8) backgroundColorRgba[4];\r\n RectRecord rectRecord;\r\n StyleRecord styleRecord; Box boxes[];\r\n }\r\n aligned(8) class RectRecord() {\r\n unsigned int(16) top;\r\n unsigned int(16) left;\r\n unsigned int(16) bottom;\r\n unsigned int(16) right;\r\n }\r\n aligned(8) class StyleRecord() {\r\n unsigned int(16) startChar;\r\n unsigned int(16) endChar;\r\n unsigned int(16) fontId;\r\n unsigned int(8) faceStyleFlags;\r\n unsigned int(8) fontSize;\r\n unsigned int(8) textColor[4]; }"
+      "syntax": "aligned(8) class TextSampleEntry() extends SampleEntry('enct') {\r\n unsigned int(32) displayFlags;\r\n unsigned int(8) horizontalJustification;\r\n unsigned int(8) verticalJustification;\r\n unsigned int(8) backgroundColorRgba[4];\r\n RectRecord rectRecord;\r\n StyleRecord styleRecord; Box boxes[];\r\n }\r\n aligned(8) class TextSampleEntry() extends SampleEntry('tx3g') {\r\n unsigned int(32) displayFlags;\r\n unsigned int(8) horizontalJustification;\r\n unsigned int(8) verticalJustification;\r\n unsigned int(8) backgroundColorRgba[4];\r\n RectRecord rectRecord;\r\n StyleRecord styleRecord; Box boxes[];\r\n }\r\n aligned(8) class RectRecord() {\r\n unsigned int(16) top;\r\n unsigned int(16) left;\r\n unsigned int(16) bottom;\r\n unsigned int(16) right;\r\n }\r\n aligned(8) class StyleRecord() {\r\n unsigned int(16) startChar;\r\n unsigned int(16) endChar;\r\n unsigned int(16) fontId;\r\n unsigned int(8) faceStyleFlags;\r\n unsigned int(8) fontSize;\r\n unsigned int(8) textColor[4]; }"
     },
     {
       "containers": [ "*" ],
@@ -1266,6 +1271,16 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class DfxpSampleEntry() extends SampleEntry('dfxp') {\r\n } "
+    },
+    {
+      "containers": [ "stsd" ],
+      "type": "Box",
+      "syntax": "aligned(8) class VcmMSampleEntry() extends SampleEntry('vcmM') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "vcmM" ],
+      "type": "Box",
+      "syntax": "aligned(8) class VcmCBox() extends Box('vcmC') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],

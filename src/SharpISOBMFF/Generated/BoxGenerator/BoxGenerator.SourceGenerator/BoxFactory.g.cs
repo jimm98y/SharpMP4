@@ -15,6 +15,12 @@ namespace SharpISOBMFF
         {
             if (uuid != null) fourCC = $"{fourCC} {ConvertEx.ToHexString(uuid).ToLowerInvariant()}";
 
+            // Every box in a TrackReferenceBox is a TrackReferenceTypeBox, whatever its type
+            // (ISO/IEC 14496-12 8.3.3): 'mpod', 'dpnd', 'sync' and the like mean other things
+            // elsewhere, and were read as those.
+            if (parent == "tref")
+                return new TrackReferenceTypeBox(IsoStream.FromFourCC(fourCC));
+
             switch(fourCC)
             {
                case "_cx_":  return new CxBox();
@@ -474,6 +480,7 @@ namespace SharpISOBMFF
                case "lsel":  return new LayerSelectorProperty();
                case "ludt":  return new LoudnessBox();
                case "Lvlm":  return new LevelMeterBox();
+               case "m4ae": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("m4ae"));break;
                case "m4ds":  return new MPEG4ExtensionDescriptorsBox();
                case "MAC3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("MAC3"));break;
                case "MAC6": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("MAC6"));break;
@@ -672,8 +679,8 @@ namespace SharpISOBMFF
                case "rsrp":  return new ReceivedSrtpHintSampleEntry();
                case "rssr":  return new ReceivedSsrcBox();
                case "RTHU":  return new RTHUPreviewImageBox();
-               case "rtng":  return new AppleRatingBox();
-               case "rtp ": return new RtpMovieHintInformation(); // TODO: box is ambiguous in between RtpMovieHintInformation and RtpHintSampleEntry
+               case "rtng": if(parent == "udta") return new ThreeGPPRatingBox(); else return new AppleRatingBox();
+               case "rtp ": if(parent == "stsd") return new RtpHintSampleEntry(); else return new RtpMovieHintInformation();
                case "s263": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("s263"));break;
                case "SA3D":  return new SpatialAudioBox();
                case "saio":  return new SampleAuxiliaryInformationOffsetsBox();
@@ -890,6 +897,8 @@ namespace SharpISOBMFF
                case "v308": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("v308"));break;
                case "v408": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("v408"));break;
                case "v410": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("v410"));break;
+               case "vcmC":  return new VcmCBox();
+               case "vcmM":  return new VcmMSampleEntry();
                case "vdep":  return new TrackReferenceTypeBoxvdepDup(); // TODO: fix duplicate
                case "ver ":  return new KodakVersionBox();
                case "VERS":  return new ProductVersionBox();
@@ -1022,6 +1031,8 @@ namespace SharpISOBMFF
                case DescriptorTags.DecoderConfigDescrTag: return new DecoderConfigDescriptor();
                case DescriptorTags.DecSpecificInfoTag: return new GenericDecoderSpecificInfo(); // TODO: choose the specific descriptor
                case DescriptorTags.ES_DescrTag: return new ES_Descriptor();
+               case DescriptorTags.ES_ID_IncTag: return new ES_ID_Inc();
+               case DescriptorTags.ES_ID_RefTag: return new ES_ID_Ref();
                case DescriptorTags.IPI_DescrPointerTag: return new IPI_DescrPointer();
                case DescriptorTags.IPMP_DescrPointerTag: return new IPMP_DescriptorPointer();
                case DescriptorTags.IPMP_DescrTag: return new IPMP_Descriptor();
