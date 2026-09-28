@@ -68,4 +68,26 @@
 		<CompilerGeneratedFilesOutputPath>$(GeneratedFolder)</CompilerGeneratedFilesOutputPath>
 	</PropertyGroup>
 
+	<!-- Boxes.md at the root of the repository: the list of boxes the generator gives with their code, in a
+	     comment of Boxes.md.g.cs. Once, not by each target framework's build at the same time. -->
+	<UsingTask TaskName="WriteBoxListFromComment" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+		<ParameterGroup>
+			<Source ParameterType="System.String" Required="true" />
+			<Destination ParameterType="System.String" Required="true" />
+		</ParameterGroup>
+		<Task>
+			<Code Type="Fragment" Language="cs"><![CDATA[
+				// the markdown between /* and */, as the generator wrote it; the file written only when it changes
+				string text = System.IO.File.ReadAllText(Source);
+				int start = text.IndexOf("/*") + 2, end = text.LastIndexOf("*/");
+				string list = text.Substring(start, end - start).Trim('\r', '\n');
+				if (!System.IO.File.Exists(Destination) || System.IO.File.ReadAllText(Destination) != list)
+					System.IO.File.WriteAllText(Destination, list);
+			]]></Code>
+		</Task>
+	</UsingTask>
+	<Target Name="WriteBoxList" AfterTargets="CoreCompile" Condition="$(AutoGenerateCode) == 'true' And '$(TargetFramework)' == 'net10.0' And Exists('$(CompilerGeneratedFilesOutputPath)\BoxGenerator\BoxGenerator.SourceGenerator\Boxes.md.g.cs')">
+		<WriteBoxListFromComment Source="$(MSBuildProjectDirectory)\$(CompilerGeneratedFilesOutputPath)\BoxGenerator\BoxGenerator.SourceGenerator\Boxes.md.g.cs" Destination="$(MSBuildProjectDirectory)\..\..\Boxes.md" />
+	</Target>
+
 </Project>
