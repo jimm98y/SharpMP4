@@ -6,17 +6,22 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class It35Box() extends Box('it35') {
- bit(8) data[];
- } 
+// ITU-T T.35 metadata's sample entry, as Chromium's MetadataIT35SampleEntry reads it
+class It35Box() extends MetaDataSampleEntry('it35') {
+	unsigned int(8) it35_identifier_length;
+	bit(8*it35_identifier_length) it35_prefix;
+}
 */
-public partial class It35Box : Box
+public partial class It35Box : MetaDataSampleEntry
 {
 	public const string TYPE = "it35";
 	public override string DisplayName { get { return "It35Box"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	protected byte it35_identifier_length; 
+	public byte It35IdentifierLength { get { return this.it35_identifier_length; } set { this.it35_identifier_length = value; } }
+
+	protected byte[] it35_prefix; 
+	public byte[] It35Prefix { get { return this.it35_prefix; } set { this.it35_prefix = value; } }
 
 	public It35Box(): base(IsoStream.FromFourCC("it35"))
 	{
@@ -26,7 +31,8 @@ public partial class It35Box : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.it35_identifier_length, "it35_identifier_length"); 
+		boxSize += stream.ReadBits(boxSize, readSize, (uint)(8*it35_identifier_length ),  out this.it35_prefix, "it35_prefix"); 
 		return boxSize;
 	}
 
@@ -34,7 +40,8 @@ public partial class It35Box : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		boxSize += stream.WriteUInt8( this.it35_identifier_length, "it35_identifier_length"); 
+		boxSize += stream.WriteBits((uint)(8*it35_identifier_length ),  this.it35_prefix, "it35_prefix"); 
 		return boxSize;
 	}
 
@@ -42,7 +49,8 @@ public partial class It35Box : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		boxSize += 8; // it35_identifier_length
+		boxSize += (ulong)(8*it35_identifier_length ); // it35_prefix
 		return boxSize;
 	}
 }

@@ -6,17 +6,18 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
+// QuickTime's, in a 'wave': 1 when the samples are little-endian; FFmpeg's mov_read_enda reads it
 aligned(8) class AppleEndiannessBox() extends Box('enda') {
- bit(8) data[];
- } 
+	unsigned int(16) littleEndian;
+}
 */
 public partial class AppleEndiannessBox : Box
 {
 	public const string TYPE = "enda";
 	public override string DisplayName { get { return "AppleEndiannessBox"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	protected ushort littleEndian; 
+	public ushort LittleEndian { get { return this.littleEndian; } set { this.littleEndian = value; } }
 
 	public AppleEndiannessBox(): base(IsoStream.FromFourCC("enda"))
 	{
@@ -26,7 +27,7 @@ public partial class AppleEndiannessBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.littleEndian, "littleEndian"); 
 		return boxSize;
 	}
 
@@ -34,7 +35,7 @@ public partial class AppleEndiannessBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		boxSize += stream.WriteUInt16( this.littleEndian, "littleEndian"); 
 		return boxSize;
 	}
 
@@ -42,7 +43,7 @@ public partial class AppleEndiannessBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		boxSize += 16; // littleEndian
 		return boxSize;
 	}
 }

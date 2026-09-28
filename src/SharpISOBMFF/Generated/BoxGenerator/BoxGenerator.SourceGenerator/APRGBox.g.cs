@@ -6,17 +6,30 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
+// Avid's scan, as FFmpeg's mov_write_avid_tag writes it: 1 progressive, 2 interlaced
 aligned(8) class APRGBox() extends Box('APRG') {
- bit(8) data[];
- } 
+	unsigned int(32) tag;
+	unsigned int(32) version;
+	unsigned int(32) interlace;
+	unsigned int(32) reserved;
+}
 */
 public partial class APRGBox : Box
 {
 	public const string TYPE = "APRG";
 	public override string DisplayName { get { return "APRGBox"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	protected uint tag; 
+	public uint Tag { get { return this.tag; } set { this.tag = value; } }
+
+	protected uint version; 
+	public uint Version { get { return this.version; } set { this.version = value; } }
+
+	protected uint interlace; 
+	public uint Interlace { get { return this.interlace; } set { this.interlace = value; } }
+
+	protected uint reserved; 
+	public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
 	public APRGBox(): base(IsoStream.FromFourCC("APRG"))
 	{
@@ -26,7 +39,10 @@ public partial class APRGBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.tag, "tag"); 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.version, "version"); 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.interlace, "interlace"); 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.reserved, "reserved"); 
 		return boxSize;
 	}
 
@@ -34,7 +50,10 @@ public partial class APRGBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		boxSize += stream.WriteUInt32( this.tag, "tag"); 
+		boxSize += stream.WriteUInt32( this.version, "version"); 
+		boxSize += stream.WriteUInt32( this.interlace, "interlace"); 
+		boxSize += stream.WriteUInt32( this.reserved, "reserved"); 
 		return boxSize;
 	}
 
@@ -42,7 +61,10 @@ public partial class APRGBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		boxSize += 32; // tag
+		boxSize += 32; // version
+		boxSize += 32; // interlace
+		boxSize += 32; // reserved
 		return boxSize;
 	}
 }
