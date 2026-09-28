@@ -14,7 +14,6 @@ public partial class TVShowSortBox : Box
 {
 	public const string TYPE = "sosn";
 	public override string DisplayName { get { return "TVShowSortBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public TVShowSortBox(): base(IsoStream.FromFourCC("sosn"))
 	{

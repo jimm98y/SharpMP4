@@ -14,7 +14,6 @@ public partial class AppleCompressedMoovBox : Box
 {
 	public const string TYPE = "cmov";
 	public override string DisplayName { get { return "AppleCompressedMoovBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleCompressedMoovBox(): base(IsoStream.FromFourCC("cmov"))
 	{

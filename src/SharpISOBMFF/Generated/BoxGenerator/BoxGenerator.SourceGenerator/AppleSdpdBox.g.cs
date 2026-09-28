@@ -15,7 +15,6 @@ public partial class AppleSdpdBox : Box
 {
 	public const string TYPE = "sdpd";
 	public override string DisplayName { get { return "AppleSdpdBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleSdpdBox(): base(IsoStream.FromFourCC("sdpd"))
 	{

@@ -14,7 +14,6 @@ public partial class AppleWarningBox : Box
 {
 	public const string TYPE = "©wrn";
 	public override string DisplayName { get { return "AppleWarningBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleWarningBox(): base(IsoStream.FromFourCC("©wrn"))
 	{

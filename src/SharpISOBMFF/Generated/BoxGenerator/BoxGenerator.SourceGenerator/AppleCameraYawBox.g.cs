@@ -14,7 +14,6 @@ public partial class AppleCameraYawBox : Box
 {
 	public const string TYPE = "©gyw";
 	public override string DisplayName { get { return "AppleCameraYawBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleCameraYawBox(): base(IsoStream.FromFourCC("©gyw"))
 	{

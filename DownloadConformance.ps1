@@ -28,6 +28,10 @@ Sources:
                                 https://github.com/MPEGGroup/FileFormatConformance
     FATE     FFmpeg's samples that are ISOBMFF or QuickTime files
                                 https://fate-suite.ffmpeg.org/
+    Metadata The MP4 and QuickTime test files of TagLib, mutagen and ExifTool, and ExifTool
+             itself to compare the tags read with
+                                https://github.com/taglib/taglib, https://github.com/quodlibet/mutagen,
+                                https://github.com/exiftool/exiftool
 
 Only files directly in each set's folder are fetched: the subfolders the ITU keeps
 beside them hold superseded versions of the same streams.
@@ -39,8 +43,9 @@ Where the suites go. The conformance folder next to this script by default.
 
 .PARAMETER Codec
 Which suites to fetch: any of H264, H265, H266, AV1, IsoBmff (the file format
-conformance files, each with GPAC's dump of its boxes) and Fate (FFmpeg's samples
-that are ISOBMFF or QuickTime files, about 140 MB). All of them by default.
+conformance files, each with GPAC's dump of its boxes), Fate (FFmpeg's samples
+that are ISOBMFF or QuickTime files, about 140 MB) and Metadata (the test files of the
+metadata libraries, under 1 MB, and ExifTool, 9 MB). All of them by default.
 
 .PARAMETER IncludeSvc
 Also fetches the H.264 scalable video coding set, 12.9 GB.
@@ -70,8 +75,8 @@ Everything, about 25 GB.
 param(
     [string]$Destination,
 
-    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate')]
-    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate'),
+    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata')]
+    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata'),
 
     [switch]$IncludeSvc,
     [switch]$IncludeArgon,
@@ -442,6 +447,47 @@ function Get-FateSuite {
     }
 }
 
+# The MP4 and QuickTime files the metadata libraries test themselves against - the tags in iTunes,
+# QuickTime, 3GPP and keyed metadata, and the odd ways files hold them - each at the commit given,
+# so that the set does not change under the tests. They are fetched here, not kept in the
+# repository: TagLib's are LGPL, mutagen's GPL, ExifTool's GPL or Artistic.
+$metadataSources = @(
+    @{ Name = 'taglib'; Repo = 'taglib/taglib'; Commit = 'f9efbc7ba8bc596332322073f81d9dc5d2066558'; Folder = 'tests/data' },
+    @{ Name = 'mutagen'; Repo = 'quodlibet/mutagen'; Commit = 'ada28b2cc92c515f3f26640a6feef6516d195872'; Folder = 'tests/data' },
+    @{ Name = 'exiftool'; Repo = 'exiftool/exiftool'; Commit = '2200871d9cef988051d2a99d67df3bda6cbb30a8'; Folder = 't/images' }
+)
+$metadataExtensions = '\.(mov|qt|mp4|m4a|m4v|m4b|3gp|3g2|heic|heif|avif|cr3|mqv|f4v)$'
+
+# ExifTool, which reads every kind of these tags, to compare SharpMP4's reading with. Run as a program
+# of its own, by the Perl Git for Windows comes with; a test tool, not a part of SharpMP4.
+$exifToolCommit = '2200871d9cef988051d2a99d67df3bda6cbb30a8'
+
+function Get-MetadataSet {
+    foreach ($source in $metadataSources) {
+        $api = "https://api.github.com/repos/$($source.Repo)/contents/$($source.Folder)?ref=$($source.Commit)"
+        $listing = Get-Text $api | ConvertFrom-Json
+        $files = @($listing | Where-Object { $_.type -eq 'file' -and $_.name -match $metadataExtensions })
+        Write-Host "metadata/$($source.Name): $($files.Count) files"
+        foreach ($file in $files) {
+            $url = "https://raw.githubusercontent.com/$($source.Repo)/$($source.Commit)/$($source.Folder)/$($file.name)"
+            Save-File $url (Join-Path (Join-Path (Join-Path $Destination 'metadata') $source.Name) $file.name) $file.size | Out-Null
+        }
+    }
+
+    $tools = Join-Path $Destination 'tools'
+    $archive = Join-Path $tools "exiftool-$exifToolCommit.zip"
+    $folder = Join-Path $tools "exiftool-$exifToolCommit"
+    if (-not (Test-Path -LiteralPath (Join-Path $folder 'exiftool'))) {
+        if (Save-File "https://codeload.github.com/exiftool/exiftool/zip/$exifToolCommit" $archive) {
+            [IO.Compression.ZipFile]::ExtractToDirectory($archive, $tools)
+            if (-not $KeepArchives) { Remove-Item -LiteralPath $archive -Force }
+        }
+    }
+    else {
+        $script:skipped++
+    }
+}
+
 New-Item -ItemType Directory -Force -Path $Destination | Out-Null
 Write-Host "Downloading into $Destination"
 
@@ -456,6 +502,9 @@ foreach ($c in $Codec) {
     }
     elseif ($c -eq 'Fate') {
         Get-FateSuite
+    }
+    elseif ($c -eq 'Metadata') {
+        Get-MetadataSet
     }
     else {
         foreach ($set in $ituSets[$c]) { Get-ItuSet $folders[$c] $set }

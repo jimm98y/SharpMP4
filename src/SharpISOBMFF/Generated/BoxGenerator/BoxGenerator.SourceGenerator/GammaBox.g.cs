@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 class GammaBox() extends Box ('gama'){
- bit(8) data[];
+ unsigned int(32) gamma;
  }
 */
 public partial class GammaBox : Box
@@ -15,8 +15,8 @@ public partial class GammaBox : Box
 	public const string TYPE = "gama";
 	public override string DisplayName { get { return "GammaBox"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	protected uint gamma; 
+	public uint Gamma { get { return this.gamma; } set { this.gamma = value; } }
 
 	public GammaBox(): base(IsoStream.FromFourCC("gama"))
 	{
@@ -26,7 +26,7 @@ public partial class GammaBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.gamma, "gamma"); 
 		return boxSize;
 	}
 
@@ -34,7 +34,7 @@ public partial class GammaBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		boxSize += stream.WriteUInt32( this.gamma, "gamma"); 
 		return boxSize;
 	}
 
@@ -42,7 +42,7 @@ public partial class GammaBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		boxSize += 32; // gamma
 		return boxSize;
 	}
 }

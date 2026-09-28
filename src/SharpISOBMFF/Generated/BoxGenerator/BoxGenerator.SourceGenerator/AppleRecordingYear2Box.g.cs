@@ -14,7 +14,6 @@ public partial class AppleRecordingYear2Box : Box
 {
 	public const string TYPE = "©day";
 	public override string DisplayName { get { return "AppleRecordingYear2Box"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleRecordingYear2Box(): base(IsoStream.FromFourCC("©day"))
 	{

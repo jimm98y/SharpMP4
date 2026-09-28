@@ -14,7 +14,6 @@ public partial class AppleMovementNumberBox : Box
 {
 	public const string TYPE = "©mvi";
 	public override string DisplayName { get { return "AppleMovementNumberBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleMovementNumberBox(): base(IsoStream.FromFourCC("©mvi"))
 	{

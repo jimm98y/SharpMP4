@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 class AppleTrackTypeBox() extends Box ('kgtt'){
- bit(8) data[];
+ MultiLanguageString value[];
  }
 */
 public partial class AppleTrackTypeBox : Box
@@ -15,8 +15,8 @@ public partial class AppleTrackTypeBox : Box
 	public const string TYPE = "kgtt";
 	public override string DisplayName { get { return "AppleTrackTypeBox"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	protected MultiLanguageString[] value; 
+	public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
 
 	public AppleTrackTypeBox(): base(IsoStream.FromFourCC("kgtt"))
 	{
@@ -26,7 +26,7 @@ public partial class AppleTrackTypeBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		boxSize += stream.ReadStringSizeLangPrefixed(boxSize, readSize,  out this.value, "value"); 
 		return boxSize;
 	}
 
@@ -34,7 +34,7 @@ public partial class AppleTrackTypeBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		boxSize += stream.WriteStringSizeLangPrefixed( this.value, "value"); 
 		return boxSize;
 	}
 
@@ -42,7 +42,7 @@ public partial class AppleTrackTypeBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		boxSize += IsoStream.CalculateStringSizeLangPrefixed(value); // value
 		return boxSize;
 	}
 }

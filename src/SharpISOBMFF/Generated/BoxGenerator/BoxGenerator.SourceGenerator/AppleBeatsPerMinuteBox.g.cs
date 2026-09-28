@@ -14,7 +14,6 @@ public partial class AppleBeatsPerMinuteBox : Box
 {
 	public const string TYPE = "tmpo";
 	public override string DisplayName { get { return "AppleBeatsPerMinuteBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleBeatsPerMinuteBox(): base(IsoStream.FromFourCC("tmpo"))
 	{

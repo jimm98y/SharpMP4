@@ -6,11 +6,11 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class AppleDataReferenceAliasBox() extends Box('alis') {
+aligned(8) class AppleDataReferenceAliasBox() extends FullBox('alis') {
  bit(8) data[];
  } 
 */
-public partial class AppleDataReferenceAliasBox : Box
+public partial class AppleDataReferenceAliasBox : FullBox
 {
 	public const string TYPE = "alis";
 	public override string DisplayName { get { return "AppleDataReferenceAliasBox"; } }

@@ -14,7 +14,6 @@ public partial class RicohAppleRecordingYear2Box : Box
 {
 	public const string TYPE = "@day";
 	public override string DisplayName { get { return "RicohAppleRecordingYear2Box"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public RicohAppleRecordingYear2Box(): base(IsoStream.FromFourCC("@day"))
 	{

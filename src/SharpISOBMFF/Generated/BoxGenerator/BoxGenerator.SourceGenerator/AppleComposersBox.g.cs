@@ -14,7 +14,6 @@ public partial class AppleComposersBox : Box
 {
 	public const string TYPE = "©wrt";
 	public override string DisplayName { get { return "AppleComposersBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleComposersBox(): base(IsoStream.FromFourCC("©wrt"))
 	{

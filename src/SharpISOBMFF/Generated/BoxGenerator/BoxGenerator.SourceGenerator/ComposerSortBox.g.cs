@@ -14,7 +14,6 @@ public partial class ComposerSortBox : Box
 {
 	public const string TYPE = "soco";
 	public override string DisplayName { get { return "ComposerSortBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ComposerSortBox(): base(IsoStream.FromFourCC("soco"))
 	{

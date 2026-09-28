@@ -14,7 +14,6 @@ public partial class ApplePublisherBox : Box
 {
 	public const string TYPE = "©pub";
 	public override string DisplayName { get { return "ApplePublisherBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ApplePublisherBox(): base(IsoStream.FromFourCC("©pub"))
 	{

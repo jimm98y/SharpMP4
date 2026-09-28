@@ -14,7 +14,6 @@ public partial class ITunesPurchaseAccountBox : Box
 {
 	public const string TYPE = "apID";
 	public override string DisplayName { get { return "ITunesPurchaseAccountBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ITunesPurchaseAccountBox(): base(IsoStream.FromFourCC("apID"))
 	{

@@ -14,7 +14,6 @@ public partial class AppleArtDirectorBox : Box
 {
 	public const string TYPE = "©ard";
 	public override string DisplayName { get { return "AppleArtDirectorBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleArtDirectorBox(): base(IsoStream.FromFourCC("©ard"))
 	{

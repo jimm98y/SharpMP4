@@ -14,7 +14,6 @@ public partial class PodcastBox : Box
 {
 	public const string TYPE = "pcst";
 	public override string DisplayName { get { return "PodcastBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public PodcastBox(): base(IsoStream.FromFourCC("pcst"))
 	{

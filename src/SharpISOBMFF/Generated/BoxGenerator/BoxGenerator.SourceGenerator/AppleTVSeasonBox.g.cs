@@ -14,7 +14,6 @@ public partial class AppleTVSeasonBox : Box
 {
 	public const string TYPE = "tvsn";
 	public override string DisplayName { get { return "AppleTVSeasonBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleTVSeasonBox(): base(IsoStream.FromFourCC("tvsn"))
 	{

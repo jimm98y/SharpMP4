@@ -14,7 +14,6 @@ public partial class CameraSystemLensBox : FullBox
 {
 	public const string TYPE = "lens";
 	public override string DisplayName { get { return "CameraSystemLensBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public CameraSystemLensBox(): base(IsoStream.FromFourCC("lens"))
 	{

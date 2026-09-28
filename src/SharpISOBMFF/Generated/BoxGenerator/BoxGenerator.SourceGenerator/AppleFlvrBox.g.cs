@@ -14,7 +14,6 @@ public partial class AppleFlvrBox : Box
 {
 	public const string TYPE = "flvr";
 	public override string DisplayName { get { return "AppleFlvrBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleFlvrBox(): base(IsoStream.FromFourCC("flvr"))
 	{

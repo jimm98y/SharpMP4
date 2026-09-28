@@ -166,7 +166,9 @@ namespace BoxGenerator
             "NONE","raw ","twos","sowt","MAC3","MAC6","ima4","fl32","fl64","in24","in32","ulaw","alaw","\\x6D\\x73\\x00\\x02","\\x6D\\x73\\x00\\x11",
             "dvca","QDMC","QDM2","Qclp","\\x6D\\x73\\x00\\x55",".mp3",
             // met in FFmpeg's samples: GSM, MPEG-H, Vorbis and WMA
-            "agsm","mhm1","msVo","wma "
+            "agsm","mhm1","msVo","wma ",
+            // FLAC in ISOBMFF (Xiph, isoflac.txt 3.3.1), its 'dfLa' a box of it
+            "fLaC"
             };
             string[] visualSampleEntryTypes = new string[]
             {

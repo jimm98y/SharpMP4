@@ -14,7 +14,6 @@ public partial class AppleCopyrightBox : Box
 {
 	public const string TYPE = "cprt";
 	public override string DisplayName { get { return "AppleCopyrightBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleCopyrightBox(): base(IsoStream.FromFourCC("cprt"))
 	{

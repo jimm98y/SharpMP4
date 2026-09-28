@@ -15,7 +15,6 @@ public partial class StereoComfortBox : Box
 {
 	public const string TYPE = "cmfy";
 	public override string DisplayName { get { return "StereoComfortBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public StereoComfortBox(): base(IsoStream.FromFourCC("cmfy"))
 	{

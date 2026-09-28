@@ -15,7 +15,6 @@ public partial class KodakFreaBox : Box
 {
 	public const string TYPE = "frea";
 	public override string DisplayName { get { return "KodakFreaBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public KodakFreaBox(): base(IsoStream.FromFourCC("frea"))
 	{

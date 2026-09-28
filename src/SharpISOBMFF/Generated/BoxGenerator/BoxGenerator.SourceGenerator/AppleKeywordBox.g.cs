@@ -14,7 +14,6 @@ public partial class AppleKeywordBox : Box
 {
 	public const string TYPE = "keyw";
 	public override string DisplayName { get { return "AppleKeywordBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleKeywordBox(): base(IsoStream.FromFourCC("keyw"))
 	{

@@ -14,7 +14,6 @@ public partial class AppleCameraModelBox : Box
 {
 	public const string TYPE = "©mod";
 	public override string DisplayName { get { return "AppleCameraModelBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleCameraModelBox(): base(IsoStream.FromFourCC("©mod"))
 	{

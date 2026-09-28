@@ -14,7 +14,6 @@ public partial class AppleShortDescriptionBox : Box
 {
 	public const string TYPE = "sdes";
 	public override string DisplayName { get { return "AppleShortDescriptionBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleShortDescriptionBox(): base(IsoStream.FromFourCC("sdes"))
 	{

@@ -15,7 +15,6 @@ public partial class SphericalVideoBox : Box
 {
 	public const string TYPE = "sv3d";
 	public override string DisplayName { get { return "SphericalVideoBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public SphericalVideoBox(): base(IsoStream.FromFourCC("sv3d"))
 	{

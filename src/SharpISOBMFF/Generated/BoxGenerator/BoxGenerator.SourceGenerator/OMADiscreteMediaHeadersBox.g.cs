@@ -22,7 +22,6 @@ public partial class OMADiscreteMediaHeadersBox : FullBox
 
 	protected byte[] contentType; 
 	public byte[] ContentType { get { return this.contentType; } set { this.contentType = value; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public OMADiscreteMediaHeadersBox(): base(IsoStream.FromFourCC("odhe"))
 	{

@@ -14,7 +14,6 @@ public partial class GenericMediaHeaderAtom : Box
 {
 	public const string TYPE = "gmhd";
 	public override string DisplayName { get { return "GenericMediaHeaderAtom"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public GenericMediaHeaderAtom(): base(IsoStream.FromFourCC("gmhd"))
 	{

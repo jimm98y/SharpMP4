@@ -6,17 +6,17 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class SerialNumberBox() extends Box ('slno'){
- bit(8) data[];
- }
+aligned(8) class SerialNumberBox() extends Box('slno') {
+ string value;
+}
 */
 public partial class SerialNumberBox : Box
 {
 	public const string TYPE = "slno";
 	public override string DisplayName { get { return "SerialNumberBox"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	protected BinaryUTF8String value; 
+	public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
 
 	public SerialNumberBox(): base(IsoStream.FromFourCC("slno"))
 	{
@@ -26,7 +26,7 @@ public partial class SerialNumberBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.value, "value"); 
 		return boxSize;
 	}
 
@@ -34,7 +34,7 @@ public partial class SerialNumberBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		boxSize += stream.WriteStringZeroTerminated( this.value, "value"); 
 		return boxSize;
 	}
 
@@ -42,7 +42,7 @@ public partial class SerialNumberBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		boxSize += IsoStream.CalculateStringSize(value); // value
 		return boxSize;
 	}
 }

@@ -7,7 +7,10 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class LoadBox() extends Box('load') {
- bit(8) data[];
+ signed int(32) preloadStartTime;
+ signed int(32) preloadDuration;
+ unsigned int(32) preloadFlags;
+ unsigned int(32) defaultHints;
  } 
 */
 public partial class LoadBox : Box
@@ -15,8 +18,17 @@ public partial class LoadBox : Box
 	public const string TYPE = "load";
 	public override string DisplayName { get { return "LoadBox"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	protected int preloadStartTime; 
+	public int PreloadStartTime { get { return this.preloadStartTime; } set { this.preloadStartTime = value; } }
+
+	protected int preloadDuration; 
+	public int PreloadDuration { get { return this.preloadDuration; } set { this.preloadDuration = value; } }
+
+	protected uint preloadFlags; 
+	public uint PreloadFlags { get { return this.preloadFlags; } set { this.preloadFlags = value; } }
+
+	protected uint defaultHints; 
+	public uint DefaultHints { get { return this.defaultHints; } set { this.defaultHints = value; } }
 
 	public LoadBox(): base(IsoStream.FromFourCC("load"))
 	{
@@ -26,7 +38,10 @@ public partial class LoadBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		boxSize += stream.ReadInt32(boxSize, readSize,  out this.preloadStartTime, "preloadStartTime"); 
+		boxSize += stream.ReadInt32(boxSize, readSize,  out this.preloadDuration, "preloadDuration"); 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.preloadFlags, "preloadFlags"); 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.defaultHints, "defaultHints"); 
 		return boxSize;
 	}
 
@@ -34,7 +49,10 @@ public partial class LoadBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		boxSize += stream.WriteInt32( this.preloadStartTime, "preloadStartTime"); 
+		boxSize += stream.WriteInt32( this.preloadDuration, "preloadDuration"); 
+		boxSize += stream.WriteUInt32( this.preloadFlags, "preloadFlags"); 
+		boxSize += stream.WriteUInt32( this.defaultHints, "defaultHints"); 
 		return boxSize;
 	}
 
@@ -42,7 +60,10 @@ public partial class LoadBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		boxSize += 32; // preloadStartTime
+		boxSize += 32; // preloadDuration
+		boxSize += 32; // preloadFlags
+		boxSize += 32; // defaultHints
 		return boxSize;
 	}
 }

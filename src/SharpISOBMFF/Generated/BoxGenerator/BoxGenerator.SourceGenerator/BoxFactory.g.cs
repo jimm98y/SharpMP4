@@ -28,7 +28,8 @@ namespace SharpISOBMFF
 
             // In a user data box, a '©' type is QuickTime text: strings each with its length and language
             // (QuickTime File Format, User Data Text Strings). In iTunes metadata it holds a 'data' box.
-            if (parent == "udta" && fourCC.Length == 4 && fourCC[0] == '©')
+            // DJI's ©dji, ©res and ©uid are binary.
+            if (parent == "udta" && fourCC.Length == 4 && fourCC[0] == '©' && fourCC != "©dji" && fourCC != "©res" && fourCC != "©uid")
                 return new QuickTimeTextBox(IsoStream.FromFourCC(fourCC));
 
             switch(fourCC)
@@ -70,6 +71,7 @@ namespace SharpISOBMFF
                case "©day":  return new AppleRecordingYear2Box();
                case "©des":  return new AppleDescriptionBox();
                case "©dir":  return new AppleDirBox();
+               case "©dji":  return new DJIUserDataBox();
                case "©ed1":  return new AppleEd1Box();
                case "©ed2":  return new AppleEd2Box();
                case "©ed3":  return new AppleEd3Box();
@@ -115,6 +117,7 @@ namespace SharpISOBMFF
                case "©prl":  return new ApplePrlBox();
                case "©pub":  return new ApplePublisherBox();
                case "©req":  return new AppleRequirementsBox();
+               case "©res":  return new DJIResBox();
                case "©sne":  return new AppleSoundEngineerBox();
                case "©snk":  return new AppleSnkBox();
                case "©snm":  return new AppleSnmBox();
@@ -129,6 +132,7 @@ namespace SharpISOBMFF
                case "©trk":  return new AppleTrackBox();
                case "©TSC":  return new AppleStartTimeScale();
                case "©TSZ":  return new AppleStartTimeSampleSize();
+               case "©uid":  return new DJIUidBox();
                case "©url":  return new AppleUrlBox();
                case "©wrk":  return new AppleWorkBox();
                case "©wrn":  return new AppleWarningBox();
@@ -141,6 +145,7 @@ namespace SharpISOBMFF
                case "0000":  return new ZeroBox();
                case "2vuY": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("2vuY"));break;
                case "3dpr":  return new MVDDepthResolutionBox();
+               case "3gf ":  return new PittasoftAccelerometerBox();
                case "3sib":  return new MVDScalabilityInformationSEIBox();
                case "8BPS": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("8BPS"));break;
                case "a1lx":  return new AV1LayeredImageIndexingProperty();
@@ -150,11 +155,15 @@ namespace SharpISOBMFF
                case "a3d3": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("a3d3"));break;
                case "a3d4": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("a3d4"));break;
                case "a3dC":  return new A3DConfigurationBox();
+               case "AACR":  return new AudibleAACRBox();
                case "aART":  return new AppleArtist2Box();
                case "ac-3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ac-3"));else return new CodecConfigurationBox(IsoStream.FromFourCC("ac-3"));break;
                case "acgl":  return new SubpicCommonGroupBox();
                case "ACLR":  return new ACLRBox();
                case "ADHR":  return new ADHRBox();
+               case "adzc":  return new AdzcBox();
+               case "adze":  return new AdzeBox();
+               case "adzm":  return new AdzmBox();
                case "agsm": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("agsm"));else return new CodecConfigurationBox(IsoStream.FromFourCC("agsm"));break;
                case "ainf":  return new AssetInformationBox();
                case "akID":  return new ITunesAccountTypeBox();
@@ -216,23 +225,30 @@ namespace SharpISOBMFF
                case "bxml":  return new BinaryXMLBox();
                case "c608":  return new C608Box();
                case "CAME":  return new CameraFirmwareBox();
+               case "camm":  return new CameraMotionMetadataSampleEntry();
                case "cams":  return new StereoCameraSystemBox();
                case "catg":  return new CategoryBox();
                case "cbmp":  return new CubemapProjection();
+               case "CCDT":  return new CanonCCDTBox();
                case "ccid":  return new OMAContentIDBox();
                case "cclv":  return new ContentColourVolumeBox();
                case "ccst":  return new CodingConstraintsBox();
+               case "CCTP":  return new CanonCCTPBox();
                case "cdef":  return new J2kChannelDefinitionBox();
-               case "CDI1":  return new CanonCDI1TagsBox();
+               case "CDEK":  return new AudibleCDEKBox();
+               case "CDET":  return new AudibleCDETBox();
+               case "CDI1":  return new CanonCDI1Box();
                case "cdis":  return new ContentDistributorIDBox();
                case "cdsc":  return new TrackReferenceTypeBox(IsoStream.FromFourCC("cdsc"));
                case "cert":  return new CertificateBox();
+               case "cfgv":  return new LivePhotoConfigurationBox();
                case "CFHD": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("CFHD"));break;
                case "chan":  return new AudioChannelLayoutBox();
                case "chap":  return new AppleChapterListBox();
                case "chnl":  return new ChannelLayout();
                case "chpl":  return new AdobeChapterBox();
                case "cinf":  return new CompleteTrackInfoBox();
+               case "cits":  return new FaceItemBox();
                case "clap":  return new CleanApertureBox();
                case "clcp":  return new ClosedCaptionTrackBox();
                case "clef":  return new AppleCleanApertureDimensionsBox();
@@ -244,6 +260,7 @@ namespace SharpISOBMFF
                case "cmap":  return new J2kComponentMappingBox();
                case "cmex":  return new CameraExtrinsicMatrixBox();
                case "cmfy":  return new StereoComfortBox();
+               case "cmid":  return new CameraIDBox();
                case "cmID":  return new CmIDBox();
                case "cmin":  return new CameraIntrinsicMatrixBox();
                case "cmnm":  return new ModelBox();
@@ -251,6 +268,10 @@ namespace SharpISOBMFF
                case "CMP1":  return new CanonCMP1TagsBox();
                case "cmpC":  return new GenericCompressionConfigurationBox();
                case "cmpd":  return new ComponentDefinitionBox();
+               case "CMT1":  return new CanonCMT1Box();
+               case "CMT2":  return new CanonCMT2Box();
+               case "CMT3":  return new CanonCMT3Box();
+               case "CMT4":  return new CanonCMT4Box();
                case "cmvd":  return new AppleCompressedMoovDataBox();
                case "CNCV":  return new CanonCompressorVersionBox();
                case "CNFV":  return new CanonFirmwareVersionBox();
@@ -268,6 +289,8 @@ namespace SharpISOBMFF
                case "cpil":  return new AppleCompilationBox();
                case "cprt": if(parent == "ilst") return new AppleCopyrightBox(); else return new CopyrightBox();
                case "Cr8r":  return new Cr8rBox();
+               case "CRAW":  return new CanonRawSampleEntry();
+               case "crec":  return new FaceRecognitionBox();
                case "crgn":  return new AppleClippingRegionBox();
                case "crtt":  return new CreationTimeProperty();
                case "csch":  return new CompatibleSchemeTypeBox();
@@ -275,7 +298,9 @@ namespace SharpISOBMFF
                case "cslg":  return new CompositionToDecodeBox();
                case "cstg":  return new CstgTrackGroupTypeBox();
                case "ctab":  return new AppleColorTableBox();
+               case "CTBO":  return new CanonCTBOBox();
                case "ctim":  return new CueTimeBox();
+               case "CTMD":  return new CanonTimedMetadataSampleEntry();
                case "ctps":  return new AppleCtpsBox();
                case "ctrm":  return new VideoContourMapBox();
                case "ctrs":  return new VideoContourCollectionBox();
@@ -299,10 +324,12 @@ namespace SharpISOBMFF
                case "dec3":  return new EC3SpecificBox();
                case "desc":  return new AppleDescriptionBoxdescDup(); // TODO: fix duplicate
                case "devc":  return new EVRCSpecificBox();
+               case "dfLa":  return new FLACSpecificBox();
                case "dfxp":  return new DfxpSampleEntry();
                case "dhec":  return new DefaultHevcExtractorConstructorBox();
                case "dimg":  return new SingleItemTypeReferenceBox(IsoStream.FromFourCC("dimg"));
                case "dimm":  return new hintimmediateBytesSent();
+               case "dims":  return new LivePhotoDimensionsBox();
                case "dinf":  return new DataInformationBox();
                case "disk":  return new DiskNumberBox();
                case "dmax":  return new HintLongestPacket();
@@ -373,6 +400,7 @@ namespace SharpISOBMFF
                case "fish":  return new FisheyeProjectionBox();
                case "fl32": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("fl32"));else return new CodecConfigurationBox(IsoStream.FromFourCC("fl32"));break;
                case "fl64": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("fl64"));else return new CodecConfigurationBox(IsoStream.FromFourCC("fl64"));break;
+               case "fLaC": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("fLaC"));else return new CodecConfigurationBox(IsoStream.FromFourCC("fLaC"));break;
                case "flvr":  return new AppleFlvrBox();
                case "folw":  return new SubtitleTrackBox();
                case "forc":  return new ForcedSubtitleTrackBox();
@@ -469,6 +497,7 @@ namespace SharpISOBMFF
                case "in32": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("in32"));else return new CodecConfigurationBox(IsoStream.FromFourCC("in32"));break;
                case "infe":  return new ItemInfoEntry();
                case "infi":  return new CameraInfoBox();
+               case "info":  return new FirmwareVersionInfoBox();
                case "INFO":  return new SamsungINFOBox();
                case "infu":  return new OMAInfoURLBox();
                case "inst":  return new Insta360InfoBox();
@@ -502,10 +531,13 @@ namespace SharpISOBMFF
                case "keyi":  return new MetaDataInlineKeysPresentBox();
                case "keys": if(parent == "mebx") return new BoxedMetaDataKeyTableBox(); else return new MetaDataKeyTableBox();
                case "keyw":  return new AppleKeywordBox();
+               case "kfix":  return new KandaoKFIXBox();
                case "kgtt":  return new AppleTrackTypeBox();
                case "kind":  return new KindBox();
                case "kmat":  return new AppleCompressedMatteBox();
                case "kpcd": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("kpcd"));break;
+               case "kstb":  return new KandaoKSTBBox();
+               case "kvar":  return new KandaoKVARBox();
                case "kywd":  return new ThreeGPPKeywordsBox();
                case "ldep":  return new TierDependencyBox();
                case "ldes":  return new AppleLongDescriptionBox();
@@ -533,6 +565,7 @@ namespace SharpISOBMFF
                case "lrcu":  return new OMALyricsURLBox();
                case "lsel":  return new LayerSelectorProperty();
                case "ludt":  return new LoudnessBox();
+               case "lvlm":  return new LevelMeter2Box();
                case "Lvlm":  return new LevelMeterBox();
                case "m4ae": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("m4ae"));else return new CodecConfigurationBox(IsoStream.FromFourCC("m4ae"));break;
                case "m4ds":  return new MPEG4ExtensionDescriptorsBox();
@@ -611,8 +644,9 @@ namespace SharpISOBMFF
                case "mvra":  return new MultiviewRelationAttributeBox();
                case "MVTG":  return new FujiFilmMVTGBox();
                case "nail":  return new ThumbnailTIFFBox();
-               case "name": return new AppleName2Box(); // TODO: box is ambiguous in between AppleName2Box and FairPlayUserNameBox
+               case "name": if(parent == "udta") return new AppleName2Box(); else if(parent == "tmcd") return new QuickTimeTextBox(IsoStream.FromFourCC("name")); else if(parent == "schi") return new FairPlayUserNameBox(); else return new ITunesMetadataNameBox();
                case "nbmt":  return new NextbaseMetaBox();
+               case "nbpl":  return new NbplBox();
                case "NCDB":  return new NikonNCDBBox();
                case "NCDT":  return new NikonNCDTBox();
                case "NCHD":  return new NikonMakerNoteVersionBox();
@@ -642,6 +676,7 @@ namespace SharpISOBMFF
                case "otyp":  return new OriginalFileTypeBox();
                case "ovc1":  return new Ovc1VisualSampleEntryImpl();
                case "owma": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("owma"));else return new CodecConfigurationBox(IsoStream.FromFourCC("owma"));break;
+               case "ownr":  return new AppleOwnerBox();
                case "pack":  return new ViewPackingBox();
                case "padb":  return new PaddingBitsBox();
                case "pads":  return new PadsBox();
@@ -681,8 +716,11 @@ namespace SharpISOBMFF
                case "prof":  return new AppleProductionApertureDimensionsBox();
                case "proj":  return new ProjectionBox();
                case "prrt":  return new ARDroneTelemetryBox();
+               case "PRVW":  return new CanonPreviewBox();
                case "pssh":  return new ProtectionSystemSpecificHeaderBox();
                case "ptch":  return new PitchBox();
+               case "ptnm":  return new PittasoftOriginalFileNameBox();
+               case "ptrh":  return new PittasoftBox();
                case "ptv ":  return new ApplePtvBox();
                case "purd":  return new PurchaseDateBox();
                case "purl":  return new PodcastUrlBox();
@@ -786,6 +824,7 @@ namespace SharpISOBMFF
                case "SIGM":  return new SigmaEXIFBox();
                case "sinf":  return new ProtectionSchemeInfoBox();
                case "skip":  return new FreeSpaceBoxskipDup(); // TODO: fix duplicate
+               case "slmt":  return new HTCSlmtBox();
                case "slno":  return new SerialNumberBox();
                case "sm2t":  return new MPEG2TSServerSampleEntry();
                case "smc ": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("smc "));break;
@@ -841,6 +880,7 @@ namespace SharpISOBMFF
                case "stsz":  return new SampleSizeBox();
                case "sttg":  return new CueSettingsBox();
                case "stti":  return new SubTrackTierBox();
+               case "sttm":  return new PittasoftStartTimeBox();
                case "stts":  return new TimeToSampleBox();
                case "stvi":  return new StereoVideoBox();
                case "stxt":  return new SimpleTextSampleEntry();
@@ -876,6 +916,7 @@ namespace SharpISOBMFF
                case "thm ":  return new ThumbnailImageBox();
                case "thma":  return new KodakThumbnailImageBox();
                case "thmb":  return new AppleThumbnailReferenceBox();
+               case "THMB":  return new CanonThumbnailBox();
                case "thum":  return new ThumbnailImage2Box();
                case "tibr":  return new TierBitRateBox();
                case "tiff": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("tiff"));break;
@@ -888,7 +929,7 @@ namespace SharpISOBMFF
                case "tkhd":  return new TrackHeaderBox();
                case "tlou":  return new TrackLoudnessInfo();
                case "tmax":  return new HintMaxRelativeTime();
-               case "tmcd":  return new TimeCodeTrackBox();
+               case "tmcd": if(parent == "stsd") return new TimeCodeSampleEntry(); else return new TimeCodeTrackBox();
                case "tmin":  return new HintMinRelativeTime();
                case "tmpo":  return new AppleBeatsPerMinuteBox();
                case "tnal":  return new ThumbnailImageBoxtnalDup(); // TODO: fix duplicate
@@ -896,6 +937,7 @@ namespace SharpISOBMFF
                case "tols":  return new TargetOlsProperty();
                case "totl":  return new HintBytesSenttotlDup(); // TODO: fix duplicate
                case "tpay":  return new HintBytesSenttpayDup(); // TODO: fix duplicate
+               case "tpaY":  return new HintBytesSentNoRtpQuickTime();
                case "tpyl":  return new HintBytesSenttpylDup(); // TODO: fix duplicate
                case "traf":  return new TrackFragmentBox();
                case "trak":  return new TrackBox();
@@ -907,6 +949,7 @@ namespace SharpISOBMFF
                case "trik":  return new TrickPlayBox();
                case "trkn":  return new TrackNumberBox();
                case "trpy":  return new HintBytesSent();
+               case "trpY":  return new HintBytesSentQuickTime();
                case "trun":  return new TrackRunBox();
                case "tsel":  return new TrackSelectionBox();
                case "tsro":  return new TimeOffset();
@@ -952,11 +995,13 @@ namespace SharpISOBMFF
                case "uuid 55534d5421d24fcebb88695cfac9c740":  return new PspUsmtExtensionBox();
                case "uuid 5ca708fb328e4205a861650eca0a9596":  return new MicrosoftWindowsVersionBox();
                case "uuid 6d1d9b0542d544e680e2141daff757b2":  return new TfxdBox();
+               case "uuid 85c0b687820f11e08111f4ce462b6a48":  return new CanonMetadataUuidBox();
                case "uuid 8974dbce7be74c5184f97148f9882554":  return new PiffTrackEncryptionBox();
                case "uuid a2394f525a9b4f14a2446c427c648df4":  return new PiffSampleEncryptionBox();
                case "uuid be7acfcb97a942e89c71999491e3afac":  return new XMPCustomBox();
                case "uuid d08a4f1810f34a82b6c832d8aba183d3":  return new UuidBasedProtectionSystemSpecificHeaderBox();
                case "uuid d4807ef2ca3946958e5426cb9e46a79f":  return new TfrfBox();
+               case "uuid eaf42b5e1c984b88b9fbb7dc406e4d16":  return new CanonPreviewUuidBox();
                case "v210": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("v210"));break;
                case "v216": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("v216"));break;
                case "v308": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("v308"));break;

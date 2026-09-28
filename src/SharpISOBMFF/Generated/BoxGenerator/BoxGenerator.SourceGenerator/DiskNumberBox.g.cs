@@ -14,7 +14,6 @@ public partial class DiskNumberBox : Box
 {
 	public const string TYPE = "disk";
 	public override string DisplayName { get { return "DiskNumberBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public DiskNumberBox(): base(IsoStream.FromFourCC("disk"))
 	{

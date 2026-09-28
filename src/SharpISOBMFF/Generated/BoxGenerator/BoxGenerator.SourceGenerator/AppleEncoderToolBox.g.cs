@@ -14,7 +14,6 @@ public partial class AppleEncoderToolBox : Box
 {
 	public const string TYPE = "©too";
 	public override string DisplayName { get { return "AppleEncoderToolBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleEncoderToolBox(): base(IsoStream.FromFourCC("©too"))
 	{

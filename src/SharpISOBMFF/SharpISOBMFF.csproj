@@ -43,6 +43,7 @@
 		<AdditionalFiles Include="Definitions\AVIF-boxes.json" />
 		<AdditionalFiles Include="Definitions\QuickTime-boxes.json" />
 		<AdditionalFiles Include="Definitions\Opus-boxes.json" />
+		<AdditionalFiles Include="Definitions\FLAC-boxes.json" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(AutoGenerateCode) == 'true'">

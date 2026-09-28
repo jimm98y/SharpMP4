@@ -14,7 +14,6 @@ public partial class AppleCommentBox : Box
 {
 	public const string TYPE = "©cmt";
 	public override string DisplayName { get { return "AppleCommentBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleCommentBox(): base(IsoStream.FromFourCC("©cmt"))
 	{

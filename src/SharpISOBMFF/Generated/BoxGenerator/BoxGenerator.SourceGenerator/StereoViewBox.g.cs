@@ -14,7 +14,6 @@ public partial class StereoViewBox : Box
 {
 	public const string TYPE = "eyes";
 	public override string DisplayName { get { return "StereoViewBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public StereoViewBox(): base(IsoStream.FromFourCC("eyes"))
 	{

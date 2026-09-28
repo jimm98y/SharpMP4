@@ -26,7 +26,6 @@ public partial class MeshProjection : ProjectionDataBox
 
 	protected uint encoding_four_cc;  //  All bytes below this point are compressed according to
 	public uint EncodingFourCc { get { return this.encoding_four_cc; } set { this.encoding_four_cc = value; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public MeshProjection(): base(IsoStream.FromFourCC("mshp"), 0, 0)
 	{

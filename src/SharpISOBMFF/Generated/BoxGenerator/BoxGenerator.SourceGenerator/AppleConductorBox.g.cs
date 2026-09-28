@@ -14,7 +14,6 @@ public partial class AppleConductorBox : Box
 {
 	public const string TYPE = "©con";
 	public override string DisplayName { get { return "AppleConductorBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleConductorBox(): base(IsoStream.FromFourCC("©con"))
 	{

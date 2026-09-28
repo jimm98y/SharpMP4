@@ -14,7 +14,6 @@ public partial class AppleCameraRollBox : Box
 {
 	public const string TYPE = "©grl";
 	public override string DisplayName { get { return "AppleCameraRollBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleCameraRollBox(): base(IsoStream.FromFourCC("©grl"))
 	{

@@ -9,6 +9,7 @@ namespace SharpISOBMFF
 aligned(8) class FairPlayUserNameBox() extends Box('name') {
  bit(8) data[]; 
  }
+ 
 */
 public partial class FairPlayUserNameBox : Box
 {

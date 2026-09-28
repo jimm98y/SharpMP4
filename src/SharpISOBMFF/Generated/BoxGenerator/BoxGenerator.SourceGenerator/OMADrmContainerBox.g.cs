@@ -14,7 +14,6 @@ public partial class OMADrmContainerBox : FullBox
 {
 	public const string TYPE = "odrm";
 	public override string DisplayName { get { return "OMADrmContainerBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public OMADrmContainerBox(): base(IsoStream.FromFourCC("odrm"))
 	{

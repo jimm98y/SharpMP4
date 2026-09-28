@@ -14,7 +14,6 @@ public partial class CmIDBox : Box
 {
 	public const string TYPE = "cmID";
 	public override string DisplayName { get { return "CmIDBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public CmIDBox(): base(IsoStream.FromFourCC("cmID"))
 	{

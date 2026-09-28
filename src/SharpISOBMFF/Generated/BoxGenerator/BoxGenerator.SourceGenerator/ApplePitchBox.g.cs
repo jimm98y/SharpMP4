@@ -14,7 +14,6 @@ public partial class ApplePitchBox : Box
 {
 	public const string TYPE = "©fpt";
 	public override string DisplayName { get { return "ApplePitchBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ApplePitchBox(): base(IsoStream.FromFourCC("©fpt"))
 	{

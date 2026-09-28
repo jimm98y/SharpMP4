@@ -14,7 +14,6 @@ public partial class ITunesCountryCodeBox : Box
 {
 	public const string TYPE = "sfID";
 	public override string DisplayName { get { return "ITunesCountryCodeBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ITunesCountryCodeBox(): base(IsoStream.FromFourCC("sfID"))
 	{

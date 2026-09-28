@@ -14,7 +14,6 @@ public partial class AppleRatingBox : Box
 {
 	public const string TYPE = "rtng";
 	public override string DisplayName { get { return "AppleRatingBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleRatingBox(): base(IsoStream.FromFourCC("rtng"))
 	{

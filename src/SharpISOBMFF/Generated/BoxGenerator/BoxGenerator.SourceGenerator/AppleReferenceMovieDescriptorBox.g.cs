@@ -14,7 +14,6 @@ public partial class AppleReferenceMovieDescriptorBox : Box
 {
 	public const string TYPE = "rmda";
 	public override string DisplayName { get { return "AppleReferenceMovieDescriptorBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleReferenceMovieDescriptorBox(): base(IsoStream.FromFourCC("rmda"))
 	{

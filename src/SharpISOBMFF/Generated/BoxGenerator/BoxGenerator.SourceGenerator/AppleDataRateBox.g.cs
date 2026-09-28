@@ -14,7 +14,6 @@ public partial class AppleDataRateBox : Box
 {
 	public const string TYPE = "rmdr";
 	public override string DisplayName { get { return "AppleDataRateBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleDataRateBox(): base(IsoStream.FromFourCC("rmdr"))
 	{

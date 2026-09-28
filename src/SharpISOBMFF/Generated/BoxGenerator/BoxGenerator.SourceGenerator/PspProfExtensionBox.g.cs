@@ -22,7 +22,6 @@ public partial class PspProfExtensionBox : Box
 
 	protected uint entry_count; 
 	public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public PspProfExtensionBox(): base(IsoStream.FromFourCC("uuid"), ConvertEx.FromHexString("50524f4621d24fcebb88695cfac9c740"))
 	{

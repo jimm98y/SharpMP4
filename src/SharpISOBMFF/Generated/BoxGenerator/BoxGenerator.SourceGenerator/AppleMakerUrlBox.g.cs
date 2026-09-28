@@ -14,7 +14,6 @@ public partial class AppleMakerUrlBox : Box
 {
 	public const string TYPE = "©mal";
 	public override string DisplayName { get { return "AppleMakerUrlBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleMakerUrlBox(): base(IsoStream.FromFourCC("©mal"))
 	{

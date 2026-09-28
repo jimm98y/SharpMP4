@@ -14,7 +14,6 @@ public partial class GooglePingUrlBox : Box
 {
 	public const string TYPE = "gspu";
 	public override string DisplayName { get { return "GooglePingUrlBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public GooglePingUrlBox(): base(IsoStream.FromFourCC("gspu"))
 	{

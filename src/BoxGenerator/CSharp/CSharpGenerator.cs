@@ -183,7 +183,8 @@ namespace SharpISOBMFF
 
             // In a user data box, a '©' type is QuickTime text: strings each with its length and language
             // (QuickTime File Format, User Data Text Strings). In iTunes metadata it holds a 'data' box.
-            if (parent == ""udta"" && fourCC.Length == 4 && fourCC[0] == '©')
+            // DJI's ©dji, ©res and ©uid are binary.
+            if (parent == ""udta"" && fourCC.Length == 4 && fourCC[0] == '©' && fourCC != ""©dji"" && fourCC != ""©res"" && fourCC != ""©uid"")
                 return new QuickTimeTextBox(IsoStream.FromFourCC(fourCC));
 
             switch(fourCC)
@@ -241,8 +242,7 @@ namespace SharpISOBMFF
                         item.Value.First().BoxName == "MovieFragmentBox" ||
                         item.Value.First().BoxName == "SegmentIndexBox" ||
                         item.Value.First().BoxName == "TrackHintInformation" ||
-                        item.Value.First().BoxName == "ViewPriorityBox" ||
-                        item.Value.First().BoxName == "AppleName2Box"
+                        item.Value.First().BoxName == "ViewPriorityBox"
                         )
                     {
                         string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
@@ -281,6 +281,19 @@ namespace SharpISOBMFF
                     else if (item.Value.First().BoxName == "TextMediaBox")
                     {
                         factory.Append($"               case \"{item.Key}\": if(parent == \"gmhd\") return new TextGmhdMediaBox(); else if(parent == \"stsd\") return new TextMediaBox(); break;\r\n");
+                    }
+                    else if (item.Key == "tmcd")
+                    {
+                        // A sample description holds the timecode sample entry; a 'gmhd', the atom holding the
+                        // timecode media information (QTFF, Timecode Sample Description, Timecode Media Information Atom).
+                        factory.Append($"               case \"{item.Key}\": if(parent == \"stsd\") return new TimeCodeSampleEntry(); else return new TimeCodeTrackBox();\r\n");
+                    }
+                    else if (item.Key == "name")
+                    {
+                        // A user data's name is a string; a timecode sample entry's source name a QuickTime text
+                        // string (QTFF, Timecode Sample Description); FairPlay's the user's; in iTunes metadata - a
+                        // freeform item's, or any item's - a full box, as its 'mean' is.
+                        factory.Append($"               case \"{item.Key}\": if(parent == \"udta\") return new AppleName2Box(); else if(parent == \"tmcd\") return new QuickTimeTextBox(IsoStream.FromFourCC(\"name\")); else if(parent == \"schi\") return new FairPlayUserNameBox(); else return new ITunesMetadataNameBox();\r\n");
                     }
                     else if (item.Key == "stri")
                     {
@@ -519,7 +532,9 @@ namespace SharpISOBMFF
 
             foreach (var field in fields)
             {
-                cls.Append("\r\n" + BuildField(b, field));
+                string built = BuildField(b, field);
+                if (built.Length > 0)
+                    cls.Append("\r\n" + built);
             }
 
             if (b.BoxName == "MetaBox")
@@ -731,7 +746,9 @@ namespace SharpISOBMFF
 
                 foreach (var f in block.Content)
                 {
-                    ret.Append("\r\n" + BuildField(b, f));
+                    string built = BuildField(b, f);
+                    if (built.Length > 0)
+                        ret.Append("\r\n" + built);
                 }
 
                 return ret.ToString();
@@ -854,6 +871,9 @@ namespace SharpISOBMFF
                 {
                     string suffix = fieldType.Contains("[]") ? "" : ".FirstOrDefault()";
                     string ttttt = fieldType.Replace("[]", "");
+                    // 'Box boxes[]' - any boxes, to the end - is Children as it is
+                    if (ttttt == "Box" && propertyName == "Boxes")
+                        return "";
                     string ttt = fieldType.Contains("[]") ? "IEnumerable<" + fieldType.Replace("[]", "") + ">" : fieldType;
                     return $"\tpublic {ttt} {propertyName} {{ get {{ return this.children.OfType<{ttttt}>(){suffix}; }} }}";
                 }

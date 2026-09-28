@@ -14,7 +14,6 @@ public partial class AppleUrlBox : Box
 {
 	public const string TYPE = "©url";
 	public override string DisplayName { get { return "AppleUrlBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleUrlBox(): base(IsoStream.FromFourCC("©url"))
 	{

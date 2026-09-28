@@ -7,16 +7,13 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AppleCokBox() extends Box('©cok') {
-	 bit(8) data[];
- } 
+ Box boxes[];
+}
 */
 public partial class AppleCokBox : Box
 {
 	public const string TYPE = "©cok";
 	public override string DisplayName { get { return "AppleCokBox"; } }
-
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public AppleCokBox(): base(IsoStream.FromFourCC("©cok"))
 	{
@@ -26,7 +23,8 @@ public partial class AppleCokBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes, "boxes"); 
+		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
 		return boxSize;
 	}
 
@@ -34,7 +32,8 @@ public partial class AppleCokBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		// boxSize += stream.WriteBox( this.boxes, "boxes"); 
+		boxSize += stream.WriteBoxArrayTillEnd(this);
 		return boxSize;
 	}
 
@@ -42,7 +41,8 @@ public partial class AppleCokBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
 }

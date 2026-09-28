@@ -14,7 +14,6 @@ public partial class AppleCopyright2Box : Box
 {
 	public const string TYPE = "©cpy";
 	public override string DisplayName { get { return "AppleCopyright2Box"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleCopyright2Box(): base(IsoStream.FromFourCC("©cpy"))
 	{

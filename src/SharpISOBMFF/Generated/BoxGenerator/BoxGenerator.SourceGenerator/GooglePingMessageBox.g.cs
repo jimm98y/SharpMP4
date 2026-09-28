@@ -14,7 +14,6 @@ public partial class GooglePingMessageBox : Box
 {
 	public const string TYPE = "gspm";
 	public override string DisplayName { get { return "GooglePingMessageBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public GooglePingMessageBox(): base(IsoStream.FromFourCC("gspm"))
 	{
