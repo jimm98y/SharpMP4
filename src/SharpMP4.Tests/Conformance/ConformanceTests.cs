@@ -99,6 +99,29 @@ public class ConformanceTests
         if (files.Count == 0)
             Assert.Inconclusive($"no FATE samples under {root}; run DownloadConformance.ps1 -Codec Fate");
 
+        CheckFilesAgainstThemselves("fate", root, files, MalformedFateFiles);
+    }
+
+    /// <summary>
+    /// Reads the files of the metadata set as <see cref="FateFilesReadWithoutSignsOfMisreading"/> reads
+    /// FFmpeg's: each checked against itself, and written back byte for byte.
+    /// </summary>
+    [TestMethod]
+    public void MetadataFilesReadWithoutSignsOfMisreading()
+    {
+        string? root = ConformanceCorpus.Locate();
+        if (root == null)
+            Assert.Inconclusive("no conformance files; run DownloadConformance.ps1, or set SHARPMP4_CONFORMANCE");
+
+        var files = ConformanceCorpus.MetadataSetFiles(root);
+        if (files.Count == 0)
+            Assert.Inconclusive($"no metadata files under {root}; run DownloadConformance.ps1 -Codec Metadata");
+
+        CheckFilesAgainstThemselves("metadata-boxes", root, files, MalformedMetadataSetFiles);
+    }
+
+    private static void CheckFilesAgainstThemselves(string name, string root, IReadOnlyList<string> files, Dictionary<string, (string Why, string[] Defects)> malformedFiles)
+    {
         var unknown = new ConcurrentDictionary<string, ConcurrentBag<string>>();
         var results = new ConcurrentBag<StreamResult>();
         Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, Environment.ProcessorCount / 2) }, file =>
@@ -121,12 +144,12 @@ public class ConformanceTests
             if (result.Keys.Count == 0)
                 result.Outcome = Outcome.Match;
             else
-                JudgeMalformed(root, result);
+                JudgeMalformed(root, result, malformedFiles);
             results.Add(result);
         });
 
         // A known defect that is no longer found means the list, or the reading, has changed: either way it is looked at.
-        foreach (var (file, defect) in MalformedFateFiles.SelectMany(m => m.Value.Defects.Select(d => (m.Key, d))))
+        foreach (var (file, defect) in malformedFiles.SelectMany(m => m.Value.Defects.Select(d => (m.Key, d))))
         {
             var result = results.FirstOrDefault(r => Path.GetRelativePath(root, r.Path) == file);
             if (result != null && result.Outcome == Outcome.Match)
@@ -136,7 +159,7 @@ public class ConformanceTests
         }
 
         var ordered = results.OrderBy(r => r.Path, StringComparer.Ordinal).ToList();
-        string summary = Summarise("fate", root, ordered);
+        string summary = Summarise(name, root, ordered);
 
         var coverage = new StringBuilder();
         coverage.AppendLine();
@@ -147,7 +170,7 @@ public class ConformanceTests
             coverage.AppendLine($"  {where.Count,4} x {kind.Key}    e.g. {Path.GetRelativePath(root, where[0])}");
         }
 
-        File.WriteAllText(Path.Combine(root, "report-fate.txt"), summary + coverage + Details(root, ordered));
+        File.WriteAllText(Path.Combine(root, $"report-{name}.txt"), summary + coverage + Details(root, ordered));
 
         int failing = ordered.Count(r => r.Outcome is Outcome.Diverged or Outcome.SharpFailed);
         Assert.AreEqual(0, failing, summary);
@@ -159,6 +182,8 @@ public class ConformanceTests
     /// </summary>
     private static readonly Dictionary<string, (string Why, string[] Defects)> MalformedFateFiles = new()
     {
+        [Path.Combine("fate", "cineform", "cineform_yuv10b_hd.mov")] =
+            ("a stereo 'chan' counting no channel descriptions, then 40 zeros: room for the two it does not count", ["sowt/chan: left over"]),
         [Path.Combine("fate", "h264", "thezerotheorem-cut.mp4")] =
             ("an 8 byte 'box' of type 0x00000099 after the 'colr' of its 'avc1'", ["avc1/?: not a box type"]),
         [Path.Combine("fate", "mov", "invalid_elst_entry_count.mov")] =
@@ -168,12 +193,38 @@ public class ConformanceTests
     };
 
     /// <summary>
+    /// Files of the metadata set that are malformed on purpose, or by the tool that wrote them, with what is
+    /// wrong in them, as <see cref="MalformedFateFiles"/>.
+    /// </summary>
+    private static readonly Dictionary<string, (string Why, string[] Defects)> MalformedMetadataSetFiles = new()
+    {
+        // ExifTool's test images keep the metadata, and little of the rest
+        [Path.Combine("metadata", "exiftool", "CanonRaw.cr3")] =
+            ("a 'PRVW' declaring the 372221 bytes of the preview it no longer has", ["uuid/PRVW: larger than its parent"]),
+        [Path.Combine("metadata", "exiftool", "QuickTime.m4a")] =
+            ("an 'stco' counting no chunks, then the zeros of the 44 offsets it had", ["stbl/stco: left over"]),
+        [Path.Combine("metadata", "exiftool", "QuickTime.mov")] =
+            ("an 'stco' counting no chunks, then the zeros of the 5 offsets it had", ["stbl/stco: left over"]),
+        // mutagen's and TagLib's test files, each made for the defect it has
+        [Path.Combine("metadata", "mutagen", "64bit.mp4")] =
+            ("boxes of 64-bit sizes whose 'ilst' declares more than its 'meta' holds, and 8 bytes after the 'moov'", ["meta/ilst: larger than its parent", "file/?: not a box type"]),
+        [Path.Combine("metadata", "taglib", "64bit.mp4")] =
+            ("boxes of 64-bit sizes whose 'ilst' declares more than its 'meta' holds, and 8 bytes after the 'moov'", ["meta/ilst: larger than its parent", "file/?: not a box type"]),
+        [Path.Combine("metadata", "mutagen", "nero-chapters.m4b")] =
+            ("an 'stsz' of 8 bytes, its header and nothing else", ["stbl/stsz: could not be read"]),
+        [Path.Combine("metadata", "taglib", "covr-junk.m4a")] =
+            ("junk in its cover art item: a 'name' of 4 zeros after its version and flags", ["covr/name: left over"]),
+        [Path.Combine("metadata", "taglib", "infloop.m4a")] =
+            ("a 'data' of size 0 in its 'gnre', which loops a reader that steps by the size", ["gnre/data: larger than its parent"]),
+    };
+
+    /// <summary>
     /// A file known to be malformed passes as <see cref="Outcome.Malformed"/> when it failed in no other
     /// way: SharpMP4 did not throw, found its known defects and nothing else, and wrote it back as it was.
     /// </summary>
-    private static void JudgeMalformed(string root, StreamResult result)
+    private static void JudgeMalformed(string root, StreamResult result, Dictionary<string, (string Why, string[] Defects)> malformedFiles)
     {
-        if (!MalformedFateFiles.TryGetValue(Path.GetRelativePath(root, result.Path), out var malformed))
+        if (!malformedFiles.TryGetValue(Path.GetRelativePath(root, result.Path), out var malformed))
             return;
 
         if (result.Outcome == Outcome.SharpFailed || result.Keys.Any(k => k.StartsWith("round trip")))
@@ -184,6 +235,83 @@ public class ConformanceTests
 
         result.Outcome = Outcome.Malformed;
         result.Detail = $"malformed, and kept as it was: {malformed.Why}\n    " + result.Detail;
+    }
+
+    /// <summary>
+    /// Reads the metadata tags of the metadata set, the FATE samples and the file format conformance files -
+    /// iTunes items, freeform items, keyed metadata and the strings of 'udta' - and checks SharpMP4 reads the
+    /// ones ExifTool reads, with their values. Needs the Metadata set of DownloadConformance.ps1, which
+    /// brings ExifTool, and a Perl to run it.
+    /// </summary>
+    [TestMethod]
+    public void MetadataReadsAsExifToolReadsIt()
+    {
+        string? root = ConformanceCorpus.Locate();
+        if (root == null)
+            Assert.Inconclusive("no conformance files; run DownloadConformance.ps1, or set SHARPMP4_CONFORMANCE");
+
+        var exifTool = ConformanceCorpus.LocateExifTool(root);
+        if (exifTool == null)
+            Assert.Inconclusive("no ExifTool or no Perl; run DownloadConformance.ps1 -Codec Metadata, or set SHARPMP4_PERL");
+
+        var files = ConformanceCorpus.MetadataFiles(root);
+        var theirs = ExifToolTrace.Read(exifTool.Value.Perl, exifTool.Value.ExifTool, files);
+        var macintosh = ExifToolTrace.MacintoshLanguages(exifTool.Value.ExifTool);
+        var xmpPrefixes = ExifToolTrace.XmpPrefixes(exifTool.Value.ExifTool);
+
+        var results = new ConcurrentBag<StreamResult>();
+        Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, Environment.ProcessorCount / 2) }, path =>
+        {
+            StreamResult result;
+            try
+            {
+                // Open while compared: what a box keeps as it was, it reads from the file when written
+                var container = new SharpISOBMFF.Container();
+                using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 1 << 16);
+                container.Read(new SharpISOBMFF.IsoStream(new SharpISOBMFF.StreamWrapper(stream)));
+                var tags = SharpMP4.Readers.MetadataReader.Read(container);
+                result = MetadataComparison.Compare(path, tags, theirs.TryGetValue(Path.GetFullPath(path), out var t) ? t : [], macintosh, xmpPrefixes);
+            }
+            catch (Exception ex)
+            {
+                result = new StreamResult { Path = path, Outcome = Outcome.SharpFailed, Detail = ex.ToString(), Key = $"read: {ex.GetType().Name}" };
+            }
+            JudgeMalformedMetadata(root, result);
+            results.Add(result);
+        });
+
+        var ordered = results.OrderBy(r => r.Path, StringComparer.Ordinal).ToList();
+        string summary = Summarise("metadata", root, ordered);
+
+        // Every tag that is not read as ExifTool reads it, by how many files it is in
+        var tally = new StringBuilder("\nEvery tag not read as ExifTool reads it, by the files it is in:\n");
+        foreach (var group in ordered.SelectMany(r => r.Keys).GroupBy(k => k).OrderByDescending(g => g.Count()).ThenBy(g => g.Key, StringComparer.Ordinal))
+            tally.Append($"  {group.Count(),5}  {group.Key}\n");
+        File.WriteAllText(Path.Combine(root, "report-metadata.txt"), summary + tally + Details(root, ordered));
+
+        int failing = ordered.Count(r => r.Outcome is Outcome.Diverged or Outcome.SharpFailed);
+        Assert.AreEqual(0, failing, summary);
+    }
+
+    /// <summary>
+    /// Metadata test files that are malformed on purpose, where ExifTool reads less than SharpMP4, with what
+    /// SharpMP4 reads that ExifTool does not.
+    /// </summary>
+    private static readonly Dictionary<string, (string Why, string[] Defects)> MalformedMetadataFiles = new()
+    {
+        [Path.Combine("metadata", "taglib", "non-full-meta.m4a")] =
+            ("its 'meta' is not a full box, as QuickTime's is not: ExifTool takes the first box for version and flags, finds it truncated and reads none of the items",
+             ["extra movie Freeform:iTunNORM", "extra movie ItemList:covr", "extra movie ItemList:©ART", "extra movie ItemList:©too"]),
+    };
+
+    private static void JudgeMalformedMetadata(string root, StreamResult result)
+    {
+        if (!MalformedMetadataFiles.TryGetValue(Path.GetRelativePath(root, result.Path), out var malformed))
+            return;
+        if (result.Outcome == Outcome.SharpFailed || !result.Keys.ToHashSet().SetEquals(malformed.Defects))
+            return;
+        result.Outcome = Outcome.Malformed;
+        result.Detail = $"malformed, and read: {malformed.Why}\n    " + result.Detail;
     }
 
     /// <summary>

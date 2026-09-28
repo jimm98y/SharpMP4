@@ -7,7 +7,8 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FontTableBox() extends Box('ftab') {
- bit(8) data[];
+ unsigned int(16) entryCount;
+ FontRecord fontEntries[entryCount];
  }
  
 */
@@ -16,8 +17,11 @@ public partial class FontTableBox : Box
 	public const string TYPE = "ftab";
 	public override string DisplayName { get { return "FontTableBox"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	protected ushort entryCount; 
+	public ushort EntryCount { get { return this.entryCount; } set { this.entryCount = value; } }
+
+	protected FontRecord[] fontEntries; 
+	public FontRecord[] FontEntries { get { return this.fontEntries; } set { this.fontEntries = value; } }
 
 	public FontTableBox(): base(IsoStream.FromFourCC("ftab"))
 	{
@@ -27,7 +31,8 @@ public partial class FontTableBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.entryCount, "entryCount"); 
+		boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(entryCount), () => new FontRecord(),  out this.fontEntries, "fontEntries"); 
 		return boxSize;
 	}
 
@@ -35,7 +40,8 @@ public partial class FontTableBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		boxSize += stream.WriteUInt16( this.entryCount, "entryCount"); 
+		boxSize += stream.WriteClass( this.fontEntries, "fontEntries"); 
 		return boxSize;
 	}
 
@@ -43,7 +49,8 @@ public partial class FontTableBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		boxSize += 16; // entryCount
+		boxSize += IsoStream.CalculateClassSize(fontEntries); // fontEntries
 		return boxSize;
 	}
 }

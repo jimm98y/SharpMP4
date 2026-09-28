@@ -7,16 +7,14 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AppleEd8Box() extends Box('©ed8') {
-	 bit(8) data[];
- } 
+ Box boxes[];
+}
 */
 public partial class AppleEd8Box : Box
 {
 	public const string TYPE = "©ed8";
 	public override string DisplayName { get { return "AppleEd8Box"; } }
-
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleEd8Box(): base(IsoStream.FromFourCC("©ed8"))
 	{
@@ -26,7 +24,8 @@ public partial class AppleEd8Box : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes, "boxes"); 
+		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
 		return boxSize;
 	}
 
@@ -34,7 +33,8 @@ public partial class AppleEd8Box : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		// boxSize += stream.WriteBox( this.boxes, "boxes"); 
+		boxSize += stream.WriteBoxArrayTillEnd(this);
 		return boxSize;
 	}
 
@@ -42,7 +42,8 @@ public partial class AppleEd8Box : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
 }

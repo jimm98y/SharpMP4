@@ -6,17 +6,21 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class PitchBox() extends Box ('ptch'){
- bit(8) data[];
- }
+aligned(8) class PitchBox() extends Box('ptch') {
+ signed int(32) numerator;
+ signed int(32) denominator;
+}
 */
 public partial class PitchBox : Box
 {
 	public const string TYPE = "ptch";
 	public override string DisplayName { get { return "PitchBox"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	protected int numerator; 
+	public int Numerator { get { return this.numerator; } set { this.numerator = value; } }
+
+	protected int denominator; 
+	public int Denominator { get { return this.denominator; } set { this.denominator = value; } }
 
 	public PitchBox(): base(IsoStream.FromFourCC("ptch"))
 	{
@@ -26,7 +30,8 @@ public partial class PitchBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		boxSize += stream.ReadInt32(boxSize, readSize,  out this.numerator, "numerator"); 
+		boxSize += stream.ReadInt32(boxSize, readSize,  out this.denominator, "denominator"); 
 		return boxSize;
 	}
 
@@ -34,7 +39,8 @@ public partial class PitchBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		boxSize += stream.WriteInt32( this.numerator, "numerator"); 
+		boxSize += stream.WriteInt32( this.denominator, "denominator"); 
 		return boxSize;
 	}
 
@@ -42,7 +48,8 @@ public partial class PitchBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		boxSize += 32; // numerator
+		boxSize += 32; // denominator
 		return boxSize;
 	}
 }

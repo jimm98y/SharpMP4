@@ -6,17 +6,21 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class AppleCleanApertureDimensionsBox() extends Box('clef') {
- bit(8) data[];
+aligned(8) class AppleCleanApertureDimensionsBox() extends FullBox('clef') {
+ unsigned int(32) width;
+ unsigned int(32) height;
  } 
 */
-public partial class AppleCleanApertureDimensionsBox : Box
+public partial class AppleCleanApertureDimensionsBox : FullBox
 {
 	public const string TYPE = "clef";
 	public override string DisplayName { get { return "AppleCleanApertureDimensionsBox"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	protected uint width; 
+	public uint Width { get { return this.width; } set { this.width = value; } }
+
+	protected uint height; 
+	public uint Height { get { return this.height; } set { this.height = value; } }
 
 	public AppleCleanApertureDimensionsBox(): base(IsoStream.FromFourCC("clef"))
 	{
@@ -26,7 +30,8 @@ public partial class AppleCleanApertureDimensionsBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.width, "width"); 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.height, "height"); 
 		return boxSize;
 	}
 
@@ -34,7 +39,8 @@ public partial class AppleCleanApertureDimensionsBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		boxSize += stream.WriteUInt32( this.width, "width"); 
+		boxSize += stream.WriteUInt32( this.height, "height"); 
 		return boxSize;
 	}
 
@@ -42,7 +48,8 @@ public partial class AppleCleanApertureDimensionsBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		boxSize += 32; // width
+		boxSize += 32; // height
 		return boxSize;
 	}
 }

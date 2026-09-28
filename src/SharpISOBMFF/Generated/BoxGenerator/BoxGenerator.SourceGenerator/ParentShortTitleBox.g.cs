@@ -6,17 +6,15 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class ParentShortTitleBox() extends Box ('@PST'){
- bit(8) data[];
- }
+aligned(8) class ParentShortTitleBox() extends Box('@PST') {
+ Box boxes[];
+}
 */
 public partial class ParentShortTitleBox : Box
 {
 	public const string TYPE = "@PST";
 	public override string DisplayName { get { return "ParentShortTitleBox"; } }
-
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ParentShortTitleBox(): base(IsoStream.FromFourCC("@PST"))
 	{
@@ -26,7 +24,8 @@ public partial class ParentShortTitleBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes, "boxes"); 
+		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
 		return boxSize;
 	}
 
@@ -34,7 +33,8 @@ public partial class ParentShortTitleBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		// boxSize += stream.WriteBox( this.boxes, "boxes"); 
+		boxSize += stream.WriteBoxArrayTillEnd(this);
 		return boxSize;
 	}
 
@@ -42,7 +42,8 @@ public partial class ParentShortTitleBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
 }

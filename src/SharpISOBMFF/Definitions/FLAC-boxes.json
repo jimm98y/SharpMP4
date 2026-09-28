@@ -1,0 +1,22 @@
+﻿{
+  "name": "Boxes",
+  "description": "FLAC in ISOBMFF (Xiph, Encapsulation of FLAC in ISO Base Media File Format)",
+  "entries": [
+    {
+      "fourcc": "fLaC",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "// Encapsulation of FLAC in ISO Base Media File Format (Xiph, isoflac.txt), 3.3.1 FLAC Sample Entry\r\nclass FLACSampleEntry() extends AudioSampleEntry ('fLaC'){\r\n FLACSpecificBox();\r\n }"
+    },
+    {
+      "fourcc": "dfLa",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "// 3.3.2 FLAC Specific Box: the metadata blocks of the stream, to the end of the box\r\naligned(8) class FLACSpecificBox extends FullBox('dfLa', version = 0, 0){\r\n FLACMetadataBlock blocks[];\r\n }\r\n aligned(8) class FLACMetadataBlock {\r\n unsigned int(1) LastMetadataBlockFlag;\r\n unsigned int(7) BlockType;\r\n unsigned int(24) Length;\r\n unsigned int(8) BlockData[Length];\r\n }"
+    }
+  ]
+}

@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 class CanonCompressorVersionBox() extends Box ('CNCV'){
- bit(8) data[];
+ string compressorVersion;
  }
 */
 public partial class CanonCompressorVersionBox : Box
@@ -15,8 +15,8 @@ public partial class CanonCompressorVersionBox : Box
 	public const string TYPE = "CNCV";
 	public override string DisplayName { get { return "CanonCompressorVersionBox"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	protected BinaryUTF8String compressorVersion; 
+	public BinaryUTF8String CompressorVersion { get { return this.compressorVersion; } set { this.compressorVersion = value; } }
 
 	public CanonCompressorVersionBox(): base(IsoStream.FromFourCC("CNCV"))
 	{
@@ -26,7 +26,7 @@ public partial class CanonCompressorVersionBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.compressorVersion, "compressorVersion"); 
 		return boxSize;
 	}
 
@@ -34,7 +34,7 @@ public partial class CanonCompressorVersionBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		boxSize += stream.WriteStringZeroTerminated( this.compressorVersion, "compressorVersion"); 
 		return boxSize;
 	}
 
@@ -42,7 +42,7 @@ public partial class CanonCompressorVersionBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		boxSize += IsoStream.CalculateStringSize(compressorVersion); // compressorVersion
 		return boxSize;
 	}
 }

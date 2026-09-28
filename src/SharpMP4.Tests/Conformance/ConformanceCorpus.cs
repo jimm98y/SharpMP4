@@ -119,6 +119,60 @@ public static class ConformanceCorpus
     }
 
     /// <summary>
+    /// ExifTool as DownloadConformance.ps1 fetched it (tools\exiftool-*\exiftool), and a Perl to run it: SHARPMP4_PERL,
+    /// the perl on the PATH or Git for Windows's. Null when either is missing.
+    /// </summary>
+    public static (string Perl, string ExifTool)? LocateExifTool(string root)
+    {
+        string tools = Path.Combine(root, "tools");
+        string? exifTool = Directory.Exists(tools)
+            ? Directory.EnumerateDirectories(tools, "exiftool-*").Select(d => Path.Combine(d, "exiftool")).FirstOrDefault(File.Exists)
+            : null;
+        if (exifTool == null)
+            return null;
+
+        string executable = OperatingSystem.IsWindows() ? "perl.exe" : "perl";
+        var candidates = new List<string?> { Environment.GetEnvironmentVariable("SHARPMP4_PERL") };
+        candidates.AddRange((Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator)
+            .Where(d => !string.IsNullOrWhiteSpace(d)).Select(d => Path.Combine(d.Trim(), executable)));
+        if (OperatingSystem.IsWindows())
+            candidates.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Git", "usr", "bin", "perl.exe"));
+        string? perl = candidates.FirstOrDefault(c => !string.IsNullOrEmpty(c) && File.Exists(c));
+        return perl == null ? null : (perl, exifTool);
+    }
+
+    /// <summary>
+    /// The files whose metadata is compared: the metadata set, the FATE samples, the file format
+    /// conformance files and the tests' metadata files. SHARPMP4_CONFORMANCE_FILTER narrows them as it does the others.
+    /// </summary>
+    public static IReadOnlyList<string> MetadataFiles(string root)
+    {
+        var files = MetadataSetFiles(root).ToList();
+        files.AddRange(FateFiles(root));
+        files.AddRange(FileFormatFiles(root).Select(f => f.File));
+        // and the tests' own, which ExifTool wrote the tags of
+        string testData = Path.Combine(AppContext.BaseDirectory, "TestData", "Metadata");
+        if (Directory.Exists(testData))
+            files.AddRange(Directory.EnumerateFiles(testData, "*.mp4"));
+        return files.OrderBy(f => f, StringComparer.Ordinal).ToList();
+    }
+
+    /// <summary>The files of the metadata set, in a stable order. SHARPMP4_CONFORMANCE_FILTER narrows them.</summary>
+    public static IReadOnlyList<string> MetadataSetFiles(string root)
+    {
+        string folder = Path.Combine(root, "metadata");
+        if (!Directory.Exists(folder))
+            return [];
+
+        string? filter = Environment.GetEnvironmentVariable("SHARPMP4_CONFORMANCE_FILTER");
+        return Directory.EnumerateFiles(folder, "*", SearchOption.AllDirectories)
+            .Where(f => !f.EndsWith(".part", StringComparison.OrdinalIgnoreCase))
+            .Where(f => string.IsNullOrEmpty(filter) || f.Contains(filter, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(f => f, StringComparer.Ordinal)
+            .ToList();
+    }
+
+    /// <summary>
     /// Every FATE sample that is an ISOBMFF or QuickTime file, in a stable order. Those that were not
     /// are listed in not-isobmff.txt, not kept. SHARPMP4_CONFORMANCE_FILTER narrows them.
     /// </summary>

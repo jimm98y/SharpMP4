@@ -170,7 +170,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSoftwareBox() extends Box('©swr') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleSoftwareBox() extends Box('©swr') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -180,7 +180,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleCreatorBox() extends Box('©swf') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleCreatorBox() extends Box('©swf') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -421,7 +421,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class TimeCodeTrackBox() extends Box('tmcd') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class TimeCodeTrackBox() extends Box('tmcd') {\r\n Box boxes[];\r\n } \r\n aligned(8) class TimeCodeSampleEntry() extends SampleEntry('tmcd') {\r\n unsigned int(32) reserved;\r\n unsigned int(32) timecodeFlags;\r\n unsigned int(32) timeScale;\r\n unsigned int(32) frameDuration;\r\n unsigned int(8) numberOfFrames;\r\n unsigned int(8) reserved2;\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -476,7 +476,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class GoogleStartTimeBox() extends Box('gsst') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class GoogleStartTimeBox() extends Box('gsst') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -486,7 +486,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class GoogleTrackDurationBox() extends Box('gstd') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class GoogleTrackDurationBox() extends Box('gstd') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -531,7 +531,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class LoadBox() extends Box('load') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class LoadBox() extends Box('load') {\r\n signed int(32) preloadStartTime;\r\n signed int(32) preloadDuration;\r\n unsigned int(32) preloadFlags;\r\n unsigned int(32) defaultHints;\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -546,17 +546,17 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleCleanApertureDimensionsBox() extends Box('clef') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleCleanApertureDimensionsBox() extends FullBox('clef') {\r\n unsigned int(32) width;\r\n unsigned int(32) height;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEncodedPixelsDimensionsBox() extends Box('enof') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleEncodedPixelsDimensionsBox() extends FullBox('enof') {\r\n unsigned int(32) width;\r\n unsigned int(32) height;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleProductionApertureDimensionsBox() extends Box('prof') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleProductionApertureDimensionsBox() extends FullBox('prof') {\r\n unsigned int(32) width;\r\n unsigned int(32) height;\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -581,12 +581,12 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleDataReferenceAliasBox() extends Box('alis') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleDataReferenceAliasBox() extends FullBox('alis') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AudioChannelLayoutBox() extends Box('chan') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AudioChannelLayoutBox() extends FullBox('chan') {\r\n unsigned int(32) channelLayoutTag;\r\n unsigned int(32) channelBitmap;\r\n unsigned int(32) numberChannelDescriptions;\r\n AudioChannelDescription channelDescriptions[numberChannelDescriptions];\r\n }\r\n aligned(8) class AudioChannelDescription() {\r\n unsigned int(32) channelLabel;\r\n unsigned int(32) channelFlags;\r\n unsigned int(32) coordinates[3];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -611,7 +611,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ClfnBox() extends Box('clfn') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class ClfnBox() extends Box('clfn') {\r\n string value;\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -646,7 +646,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class CustomBox() extends Box('----') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class CustomBox() extends Box('----') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -696,7 +696,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class FairPlayUserNameBox() extends Box('name') {\r\n bit(8) data[]; \r\n }"
+      "syntax": "aligned(8) class FairPlayUserNameBox() extends Box('name') {\r\n bit(8) data[]; \r\n }\r\n aligned(8) class ITunesMetadataNameBox() extends FullBox('name') {\r\n string name; \r\n }"
     },
     {
       "containers": [ "*" ],
@@ -723,7 +723,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ID3TagBox() extends FullBox('ID32') {\r\n bit(8) data[]; \r\n }"
+      "syntax": "aligned(8) class ID3TagBox() extends FullBox('ID32') {\r\n bit(1) pad;\r\n unsigned int(5)[3] language;\r\n bit(8) data[]; \r\n }"
     },
     {
       "containers": [ "*" ],
@@ -944,107 +944,107 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ApplePtvBox() extends Box('ptv ') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class ApplePtvBox() extends Box('ptv ') {\r\n\t unsigned int(16) displaySize;\r\n unsigned int(16) reserved1;\r\n unsigned int(16) reserved2;\r\n unsigned int(8) slideShow;\r\n unsigned int(8) playOnOpen;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleArgBox() extends Box('©arg') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleArgBox() extends Box('©arg') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleArkBox() extends Box('©ark') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleArkBox() extends Box('©ark') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleCokBox() extends Box('©cok') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleCokBox() extends Box('©cok') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleComBox() extends Box('©com') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleComBox() extends Box('©com') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleDirBox() extends Box('©dir') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleDirBox() extends Box('©dir') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd1Box() extends Box('©ed1') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleEd1Box() extends Box('©ed1') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd2Box() extends Box('©ed2') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleEd2Box() extends Box('©ed2') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd3Box() extends Box('©ed3') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleEd3Box() extends Box('©ed3') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd4Box() extends Box('©ed4') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleEd4Box() extends Box('©ed4') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd5Box() extends Box('©ed5') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleEd5Box() extends Box('©ed5') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd6Box() extends Box('©ed6') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleEd6Box() extends Box('©ed6') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd7Box() extends Box('©ed7') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleEd7Box() extends Box('©ed7') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd8Box() extends Box('©ed8') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleEd8Box() extends Box('©ed8') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd9Box() extends Box('©ed9') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleEd9Box() extends Box('©ed9') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleFmtBox() extends Box('©fmt') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleFmtBox() extends Box('©fmt') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleInfBox() extends Box('©inf') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleInfBox() extends Box('©inf') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleIsrBox() extends Box('©isr') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleIsrBox() extends Box('©isr') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleLabBox() extends Box('©lab') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleLabBox() extends Box('©lab') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleLalBox() extends Box('©lal') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleLalBox() extends Box('©lal') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleMakBox() extends Box('©mak') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleMakBox() extends Box('©mak') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -1054,57 +1054,57 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleNakBox() extends Box('©nak') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleNakBox() extends Box('©nak') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ApplePdkBox() extends Box('©pdk') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class ApplePdkBox() extends Box('©pdk') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ApplePhgBox() extends Box('©phg') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class ApplePhgBox() extends Box('©phg') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleProducerBox() extends Box('©prd') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleProducerBox() extends Box('©prd') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ApplePrfBox() extends Box('©prf') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class ApplePrfBox() extends Box('©prf') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ApplePrkBox() extends Box('©prk') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class ApplePrkBox() extends Box('©prk') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ApplePrlBox() extends Box('©prl') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class ApplePrlBox() extends Box('©prl') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSnkBox() extends Box('©snk') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleSnkBox() extends Box('©snk') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSnmBox() extends Box('©snm') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleSnmBox() extends Box('©snm') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSrcBox() extends Box('©src') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleSrcBox() extends Box('©src') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSwkBox() extends Box('©swk') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleSwkBox() extends Box('©swk') {\r\n Box boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -1199,7 +1199,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class FontTableBox() extends Box('ftab') {\r\n bit(8) data[];\r\n }\r\n aligned(8) class FontRecord() {\r\n unsigned int(16) fontId;\r\n unsigned int(8) count;\r\n unsigned int(8) fontName[count];\r\n }"
+      "syntax": "aligned(8) class FontTableBox() extends Box('ftab') {\r\n unsigned int(16) entryCount;\r\n FontRecord fontEntries[entryCount];\r\n }\r\n aligned(8) class FontRecord() {\r\n unsigned int(16) fontId;\r\n unsigned int(8) count;\r\n unsigned int(8) fontName[count];\r\n }"
     },
     {
       "containers": [ "*" ],

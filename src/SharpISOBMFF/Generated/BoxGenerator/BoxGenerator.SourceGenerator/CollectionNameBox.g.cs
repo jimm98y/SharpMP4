@@ -6,19 +6,27 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class CollectionNameBox() extends Box ('coll'){
- bit(8) data[];
- }
+aligned(8) class CollectionNameBox() extends FullBox('coll', version = 0, 0) {
+ bit(1) reserved = 0;
+ unsigned int(5)[3] language;
+ string value;
+}
 */
-public partial class CollectionNameBox : Box
+public partial class CollectionNameBox : FullBox
 {
 	public const string TYPE = "coll";
 	public override string DisplayName { get { return "CollectionNameBox"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	protected bool reserved = false; 
+	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-	public CollectionNameBox(): base(IsoStream.FromFourCC("coll"))
+	protected string language; 
+	public string Language { get { return this.language; } set { this.language = value; } }
+
+	protected BinaryUTF8String value; 
+	public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
+
+	public CollectionNameBox(): base(IsoStream.FromFourCC("coll"), 0, 0)
 	{
 	}
 
@@ -26,7 +34,9 @@ public partial class CollectionNameBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		boxSize += stream.ReadBit(boxSize, readSize,  out this.reserved, "reserved"); 
+		boxSize += stream.ReadIso639(boxSize, readSize,  out this.language, "language"); 
+		boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.value, "value"); 
 		return boxSize;
 	}
 
@@ -34,7 +44,9 @@ public partial class CollectionNameBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		boxSize += stream.WriteBit( this.reserved, "reserved"); 
+		boxSize += stream.WriteIso639( this.language, "language"); 
+		boxSize += stream.WriteStringZeroTerminated( this.value, "value"); 
 		return boxSize;
 	}
 
@@ -42,7 +54,9 @@ public partial class CollectionNameBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		boxSize += 1; // reserved
+		boxSize += 15; // language
+		boxSize += IsoStream.CalculateStringSize(value); // value
 		return boxSize;
 	}
 }
