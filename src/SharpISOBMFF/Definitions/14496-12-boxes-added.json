@@ -93,6 +93,27 @@
       "description": "Metadata sample entries",
       "type": "Box",
       "syntax": "aligned(8) class DataEntryBaseBox(entry_type, bit(24) flags) \r\nextends FullBox(entry_type, version = 0, flags) { \r\n\r\n} "
+    },
+    {
+      "fourcc": "ssix",
+      "containers": [ "file" ],
+      "description": "Subsegment index box (14496-12:2015 8.16.4.2), which only its compressed form had",
+      "type": "Box",
+      "syntax": "aligned(8) class SubsegmentIndexBox extends FullBox('ssix', 0, 0) { \r\n unsigned int(32) subsegment_count; \r\n for( i=1; i <= subsegment_count; i++) \r\n { \r\n  unsigned int(32) range_count; \r\n  for ( j=1; j <= range_count; j++) { \r\n   unsigned int(8) level; \r\n   unsigned int(24) range_size; \r\n  }  \r\n } \r\n} "
+    },
+    {
+      "fourcc": "rtcp",
+      "containers": [ "stsd" ],
+      "description": "RTCP reception hint sample entry (14496-12:2015 9.4.2.3): otherwise identical in structure to the sample entry format for RTP",
+      "type": "Box",
+      "syntax": "class ReceivedRtcpHintSampleEntry() extends HintSampleEntry ('rtcp') {\r\n\tuint(16)\t\thinttrackversion = 1;\r\n\tuint(16)\t\thighestcompatibleversion = 1;\r\n\tuint(32)\t\tmaxpacketsize;\r\n}"
+    },
+    {
+      "fourcc": "msrc",
+      "containers": [ "trgr" ],
+      "description": "Multi-source presentation track group (14496-12:2015 8.3.4.3): the fields of a TrackGroupTypeBox alone",
+      "type": "Box",
+      "syntax": "aligned(8) class MultiSourcePresentationBox extends TrackGroupTypeBox('msrc') {\r\n}"
     }
   ]
 }

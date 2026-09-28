@@ -21,6 +21,9 @@ public sealed class DumpedBox
     public Dictionary<string, string> Fields { get; }
 
     public List<DumpedBox> Children { get; } = [];
+
+    /// <summary>The box SharpMP4 read, of a tree made of what it read; null in GPAC's.</summary>
+    public SharpISOBMFF.Box? Source { get; init; }
 }
 
 /// <summary>

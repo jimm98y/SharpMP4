@@ -2968,7 +2968,8 @@ namespace SharpISOBMFF
 
         public override string ToString()
         {
-            return GetString(Bytes);
+            // one not read - a field its box did not have - is no text
+            return Bytes == null ? "" : GetString(Bytes);
         }
 
         /// <summary>

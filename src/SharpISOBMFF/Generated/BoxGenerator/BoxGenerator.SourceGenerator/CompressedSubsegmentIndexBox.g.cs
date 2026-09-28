@@ -12,10 +12,10 @@ aligned(8) class CompressedSubsegmentIndexBox
 */
 public partial class CompressedSubsegmentIndexBox : CompressedBox
 {
-	public const string TYPE = "ssix";
+	public const string TYPE = "!ssx";
 	public override string DisplayName { get { return "CompressedSubsegmentIndexBox"; } }
 
-	public CompressedSubsegmentIndexBox(): base(IsoStream.FromFourCC("ssix"))
+	public CompressedSubsegmentIndexBox(): base(IsoStream.FromFourCC("!ssx"))
 	{
 	}
 

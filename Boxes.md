@@ -6,6 +6,10 @@
 |\_htc|HTCInfoBox|
 |\_yaw|YawBox|
 |----|CustomBox|
+|!mof|CompressedMovieFragmentBox|
+|!mov|CompressedMovieBox|
+|!six|CompressedSegmentIndexBox|
+|!ssx|CompressedSubsegmentIndexBox|
 |.mp3|AudioSampleEntry|
 |@day|RicohAppleRecordingYear2Box|
 |@mak|RicohAppleMakBox|
@@ -463,6 +467,7 @@
 |ienc|ItemEncryptionBox|
 |iicc|AppleICCProfileBox|
 |iinf|ItemInfoBox|
+|iKMS|ISMAKMSBox|
 |iloc|ItemLocationBox|
 |ilst|AppleItemListBox|
 |ima4|AudioSampleEntry|
@@ -491,6 +496,8 @@
 |iroi|IroiInfoBox|
 |irot|ImageRotation|
 |iscl|ImageScaling|
+|iSFM|ISMASampleFormatBox|
+|iSLT|ISMACrypSaltBox|
 |ispe|ImageSpatialExtentsProperty|
 |it35|It35Box|
 |itai|ItaiBox|
@@ -500,6 +507,7 @@
 |j2kH|J2kHBox|
 |j2ki|VisualSampleEntry|
 |j2kL|J2kLayersBox|
+|j420|VisualSampleEntry|
 |jbrd|JpegBitstreamReconstructionBox|
 |jpeg|VisualSampleEntry|
 |JPEG|JPEGInfoBox|
@@ -606,6 +614,7 @@
 |mrlv|MarlinValuesBox|
 |mshp|MeshProjection|
 |mskC|MaskConfigurationProperty|
+|msrc|MultiSourcePresentationBox|
 |mstv|MVCSubTrackViewBox|
 |msVo|AudioSampleEntry|
 |MTDT|PspMtdtBox|
@@ -765,6 +774,7 @@
 |rsrc|AppleDataReferenceResourceBox|
 |rsrp|ReceivedSrtpHintSampleEntry|
 |rssr|ReceivedSsrcBox|
+|rtcp|ReceivedRtcpHintSampleEntry|
 |RTHU|RTHUPreviewImageBox|
 |rtng|AppleRatingBox|
 |rtp |RtpMovieHintInformation|
@@ -837,7 +847,7 @@
 |srat|SamplingRateBox|
 |srpp|SRTPProcessBox|
 |srtp|SrtpHintSampleEntry|
-|ssix|CompressedSubsegmentIndexBox|
+|ssix|SubsegmentIndexBox|
 |ssld|SuggestedTimeDisplayDurationProperty|
 |ssmv|AudioSampleEntry|
 |ssrc|NonPrimarySourceBox|

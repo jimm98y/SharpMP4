@@ -144,6 +144,11 @@ namespace BoxGenerator
             Entries = new SortedDictionary<string, List<PseudoClass>>();
             foreach (var item in parsedClasses)
             {
+                // A compressed box - CompressedBox('!ssx', 'ssix') - is a box of its own type, '!ssx', which holds a
+                // compressed 'ssix' (14496-12 8.19): not an 'ssix'
+                if (item.Value.Extended != null && !string.IsNullOrEmpty(item.Value.Extended.OldType) && item.Value.Extended.BoxType?.StartsWith("!") != true)
+                    item.Value.Extended.BoxType = "!" + item.Value.Extended.OldType;
+
                 if (item.Value.Extended != null && !string.IsNullOrWhiteSpace(item.Value.Extended.BoxType))
                 {
                     if (item.Value.ParsedBoxType == ParsedBoxType.Box)
@@ -197,7 +202,7 @@ namespace BoxGenerator
             "avc2","avc3","avc4","vp08","vp09","vp10","av02","apcn","dvhe","dvav","mjpg","uncv","j2ki",
             // quicktime https://developer.apple.com/documentation/quicktime-file-format/video_sample_description
             "cvid","jpeg","smc ","rle ","rpza","kpcd","png ","mjpa","mjpb","SVQ1","SVQ3","dvc ","dvcp","gif ","h263","tiff","raw ","2vuY","yuv2","v308","v408",
-            "v216","v410","v210","qhvc",
+            "v216","v410","v210","qhvc","j420",
             // met in FFmpeg's samples: ProRes, DNxHD/HR and Avid, Hap, DXV, CineForm, AIC, DVCPRO HD, Pixlet,
             // QuickDraw, Media 100, Indeo 3, VP6 with alpha, 8BPS and VC-1
             "apch","apco","apcs","ap4h","AVdn","AVdh","AVDJ","Hap1","Hap5","HapY","HapM","HapA","DXD3","DXDI",

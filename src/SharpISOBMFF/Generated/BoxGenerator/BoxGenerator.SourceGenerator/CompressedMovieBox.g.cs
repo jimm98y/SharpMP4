@@ -12,10 +12,10 @@ aligned(8) class CompressedMovieBox
 */
 public partial class CompressedMovieBox : CompressedBox
 {
-	public const string TYPE = "moov";
+	public const string TYPE = "!mov";
 	public override string DisplayName { get { return "CompressedMovieBox"; } }
 
-	public CompressedMovieBox(): base(IsoStream.FromFourCC("moov"))
+	public CompressedMovieBox(): base(IsoStream.FromFourCC("!mov"))
 	{
 	}
 

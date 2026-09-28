@@ -38,7 +38,9 @@ public class ConformanceTests
 
     /// <summary>
     /// Reads every file format conformance file and checks SharpMP4 finds the boxes GPAC's dump
-    /// has, where it has them and as large. Needs no ffmpeg: the dumps come with the files.
+    /// has, where it has them and as large, and the fields of each as GPAC gives them. Needs no
+    /// ffmpeg: the dumps come with the files. GPAC's fields SharpMP4 has none of the name of are
+    /// listed in the report, the most common first.
     /// </summary>
     [TestMethod]
     public void IsoBmffBoxesReadAsGpacDumpsThem()
@@ -76,7 +78,12 @@ public class ConformanceTests
 
         var ordered = results.OrderBy(r => r.Path, StringComparer.Ordinal).ToList();
         string summary = Summarise("isobmff", root, ordered);
-        File.WriteAllText(Path.Combine(root, "report-isobmff.txt"), summary + Details(root, ordered));
+        var unpaired = new StringBuilder();
+        unpaired.AppendLine();
+        unpaired.AppendLine($"GPAC's fields SharpMP4 has none of the name of, by how often GPAC gives them ({BoxTreeComparison.Unpaired.Count} kinds):");
+        foreach (var field in BoxTreeComparison.Unpaired.OrderByDescending(f => f.Value).ThenBy(f => f.Key, StringComparer.Ordinal))
+            unpaired.AppendLine($"  {field.Value,6} x {field.Key}");
+        File.WriteAllText(Path.Combine(root, "report-isobmff.txt"), summary + unpaired + Details(root, ordered));
 
         int failing = ordered.Count(r => r.Outcome is Outcome.Diverged or Outcome.SharpFailed);
         Assert.AreEqual(0, failing, summary);

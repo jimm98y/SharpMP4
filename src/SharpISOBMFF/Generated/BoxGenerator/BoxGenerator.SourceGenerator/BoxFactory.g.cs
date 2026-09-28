@@ -39,6 +39,10 @@ namespace SharpISOBMFF
                case "_htc":  return new HTCInfoBox();
                case "_yaw":  return new YawBox();
                case "----":  return new CustomBox();
+               case "!mof":  return new CompressedMovieFragmentBox();
+               case "!mov":  return new CompressedMovieBox();
+               case "!six":  return new CompressedSegmentIndexBox();
+               case "!ssx":  return new CompressedSubsegmentIndexBox();
                case ".mp3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC(".mp3"));else return new CodecConfigurationBox(IsoStream.FromFourCC(".mp3"));break;
                case "@day":  return new RicohAppleRecordingYear2Box();
                case "@mak":  return new RicohAppleMakBox();
@@ -496,6 +500,7 @@ namespace SharpISOBMFF
                case "ienc":  return new ItemEncryptionBox();
                case "iicc":  return new AppleICCProfileBox();
                case "iinf":  return new ItemInfoBox();
+               case "iKMS":  return new ISMAKMSBox();
                case "iloc":  return new ItemLocationBox();
                case "ilst":  return new AppleItemListBox();
                case "ima4": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ima4"));else return new CodecConfigurationBox(IsoStream.FromFourCC("ima4"));break;
@@ -524,6 +529,8 @@ namespace SharpISOBMFF
                case "iroi":  return new IroiInfoBox();
                case "irot":  return new ImageRotation();
                case "iscl":  return new ImageScaling();
+               case "iSFM":  return new ISMASampleFormatBox();
+               case "iSLT":  return new ISMACrypSaltBox();
                case "ispe":  return new ImageSpatialExtentsProperty();
                case "it35":  return new It35Box();
                case "itai":  return new ItaiBox();
@@ -533,6 +540,7 @@ namespace SharpISOBMFF
                case "j2kH":  return new J2kHBox();
                case "j2ki": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("j2ki"));break;
                case "j2kL":  return new J2kLayersBox();
+               case "j420": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("j420"));break;
                case "jbrd":  return new JpegBitstreamReconstructionBox();
                case "jpeg": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("jpeg"));break;
                case "JPEG":  return new JPEGInfoBox();
@@ -627,8 +635,8 @@ namespace SharpISOBMFF
                case "MMA1":  return new MinoltaMMA1Box();
                case "moat":  return new MoatBox();
                case "modl":  return new ModelBoxmodlDup(); // TODO: fix duplicate
-               case "moof": return new MovieFragmentBox(); // TODO: box is ambiguous in between MovieFragmentBox and CompressedMovieFragmentBox
-               case "moov": return new MovieBox(); // TODO: box is ambiguous in between MovieBox and CompressedMovieBox
+               case "moof":  return new MovieFragmentBox();
+               case "moov":  return new MovieBox();
                case "mp4a": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("mp4a"));else return new Mp4aBox();break;
                case "mp4s": if(parent == "stsd")  return new MpegSampleEntry();break;
                case "mp4v": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("mp4v"));break;
@@ -639,6 +647,7 @@ namespace SharpISOBMFF
                case "mrlv":  return new MarlinValuesBox();
                case "mshp":  return new MeshProjection();
                case "mskC":  return new MaskConfigurationProperty();
+               case "msrc":  return new MultiSourcePresentationBox();
                case "mstv":  return new MVCSubTrackViewBox();
                case "msVo": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("msVo"));else return new CodecConfigurationBox(IsoStream.FromFourCC("msVo"));break;
                case "MTDT":  return new PspMtdtBox();
@@ -798,6 +807,7 @@ namespace SharpISOBMFF
                case "rsrc":  return new AppleDataReferenceResourceBox();
                case "rsrp":  return new ReceivedSrtpHintSampleEntry();
                case "rssr":  return new ReceivedSsrcBox();
+               case "rtcp":  return new ReceivedRtcpHintSampleEntry();
                case "RTHU":  return new RTHUPreviewImageBox();
                case "rtng": if(parent == "udta") return new ThreeGPPRatingBox(); else return new AppleRatingBox();
                case "rtp ": if(parent == "stsd") return new RtpHintSampleEntry(); else return new RtpMovieHintInformation();
@@ -838,7 +848,7 @@ namespace SharpISOBMFF
                case "sgpd":  return new SampleGroupDescriptionBox();
                case "shot":  return new ShotNameBox();
                case "shwm":  return new ShowMovementBox();
-               case "sidx": return new SegmentIndexBox(); // TODO: box is ambiguous in between SegmentIndexBox and CompressedSegmentIndexBox
+               case "sidx":  return new SegmentIndexBox();
                case "SIGM":  return new SigmaEXIFBox();
                case "sinf":  return new ProtectionSchemeInfoBox();
                case "skip":  return new FreeSpaceBoxskipDup(); // TODO: fix duplicate
@@ -870,7 +880,7 @@ namespace SharpISOBMFF
                case "srat":  return new SamplingRateBox();
                case "srpp":  return new SRTPProcessBox();
                case "srtp":  return new SrtpHintSampleEntry();
-               case "ssix":  return new CompressedSubsegmentIndexBox();
+               case "ssix":  return new SubsegmentIndexBox();
                case "ssld":  return new SuggestedTimeDisplayDurationProperty();
                case "ssmv": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ssmv"));else return new CodecConfigurationBox(IsoStream.FromFourCC("ssmv"));break;
                case "ssrc":  return new NonPrimarySourceBox();

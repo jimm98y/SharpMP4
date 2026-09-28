@@ -6,17 +6,15 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class CompressedMovieFragmentBox
-	extends CompressedBox('!mof', 'moof') {
+aligned(8) class MultiSourcePresentationBox extends TrackGroupTypeBox('msrc') {
 }
-
 */
-public partial class CompressedMovieFragmentBox : CompressedBox
+public partial class MultiSourcePresentationBox : TrackGroupTypeBox
 {
-	public const string TYPE = "!mof";
-	public override string DisplayName { get { return "CompressedMovieFragmentBox"; } }
+	public const string TYPE = "msrc";
+	public override string DisplayName { get { return "MultiSourcePresentationBox"; } }
 
-	public CompressedMovieFragmentBox(): base(IsoStream.FromFourCC("!mof"))
+	public MultiSourcePresentationBox(): base(IsoStream.FromFourCC("msrc"))
 	{
 	}
 
@@ -24,7 +22,6 @@ public partial class CompressedMovieFragmentBox : CompressedBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
 		return boxSize;
 	}
 
@@ -32,7 +29,6 @@ public partial class CompressedMovieFragmentBox : CompressedBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteBoxArrayTillEnd(this);
 		return boxSize;
 	}
 
@@ -40,7 +36,6 @@ public partial class CompressedMovieFragmentBox : CompressedBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
 }
