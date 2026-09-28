@@ -38,14 +38,18 @@ class ALSSpecificConfig()
     uimsbf(16) chan_config_info;
   }
   if (chan_sort) {
-    for (c = 0; c < channels; c++)
-      uimsbf(1) chan_pos[c]; // 1..16 uimsbf 
+    for (c = 0; c <= channels; c++)
+      uimsbf(ChBits(channels)) chan_pos[c]; // ChBits = ceil[log2(channels+1)] = 1..16
   }
-  bslbf(1) byte_align; // TODO: 0..7 bslbf 
+  byte_alignment(); // byte_align, 0..7 bits: relative to the start of ALSSpecificConfig
   uimsbf(32) header_size;
   uimsbf(32) trailer_size;
-  bslbf(header_size * 8) orig_header;
-  bslbf(trailer_size * 8) orig_trailer;
+  if (header_size != 0xFFFFFFFF) {
+    bslbf(8) orig_header[header_size];
+  }
+  if (trailer_size != 0xFFFFFFFF) {
+    bslbf(8) orig_trailer[trailer_size];
+  }
   if (crc_enabled) {
     uimsbf(32) crc;
   }
@@ -56,7 +60,7 @@ class ALSSpecificConfig()
   }
   if (aux_data_enabled) {
     uimsbf(32) aux_size;
-    bslbf(aux_size * 8) aux_data;
+    bslbf(8) aux_data[aux_size];
   }
 }
 
@@ -151,11 +155,11 @@ public partial class ALSSpecificConfig : IMp4Serializable
 	protected ushort chan_config_info; 
 	public ushort ChanConfigInfo { get { return this.chan_config_info; } set { this.chan_config_info = value; } }
 
-	protected bool[] chan_pos;  //  1..16 uimsbf 
-	public bool[] ChanPos { get { return this.chan_pos; } set { this.chan_pos = value; } }
+	protected byte[][] chan_pos;  //  ChBits = ceil[log2(channels+1)] = 1..16
+	public byte[][] ChanPos { get { return this.chan_pos; } set { this.chan_pos = value; } }
 
-	protected bool byte_align;  //  TODO: 0..7 bslbf 
-	public bool ByteAlign { get { return this.byte_align; } set { this.byte_align = value; } }
+	protected AlignmentBits byte_alignment;  //  byte_align, 0..7 bits: relative to the start of ALSSpecificConfig
+	public AlignmentBits ByteAlignment { get { return this.byte_alignment; } set { this.byte_alignment = value; } }
 
 	protected uint header_size; 
 	public uint HeaderSize { get { return this.header_size; } set { this.header_size = value; } }
@@ -223,17 +227,25 @@ public partial class ALSSpecificConfig : IMp4Serializable
 		if (chan_sort)
 		{
 
-			this.chan_pos = stream.SafeAllocate<bool>(boxSize, readSize, IsoStream.GetInt( channels), "chan_pos");
-			for (int c = 0; c < channels; c++)
+			this.chan_pos = stream.SafeAllocate<byte[]>(boxSize, readSize, IsoStream.GetInt( channels + 1), "chan_pos");
+			for (int c = 0; c <= channels; c++)
 			{
-				boxSize += stream.ReadBit(boxSize, readSize,  out this.chan_pos[c], "chan_pos"); // 1..16 uimsbf 
+				boxSize += stream.ReadBits(boxSize, readSize, (uint)(ChBits(channels) ),  out this.chan_pos[c], "chan_pos"); // ChBits = ceil[log2(channels+1)] = 1..16
 			}
 		}
-		boxSize += stream.ReadBit(boxSize, readSize,  out this.byte_align, "byte_align"); // TODO: 0..7 bslbf 
+		boxSize += stream.ReadByteAlignment(boxSize, readSize,  out this.byte_alignment, "byte_alignment"); // byte_align, 0..7 bits: relative to the start of ALSSpecificConfig
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.header_size, "header_size"); 
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.trailer_size, "trailer_size"); 
-		boxSize += stream.ReadBits(boxSize, readSize, (uint)(header_size * 8 ),  out this.orig_header, "orig_header"); 
-		boxSize += stream.ReadBits(boxSize, readSize, (uint)(trailer_size * 8 ),  out this.orig_trailer, "orig_trailer"); 
+
+		if (header_size != 0xFFFFFFFF)
+		{
+			boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(header_size),  out this.orig_header, "orig_header"); 
+		}
+
+		if (trailer_size != 0xFFFFFFFF)
+		{
+			boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(trailer_size),  out this.orig_trailer, "orig_trailer"); 
+		}
 
 		if (crc_enabled)
 		{
@@ -253,7 +265,7 @@ public partial class ALSSpecificConfig : IMp4Serializable
 		if (aux_data_enabled)
 		{
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.aux_size, "aux_size"); 
-			boxSize += stream.ReadBits(boxSize, readSize, (uint)(aux_size * 8 ),  out this.aux_data, "aux_data"); 
+			boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(aux_size),  out this.aux_data, "aux_data"); 
 		}
 		return boxSize;
 	}
@@ -296,16 +308,24 @@ public partial class ALSSpecificConfig : IMp4Serializable
 		if (chan_sort)
 		{
 
-			for (int c = 0; c < channels; c++)
+			for (int c = 0; c <= channels; c++)
 			{
-				boxSize += stream.WriteBit( this.chan_pos[c], "chan_pos"); // 1..16 uimsbf 
+				boxSize += stream.WriteBits((uint)(ChBits(channels) ),  this.chan_pos[c], "chan_pos"); // ChBits = ceil[log2(channels+1)] = 1..16
 			}
 		}
-		boxSize += stream.WriteBit( this.byte_align, "byte_align"); // TODO: 0..7 bslbf 
+		boxSize += stream.WriteByteAlignment( this.byte_alignment, "byte_alignment"); // byte_align, 0..7 bits: relative to the start of ALSSpecificConfig
 		boxSize += stream.WriteUInt32( this.header_size, "header_size"); 
 		boxSize += stream.WriteUInt32( this.trailer_size, "trailer_size"); 
-		boxSize += stream.WriteBits((uint)(header_size * 8 ),  this.orig_header, "orig_header"); 
-		boxSize += stream.WriteBits((uint)(trailer_size * 8 ),  this.orig_trailer, "orig_trailer"); 
+
+		if (header_size != 0xFFFFFFFF)
+		{
+			boxSize += stream.WriteUInt8Array((uint)(header_size),  this.orig_header, "orig_header"); 
+		}
+
+		if (trailer_size != 0xFFFFFFFF)
+		{
+			boxSize += stream.WriteUInt8Array((uint)(trailer_size),  this.orig_trailer, "orig_trailer"); 
+		}
 
 		if (crc_enabled)
 		{
@@ -324,7 +344,7 @@ public partial class ALSSpecificConfig : IMp4Serializable
 		if (aux_data_enabled)
 		{
 			boxSize += stream.WriteUInt32( this.aux_size, "aux_size"); 
-			boxSize += stream.WriteBits((uint)(aux_size * 8 ),  this.aux_data, "aux_data"); 
+			boxSize += stream.WriteUInt8Array((uint)(aux_size),  this.aux_data, "aux_data"); 
 		}
 		return boxSize;
 	}
@@ -367,16 +387,24 @@ public partial class ALSSpecificConfig : IMp4Serializable
 		if (chan_sort)
 		{
 
-			for (int c = 0; c < channels; c++)
+			for (int c = 0; c <= channels; c++)
 			{
-				boxSize += 1; // chan_pos
+				boxSize += (ulong)(ChBits(channels) ); // chan_pos
 			}
 		}
-		boxSize += 1; // byte_align
+		boxSize += IsoStream.CalculateByteAlignmentSize(boxSize, byte_alignment); // byte_alignment
 		boxSize += 32; // header_size
 		boxSize += 32; // trailer_size
-		boxSize += (ulong)(header_size * 8 ); // orig_header
-		boxSize += (ulong)(trailer_size * 8 ); // orig_trailer
+
+		if (header_size != 0xFFFFFFFF)
+		{
+			boxSize += ((ulong)(header_size) * 8); // orig_header
+		}
+
+		if (trailer_size != 0xFFFFFFFF)
+		{
+			boxSize += ((ulong)(trailer_size) * 8); // orig_trailer
+		}
 
 		if (crc_enabled)
 		{
@@ -395,7 +423,7 @@ public partial class ALSSpecificConfig : IMp4Serializable
 		if (aux_data_enabled)
 		{
 			boxSize += 32; // aux_size
-			boxSize += (ulong)(aux_size * 8 ); // aux_data
+			boxSize += ((ulong)(aux_size) * 8); // aux_data
 		}
 		return boxSize;
 	}

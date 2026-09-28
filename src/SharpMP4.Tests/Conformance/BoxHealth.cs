@@ -79,9 +79,61 @@ public static class BoxHealth
                     result.Fail(Outcome.Diverged, $"{at}: calculated size", $"{at}: read {read} bytes, calculates {calculated}");
             }
 
+            foreach (var descriptor in DescriptorFields(box))
+                WalkDescriptor(descriptor, at, result);
+
             Walk(BoxTreeComparison.BoxFields(box), type, path, result, unknown);
             Walk(box.Children, type, path, result, unknown);
         }
+    }
+
+    /// <summary>
+    /// A descriptor (ISO/IEC 14496-1) - an ES_Descriptor, its DecoderConfigDescriptor, an
+    /// AudioSpecificConfig - read wrong shows as a box does: bytes left over, or a size worked out from
+    /// what was read that is not the size it declares, as where it read past its end.
+    /// </summary>
+    private static void WalkDescriptor(Descriptor descriptor, string parent, StreamResult result)
+    {
+        string at = $"{parent}/{descriptor.DisplayName}";
+        result.UnitsCompared++;
+        if (descriptor is InvalidDescriptor)
+        {
+            result.Fail(Outcome.Diverged, $"{at}: larger than its parent", $"{at}: declares more than its parent has left");
+            return;
+        }
+
+        ulong padding = descriptor.Padding != null ? (ulong)descriptor.Padding.Length : 0;
+        if (padding > 0)
+            result.Fail(Outcome.Diverged, $"{at}: left over", $"{at}: {padding} bytes left over");
+
+        ulong calculated = descriptor.CalculateSize() + padding * 8;
+        if (calculated != descriptor.SizeOfInstance * 8)
+            result.Fail(Outcome.Diverged, $"{at}: calculated size", $"{at}: declares {descriptor.SizeOfInstance} bytes, calculates {calculated / 8.0}");
+
+        foreach (var child in descriptor.Children ?? [])
+            WalkDescriptor(child, at, result);
+        foreach (var field in DescriptorFields(descriptor))
+            WalkDescriptor(field, at, result);
+    }
+
+    /// <summary>The descriptors an object holds in fields of its own, not as children.</summary>
+    private static List<Descriptor> DescriptorFields(object owner)
+    {
+        var found = new List<Descriptor>();
+        for (var type = owner.GetType(); type != null && type != typeof(object); type = type.BaseType)
+        {
+            foreach (var field in type.GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly))
+            {
+                if (field.Name is "children" or "parent")
+                    continue;
+                object? value = field.GetValue(owner);
+                if (value is Descriptor single && !ReferenceEquals(single, owner))
+                    found.Add(single);
+                else if (value is IEnumerable<Descriptor> many)
+                    found.AddRange(many.Where(d => d != null));
+            }
+        }
+        return found;
     }
 
     /// <summary>

@@ -53,6 +53,8 @@ public partial class GetAudioObjectType : IMp4Serializable
 	public virtual ulong Write(IsoStream stream)
 	{
 		ulong boxSize = 0;
+		if (audioObjectType >= 32) { audioObjectTypeExt = (byte)(audioObjectType - 32); audioObjectType = 31; }
+
 		boxSize += stream.WriteBits(5,  this.audioObjectType, "audioObjectType"); 
 
 		if (audioObjectType == 31)
@@ -67,6 +69,8 @@ public partial class GetAudioObjectType : IMp4Serializable
 	public virtual ulong CalculateSize()
 	{
 		ulong boxSize = 0;
+		if (audioObjectType >= 32) { audioObjectTypeExt = (byte)(audioObjectType - 32); audioObjectType = 31; }
+
 		boxSize += 5; // audioObjectType
 
 		if (audioObjectType == 31)

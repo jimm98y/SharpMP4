@@ -117,7 +117,16 @@ namespace SharpMP4.Tracks
                             genericDecoderSpecificInfo.Write(isoStream);
                             isoStream.SeekFromBeginning(0);
                             audioSpecificConfig = new AudioSpecificConfig();
-                            audioSpecificConfig.Read(isoStream, (ulong)isoStream.GetStreamLength() << 3);
+                            try
+                            {
+                                audioSpecificConfig.Read(isoStream, (ulong)isoStream.GetStreamLength() << 3);
+                            }
+                            catch (EndOfStreamException)
+                            {
+                                // a config cut short (mutagen's ep7.m4b ends before the coreCoderDelay it says
+                                // follows): what was read before its end stands - the object type, the
+                                // sampling frequency and the channel configuration come first
+                            }
                         }
                     }
                 }

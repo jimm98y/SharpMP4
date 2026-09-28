@@ -266,8 +266,18 @@ namespace SharpISOBMFF
 
         private void WriteBitInternal(int value) => this.bitstream.WriteBit(value);
 
+        /// <summary>
+        /// A byte of a whole number field. After bits that end within a byte - uimsbf(24) samplingFrequency after
+        /// the 4 bits of samplingFrequencyIndex (ISO/IEC 14496-3 1.6.2.1) - it is read bit by bit: the stream is at
+        /// the byte after the one the bits are in.
+        /// </summary>
         public int ReadByteInternal()
         {
+            if ((this.bitstream.BitsPosition & 7) != 0)
+            {
+                try { return (int)this.bitstream.ReadBits(8); }
+                catch (EndOfStreamException) { return -1; }
+            }
             return _stream.ReadByte();
         }
 
@@ -278,8 +288,11 @@ namespace SharpISOBMFF
             return (byte)(read & 0xff);
         }
 
+        /// <summary>A byte of a whole number field; after bits that end within a byte, written bit by bit after them.</summary>
         private ulong WriteByte(byte value)
         {
+            if ((this.bitstream.BitsPosition & 7) != 0)
+                return this.bitstream.WriteBits(8, (ulong)value);
             _stream.WriteByte(value);
             return 8;
         }
@@ -567,25 +580,66 @@ namespace SharpISOBMFF
             return count;
         }
 
-        public ulong ReadByteAlignment(ulong boxSize, ulong readSize, out byte value, string name)
+        /// <summary>
+        /// byte_alignment(): the 0 to 7 bits to the next byte (ISO/IEC 14496-3 1.3.36). What it aligns to -
+        /// the start of an AudioSpecificConfig (Table 4.2, Note 1), of a box - starts on a byte of the
+        /// stream, so the stream's position tells how many.
+        /// </summary>
+        public ulong ReadByteAlignment(ulong boxSize, ulong readSize, out AlignmentBits value, string name)
         {
-            long bytePos = this.bitstream.BitsPosition >> 3;
-            long currentBytePos = bytePos << 3;
-            uint bitsToRead = (uint)(8 - (this.bitstream.BitsPosition - currentBytePos));
-            return ReadBits(boxSize, readSize, bitsToRead, out value, name);
+            int bits = (int)((8 - (this.bitstream.BitsPosition & 7)) & 7);
+            ulong size = ReadBits(boxSize, readSize, (uint)bits, out byte read, name);
+            value = new AlignmentBits(read, bits);
+            return size;
         }
 
-        public ulong WriteByteAlignment(byte value, string name)
+        public ulong WriteByteAlignment(AlignmentBits value, string name)
         {
-            long bytePos = this.bitstream.BitsPosition >> 3;
-            long currentBytePos = bytePos << 3;
-            uint bitsToWrite = (uint)(8 - (this.bitstream.BitsPosition - currentBytePos));
-            return WriteBits(bitsToWrite, value, name);
+            int bits = (int)((8 - (this.bitstream.BitsPosition & 7)) & 7);
+            // the bits as they were read, where they still align; zeros where what comes before has changed
+            return WriteBits((uint)bits, bits == value.Bits ? value.Value : (byte)0, name);
         }
 
-        public static ulong CalculateByteAlignmentSize(ulong boxSize, byte value)
+        /// <summary>
+        /// The bits left of a class after its last field, which need not start or end on a byte: kept as they
+        /// are, 8 a byte, the last byte holding what is left over in its low bits.
+        /// </summary>
+        public ulong ReadRemainingBits(ulong count, out RemainingBits value, string name)
         {
-            return 8 - (boxSize % 8);
+            var bytes = new byte[(count + 7) / 8];
+            ulong left = count;
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                uint bits = (uint)Math.Min(8UL, left);
+                bytes[i] = (byte)this.bitstream.ReadBits(bits);
+                left -= bits;
+            }
+            value = new RemainingBits(bytes, count);
+            LogEnd(name, count, value);
+            return count;
+        }
+
+        public ulong WriteRemainingBits(RemainingBits value, string name)
+        {
+            ulong left = value.Count;
+            for (int i = 0; left > 0; i++)
+            {
+                uint bits = (uint)Math.Min(8UL, left);
+                this.bitstream.WriteBits(bits, (ulong)value.Bytes[i]);
+                left -= bits;
+            }
+            if (value.Count > 0)
+                LogEnd(name, value.Count, value);
+            return value.Count;
+        }
+
+        /// <summary>
+        /// The bits byte_alignment() took when it was read: the class it is in need not start on a byte
+        /// (a program_config_element does not), so its own size does not tell.
+        /// </summary>
+        public static ulong CalculateByteAlignmentSize(ulong boxSize, AlignmentBits value)
+        {
+            return (ulong)value.Bits;
         }
 
         /// <summary>
@@ -1386,6 +1440,7 @@ namespace SharpISOBMFF
             long sizeOfInstanceBits = (long)sizeOfInstance << 3;
             descriptor = (T)BoxFactory.CreateDescriptor(tag, this.Logger);
             descriptor.SizeOfSize = sizeOfSize;
+            descriptor.SizeOfInstance = (ulong)sizeOfInstance;
             descriptor.SetParent(parent);
 
             availableSize -= (long)size;
@@ -2908,6 +2963,41 @@ namespace SharpISOBMFF
         {
             return Encoding.UTF8.GetString(text);
         }
+    }
+
+    /// <summary>
+    /// Bits after the last field a class reads: <see cref="Count"/> of them, 8 a byte in <see cref="Bytes"/>, the
+    /// last byte holding those left over in its low bits.
+    /// </summary>
+    public struct RemainingBits
+    {
+        public byte[] Bytes { get; }
+
+        public ulong Count { get; }
+
+        public RemainingBits(byte[] bytes, ulong count)
+        {
+            Bytes = bytes;
+            Count = count;
+        }
+
+        public override string ToString() => $"{Count} bits";
+    }
+
+    /// <summary>The bits of a byte_alignment(): 0 to 7 of them, and what they were.</summary>
+    public struct AlignmentBits
+    {
+        public byte Value { get; }
+
+        public int Bits { get; }
+
+        public AlignmentBits(byte value, int bits)
+        {
+            Value = value;
+            Bits = bits;
+        }
+
+        public override string ToString() => $"{Bits} bits: {Value}";
     }
 
     /// <summary>

@@ -142,8 +142,8 @@ public partial class program_config_element : IMp4Serializable
 	protected byte[] valid_cc_element_tag_select; 
 	public byte[] ValidCcElementTagSelect { get { return this.valid_cc_element_tag_select; } set { this.valid_cc_element_tag_select = value; } }
 
-	protected byte byte_alignment;  //  Note 1 
-	public byte ByteAlignment { get { return this.byte_alignment; } set { this.byte_alignment = value; } }
+	protected AlignmentBits byte_alignment;  //  Note 1 
+	public AlignmentBits ByteAlignment { get { return this.byte_alignment; } set { this.byte_alignment = value; } }
 
 	protected byte comment_field_bytes; 
 	public byte CommentFieldBytes { get { return this.comment_field_bytes; } set { this.comment_field_bytes = value; } }

@@ -495,7 +495,8 @@ namespace SharpMP4.Tracks
                     }
                 }
 
-                isoStream.WriteByteAlignment(0, "");
+                // zeros to the next byte, none where the constraint bits end on one
+                isoStream.WriteByteAlignment(new AlignmentBits(0, 0), "");
 
                 return ms.ToArray();
             }

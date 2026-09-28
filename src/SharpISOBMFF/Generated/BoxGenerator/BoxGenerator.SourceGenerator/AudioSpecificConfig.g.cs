@@ -142,8 +142,8 @@ class AudioSpecificConfig() extends BaseDescriptor : bit(8) tag=DecSpecificInfoT
             uimsbf(24) extensionSamplingFrequency;
           }
           if (bits_to_decode() >= 12) {
-            bslbf(11) syncExtensionType;
-            if (syncExtensionType == 0x548) {
+            bslbf(11) syncExtensionType2; // syncExtensionType, read again: a field of its own, so both are written
+            if (syncExtensionType2 == 0x548) {
               uimsbf(1) psPresentFlag;
             }
           }
@@ -263,6 +263,9 @@ public partial class AudioSpecificConfig : BaseDescriptor
 	protected bool sbrPresentFlag; 
 	public bool SbrPresentFlag { get { return this.sbrPresentFlag; } set { this.sbrPresentFlag = value; } }
 
+	protected ushort syncExtensionType2;  //  syncExtensionType, read again: a field of its own, so both are written
+	public ushort SyncExtensionType2 { get { return this.syncExtensionType2; } set { this.syncExtensionType2 = value; } }
+
 	protected bool psPresentFlag; 
 	public bool PsPresentFlag { get { return this.psPresentFlag; } set { this.psPresentFlag = value; } }
 
@@ -274,6 +277,8 @@ public partial class AudioSpecificConfig : BaseDescriptor
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
+		if (SizeOfInstance == 0) SizeOfInstance = readSize >> 3;
+
 		boxSize += stream.ReadClass(boxSize, readSize, this, () => new GetAudioObjectType(),  out this.audioObjectType, "audioObjectType"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.samplingFrequencyIndex, "samplingFrequencyIndex"); 
 
@@ -288,6 +293,7 @@ public partial class AudioSpecificConfig : BaseDescriptor
 		if (audioObjectType.AudioObjectType == 5 || audioObjectType.AudioObjectType == 29)
 		{
 			extensionAudioObjectType.AudioObjectType = 5;
+			signalledAudioObjectType = audioObjectType; // read again below: the signalled type, kept
 			sbrPresentFlag = true;
 
 			if (audioObjectType.AudioObjectType == 29)
@@ -463,9 +469,9 @@ public partial class AudioSpecificConfig : BaseDescriptor
 
 						if (IsoStream.BitsToDecode(boxSize, readSize) >= 12)
 						{
-							boxSize += stream.ReadBits(boxSize, readSize, 11,  out this.syncExtensionType, "syncExtensionType"); 
+							boxSize += stream.ReadBits(boxSize, readSize, 11,  out this.syncExtensionType2, "syncExtensionType2"); // syncExtensionType, read again: a field of its own, so both are written
 
-							if (syncExtensionType == 0x548)
+							if (syncExtensionType2 == 0x548)
 							{
 								boxSize += stream.ReadBit(boxSize, readSize,  out this.psPresentFlag, "psPresentFlag"); 
 							}
@@ -490,6 +496,7 @@ public partial class AudioSpecificConfig : BaseDescriptor
 				}
 			}
 		}
+		if (boxSize < readSize) boxSize += stream.ReadRemainingBits(readSize - boxSize, out this.remainder, "remainder");
 		return boxSize;
 	}
 
@@ -497,6 +504,9 @@ public partial class AudioSpecificConfig : BaseDescriptor
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
+		GetAudioObjectType coreAudioObjectType = audioObjectType;
+		if (signalledAudioObjectType != null) audioObjectType = signalledAudioObjectType;
+
 		boxSize += stream.WriteClass( this.audioObjectType, "audioObjectType"); 
 		boxSize += stream.WriteBits(4,  this.samplingFrequencyIndex, "samplingFrequencyIndex"); 
 
@@ -505,17 +515,18 @@ public partial class AudioSpecificConfig : BaseDescriptor
 			boxSize += stream.WriteUInt24( this.samplingFrequency, "samplingFrequency"); 
 		}
 		boxSize += stream.WriteBits(4,  this.channelConfiguration, "channelConfiguration"); 
-		sbrPresentFlag = false;
-		psPresentFlag = false;
+		// sbrPresentFlag = -1: as read
+		// psPresentFlag = -1: as read
 
 		if (audioObjectType.AudioObjectType == 5 || audioObjectType.AudioObjectType == 29)
 		{
-			extensionAudioObjectType.AudioObjectType = 5;
-			sbrPresentFlag = true;
+			// extensionAudioObjectType = 5: as read
+			audioObjectType = coreAudioObjectType; // the core type, written second
+			// sbrPresentFlag = 1: as read
 
 			if (audioObjectType.AudioObjectType == 29)
 			{
-				psPresentFlag = true;
+				// psPresentFlag = 1: as read
 			}
 			boxSize += stream.WriteBits(4,  this.extensionSamplingFrequencyIndex, "extensionSamplingFrequencyIndex"); 
 
@@ -533,7 +544,7 @@ public partial class AudioSpecificConfig : BaseDescriptor
 
 		else 
 		{
-			extensionAudioObjectType.AudioObjectType = 0;
+			// extensionAudioObjectType = 0: as read
 		}
 
 		switch (audioObjectType.AudioObjectType)
@@ -663,7 +674,7 @@ public partial class AudioSpecificConfig : BaseDescriptor
 
 		}
 
-		if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode(boxSize, SizeOfInstance) >= 16)
+		if (signalledAudioObjectType == null && IsoStream.BitsToDecode(boxSize, SizeOfInstance << 3) >= 16)
 		{
 			boxSize += stream.WriteBits(11,  this.syncExtensionType, "syncExtensionType"); 
 
@@ -684,11 +695,11 @@ public partial class AudioSpecificConfig : BaseDescriptor
 							boxSize += stream.WriteUInt24( this.extensionSamplingFrequency, "extensionSamplingFrequency"); 
 						}
 
-						if (IsoStream.BitsToDecode(boxSize, SizeOfInstance) >= 12)
+						if (IsoStream.BitsToDecode(boxSize, SizeOfInstance << 3) >= 12)
 						{
-							boxSize += stream.WriteBits(11,  this.syncExtensionType, "syncExtensionType"); 
+							boxSize += stream.WriteBits(11,  this.syncExtensionType2, "syncExtensionType2"); // syncExtensionType, read again: a field of its own, so both are written
 
-							if (syncExtensionType == 0x548)
+							if (syncExtensionType2 == 0x548)
 							{
 								boxSize += stream.WriteBit( this.psPresentFlag, "psPresentFlag"); 
 							}
@@ -713,6 +724,7 @@ public partial class AudioSpecificConfig : BaseDescriptor
 				}
 			}
 		}
+		boxSize += stream.WriteRemainingBits(this.remainder, "remainder");
 		return boxSize;
 	}
 
@@ -720,6 +732,9 @@ public partial class AudioSpecificConfig : BaseDescriptor
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
+		GetAudioObjectType coreAudioObjectType = audioObjectType;
+		if (signalledAudioObjectType != null) audioObjectType = signalledAudioObjectType;
+
 		boxSize += IsoStream.CalculateClassSize(audioObjectType); // audioObjectType
 		boxSize += 4; // samplingFrequencyIndex
 
@@ -728,17 +743,18 @@ public partial class AudioSpecificConfig : BaseDescriptor
 			boxSize += 24; // samplingFrequency
 		}
 		boxSize += 4; // channelConfiguration
-		sbrPresentFlag = false;
-		psPresentFlag = false;
+		// sbrPresentFlag = -1: as read
+		// psPresentFlag = -1: as read
 
 		if (audioObjectType.AudioObjectType == 5 || audioObjectType.AudioObjectType == 29)
 		{
-			extensionAudioObjectType.AudioObjectType = 5;
-			sbrPresentFlag = true;
+			// extensionAudioObjectType = 5: as read
+			audioObjectType = coreAudioObjectType; // the core type, written second
+			// sbrPresentFlag = 1: as read
 
 			if (audioObjectType.AudioObjectType == 29)
 			{
-				psPresentFlag = true;
+				// psPresentFlag = 1: as read
 			}
 			boxSize += 4; // extensionSamplingFrequencyIndex
 
@@ -756,7 +772,7 @@ public partial class AudioSpecificConfig : BaseDescriptor
 
 		else 
 		{
-			extensionAudioObjectType.AudioObjectType = 0;
+			// extensionAudioObjectType = 0: as read
 		}
 
 		switch (audioObjectType.AudioObjectType)
@@ -886,7 +902,7 @@ public partial class AudioSpecificConfig : BaseDescriptor
 
 		}
 
-		if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode(boxSize, SizeOfInstance) >= 16)
+		if (signalledAudioObjectType == null && IsoStream.BitsToDecode(boxSize, SizeOfInstance << 3) >= 16)
 		{
 			boxSize += 11; // syncExtensionType
 
@@ -907,11 +923,11 @@ public partial class AudioSpecificConfig : BaseDescriptor
 							boxSize += 24; // extensionSamplingFrequency
 						}
 
-						if (IsoStream.BitsToDecode(boxSize, SizeOfInstance) >= 12)
+						if (IsoStream.BitsToDecode(boxSize, SizeOfInstance << 3) >= 12)
 						{
-							boxSize += 11; // syncExtensionType
+							boxSize += 11; // syncExtensionType2
 
-							if (syncExtensionType == 0x548)
+							if (syncExtensionType2 == 0x548)
 							{
 								boxSize += 1; // psPresentFlag
 							}
@@ -936,6 +952,7 @@ public partial class AudioSpecificConfig : BaseDescriptor
 				}
 			}
 		}
+		boxSize += this.remainder.Count;
 		return boxSize;
 	}
 }

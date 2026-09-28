@@ -103,6 +103,130 @@ public class ConformanceTests
     }
 
     /// <summary>
+    /// Every AudioSpecificConfig (ISO/IEC 14496-3 1.6.2.1) of the MPEG-4 and MPEG-2 AAC audio in the FATE
+    /// samples, the metadata set, Chromium's files and the file format conformance files, read as AACTrack
+    /// reads it: it has to be read to its last bit, size to what it was read from, and write back byte for
+    /// byte - its PCE, its SBR and PS signalling, an escaped object type, ALS's config, and what follows.
+    /// </summary>
+    [TestMethod]
+    public void AudioSpecificConfigsReadAndWriteBackAsTheyWere()
+    {
+        string? root = ConformanceCorpus.Locate();
+        if (root == null)
+            Assert.Inconclusive("no conformance files; run DownloadConformance.ps1, or set SHARPMP4_CONFORMANCE");
+
+        var files = ConformanceCorpus.FateFiles(root)
+            .Concat(ConformanceCorpus.MetadataSetFiles(root))
+            .Concat(ConformanceCorpus.ChromiumFiles(root))
+            .Concat(ConformanceCorpus.FileFormatFiles(root).Select(f => f.File))
+            .ToList();
+        if (files.Count == 0)
+            Assert.Inconclusive($"no files under {root}; run DownloadConformance.ps1");
+
+        var results = new ConcurrentBag<StreamResult>();
+        Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, Environment.ProcessorCount / 2) }, path =>
+        {
+            List<byte[]> configs;
+            try
+            {
+                configs = AudioConfigs(path);
+            }
+            catch (Exception)
+            {
+                return; // not a file this reads; the other tests say so
+            }
+            if (configs.Count == 0)
+                return;
+
+            var result = new StreamResult { Path = path };
+            foreach (byte[] bytes in configs)
+            {
+                result.UnitsCompared++;
+                string hex = Convert.ToHexString(bytes).ToLowerInvariant();
+                var config = new SharpISOBMFF.AudioSpecificConfig();
+                ulong read;
+                try
+                {
+                    using var stream = new SharpISOBMFF.IsoStream(new MemoryStream(bytes));
+                    read = config.Read(stream, (ulong)bytes.Length * 8);
+                }
+                catch (Exception ex)
+                {
+                    result.Fail(Outcome.Diverged, $"read: {ex.GetType().Name}", $"{hex}: {ex.GetType().Name}: {ex.Message}");
+                    continue;
+                }
+
+                ulong bits = (ulong)bytes.Length * 8;
+                if (read != bits)
+                    result.Fail(Outcome.Diverged, "read short", $"{hex}: read {read} of {bits} bits");
+                if (config.CalculateSize() != bits)
+                    result.Fail(Outcome.Diverged, "calculated size", $"{hex}: calculates {config.CalculateSize()} of {bits} bits");
+
+                using var written = new MemoryStream();
+                using (var stream = new SharpISOBMFF.IsoStream(written))
+                    config.Write(stream);
+                if (!written.ToArray().AsSpan().SequenceEqual(bytes))
+                    result.Fail(Outcome.Diverged, "writes back otherwise", $"{hex}: writes back {Convert.ToHexString(written.ToArray()).ToLowerInvariant()}");
+            }
+
+            if (result.Keys.Count == 0)
+                result.Outcome = Outcome.Match;
+            else
+                JudgeMalformed(root, result, MalformedAudioConfigFiles);
+            results.Add(result);
+        });
+
+        var ordered = results.OrderBy(r => r.Path, StringComparer.Ordinal).ToList();
+        string summary = Summarise("aac", root, ordered);
+        File.WriteAllText(Path.Combine(root, "report-aac.txt"), summary + Details(root, ordered));
+
+        int failing = ordered.Count(r => r.Outcome is Outcome.Diverged or Outcome.SharpFailed);
+        Assert.AreEqual(0, failing, summary);
+    }
+
+    /// <summary>Files whose AudioSpecificConfig is malformed, with what is wrong in it.</summary>
+    private static readonly Dictionary<string, (string Why, string[] Defects)> MalformedAudioConfigFiles = new()
+    {
+        [Path.Combine("metadata", "mutagen", "ep7.m4b")] =
+            ("a config of 2 bytes whose dependsOnCoreCoder says a coreCoderDelay of 14 bits follows, which it has not", ["read: EndOfStreamException"]),
+    };
+
+    /// <summary>
+    /// The AudioSpecificConfigs of a file: the DecoderSpecificInfo of each DecoderConfigDescriptor of MPEG-4 audio
+    /// (objectTypeIndication 0x40) or MPEG-2 AAC (0x66 to 0x68), which SharpMP4 keeps as its bytes.
+    /// </summary>
+    private static List<byte[]> AudioConfigs(string path)
+    {
+        var container = new SharpISOBMFF.Container();
+        using var file = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 1 << 16);
+        container.Read(new SharpISOBMFF.IsoStream(new SharpISOBMFF.StreamWrapper(file)));
+
+        var configs = new List<byte[]>();
+        void Walk(IEnumerable<SharpISOBMFF.Box>? boxes)
+        {
+            foreach (var box in boxes ?? [])
+            {
+                if (box is SharpISOBMFF.ESDBox esds && esds._ES?.Children != null)
+                {
+                    foreach (var decoderConfig in esds._ES.Children.OfType<SharpISOBMFF.DecoderConfigDescriptor>())
+                    {
+                        if (decoderConfig.ObjectTypeIndication is not (0x40 or 0x66 or 0x67 or 0x68))
+                            continue;
+                        foreach (var info in decoderConfig.Children?.OfType<SharpISOBMFF.GenericDecoderSpecificInfo>() ?? [])
+                        {
+                            if (info.Data is { Length: > 0 })
+                                configs.Add(info.Data);
+                        }
+                    }
+                }
+                Walk(box.Children);
+            }
+        }
+        Walk(container.Children);
+        return configs;
+    }
+
+    /// <summary>
     /// Reads the files of the metadata set as <see cref="FateFilesReadWithoutSignsOfMisreading"/> reads
     /// FFmpeg's: each checked against itself, and written back byte for byte.
     /// </summary>

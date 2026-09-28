@@ -69,6 +69,27 @@ namespace BoxGenerator.CSharp
                 cls += "\r\n\t\tint len = 0;\r\n";
                 cls += "\r\n\t\tconst byte ELDEXT_TERM = 0;\r\n";
             }
+            else if (box.BoxName == "GetAudioObjectType" && methodType != MethodType.Read)
+            {
+                // The inverse of audioObjectType = 32 + audioObjectTypeExt (Table 1.14): a type from 32 on is coded 31
+                // and the rest; the assignment after audioObjectTypeExt gives the type back.
+                cls += "\r\n\t\tif (audioObjectType >= 32) { audioObjectTypeExt = (byte)(audioObjectType - 32); audioObjectType = 31; }\r\n";
+            }
+            else if (box.BoxName == "AudioSpecificConfig")
+            {
+                if (methodType == MethodType.Read)
+                {
+                    // bits_to_decode() of writing is what is left of the size read with: read on its own, not as a
+                    // descriptor, the config has its size from what it is read from
+                    cls += "\r\n\t\tif (SizeOfInstance == 0) SizeOfInstance = readSize >> 3;\r\n";
+                }
+                else
+                {
+                    // the signalled type is written first, the core type after it (see extensionAudioObjectType = 5)
+                    cls += "\r\n\t\tGetAudioObjectType coreAudioObjectType = audioObjectType;\r\n";
+                    cls += "\t\tif (signalledAudioObjectType != null) audioObjectType = signalledAudioObjectType;\r\n";
+                }
+            }
             else if (box.BoxName == "CelpHeader" || box.BoxName == "ER_SC_CelpHeader")
             {
                 cls += "\r\n\t\tconst bool RPE = true;\r\n";
@@ -76,6 +97,22 @@ namespace BoxGenerator.CSharp
             }
 
             return cls;
+        }
+
+        /// <summary>Code a class's Read, Write or CalculateSize ends with, before it returns.</summary>
+        private string AddMethodEndCode(PseudoClass box, MethodType methodType)
+        {
+            if (box.BoxName == "AudioSpecificConfig")
+            {
+                // What follows the last field - zero bytes, the config of an object type the syntax leaves
+                // undefined (UsacConfig, ISO/IEC 23003-3) - kept as it is, and written back
+                if (methodType == MethodType.Read)
+                    return "\r\n\t\tif (boxSize < readSize) boxSize += stream.ReadRemainingBits(readSize - boxSize, out this.remainder, \"remainder\");";
+                if (methodType == MethodType.Write)
+                    return "\r\n\t\tboxSize += stream.WriteRemainingBits(this.remainder, \"remainder\");";
+                return "\r\n\t\tboxSize += this.remainder.Count;";
+            }
+            return "";
         }
 
         private string GetCtorParams(string classType, IList<(string Name, string Value)> parameters)
@@ -659,6 +696,7 @@ namespace SharpISOBMFF
                 cls.Append("\r\n" + $"\t\tboxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this{objectTypeIndication});");
             }
 
+            cls.Append(AddMethodEndCode(b, MethodType.Read));
             cls.Append("\r\n\t\treturn boxSize;\r\n\t}\r\n");
 
 
@@ -693,6 +731,7 @@ namespace SharpISOBMFF
                 cls.Append("\r\n" + $"\t\tboxSize += stream.WriteDescriptorsTillEnd(this{objectTypeIndication});");
             }
 
+            cls.Append(AddMethodEndCode(b, MethodType.Write));
             cls.Append("\r\n\t\treturn boxSize;\r\n\t}\r\n");
 
             cls.Append("\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong CalculateSize()\r\n\t{\r\n\t\tulong boxSize = 0;");
@@ -729,6 +768,7 @@ namespace SharpISOBMFF
                 cls.Append("\r\n" + $"\t\tboxSize += IsoStream.CalculateDescriptors(this{objectTypeIndication});");
             }
 
+            cls.Append(AddMethodEndCode(b, MethodType.Size));
             cls.Append("\r\n\t\treturn boxSize;\r\n\t}\r\n");
 
             // end of class
@@ -977,6 +1017,23 @@ namespace SharpISOBMFF
                     { "return audioObjectType",                                  "// return audioObjectType;"},
                 };
 
+                if (b.BoxName == "AudioSpecificConfig")
+                {
+                    // Reading sets these, and the extension may read them after (1.6.2.1); written or sized, they
+                    // are as they were read, and setting them again would write what was not read.
+                    if (methodType != MethodType.Read && (fieldType.StartsWith("sbrPresentFlag = ") || fieldType.StartsWith("psPresentFlag = ") || fieldType == "extensionAudioObjectType = 0"))
+                        return $"{spacing}// {fieldType}: as read";
+
+                    // An explicit SBR or PS config reads audioObjectType twice: the signalled type (5, 29), then the
+                    // core type. Reading keeps the first, writing puts it first and the core type after it.
+                    if (fieldType == "extensionAudioObjectType = 5")
+                    {
+                        if (methodType == MethodType.Read)
+                            return $"{spacing}{map[fieldType]}\r\n{spacing}signalledAudioObjectType = audioObjectType; // read again below: the signalled type, kept";
+                        return $"{spacing}// {fieldType}: as read\r\n{spacing}audioObjectType = coreAudioObjectType; // the core type, written second";
+                    }
+                }
+
                 if (map.ContainsKey(fieldType))
                     return $"{spacing}{map[fieldType]}";
                 else
@@ -1148,6 +1205,12 @@ namespace SharpISOBMFF
                 if (condition.Contains("extensionAudioObjectType"))
                     condition = condition.Replace("extensionAudioObjectType", "extensionAudioObjectType.AudioObjectType");
 
+                // The extension of an AudioSpecificConfig (1.6.2.1) is there unless the config is explicit SBR or PS:
+                // extensionAudioObjectType is 5 then, and 0 otherwise, until the extension reads it. Written, what
+                // it read is kept, so it is the explicit config that tells.
+                if (b.BoxName == "AudioSpecificConfig" && methodType != MethodType.Read && condition.Contains("extensionAudioObjectType.AudioObjectType != 5 &&"))
+                    condition = condition.Replace("extensionAudioObjectType.AudioObjectType != 5 &&", "signalledAudioObjectType == null &&");
+
                 if (condition.Contains("bits_to_decode()"))
                 {
                     if (methodType == MethodType.Read)
@@ -1156,7 +1219,8 @@ namespace SharpISOBMFF
                     }
                     else
                     {
-                        condition = condition.Replace("bits_to_decode()", "IsoStream.BitsToDecode(boxSize, SizeOfInstance)");
+                        // what is left of the size read with, in bits as boxSize is
+                        condition = condition.Replace("bits_to_decode()", "IsoStream.BitsToDecode(boxSize, SizeOfInstance << 3)");
                     }
                 }
 
@@ -1220,8 +1284,9 @@ namespace SharpISOBMFF
                                 throw new Exception();
                             }
                         }
-                        else if (variable.Contains("_minus1"))
+                        else if (variable.Contains("_minus1") || parts[1].Contains("<="))
                         {
+                            // an inclusive bound counts one more: for (c = 0; c <= channels; c++) (14496-3 Table 11.1)
                             variable += " + 1";
                         }
 
@@ -1893,7 +1958,7 @@ namespace SharpISOBMFF
             }
             else if (info.FieldType == ParsedBoxType.ByteAlignment)
             {
-                t = "byte";
+                t = "AlignmentBits";
             }
             else if (info.FieldType == ParsedBoxType.Leb128)
             {
