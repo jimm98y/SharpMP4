@@ -14,7 +14,6 @@ public partial class AppleTrackApertureBox : Box
 {
 	public const string TYPE = "tapt";
 	public override string DisplayName { get { return "AppleTrackApertureBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleTrackApertureBox(): base(IsoStream.FromFourCC("tapt"))
 	{

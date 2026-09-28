@@ -14,7 +14,6 @@ public partial class AppleRollBox : Box
 {
 	public const string TYPE = "©frl";
 	public override string DisplayName { get { return "AppleRollBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleRollBox(): base(IsoStream.FromFourCC("©frl"))
 	{

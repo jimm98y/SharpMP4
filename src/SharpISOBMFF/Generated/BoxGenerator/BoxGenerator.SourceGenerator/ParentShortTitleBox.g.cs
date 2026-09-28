@@ -14,7 +14,6 @@ public partial class ParentShortTitleBox : Box
 {
 	public const string TYPE = "@PST";
 	public override string DisplayName { get { return "ParentShortTitleBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ParentShortTitleBox(): base(IsoStream.FromFourCC("@PST"))
 	{

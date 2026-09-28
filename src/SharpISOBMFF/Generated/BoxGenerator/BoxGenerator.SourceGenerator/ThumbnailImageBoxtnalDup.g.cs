@@ -14,7 +14,6 @@ public partial class ThumbnailImageBoxtnalDup : Box
 {
 	public const string TYPE = "tnal";
 	public override string DisplayName { get { return "ThumbnailImageBoxtnalDup"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ThumbnailImageBoxtnalDup(): base(IsoStream.FromFourCC("tnal"))
 	{

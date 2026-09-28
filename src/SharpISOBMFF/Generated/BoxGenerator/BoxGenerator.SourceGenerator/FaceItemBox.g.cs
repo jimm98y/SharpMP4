@@ -15,7 +15,6 @@ public partial class FaceItemBox : Box
 {
 	public const string TYPE = "cits";
 	public override string DisplayName { get { return "FaceItemBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public FaceItemBox(): base(IsoStream.FromFourCC("cits"))
 	{

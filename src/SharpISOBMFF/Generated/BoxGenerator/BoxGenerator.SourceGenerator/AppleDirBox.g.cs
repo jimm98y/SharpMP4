@@ -14,7 +14,6 @@ public partial class AppleDirBox : Box
 {
 	public const string TYPE = "©dir";
 	public override string DisplayName { get { return "AppleDirBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleDirBox(): base(IsoStream.FromFourCC("©dir"))
 	{

@@ -14,7 +14,6 @@ public partial class GooglesHostHeaderBox : Box
 {
 	public const string TYPE = "gshh";
 	public override string DisplayName { get { return "GooglesHostHeaderBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public GooglesHostHeaderBox(): base(IsoStream.FromFourCC("gshh"))
 	{

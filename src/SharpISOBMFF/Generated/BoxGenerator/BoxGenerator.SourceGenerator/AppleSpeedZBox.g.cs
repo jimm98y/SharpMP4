@@ -14,7 +14,6 @@ public partial class AppleSpeedZBox : Box
 {
 	public const string TYPE = "©zsp";
 	public override string DisplayName { get { return "AppleSpeedZBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleSpeedZBox(): base(IsoStream.FromFourCC("©zsp"))
 	{

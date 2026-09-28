@@ -14,7 +14,6 @@ public partial class ItemListPreviewImageBox : Box
 {
 	public const string TYPE = "snal";
 	public override string DisplayName { get { return "ItemListPreviewImageBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ItemListPreviewImageBox(): base(IsoStream.FromFourCC("snal"))
 	{

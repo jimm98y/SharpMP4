@@ -14,7 +14,6 @@ public partial class AppleGeIDBox : Box
 {
 	public const string TYPE = "geID";
 	public override string DisplayName { get { return "AppleGeIDBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleGeIDBox(): base(IsoStream.FromFourCC("geID"))
 	{

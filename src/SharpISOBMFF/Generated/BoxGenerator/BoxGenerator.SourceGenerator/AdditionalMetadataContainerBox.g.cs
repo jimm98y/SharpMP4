@@ -14,7 +14,6 @@ public partial class AdditionalMetadataContainerBox : Box
 {
 	public const string TYPE = "meco";
 	public override string DisplayName { get { return "AdditionalMetadataContainerBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AdditionalMetadataContainerBox(): base(IsoStream.FromFourCC("meco"))
 	{

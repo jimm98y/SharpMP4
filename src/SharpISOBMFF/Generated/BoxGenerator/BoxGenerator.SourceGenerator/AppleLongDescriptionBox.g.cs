@@ -14,7 +14,6 @@ public partial class AppleLongDescriptionBox : Box
 {
 	public const string TYPE = "ldes";
 	public override string DisplayName { get { return "AppleLongDescriptionBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleLongDescriptionBox(): base(IsoStream.FromFourCC("ldes"))
 	{

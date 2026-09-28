@@ -14,7 +14,6 @@ public partial class ITunesUBox : Box
 {
 	public const string TYPE = "itnu";
 	public override string DisplayName { get { return "ITunesUBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ITunesUBox(): base(IsoStream.FromFourCC("itnu"))
 	{

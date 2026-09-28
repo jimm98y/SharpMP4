@@ -14,7 +14,6 @@ public partial class VideoContourCollectionBox : Box
 {
 	public const string TYPE = "ctrs";
 	public override string DisplayName { get { return "VideoContourCollectionBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public VideoContourCollectionBox(): base(IsoStream.FromFourCC("ctrs"))
 	{

@@ -14,7 +14,6 @@ public partial class ApplePhgBox : Box
 {
 	public const string TYPE = "©phg";
 	public override string DisplayName { get { return "ApplePhgBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ApplePhgBox(): base(IsoStream.FromFourCC("©phg"))
 	{

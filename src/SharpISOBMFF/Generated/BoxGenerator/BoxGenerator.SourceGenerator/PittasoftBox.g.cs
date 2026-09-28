@@ -15,7 +15,6 @@ public partial class PittasoftBox : Box
 {
 	public const string TYPE = "ptrh";
 	public override string DisplayName { get { return "PittasoftBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public PittasoftBox(): base(IsoStream.FromFourCC("ptrh"))
 	{

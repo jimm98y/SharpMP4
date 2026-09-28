@@ -15,7 +15,6 @@ public partial class TimeCodeTrackBox : Box
 {
 	public const string TYPE = "tmcd";
 	public override string DisplayName { get { return "TimeCodeTrackBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public TimeCodeTrackBox(): base(IsoStream.FromFourCC("tmcd"))
 	{

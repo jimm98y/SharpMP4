@@ -38,7 +38,6 @@ public partial class TextSampleEntrytx3gDup : SampleEntry
 
 	protected StyleRecord styleRecord; 
 	public StyleRecord StyleRecord { get { return this.styleRecord; } set { this.styleRecord = value; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public TextSampleEntrytx3gDup(): base(IsoStream.FromFourCC("tx3g"))
 	{

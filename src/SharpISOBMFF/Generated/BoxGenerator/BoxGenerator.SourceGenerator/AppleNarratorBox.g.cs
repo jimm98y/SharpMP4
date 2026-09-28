@@ -14,7 +14,6 @@ public partial class AppleNarratorBox : Box
 {
 	public const string TYPE = "©nrt";
 	public override string DisplayName { get { return "AppleNarratorBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleNarratorBox(): base(IsoStream.FromFourCC("©nrt"))
 	{

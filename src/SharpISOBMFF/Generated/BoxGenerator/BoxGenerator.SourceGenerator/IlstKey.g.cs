@@ -12,7 +12,6 @@ aligned(8) class IlstKey(unsigned int(32) format) extends Box(format) {
 public partial class IlstKey : Box
 {
 	public override string DisplayName { get { return "IlstKey"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public IlstKey(uint format): base(format)
 	{

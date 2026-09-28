@@ -14,7 +14,6 @@ public partial class CameraSystemLensCollectionBox : Box
 {
 	public const string TYPE = "lnsc";
 	public override string DisplayName { get { return "CameraSystemLensCollectionBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public CameraSystemLensCollectionBox(): base(IsoStream.FromFourCC("lnsc"))
 	{

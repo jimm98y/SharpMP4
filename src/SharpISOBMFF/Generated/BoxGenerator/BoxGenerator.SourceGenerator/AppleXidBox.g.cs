@@ -14,7 +14,6 @@ public partial class AppleXidBox : Box
 {
 	public const string TYPE = "xid ";
 	public override string DisplayName { get { return "AppleXidBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleXidBox(): base(IsoStream.FromFourCC("xid "))
 	{

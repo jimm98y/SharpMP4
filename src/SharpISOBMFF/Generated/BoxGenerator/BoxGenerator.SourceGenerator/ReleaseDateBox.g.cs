@@ -14,7 +14,6 @@ public partial class ReleaseDateBox : Box
 {
 	public const string TYPE = "rldt";
 	public override string DisplayName { get { return "ReleaseDateBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ReleaseDateBox(): base(IsoStream.FromFourCC("rldt"))
 	{

@@ -14,7 +14,6 @@ public partial class ViewPackingBox : Box
 {
 	public const string TYPE = "pack";
 	public override string DisplayName { get { return "ViewPackingBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ViewPackingBox(): base(IsoStream.FromFourCC("pack"))
 	{

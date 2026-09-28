@@ -14,7 +14,6 @@ public partial class ApplePdkBox : Box
 {
 	public const string TYPE = "©pdk";
 	public override string DisplayName { get { return "ApplePdkBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ApplePdkBox(): base(IsoStream.FromFourCC("©pdk"))
 	{

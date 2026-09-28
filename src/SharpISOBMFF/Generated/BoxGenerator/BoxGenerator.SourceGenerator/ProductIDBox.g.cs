@@ -14,7 +14,6 @@ public partial class ProductIDBox : Box
 {
 	public const string TYPE = "prID";
 	public override string DisplayName { get { return "ProductIDBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ProductIDBox(): base(IsoStream.FromFourCC("prID"))
 	{

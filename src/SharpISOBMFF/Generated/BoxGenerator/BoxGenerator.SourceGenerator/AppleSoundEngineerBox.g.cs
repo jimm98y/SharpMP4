@@ -14,7 +14,6 @@ public partial class AppleSoundEngineerBox : Box
 {
 	public const string TYPE = "©sne";
 	public override string DisplayName { get { return "AppleSoundEngineerBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleSoundEngineerBox(): base(IsoStream.FromFourCC("©sne"))
 	{

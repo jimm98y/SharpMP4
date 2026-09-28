@@ -14,7 +14,6 @@ public partial class RatingPercentBox : Box
 {
 	public const string TYPE = "rate";
 	public override string DisplayName { get { return "RatingPercentBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public RatingPercentBox(): base(IsoStream.FromFourCC("rate"))
 	{

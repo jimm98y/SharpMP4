@@ -14,7 +14,6 @@ public partial class AppleTrackMatteBox : Box
 {
 	public const string TYPE = "matt";
 	public override string DisplayName { get { return "AppleTrackMatteBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleTrackMatteBox(): base(IsoStream.FromFourCC("matt"))
 	{

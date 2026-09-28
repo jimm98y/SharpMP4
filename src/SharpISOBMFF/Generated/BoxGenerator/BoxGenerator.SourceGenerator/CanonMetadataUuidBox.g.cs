@@ -16,7 +16,6 @@ public partial class CanonMetadataUuidBox : Box
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "CanonMetadataUuidBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public CanonMetadataUuidBox(): base(IsoStream.FromFourCC("uuid"), ConvertEx.FromHexString("85c0b687820f11e08111f4ce462b6a48"))
 	{

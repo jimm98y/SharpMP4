@@ -14,7 +14,6 @@ public partial class AppleClippingBox : Box
 {
 	public const string TYPE = "clip";
 	public override string DisplayName { get { return "AppleClippingBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleClippingBox(): base(IsoStream.FromFourCC("clip"))
 	{

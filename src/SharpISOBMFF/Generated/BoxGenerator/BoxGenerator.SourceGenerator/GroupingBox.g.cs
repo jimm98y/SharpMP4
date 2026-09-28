@@ -14,7 +14,6 @@ public partial class GroupingBox : Box
 {
 	public const string TYPE = "grup";
 	public override string DisplayName { get { return "GroupingBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public GroupingBox(): base(IsoStream.FromFourCC("grup"))
 	{

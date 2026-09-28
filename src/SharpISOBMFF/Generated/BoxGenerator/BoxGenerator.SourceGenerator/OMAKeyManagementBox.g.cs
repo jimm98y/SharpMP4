@@ -14,7 +14,6 @@ public partial class OMAKeyManagementBox : FullBox
 {
 	public const string TYPE = "odkm";
 	public override string DisplayName { get { return "OMAKeyManagementBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public OMAKeyManagementBox(): base(IsoStream.FromFourCC("odkm"))
 	{

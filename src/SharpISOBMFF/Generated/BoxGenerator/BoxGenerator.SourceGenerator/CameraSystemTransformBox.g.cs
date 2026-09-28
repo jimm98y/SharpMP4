@@ -14,7 +14,6 @@ public partial class CameraSystemTransformBox : Box
 {
 	public const string TYPE = "cxfm";
 	public override string DisplayName { get { return "CameraSystemTransformBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public CameraSystemTransformBox(): base(IsoStream.FromFourCC("cxfm"))
 	{

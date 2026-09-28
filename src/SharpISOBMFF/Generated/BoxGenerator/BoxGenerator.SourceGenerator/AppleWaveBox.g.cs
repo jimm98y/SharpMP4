@@ -14,7 +14,6 @@ public partial class AppleWaveBox : Box
 {
 	public const string TYPE = "wave";
 	public override string DisplayName { get { return "AppleWaveBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleWaveBox(): base(IsoStream.FromFourCC("wave"))
 	{

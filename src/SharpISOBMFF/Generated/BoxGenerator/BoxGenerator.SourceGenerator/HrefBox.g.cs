@@ -22,7 +22,6 @@ public partial class HrefBox : Box
 
 	protected ushort dataReferenceIndex; 
 	public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public HrefBox(): base(IsoStream.FromFourCC("href"))
 	{

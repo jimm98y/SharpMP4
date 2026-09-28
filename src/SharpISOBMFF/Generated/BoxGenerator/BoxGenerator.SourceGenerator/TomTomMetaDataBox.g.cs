@@ -14,7 +14,6 @@ public partial class TomTomMetaDataBox : Box
 {
 	public const string TYPE = "TTMD";
 	public override string DisplayName { get { return "TomTomMetaDataBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public TomTomMetaDataBox(): base(IsoStream.FromFourCC("TTMD"))
 	{

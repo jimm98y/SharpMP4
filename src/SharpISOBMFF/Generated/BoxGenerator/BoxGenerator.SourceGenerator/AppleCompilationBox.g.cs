@@ -14,7 +14,6 @@ public partial class AppleCompilationBox : Box
 {
 	public const string TYPE = "cpil";
 	public override string DisplayName { get { return "AppleCompilationBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleCompilationBox(): base(IsoStream.FromFourCC("cpil"))
 	{

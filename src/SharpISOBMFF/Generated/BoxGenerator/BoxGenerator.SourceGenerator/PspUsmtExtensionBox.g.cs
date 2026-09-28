@@ -14,7 +14,6 @@ public partial class PspUsmtExtensionBox : Box
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "PspUsmtExtensionBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public PspUsmtExtensionBox(): base(IsoStream.FromFourCC("uuid"), ConvertEx.FromHexString("55534d5421d24fcebb88695cfac9c740"))
 	{

@@ -14,7 +14,6 @@ public partial class J2kHBox : Box
 {
 	public const string TYPE = "j2kH";
 	public override string DisplayName { get { return "J2kHBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public J2kHBox(): base(IsoStream.FromFourCC("j2kH"))
 	{

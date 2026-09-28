@@ -15,7 +15,6 @@ public partial class ProjectionBox : Box
 {
 	public const string TYPE = "proj";
 	public override string DisplayName { get { return "ProjectionBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ProjectionBox(): base(IsoStream.FromFourCC("proj"))
 	{

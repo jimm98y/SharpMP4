@@ -14,7 +14,6 @@ public partial class StereoCameraSystemBox : Box
 {
 	public const string TYPE = "cams";
 	public override string DisplayName { get { return "StereoCameraSystemBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public StereoCameraSystemBox(): base(IsoStream.FromFourCC("cams"))
 	{

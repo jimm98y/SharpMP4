@@ -14,7 +14,6 @@ public partial class GoogleStartTimeBox : Box
 {
 	public const string TYPE = "gsst";
 	public override string DisplayName { get { return "GoogleStartTimeBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public GoogleStartTimeBox(): base(IsoStream.FromFourCC("gsst"))
 	{

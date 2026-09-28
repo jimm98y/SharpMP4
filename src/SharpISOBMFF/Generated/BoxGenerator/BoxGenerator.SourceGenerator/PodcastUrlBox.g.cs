@@ -14,7 +14,6 @@ public partial class PodcastUrlBox : Box
 {
 	public const string TYPE = "purl";
 	public override string DisplayName { get { return "PodcastUrlBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public PodcastUrlBox(): base(IsoStream.FromFourCC("purl"))
 	{

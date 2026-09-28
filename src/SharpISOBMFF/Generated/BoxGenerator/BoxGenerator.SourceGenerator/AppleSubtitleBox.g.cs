@@ -14,7 +14,6 @@ public partial class AppleSubtitleBox : Box
 {
 	public const string TYPE = "©st3";
 	public override string DisplayName { get { return "AppleSubtitleBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleSubtitleBox(): base(IsoStream.FromFourCC("©st3"))
 	{

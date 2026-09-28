@@ -14,7 +14,6 @@ public partial class TVEpisodeIDBox : Box
 {
 	public const string TYPE = "tven";
 	public override string DisplayName { get { return "TVEpisodeIDBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public TVEpisodeIDBox(): base(IsoStream.FromFourCC("tven"))
 	{

@@ -14,7 +14,6 @@ public partial class ParentTitleBox : Box
 {
 	public const string TYPE = "@pti";
 	public override string DisplayName { get { return "ParentTitleBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ParentTitleBox(): base(IsoStream.FromFourCC("@pti"))
 	{

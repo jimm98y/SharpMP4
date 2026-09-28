@@ -14,7 +14,6 @@ public partial class AppleMakBox : Box
 {
 	public const string TYPE = "©mak";
 	public override string DisplayName { get { return "AppleMakBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleMakBox(): base(IsoStream.FromFourCC("©mak"))
 	{

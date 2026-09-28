@@ -14,7 +14,6 @@ public partial class EpisodeGlobalUniqueIdBox : Box
 {
 	public const string TYPE = "egid";
 	public override string DisplayName { get { return "EpisodeGlobalUniqueIdBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public EpisodeGlobalUniqueIdBox(): base(IsoStream.FromFourCC("egid"))
 	{

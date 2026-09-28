@@ -14,7 +14,6 @@ public partial class GoogleTrackDurationBox : Box
 {
 	public const string TYPE = "gstd";
 	public override string DisplayName { get { return "GoogleTrackDurationBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public GoogleTrackDurationBox(): base(IsoStream.FromFourCC("gstd"))
 	{

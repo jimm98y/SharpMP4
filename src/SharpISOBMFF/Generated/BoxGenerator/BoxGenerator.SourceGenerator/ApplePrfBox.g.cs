@@ -14,7 +14,6 @@ public partial class ApplePrfBox : Box
 {
 	public const string TYPE = "©prf";
 	public override string DisplayName { get { return "ApplePrfBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ApplePrfBox(): base(IsoStream.FromFourCC("©prf"))
 	{

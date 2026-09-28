@@ -15,7 +15,6 @@ public partial class AudibleCDEKBox : Box
 {
 	public const string TYPE = "CDEK";
 	public override string DisplayName { get { return "AudibleCDEKBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AudibleCDEKBox(): base(IsoStream.FromFourCC("CDEK"))
 	{

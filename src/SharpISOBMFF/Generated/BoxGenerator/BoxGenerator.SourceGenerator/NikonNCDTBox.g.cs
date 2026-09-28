@@ -14,7 +14,6 @@ public partial class NikonNCDTBox : Box
 {
 	public const string TYPE = "NCDT";
 	public override string DisplayName { get { return "NikonNCDTBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public NikonNCDTBox(): base(IsoStream.FromFourCC("NCDT"))
 	{

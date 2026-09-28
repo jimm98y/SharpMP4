@@ -28,7 +28,6 @@ public partial class CanonCCTPBox : Box
 
 	protected uint entryCount; 
 	public uint EntryCount { get { return this.entryCount; } set { this.entryCount = value; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public CanonCCTPBox(): base(IsoStream.FromFourCC("CCTP"))
 	{

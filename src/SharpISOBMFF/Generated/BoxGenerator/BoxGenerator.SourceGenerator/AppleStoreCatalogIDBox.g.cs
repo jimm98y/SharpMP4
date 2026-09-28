@@ -14,7 +14,6 @@ public partial class AppleStoreCatalogIDBox : Box
 {
 	public const string TYPE = "cnID";
 	public override string DisplayName { get { return "AppleStoreCatalogIDBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleStoreCatalogIDBox(): base(IsoStream.FromFourCC("cnID"))
 	{

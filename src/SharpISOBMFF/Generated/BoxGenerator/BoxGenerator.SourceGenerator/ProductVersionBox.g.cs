@@ -14,7 +14,6 @@ public partial class ProductVersionBox : Box
 {
 	public const string TYPE = "VERS";
 	public override string DisplayName { get { return "ProductVersionBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ProductVersionBox(): base(IsoStream.FromFourCC("VERS"))
 	{

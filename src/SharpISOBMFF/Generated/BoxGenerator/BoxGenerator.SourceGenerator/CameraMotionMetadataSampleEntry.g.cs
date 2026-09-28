@@ -15,7 +15,6 @@ public partial class CameraMotionMetadataSampleEntry : SampleEntry
 {
 	public const string TYPE = "camm";
 	public override string DisplayName { get { return "CameraMotionMetadataSampleEntry"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public CameraMotionMetadataSampleEntry(): base(IsoStream.FromFourCC("camm"))
 	{

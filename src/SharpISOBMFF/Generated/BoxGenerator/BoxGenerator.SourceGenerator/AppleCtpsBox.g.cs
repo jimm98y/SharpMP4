@@ -15,7 +15,6 @@ public partial class AppleCtpsBox : Box
 {
 	public const string TYPE = "ctps";
 	public override string DisplayName { get { return "AppleCtpsBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleCtpsBox(): base(IsoStream.FromFourCC("ctps"))
 	{

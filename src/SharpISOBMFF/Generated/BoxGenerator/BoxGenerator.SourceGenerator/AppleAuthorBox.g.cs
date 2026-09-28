@@ -14,7 +14,6 @@ public partial class AppleAuthorBox : Box
 {
 	public const string TYPE = "©aut";
 	public override string DisplayName { get { return "AppleAuthorBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleAuthorBox(): base(IsoStream.FromFourCC("©aut"))
 	{

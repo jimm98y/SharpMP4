@@ -14,7 +14,6 @@ public partial class BoxedMetaDataKeyTableBox : Box
 {
 	public const string TYPE = "keys";
 	public override string DisplayName { get { return "BoxedMetaDataKeyTableBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public BoxedMetaDataKeyTableBox(): base(IsoStream.FromFourCC("keys"))
 	{

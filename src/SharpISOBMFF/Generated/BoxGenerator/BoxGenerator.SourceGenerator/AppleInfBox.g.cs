@@ -14,7 +14,6 @@ public partial class AppleInfBox : Box
 {
 	public const string TYPE = "©inf";
 	public override string DisplayName { get { return "AppleInfBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleInfBox(): base(IsoStream.FromFourCC("©inf"))
 	{

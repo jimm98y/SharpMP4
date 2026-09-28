@@ -14,7 +14,6 @@ public partial class AppleExecutiveProducerBox : Box
 {
 	public const string TYPE = "©xpd";
 	public override string DisplayName { get { return "AppleExecutiveProducerBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleExecutiveProducerBox(): base(IsoStream.FromFourCC("©xpd"))
 	{

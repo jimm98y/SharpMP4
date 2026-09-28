@@ -14,7 +14,6 @@ public partial class AppleDescriptionBoxdescDup : Box
 {
 	public const string TYPE = "desc";
 	public override string DisplayName { get { return "AppleDescriptionBoxdescDup"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleDescriptionBoxdescDup(): base(IsoStream.FromFourCC("desc"))
 	{

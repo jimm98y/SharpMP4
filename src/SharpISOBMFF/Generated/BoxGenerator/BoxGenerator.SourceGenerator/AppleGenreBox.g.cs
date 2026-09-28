@@ -14,7 +14,6 @@ public partial class AppleGenreBox : Box
 {
 	public const string TYPE = "©gen";
 	public override string DisplayName { get { return "AppleGenreBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleGenreBox(): base(IsoStream.FromFourCC("©gen"))
 	{

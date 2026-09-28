@@ -14,7 +14,6 @@ public partial class CameraSystemLensExtrinsicsBox : Box
 {
 	public const string TYPE = "lnex";
 	public override string DisplayName { get { return "CameraSystemLensExtrinsicsBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public CameraSystemLensExtrinsicsBox(): base(IsoStream.FromFourCC("lnex"))
 	{

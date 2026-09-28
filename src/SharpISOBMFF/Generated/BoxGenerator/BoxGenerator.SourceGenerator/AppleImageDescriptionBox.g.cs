@@ -14,7 +14,6 @@ public partial class AppleImageDescriptionBox : Box
 {
 	public const string TYPE = "idsc";
 	public override string DisplayName { get { return "AppleImageDescriptionBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleImageDescriptionBox(): base(IsoStream.FromFourCC("idsc"))
 	{

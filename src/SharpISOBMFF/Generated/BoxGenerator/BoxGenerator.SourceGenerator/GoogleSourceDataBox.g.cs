@@ -14,7 +14,6 @@ public partial class GoogleSourceDataBox : Box
 {
 	public const string TYPE = "gssd";
 	public override string DisplayName { get { return "GoogleSourceDataBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public GoogleSourceDataBox(): base(IsoStream.FromFourCC("gssd"))
 	{

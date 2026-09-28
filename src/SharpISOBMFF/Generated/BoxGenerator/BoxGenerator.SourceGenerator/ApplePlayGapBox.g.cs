@@ -14,7 +14,6 @@ public partial class ApplePlayGapBox : Box
 {
 	public const string TYPE = "pgap";
 	public override string DisplayName { get { return "ApplePlayGapBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ApplePlayGapBox(): base(IsoStream.FromFourCC("pgap"))
 	{

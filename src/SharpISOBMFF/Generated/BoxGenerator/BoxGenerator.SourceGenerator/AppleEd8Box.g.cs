@@ -14,7 +14,6 @@ public partial class AppleEd8Box : Box
 {
 	public const string TYPE = "©ed8";
 	public override string DisplayName { get { return "AppleEd8Box"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleEd8Box(): base(IsoStream.FromFourCC("©ed8"))
 	{

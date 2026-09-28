@@ -14,7 +14,6 @@ public partial class HdvdBox : Box
 {
 	public const string TYPE = "hdvd";
 	public override string DisplayName { get { return "HdvdBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public HdvdBox(): base(IsoStream.FromFourCC("hdvd"))
 	{

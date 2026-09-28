@@ -15,7 +15,6 @@ public partial class AppleItemListBox : Box
 {
 	public const string TYPE = "ilst";
 	public override string DisplayName { get { return "AppleItemListBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleItemListBox(): base(IsoStream.FromFourCC("ilst"))
 	{

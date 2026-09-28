@@ -38,7 +38,6 @@ public partial class TextSampleEntry : SampleEntry
 
 	protected StyleRecord styleRecord; 
 	public StyleRecord StyleRecord { get { return this.styleRecord; } set { this.styleRecord = value; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public TextSampleEntry(): base(IsoStream.FromFourCC("enct"))
 	{

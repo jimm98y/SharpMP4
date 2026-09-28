@@ -14,7 +14,6 @@ public partial class HTCInfoBox : Box
 {
 	public const string TYPE = "_htc";
 	public override string DisplayName { get { return "HTCInfoBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public HTCInfoBox(): base(IsoStream.FromFourCC("_htc"))
 	{

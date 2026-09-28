@@ -14,7 +14,6 @@ public partial class ShowMovementBox : Box
 {
 	public const string TYPE = "shwm";
 	public override string DisplayName { get { return "ShowMovementBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ShowMovementBox(): base(IsoStream.FromFourCC("shwm"))
 	{

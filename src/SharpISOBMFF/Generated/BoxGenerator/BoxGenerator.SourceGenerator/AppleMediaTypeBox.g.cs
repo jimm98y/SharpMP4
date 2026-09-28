@@ -14,7 +14,6 @@ public partial class AppleMediaTypeBox : Box
 {
 	public const string TYPE = "stik";
 	public override string DisplayName { get { return "AppleMediaTypeBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleMediaTypeBox(): base(IsoStream.FromFourCC("stik"))
 	{

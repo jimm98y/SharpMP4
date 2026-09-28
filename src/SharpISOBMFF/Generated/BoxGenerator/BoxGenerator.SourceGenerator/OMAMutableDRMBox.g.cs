@@ -14,7 +14,6 @@ public partial class OMAMutableDRMBox : Box
 {
 	public const string TYPE = "mdri";
 	public override string DisplayName { get { return "OMAMutableDRMBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public OMAMutableDRMBox(): base(IsoStream.FromFourCC("mdri"))
 	{

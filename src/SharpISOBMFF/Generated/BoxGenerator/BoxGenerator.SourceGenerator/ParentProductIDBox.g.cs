@@ -14,7 +14,6 @@ public partial class ParentProductIDBox : Box
 {
 	public const string TYPE = "@ppi";
 	public override string DisplayName { get { return "ParentProductIDBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ParentProductIDBox(): base(IsoStream.FromFourCC("@ppi"))
 	{

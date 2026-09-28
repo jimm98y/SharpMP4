@@ -532,7 +532,9 @@ namespace SharpISOBMFF
 
             foreach (var field in fields)
             {
-                cls.Append("\r\n" + BuildField(b, field));
+                string built = BuildField(b, field);
+                if (built.Length > 0)
+                    cls.Append("\r\n" + built);
             }
 
             if (b.BoxName == "MetaBox")
@@ -744,7 +746,9 @@ namespace SharpISOBMFF
 
                 foreach (var f in block.Content)
                 {
-                    ret.Append("\r\n" + BuildField(b, f));
+                    string built = BuildField(b, f);
+                    if (built.Length > 0)
+                        ret.Append("\r\n" + built);
                 }
 
                 return ret.ToString();
@@ -867,6 +871,9 @@ namespace SharpISOBMFF
                 {
                     string suffix = fieldType.Contains("[]") ? "" : ".FirstOrDefault()";
                     string ttttt = fieldType.Replace("[]", "");
+                    // 'Box boxes[]' - any boxes, to the end - is Children as it is
+                    if (ttttt == "Box" && propertyName == "Boxes")
+                        return "";
                     string ttt = fieldType.Contains("[]") ? "IEnumerable<" + fieldType.Replace("[]", "") + ">" : fieldType;
                     return $"\tpublic {ttt} {propertyName} {{ get {{ return this.children.OfType<{ttttt}>(){suffix}; }} }}";
                 }

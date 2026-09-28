@@ -14,7 +14,6 @@ public partial class AppleCameraPitchBox : Box
 {
 	public const string TYPE = "©gpt";
 	public override string DisplayName { get { return "AppleCameraPitchBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleCameraPitchBox(): base(IsoStream.FromFourCC("©gpt"))
 	{

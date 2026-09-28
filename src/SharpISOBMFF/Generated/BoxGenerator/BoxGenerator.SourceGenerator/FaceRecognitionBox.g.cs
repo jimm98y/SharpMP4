@@ -15,7 +15,6 @@ public partial class FaceRecognitionBox : Box
 {
 	public const string TYPE = "crec";
 	public override string DisplayName { get { return "FaceRecognitionBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public FaceRecognitionBox(): base(IsoStream.FromFourCC("crec"))
 	{

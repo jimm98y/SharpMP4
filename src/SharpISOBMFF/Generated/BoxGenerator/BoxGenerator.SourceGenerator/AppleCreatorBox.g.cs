@@ -14,7 +14,6 @@ public partial class AppleCreatorBox : Box
 {
 	public const string TYPE = "©swf";
 	public override string DisplayName { get { return "AppleCreatorBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleCreatorBox(): base(IsoStream.FromFourCC("©swf"))
 	{

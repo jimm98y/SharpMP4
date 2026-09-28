@@ -14,7 +14,6 @@ public partial class VcmMSampleEntry : SampleEntry
 {
 	public const string TYPE = "vcmM";
 	public override string DisplayName { get { return "VcmMSampleEntry"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public VcmMSampleEntry(): base(IsoStream.FromFourCC("vcmM"))
 	{

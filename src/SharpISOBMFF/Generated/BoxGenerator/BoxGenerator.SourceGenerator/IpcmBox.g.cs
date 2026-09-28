@@ -14,7 +14,6 @@ public partial class IpcmBox : Box
 {
 	public const string TYPE = "ipcm";
 	public override string DisplayName { get { return "IpcmBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public IpcmBox(): base(IsoStream.FromFourCC("ipcm"))
 	{

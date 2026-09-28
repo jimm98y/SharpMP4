@@ -24,7 +24,6 @@ public partial class CanonPreviewUuidBox : Box
 
 	protected uint unknown2; 
 	public uint Unknown2 { get { return this.unknown2; } set { this.unknown2 = value; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public CanonPreviewUuidBox(): base(IsoStream.FromFourCC("uuid"), ConvertEx.FromHexString("eaf42b5e1c984b88b9fbb7dc406e4d16"))
 	{

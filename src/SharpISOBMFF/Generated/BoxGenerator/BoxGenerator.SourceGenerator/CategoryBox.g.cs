@@ -14,7 +14,6 @@ public partial class CategoryBox : Box
 {
 	public const string TYPE = "catg";
 	public override string DisplayName { get { return "CategoryBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public CategoryBox(): base(IsoStream.FromFourCC("catg"))
 	{

@@ -38,7 +38,6 @@ public partial class TimeCodeSampleEntry : SampleEntry
 
 	protected byte reserved2; 
 	public byte Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public TimeCodeSampleEntry(): base(IsoStream.FromFourCC("tmcd"))
 	{

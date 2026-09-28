@@ -14,7 +14,6 @@ public partial class AppleSnmBox : Box
 {
 	public const string TYPE = "©snm";
 	public override string DisplayName { get { return "AppleSnmBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleSnmBox(): base(IsoStream.FromFourCC("©snm"))
 	{

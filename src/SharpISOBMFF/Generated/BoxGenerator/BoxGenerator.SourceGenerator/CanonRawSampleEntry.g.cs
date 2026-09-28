@@ -72,7 +72,6 @@ public partial class CanonRawSampleEntry : SampleEntry
 
 	protected ushort imageFlags; 
 	public ushort ImageFlags { get { return this.imageFlags; } set { this.imageFlags = value; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public CanonRawSampleEntry(): base(IsoStream.FromFourCC("CRAW"))
 	{

@@ -14,7 +14,6 @@ public partial class AppleAlbumBox : Box
 {
 	public const string TYPE = "©alb";
 	public override string DisplayName { get { return "AppleAlbumBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public AppleAlbumBox(): base(IsoStream.FromFourCC("©alb"))
 	{

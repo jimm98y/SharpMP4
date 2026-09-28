@@ -14,7 +14,6 @@ public partial class ArtistSortBox : Box
 {
 	public const string TYPE = "soar";
 	public override string DisplayName { get { return "ArtistSortBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public ArtistSortBox(): base(IsoStream.FromFourCC("soar"))
 	{

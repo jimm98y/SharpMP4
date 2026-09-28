@@ -14,7 +14,6 @@ public partial class TrackNumberBox : Box
 {
 	public const string TYPE = "trkn";
 	public override string DisplayName { get { return "TrackNumberBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public TrackNumberBox(): base(IsoStream.FromFourCC("trkn"))
 	{

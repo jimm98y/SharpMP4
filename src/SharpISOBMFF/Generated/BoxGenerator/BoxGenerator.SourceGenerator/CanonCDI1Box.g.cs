@@ -20,7 +20,6 @@ public partial class CanonCDI1Box : Box
 
 	protected uint unknown; 
 	public uint Unknown { get { return this.unknown; } set { this.unknown = value; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public CanonCDI1Box(): base(IsoStream.FromFourCC("CDI1"))
 	{

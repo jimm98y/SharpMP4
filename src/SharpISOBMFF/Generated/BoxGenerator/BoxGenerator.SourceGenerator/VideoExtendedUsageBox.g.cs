@@ -14,7 +14,6 @@ public partial class VideoExtendedUsageBox : Box
 {
 	public const string TYPE = "vexu";
 	public override string DisplayName { get { return "VideoExtendedUsageBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public VideoExtendedUsageBox(): base(IsoStream.FromFourCC("vexu"))
 	{

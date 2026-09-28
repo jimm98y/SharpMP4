@@ -14,7 +14,6 @@ public partial class CustomBox : Box
 {
 	public const string TYPE = "----";
 	public override string DisplayName { get { return "CustomBox"; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
 	public CustomBox(): base(IsoStream.FromFourCC("----"))
 	{
