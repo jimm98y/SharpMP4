@@ -32,6 +32,9 @@ Sources:
              itself to compare the tags read with
                                 https://github.com/taglib/taglib, https://github.com/quodlibet/mutagen,
                                 https://github.com/exiftool/exiftool
+    Chromium The MP4 files Chromium's media stack is tested with: fragmented, encrypted (CENC,
+             cbcs), HDR, Dolby Vision, AC-4, and broken on purpose
+                                https://github.com/chromium/chromium/tree/main/media/test/data
 
 Only files directly in each set's folder are fetched: the subfolders the ITU keeps
 beside them hold superseded versions of the same streams.
@@ -45,7 +48,8 @@ Where the suites go. The conformance folder next to this script by default.
 Which suites to fetch: any of H264, H265, H266, AV1, IsoBmff (the file format
 conformance files, each with GPAC's dump of its boxes), Fate (FFmpeg's samples
 that are ISOBMFF or QuickTime files, about 140 MB) and Metadata (the test files of the
-metadata libraries, under 1 MB, and ExifTool, 9 MB). All of them by default.
+metadata libraries, under 1 MB, and ExifTool, 9 MB) and Chromium (the MP4 files of Chromium's
+media tests, 43 MB). All of them by default.
 
 .PARAMETER IncludeSvc
 Also fetches the H.264 scalable video coding set, 12.9 GB.
@@ -75,8 +79,8 @@ Everything, about 25 GB.
 param(
     [string]$Destination,
 
-    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata')]
-    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata'),
+    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium')]
+    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium'),
 
     [switch]$IncludeSvc,
     [switch]$IncludeArgon,
@@ -488,6 +492,28 @@ function Get-MetadataSet {
     }
 }
 
+# The MP4 files of Chromium's media tests (BSD-3-Clause), at the commit given: fragmented and
+# segmented files, encryption (CENC, cbcs, key rotation), HEVC HDR, Dolby Vision, AC-4, AV1, and files
+# broken on purpose. Listed by the folder's git tree - the contents listing stops at 1000 entries.
+$chromiumCommit = '30c2a44f19b32e0dc50175f3fa392ec41bd741e6'
+$chromiumFolder = 'media/test/data'
+$chromiumExtensions = '\.(mp4|m4a|m4s|m4v|mov|3gp|heic|heif|avif|mj2)$'
+
+function Get-ChromiumSet {
+    $parent = $chromiumFolder.Substring(0, $chromiumFolder.LastIndexOf('/'))
+    $name = $chromiumFolder.Substring($chromiumFolder.LastIndexOf('/') + 1)
+    $listing = Get-Text "https://api.github.com/repos/chromium/chromium/contents/$($parent)?ref=$chromiumCommit" | ConvertFrom-Json
+    $tree = ($listing | Where-Object { $_.name -eq $name }).sha
+    $entries = (Get-Text "https://api.github.com/repos/chromium/chromium/git/trees/$($tree)?recursive=1" | ConvertFrom-Json).tree
+    $files = @($entries | Where-Object { $_.type -eq 'blob' -and $_.path -match $chromiumExtensions })
+    Write-Host "chromium: $($files.Count) files"
+    foreach ($file in $files) {
+        $url = "https://raw.githubusercontent.com/chromium/chromium/$chromiumCommit/$chromiumFolder/$($file.path)"
+        $path = Join-Path (Join-Path $Destination 'chromium') $file.path.Replace('/', [IO.Path]::DirectorySeparatorChar)
+        Save-File $url $path $file.size | Out-Null
+    }
+}
+
 New-Item -ItemType Directory -Force -Path $Destination | Out-Null
 Write-Host "Downloading into $Destination"
 
@@ -505,6 +531,9 @@ foreach ($c in $Codec) {
     }
     elseif ($c -eq 'Metadata') {
         Get-MetadataSet
+    }
+    elseif ($c -eq 'Chromium') {
+        Get-ChromiumSet
     }
     else {
         foreach ($set in $ituSets[$c]) { Get-ItuSet $folders[$c] $set }

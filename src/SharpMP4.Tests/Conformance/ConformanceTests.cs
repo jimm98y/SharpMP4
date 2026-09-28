@@ -120,6 +120,39 @@ public class ConformanceTests
         CheckFilesAgainstThemselves("metadata-boxes", root, files, MalformedMetadataSetFiles);
     }
 
+    /// <summary>
+    /// Reads the MP4 files of Chromium's media tests - fragmented, segmented, encrypted, HDR, Dolby Vision,
+    /// AC-4, and broken on purpose - as <see cref="FateFilesReadWithoutSignsOfMisreading"/> reads FFmpeg's.
+    /// </summary>
+    [TestMethod]
+    public void ChromiumFilesReadWithoutSignsOfMisreading()
+    {
+        string? root = ConformanceCorpus.Locate();
+        if (root == null)
+            Assert.Inconclusive("no conformance files; run DownloadConformance.ps1, or set SHARPMP4_CONFORMANCE");
+
+        var files = ConformanceCorpus.ChromiumFiles(root);
+        if (files.Count == 0)
+            Assert.Inconclusive($"no Chromium files under {root}; run DownloadConformance.ps1 -Codec Chromium");
+
+        CheckFilesAgainstThemselves("chromium", root, files, MalformedChromiumFiles);
+    }
+
+    /// <summary>
+    /// Chromium's test files that are malformed on purpose, with what is wrong in them, as
+    /// <see cref="MalformedFateFiles"/>.
+    /// </summary>
+    private static readonly Dictionary<string, (string Why, string[] Defects)> MalformedChromiumFiles = new()
+    {
+        [Path.Combine("chromium", "bear-1280x720-av_frag-initsegment-mvhd_version_0-mvhd_duration_bits_all_set.mp4")] =
+            ("an init segment cut 5 bytes into the box after its 'moov'", ["file: left over"]),
+        [Path.Combine("chromium", "blackwhite_yuv420p_rec709.mp4")] =
+            ("an 'avcC' of 8 bytes, its header and nothing else", ["avc1/avcC: could not be read"]),
+        [Path.Combine("chromium", "duplicate_track_id.mp4")] =
+            ("a fuzzed file: 'trun's that overlap the boxes after them, and bytes of text where boxes are",
+             ["traf/1455: larger than its parent", "traf/trun: left over", "file/?: not a box type"]),
+    };
+
     private static void CheckFilesAgainstThemselves(string name, string root, IReadOnlyList<string> files, Dictionary<string, (string Why, string[] Defects)> malformedFiles)
     {
         var unknown = new ConcurrentDictionary<string, ConcurrentBag<string>>();

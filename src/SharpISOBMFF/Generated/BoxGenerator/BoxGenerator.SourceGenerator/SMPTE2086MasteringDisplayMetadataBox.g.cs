@@ -13,6 +13,8 @@ unsigned int(16) primaryGChromaticityX;
 unsigned int(16) primaryGChromaticityY;
 unsigned int(16) primaryBChromaticityX;
 unsigned int(16) primaryBChromaticityY;
+unsigned int(16) whitePointChromaticityX;
+unsigned int(16) whitePointChromaticityY;
  unsigned int(32) luminanceMax;
  unsigned int(32) luminanceMin;
  } 
@@ -40,6 +42,12 @@ public partial class SMPTE2086MasteringDisplayMetadataBox : FullBox
 	protected ushort primaryBChromaticityY; 
 	public ushort PrimaryBChromaticityY { get { return this.primaryBChromaticityY; } set { this.primaryBChromaticityY = value; } }
 
+	protected ushort whitePointChromaticityX; 
+	public ushort WhitePointChromaticityX { get { return this.whitePointChromaticityX; } set { this.whitePointChromaticityX = value; } }
+
+	protected ushort whitePointChromaticityY; 
+	public ushort WhitePointChromaticityY { get { return this.whitePointChromaticityY; } set { this.whitePointChromaticityY = value; } }
+
 	protected uint luminanceMax; 
 	public uint LuminanceMax { get { return this.luminanceMax; } set { this.luminanceMax = value; } }
 
@@ -60,6 +68,8 @@ public partial class SMPTE2086MasteringDisplayMetadataBox : FullBox
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.primaryGChromaticityY, "primaryGChromaticityY"); 
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.primaryBChromaticityX, "primaryBChromaticityX"); 
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.primaryBChromaticityY, "primaryBChromaticityY"); 
+		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.whitePointChromaticityX, "whitePointChromaticityX"); 
+		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.whitePointChromaticityY, "whitePointChromaticityY"); 
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.luminanceMax, "luminanceMax"); 
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.luminanceMin, "luminanceMin"); 
 		return boxSize;
@@ -75,6 +85,8 @@ public partial class SMPTE2086MasteringDisplayMetadataBox : FullBox
 		boxSize += stream.WriteUInt16( this.primaryGChromaticityY, "primaryGChromaticityY"); 
 		boxSize += stream.WriteUInt16( this.primaryBChromaticityX, "primaryBChromaticityX"); 
 		boxSize += stream.WriteUInt16( this.primaryBChromaticityY, "primaryBChromaticityY"); 
+		boxSize += stream.WriteUInt16( this.whitePointChromaticityX, "whitePointChromaticityX"); 
+		boxSize += stream.WriteUInt16( this.whitePointChromaticityY, "whitePointChromaticityY"); 
 		boxSize += stream.WriteUInt32( this.luminanceMax, "luminanceMax"); 
 		boxSize += stream.WriteUInt32( this.luminanceMin, "luminanceMin"); 
 		return boxSize;
@@ -90,6 +102,8 @@ public partial class SMPTE2086MasteringDisplayMetadataBox : FullBox
 		boxSize += 16; // primaryGChromaticityY
 		boxSize += 16; // primaryBChromaticityX
 		boxSize += 16; // primaryBChromaticityY
+		boxSize += 16; // whitePointChromaticityX
+		boxSize += 16; // whitePointChromaticityY
 		boxSize += 32; // luminanceMax
 		boxSize += 32; // luminanceMin
 		return boxSize;

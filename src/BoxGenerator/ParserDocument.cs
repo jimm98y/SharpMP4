@@ -168,7 +168,9 @@ namespace BoxGenerator
             // met in FFmpeg's samples: GSM, MPEG-H, Vorbis and WMA
             "agsm","mhm1","msVo","wma ",
             // FLAC in ISOBMFF (Xiph, isoflac.txt 3.3.1), its 'dfLa' a box of it
-            "fLaC"
+            "fLaC",
+            // met in Chromium's: AC-4 (ETSI TS 103 190-2, E.4), IAMF (AOMedia IAMF, 6.2), DTS-UHD (ETSI TS 103 491, B)
+            "ac-4","iamf","dtsx","dtsy"
             };
             string[] visualSampleEntryTypes = new string[]
             {
@@ -181,7 +183,9 @@ namespace BoxGenerator
             // met in FFmpeg's samples: ProRes, DNxHD/HR and Avid, Hap, DXV, CineForm, AIC, DVCPRO HD, Pixlet,
             // QuickDraw, Media 100, Indeo 3, VP6 with alpha, 8BPS and VC-1
             "apch","apco","apcs","ap4h","AVdn","AVdh","AVDJ","Hap1","Hap5","HapY","HapM","HapA","DXD3","DXDI",
-            "CFHD","icod","dvh2","dvh5","dvhq","pxlt","qdrw","dtPA","IV32","VP6A","8BPS","vc-1"
+            "CFHD","icod","dvh2","dvh5","dvhq","pxlt","qdrw","dtPA","IV32","VP6A","8BPS","vc-1",
+            // met in Chromium's: Dolby Vision in ISOBMFF, its HEVC and AVC entries whose parameter sets are in the configuration
+            "dvh1","dva1"
             };
 
             foreach (var type in audioSampleEntryTypes)

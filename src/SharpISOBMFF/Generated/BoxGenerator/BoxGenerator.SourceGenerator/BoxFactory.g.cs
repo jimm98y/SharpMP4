@@ -158,6 +158,7 @@ namespace SharpISOBMFF
                case "AACR":  return new AudibleAACRBox();
                case "aART":  return new AppleArtist2Box();
                case "ac-3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ac-3"));else return new CodecConfigurationBox(IsoStream.FromFourCC("ac-3"));break;
+               case "ac-4": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ac-4"));else return new CodecConfigurationBox(IsoStream.FromFourCC("ac-4"));break;
                case "acgl":  return new SubpicCommonGroupBox();
                case "ACLR":  return new ACLRBox();
                case "ADHR":  return new ADHRBox();
@@ -350,13 +351,17 @@ namespace SharpISOBMFF
                case "dtse": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtse"));else return new CodecConfigurationBox(IsoStream.FromFourCC("dtse"));break;
                case "dtsh": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtsh"));else return new CodecConfigurationBox(IsoStream.FromFourCC("dtsh"));break;
                case "dtsl": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtsl"));else return new CodecConfigurationBox(IsoStream.FromFourCC("dtsl"));break;
+               case "dtsx": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtsx"));else return new CodecConfigurationBox(IsoStream.FromFourCC("dtsx"));break;
+               case "dtsy": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtsy"));else return new CodecConfigurationBox(IsoStream.FromFourCC("dtsy"));break;
                case "dtyp":  return new MetaDatatypeDefinitionBox();
+               case "dva1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dva1"));break;
                case "dvav": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvav"));break;
                case "dvc ": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvc "));break;
                case "dvc1":  return new Dvc1Box();
                case "dvca": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dvca"));else return new CodecConfigurationBox(IsoStream.FromFourCC("dvca"));break;
                case "dvcC":  return new DoViConfigurationBox();
                case "dvcp": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvcp"));break;
+               case "dvh1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvh1"));break;
                case "dvh2": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvh2"));break;
                case "dvh5": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvh5"));break;
                case "dvhe": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvhe"));break;
@@ -472,6 +477,7 @@ namespace SharpISOBMFF
                case "hvt2": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("hvt2"));break;
                case "hvt3": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("hvt3"));break;
                case "hvtC":  return new HEVCTileConfigurationBox();
+               case "iamf": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("iamf"));else return new CodecConfigurationBox(IsoStream.FromFourCC("iamf"));break;
                case "icam":  return new IntrinsicCameraParametersBox();
                case "icef":  return new GenericCompressedUnitsItemInfoBox();
                case "icnu":  return new OMAIconURLBox();

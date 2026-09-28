@@ -634,7 +634,7 @@ namespace SharpISOBMFF
                 string baseRead = "\r\n\t\tboxSize += base.Read(stream, readSize);";
                 if (b.BoxName == "MetaBox")
                 {
-                    baseRead = "\r\n\t\tHasFullBoxHeader = stream.PeekMetaHasFullBoxHeader();\r\n\t\tif(IsQuickTime) boxSize += base.Read(stream, readSize);";
+                    baseRead = "\r\n\t\tHasFullBoxHeader = stream.PeekMetaHasFullBoxHeader(readSize);\r\n\t\tif(IsQuickTime) boxSize += base.Read(stream, readSize);";
                 }
                 cls.Append(baseRead);
             }
@@ -1162,7 +1162,12 @@ namespace SharpISOBMFF
 
                 if (condition.Contains("AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110"))
                 {
-                    // this condition is necessary, otherwise AVCDecoderConfigurationRecord can exceed its box size
+                    // ISO/IEC 14496-15:2010 5.2.4.1.1 lists 144, High 4:4:4, which H.264 withdrew in 2007 for
+                    // High 4:4:4 Predictive, 244: an avcC of that profile has the extension too.
+                    condition = condition.Replace("AVCProfileIndication  ==  144", "AVCProfileIndication  ==  144  ||  AVCProfileIndication  ==  244");
+
+                    // this condition is necessary, otherwise AVCDecoderConfigurationRecord can exceed its box size:
+                    // writers leave the extension out, High profile's too
                     if (methodType == MethodType.Read)
                     {
                         ret.Append($"\r\n{spacing}if (boxSize >= readSize || (readSize - boxSize) < 4) return boxSize; else HasExtensions = true;");

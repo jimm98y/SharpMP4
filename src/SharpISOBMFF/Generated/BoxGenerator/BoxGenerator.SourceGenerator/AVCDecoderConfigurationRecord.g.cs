@@ -151,7 +151,7 @@ public bool HasExtensions { get; set; } = false;
 
 		if (boxSize >= readSize || (readSize - boxSize) < 4) return boxSize; else HasExtensions = true;
 		if ( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  || 
-    AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144 )
+    AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144  ||  AVCProfileIndication  ==  244 )
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, 6,  out this.reserved1, "reserved1"); 
 			boxSize += stream.ReadBits(boxSize, readSize, 2,  out this.chroma_format, "chroma_format"); 
@@ -199,7 +199,7 @@ public bool HasExtensions { get; set; } = false;
 
 		if (!HasExtensions) return boxSize;
 		if ( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  || 
-    AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144 )
+    AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144  ||  AVCProfileIndication  ==  244 )
 		{
 			boxSize += stream.WriteBits(6,  this.reserved1, "reserved1"); 
 			boxSize += stream.WriteBits(2,  this.chroma_format, "chroma_format"); 
@@ -245,7 +245,7 @@ public bool HasExtensions { get; set; } = false;
 
 		if (!HasExtensions) return boxSize;
 		if ( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  || 
-    AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144 )
+    AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144  ||  AVCProfileIndication  ==  244 )
 		{
 			boxSize += 6; // reserved1
 			boxSize += 2; // chroma_format

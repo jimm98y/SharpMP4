@@ -14,7 +14,8 @@ aligned(8) class VPCodecConfigurationBox() extends FullBox('vpcC') {
  bit(1) videoFullRangeFlag;
  unsigned int(8) colourPrimaries; unsigned int(8) transferCharacteristics;
  unsigned int(8) matrixCoefficients;
- unsigned int(16) codecInitializationData;
+ unsigned int(16) codecInitializationDataSize;
+ unsigned int(8) codecInitializationData[codecInitializationDataSize];
  } 
 */
 public partial class VPCodecConfigurationBox : FullBox
@@ -46,8 +47,11 @@ public partial class VPCodecConfigurationBox : FullBox
 	protected byte matrixCoefficients; 
 	public byte MatrixCoefficients { get { return this.matrixCoefficients; } set { this.matrixCoefficients = value; } }
 
-	protected ushort codecInitializationData; 
-	public ushort CodecInitializationData { get { return this.codecInitializationData; } set { this.codecInitializationData = value; } }
+	protected ushort codecInitializationDataSize; 
+	public ushort CodecInitializationDataSize { get { return this.codecInitializationDataSize; } set { this.codecInitializationDataSize = value; } }
+
+	protected byte[] codecInitializationData; 
+	public byte[] CodecInitializationData { get { return this.codecInitializationData; } set { this.codecInitializationData = value; } }
 
 	public VPCodecConfigurationBox(): base(IsoStream.FromFourCC("vpcC"))
 	{
@@ -65,7 +69,8 @@ public partial class VPCodecConfigurationBox : FullBox
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.colourPrimaries, "colourPrimaries"); 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.transferCharacteristics, "transferCharacteristics"); 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.matrixCoefficients, "matrixCoefficients"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.codecInitializationData, "codecInitializationData"); 
+		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.codecInitializationDataSize, "codecInitializationDataSize"); 
+		boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(codecInitializationDataSize),  out this.codecInitializationData, "codecInitializationData"); 
 		return boxSize;
 	}
 
@@ -81,7 +86,8 @@ public partial class VPCodecConfigurationBox : FullBox
 		boxSize += stream.WriteUInt8( this.colourPrimaries, "colourPrimaries"); 
 		boxSize += stream.WriteUInt8( this.transferCharacteristics, "transferCharacteristics"); 
 		boxSize += stream.WriteUInt8( this.matrixCoefficients, "matrixCoefficients"); 
-		boxSize += stream.WriteUInt16( this.codecInitializationData, "codecInitializationData"); 
+		boxSize += stream.WriteUInt16( this.codecInitializationDataSize, "codecInitializationDataSize"); 
+		boxSize += stream.WriteUInt8Array((uint)(codecInitializationDataSize),  this.codecInitializationData, "codecInitializationData"); 
 		return boxSize;
 	}
 
@@ -97,7 +103,8 @@ public partial class VPCodecConfigurationBox : FullBox
 		boxSize += 8; // colourPrimaries
 		boxSize += 8; // transferCharacteristics
 		boxSize += 8; // matrixCoefficients
-		boxSize += 16; // codecInitializationData
+		boxSize += 16; // codecInitializationDataSize
+		boxSize += ((ulong)(codecInitializationDataSize) * 8); // codecInitializationData
 		return boxSize;
 	}
 }

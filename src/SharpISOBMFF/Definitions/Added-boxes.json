@@ -1179,7 +1179,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class VPCodecConfigurationBox() extends FullBox('vpcC') {\r\n unsigned int(8) profile;\r\n unsigned int(8) level;\r\n bit(4) bitDepth;\r\n bit(3) chromaSubsampling;\r\n bit(1) videoFullRangeFlag;\r\n unsigned int(8) colourPrimaries; unsigned int(8) transferCharacteristics;\r\n unsigned int(8) matrixCoefficients;\r\n unsigned int(16) codecInitializationData;\r\n } "
+      "syntax": "aligned(8) class VPCodecConfigurationBox() extends FullBox('vpcC') {\r\n unsigned int(8) profile;\r\n unsigned int(8) level;\r\n bit(4) bitDepth;\r\n bit(3) chromaSubsampling;\r\n bit(1) videoFullRangeFlag;\r\n unsigned int(8) colourPrimaries; unsigned int(8) transferCharacteristics;\r\n unsigned int(8) matrixCoefficients;\r\n unsigned int(16) codecInitializationDataSize;\r\n unsigned int(8) codecInitializationData[codecInitializationDataSize];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -1305,12 +1305,12 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ContentLightLevelBox() extends FullBox('CoLL') {\r\n unsigned int(16) maxCLL;\r\n unsigned int(8) maxFALL;\r\n } "
+      "syntax": "aligned(8) class ContentLightLevelBox() extends FullBox('CoLL') {\r\n unsigned int(16) maxCLL;\r\n unsigned int(16) maxFALL;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class SMPTE2086MasteringDisplayMetadataBox() extends FullBox('SmDm') {\r\n unsigned int(16) primaryRChromaticityX;\r\nunsigned int(16) primaryRChromaticityY;\r\nunsigned int(16) primaryGChromaticityX;\r\nunsigned int(16) primaryGChromaticityY;\r\nunsigned int(16) primaryBChromaticityX;\r\nunsigned int(16) primaryBChromaticityY;\r\n unsigned int(32) luminanceMax;\r\n unsigned int(32) luminanceMin;\r\n } "
+      "syntax": "aligned(8) class SMPTE2086MasteringDisplayMetadataBox() extends FullBox('SmDm') {\r\n unsigned int(16) primaryRChromaticityX;\r\nunsigned int(16) primaryRChromaticityY;\r\nunsigned int(16) primaryGChromaticityX;\r\nunsigned int(16) primaryGChromaticityY;\r\nunsigned int(16) primaryBChromaticityX;\r\nunsigned int(16) primaryBChromaticityY;\r\nunsigned int(16) whitePointChromaticityX;\r\nunsigned int(16) whitePointChromaticityY;\r\n unsigned int(32) luminanceMax;\r\n unsigned int(32) luminanceMin;\r\n } "
     },
     {
       "containers": [ "*" ],

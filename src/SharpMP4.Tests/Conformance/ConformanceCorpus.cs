@@ -157,6 +157,23 @@ public static class ConformanceCorpus
         return files.OrderBy(f => f, StringComparer.Ordinal).ToList();
     }
 
+    /// <summary>
+    /// The MP4 files of Chromium's media tests, in a stable order. SHARPMP4_CONFORMANCE_FILTER narrows them.
+    /// </summary>
+    public static IReadOnlyList<string> ChromiumFiles(string root)
+    {
+        string folder = Path.Combine(root, "chromium");
+        if (!Directory.Exists(folder))
+            return [];
+
+        string? filter = Environment.GetEnvironmentVariable("SHARPMP4_CONFORMANCE_FILTER");
+        return Directory.EnumerateFiles(folder, "*", SearchOption.AllDirectories)
+            .Where(f => !f.EndsWith(".part", StringComparison.OrdinalIgnoreCase))
+            .Where(f => string.IsNullOrEmpty(filter) || f.Contains(filter, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(f => f, StringComparer.Ordinal)
+            .ToList();
+    }
+
     /// <summary>The files of the metadata set, in a stable order. SHARPMP4_CONFORMANCE_FILTER narrows them.</summary>
     public static IReadOnlyList<string> MetadataSetFiles(string root)
     {

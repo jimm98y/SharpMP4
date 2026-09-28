@@ -218,11 +218,15 @@ namespace SharpISOBMFF
         /// <summary>
         /// Whether the 'meta' box about to be read starts with a version and flags, as ISOBMFF's
         /// MetaBox does, or goes straight to its first box, as the QuickTime 'meta' atom does:
-        /// the first has its 'hdlr' at bytes 8 to 12, the second at bytes 4 to 8. Null where the
-        /// stream cannot be read ahead, or neither is there.
+        /// the first has its 'hdlr' at bytes 8 to 12, the second at bytes 4 to 8. A box of 4 to 7
+        /// bytes (<paramref name="readSize"/>, in bits) holds no box, so it is the version and flags.
+        /// Null where the stream cannot be read ahead, or neither is there.
         /// </summary>
-        public bool? PeekMetaHasFullBoxHeader()
+        public bool? PeekMetaHasFullBoxHeader(ulong readSize = ulong.MaxValue)
         {
+            if (readSize != ulong.MaxValue && readSize >= 32 && readSize < 64)
+                return true;
+
             if (!CanStreamSeek())
                 return null;
 
@@ -300,7 +304,7 @@ namespace SharpISOBMFF
 
             if (correctedLength < length)
             {
-                throw new IsoEndOfStreamException(new StreamMarker(GetCurrentOffset(), GetStreamLength(), this));
+                throw new IsoEndOfStreamException(new StreamMarker(GetCurrentOffset(), GetStreamLength() - GetCurrentOffset(), this));
             }
 
             _stream.ReadExactly(value, offset, (int)correctedLength);
@@ -837,7 +841,7 @@ namespace SharpISOBMFF
 
             if (remaining > 0 && remaining < 8)
             {
-                throw new IsoEndOfStreamException(new StreamMarker(GetCurrentOffset(), GetStreamLength(), this));
+                throw new IsoEndOfStreamException(new StreamMarker(GetCurrentOffset(), GetStreamLength() - GetCurrentOffset(), this));
             }
 
             headerSize = header.Read(this, 0);
@@ -1261,8 +1265,9 @@ namespace SharpISOBMFF
             for (uint i = 0; i < count && consumed < remaining; i++)
             {
                 T c;
-                consumed += ReadClass<T>(boxSize + consumed, remaining, parent, factory, out c, name);
-                if (consumed > readSize)
+                // readSize, not remaining: the class reads what is left after boxSize + consumed of it
+                consumed += ReadClass<T>(boxSize + consumed, readSize, parent, factory, out c, name);
+                if (consumed > remaining)
                 {
                     throw new Exception($"Class read through!");
                 }
@@ -1767,7 +1772,7 @@ namespace SharpISOBMFF
         {
             if (count < 0)
             {
-                throw new IsoEndOfStreamException(new StreamMarker(GetCurrentOffset(), GetStreamLength(), this));
+                throw new IsoEndOfStreamException(new StreamMarker(GetCurrentOffset(), GetStreamLength() - GetCurrentOffset(), this));
             }
 
             CheckArrayAllocation(boxSize, readSize, (ulong)count, GetMinimumBitsPerEntry(typeof(T)), name);
@@ -1844,7 +1849,7 @@ namespace SharpISOBMFF
             if (minBitsPerEntry > 0 && count > remaining / minBitsPerEntry)
             {
                 this.Logger.LogDebug($"Invalid count of '{name}': {count} entries do not fit into the remaining {remaining >> 3} bytes");
-                throw new IsoEndOfStreamException(new StreamMarker(GetCurrentOffset(), GetStreamLength(), this));
+                throw new IsoEndOfStreamException(new StreamMarker(GetCurrentOffset(), GetStreamLength() - GetCurrentOffset(), this));
             }
         }
 
