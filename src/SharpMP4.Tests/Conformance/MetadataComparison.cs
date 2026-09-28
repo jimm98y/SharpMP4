@@ -80,6 +80,7 @@ public static partial class MetadataComparison
         }
 
         var ours = new Dictionary<string, List<Value>>(StringComparer.Ordinal);
+        var firstOnce = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var tag in sharp)
         {
             string scope = tag.Family == MetadataFamily.Xmp ? "file" : tag.TrackID == 0 ? "movie" : "track";
@@ -109,6 +110,13 @@ public static partial class MetadataComparison
             {
                 foreach (var (xmpKey, value) in XmpValues((string)tag.Value, xmpPrefixes))
                 {
+                    // ExifTool takes the toolkit and what a packet is about once per value: of a packet after
+                    // the first, only one other than the first packet's (XMP.pm, %recognizedAttrs)
+                    if (OncePerValue.Contains(xmpKey))
+                    {
+                        if (!firstOnce.TryAdd(xmpKey, value) && firstOnce[xmpKey] == value)
+                            continue;
+                    }
                     if (!ours.TryGetValue(xmpKey, out var xmpValues))
                         ours[xmpKey] = xmpValues = [];
                     xmpValues.Add(new Value([value]));
@@ -223,6 +231,10 @@ public static partial class MetadataComparison
             bool variable = VariableNamespaceStructures.Contains((top.Namespace, top.Name)) && fields.Count > 1;
             if (variable && fields[1].Namespace != top.Namespace)
                 id = Prefix(fields[1]) + ":" + id;
+            // A namespace ExifTool has no table of goes to its table of others, whose ids have the prefix:
+            // GIMP:api (XMP.pm, FoundXMP)
+            else if (!prefixes.ContainsKey(top.Namespace) && !WrapperNamespaces.Contains(top.Namespace))
+                id = top.Prefix + ":" + id;
             bool item = property.Path.Any(s => s.Index > 0);
             string? language = item && property.Language != null && property.Language != "x-default" ? property.Language : null;
             string key = Key("file", group, id, language);
@@ -236,6 +248,12 @@ public static partial class MetadataComparison
         }
         return values;
     }
+
+    /// <summary>The namespaces of the packet's wrapper, whose attributes ExifTool reads into tables of their own.</summary>
+    private static readonly HashSet<string> WrapperNamespaces = ["adobe:ns:meta/", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"];
+
+    /// <summary>The wrapper's attributes ExifTool takes once per value: the toolkit, and what the packet is about.</summary>
+    private static readonly HashSet<string> OncePerValue = [Key("file", "XMP-x", "xmptk", null), Key("file", "XMP-rdf", "about", null)];
 
     /// <summary>ExifTool's structures whose fields may be of any namespace (XMP.pm: NAMESPACE => undef).</summary>
     private static readonly HashSet<(string Namespace, string Name)> VariableNamespaceStructures =

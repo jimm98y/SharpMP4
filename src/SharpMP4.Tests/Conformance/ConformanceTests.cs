@@ -281,6 +281,29 @@ public class ConformanceTests
         CheckFilesAgainstThemselves("firefox", root, files, MalformedFirefoxFiles);
     }
 
+    /// <summary>
+    /// Reads the AVIF files of libavif's tests - still images and their items, grids, alpha, gain maps,
+    /// image sequences - as <see cref="FateFilesReadWithoutSignsOfMisreading"/> reads FFmpeg's.
+    /// </summary>
+    [TestMethod]
+    public void LibavifFilesReadWithoutSignsOfMisreading()
+    {
+        string? root = ConformanceCorpus.Locate();
+        if (root == null)
+            Assert.Inconclusive("no conformance files; run DownloadConformance.ps1, or set SHARPMP4_CONFORMANCE");
+
+        var files = ConformanceCorpus.LibavifFiles(root);
+        if (files.Count == 0)
+            Assert.Inconclusive($"no libavif files under {root}; run DownloadConformance.ps1 -Codec Libavif");
+
+        CheckFilesAgainstThemselves("libavif", root, files, MalformedLibavifFiles);
+    }
+
+    /// <summary>libavif's test files that are malformed, with what is wrong in them, as <see cref="MalformedFateFiles"/>.</summary>
+    private static readonly Dictionary<string, (string Why, string[] Defects)> MalformedLibavifFiles = new()
+    {
+    };
+
     /// <summary>Firefox's test files that are malformed, with what is wrong in them, as <see cref="MalformedFateFiles"/>.</summary>
     private static readonly Dictionary<string, (string Why, string[] Defects)> MalformedFirefoxFiles = new()
     {

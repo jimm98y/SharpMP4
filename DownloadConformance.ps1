@@ -38,6 +38,9 @@ Sources:
     Firefox  The MP4 files Firefox's media tests use: DASH segments, encrypted, AV1, HEVC, and the
              files of bug reports and crash tests
                                 https://github.com/mozilla-firefox/firefox/tree/main/dom/media/test
+    Libavif  The AVIF files libavif is tested with: still images and sequences, alpha, grids, gain
+             maps, sample transforms, and files broken on purpose
+                                https://github.com/AOMediaCodec/libavif/tree/main/tests/data
 
 Only files directly in each set's folder are fetched: the subfolders the ITU keeps
 beside them hold superseded versions of the same streams.
@@ -52,7 +55,8 @@ Which suites to fetch: any of H264, H265, H266, AV1, IsoBmff (the file format
 conformance files, each with GPAC's dump of its boxes), Fate (FFmpeg's samples
 that are ISOBMFF or QuickTime files, about 140 MB) and Metadata (the test files of the
 metadata libraries, under 1 MB, and ExifTool, 9 MB), Chromium (the MP4 files of Chromium's
-media tests, 43 MB) and Firefox (those of Firefox's, 18 MB). All of them by default.
+media tests, 43 MB), Firefox (those of Firefox's, 18 MB) and Libavif (libavif's AVIF files, 2 MB).
+All of them by default.
 
 .PARAMETER IncludeSvc
 Also fetches the H.264 scalable video coding set, 12.9 GB.
@@ -82,8 +86,8 @@ Everything, about 25 GB.
 param(
     [string]$Destination,
 
-    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox')]
-    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox'),
+    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif')]
+    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif'),
 
     [switch]$IncludeSvc,
     [switch]$IncludeArgon,
@@ -495,7 +499,7 @@ function Get-MetadataSet {
     }
 }
 
-$browserExtensions = '\.(mp4|m4a|m4s|m4v|mov|3gp|heic|heif|avif|mj2)$'
+$browserExtensions = '\.(mp4|m4a|m4s|m4v|mov|3gp|heic|heics|heif|avif|avifs|mj2)$'
 
 # The MP4 files of Chromium's media tests (BSD-3-Clause), at the commit given: fragmented and
 # segmented files, encryption (CENC, cbcs, key rotation), HEVC HDR, Dolby Vision, AC-4, AV1, and files
@@ -506,6 +510,11 @@ $chromiumSet = @{ Name = 'chromium'; Repo = 'chromium/chromium'; Commit = '30c2a
 # at the commit given: DASH init and media segments, encrypted (CENC, key rotation) and clear-key files,
 # AV1, HEVC, and the files of bug reports and crash tests - broken on purpose, or by what wrote them.
 $firefoxSet = @{ Name = 'firefox'; Repo = 'mozilla-firefox/firefox'; Commit = 'b478a70dbe9b20189bb57f12c05bc0d6a8f323bd'; Folder = 'dom/media/test' }
+
+# The AVIF files of libavif's tests (tests/data, BSD-2-Clause), at the commit given: items rather than
+# tracks - still images, grids, alpha, gain maps, sample transforms - image sequences, and files broken on
+# purpose. Its README says what each file is.
+$libavifSet = @{ Name = 'libavif'; Repo = 'AOMediaCodec/libavif'; Commit = 'ef43c7be4167464eab9947267fb6e9a88584910f'; Folder = 'tests/data' }
 
 # The files of a folder of a GitHub repository, at a commit, and in its subfolders, into a folder of their
 # own. Listed by the folder's git tree: the contents listing stops at 1000 entries.
@@ -547,6 +556,9 @@ foreach ($c in $Codec) {
     }
     elseif ($c -eq 'Firefox') {
         Get-GitHubFolderSet $firefoxSet
+    }
+    elseif ($c -eq 'Libavif') {
+        Get-GitHubFolderSet $libavifSet
     }
     else {
         foreach ($set in $ituSets[$c]) { Get-ItuSet $folders[$c] $set }

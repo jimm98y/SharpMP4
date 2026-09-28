@@ -1410,7 +1410,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ImagePyramidEntityGroupBox() extends TrackGroupTypeBox('pymd') {\r\n\t unsigned int(32) entity_count;\r\n unsigned int(32) entity_ids[]; \r\n } "
+      "syntax": "// ISO/IEC 23008-12 image pyramid entity group, as libheif's Box_pymd reads and writes it (libheif/box.cc)\r\naligned(8) class ImagePyramidEntityGroupBox extends EntityToGroupBox('pymd',0,0)\r\n{\r\n\tunsigned int(16) tile_size_x;\r\n\tunsigned int(16) tile_size_y;\r\n\tfor (i = 0; i < num_entities_in_group; i++) {\r\n\t\tunsigned int(16) layer_binning[i];\r\n\t\tunsigned int(16) tiles_in_layer_row_minus1[i];\r\n\t\tunsigned int(16) tiles_in_layer_column_minus1[i];\r\n\t}\r\n}"
     },
     {
       "containers": [ "*" ],
