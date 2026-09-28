@@ -1457,7 +1457,10 @@ namespace SharpISOBMFF
             availableSize -= (long)size;
             if (availableSize < sizeOfInstanceBits)
             {
+                // larger than its parent: what there is read, and the size it declares kept, to be written back
                 descriptor = new InvalidDescriptor(tag) as T;
+                descriptor.SizeOfSize = sizeOfSize;
+                descriptor.SizeOfInstance = (ulong)sizeOfInstance;
                 if (this.Logger.IsDebugEnabled)
                     this.Logger.LogDebug($"DES:{GetIndentation(descriptor)}\'{descriptor.DisplayName}\'");
                 size += descriptor.Read(this, (ulong) availableSize);
@@ -1635,6 +1638,9 @@ namespace SharpISOBMFF
             size += WriteUInt8(descriptor.Tag, "");
 
             ulong sizeOfInstance = descriptor.CalculateSize() + 8 * (ulong)(descriptor.Padding != null ? descriptor.Padding.Length : 0);
+            // a descriptor larger than its parent declares more than it has: the size it declared, as it was
+            if (descriptor is InvalidDescriptor)
+                sizeOfInstance = descriptor.SizeOfInstance << 3;
             size += WriteDescriptorSize(sizeOfInstance >> 3, descriptor.SizeOfSize >> 3);
             size += descriptor.Write(this);
             if (descriptor.Padding != null)
@@ -1819,7 +1825,16 @@ namespace SharpISOBMFF
         {
             if (readSize == ulong.MaxValue)
             {
-                return ReadBytes(readSize >> 3, out value);
+                // a box of size 0 runs to the end of the file (ISO/IEC 14496-12 4.2): what the stream has left
+                if (CanStreamSeek())
+                    return ReadBytes((ulong)Math.Max(0, GetStreamLength() - GetCurrentOffset()), out value);
+
+                var bytes = new List<byte>();
+                int b;
+                while ((b = ReadByteInternal()) >= 0)
+                    bytes.Add((byte)b);
+                value = bytes.ToArray();
+                return (ulong)value.Length << 3;
             }
 
             ulong remaining = readSize - boxSize;

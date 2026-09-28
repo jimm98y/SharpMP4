@@ -142,13 +142,15 @@ public static class ConformanceCorpus
     }
 
     /// <summary>
-    /// The files whose metadata is compared: the metadata set, the FATE samples, the file format
-    /// conformance files and the tests' metadata files. SHARPMP4_CONFORMANCE_FILTER narrows them as it does the others.
+    /// The files whose metadata is compared: the metadata set, the FATE samples, the browsers' test files, the
+    /// file format conformance files and the tests' metadata files. SHARPMP4_CONFORMANCE_FILTER narrows them as it does the others.
     /// </summary>
     public static IReadOnlyList<string> MetadataFiles(string root)
     {
         var files = MetadataSetFiles(root).ToList();
         files.AddRange(FateFiles(root));
+        files.AddRange(ChromiumFiles(root));
+        files.AddRange(FirefoxFiles(root));
         files.AddRange(FileFormatFiles(root).Select(f => f.File));
         // and the tests' own, which ExifTool wrote the tags of
         string testData = Path.Combine(AppContext.BaseDirectory, "TestData", "Metadata");
@@ -157,12 +159,16 @@ public static class ConformanceCorpus
         return files.OrderBy(f => f, StringComparer.Ordinal).ToList();
     }
 
-    /// <summary>
-    /// The MP4 files of Chromium's media tests, in a stable order. SHARPMP4_CONFORMANCE_FILTER narrows them.
-    /// </summary>
-    public static IReadOnlyList<string> ChromiumFiles(string root)
+    /// <summary>The MP4 files of Chromium's media tests, in a stable order. SHARPMP4_CONFORMANCE_FILTER narrows them.</summary>
+    public static IReadOnlyList<string> ChromiumFiles(string root) => FolderFiles(root, "chromium");
+
+    /// <summary>The MP4 files of Firefox's media tests, in a stable order. SHARPMP4_CONFORMANCE_FILTER narrows them.</summary>
+    public static IReadOnlyList<string> FirefoxFiles(string root) => FolderFiles(root, "firefox");
+
+    /// <summary>Every file of a set's folder and its subfolders, in a stable order.</summary>
+    private static IReadOnlyList<string> FolderFiles(string root, string name)
     {
-        string folder = Path.Combine(root, "chromium");
+        string folder = Path.Combine(root, name);
         if (!Directory.Exists(folder))
             return [];
 

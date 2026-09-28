@@ -118,6 +118,7 @@ public class ConformanceTests
         var files = ConformanceCorpus.FateFiles(root)
             .Concat(ConformanceCorpus.MetadataSetFiles(root))
             .Concat(ConformanceCorpus.ChromiumFiles(root))
+            .Concat(ConformanceCorpus.FirefoxFiles(root))
             .Concat(ConformanceCorpus.FileFormatFiles(root).Select(f => f.File))
             .ToList();
         if (files.Count == 0)
@@ -261,6 +262,50 @@ public class ConformanceTests
 
         CheckFilesAgainstThemselves("chromium", root, files, MalformedChromiumFiles);
     }
+
+    /// <summary>
+    /// Reads the MP4 files of Firefox's media tests - DASH segments, encrypted, AV1, HEVC, and the files of
+    /// bug reports and crash tests - as <see cref="FateFilesReadWithoutSignsOfMisreading"/> reads FFmpeg's.
+    /// </summary>
+    [TestMethod]
+    public void FirefoxFilesReadWithoutSignsOfMisreading()
+    {
+        string? root = ConformanceCorpus.Locate();
+        if (root == null)
+            Assert.Inconclusive("no conformance files; run DownloadConformance.ps1, or set SHARPMP4_CONFORMANCE");
+
+        var files = ConformanceCorpus.FirefoxFiles(root);
+        if (files.Count == 0)
+            Assert.Inconclusive($"no Firefox files under {root}; run DownloadConformance.ps1 -Codec Firefox");
+
+        CheckFilesAgainstThemselves("firefox", root, files, MalformedFirefoxFiles);
+    }
+
+    /// <summary>Firefox's test files that are malformed, with what is wrong in them, as <see cref="MalformedFateFiles"/>.</summary>
+    private static readonly Dictionary<string, (string Why, string[] Defects)> MalformedFirefoxFiles = new()
+    {
+        [Path.Combine("firefox", "crashtests", "1389304.mp4")] =
+            ("a fuzzed file: the last 'sidx' declares 0x0400002C bytes, one bit flipped from 0x2C", ["file/sidx: left over"]),
+        [Path.Combine("firefox", "crashtests", "1833894.mp4")] =
+            ("a fuzzed file: 'tfhd' and a box header in the file overwritten", ["traf/?: not a box type", "file/?: not a box type"]),
+        [Path.Combine("firefox", "crashtests", "1845350.mp4")] =
+            ("a fuzzed file: 'udta' misspelled 'udC6a'", ["moov/?: not a box type"]),
+        [Path.Combine("firefox", "crashtests", "1859600.mp4")] =
+            ("a fuzzed file: an 'hvcC' whose SPS declares 7983 bytes in a box of 2453", ["hev1/hvcC: could not be read"]),
+        [Path.Combine("firefox", "crashtests", "encrypted-track-with-bad-sample-description-index.mp4")] =
+            ("a fuzzed file: an 'mehd' declaring 33296 bytes, and a 'moof' misspelled 'moFFf'",
+             ["mvex/mehd: larger than its parent", "file/?: not a box type"]),
+        [Path.Combine("firefox", "crashtests", "encrypted-track-with-sample-missing-cenc-aux.mp4")] =
+            ("a fuzzed file: a 'saio' of version 0xC0, which no version is, read as 64 bit offsets it has no room for", ["traf/saio: could not be read"]),
+        [Path.Combine("firefox", "crashtests", "encrypted-track-without-tenc.mp4")] =
+            ("'tenc' renamed '02enc', to test a track without it", ["schi/?: not a box type"]),
+        [Path.Combine("firefox", "crashtests", "mp4_box_emptyrange.mp4")] =
+            ("a fuzzed file: an 'elst' and a 'meta' child declaring more than their parents have, and boxes overwritten",
+             ["edts/elst: larger than its parent", "meta/?: not a box type", "meta/000000FF: larger than its parent", "file/?: not a box type"]),
+        [Path.Combine("firefox", "crashtests", "small-timebase.mp4")] =
+            ("a fuzzed file: a descriptor in the 'esds', and an item list 'data', declaring more than their parents have, and 'stsd' misspelled 'sd00s'",
+             ["mp4a/esds/ES_Descriptor/UnknownDescriptor: larger than its parent", "stbl/?: not a box type", "00o00t/data: larger than its parent"]),
+    };
 
     /// <summary>
     /// Chromium's test files that are malformed on purpose, with what is wrong in them, as

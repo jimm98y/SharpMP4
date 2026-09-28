@@ -9,11 +9,19 @@ namespace SharpISOBMFF
 aligned(8) class VPCodecConfigurationBox() extends FullBox('vpcC') {
  unsigned int(8) profile;
  unsigned int(8) level;
+ if (version == 0) {
+ bit(4) bitDepth;
+ bit(4) colorSpace;
+ bit(4) chromaSubsampling;
+ bit(3) transferFunction;
+ bit(1) videoFullRangeFlag;
+ } else {
  bit(4) bitDepth;
  bit(3) chromaSubsampling;
  bit(1) videoFullRangeFlag;
  unsigned int(8) colourPrimaries; unsigned int(8) transferCharacteristics;
  unsigned int(8) matrixCoefficients;
+ }
  unsigned int(16) codecInitializationDataSize;
  unsigned int(8) codecInitializationData[codecInitializationDataSize];
  } 
@@ -32,8 +40,14 @@ public partial class VPCodecConfigurationBox : FullBox
 	protected byte bitDepth; 
 	public byte BitDepth { get { return this.bitDepth; } set { this.bitDepth = value; } }
 
+	protected byte colorSpace; 
+	public byte ColorSpace { get { return this.colorSpace; } set { this.colorSpace = value; } }
+
 	protected byte chromaSubsampling; 
 	public byte ChromaSubsampling { get { return this.chromaSubsampling; } set { this.chromaSubsampling = value; } }
+
+	protected byte transferFunction; 
+	public byte TransferFunction { get { return this.transferFunction; } set { this.transferFunction = value; } }
 
 	protected bool videoFullRangeFlag; 
 	public bool VideoFullRangeFlag { get { return this.videoFullRangeFlag; } set { this.videoFullRangeFlag = value; } }
@@ -63,12 +77,25 @@ public partial class VPCodecConfigurationBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.profile, "profile"); 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.level, "level"); 
-		boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.bitDepth, "bitDepth"); 
-		boxSize += stream.ReadBits(boxSize, readSize, 3,  out this.chromaSubsampling, "chromaSubsampling"); 
-		boxSize += stream.ReadBit(boxSize, readSize,  out this.videoFullRangeFlag, "videoFullRangeFlag"); 
-		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.colourPrimaries, "colourPrimaries"); 
-		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.transferCharacteristics, "transferCharacteristics"); 
-		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.matrixCoefficients, "matrixCoefficients"); 
+
+		if (version == 0)
+		{
+			boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.bitDepth, "bitDepth"); 
+			boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.colorSpace, "colorSpace"); 
+			boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.chromaSubsampling, "chromaSubsampling"); 
+			boxSize += stream.ReadBits(boxSize, readSize, 3,  out this.transferFunction, "transferFunction"); 
+			boxSize += stream.ReadBit(boxSize, readSize,  out this.videoFullRangeFlag, "videoFullRangeFlag"); 
+		}
+
+		else 
+		{
+			boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.bitDepth, "bitDepth"); 
+			boxSize += stream.ReadBits(boxSize, readSize, 3,  out this.chromaSubsampling, "chromaSubsampling"); 
+			boxSize += stream.ReadBit(boxSize, readSize,  out this.videoFullRangeFlag, "videoFullRangeFlag"); 
+			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.colourPrimaries, "colourPrimaries"); 
+			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.transferCharacteristics, "transferCharacteristics"); 
+			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.matrixCoefficients, "matrixCoefficients"); 
+		}
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.codecInitializationDataSize, "codecInitializationDataSize"); 
 		boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(codecInitializationDataSize),  out this.codecInitializationData, "codecInitializationData"); 
 		return boxSize;
@@ -80,12 +107,25 @@ public partial class VPCodecConfigurationBox : FullBox
 		boxSize += base.Write(stream);
 		boxSize += stream.WriteUInt8( this.profile, "profile"); 
 		boxSize += stream.WriteUInt8( this.level, "level"); 
-		boxSize += stream.WriteBits(4,  this.bitDepth, "bitDepth"); 
-		boxSize += stream.WriteBits(3,  this.chromaSubsampling, "chromaSubsampling"); 
-		boxSize += stream.WriteBit( this.videoFullRangeFlag, "videoFullRangeFlag"); 
-		boxSize += stream.WriteUInt8( this.colourPrimaries, "colourPrimaries"); 
-		boxSize += stream.WriteUInt8( this.transferCharacteristics, "transferCharacteristics"); 
-		boxSize += stream.WriteUInt8( this.matrixCoefficients, "matrixCoefficients"); 
+
+		if (version == 0)
+		{
+			boxSize += stream.WriteBits(4,  this.bitDepth, "bitDepth"); 
+			boxSize += stream.WriteBits(4,  this.colorSpace, "colorSpace"); 
+			boxSize += stream.WriteBits(4,  this.chromaSubsampling, "chromaSubsampling"); 
+			boxSize += stream.WriteBits(3,  this.transferFunction, "transferFunction"); 
+			boxSize += stream.WriteBit( this.videoFullRangeFlag, "videoFullRangeFlag"); 
+		}
+
+		else 
+		{
+			boxSize += stream.WriteBits(4,  this.bitDepth, "bitDepth"); 
+			boxSize += stream.WriteBits(3,  this.chromaSubsampling, "chromaSubsampling"); 
+			boxSize += stream.WriteBit( this.videoFullRangeFlag, "videoFullRangeFlag"); 
+			boxSize += stream.WriteUInt8( this.colourPrimaries, "colourPrimaries"); 
+			boxSize += stream.WriteUInt8( this.transferCharacteristics, "transferCharacteristics"); 
+			boxSize += stream.WriteUInt8( this.matrixCoefficients, "matrixCoefficients"); 
+		}
 		boxSize += stream.WriteUInt16( this.codecInitializationDataSize, "codecInitializationDataSize"); 
 		boxSize += stream.WriteUInt8Array((uint)(codecInitializationDataSize),  this.codecInitializationData, "codecInitializationData"); 
 		return boxSize;
@@ -97,12 +137,25 @@ public partial class VPCodecConfigurationBox : FullBox
 		boxSize += base.CalculateSize();
 		boxSize += 8; // profile
 		boxSize += 8; // level
-		boxSize += 4; // bitDepth
-		boxSize += 3; // chromaSubsampling
-		boxSize += 1; // videoFullRangeFlag
-		boxSize += 8; // colourPrimaries
-		boxSize += 8; // transferCharacteristics
-		boxSize += 8; // matrixCoefficients
+
+		if (version == 0)
+		{
+			boxSize += 4; // bitDepth
+			boxSize += 4; // colorSpace
+			boxSize += 4; // chromaSubsampling
+			boxSize += 3; // transferFunction
+			boxSize += 1; // videoFullRangeFlag
+		}
+
+		else 
+		{
+			boxSize += 4; // bitDepth
+			boxSize += 3; // chromaSubsampling
+			boxSize += 1; // videoFullRangeFlag
+			boxSize += 8; // colourPrimaries
+			boxSize += 8; // transferCharacteristics
+			boxSize += 8; // matrixCoefficients
+		}
 		boxSize += 16; // codecInitializationDataSize
 		boxSize += ((ulong)(codecInitializationDataSize) * 8); // codecInitializationData
 		return boxSize;
