@@ -479,6 +479,7 @@ namespace SharpISOBMFF
                case "hvt3": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("hvt3"));break;
                case "hvtC":  return new HEVCTileConfigurationBox();
                case "iacb":  return new IAConfigurationBox();
+               case "IAD1":  return new CanonIAD1Box();
                case "iamf": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("iamf"));else return new CodecConfigurationBox(IsoStream.FromFourCC("iamf"));break;
                case "icam":  return new IntrinsicCameraParametersBox();
                case "icef":  return new GenericCompressedUnitsItemInfoBox();
@@ -939,6 +940,7 @@ namespace SharpISOBMFF
                case "tlou":  return new TrackLoudnessInfo();
                case "tmax":  return new HintMaxRelativeTime();
                case "tmcd": if(parent == "stsd") return new TimeCodeSampleEntry(); else return new TimeCodeTrackBox();
+               case "tmci":  return new TimecodeMediaInfoMisspelledBox();
                case "tmin":  return new HintMinRelativeTime();
                case "tmpo":  return new AppleBeatsPerMinuteBox();
                case "tnal":  return new ThumbnailImageBoxtnalDup(); // TODO: fix duplicate

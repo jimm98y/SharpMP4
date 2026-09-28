@@ -102,6 +102,9 @@ class AudioSpecificConfig() extends BaseDescriptor : bit(8) tag=DecSpecificInfoT
     case 41:
       SymbolicMusicSpecificConfig();
       break;
+    case 42: // USAC (ISO/IEC 23003-3), which this edition (2009) does not list
+      UsacConfig();
+      break;
     default:
       /* reserved *//*
       break;
@@ -244,6 +247,9 @@ public partial class AudioSpecificConfig : BaseDescriptor
 
 	protected SymbolicMusicSpecificConfig SymbolicMusicSpecificConfig; 
 	public SymbolicMusicSpecificConfig _SymbolicMusicSpecificConfig { get { return this.SymbolicMusicSpecificConfig; } set { this.SymbolicMusicSpecificConfig = value; } }
+
+	protected UsacConfig UsacConfig; 
+	public UsacConfig _UsacConfig { get { return this.UsacConfig; } set { this.UsacConfig = value; } }
 
 	protected byte epConfig; 
 	public byte EpConfig { get { return this.epConfig; } set { this.epConfig = value; } }
@@ -404,6 +410,11 @@ public partial class AudioSpecificConfig : BaseDescriptor
 			case 40:
 			case 41:
 			boxSize += stream.ReadClass(boxSize, readSize, this, () => new SymbolicMusicSpecificConfig(),  out this.SymbolicMusicSpecificConfig, "SymbolicMusicSpecificConfig"); 
+			break;
+
+			case 42:
+			/*  USAC (ISO/IEC 23003-3), which this edition (2009) does not list */
+			boxSize += stream.ReadClass(boxSize, readSize, this, () => new UsacConfig(),  out this.UsacConfig, "UsacConfig"); 
 			break;
 
 			default:
@@ -634,6 +645,11 @@ public partial class AudioSpecificConfig : BaseDescriptor
 			boxSize += stream.WriteClass( this.SymbolicMusicSpecificConfig, "SymbolicMusicSpecificConfig"); 
 			break;
 
+			case 42:
+			/*  USAC (ISO/IEC 23003-3), which this edition (2009) does not list */
+			boxSize += stream.WriteClass( this.UsacConfig, "UsacConfig"); 
+			break;
+
 			default:
 
 			/*  reserved  */
@@ -860,6 +876,11 @@ public partial class AudioSpecificConfig : BaseDescriptor
 			case 40:
 			case 41:
 			boxSize += IsoStream.CalculateClassSize(SymbolicMusicSpecificConfig); // SymbolicMusicSpecificConfig
+			break;
+
+			case 42:
+			/*  USAC (ISO/IEC 23003-3), which this edition (2009) does not list */
+			boxSize += IsoStream.CalculateClassSize(UsacConfig); // UsacConfig
 			break;
 
 			default:

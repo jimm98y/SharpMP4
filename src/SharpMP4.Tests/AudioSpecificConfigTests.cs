@@ -57,7 +57,7 @@ public class AudioSpecificConfigTests
     [DataRow("138856e5a54880", 2, 0, 22050, 44100, 1, true, true, 7ul, DisplayName = "CT_DecoderCheck/File4.mp4: SBR and PS after 0x2b7 and 0x548")]
     [DataRow("140856e5ad4880", 2, 0, 16000, 32000, 1, true, true, 7ul, DisplayName = "tones_afconvert_16000_stereo_aac_he2: SBR and PS after 0x2b7 and 0x548")]
     [DataRow("f8e82000", 39, 0, 44100, 0, 1, false, false, 2ul, DisplayName = "er_eld1001np_44_ep0: ELD, escaped as 31 and 7")]
-    [DataRow("f94643221cc05852002000a04046d0b800", 42, 0, 48000, 0, 2, false, false, 106ul, DisplayName = "usac/xhe_target_level: USAC, its UsacConfig kept as bits")]
+    [DataRow("f94643221cc05852002000a04046d0b800", 42, 0, 48000, 0, 2, false, false, 5ul, DisplayName = "usac/xhe_target_level: USAC, its UsacConfig 14 bytes after 19 bits, 5 after them")]
     [DataRow("1190000000", 2, 0, 48000, 0, 2, false, false, 13ul, DisplayName = "twofields_packet: zeros after the config")]
     public void ReadsAndWritesBackTheSignallingAndWhatFollows(string hex, int objectType, int signalledType, int samplingFrequency,
         int extensionSamplingFrequency, int channelConfiguration, bool sbr, bool ps, ulong remainingBits)
@@ -98,6 +98,30 @@ public class AudioSpecificConfigTests
         Assert.IsTrue(als.Floating);
         Assert.AreEqual(44u, als.HeaderSize);
         Assert.AreEqual("RIFF", System.Text.Encoding.ASCII.GetString(als.OrigHeader, 0, 4));
+
+        Assert.AreEqual((ulong)bytes.Length * 8, read);
+        Assert.AreEqual((ulong)bytes.Length * 8, config.CalculateSize());
+        CollectionAssert.AreEqual(bytes, Write(config));
+    }
+
+    /// <summary>
+    /// ALS's channel rearrangement (11.4.1, Table 11.1), which none of the samples has: a config built by hand
+    /// of 3 channels (channels = 2), chan_pos of ChBits = ceil[log2(3)] = 2 bits each for each of them, then the
+    /// byte_align of 2 bits, no header (header_size 0xFFFFFFFF) and a trailer of 4 bytes.
+    /// </summary>
+    [TestMethod]
+    public void ReadsAndWritesBackAlsChannelPositions()
+    {
+        byte[] bytes = Convert.FromHexString("f88600414c53000000bb80000003e800020407ff000014010084ffffffff0000000444415441");
+        var (config, read) = Read(bytes);
+        var als = config._ALSSpecificConfig;
+
+        Assert.AreEqual(2, als.Channels);
+        Assert.IsTrue(als.ChanSort);
+        CollectionAssert.AreEqual(new byte[] { 2, 0, 1 }, als.ChanPos.Select(p => p[0]).ToArray());
+        Assert.AreEqual(2, als.ByteAlignment.Bits);
+        Assert.AreEqual(0xFFFFFFFFu, als.HeaderSize);
+        Assert.AreEqual("DATA", System.Text.Encoding.ASCII.GetString(als.OrigTrailer));
 
         Assert.AreEqual((ulong)bytes.Length * 8, read);
         Assert.AreEqual((ulong)bytes.Length * 8, config.CalculateSize());

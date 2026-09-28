@@ -16,7 +16,7 @@
         "*"
       ],
       "type": "Box",
-      "syntax": "// E.5, Pseudocode E.2: an ac4_dsi_v1() (E.6.1), to the end of the box\r\naligned(8) class AC4SpecificBox extends Box('dac4') {\r\n bit(8) ac4_dsi_v1[];\r\n}"
+      "syntax": "// E.5, Pseudocode E.2: an ac4_dsi_v1() (E.6.1), to the end of the box\r\naligned(8) class AC4SpecificBox extends Box('dac4') {\r\n bit(3) ac4_dsi_version;\r\n bit(7) bitstream_version;\r\n bit(1) fs_index;\r\n bit(4) frame_rate_index;\r\n bit(9) n_presentations;\r\n if (bitstream_version > 1) {\r\n  bit(1) b_program_id;\r\n  if (b_program_id) {\r\n   bit(16) short_program_id;\r\n   bit(1) b_uuid;\r\n   if (b_uuid) {\r\n    bit(8) program_uuid[16];\r\n   }\r\n  }\r\n }\r\n AC4BitrateDsi ac4_bitrate_dsi;\r\n byte_alignment(); // byte_align, 0..7: to a byte from the start of ac4_dsi_v1\r\n AC4PresentationDsi presentations[n_presentations];\r\n}\r\n// E.7.1\r\naligned(8) class AC4BitrateDsi() {\r\n bit(2) bit_rate_mode;\r\n bit(32) bit_rate;\r\n bit(32) bit_rate_precision;\r\n}\r\n// a presentation of ac4_dsi_v1(): its version, and its pres_bytes (pres_bytes += add_pres_bytes). Its content -\r\n// ac4_presentation_v1_dsi() (E.10), ac4_presentation_v0_dsi() (TS 103 190-1), then skip_area - as bytes, to be defined\r\naligned(8) class AC4PresentationDsi() {\r\n bit(8) presentation_version;\r\n bit(8) pres_bytes;\r\n if (pres_bytes == 255) {\r\n  bit(16) add_pres_bytes;\r\n }\r\n bit(8) presentation_data[pres_bytes + add_pres_bytes];\r\n}"
     },
     {
       "fourcc": "lac4",

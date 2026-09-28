@@ -320,6 +320,14 @@ namespace SharpISOBMFF
                 throw new IsoEndOfStreamException(new StreamMarker(GetCurrentOffset(), GetStreamLength() - GetCurrentOffset(), this));
             }
 
+            if ((this.bitstream.BitsPosition & 7) != 0)
+            {
+                // after bits that end within a byte (UsacConfig's bytes after the 30 bits before them), bit by bit
+                for (ulong i = 0; i < correctedLength; i++)
+                    value[offset + (int)i] = ReadByte();
+                return correctedLength << 3;
+            }
+
             _stream.ReadExactly(value, offset, (int)correctedLength);
 
             return correctedLength << 3;
@@ -327,10 +335,13 @@ namespace SharpISOBMFF
 
         public ulong WriteBytes(ulong count, byte[] value)
         {
-            //for (ulong i = 0; i < count; i++)
-            //{
-            //    WriteByte(value[i]);
-            //}
+            if ((this.bitstream.BitsPosition & 7) != 0)
+            {
+                // after bits that end within a byte, bit by bit after them
+                for (ulong i = 0; i < count; i++)
+                    WriteByte(value[i]);
+                return count << 3;
+            }
             _stream.Write(value, 0, (int)count);
             return count << 3;
         }

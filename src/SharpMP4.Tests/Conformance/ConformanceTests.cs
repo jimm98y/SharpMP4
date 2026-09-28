@@ -345,6 +345,8 @@ public class ConformanceTests
             ("an 8 byte 'box' of type 0x00000099 after the 'colr' of its 'avc1'", ["avc1/?: not a box type"]),
         [Path.Combine("fate", "mov", "invalid_elst_entry_count.mov")] =
             ("an 'elst' counting more entries than it holds", ["edts/elst: could not be read"]),
+        [Path.Combine("fate", "mov", "mp4-with-mov-in24-ver.mp4")] =
+            ("'tcmi' misspelled 'tmci', with 2 zero bytes after its font name", ["tmcd/tmci: left over"]),
         [Path.Combine("fate", "qt-surge-suite", "surge-2-16-B-QDM2.mov")] =
             ("8 bytes after the terminator of its 'wave', that no box can be", ["wave/00000004: larger than its parent"]),
     };
