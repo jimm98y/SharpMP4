@@ -513,6 +513,12 @@ namespace BoxGenerator
                     info.IsSigned = false;
                     break;
 
+                case "leb128": // 1 to 8 bytes, 7 bits each (AV1 4.10.5, IAMF 4.2)
+                    info.FieldType = ParsedBoxType.Leb128;
+                    info.ElementSizeInBits = 8;
+                    info.IsSigned = false;
+                    break;
+
                 case "float":
                 case "double":
                 case "BEFloat32":
@@ -593,7 +599,7 @@ namespace BoxGenerator
             if (info.FieldType == ParsedBoxType.Number && info.ElementSizeInBits == 0)
                 throw new NotSupportedException($"{fieldType.Type} is unknown");
 
-            if (info.FieldType != ParsedBoxType.Number && info.FieldType != ParsedBoxType.String && !info.IsFloatingPoint && info.FieldType != ParsedBoxType.ByteAlignment)
+            if (info.FieldType != ParsedBoxType.Number && info.FieldType != ParsedBoxType.String && !info.IsFloatingPoint && info.FieldType != ParsedBoxType.ByteAlignment && info.FieldType != ParsedBoxType.Leb128)
             {
                 info.Ancestors = GetClassAncestors(fieldType.Type);
 

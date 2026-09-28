@@ -44,6 +44,9 @@
 		<AdditionalFiles Include="Definitions\QuickTime-boxes.json" />
 		<AdditionalFiles Include="Definitions\Opus-boxes.json" />
 		<AdditionalFiles Include="Definitions\FLAC-boxes.json" />
+		<AdditionalFiles Include="Definitions\AC4-boxes.json" />
+		<AdditionalFiles Include="Definitions\DTSUHD-boxes.json" />
+		<AdditionalFiles Include="Definitions\IAMF-boxes.json" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(AutoGenerateCode) == 'true'">

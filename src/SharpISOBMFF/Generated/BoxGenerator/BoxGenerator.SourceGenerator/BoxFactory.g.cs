@@ -315,6 +315,7 @@ namespace SharpISOBMFF
                case "cxfm":  return new CameraSystemTransformBox();
                case "d263":  return new H263SpecificBox();
                case "dac3":  return new AC3SpecificBox();
+               case "dac4":  return new AC4SpecificBox();
                case "dadj":  return new StereoComfortDisparityAdjustmentBox();
                case "damr":  return new AmrSpecificBox();
                case "data":  return new DataBox();
@@ -477,6 +478,7 @@ namespace SharpISOBMFF
                case "hvt2": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("hvt2"));break;
                case "hvt3": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("hvt3"));break;
                case "hvtC":  return new HEVCTileConfigurationBox();
+               case "iacb":  return new IAConfigurationBox();
                case "iamf": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("iamf"));else return new CodecConfigurationBox(IsoStream.FromFourCC("iamf"));break;
                case "icam":  return new IntrinsicCameraParametersBox();
                case "icef":  return new GenericCompressedUnitsItemInfoBox();
@@ -545,6 +547,7 @@ namespace SharpISOBMFF
                case "kstb":  return new KandaoKSTBBox();
                case "kvar":  return new KandaoKVARBox();
                case "kywd":  return new ThreeGPPKeywordsBox();
+               case "lac4":  return new AC4PresentationLabelBox();
                case "ldep":  return new TierDependencyBox();
                case "ldes":  return new AppleLongDescriptionBox();
                case "ldst":  return new CameraSystemLensDistortionsBox();
@@ -982,6 +985,7 @@ namespace SharpISOBMFF
                case "udat":  return new GPSLogBox();
                case "udes":  return new UserDescriptionProperty();
                case "udta":  return new UserDataBox();
+               case "udts":  return new DTSUHDSpecificBox();
                case "ulaw": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ulaw"));else return new CodecConfigurationBox(IsoStream.FromFourCC("ulaw"));break;
                case "uncC":  return new UncompressedFrameConfigurationBox();
                case "uncv": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("uncv"));break;

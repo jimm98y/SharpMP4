@@ -588,6 +588,47 @@ namespace SharpISOBMFF
             return 8 - (boxSize % 8);
         }
 
+        /// <summary>
+        /// A leb128 (AV1 4.10.5, IAMF 4.2): 7 bits a byte, the lowest first, each byte but the last with its top
+        /// bit set; at most 8 bytes. Kept with the number of bytes it was read in, which a writer may pad.
+        /// </summary>
+        public ulong ReadLeb128(ulong boxSize, ulong readSize, out Leb128 value, string name)
+        {
+            ulong result = 0;
+            int length = 0;
+            byte b;
+            do
+            {
+                ReadBits(boxSize + (ulong)length * 8, readSize, 8, out b, name);
+                result |= (ulong)(b & 0x7f) << (7 * length);
+                length++;
+            }
+            while ((b & 0x80) != 0 && length < 8);
+
+            value = new Leb128(result, length);
+            LogEnd(name, (ulong)length * 8, value);
+            return (ulong)length * 8;
+        }
+
+        public ulong WriteLeb128(Leb128 value, string name)
+        {
+            int length = Math.Max(value.Length, Leb128.MinimalLength(value.Value));
+            for (int i = 0; i < length; i++)
+            {
+                byte b = (byte)((value.Value >> (7 * i)) & 0x7f);
+                if (i < length - 1)
+                    b |= 0x80;
+                WriteBits(8, b, name);
+            }
+            LogEnd(name, (ulong)length * 8, value);
+            return (ulong)length * 8;
+        }
+
+        public static ulong CalculateLeb128Size(Leb128 value)
+        {
+            return (ulong)Math.Max(value.Length, Leb128.MinimalLength(value.Value)) * 8;
+        }
+
         #endregion // Bits
 
         #region Strings
@@ -2867,6 +2908,37 @@ namespace SharpISOBMFF
         {
             return Encoding.UTF8.GetString(text);
         }
+    }
+
+    /// <summary>
+    /// A leb128 value, and the number of bytes it takes: at least as many as the value needs, more where
+    /// the writer padded it, so that it is written back as it was.
+    /// </summary>
+    public struct Leb128
+    {
+        public ulong Value { get; }
+
+        public int Length { get; }
+
+        public Leb128(ulong value, int length = 0)
+        {
+            Value = value;
+            Length = Math.Max(length, MinimalLength(value));
+        }
+
+        public static int MinimalLength(ulong value)
+        {
+            int length = 1;
+            while ((value >>= 7) != 0)
+                length++;
+            return length;
+        }
+
+        public static implicit operator ulong(Leb128 value) => value.Value;
+
+        public static implicit operator Leb128(ulong value) => new Leb128(value);
+
+        public override string ToString() => Value.ToString();
     }
 
     public class MultiLanguageString

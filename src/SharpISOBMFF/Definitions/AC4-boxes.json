@@ -1,0 +1,30 @@
+﻿{
+  "name": "Boxes",
+  "description": "AC-4 in ISOBMFF (ETSI TS 103 190-2 V1.3.1, Annex E)",
+  "entries": [
+    {
+      "fourcc": "ac-4",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "// E.4, Pseudocode E.1\r\naligned(8) class AC4SampleEntry extends AudioSampleEntry('ac-4') {\r\n AC4SpecificBox();\r\n // we permit any number of AC4PresentationLabel boxes:\r\n AC4PresentationLabelBox() [];\r\n Box () [];\r\n}"
+    },
+    {
+      "fourcc": "dac4",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "// E.5, Pseudocode E.2: an ac4_dsi_v1() (E.6.1), to the end of the box\r\naligned(8) class AC4SpecificBox extends Box('dac4') {\r\n bit(8) ac4_dsi_v1[];\r\n}"
+    },
+    {
+      "fourcc": "lac4",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "// E.5a, Pseudocode E.2a\r\naligned(8) class AC4PresentationLabelBox extends FullBox('lac4', version = 0, 0) {\r\n unsigned int(16) num_presentation_labels;\r\n utf8string language_tag;\r\n for (i=0; i < num_presentation_labels; i++) {\r\n  unsigned int(16) presentation_id;\r\n  utf8string presentation_label;\r\n }\r\n}"
+    }
+  ]
+}

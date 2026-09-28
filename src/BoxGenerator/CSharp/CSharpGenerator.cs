@@ -1449,6 +1449,10 @@ namespace SharpISOBMFF
             {
                 csharpResult = "stream.ReadByteAlignment(boxSize, readSize, ";
             }
+            else if (info.FieldType == ParsedBoxType.Leb128)
+            {
+                csharpResult = "stream.ReadLeb128(boxSize, readSize, ";
+            }
             else if (info.FieldType == ParsedBoxType.String)
             {
                 string arraySuffix = "";
@@ -1590,6 +1594,8 @@ namespace SharpISOBMFF
                 csharpResult = "stream.WriteDescriptor(";
             else if (info.FieldType == ParsedBoxType.ByteAlignment)
                 csharpResult = "stream.WriteByteAlignment(";
+            else if (info.FieldType == ParsedBoxType.Leb128)
+                csharpResult = "stream.WriteLeb128(";
             else if (info.FieldType == ParsedBoxType.String)
             {
                 string arraySuffix = "";
@@ -1729,6 +1735,8 @@ namespace SharpISOBMFF
                 csharpResult = "IsoStream.CalculateDescriptorSize(value)";
             else if (info.FieldType == ParsedBoxType.ByteAlignment)
                 csharpResult = "IsoStream.CalculateByteAlignmentSize(boxSize, value)";
+            else if (info.FieldType == ParsedBoxType.Leb128)
+                csharpResult = "IsoStream.CalculateLeb128Size(value)";
             else if (info.FieldType == ParsedBoxType.String)
             {
                 if (info.Type == "MultiLanguageString")
@@ -1886,6 +1894,10 @@ namespace SharpISOBMFF
             else if (info.FieldType == ParsedBoxType.ByteAlignment)
             {
                 t = "byte";
+            }
+            else if (info.FieldType == ParsedBoxType.Leb128)
+            {
+                t = "Leb128";
             }
             else
             {

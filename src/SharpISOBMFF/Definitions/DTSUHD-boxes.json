@@ -1,0 +1,14 @@
+﻿{
+  "name": "Boxes",
+  "description": "DTS-UHD in ISOBMFF (ETSI TS 103 491 V1.2.1, Annex B)",
+  "entries": [
+    {
+      "fourcc": "udts",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "// B.2.2.3.1, Table B-2; NumPresentations = NumPresentationsCode + 1, as m_ucNumAudioPres is\r\nclass DTSUHDSpecificBox extends Box('udts') {\r\n bit(6) DecoderProfileCode;\r\n bit(2) FrameDurationCode;\r\n bit(3) MaxPayloadCode;\r\n bit(5) NumPresentationsCode;\r\n unsigned int(32) ChannelMask;\r\n bit(1) BaseSamplingFrequencyCode;\r\n bit(2) SampleRateMod;\r\n bit(3) RepresentationType;\r\n bit(3) StreamIndex;\r\n bit(1) ExpansionBoxPresent;\r\n for (i = 0; i < NumPresentationsCode + 1; i++) {\r\n  bit(1) IDTagPresent; // bit(NumPresentations) IDTagPresent[NumPresentations]\r\n }\r\n bit((8 - ((59 + NumPresentationsCode) % 8)) % 8) ByteAlign; // [0..7] to a byte: 58 bits and one a presentation are before it\r\n for (i = 0; i < NumPresentationsCode + 1; i++) {\r\n  if (IDTagPresent[i]) {\r\n   unsigned int(8) PresentationIDTag[16];\r\n  }\r\n }\r\n if (ExpansionBoxPresent) {\r\n  Box DTSExpansionBox[];\r\n }\r\n}"
+    }
+  ]
+}

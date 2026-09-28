@@ -191,7 +191,8 @@ namespace BoxGenerator
         Number,
         String,
         Iso639,
-        ByteAlignment
+        ByteAlignment,
+        Leb128
     }
 
     [SuppressMessage("naming", "CA1724:The type name conflicts with the namespace name", Justification = "Example code")]
