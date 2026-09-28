@@ -1429,6 +1429,18 @@ namespace SharpISOBMFF
 
         public ulong ReadDescriptor<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T descriptor, string name) where T : Descriptor
         {
+            return ReadDescriptor(boxSize, readSize, parent, out descriptor, name, -1);
+        }
+
+        /// <summary>
+        /// Reads a descriptor: its tag and size, then its bytes, all of them, which its syntax reads from memory. One
+        /// its syntax cannot read is kept as those bytes (<see cref="UnreadableDescriptor"/>), so the descriptors
+        /// and the box around it still read - on any stream, one that cannot seek too.
+        /// </summary>
+        /// <param name="objectTypeIndication">That of the DecoderConfigDescriptor it is in, which says what its
+        /// decoder specific info is (<see cref="BoxFactory.DefaultCreateDescriptor"/>); -1 elsewhere.</param>
+        public ulong ReadDescriptor<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T descriptor, string name, int objectTypeIndication) where T : Descriptor
+        {
             LogBegin(name);
 
             long availableSize = (long)readSize - (long)boxSize;
@@ -1449,7 +1461,7 @@ namespace SharpISOBMFF
             ulong sizeOfSize = ReadDescriptorSize(out int sizeOfInstance);
             size += sizeOfSize;
             long sizeOfInstanceBits = (long)sizeOfInstance << 3;
-            descriptor = (T)BoxFactory.CreateDescriptor(tag, this.Logger);
+            descriptor = (T)BoxFactory.CreateDescriptor(tag, objectTypeIndication, this.Logger);
             descriptor.SizeOfSize = sizeOfSize;
             descriptor.SizeOfInstance = (ulong)sizeOfInstance;
             descriptor.SetParent(parent);
@@ -1470,22 +1482,30 @@ namespace SharpISOBMFF
             if (this.Logger.IsDebugEnabled)
                 this.Logger.LogDebug($"DES:{GetIndentation(descriptor)}\'{descriptor.DisplayName}\'");
 
-            ulong readInstanceSizeBits = descriptor.Read(this, (ulong)sizeOfInstanceBits);
-            if (readInstanceSizeBits != (ulong)sizeOfInstanceBits)
+            // All of its bytes, read once: a descriptor is small, and says how large it is before it starts
+            size += ReadBytes((ulong)sizeOfInstance, out byte[] bytes);
+            try
             {
+                var inner = InMemory(bytes);
+                ulong readInstanceSizeBits = descriptor.Read(inner, (ulong)sizeOfInstanceBits);
                 if (readInstanceSizeBits < (ulong)sizeOfInstanceBits)
                 {
-                    StreamMarker missing;
-                    size += ReadPadding((ulong)sizeOfInstanceBits, readInstanceSizeBits, out missing);
+                    inner.ReadPadding((ulong)sizeOfInstanceBits, readInstanceSizeBits, out StreamMarker missing);
                     descriptor.Padding = missing;
                     this.Logger.LogDebug($"Descriptor \'{tag}\' has extra padding of {missing.Length} bytes");
                 }
-                else
-                {
-                    this.Logger.LogDebug($"Descriptor \'{tag}\' read through!");
-                }
             }
-            size += readInstanceSizeBits;
+            catch (Exception ex) when (!(ex is OutOfMemoryException) && typeof(T).IsAssignableFrom(typeof(UnreadableDescriptor)))
+            {
+                // The descriptor's syntax does not fit what is in it: it is kept as its bytes, rather than lose
+                // the descriptors and the box it is in
+                this.Logger.LogDebug($"Descriptor \'{tag}\' could not be read, kept as its bytes: {ex.Message}");
+                descriptor = new UnreadableDescriptor(tag, ex.Message) as T;
+                descriptor.SizeOfSize = sizeOfSize;
+                descriptor.SizeOfInstance = (ulong)sizeOfInstance;
+                descriptor.SetParent(parent);
+                descriptor.Read(InMemory(bytes), (ulong)sizeOfInstanceBits);
+            }
 
             ulong calculatedSize = descriptor.CalculateSize();
             if (calculatedSize != (ulong)sizeOfInstanceBits)
@@ -1496,6 +1516,12 @@ namespace SharpISOBMFF
             LogEnd(name, size, descriptor);
 
             return size;
+        }
+
+        /// <summary>A stream of bytes already read, which reads as this one does: its factory, its logger, its storage.</summary>
+        private IsoStream InMemory(byte[] bytes)
+        {
+            return new IsoStream(new StreamWrapper(new MemoryStream(bytes, false)), _storageFactory, this.Logger) { BoxFactory = _boxFactory };
         }
 
         public ulong ReadDescriptor<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T[] descriptor, string name) where T : Descriptor
@@ -1557,7 +1583,7 @@ namespace SharpISOBMFF
                     while (true)
                     {
                         Descriptor v;
-                        consumed += ReadDescriptor(consumed, readSize, descriptor, out v, "");
+                        consumed += ReadDescriptor(consumed, readSize, descriptor, out v, "", objectTypeIndication);
                         descriptor.Children.Add(v);
                     }
                 }
@@ -1571,7 +1597,7 @@ namespace SharpISOBMFF
             while (consumed < remaining)
             {
                 Descriptor v;
-                consumed += ReadDescriptor(consumed, remaining, descriptor, out v, "");
+                consumed += ReadDescriptor(consumed, remaining, descriptor, out v, "", objectTypeIndication);
                 descriptor.Children.Add(v);
             }
             return consumed;

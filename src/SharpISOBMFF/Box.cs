@@ -398,6 +398,22 @@ namespace SharpISOBMFF
         }
     }
 
+    /// <summary>
+    /// A descriptor its syntax could not read - a field past its end, a count larger than what follows -
+    /// kept as its bytes, as <see cref="UnreadableBox"/> keeps a box, so the descriptors and the box around
+    /// it still read, and it writes back as it was.
+    /// </summary>
+    public class UnreadableDescriptor : UnknownDescriptor
+    {
+        public UnreadableDescriptor(byte tag, string error) : base(tag)
+        {
+            Error = error;
+        }
+
+        /// <summary>Why the descriptor's syntax could not read it.</summary>
+        public string Error { get; }
+    }
+
     public class UnknownDescriptor : Descriptor
     {
         public override string DisplayName { get { return nameof(UnknownDescriptor); } }

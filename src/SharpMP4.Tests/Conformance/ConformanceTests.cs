@@ -194,13 +194,18 @@ public class ConformanceTests
 
     /// <summary>
     /// The AudioSpecificConfigs of a file: the DecoderSpecificInfo of each DecoderConfigDescriptor of MPEG-4 audio
-    /// (objectTypeIndication 0x40) or MPEG-2 AAC (0x66 to 0x68), which SharpMP4 keeps as its bytes.
+    /// (objectTypeIndication 0x40) or MPEG-2 AAC (0x66 to 0x68), as the file has it: each kept as its bytes,
+    /// though SharpMP4 reads MPEG-4 audio's as an AudioSpecificConfig, so that it is checked against the file.
     /// </summary>
     private static List<byte[]> AudioConfigs(string path)
     {
         var container = new SharpISOBMFF.Container();
         using var file = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 1 << 16);
-        container.Read(new SharpISOBMFF.IsoStream(new SharpISOBMFF.StreamWrapper(file)));
+        var factory = new SharpISOBMFF.BoxFactory();
+        factory.CreateDescriptor = (tag, objectTypeIndication, logger) => tag == SharpISOBMFF.DescriptorTags.DecSpecificInfoTag
+            ? new SharpISOBMFF.GenericDecoderSpecificInfo()
+            : SharpISOBMFF.BoxFactory.DefaultCreateDescriptor(tag, objectTypeIndication, logger);
+        container.Read(new SharpISOBMFF.IsoStream(new SharpISOBMFF.StreamWrapper(file)) { BoxFactory = factory });
 
         var configs = new List<byte[]>();
         void Walk(IEnumerable<SharpISOBMFF.Box>? boxes)
@@ -504,6 +509,9 @@ public class ConformanceTests
             ("junk in its cover art item: a 'name' of 4 zeros after its version and flags", ["covr/name: left over"]),
         [Path.Combine("metadata", "taglib", "infloop.m4a")] =
             ("a 'data' of size 0 in its 'gnre', which loops a reader that steps by the size", ["gnre/data: larger than its parent"]),
+        [Path.Combine("metadata", "mutagen", "ep7.m4b")] =
+            ("an AudioSpecificConfig of 2 bytes whose dependsOnCoreCoder says a coreCoderDelay of 14 bits follows, which it has not",
+             ["mp4a/esds/ES_Descriptor/DecoderConfigDescriptor/5: could not be read"]),
     };
 
     /// <summary>

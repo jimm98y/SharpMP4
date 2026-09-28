@@ -101,6 +101,11 @@ public static class BoxHealth
             result.Fail(Outcome.Diverged, $"{at}: larger than its parent", $"{at}: declares more than its parent has left");
             return;
         }
+        if (descriptor is UnreadableDescriptor unreadable)
+        {
+            result.Fail(Outcome.Diverged, $"{parent}/{unreadable.Tag}: could not be read", $"{parent}/descriptor {unreadable.Tag}: could not be read, kept as its bytes: {unreadable.Error}");
+            return;
+        }
 
         ulong padding = descriptor.Padding != null ? (ulong)descriptor.Padding.Length : 0;
         if (padding > 0)

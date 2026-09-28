@@ -9,7 +9,7 @@ namespace SharpISOBMFF
     {
         public Func<string, string, byte[], IMp4Logger, Box> CreateBox = DefaultCreateBox;
         public Func<string, IMp4Logger, SampleGroupDescriptionEntry> CreateEntry = DefaultCreateEntry;
-        public Func<byte, IMp4Logger, Descriptor> CreateDescriptor = DefaultCreateDescriptor;
+        public Func<byte, int, IMp4Logger, Descriptor> CreateDescriptor = DefaultCreateDescriptor;
 
         public static Box DefaultCreateBox(string fourCC, string parent, byte[] uuid = null, IMp4Logger logger = null)
         {
@@ -1157,12 +1157,14 @@ namespace SharpISOBMFF
             return new UnknownEntry(IsoStream.FromFourCC(fourCC));
         }
 
-        public static Descriptor DefaultCreateDescriptor(byte tag, IMp4Logger logger = null)
+        /// <param name="objectTypeIndication">That of the DecoderConfigDescriptor the descriptor is in, which
+        /// says what its decoder specific info is; -1 elsewhere.</param>
+        public static Descriptor DefaultCreateDescriptor(byte tag, int objectTypeIndication = -1, IMp4Logger logger = null)
         {
             switch (tag)
             {
                case DescriptorTags.DecoderConfigDescrTag: return new DecoderConfigDescriptor();
-               case DescriptorTags.DecSpecificInfoTag: return new GenericDecoderSpecificInfo(); // TODO: choose the specific descriptor
+               case DescriptorTags.DecSpecificInfoTag: if (objectTypeIndication == 0x40 || (objectTypeIndication >= 0x66 && objectTypeIndication <= 0x68)) return new AudioSpecificConfig(); return new GenericDecoderSpecificInfo();
                case DescriptorTags.ES_DescrTag: return new ES_Descriptor();
                case DescriptorTags.ES_ID_IncTag: return new ES_ID_Inc();
                case DescriptorTags.ES_ID_RefTag: return new ES_ID_Ref();

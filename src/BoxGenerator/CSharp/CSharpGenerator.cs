@@ -201,7 +201,7 @@ namespace SharpISOBMFF
     {
         public Func<string, string, byte[], IMp4Logger, Box> CreateBox = DefaultCreateBox;
         public Func<string, IMp4Logger, SampleGroupDescriptionEntry> CreateEntry = DefaultCreateEntry;
-        public Func<byte, IMp4Logger, Descriptor> CreateDescriptor = DefaultCreateDescriptor;
+        public Func<byte, int, IMp4Logger, Descriptor> CreateDescriptor = DefaultCreateDescriptor;
 
         public static Box DefaultCreateBox(string fourCC, string parent, byte[] uuid = null, IMp4Logger logger = null)
         {
@@ -426,7 +426,9 @@ namespace SharpISOBMFF
 ");
 
             factory.Append(@"
-        public static Descriptor DefaultCreateDescriptor(byte tag, IMp4Logger logger = null)
+        /// <param name=""objectTypeIndication"">That of the DecoderConfigDescriptor the descriptor is in, which
+        /// says what its decoder specific info is; -1 elsewhere.</param>
+        public static Descriptor DefaultCreateDescriptor(byte tag, int objectTypeIndication = -1, IMp4Logger logger = null)
         {
             switch (tag)
             {
@@ -438,7 +440,10 @@ namespace SharpISOBMFF
                     string key = "DescriptorTags." + item.Key;
                     if (item.Key == "DecSpecificInfoTag")
                     {
-                        factory.Append($"               case {key}: return new GenericDecoderSpecificInfo(); // TODO: choose the specific descriptor\r\n");
+                        // MPEG-4 audio's is an AudioSpecificConfig (ISO/IEC 14496-1 Table 5, ISO/IEC 14496-3 1.6.2.1), and so
+                        // is MPEG-2 AAC's (0x66 to 0x68: Main, LC, SSR), as writers and readers of it have it; any other kept
+                        // as its bytes
+                        factory.Append($"               case {key}: if (objectTypeIndication == 0x40 || (objectTypeIndication >= 0x66 && objectTypeIndication <= 0x68)) return new AudioSpecificConfig(); return new GenericDecoderSpecificInfo();\r\n");
                     }
                     else
                     {
