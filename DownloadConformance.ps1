@@ -47,6 +47,9 @@ Sources:
     Exiv2    The ISOBMFF files Exiv2 is tested with: HEIF, AVIF, CR3, JPEG XL and video with Exif
              and XMP, and the files of security reports
                                 https://github.com/Exiv2/exiv2/tree/main/test/data
+    Mp4parse The MP4 and AVIF files Firefox's parser, mp4parse, is tested with: each made for a case,
+             corrupt ones among them
+                                https://github.com/mozilla/mp4parse-rust
 
 Only files directly in each set's folder are fetched: the subfolders the ITU keeps
 beside them hold superseded versions of the same streams.
@@ -62,8 +65,8 @@ conformance files, each with GPAC's dump of its boxes), Fate (FFmpeg's samples
 that are ISOBMFF or QuickTime files, about 140 MB) and Metadata (the test files of the
 metadata libraries, under 1 MB, and ExifTool, 9 MB), Chromium (the MP4 files of Chromium's
 media tests, 43 MB), Firefox (those of Firefox's, 18 MB), Libavif (libavif's AVIF files, 2 MB),
-Avif (the AVIF specification's test files, 50 MB) and Exiv2 (Exiv2's ISOBMFF files, 6 MB). All of
-them by default.
+Avif (the AVIF specification's test files, 50 MB), Exiv2 (Exiv2's ISOBMFF files, 6 MB) and Mp4parse
+(those of Firefox's parser, 12 MB). All of them by default.
 
 .PARAMETER IncludeSvc
 Also fetches the H.264 scalable video coding set, 12.9 GB.
@@ -93,8 +96,8 @@ Everything, about 25 GB.
 param(
     [string]$Destination,
 
-    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2')]
-    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2'),
+    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2', 'Mp4parse')]
+    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2', 'Mp4parse'),
 
     [switch]$IncludeSvc,
     [switch]$IncludeArgon,
@@ -536,9 +539,20 @@ $avifSet = @{ Name = 'avif'; Repo = 'AOMediaCodec/av1-avif'; Commit = 'bf4c18d1f
 $exiv2Set = @{ Name = 'exiv2'; Repo = 'Exiv2/exiv2'; Commit = '7710fc07c30a9f968a80dcff448c82adee84720d'; Folder = 'test/data'
     Extensions = '\.(mp4|m4a|m4v|mov|3gp|heic|heif|hif|avif|avifs|cr3|crm|jxl)$' }
 
+# The test files of mp4parse, Firefox's MP4 and AVIF parser (mozilla/mp4parse-rust, MPL-2.0), at the commit
+# given: of the parser and of its C API, each in a folder of its own - some are in both - made for the case
+# each tests, corrupt ones among them - not their zip, which holds three of them again - and a ClusterFuzz
+# test case.
+$mp4parseSets = @(
+    @{ Name = 'mp4parse'; Into = 'mp4parse'; Repo = 'mozilla/mp4parse-rust'; Commit = '95d98b9a6840f5bfc9a2323b3fa3f56d7f3c6077'; Folder = 'mp4parse/tests'
+        Extensions = '\.(mp4|avif|avifs|3gp)$|clusterfuzz-testcase' },
+    @{ Name = 'mp4parse'; Into = 'mp4parse_capi'; Repo = 'mozilla/mp4parse-rust'; Commit = '95d98b9a6840f5bfc9a2323b3fa3f56d7f3c6077'; Folder = 'mp4parse_capi/tests'
+        Extensions = '\.(mp4|avif|avifs|3gp)$' }
+)
+
 # The files of a folder of a GitHub repository, at a commit, and in its subfolders, into a folder of their
-# own. Listed by the folder's git tree: the contents listing stops at 1000 entries. The files are those of
-# the browsers' extensions, unless the set gives its own.
+# own - or of the set's Into in it. Listed by the folder's git tree: the contents listing stops at 1000
+# entries. The files are those of the browsers' extensions, unless the set gives its own.
 function Get-GitHubFolderSet($Set) {
     $extensions = if ($Set.Extensions) { $Set.Extensions } else { $browserExtensions }
     # a folder at the top of the repository is listed with the repository's contents
@@ -549,10 +563,12 @@ function Get-GitHubFolderSet($Set) {
     $tree = ($listing | Where-Object { $_.name -eq $name }).sha
     $entries = (Get-Text "https://api.github.com/repos/$($Set.Repo)/git/trees/$($tree)?recursive=1" | ConvertFrom-Json).tree
     $files = @($entries | Where-Object { $_.type -eq 'blob' -and $_.path -match $extensions })
-    Write-Host "$($Set.Name): $($files.Count) files"
+    Write-Host "$($Set.Name): $($files.Count) files of $($Set.Folder)"
+    $into = Join-Path $Destination $Set.Name
+    if ($Set.Into) { $into = Join-Path $into $Set.Into }
     foreach ($file in $files) {
         $url = "https://raw.githubusercontent.com/$($Set.Repo)/$($Set.Commit)/$($Set.Folder)/$($file.path)"
-        $path = Join-Path (Join-Path $Destination $Set.Name) $file.path.Replace('/', [IO.Path]::DirectorySeparatorChar)
+        $path = Join-Path $into $file.path.Replace('/', [IO.Path]::DirectorySeparatorChar)
         Save-File $url $path $file.size | Out-Null
     }
 }
@@ -589,6 +605,9 @@ foreach ($c in $Codec) {
     }
     elseif ($c -eq 'Exiv2') {
         Get-GitHubFolderSet $exiv2Set
+    }
+    elseif ($c -eq 'Mp4parse') {
+        foreach ($set in $mp4parseSets) { Get-GitHubFolderSet $set }
     }
     else {
         foreach ($set in $ituSets[$c]) { Get-ItuSet $folders[$c] $set }

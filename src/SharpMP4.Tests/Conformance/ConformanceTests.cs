@@ -350,6 +350,53 @@ public class ConformanceTests
         CheckFilesAgainstThemselves("exiv2", root, files, MalformedExiv2Files);
     }
 
+    /// <summary>
+    /// Reads the test files of mp4parse, Firefox's MP4 and AVIF parser - each made for a case, corrupt ones among
+    /// them - as <see cref="FateFilesReadWithoutSignsOfMisreading"/> reads FFmpeg's.
+    /// </summary>
+    [TestMethod]
+    public void Mp4parseFilesReadWithoutSignsOfMisreading()
+    {
+        string? root = ConformanceCorpus.Locate();
+        if (root == null)
+            Assert.Inconclusive("no conformance files; run DownloadConformance.ps1, or set SHARPMP4_CONFORMANCE");
+
+        var files = ConformanceCorpus.Mp4parseFiles(root);
+        if (files.Count == 0)
+            Assert.Inconclusive($"no mp4parse files under {root}; run DownloadConformance.ps1 -Codec Mp4parse");
+
+        CheckFilesAgainstThemselves("mp4parse", root, files, MalformedMp4parseFiles);
+    }
+
+    /// <summary>mp4parse's test files that are malformed, with what is wrong in them, as <see cref="MalformedFateFiles"/>.</summary>
+    private static readonly Dictionary<string, (string Why, string[] Defects)> MalformedMp4parseFiles = new()
+    {
+        [Path.Combine("mp4parse", "mp4parse", "clusterfuzz-testcase-minimized-mp4-6093954524250112")] =
+            ("a ClusterFuzz test case of 56 bytes: a 'moov' whose boxes run past its end", ["file/moov: could not be read"]),
+        [Path.Combine("mp4parse", "mp4parse", "corrupt", "bug-1655846.avif")] =
+            ("fuzzed: a box of the 'meta' of type p9Dtm, and an 'iloc' declaring 4294639646 bytes",
+             ["meta/?: not a box type", "meta/iloc: larger than its parent"]),
+        [Path.Combine("mp4parse", "mp4parse", "corrupt", "clusterfuzz-testcase-minimized-avif-4914209301856256.avif")] =
+            ("a ClusterFuzz test case: a property of type irFFFF", ["ipco/?: not a box type"]),
+        [Path.Combine("mp4parse", "mp4parse", "invalid_userdata.mp4")] =
+            ("its 'cprt' item holds 9 zero bytes, not a 'data' box", ["ilst/cprt: left over"]),
+        [Path.Combine("mp4parse", "mp4parse", "unknown_mdat_in_oversized_meta.avif")] =
+            ("a 'meta' larger than the file, an 'mdat' of size 0 in it, and fuzzed boxes in its track",
+             ["trak/?: not a box type", "stbl/stsz: left over", "meta/mdat: larger than its parent"]),
+        [Path.Combine("mp4parse", "mp4parse", "valid_with_garbage_byte.avif")] =
+            ("a valid file with bytes of garbage after its last box", ["file: left over"]),
+        [Path.Combine("mp4parse", "mp4parse", "valid_with_garbage_overread.avif")] =
+            ("a valid file with garbage after it that declares 757935405 bytes", ["----/----: larger than its parent"]),
+        [Path.Combine("mp4parse", "mp4parse", "wide_box_size_0.avif")] =
+            ("fuzzed: a 'trak' declaring 1529508868 bytes in a 'moov' of 2120", ["moov/trak: larger than its parent"]),
+        [Path.Combine("mp4parse", "mp4parse_capi", "no_timescale.mp4")] =
+            ("its 'mvhd' renamed m\\x01hd, so that there is no timescale, and an 'hdlr' declaring 32545 bytes",
+             ["moov/?: not a box type", "meta/hdlr: larger than its parent"]),
+        [Path.Combine("mp4parse", "mp4parse_capi", "zero_empty_stsc.mp4")] =
+            ("a DecoderConfigDescriptor declaring 23 bytes for its 20, the 3 after them the SLConfigDescriptor's",
+             ["mp4a/esds/ES_Descriptor/4: could not be read"]),
+    };
+
     /// <summary>Exiv2's test files that are malformed, with what is wrong in them, as <see cref="MalformedFateFiles"/>.</summary>
     private static readonly Dictionary<string, (string Why, string[] Defects)> MalformedExiv2Files = new()
     {
@@ -598,6 +645,9 @@ public class ConformanceTests
         [Path.Combine("metadata", "taglib", "non-full-meta.m4a")] =
             ("its 'meta' is not a full box, as QuickTime's is not: ExifTool takes the first box for version and flags, finds it truncated and reads none of the items",
              ["extra movie Freeform:iTunNORM", "extra movie ItemList:covr", "extra movie ItemList:©ART", "extra movie ItemList:©too"]),
+        [Path.Combine("mp4parse", "mp4parse", "invalid_userdata.mp4")] =
+            ("a 'cprt' item of 9 zero bytes, no 'data' box: ExifTool gives it as a tag of no value, SharpMP4 as no tag",
+             ["missing movie ItemList:cprt"]),
     };
 
     private static void JudgeMalformedMetadata(string root, StreamResult result)

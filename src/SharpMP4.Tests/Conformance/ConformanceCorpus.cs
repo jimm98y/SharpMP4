@@ -142,7 +142,7 @@ public static class ConformanceCorpus
     }
 
     /// <summary>
-    /// The files whose metadata is compared: the metadata set, the FATE samples, the browsers', libavif's, the AVIF specification's and Exiv2's test files, the
+    /// The files whose metadata is compared: the metadata set, the FATE samples, the browsers', libavif's, the AVIF specification's, Exiv2's and mp4parse's test files, the
     /// file format conformance files and the tests' metadata files. SHARPMP4_CONFORMANCE_FILTER narrows them as it does the others.
     /// </summary>
     public static IReadOnlyList<string> MetadataFiles(string root)
@@ -154,6 +154,7 @@ public static class ConformanceCorpus
         files.AddRange(LibavifFiles(root));
         files.AddRange(AvifFiles(root));
         files.AddRange(Exiv2Files(root));
+        files.AddRange(Mp4parseFiles(root));
         files.AddRange(FileFormatFiles(root).Select(f => f.File));
         // and the tests' own, which ExifTool wrote the tags of
         string testData = Path.Combine(AppContext.BaseDirectory, "TestData", "Metadata");
@@ -176,6 +177,9 @@ public static class ConformanceCorpus
 
     /// <summary>The ISOBMFF files of Exiv2's tests, in a stable order. SHARPMP4_CONFORMANCE_FILTER narrows them.</summary>
     public static IReadOnlyList<string> Exiv2Files(string root) => FolderFiles(root, "exiv2");
+
+    /// <summary>The test files of mp4parse, Firefox's parser, in a stable order. SHARPMP4_CONFORMANCE_FILTER narrows them.</summary>
+    public static IReadOnlyList<string> Mp4parseFiles(string root) => FolderFiles(root, "mp4parse");
 
     /// <summary>Every file of a set's folder and its subfolders, in a stable order.</summary>
     private static IReadOnlyList<string> FolderFiles(string root, string name)
