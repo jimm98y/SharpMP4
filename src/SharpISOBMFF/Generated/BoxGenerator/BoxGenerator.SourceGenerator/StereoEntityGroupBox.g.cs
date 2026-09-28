@@ -6,23 +6,17 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class StereoEntityGroupBox() extends TrackGroupTypeBox('ster') {
-	 unsigned int(32) entity_count;
- unsigned int(32) entity_ids[]; 
- } 
+// ISO/IEC 23008-12 entity group 'ster': the fields of an EntityToGroupBox alone, as 23008-12-entity-groups.json has it
+aligned(8) class StereoEntityGroupBox extends EntityToGroupBox('ster',0,0)
+{
+}
 */
-public partial class StereoEntityGroupBox : TrackGroupTypeBox
+public partial class StereoEntityGroupBox : EntityToGroupBox
 {
 	public const string TYPE = "ster";
 	public override string DisplayName { get { return "StereoEntityGroupBox"; } }
 
-	protected uint entity_count; 
-	public uint EntityCount { get { return this.entity_count; } set { this.entity_count = value; } }
-
-	protected uint[] entity_ids; 
-	public uint[] EntityIds { get { return this.entity_ids; } set { this.entity_ids = value; } }
-
-	public StereoEntityGroupBox(): base(IsoStream.FromFourCC("ster"))
+	public StereoEntityGroupBox(): base(IsoStream.FromFourCC("ster"), 0, 0)
 	{
 	}
 
@@ -30,8 +24,6 @@ public partial class StereoEntityGroupBox : TrackGroupTypeBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.entity_count, "entity_count"); 
-		boxSize += stream.ReadUInt32ArrayTillEnd(boxSize, readSize,  out this.entity_ids, "entity_ids"); 
 		return boxSize;
 	}
 
@@ -39,8 +31,6 @@ public partial class StereoEntityGroupBox : TrackGroupTypeBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt32( this.entity_count, "entity_count"); 
-		boxSize += stream.WriteUInt32ArrayTillEnd( this.entity_ids, "entity_ids"); 
 		return boxSize;
 	}
 
@@ -48,8 +38,6 @@ public partial class StereoEntityGroupBox : TrackGroupTypeBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += 32; // entity_count
-		boxSize += ((ulong)entity_ids.Length * 32); // entity_ids
 		return boxSize;
 	}
 }

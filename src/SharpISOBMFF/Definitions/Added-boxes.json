@@ -1400,12 +1400,12 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AlternativesEntityGroupBox() extends TrackGroupTypeBox('altr') {\r\n\t unsigned int(32) entity_count;\r\n unsigned int(32) entity_ids[]; \r\n } "
+      "syntax": "// ISO/IEC 14496-12 entity group 'altr': the fields of an EntityToGroupBox alone, as 14496-12-entity-groups.json has it\r\naligned(8) class AlternativesEntityGroupBox extends EntityToGroupBox('altr',0,0)\r\n{\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class StereoEntityGroupBox() extends TrackGroupTypeBox('ster') {\r\n\t unsigned int(32) entity_count;\r\n unsigned int(32) entity_ids[]; \r\n } "
+      "syntax": "// ISO/IEC 23008-12 entity group 'ster': the fields of an EntityToGroupBox alone, as 23008-12-entity-groups.json has it\r\naligned(8) class StereoEntityGroupBox extends EntityToGroupBox('ster',0,0)\r\n{\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -1415,7 +1415,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class TimeSynchronizedCaptureEntityGroupBox() extends TrackGroupTypeBox('tsyn') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "// ISO/IEC 23008-12 entity group 'tsyn': the fields of an EntityToGroupBox alone, as 23008-12-entity-groups.json has it\r\naligned(8) class TimeSynchronizedCaptureEntityGroupBox extends EntityToGroupBox('tsyn',0,0)\r\n{\r\n}"
     },
     {
       "containers": [ "*" ],

@@ -6,19 +6,17 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class TimeSynchronizedCaptureEntityGroupBox() extends TrackGroupTypeBox('tsyn') {
-	 bit(8) data[];
- } 
+// ISO/IEC 23008-12 entity group 'tsyn': the fields of an EntityToGroupBox alone, as 23008-12-entity-groups.json has it
+aligned(8) class TimeSynchronizedCaptureEntityGroupBox extends EntityToGroupBox('tsyn',0,0)
+{
+}
 */
-public partial class TimeSynchronizedCaptureEntityGroupBox : TrackGroupTypeBox
+public partial class TimeSynchronizedCaptureEntityGroupBox : EntityToGroupBox
 {
 	public const string TYPE = "tsyn";
 	public override string DisplayName { get { return "TimeSynchronizedCaptureEntityGroupBox"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-	public TimeSynchronizedCaptureEntityGroupBox(): base(IsoStream.FromFourCC("tsyn"))
+	public TimeSynchronizedCaptureEntityGroupBox(): base(IsoStream.FromFourCC("tsyn"), 0, 0)
 	{
 	}
 
@@ -26,7 +24,6 @@ public partial class TimeSynchronizedCaptureEntityGroupBox : TrackGroupTypeBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
 		return boxSize;
 	}
 
@@ -34,7 +31,6 @@ public partial class TimeSynchronizedCaptureEntityGroupBox : TrackGroupTypeBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
 		return boxSize;
 	}
 
@@ -42,7 +38,6 @@ public partial class TimeSynchronizedCaptureEntityGroupBox : TrackGroupTypeBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
 		return boxSize;
 	}
 }
