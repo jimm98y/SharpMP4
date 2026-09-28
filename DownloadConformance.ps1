@@ -41,6 +41,9 @@ Sources:
     Libavif  The AVIF files libavif is tested with: still images and sequences, alpha, grids, gain
              maps, sample transforms, and files broken on purpose
                                 https://github.com/AOMediaCodec/libavif/tree/main/tests/data
+    Avif     The AVIF specification's test files, from Apple, Link-U, Microsoft, Netflix and Xiph:
+             still images, grids, alpha, HDR, image sequences
+                                https://github.com/AOMediaCodec/av1-avif/tree/main/testFiles
 
 Only files directly in each set's folder are fetched: the subfolders the ITU keeps
 beside them hold superseded versions of the same streams.
@@ -55,8 +58,8 @@ Which suites to fetch: any of H264, H265, H266, AV1, IsoBmff (the file format
 conformance files, each with GPAC's dump of its boxes), Fate (FFmpeg's samples
 that are ISOBMFF or QuickTime files, about 140 MB) and Metadata (the test files of the
 metadata libraries, under 1 MB, and ExifTool, 9 MB), Chromium (the MP4 files of Chromium's
-media tests, 43 MB), Firefox (those of Firefox's, 18 MB) and Libavif (libavif's AVIF files, 2 MB).
-All of them by default.
+media tests, 43 MB), Firefox (those of Firefox's, 18 MB), Libavif (libavif's AVIF files, 2 MB) and
+Avif (the AVIF specification's test files, 50 MB). All of them by default.
 
 .PARAMETER IncludeSvc
 Also fetches the H.264 scalable video coding set, 12.9 GB.
@@ -86,8 +89,8 @@ Everything, about 25 GB.
 param(
     [string]$Destination,
 
-    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif')]
-    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif'),
+    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif')]
+    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif'),
 
     [switch]$IncludeSvc,
     [switch]$IncludeArgon,
@@ -516,11 +519,19 @@ $firefoxSet = @{ Name = 'firefox'; Repo = 'mozilla-firefox/firefox'; Commit = 'b
 # purpose. Its README says what each file is.
 $libavifSet = @{ Name = 'libavif'; Repo = 'AOMediaCodec/libavif'; Commit = 'ef43c7be4167464eab9947267fb6e9a88584910f'; Folder = 'tests/data' }
 
+# The test files of the AVIF specification (testFiles of AOMediaCodec/av1-avif), at the commit given, a folder
+# for each company that gave them, under the licence it gives: Microsoft's and Xiph's as the repository,
+# BSD-2-Clause; Apple's and Link-U's CC BY-SA 4.0; Netflix's CC BY-NC-ND 4.0 - read here, never changed or
+# passed on. Other writers than libavif's and libheif's: HDR, 10 and 12 bit, grids, alpha, image sequences.
+$avifSet = @{ Name = 'avif'; Repo = 'AOMediaCodec/av1-avif'; Commit = 'bf4c18d1f3971069b75e87d6ee469790589f4f09'; Folder = 'testFiles' }
+
 # The files of a folder of a GitHub repository, at a commit, and in its subfolders, into a folder of their
 # own. Listed by the folder's git tree: the contents listing stops at 1000 entries.
 function Get-GitHubFolderSet($Set) {
-    $parent = $Set.Folder.Substring(0, $Set.Folder.LastIndexOf('/'))
-    $name = $Set.Folder.Substring($Set.Folder.LastIndexOf('/') + 1)
+    # a folder at the top of the repository is listed with the repository's contents
+    $slash = $Set.Folder.LastIndexOf('/')
+    $parent = if ($slash -ge 0) { $Set.Folder.Substring(0, $slash) } else { '' }
+    $name = $Set.Folder.Substring($slash + 1)
     $listing = Get-Text "https://api.github.com/repos/$($Set.Repo)/contents/$($parent)?ref=$($Set.Commit)" | ConvertFrom-Json
     $tree = ($listing | Where-Object { $_.name -eq $name }).sha
     $entries = (Get-Text "https://api.github.com/repos/$($Set.Repo)/git/trees/$($tree)?recursive=1" | ConvertFrom-Json).tree
@@ -559,6 +570,9 @@ foreach ($c in $Codec) {
     }
     elseif ($c -eq 'Libavif') {
         Get-GitHubFolderSet $libavifSet
+    }
+    elseif ($c -eq 'Avif') {
+        Get-GitHubFolderSet $avifSet
     }
     else {
         foreach ($set in $ituSets[$c]) { Get-ItuSet $folders[$c] $set }

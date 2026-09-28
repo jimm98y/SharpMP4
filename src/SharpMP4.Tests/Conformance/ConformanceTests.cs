@@ -304,6 +304,29 @@ public class ConformanceTests
     {
     };
 
+    /// <summary>
+    /// Reads the AVIF specification's test files - Apple's, Link-U's, Microsoft's, Netflix's and Xiph's: still
+    /// images, grids, alpha, HDR, image sequences - as <see cref="FateFilesReadWithoutSignsOfMisreading"/> reads FFmpeg's.
+    /// </summary>
+    [TestMethod]
+    public void AvifFilesReadWithoutSignsOfMisreading()
+    {
+        string? root = ConformanceCorpus.Locate();
+        if (root == null)
+            Assert.Inconclusive("no conformance files; run DownloadConformance.ps1, or set SHARPMP4_CONFORMANCE");
+
+        var files = ConformanceCorpus.AvifFiles(root);
+        if (files.Count == 0)
+            Assert.Inconclusive($"no AVIF test files under {root}; run DownloadConformance.ps1 -Codec Avif");
+
+        CheckFilesAgainstThemselves("avif", root, files, MalformedAvifFiles);
+    }
+
+    /// <summary>The AVIF specification's test files that are malformed, with what is wrong in them, as <see cref="MalformedFateFiles"/>.</summary>
+    private static readonly Dictionary<string, (string Why, string[] Defects)> MalformedAvifFiles = new()
+    {
+    };
+
     /// <summary>Firefox's test files that are malformed, with what is wrong in them, as <see cref="MalformedFateFiles"/>.</summary>
     private static readonly Dictionary<string, (string Why, string[] Defects)> MalformedFirefoxFiles = new()
     {
