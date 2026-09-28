@@ -159,6 +159,9 @@ namespace BoxGenerator.CSharp
                 { "unsigned int(8) OutputChannelCount", "byte OutputChannelCount" },
                 { "entry_type, bit(24) flags",        "uint entry_type, uint flags" },
                 { "samplingFrequencyIndex",           "int samplingFrequencyIndex" },
+                { "pres_bytes",                       "int pres_bytes = 0" },
+                { "coreSbrFrameLengthIndex",          "int coreSbrFrameLengthIndex = 0" },
+                { "usacConfigExtLength",              "uint usacConfigExtLength = 0" },
                 { "version, flags, Per_Sample_IV_Size",  "byte version, uint flags, byte Per_Sample_IV_Size" },
                 { "version, flags",                   "byte version = 0, uint flags = 0" },
                 { "loudnessType",                     "uint loudnessType" },
@@ -1234,6 +1237,9 @@ namespace SharpISOBMFF
                         condition = condition.Replace("bits_to_decode()", "IsoStream.BitsToDecode(boxSize, SizeOfInstance << 3)");
                     }
                 }
+
+                // the bits read of the class so far (ETSI TS 103 190-2 E.10.1): read, written or sized alike, boxSize
+                condition = condition.Replace("bits_read()", "(long)boxSize");
 
                 if (condition.Contains("AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110"))
                 {

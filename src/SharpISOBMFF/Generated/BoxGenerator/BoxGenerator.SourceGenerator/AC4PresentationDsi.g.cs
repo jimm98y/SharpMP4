@@ -6,15 +6,22 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-// ac4_presentation_v1_dsi() (E.10), ac4_presentation_v0_dsi() (TS 103 190-1), then skip_area - as bytes, to be defined
+// is ac4_presentation_v1_dsi() (E.10); version 0's (ETSI TS 103 190-1, not at hand) and any other's are bytes
 aligned(8) class AC4PresentationDsi() {
  bit(8) presentation_version;
  bit(8) pres_bytes;
  if (pres_bytes == 255) {
   bit(16) add_pres_bytes;
  }
- bit(8) presentation_data[pres_bytes + add_pres_bytes];
+ if (presentation_version == 1) {
+  AC4PresentationV1Dsi(pres_bytes + add_pres_bytes) presentation_v1;
+ }
+ else {
+  bit(8) presentation_data[pres_bytes + add_pres_bytes];
+ }
 }
+// E.10.1: in [a, b] written out, the loops over sg counted by i, b_add_emdf_substreams = 1 of config 0x06 in the condition; the spec's dsi_presentation_channel_mode is its dsi_presentation_ch_mode.
+
 */
 public partial class AC4PresentationDsi : IMp4Serializable
 {
@@ -33,6 +40,9 @@ public partial class AC4PresentationDsi : IMp4Serializable
 	protected ushort add_pres_bytes; 
 	public ushort AddPresBytes { get { return this.add_pres_bytes; } set { this.add_pres_bytes = value; } }
 
+	protected AC4PresentationV1Dsi presentation_v1; 
+	public AC4PresentationV1Dsi PresentationV1 { get { return this.presentation_v1; } set { this.presentation_v1 = value; } }
+
 	protected byte[] presentation_data; 
 	public byte[] PresentationData { get { return this.presentation_data; } set { this.presentation_data = value; } }
 
@@ -50,7 +60,16 @@ public partial class AC4PresentationDsi : IMp4Serializable
 		{
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.add_pres_bytes, "add_pres_bytes"); 
 		}
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(pres_bytes + add_pres_bytes),  out this.presentation_data, "presentation_data"); 
+
+		if (presentation_version == 1)
+		{
+			boxSize += stream.ReadClass(boxSize, readSize, this, () => new AC4PresentationV1Dsi(pres_bytes + add_pres_bytes),  out this.presentation_v1, "presentation_v1"); 
+		}
+
+		else 
+		{
+			boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(pres_bytes + add_pres_bytes),  out this.presentation_data, "presentation_data"); 
+		}
 		return boxSize;
 	}
 
@@ -64,7 +83,16 @@ public partial class AC4PresentationDsi : IMp4Serializable
 		{
 			boxSize += stream.WriteUInt16( this.add_pres_bytes, "add_pres_bytes"); 
 		}
-		boxSize += stream.WriteUInt8Array((uint)(pres_bytes + add_pres_bytes),  this.presentation_data, "presentation_data"); 
+
+		if (presentation_version == 1)
+		{
+			boxSize += stream.WriteClass( this.presentation_v1, "presentation_v1"); 
+		}
+
+		else 
+		{
+			boxSize += stream.WriteUInt8Array((uint)(pres_bytes + add_pres_bytes),  this.presentation_data, "presentation_data"); 
+		}
 		return boxSize;
 	}
 
@@ -78,7 +106,16 @@ public partial class AC4PresentationDsi : IMp4Serializable
 		{
 			boxSize += 16; // add_pres_bytes
 		}
-		boxSize += ((ulong)(pres_bytes + add_pres_bytes) * 8); // presentation_data
+
+		if (presentation_version == 1)
+		{
+			boxSize += IsoStream.CalculateClassSize(presentation_v1); // presentation_v1
+		}
+
+		else 
+		{
+			boxSize += ((ulong)(pres_bytes + add_pres_bytes) * 8); // presentation_data
+		}
 		return boxSize;
 	}
 }

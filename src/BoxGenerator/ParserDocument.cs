@@ -63,6 +63,24 @@ namespace BoxGenerator
                     fields.Add(new PseudoField() { Name = "num_sublayers", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
                     item.Value.CtorContent = "\t\tthis.num_sublayers = num_sublayers;\r\n";
                 }
+                else if (item.Value.BoxName == "AC4PresentationV1Dsi")
+                {
+                    // its presentation's pres_bytes (ETSI TS 103 190-2 E.6.1), which it ends with the skip_area of
+                    fields.Add(new PseudoField() { Name = "pres_bytes", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("signed"), "int", new Maybe<string>("(32)")) });
+                    item.Value.CtorContent = "\t\tthis.pres_bytes = pres_bytes;\r\n";
+                }
+                else if (item.Value.BoxName == "UsacSingleChannelElementConfig" || item.Value.BoxName == "UsacChannelPairElementConfig")
+                {
+                    // the UsacConfig's, which says whether an element has an SBR config
+                    fields.Add(new PseudoField() { Name = "coreSbrFrameLengthIndex", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("signed"), "int", new Maybe<string>("(32)")) });
+                    item.Value.CtorContent = "\t\tthis.coreSbrFrameLengthIndex = coreSbrFrameLengthIndex;\r\n";
+                }
+                else if (item.Value.BoxName == "UsacConfigExtensionData")
+                {
+                    // the length of the config extension, in bytes
+                    fields.Add(new PseudoField() { Name = "usacConfigExtLength", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(32)")) });
+                    item.Value.CtorContent = "\t\tthis.usacConfigExtLength = usacConfigExtLength;\r\n";
+                }
                 else if (item.Value.BoxName == "ChannelMappingTable")
                 {
                     fields.Add(new PseudoField() { Name = "OutputChannelCount", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
@@ -476,7 +494,8 @@ namespace BoxGenerator
             FieldTypeInfo info = new FieldTypeInfo();
 
             info.Type = fieldType.Type;
-            info.ArrayLengthVariable = field.FieldArray;
+            // the bits read of the class so far, as in a condition: read, written or sized alike, boxSize
+            info.ArrayLengthVariable = field.FieldArray?.Replace("bits_read()", "(long)boxSize");
 
             switch (fieldType.Type)
             {

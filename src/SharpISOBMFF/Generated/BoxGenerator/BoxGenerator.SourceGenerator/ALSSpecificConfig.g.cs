@@ -64,6 +64,7 @@ class ALSSpecificConfig()
   }
 }
 
+// ISO/IEC 23003-3 (not at hand) as FFmpeg's USAC decoder reads it (libavcodec/aac/aacdec_usac.c, ff_aac_usac_config_decode), by the spec's names it gives: the element configs; extension element configs and config extensions to their lengths, as bytes; UsacDecoderConfig, UsacCoreConfig, SbrDfltHeader and Mps212Config written out in place
 
 */
 public partial class ALSSpecificConfig : IMp4Serializable

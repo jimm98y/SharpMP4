@@ -11,7 +11,7 @@ aligned(8) class AC4BitrateDsi() {
  bit(32) bit_rate;
  bit(32) bit_rate_precision;
 }
-// a presentation of ac4_dsi_v1(): its version, and its pres_bytes (pres_bytes += add_pres_bytes). Its content -
+// a presentation of ac4_dsi_v1(): its version, and its pres_bytes (pres_bytes += add_pres_bytes). Version 1's content
 
 */
 public partial class AC4BitrateDsi : IMp4Serializable
