@@ -45,11 +45,102 @@ public static partial class FfmpegTrace
     private static partial Regex FieldLine();
 
     /// <summary>
-    /// Reads every header ffmpeg can decompose. The trace is read as it is written - a long
-    /// stream's runs to hundreds of megabytes - and kept only as the fields.
+    /// Reads every header ffmpeg can decompose, as ffmpeg traced it the last time it was given the
+    /// stream (<see cref="ToolCache"/>), or as it traces it now.
     /// </summary>
     /// <param name="format">ffmpeg's name for the raw format: h264, hevc, vvc, ivf or obu.</param>
-    public static List<TracedUnit> Read(string ffmpeg, string path, string format)
+    /// <param name="input">What to give ffmpeg instead of the stream, if anything: a file deleted
+    /// once traced. Made only when ffmpeg is run.</param>
+    public static List<TracedUnit> Read(string ffmpeg, string path, string format, Func<string, string?>? input = null)
+    {
+        // The arguments count in finding an entry, and so does the version of what it holds
+        string? entry = ToolCache.EntryOf("ffmpeg", [ffmpeg], $"trace 1 -f {format} -bsf:v trace_headers", path);
+        var units = ToolCache.GetOrRun(entry, () =>
+        {
+            string? made = input?.Invoke(path);
+            try
+            {
+                return Trace(ffmpeg, made ?? path, format);
+            }
+            finally
+            {
+                if (made != null)
+                    File.Delete(made);
+            }
+        }, ReadUnits, WriteUnits);
+
+        // ffmpeg's names, kept as it wrote them, as the specs spell them
+        var names = new Dictionary<string, string>();
+        foreach (var unit in units)
+        {
+            for (int i = 0; i < unit.Fields.Count; i++)
+            {
+                string name = unit.Fields[i].Name;
+                if (!names.TryGetValue(name, out string? plain))
+                    names[name] = plain = Canonical(Indexed.TryGetValue(name, out string? spec) ? spec : StripIndices(name));
+                unit.Fields[i] = unit.Fields[i] with { Name = plain };
+            }
+        }
+        return units;
+    }
+
+    private static void WriteUnits(BinaryWriter writer, List<TracedUnit> units)
+    {
+        // A name is written once, then by its number: a stream's trace names a few hundred elements millions of times
+        var numbers = new Dictionary<string, int>(StringComparer.Ordinal);
+        writer.Write(units.Count);
+        foreach (var unit in units)
+        {
+            writer.Write(unit.Title);
+            writer.Write(unit.Truncated);
+            writer.Write(unit.Fields.Count);
+            foreach (var field in unit.Fields)
+            {
+                if (numbers.TryGetValue(field.Name, out int number))
+                {
+                    writer.Write7BitEncodedInt(number + 1);
+                }
+                else
+                {
+                    writer.Write7BitEncodedInt(0);
+                    writer.Write(field.Name);
+                    numbers[field.Name] = numbers.Count;
+                }
+                writer.Write7BitEncodedInt(field.Bits);
+                writer.Write7BitEncodedInt64(field.Value);
+            }
+        }
+    }
+
+    private static List<TracedUnit> ReadUnits(BinaryReader reader)
+    {
+        var names = new List<string>();
+        var units = new List<TracedUnit>(reader.ReadInt32());
+        for (int count = units.Capacity; units.Count < count;)
+        {
+            var unit = new TracedUnit(reader.ReadString()) { Truncated = reader.ReadBoolean() };
+            int fields = reader.ReadInt32();
+            unit.Fields.Capacity = fields;
+            for (int i = 0; i < fields; i++)
+            {
+                int number = reader.Read7BitEncodedInt();
+                string name;
+                if (number == 0)
+                    names.Add(name = reader.ReadString());
+                else
+                    name = names[number - 1];
+                unit.Fields.Add(new TracedField(name, reader.Read7BitEncodedInt(), reader.Read7BitEncodedInt64()));
+            }
+            units.Add(unit);
+        }
+        return units;
+    }
+
+    /// <summary>
+    /// Runs ffmpeg's trace_headers over a stream. The trace is read as it is written - a long
+    /// stream's runs to hundreds of megabytes - and kept only as the fields, named as ffmpeg names them.
+    /// </summary>
+    private static List<TracedUnit> Trace(string ffmpeg, string path, string format)
     {
         var start = new ProcessStartInfo(ffmpeg)
         {
@@ -75,7 +166,8 @@ public static partial class FfmpegTrace
         var units = new List<TracedUnit>();
         TracedUnit? current = null;
         string? heading = null;
-        var names = new Dictionary<string, string>();
+        // one string per name, not one per line
+        var names = new Dictionary<string, string>(StringComparer.Ordinal);
 
         for (string? line = process.StandardError.ReadLine(); line != null; line = process.StandardError.ReadLine())
         {
@@ -113,10 +205,10 @@ public static partial class FfmpegTrace
             if (current == null)
                 continue;
 
-            if (!names.TryGetValue(name, out string? plain))
-                names[name] = plain = Canonical(Indexed.TryGetValue(name, out string? spec) ? spec : StripIndices(name));
+            if (!names.TryGetValue(name, out string? kept))
+                names[name] = kept = name;
 
-            current.Fields.Add(new TracedField(plain, match.Groups[3].Length, long.Parse(match.Groups[4].Value)));
+            current.Fields.Add(new TracedField(kept, match.Groups[3].Length, long.Parse(match.Groups[4].Value)));
         }
 
         process.WaitForExit();

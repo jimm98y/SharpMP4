@@ -6,6 +6,11 @@ namespace SharpMP4.Tests.Conformance;
 /// Reads a file with SharpMP4 and writes it back, checking the bytes written against the file's own
 /// as they come, so that a file of gigabytes needs no copy of itself.
 /// </summary>
+/// <remarks>
+/// What an 'mdat' holds is not compared: SharpMP4 reads none of it, only where it is, and writes it back
+/// by copying those bytes of the file - the file compared with itself, most of a file of gigabytes. Its
+/// header is compared, and so is everything after it, which a payload of any other length or place moves.
+/// </remarks>
 public static class RoundTrip
 {
     public static StreamResult Check(string path)
@@ -17,7 +22,19 @@ public static class RoundTrip
         var container = new Container();
         container.Read(new IsoStream(new StreamWrapper(file)));
 
-        var comparing = new ComparingStream(original);
+        // The payloads, where the file has them: copied from a stream as long as the file that reads nothing,
+        // and not compared. A payload cut short by the end of the file ends there, as the file does: what is
+        // written past its end is compared, and differs.
+        var payloads = new List<(long Start, long End)>();
+        var nothing = new IsoStream(new StreamWrapper(new NothingStream(original.Length)));
+        foreach (var mdat in MediaData(container.Children))
+        {
+            payloads.Add((mdat.Data.Position, Math.Min(mdat.Data.Position + mdat.Data.Length, original.Length)));
+            mdat.Data.Stream = nothing;
+        }
+        payloads.Sort();
+
+        var comparing = new ComparingStream(original, payloads);
         try
         {
             container.Write(new IsoStream(new StreamWrapper(comparing)));
@@ -48,6 +65,18 @@ public static class RoundTrip
         return result;
     }
 
+    /// <summary>Every 'mdat' with a payload, at any depth.</summary>
+    private static IEnumerable<MediaDataBox> MediaData(List<Box>? boxes)
+    {
+        foreach (var box in boxes ?? [])
+        {
+            if (box is MediaDataBox mdat && mdat.Data != null)
+                yield return mdat;
+            foreach (var inner in MediaData(box.Children))
+                yield return inner;
+        }
+    }
+
     /// <summary>The path of the innermost box read at an offset, found through the sizes read.</summary>
     private static string Locate(List<Box> boxes, ulong offset)
     {
@@ -74,16 +103,21 @@ public static class RoundTrip
         return name.ToString();
     }
 
-    /// <summary>A stream that takes writes and compares them with another stream, byte for byte.</summary>
+    /// <summary>
+    /// A stream that takes writes and compares them with another stream, byte for byte, but for the
+    /// ranges it is told to pass over.
+    /// </summary>
     private sealed class ComparingStream : Stream
     {
         private readonly Stream expected;
+        private readonly List<(long Start, long End)> skipped;
         private byte[] buffer = new byte[1 << 16];
         private long position;
 
-        public ComparingStream(Stream expected)
+        public ComparingStream(Stream expected, List<(long Start, long End)> skipped)
         {
             this.expected = expected;
+            this.skipped = skipped;
         }
 
         /// <summary>Where the first byte written differs from the original, if one does.</summary>
@@ -91,31 +125,59 @@ public static class RoundTrip
 
         public override void Write(byte[] data, int offset, int count)
         {
-            if (FirstDifference == null)
+            while (count > 0)
             {
-                if (buffer.Length < count)
-                    buffer = new byte[count];
-
-                int read = 0;
-                while (read < count)
+                // Up to where a range passed over starts or ends
+                int n = count;
+                bool skip = false;
+                foreach (var (start, end) in skipped)
                 {
-                    int n = expected.Read(buffer, read, count - read);
-                    if (n == 0)
-                        break;
-                    read += n;
-                }
-
-                for (int i = 0; i < count; i++)
-                {
-                    if (i >= read || buffer[i] != data[offset + i])
+                    if (position < start)
                     {
-                        FirstDifference = position + i;
+                        n = (int)Math.Min(n, start - position);
+                        break;
+                    }
+                    if (position < end)
+                    {
+                        n = (int)Math.Min(n, end - position);
+                        skip = true;
                         break;
                     }
                 }
+
+                if (skip)
+                    expected.Seek(n, SeekOrigin.Current);
+                else if (FirstDifference == null)
+                    Compare(data, offset, n);
+
+                position += n;
+                offset += n;
+                count -= n;
+            }
+        }
+
+        private void Compare(byte[] data, int offset, int count)
+        {
+            if (buffer.Length < count)
+                buffer = new byte[count];
+
+            int read = 0;
+            while (read < count)
+            {
+                int n = expected.Read(buffer, read, count - read);
+                if (n == 0)
+                    break;
+                read += n;
             }
 
-            position += count;
+            for (int i = 0; i < count; i++)
+            {
+                if (i >= read || buffer[i] != data[offset + i])
+                {
+                    FirstDifference = position + i;
+                    break;
+                }
+            }
         }
 
         public override bool CanRead => false;
@@ -127,5 +189,32 @@ public static class RoundTrip
         public override int Read(byte[] data, int offset, int count) => throw new NotSupportedException();
         public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
         public override void SetLength(long value) => throw new NotSupportedException();
+    }
+
+    /// <summary>A stream as long as a file that reads nothing: what it gives is whatever the buffer held.</summary>
+    private sealed class NothingStream(long length) : Stream
+    {
+        public override int Read(byte[] data, int offset, int count)
+        {
+            int n = (int)Math.Clamp(length - Position, 0, count);
+            Position += n;
+            return n;
+        }
+
+        public override long Seek(long offset, SeekOrigin origin) => Position = origin switch
+        {
+            SeekOrigin.Begin => offset,
+            SeekOrigin.Current => Position + offset,
+            _ => Length + offset,
+        };
+
+        public override bool CanRead => true;
+        public override bool CanSeek => true;
+        public override bool CanWrite => false;
+        public override long Length => length;
+        public override long Position { get; set; }
+        public override void Flush() { }
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] data, int offset, int count) => throw new NotSupportedException();
     }
 }

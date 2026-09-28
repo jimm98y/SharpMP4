@@ -638,17 +638,7 @@ public class ConformanceTests
             try
             {
                 var (sharp, error) = read(path);
-                string? input = ffmpegInput?.Invoke(path);
-                List<TracedUnit> reference;
-                try
-                {
-                    reference = FfmpegTrace.Read(ffmpeg, input ?? path, ffmpegFormat(path));
-                }
-                finally
-                {
-                    if (input != null)
-                        File.Delete(input);
-                }
+                var reference = FfmpegTrace.Read(ffmpeg, path, ffmpegFormat(path), ffmpegInput);
                 result = TraceComparison.Compare(path, sharp, error, reference);
             }
             catch (Exception ex)

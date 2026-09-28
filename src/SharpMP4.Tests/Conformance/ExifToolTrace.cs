@@ -15,57 +15,104 @@ public sealed record ExifToolTag(string Group, string Name, string Id, string Va
 /// </summary>
 public static partial class ExifToolTrace
 {
+    // --MediaData: not the 'mdat's too, as base64 - tens of megabytes of a file, and in a group not compared
+    private static readonly string[] Arguments = ["-j", "-a", "-u", "-G1:4", "-H", "-n", "-b", "-q", "-q", "-all", "--MediaData", "-XMP", "-charset", "filename=utf8"];
+
+    /// <summary>
+    /// The tags of each file, as ExifTool read them the last time it was given the file (<see cref="ToolCache"/>),
+    /// or as it reads them now.
+    /// </summary>
     public static Dictionary<string, List<ExifToolTag>> Read(string perl, string exifTool, IReadOnlyList<string> files)
     {
-        var result = new Dictionary<string, List<ExifToolTag>>(StringComparer.OrdinalIgnoreCase);
-        // In batches, each a Perl of its own: ExifTool's start takes longer than a file
-        foreach (var batch in files.Chunk(200))
+        // What ExifTool wrote of each file, its object of the JSON; empty where it wrote nothing
+        var objects = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var entries = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
+        var missing = new List<string>();
+        foreach (string file in files.Select(Path.GetFullPath).Distinct(StringComparer.OrdinalIgnoreCase))
         {
-            string list = Path.GetTempFileName();
-            try
-            {
-                File.WriteAllLines(list, batch, new UTF8Encoding(false));
-                var start = new ProcessStartInfo(perl)
-                {
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    StandardOutputEncoding = Encoding.UTF8,
-                };
-                foreach (var argument in new[] { exifTool, "-j", "-a", "-u", "-G1:4", "-H", "-n", "-b", "-q", "-q", "-all", "-XMP", "-charset", "filename=utf8", "-@", list })
-                    start.ArgumentList.Add(argument);
-                using var process = Process.Start(start)!;
-                var errors = process.StandardError.ReadToEndAsync();
-                string json = process.StandardOutput.ReadToEnd();
-                process.WaitForExit();
-                _ = errors.Result;
-                if (string.IsNullOrWhiteSpace(json))
-                    continue;
+            // The arguments count in finding an entry, and so does the version of what it holds
+            string? entry = entries[file] = ToolCache.EntryOf("exiftool", [perl, exifTool], "json 1 " + string.Join(' ', Arguments), file);
+            if (ToolCache.TryLoad(entry, reader => reader.ReadString(), out string json))
+                objects[file] = json;
+            else
+                missing.Add(file);
+        }
 
-                using var document = JsonDocument.Parse(EscapeControlCharacters(json));
-                foreach (var file in document.RootElement.EnumerateArray())
-                {
-                    string source = file.GetProperty("SourceFile").GetString()!;
-                    var tags = new List<ExifToolTag>();
-                    foreach (var property in file.EnumerateObject())
-                    {
-                        if (property.Value.ValueKind != JsonValueKind.Object || !property.Value.TryGetProperty("id", out var id))
-                            continue;
-                        // Group:Copy1:Name - a tag found again is a copy (family 4), else JSON keeps only the last
-                        string[] parts = property.Name.Split(':');
-                        string group = parts.Length > 1 ? parts[0] : "";
-                        string name = parts[^1];
-                        tags.Add(new ExifToolTag(group, name, IdText(id), ValueText(property.Value.GetProperty("val"))));
-                    }
-                    result[Path.GetFullPath(source)] = tags;
-                }
-            }
-            finally
+        // In batches, each a Perl of its own: ExifTool's start takes longer than a file
+        foreach (var batch in missing.Chunk(200))
+        {
+            var written = Run(perl, exifTool, batch);
+            if (written == null)
+                continue;
+
+            foreach (string file in batch)
             {
-                File.Delete(list);
+                string json = written.TryGetValue(file, out string? text) ? text : "";
+                objects[file] = json;
+                ToolCache.Save(entries[file], json, (writer, value) => writer.Write(value));
             }
         }
+
+        var result = new Dictionary<string, List<ExifToolTag>>(StringComparer.OrdinalIgnoreCase);
+        foreach (var (path, json) in objects)
+        {
+            if (json.Length == 0)
+                continue;
+
+            using var document = JsonDocument.Parse(json);
+            var tags = new List<ExifToolTag>();
+            foreach (var property in document.RootElement.EnumerateObject())
+            {
+                if (property.Value.ValueKind != JsonValueKind.Object || !property.Value.TryGetProperty("id", out var id))
+                    continue;
+                // Group:Copy1:Name - a tag found again is a copy (family 4), else JSON keeps only the last
+                string[] parts = property.Name.Split(':');
+                string group = parts.Length > 1 ? parts[0] : "";
+                string name = parts[^1];
+                tags.Add(new ExifToolTag(group, name, IdText(id), ValueText(property.Value.GetProperty("val"))));
+            }
+            result[path] = tags;
+        }
         return result;
+    }
+
+    /// <summary>
+    /// Runs ExifTool over files, and gives each file's object of its JSON by the file's full path; null when
+    /// ExifTool wrote nothing at all.
+    /// </summary>
+    private static Dictionary<string, string>? Run(string perl, string exifTool, string[] files)
+    {
+        string list = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllLines(list, files, new UTF8Encoding(false));
+            var start = new ProcessStartInfo(perl)
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                StandardOutputEncoding = Encoding.UTF8,
+            };
+            foreach (var argument in new[] { exifTool }.Concat(Arguments).Concat(["-@", list]))
+                start.ArgumentList.Add(argument);
+            using var process = Process.Start(start)!;
+            var errors = process.StandardError.ReadToEndAsync();
+            string json = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+            _ = errors.Result;
+            if (string.IsNullOrWhiteSpace(json))
+                return null;
+
+            var objects = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            using var document = JsonDocument.Parse(EscapeControlCharacters(json));
+            foreach (var file in document.RootElement.EnumerateArray())
+                objects[Path.GetFullPath(file.GetProperty("SourceFile").GetString()!)] = file.GetRawText();
+            return objects;
+        }
+        finally
+        {
+            File.Delete(list);
+        }
     }
 
     /// <summary>An id as the atom type it is: "base64:qW5hbQ==" as ©nam, its bytes taken as ISO 8859-1.</summary>
