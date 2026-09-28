@@ -9,7 +9,7 @@ namespace SharpMP4.Tests.Conformance;
 /// where, and how large. Within a parent, boxes are paired by type in the order they come, as the
 /// dump keeps only that order.
 /// </summary>
-public static class BoxTreeComparison
+public static partial class BoxTreeComparison
 {
     /// <summary>Reads a file with SharpMP4 into the same shape as a dump.</summary>
     public static (DumpedBox Root, Exception? Error) ReadWithSharpMp4(string path)
@@ -154,6 +154,13 @@ public static class BoxTreeComparison
             if (NotFields.Contains(name))
                 continue;
 
+            // a tfhd's default sample flags, in their parts
+            if (box is TrackFragmentHeaderBox fragmentHeader && SampleFlagsPart(0, name) != null)
+            {
+                CompareSampleFlags(fragmentHeader.DefaultSampleFlags, new() { [name] = gpacValue }, at, result);
+                continue;
+            }
+
             if (!TryGetProperty(box, properties, name, out var property))
             {
                 // of a box SharpMP4 does not know, which one
@@ -209,13 +216,29 @@ public static class BoxTreeComparison
                     long s => (ulong)s,
                     _ => value,
                 };
-                // GPAC's hex with no 0x: tx3g's displayFlags 262144 is 40000
+                // GPAC's hex with no 0x: tx3g's displayFlags 262144 is 40000, subs's reserved 00000000
                 yield return Convert.ToUInt64(number < 0 ? 0 : number).ToString("X");
+                yield return Convert.ToUInt64(number < 0 ? 0 : number).ToString("X8");
+                // and in lower case: an oinf's general_constraint_indicator_flags f8800000000
+                yield return Convert.ToUInt64(number < 0 ? 0 : number).ToString("x");
+                // an oinf's maxBitDepth, of maxBitDepthMinus8
+                if (name == "maxBitDepth")
+                    yield return number + 8;
+                // a matrix's value, 0x00010000: of its bits, a negative one's too
+                yield return "0x" + (value is int or short or sbyte or long ? unchecked((uint)Convert.ToInt64(value)) : Convert.ToUInt64(number)).ToString("X8");
                 break;
             case byte[] bytes:
                 yield return "0x" + Convert.ToHexString(bytes);
+                // a parameter set's content, as a data URL; a decoder specific info's, its bytes URL-encoded
+                yield return "data:application/octet-string," + Convert.ToHexString(bytes);
+                yield return "data:application/octet-string," + string.Concat(bytes.Select(b => "%" + b.ToString("X2")));
+                // a field of no width - an iloc's base_offset of base_offset_size 0 - is 0
+                if (bytes.Length == 0)
+                    yield return 0UL;
                 // each byte in hex, as a colour: tx3g's backgroundColor ff 0 0 ff
                 yield return string.Join(" ", bytes.Select(b => b.ToString("x")));
+                // each byte a number, as GPAC lists them: an oinf layer's dependent_on_layerID 0
+                yield return string.Concat(bytes.Select(b => $"{b} "));
                 // a UUID, in GPAC's braces: {F78CAA0C-36BE4CE9-87D203C2-56DABEB2}
                 if (bytes.Length == 16)
                     yield return "{" + string.Join("-", Enumerable.Range(0, 4).Select(i => Convert.ToHexString(bytes, i * 4, 4))) + "}";
@@ -261,6 +284,16 @@ public static class BoxTreeComparison
             }
         }
 
+        // a decoder configuration's chroma_format, in GPAC's words (0 to 3 of H.264's and H.265's chroma_format_idc)
+        if (name == "chroma_format" && value is byte chroma && chroma < 4)
+            yield return new[] { "YUV 4:0:0", "YUV 4:2:0", "YUV 4:2:2", "YUV 4:4:4" }[chroma];
+        // an sdtp's two bits of a sample, in GPAC's words
+        if (value is byte dependency && name is "isLeading" or "dependsOnOther" or "dependedOn" or "hasRedundancy" && dependency < 3)
+            yield return new[] { "unknown", "yes", "no" }[dependency];
+        // an sbgp's index in a traf: 0x10000 and up are the traf's own descriptions, which GPAC gives apart
+        if (name == "group_description_index" && value is uint index && index > 0xFFFF)
+            yield return index & 0xFFFF;
+
         // GPAC's own words of a few boxes' fields
         if (value is byte angle && name == "angle")
             yield return angle * 90;
@@ -279,6 +312,209 @@ public static class BoxTreeComparison
         // an 'mdhd' of timescale 0, which GPAC reads as 90000 (isomedia/box_code_base.c, mdhd_box_read)
         if (name == "TimeScale" && box is MediaHeaderBox && value is uint timescale && timescale == 0)
             yield return 90000u;
+    }
+
+    /// <summary>
+    /// GPAC's names of the fields of entries SharpMP4 names otherwise, by the box's class, the entry's element and
+    /// GPAC's name; where more than one, separated by |, the first SharpMP4 has - an 'stsz' of sizes, or of one size.
+    /// </summary>
+    private static readonly Dictionary<string, string> GpacEntryNames = new(StringComparer.Ordinal)
+    {
+        ["SampleSizeBox.SampleSizeEntry.Size"] = "EntrySize|SampleSize",
+        ["CompactSampleSizeBox.SampleSizeEntry.Size"] = "EntrySize",
+        ["ChunkOffsetBox.ChunkEntry.offset"] = "ChunkOffset",
+        ["ChunkLargeOffsetBox.ChunkOffsetEntry.offset"] = "ChunkOffset",
+        ["CompositionOffsetBox.CompositionOffsetEntry.CompositionOffset"] = "SampleOffset|SampleOffset0",
+        ["TrackRunBox.TrackRunEntry.Duration"] = "SampleDuration",
+        ["TrackRunBox.TrackRunEntry.Size"] = "SampleSize",
+        ["TrackRunBox.TrackRunEntry.CTSOffset"] = "SampleCompositionTimeOffset|SampleCompositionTimeOffset0",
+        ["SampleAuxiliaryInformationSizesBox.SAISize.size"] = "SampleInfoSize|DefaultSampleInfoSize",
+        ["FileTypeBox.BrandEntry.AlternateBrand"] = "CompatibleBrands",
+        ["SegmentTypeBox.BrandEntry.AlternateBrand"] = "CompatibleBrands",
+        ["SampleDependencyTypeBox.SampleDependencyEntry.dependsOnOther"] = "SampleDependsOn",
+        ["SampleDependencyTypeBox.SampleDependencyEntry.dependedOn"] = "SampleIsDependedOn",
+        ["SampleDependencyTypeBox.SampleDependencyEntry.hasRedundancy"] = "SampleHasRedundancy",
+        ["EditListBox.EditListEntry.Duration"] = "EditDuration",
+        ["EditListBox.EditListEntry.MediaRate"] = "MediaRateInteger",
+        ["TrackFragmentRandomAccessBox.RandomAccessEntry.traf"] = "TrafNumber",
+        ["TrackFragmentRandomAccessBox.RandomAccessEntry.trun"] = "TrunNumber",
+        ["TrackFragmentRandomAccessBox.RandomAccessEntry.sample"] = "SampleDelta",
+        ["SegmentIndexBox.Reference.type"] = "ReferenceType",
+        ["SegmentIndexBox.Reference.size"] = "ReferencedSize",
+        ["SegmentIndexBox.Reference.duration"] = "SubsegmentDuration",
+        ["SegmentIndexBox.Reference.SAP_type"] = "SAPType",
+        ["TrackReferenceTypeBox.TrackReferenceEntry.TrackID"] = "TrackIDs",
+        ["SingleItemTypeReferenceBox.ItemReferenceBoxEntry.ItemID"] = "ToItemID",
+        ["ShadowSyncSampleBox.SyncShadowEntry.ShadowedSample"] = "ShadowedSampleNumber",
+        ["ShadowSyncSampleBox.SyncShadowEntry.SyncSample"] = "SyncSampleNumber",
+        ["FontTableBox.FontRecord.ID"] = "FontId",
+        ["FontTableBox.FontRecord.name"] = "FontName",
+        ["LevelAssignmentBox.Assignement.assignement_type"] = "AssignmentType",
+        ["SubTrackInformationBox.SubTrackInformationAttribute.value"] = "AttributeList",
+    };
+
+    /// <summary>The lists of entries GPAC gives that are SharpMP4's arrays, an entry an element: by the box's class and the entry's element.</summary>
+    private static readonly HashSet<string> FlatEntries = new(StringComparer.Ordinal)
+    {
+        "SampleSizeBox.SampleSizeEntry", "CompactSampleSizeBox.SampleSizeEntry", "ChunkOffsetBox.ChunkEntry",
+        "ChunkLargeOffsetBox.ChunkOffsetEntry", "CompositionOffsetBox.CompositionOffsetEntry", "PaddingBitsBox.PaddingBitsEntry",
+        "TrackRunBox.TrackRunEntry", "TimeToSampleBox.TimeToSampleEntry", "SyncSampleBox.SyncSampleEntry",
+        "SampleToGroupBox.SampleGroupBoxEntry", "SampleAuxiliaryInformationSizesBox.SAISize", "SampleToChunkBox.SampleToChunkEntry",
+        "TrickPlayBox.TrickPlayBoxEntry", "FileTypeBox.BrandEntry", "SegmentTypeBox.BrandEntry",
+        "SampleDependencyTypeBox.SampleDependencyEntry", "EditListBox.EditListEntry", "TrackFragmentRandomAccessBox.RandomAccessEntry",
+        "SegmentIndexBox.Reference", "TrackReferenceTypeBox.TrackReferenceEntry", "SingleItemTypeReferenceBox.ItemReferenceBoxEntry",
+        "SampleAuxiliaryInformationOffsetsBox.SAIChunkOffset", "FilePartitionBox.FilePartitionBoxEntry",
+        "ShadowSyncSampleBox.SyncShadowEntry", "FontTableBox.FontRecord", "FECReservoirBox.FECReservoirBoxEntry",
+        "LevelAssignmentBox.Assignement", "SubTrackInformationBox.SubTrackInformationAttribute",
+    };
+
+    /// <summary>
+    /// Compares the entries GPAC gives of a box - each attribute of its i-th entry of a kind - with the i-th of the
+    /// array SharpMP4 has of that name, or with the field of that name of the i-th of its entries where it keeps them
+    /// as objects (a trun's TrunEntry). A padb's entries are its samples', two to SharpMP4's each. Attributes of
+    /// entries SharpMP4 has none of the name of are counted with GPAC's fields it has none of.
+    /// </summary>
+    private static void CompareEntries(Box box, Dictionary<string, List<Dictionary<string, string>>> gpacEntries, string at, StreamResult result)
+    {
+        var properties = Properties(box.GetType());
+        string boxClass = box.GetType().Name;
+
+        // entries SharpMP4 keeps as objects: the one array of a class of its own
+        var objects = properties.Values
+            .Where(p => p.PropertyType.IsArray && p.PropertyType.GetElementType() is { IsClass: true } t && t != typeof(string) && !t.IsArray && !typeof(Box).IsAssignableFrom(t))
+            .Select(p => Value(p, box) as Array).Where(a => a != null).ToList();
+        Array? entryObjects = objects.Count == 1 ? objects[0] : null;
+
+        foreach (var (element, entries) in gpacEntries)
+        {
+            // a trun's first sample's flags, a trex's default ones, in their parts
+            if (element is "FirstSampleFlags" or "DefaultSampleFlags" && properties.TryGetValue(Normal(element), out var flagsProperty) && Value(flagsProperty, box) is uint boxFlags)
+            {
+                foreach (var entry in entries)
+                    CompareSampleFlags(boxFlags, entry, $"{at}/{element}", result);
+                continue;
+            }
+
+            // only flat lists, an entry each of SharpMP4's arrays' elements: lists in lists - iloc's extents, ipma's
+            // properties, a decoder configuration's parameter sets - not yet
+            if (!FlatEntries.Contains($"{boxClass}.{element}"))
+            {
+                Unpaired.AddOrUpdate($"{boxClass}.{element} (entries not compared)", entries.Count, (_, n) => n + entries.Count);
+                continue;
+            }
+
+            var attributes = entries.SelectMany(e => e.Keys).Distinct().ToList();
+            foreach (string attribute in attributes)
+            {
+                string key = $"{boxClass}.{element}.{attribute}";
+                Func<int, (bool Found, object? Value)>? ours = null;
+
+                // a trun's samples' own flags, in their parts
+                if (entryObjects is TrunEntry[] runEntries && SampleFlagsPart(0, attribute) != null)
+                {
+                    for (int i = 0; i < Math.Min(entries.Count, runEntries.Length); i++)
+                        CompareSampleFlags(runEntries[i].SampleFlags, entries[i].Where(e => e.Key == attribute).ToDictionary(), $"{at}/{element}[{i}]", result);
+                    continue;
+                }
+
+                if (box is PaddingBitsBox padding && attribute == "PaddingBits")
+                {
+                    // two samples' padding a byte: pad1 of the first, pad2 of the second
+                    ours = i => (true, i / 2 < (i % 2 == 0 ? padding.Pad1 : padding.Pad2)?.Length ? (i % 2 == 0 ? padding.Pad1 : padding.Pad2)![i / 2] : null);
+                }
+                else
+                {
+                    string[] names = GpacEntryNames.TryGetValue(key, out string? mapped) ? mapped.Split('|') : [attribute];
+                    if (entryObjects != null)
+                    {
+                        var elementProperties = Properties(entryObjects.GetType().GetElementType()!);
+                        var candidates = names.Select(n => elementProperties.GetValueOrDefault(Normal(n))).Where(p => p != null).Select(p => p!).ToList();
+                        // of more than one - a version 0 trun's unsigned offset, a version 1's signed - the one that is set
+                        if (candidates.Count > 0)
+                            ours = i => i < entryObjects.Length && entryObjects.GetValue(i) is object entry
+                                ? (true, candidates.Select(p => Value(p, entry)).FirstOrDefault(v => v != null && (!v.GetType().IsValueType || !Equals(v, Activator.CreateInstance(v.GetType())))) ?? Value(candidates[0], entry))
+                                : (false, null);
+                    }
+                    if (ours == null)
+                    {
+                        // the first of the names SharpMP4 has a value of: an array, else one value for all entries
+                        var property = names.Select(n => properties.GetValueOrDefault(Normal(n))).FirstOrDefault(p => p != null && Value(p, box) != null);
+                        object? value = property != null ? Value(property, box) : null;
+                        if (value is Array array && value is not byte[] { Length: 0 })
+                            ours = i => i < array.Length ? (true, array.GetValue(i)) : (false, null);
+                        else if (value != null)
+                            ours = _ => (true, value);
+                    }
+                }
+
+                if (ours == null)
+                {
+                    Unpaired.AddOrUpdate(key, entries.Count, (_, n) => n + entries.Count);
+                    continue;
+                }
+
+                for (int i = 0; i < entries.Count; i++)
+                {
+                    if (!entries[i].TryGetValue(attribute, out string? gpacValue))
+                        continue;
+                    result.FieldsCompared++;
+                    var (found, value) = ours(i);
+                    if (!found)
+                    {
+                        result.Fail(Outcome.Diverged, $"{at}/{element}.{attribute}: missing", $"{at}/{element}[{i}].{attribute}: GPAC {gpacValue}, SharpMP4 has no entry {i}");
+                        break;
+                    }
+                    if (!Forms(value, box, attribute).Any(form => Same(gpacValue, form)))
+                    {
+                        result.Fail(Outcome.Diverged, $"{at}/{element}.{attribute}: differs", $"{at}/{element}[{i}].{attribute}: GPAC {gpacValue}, SharpMP4 {Show(value)}");
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// A part of sample flags (14496-12 8.8.3.1), by GPAC's name for it: reserved(4) is_leading(2)
+    /// sample_depends_on(2) sample_is_depended_on(2) sample_has_redundancy(2) sample_padding_value(3)
+    /// sample_is_non_sync_sample(1) sample_degradation_priority(16); GPAC's Sync is 1 of a sync sample. Null of a
+    /// name that is not a part of them.
+    /// </summary>
+    private static uint? SampleFlagsPart(uint flags, string name) => name.StartsWith("Sample", StringComparison.Ordinal) && name != "SamplePadding" ? SampleFlagsPart(flags, name.Substring(6)) : name switch
+    {
+        "IsLeading" => (flags >> 26) & 3,
+        "DependsOn" => (flags >> 24) & 3,
+        "IsDependedOn" => (flags >> 22) & 3,
+        "HasRedundancy" => (flags >> 20) & 3,
+        "SamplePadding" => (flags >> 17) & 7,
+        "Sync" => ((flags >> 16) & 1) == 0 ? 1u : 0u,
+        "DegradationPriority" => flags & 0xFFFF,
+        _ => null,
+    };
+
+    /// <summary>Compares GPAC's parts of sample flags - of an entry, or of a box - with those of SharpMP4's flags.</summary>
+    private static void CompareSampleFlags(uint flags, Dictionary<string, string> gpac, string at, StreamResult result)
+    {
+        foreach (var (name, gpacValue) in gpac)
+        {
+            if (SampleFlagsPart(flags, name) is not uint part)
+                continue;
+            result.FieldsCompared++;
+            if (!Same(gpacValue, part))
+                result.Fail(Outcome.Diverged, $"{at}.{name}: differs", $"{at}.{name}: GPAC {gpacValue}, SharpMP4 {part} (of sample flags 0x{flags:X8})");
+        }
+    }
+
+    private static object? Value(PropertyInfo property, object owner)
+    {
+        try
+        {
+            return property.GetValue(owner);
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
 
     /// <summary>GPAC's ISO 639-2/T codes of QuickTime's language codes 0 to 31 (isomedia/box_code_base.c, qtLanguages).</summary>
@@ -406,6 +642,10 @@ public static class BoxTreeComparison
         // GPAC's (null) of a string it has none of
         if (gpac == "(null)")
             gpac = "";
+        // a number with GPAC's words for it: an oinf's scalability_mask 4 (Spatial scalability)
+        var described = System.Text.RegularExpressions.Regex.Match(gpac, @"^(\S+) \(.*\)$");
+        if (described.Success && Same(described.Groups[1].Value, ours))
+            return true;
         switch (ours)
         {
             case null:
@@ -472,7 +712,11 @@ public static class BoxTreeComparison
                 }
 
                 if (ours[i].Source != null)
+                {
                     CompareFields(ours[i].Source!, theirs[i].Fields, at, result);
+                    var nested = CompareNested(ours[i].Source!, theirs[i], at, result);
+                    CompareEntries(ours[i].Source!, theirs[i].Entries.Where(e => !nested.Contains(e.Key)).ToDictionary(), at, result);
+                }
                 CompareChildren(ours[i], theirs[i], at, result);
             }
 

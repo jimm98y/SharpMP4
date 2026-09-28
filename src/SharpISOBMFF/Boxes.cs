@@ -32,7 +32,6 @@ namespace SharpISOBMFF
     {
         public RtpReceptionHintSampleEntry(uint boxtype) : base(boxtype) { }
     }
-    public class OperatingPointsRecord : UnknownClass { }
 
     public class MetaDataDatatypeBox : UnknownBox { } // missing info
     public abstract class SampleConstructor : Box { }

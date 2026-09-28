@@ -838,7 +838,6 @@ namespace SharpISOBMFF
                case "sefd":  return new SamsungTrailerBox();
                case "segr":  return new FDSessionGroupBox();
                case "seib":  return new ScalabilityInformationSEIBox();
-               case "seig":  return new SeigBox();
                case "seii":  return new SeiInformationBox();
                case "SelO":  return new AppleSelectionOnlyBox();
                case "senc":  return new SampleEncryptionBox();
@@ -1145,6 +1144,7 @@ namespace SharpISOBMFF
                case "sap ": return new SAPEntry();
                case "scif": return new ScalableGroupEntry();
                case "scnm": return new ScalableNALUMapEntry();
+               case "seig": return new CencSampleEncryptionInformationGroupEntry();
                case "spid": return new VvcSubpicIDEntry();
                case "spli": return new SubpicLevelInfoEntry();
                case "spor": return new VvcSubpicOrderEntry();

@@ -661,7 +661,7 @@
     {
       "containers": [ "*" ],
       "type": "Descriptor",
-      "syntax": "aligned(8) class IOD_Descriptor extends BaseDescriptor : bit(8) tag=MP4_IOD_Tag {\r\n unsigned int(16) odid;\r\n unsigned int(8) odProfileLevel;\r\n unsigned int(8) sceneProfileLevel;\r\n unsigned int(8) audioProfileId;\r\n unsigned int(8) videoProfileId;\r\n unsigned int(8) graphicsProfileLevel;\r\n ES_ID_Inc esIdInc[1 .. 255];\r\n }\r\n class ES_ID_Inc extends BaseDescriptor : bit(8) tag=ES_ID_IncTag {\r\n bit(32) Track_ID;\r\n }\r\n class ES_ID_Ref extends BaseDescriptor : bit(8) tag=ES_ID_RefTag {\r\n bit(16) ref_index;\r\n }"
+      "syntax": "// ISO/IEC 14496-1:2010's InitialObjectDescriptor, as an MP4 file has it (ISO/IEC 14496-14): ES_ID_Inc for its ES_Descriptors\r\naligned(8) class IOD_Descriptor extends BaseDescriptor : bit(8) tag=MP4_IOD_Tag {\r\n bit(10) ObjectDescriptorID;\r\n bit(1) URL_Flag;\r\n bit(1) includeInlineProfileLevelFlag;\r\n bit(4) reserved;\r\n if (URL_Flag) {\r\n  bit(8) URLlength;\r\n  bit(8) URLstring[URLlength];\r\n }\r\n else {\r\n  bit(8) ODProfileLevelIndication;\r\n  bit(8) sceneProfileLevelIndication;\r\n  bit(8) audioProfileLevelIndication;\r\n  bit(8) visualProfileLevelIndication;\r\n  bit(8) graphicsProfileLevelIndication;\r\n }\r\n ES_ID_Inc esIdInc[1 .. 255];\r\n }\r\n class ES_ID_Inc extends BaseDescriptor : bit(8) tag=ES_ID_IncTag {\r\n bit(32) Track_ID;\r\n }\r\n class ES_ID_Ref extends BaseDescriptor : bit(8) tag=ES_ID_RefTag {\r\n bit(16) ref_index;\r\n }"
     },
     {
       "containers": [ "*" ],
@@ -1544,9 +1544,10 @@
       "syntax": "aligned(8) class MoatBox() extends Box('moat') {\r\n\t bit(8) data[];\r\n } "
     },
     {
-      "containers": [ "*" ],
-      "type": "Box",
-      "syntax": "aligned(8) class SeigBox() extends Box('seig') {\r\n\t bit(8) data[];\r\n } "
+      "fourcc": "seig",
+      "containers": [ "sgpd" ],
+      "type": "SampleGroupDescriptionEntry",
+      "syntax": "// ISO/IEC 23001-7 (3rd edition, not at hand; the 2023 at hand a preview) CENC sample encryption information, the fields of tenc's version 1 as GPAC reads them, not the multi-key form of later editions\r\naligned(8) class CencSampleEncryptionInformationGroupEntry() extends SampleGroupDescriptionEntry('seig') {\r\n unsigned int(8) reserved = 0;\r\n unsigned int(4) crypt_byte_block;\r\n unsigned int(4) skip_byte_block;\r\n unsigned int(8) isProtected;\r\n unsigned int(8) Per_Sample_IV_Size;\r\n unsigned int(8) KID[16];\r\n if (isProtected == 1 && Per_Sample_IV_Size == 0) {\r\n  unsigned int(8) constant_IV_size;\r\n  unsigned int(8) constant_IV[constant_IV_size];\r\n }\r\n } "
     },
     {
       "containers": [ "*" ],

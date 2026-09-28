@@ -807,7 +807,6 @@
 |sefd|SamsungTrailerBox|
 |segr|FDSessionGroupBox|
 |seib|ScalabilityInformationSEIBox|
-|seig|SeigBox|
 |seii|SeiInformationBox|
 |SelO|AppleSelectionOnlyBox|
 |senc|SampleEncryptionBox|
@@ -1094,6 +1093,7 @@
 |sap |SAPEntry|
 |scif|ScalableGroupEntry|
 |scnm|ScalableNALUMapEntry|
+|seig|CencSampleEncryptionInformationGroupEntry|
 |spid|VvcSubpicIDEntry|
 |spli|SubpicLevelInfoEntry|
 |spor|VvcSubpicOrderEntry|

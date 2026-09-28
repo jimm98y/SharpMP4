@@ -22,8 +22,26 @@ public sealed class DumpedBox
 
     public List<DumpedBox> Children { get; } = [];
 
+    /// <summary>
+    /// The entries GPAC gives of a box - its sample table's SampleSizeEntry, its ftyp's BrandEntry - by the name of
+    /// their element, each with its attributes, in order: the elements in the box's that are not boxes.
+    /// </summary>
+    public Dictionary<string, List<Dictionary<string, string>>> Entries { get; } = new(StringComparer.Ordinal);
+
+    /// <summary>The same entries as they are nested: a senc's samples, each with its subsamples.</summary>
+    public List<GpacEntry> EntryTree { get; } = [];
+
     /// <summary>The box SharpMP4 read, of a tree made of what it read; null in GPAC's.</summary>
     public SharpISOBMFF.Box? Source { get; init; }
+}
+
+/// <summary>An entry of a box as GPAC dumps it: its element's name, its attributes, and the entries in it.</summary>
+public sealed record GpacEntry(string Name, Dictionary<string, string> Attributes)
+{
+    public List<GpacEntry> Children { get; } = [];
+
+    /// <summary>The entries in it of a name, in order.</summary>
+    public List<GpacEntry> Named(string name) => Children.Where(c => c.Name == name).ToList();
 }
 
 /// <summary>
@@ -39,12 +57,15 @@ public static class GpacDump
         using var document = JsonDocument.Parse(File.ReadAllBytes(path));
         var file = document.RootElement.GetProperty("IsoMediaFile");
         var root = new DumpedBox("file", null, []);
-        Collect(file, root);
+        Collect(file, root, null);
         return root;
     }
 
-    /// <summary>The boxes in an element, found through whatever elements that are not boxes lie between.</summary>
-    private static void Collect(JsonElement element, DumpedBox parent)
+    /// <summary>
+    /// The boxes in an element, found through whatever elements that are not boxes lie between, and those elements
+    /// as the box's entries: in the entry the element is, if it is one.
+    /// </summary>
+    private static void Collect(JsonElement element, DumpedBox parent, GpacEntry? entry)
     {
         foreach (var property in element.EnumerateObject())
         {
@@ -59,36 +80,49 @@ public static class GpacDump
             if (property.Value.ValueKind == JsonValueKind.Array)
             {
                 foreach (var item in property.Value.EnumerateArray())
-                    Add(item, parent);
+                    Add(property.Name, item, parent, entry);
             }
             else
             {
-                Add(property.Value, parent);
+                Add(property.Name, property.Value, parent, entry);
             }
         }
     }
 
-    private static void Add(JsonElement element, DumpedBox parent)
+    private static void Add(string name, JsonElement element, DumpedBox parent, GpacEntry? entry)
     {
         if (element.ValueKind != JsonValueKind.Object)
             return;
 
         if (!element.TryGetProperty("@Type", out var type))
         {
-            Collect(element, parent);
+            // an entry of the box, and the boxes it may hold
+            var attributes = Attributes(element);
+            if (!parent.Entries.TryGetValue(name, out var entries))
+                parent.Entries[name] = entries = [];
+            entries.Add(attributes);
+            var nested = new GpacEntry(name, attributes);
+            (entry?.Children ?? parent.EntryTree).Add(nested);
+            Collect(element, parent, nested);
             return;
         }
 
-        var fields = new Dictionary<string, string>();
-        foreach (var property in element.EnumerateObject())
-        {
-            if (property.Name.StartsWith('@') && property.Value.ValueKind == JsonValueKind.String)
-                fields[property.Name.Substring(1)] = property.Value.GetString()!;
-        }
-
+        var fields = Attributes(element);
         ulong? size = fields.TryGetValue("Size", out string? text) && ulong.TryParse(text, out ulong value) ? value : null;
         var box = new DumpedBox(type.GetString() ?? "", size, fields);
         parent.Children.Add(box);
-        Collect(element, box);
+        Collect(element, box, null);
+    }
+
+    /// <summary>An element's attributes, by their names without the @.</summary>
+    private static Dictionary<string, string> Attributes(JsonElement element)
+    {
+        var attributes = new Dictionary<string, string>();
+        foreach (var property in element.EnumerateObject())
+        {
+            if (property.Name.StartsWith('@') && property.Value.ValueKind == JsonValueKind.String)
+                attributes[property.Name.Substring(1)] = property.Value.GetString()!;
+        }
+        return attributes;
     }
 }
