@@ -332,6 +332,12 @@ namespace SharpISOBMFF
                         // freeform item's, or any item's - a full box, as its 'mean' is.
                         factory.Append($"               case \"{item.Key}\": if(parent == \"udta\") return new AppleName2Box(); else if(parent == \"tmcd\") return new QuickTimeTextBox(IsoStream.FromFourCC(\"name\")); else if(parent == \"schi\") return new FairPlayUserNameBox(); else return new ITunesMetadataNameBox();\r\n");
                     }
+                    else if (item.Key == "xml ")
+                    {
+                        // In a 'meta', XML is a full box (14496-12 8.11.2); a box of the file, as JPEG XL's and
+                        // JPEG 2000's containers have it, is a box and nothing more.
+                        factory.Append($"               case \"{item.Key}\": if(parent == \"\") return new JpegXMLBox(); else return new XMLBox();\r\n");
+                    }
                     else if (item.Key == "stri")
                     {
                         factory.Append($"               case \"{item.Key}\": if(parent == \"eyes\") return new StereoViewInformationBox(); else return new SubTrackInformationBox();\r\n");
@@ -1334,13 +1340,24 @@ namespace SharpISOBMFF
                 }
             }
 
-            ret.Append($"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{");
-
+            var body = new StringBuilder();
             foreach (var field in block.Content)
             {
-                ret.Append("\r\n" + BuildMethod(b, block, field, level + 1, methodType));
+                body.Append("\r\n" + BuildMethod(b, block, field, level + 1, methodType));
             }
 
+            // A loop with nothing in it but comments - the entries of 'stsd', 'dref' and 'ipro', read after it as
+            // boxes - is left out: its int counter never gets past a count over int.MaxValue, and it never ends
+            // (Exiv2's issue_2423_poc.mp4: an 'stsd' counting 0xE9E9E9E9 entries in 20 bytes)
+            if (blockType == "for" && body.ToString().Split('\n').All(line => line.Trim().Length == 0 || line.Trim().StartsWith("//")))
+            {
+                ret.Append($"\r\n{spacing}// {blockType} {condition}");
+                ret.Append(body);
+                return ret.ToString();
+            }
+
+            ret.Append($"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{");
+            ret.Append(body);
             ret.Append($"\r\n{spacing}}}");
 
             return ret.ToString();

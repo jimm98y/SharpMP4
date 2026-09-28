@@ -114,12 +114,16 @@ public static partial class MetadataComparison
                     // the first, only one other than the first packet's (XMP.pm, %recognizedAttrs)
                     if (OncePerValue.Contains(xmpKey))
                     {
-                        if (!firstOnce.TryAdd(xmpKey, value) && firstOnce[xmpKey] == value)
+                        // and not at all when it is empty, or 0: Perl's false
+                        if (value is "" or "0" || (!firstOnce.TryAdd(xmpKey, value) && firstOnce[xmpKey] == value))
                             continue;
                     }
                     if (!ours.TryGetValue(xmpKey, out var xmpValues))
                         ours[xmpKey] = xmpValues = [];
-                    xmpValues.Add(new Value([value]));
+                    // PLUS's vocabulary without its namespace, as ExifTool gives it even unconverted (PLUS.pm, ValueConv)
+                    xmpValues.Add(xmpKey.Contains(" XMP-plus:", StringComparison.Ordinal) && value.StartsWith(PlusVocabulary, StringComparison.Ordinal)
+                        ? new Value([value, value.Substring(PlusVocabulary.Length)])
+                        : new Value([value]));
                 }
             }
         }
@@ -135,6 +139,11 @@ public static partial class MetadataComparison
                 if (match >= 0)
                 {
                     actual.RemoveAt(match);
+                    expected.Remove(value);
+                }
+                // an empty array - <rdf:Bag/> - ExifTool gives as a tag of no value, SharpMP4 as no property
+                else if (value.Length == 0 && key.StartsWith("file XMP-", StringComparison.Ordinal))
+                {
                     expected.Remove(value);
                 }
             }
@@ -249,6 +258,9 @@ public static partial class MetadataComparison
         return values;
     }
 
+    /// <summary>The namespace of PLUS's controlled vocabulary, which ExifTool takes off its values.</summary>
+    private const string PlusVocabulary = "http://ns.useplus.org/ldf/vocab/";
+
     /// <summary>The namespaces of the packet's wrapper, whose attributes ExifTool reads into tables of their own.</summary>
     private static readonly HashSet<string> WrapperNamespaces = ["adobe:ns:meta/", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"];
 
@@ -357,7 +369,15 @@ public static partial class MetadataComparison
             }
             return false;
         }
+        // Text ExifTool takes for bytes - an XMP packet with NULs after it - it gives as base64
+        if (exifTool.StartsWith("base64:", StringComparison.Ordinal) && !sharp.StartsWith("base64:", StringComparison.Ordinal))
+            return SameValue(System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(exifTool.Substring(7))), sharp);
         if (exifTool.TrimEnd('\0', ' ') == sharp.TrimEnd('\0', ' ') || exifTool.Replace("\0", "") == sharp.Replace("\0", ""))
+            return true;
+        // A list of rationals ExifTool gives as the numbers they are (XMP-aux:LensInfo 18/1 250/1 is 18 250)
+        string[] theirItems = exifTool.Split(' '), ourItems = sharp.Split(' ');
+        if (ourItems.Length > 1 && ourItems.Length == theirItems.Length && ourItems.Any(item => Rational().IsMatch(item))
+            && theirItems.Zip(ourItems).All(pair => SameValue(pair.First, pair.Second)))
             return true;
         // An XMP boolean, True, however it is written
         if (exifTool is "True" or "False" && string.Equals(exifTool, sharp, StringComparison.OrdinalIgnoreCase))

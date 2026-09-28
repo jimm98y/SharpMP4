@@ -33,10 +33,8 @@ public partial class DataReferenceBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.entry_count, "entry_count"); 
 
-		for (int i=0; i < entry_count; i++)
-		{
+		// for (int i=0; i < entry_count; i++)
 			// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.data_entry[i], "data_entry"); 
-		}
 		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
 		return boxSize;
 	}
@@ -47,10 +45,8 @@ public partial class DataReferenceBox : FullBox
 		boxSize += base.Write(stream);
 		boxSize += stream.WriteUInt32( this.entry_count, "entry_count"); 
 
-		for (int i=0; i < entry_count; i++)
-		{
+		// for (int i=0; i < entry_count; i++)
 			// boxSize += stream.WriteBox( this.data_entry[i], "data_entry"); 
-		}
 		boxSize += stream.WriteBoxArrayTillEnd(this);
 		return boxSize;
 	}
@@ -61,10 +57,8 @@ public partial class DataReferenceBox : FullBox
 		boxSize += base.CalculateSize();
 		boxSize += 32; // entry_count
 
-		for (int i=0; i < entry_count; i++)
-		{
+		// for (int i=0; i < entry_count; i++)
 			// boxSize += IsoStream.CalculateBoxSize(data_entry[i]); // data_entry
-		}
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}

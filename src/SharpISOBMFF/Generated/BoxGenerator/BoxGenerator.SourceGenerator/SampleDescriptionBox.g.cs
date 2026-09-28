@@ -35,10 +35,8 @@ public partial class SampleDescriptionBox : FullBox
 		
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.entry_count, "entry_count"); 
 
-		for (int i = 0 ; i < entry_count ; i++)
-		{
+		// for (int i = 0 ; i < entry_count ; i++)
 			// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.SampleEntry[i], "SampleEntry"); // an instance of a class derived from SampleEntry
-		}
 		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
 		return boxSize;
 	}
@@ -50,10 +48,8 @@ public partial class SampleDescriptionBox : FullBox
 		
 		boxSize += stream.WriteUInt32( this.entry_count, "entry_count"); 
 
-		for (int i = 0 ; i < entry_count ; i++)
-		{
+		// for (int i = 0 ; i < entry_count ; i++)
 			// boxSize += stream.WriteBox( this.SampleEntry[i], "SampleEntry"); // an instance of a class derived from SampleEntry
-		}
 		boxSize += stream.WriteBoxArrayTillEnd(this);
 		return boxSize;
 	}
@@ -65,10 +61,8 @@ public partial class SampleDescriptionBox : FullBox
 		
 		boxSize += 32; // entry_count
 
-		for (int i = 0 ; i < entry_count ; i++)
-		{
+		// for (int i = 0 ; i < entry_count ; i++)
 			// boxSize += IsoStream.CalculateBoxSize(SampleEntry); // SampleEntry
-		}
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}

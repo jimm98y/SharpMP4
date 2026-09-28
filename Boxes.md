@@ -187,6 +187,7 @@
 |bloc|BaseLocationBox|
 |bmdc|BmdcBox|
 |brnd|BrandProperty|
+|brob|BrotliCompressedBox|
 |btec|GlamourSettingsBox|
 |btrt|BitRateBox|
 |buff|BufferingBox|
@@ -357,6 +358,7 @@
 |evs1|VisualSampleEntry|
 |evs2|VisualSampleEntry|
 |evsC|EVCSliceComponentTrackConfigurationBox|
+|Exif|ExifBox|
 |exte|MetaDataExtensionsBox|
 |eyes|StereoViewBox|
 |fade|FadeTransitionEffectProperty|
@@ -498,10 +500,16 @@
 |j2kH|J2kHBox|
 |j2ki|VisualSampleEntry|
 |j2kL|J2kLayersBox|
+|jbrd|JpegBitstreamReconstructionBox|
 |jpeg|VisualSampleEntry|
 |JPEG|JPEGInfoBox|
 |jpgC|JPEGConfigurationBox|
 |junk|AppleJunkBox|
+|JXL |JpegXLSignatureBox|
+|jxlc|JpegXLCodestreamBox|
+|jxli|JpegXLFrameIndexBox|
+|jxll|JpegXLLevelBox|
+|jxlp|JpegXLPartialCodestreamBox|
 |key |FairPlayUserKeyBox|
 |keyd|MetaDataKeyDeclarationBox|
 |keyi|MetaDataInlineKeysPresentBox|

@@ -1,0 +1,60 @@
+﻿{
+  "name": "Boxes",
+  "description": "The JPEG XL container (ISO/IEC 18181-2, not at hand): its boxes as libjxl reads and writes them (doc/format_overview.md, lib/jxl/decode.cc) and ExifTool reads them (Jpeg2000.pm)",
+  "entries": [
+    {
+      "fourcc": "JXL ",
+      "containers": [ "file" ],
+      "type": "Box",
+      "syntax": "// The signature a JPEG XL container starts with: 0x0D0A870A\r\naligned(8) class JpegXLSignatureBox extends Box('JXL ') {\r\n unsigned int(32) signature;\r\n }"
+    },
+    {
+      "fourcc": "jxll",
+      "containers": [ "file" ],
+      "type": "Box",
+      "syntax": "// The level of the codestream, 5 or 10\r\naligned(8) class JpegXLLevelBox extends Box('jxll') {\r\n unsigned int(8) level;\r\n }"
+    },
+    {
+      "fourcc": "jxlc",
+      "containers": [ "file" ],
+      "type": "Box",
+      "syntax": "// The codestream, whole\r\naligned(8) class JpegXLCodestreamBox extends Box('jxlc') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "jxlp",
+      "containers": [ "file" ],
+      "type": "Box",
+      "syntax": "// A part of the codestream: its index, the last part's with the top bit set\r\naligned(8) class JpegXLPartialCodestreamBox extends Box('jxlp') {\r\n unsigned int(1) is_last;\r\n unsigned int(31) index;\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "jbrd",
+      "containers": [ "file" ],
+      "type": "Box",
+      "syntax": "// What it takes to make the JPEG file a JPEG XL codestream was made of again, byte for byte\r\naligned(8) class JpegBitstreamReconstructionBox extends Box('jbrd') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "jxli",
+      "containers": [ "file" ],
+      "type": "Box",
+      "syntax": "// The index of an animation's key frames\r\naligned(8) class JpegXLFrameIndexBox extends Box('jxli') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "Exif",
+      "containers": [ "file" ],
+      "type": "Box",
+      "syntax": "// Exif: where in it the TIFF header is, then the Exif\r\naligned(8) class ExifBox extends Box('Exif') {\r\n unsigned int(32) tiff_header_offset;\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "xml ",
+      "containers": [ "file" ],
+      "type": "Box",
+      "syntax": "// XMP, a box of the file, not a full box as the XMLBox of a 'meta' is (JPEG 2000's XML box too)\r\naligned(8) class JpegXMLBox extends Box('xml ') {\r\n string data;\r\n }"
+    },
+    {
+      "fourcc": "brob",
+      "containers": [ "file" ],
+      "type": "Box",
+      "syntax": "// A box compressed with Brotli: the type of the box it is, then that box's content, compressed\r\naligned(8) class BrotliCompressedBox extends Box('brob') {\r\n unsigned int(32) box_type;\r\n bit(8) data[];\r\n }"
+    }
+  ]
+}

@@ -220,6 +220,7 @@ namespace SharpISOBMFF
                case "bloc":  return new BaseLocationBox();
                case "bmdc":  return new BmdcBox();
                case "brnd":  return new BrandProperty();
+               case "brob":  return new BrotliCompressedBox();
                case "btec":  return new GlamourSettingsBox();
                case "btrt":  return new BitRateBox();
                case "buff":  return new BufferingBox();
@@ -390,6 +391,7 @@ namespace SharpISOBMFF
                case "evs1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("evs1"));break;
                case "evs2": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("evs2"));break;
                case "evsC":  return new EVCSliceComponentTrackConfigurationBox();
+               case "Exif":  return new ExifBox();
                case "exte":  return new MetaDataExtensionsBox();
                case "eyes":  return new StereoViewBox();
                case "fade":  return new FadeTransitionEffectProperty();
@@ -531,10 +533,16 @@ namespace SharpISOBMFF
                case "j2kH":  return new J2kHBox();
                case "j2ki": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("j2ki"));break;
                case "j2kL":  return new J2kLayersBox();
+               case "jbrd":  return new JpegBitstreamReconstructionBox();
                case "jpeg": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("jpeg"));break;
                case "JPEG":  return new JPEGInfoBox();
                case "jpgC":  return new JPEGConfigurationBox();
                case "junk":  return new AppleJunkBox();
+               case "JXL ":  return new JpegXLSignatureBox();
+               case "jxlc":  return new JpegXLCodestreamBox();
+               case "jxli":  return new JpegXLFrameIndexBox();
+               case "jxll":  return new JpegXLLevelBox();
+               case "jxlp":  return new JpegXLPartialCodestreamBox();
                case "key ":  return new FairPlayUserKeyBox();
                case "keyd":  return new MetaDataKeyDeclarationBox();
                case "keyi":  return new MetaDataInlineKeysPresentBox();
@@ -1060,7 +1068,7 @@ namespace SharpISOBMFF
                case "wma ": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("wma "));else return new CodecConfigurationBox(IsoStream.FromFourCC("wma "));break;
                case "wvtt":  return new WVTTSampleEntry();
                case "xid ":  return new AppleXidBox();
-               case "xml ":  return new XMLBox();
+               case "xml ": if(parent == "") return new JpegXMLBox(); else return new XMLBox();
                case "XMP_":  return new XMPBox();
                case "Xtra":  return new WindowsMediaXtraBox();
                case "yrrc":  return new ThreeGPPRecordingYearBox();

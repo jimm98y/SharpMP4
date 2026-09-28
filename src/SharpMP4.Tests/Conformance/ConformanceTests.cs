@@ -327,6 +327,44 @@ public class ConformanceTests
     {
     };
 
+    /// <summary>
+    /// Reads the ISOBMFF files of Exiv2's tests - HEIF from cameras, AVIF, CR3, JPEG XL, video, and the files of
+    /// security reports - as <see cref="FateFilesReadWithoutSignsOfMisreading"/> reads FFmpeg's.
+    /// </summary>
+    [TestMethod]
+    public void Exiv2FilesReadWithoutSignsOfMisreading()
+    {
+        string? root = ConformanceCorpus.Locate();
+        if (root == null)
+            Assert.Inconclusive("no conformance files; run DownloadConformance.ps1, or set SHARPMP4_CONFORMANCE");
+
+        var files = ConformanceCorpus.Exiv2Files(root);
+        if (files.Count == 0)
+            Assert.Inconclusive($"no Exiv2 files under {root}; run DownloadConformance.ps1 -Codec Exiv2");
+
+        CheckFilesAgainstThemselves("exiv2", root, files, MalformedExiv2Files);
+    }
+
+    /// <summary>Exiv2's test files that are malformed, with what is wrong in them, as <see cref="MalformedFateFiles"/>.</summary>
+    private static readonly Dictionary<string, (string Why, string[] Defects)> MalformedExiv2Files = new()
+    {
+        [Path.Combine("exiv2", "issue_1793_poc.heic")] =
+            ("a security report's file: a 'meta' of 0xFFFFFFFF bytes in a file of 100", ["file/meta: could not be read"]),
+        [Path.Combine("exiv2", "issue_2340_poc.mp4")] =
+            ("a security report's file: a 'pnot' of 32 bytes, 12 of them spaces its fields do not take", ["file/pnot: left over"]),
+        [Path.Combine("exiv2", "issue_2345_poc.mp4")] =
+            ("a security report's file: an 'ftyp' of 13 bytes, too few for its brand and version", ["file/ftyp: could not be read"]),
+        [Path.Combine("exiv2", "issue_2393_poc.mp4")] =
+            ("a security report's file: 2 bytes after its last box", ["file: left over"]),
+        [Path.Combine("exiv2", "issue_2423_poc.mp4")] =
+            ("a security report's file: an 'stsd' of 20 bytes counting 0xE9E9E9E9 entries, 4 bytes of it no box", ["file/stsd: left over"]),
+        [Path.Combine("exiv2", "issue_ghsa_crmj_qh74_2r36_poc.mov")] =
+            ("a security report's file: a box of type 0x80000000 among fuzzed ones", ["file/?: not a box type"]),
+        [Path.Combine("exiv2", "issue_ghsa_fgw8_p7pr_37cp_poc.mov")] =
+            ("a security report's file: an 'ftyp' of 12 bytes, too few for its brand and version, and fuzzed boxes after it",
+             ["file/ftyp: could not be read", "file/?: not a box type"]),
+    };
+
     /// <summary>Firefox's test files that are malformed, with what is wrong in them, as <see cref="MalformedFateFiles"/>.</summary>
     private static readonly Dictionary<string, (string Why, string[] Defects)> MalformedFirefoxFiles = new()
     {

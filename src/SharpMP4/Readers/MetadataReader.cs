@@ -95,6 +95,9 @@ namespace SharpMP4.Readers
             var tags = new List<MetadataTag>();
             foreach (var xmp in file.Children.OfType<XMPCustomBox>())
                 tags.Add(Xmp(xmp, 0, xmp.Data.Bytes));
+            // JPEG XL's: a box of the file
+            foreach (var xmp in file.Children.OfType<JpegXMLBox>())
+                tags.Add(Xmp(xmp, 0, xmp.Data.Bytes));
             foreach (var meta in file.Children.OfType<MetaBox>())
                 ReadItems(file, meta, tags);
             foreach (var moov in file.Children.OfType<MovieBox>())

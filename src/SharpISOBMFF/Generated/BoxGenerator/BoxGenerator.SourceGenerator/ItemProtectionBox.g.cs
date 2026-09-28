@@ -33,10 +33,8 @@ public partial class ItemProtectionBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.protection_count, "protection_count"); 
 
-		for (int i=0; i<protection_count; i++)
-		{
+		// for (int i=0; i<protection_count; i++)
 			// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.protection_information[i], "protection_information"); 
-		}
 		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
 		return boxSize;
 	}
@@ -47,10 +45,8 @@ public partial class ItemProtectionBox : FullBox
 		boxSize += base.Write(stream);
 		boxSize += stream.WriteUInt16( this.protection_count, "protection_count"); 
 
-		for (int i=0; i<protection_count; i++)
-		{
+		// for (int i=0; i<protection_count; i++)
 			// boxSize += stream.WriteBox( this.protection_information[i], "protection_information"); 
-		}
 		boxSize += stream.WriteBoxArrayTillEnd(this);
 		return boxSize;
 	}
@@ -61,10 +57,8 @@ public partial class ItemProtectionBox : FullBox
 		boxSize += base.CalculateSize();
 		boxSize += 16; // protection_count
 
-		for (int i=0; i<protection_count; i++)
-		{
+		// for (int i=0; i<protection_count; i++)
 			// boxSize += IsoStream.CalculateBoxSize(protection_information[i]); // protection_information
-		}
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}

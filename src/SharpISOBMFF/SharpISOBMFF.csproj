@@ -47,6 +47,7 @@
 		<AdditionalFiles Include="Definitions\AC4-boxes.json" />
 		<AdditionalFiles Include="Definitions\DTSUHD-boxes.json" />
 		<AdditionalFiles Include="Definitions\IAMF-boxes.json" />
+		<AdditionalFiles Include="Definitions\JPEGXL-boxes.json" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(AutoGenerateCode) == 'true'">

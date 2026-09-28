@@ -44,6 +44,9 @@ Sources:
     Avif     The AVIF specification's test files, from Apple, Link-U, Microsoft, Netflix and Xiph:
              still images, grids, alpha, HDR, image sequences
                                 https://github.com/AOMediaCodec/av1-avif/tree/main/testFiles
+    Exiv2    The ISOBMFF files Exiv2 is tested with: HEIF, AVIF, CR3, JPEG XL and video with Exif
+             and XMP, and the files of security reports
+                                https://github.com/Exiv2/exiv2/tree/main/test/data
 
 Only files directly in each set's folder are fetched: the subfolders the ITU keeps
 beside them hold superseded versions of the same streams.
@@ -58,8 +61,9 @@ Which suites to fetch: any of H264, H265, H266, AV1, IsoBmff (the file format
 conformance files, each with GPAC's dump of its boxes), Fate (FFmpeg's samples
 that are ISOBMFF or QuickTime files, about 140 MB) and Metadata (the test files of the
 metadata libraries, under 1 MB, and ExifTool, 9 MB), Chromium (the MP4 files of Chromium's
-media tests, 43 MB), Firefox (those of Firefox's, 18 MB), Libavif (libavif's AVIF files, 2 MB) and
-Avif (the AVIF specification's test files, 50 MB). All of them by default.
+media tests, 43 MB), Firefox (those of Firefox's, 18 MB), Libavif (libavif's AVIF files, 2 MB),
+Avif (the AVIF specification's test files, 50 MB) and Exiv2 (Exiv2's ISOBMFF files, 6 MB). All of
+them by default.
 
 .PARAMETER IncludeSvc
 Also fetches the H.264 scalable video coding set, 12.9 GB.
@@ -89,8 +93,8 @@ Everything, about 25 GB.
 param(
     [string]$Destination,
 
-    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif')]
-    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif'),
+    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2')]
+    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2'),
 
     [switch]$IncludeSvc,
     [switch]$IncludeArgon,
@@ -525,9 +529,18 @@ $libavifSet = @{ Name = 'libavif'; Repo = 'AOMediaCodec/libavif'; Commit = 'ef43
 # passed on. Other writers than libavif's and libheif's: HDR, 10 and 12 bit, grids, alpha, image sequences.
 $avifSet = @{ Name = 'avif'; Repo = 'AOMediaCodec/av1-avif'; Commit = 'bf4c18d1f3971069b75e87d6ee469790589f4f09'; Folder = 'testFiles' }
 
+# The ISOBMFF files of Exiv2's tests (test/data, Exiv2's: GPL-2.0-or-later), at the commit given: HEIF from
+# Apple's, Canon's and Sony's cameras, AVIF and CR3 with their Exif and XMP, JPEG XL's box container, video,
+# and the files of security reports - broken on purpose. Read here, never passed on. Camera extensions too,
+# so a set of its own filter.
+$exiv2Set = @{ Name = 'exiv2'; Repo = 'Exiv2/exiv2'; Commit = '7710fc07c30a9f968a80dcff448c82adee84720d'; Folder = 'test/data'
+    Extensions = '\.(mp4|m4a|m4v|mov|3gp|heic|heif|hif|avif|avifs|cr3|crm|jxl)$' }
+
 # The files of a folder of a GitHub repository, at a commit, and in its subfolders, into a folder of their
-# own. Listed by the folder's git tree: the contents listing stops at 1000 entries.
+# own. Listed by the folder's git tree: the contents listing stops at 1000 entries. The files are those of
+# the browsers' extensions, unless the set gives its own.
 function Get-GitHubFolderSet($Set) {
+    $extensions = if ($Set.Extensions) { $Set.Extensions } else { $browserExtensions }
     # a folder at the top of the repository is listed with the repository's contents
     $slash = $Set.Folder.LastIndexOf('/')
     $parent = if ($slash -ge 0) { $Set.Folder.Substring(0, $slash) } else { '' }
@@ -535,7 +548,7 @@ function Get-GitHubFolderSet($Set) {
     $listing = Get-Text "https://api.github.com/repos/$($Set.Repo)/contents/$($parent)?ref=$($Set.Commit)" | ConvertFrom-Json
     $tree = ($listing | Where-Object { $_.name -eq $name }).sha
     $entries = (Get-Text "https://api.github.com/repos/$($Set.Repo)/git/trees/$($tree)?recursive=1" | ConvertFrom-Json).tree
-    $files = @($entries | Where-Object { $_.type -eq 'blob' -and $_.path -match $browserExtensions })
+    $files = @($entries | Where-Object { $_.type -eq 'blob' -and $_.path -match $extensions })
     Write-Host "$($Set.Name): $($files.Count) files"
     foreach ($file in $files) {
         $url = "https://raw.githubusercontent.com/$($Set.Repo)/$($Set.Commit)/$($Set.Folder)/$($file.path)"
@@ -573,6 +586,9 @@ foreach ($c in $Codec) {
     }
     elseif ($c -eq 'Avif') {
         Get-GitHubFolderSet $avifSet
+    }
+    elseif ($c -eq 'Exiv2') {
+        Get-GitHubFolderSet $exiv2Set
     }
     else {
         foreach ($set in $ituSets[$c]) { Get-ItuSet $folders[$c] $set }
