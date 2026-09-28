@@ -358,6 +358,31 @@ public class ConformanceTests
     }
 
     /// <summary>
+    /// Reads the MP4 files of Shaka Player's tests - DASH and HLS segments, CMAF text, encrypted files, AC-3 and
+    /// E-AC-3, LCEVC - as <see cref="FateFilesReadWithoutSignsOfMisreading"/> reads FFmpeg's.
+    /// </summary>
+    [TestMethod]
+    public void ShakaFilesReadWithoutSignsOfMisreading()
+    {
+        string? root = ConformanceCorpus.Locate();
+        if (root == null)
+            Assert.Inconclusive("no conformance files; run DownloadConformance.ps1, or set SHARPMP4_CONFORMANCE");
+
+        var files = ConformanceCorpus.ShakaFiles(root);
+        if (files.Count == 0)
+            Assert.Inconclusive($"no Shaka Player files under {root}; run DownloadConformance.ps1 -Codec Shaka");
+
+        CheckFilesAgainstThemselves("shaka", root, files, MalformedShakaFiles);
+    }
+
+    /// <summary>Shaka Player's test files that are malformed, with what is wrong in them, as <see cref="MalformedFateFiles"/>.</summary>
+    private static readonly Dictionary<string, (string Why, string[] Defects)> MalformedShakaFiles = new()
+    {
+        [Path.Combine("shaka", "empty_caption_video_segment.mp4")] =
+            ("its 'avcn' counts its one PPS as 0xE1, in the form of the SPS count, so 225 of them", ["traf/avcn: could not be read"]),
+    };
+
+    /// <summary>
     /// Reads the test files of mp4parse, Firefox's MP4 and AVIF parser - each made for a case, corrupt ones among
     /// them - as <see cref="FateFilesReadWithoutSignsOfMisreading"/> reads FFmpeg's.
     /// </summary>

@@ -50,6 +50,9 @@ Sources:
     Mp4parse The MP4 and AVIF files Firefox's parser, mp4parse, is tested with: each made for a case,
              corrupt ones among them
                                 https://github.com/mozilla/mp4parse-rust
+    Shaka    The MP4 files Shaka Player is tested with: DASH and HLS segments, CMAF text, encrypted
+             (CENC, cbcs), AC-3 and E-AC-3, LCEVC, and live streams
+                                https://github.com/shaka-project/shaka-player/tree/main/test/test/assets
 
 Only files directly in each set's folder are fetched: the subfolders the ITU keeps
 beside them hold superseded versions of the same streams.
@@ -65,8 +68,8 @@ conformance files, each with GPAC's dump of its boxes), Fate (FFmpeg's samples
 that are ISOBMFF or QuickTime files, about 140 MB) and Metadata (the test files of the
 metadata libraries, under 1 MB, and ExifTool, 9 MB), Chromium (the MP4 files of Chromium's
 media tests, 43 MB), Firefox (those of Firefox's, 18 MB), Libavif (libavif's AVIF files, 2 MB),
-Avif (the AVIF specification's test files, 50 MB), Exiv2 (Exiv2's ISOBMFF files, 6 MB) and Mp4parse
-(those of Firefox's parser, 12 MB). All of them by default.
+Avif (the AVIF specification's test files, 50 MB), Exiv2 (Exiv2's ISOBMFF files, 6 MB), Mp4parse
+(those of Firefox's parser, 12 MB) and Shaka (Shaka Player's MP4 files, 84 MB). All of them by default.
 
 .PARAMETER IncludeSvc
 Also fetches the H.264 scalable video coding set, 12.9 GB.
@@ -96,8 +99,8 @@ Everything, about 25 GB.
 param(
     [string]$Destination,
 
-    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2', 'Mp4parse')]
-    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2', 'Mp4parse'),
+    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2', 'Mp4parse', 'Shaka')]
+    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2', 'Mp4parse', 'Shaka'),
 
     [switch]$IncludeSvc,
     [switch]$IncludeArgon,
@@ -550,6 +553,12 @@ $mp4parseSets = @(
         Extensions = '\.(mp4|avif|avifs|3gp)$' }
 )
 
+# The MP4 files of Shaka Player's tests (test/test/assets, Apache-2.0), at the commit given: DASH and HLS init
+# and media segments - some named .dash - CMAF text (.cmft), encryption (CENC, cbcs), AC-3 and E-AC-3, LCEVC's
+# enhancement tracks, and live streams. Not dash-aes-128's fragments nor hls-aes-256's files: segments encrypted whole.
+$shakaSet = @{ Name = 'shaka'; Repo = 'shaka-project/shaka-player'; Commit = '91ca4dbd95a82ff3b352110a173756d414e5d8cb'; Folder = 'test/test/assets'
+    Extensions = '^(?!hls-aes-256/).*\.(mp4|m4a|m4s|m4v|mov|dash|cmft)$' }
+
 # The files of a folder of a GitHub repository, at a commit, and in its subfolders, into a folder of their
 # own - or of the set's Into in it. Listed by the folder's git tree: the contents listing stops at 1000
 # entries. The files are those of the browsers' extensions, unless the set gives its own.
@@ -608,6 +617,9 @@ foreach ($c in $Codec) {
     }
     elseif ($c -eq 'Mp4parse') {
         foreach ($set in $mp4parseSets) { Get-GitHubFolderSet $set }
+    }
+    elseif ($c -eq 'Shaka') {
+        Get-GitHubFolderSet $shakaSet
     }
     else {
         foreach ($set in $ituSets[$c]) { Get-ItuSet $folders[$c] $set }

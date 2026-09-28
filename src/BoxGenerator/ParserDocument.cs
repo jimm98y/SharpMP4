@@ -208,7 +208,9 @@ namespace BoxGenerator
             "apch","apco","apcs","ap4h","AVdn","AVdh","AVDJ","Hap1","Hap5","HapY","HapM","HapA","DXD3","DXDI",
             "CFHD","icod","dvh2","dvh5","dvhq","pxlt","qdrw","dtPA","IV32","VP6A","8BPS","vc-1",
             // met in Chromium's: Dolby Vision in ISOBMFF, its HEVC and AVC entries whose parameter sets are in the configuration
-            "dvh1","dva1"
+            "dvh1","dva1",
+            // met in Shaka Player's: LCEVC's enhancement track, its configuration in an 'lvcC'
+            "lvc1"
             };
 
             foreach (var type in audioSampleEntryTypes)

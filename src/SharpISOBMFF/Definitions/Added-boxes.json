@@ -1783,6 +1783,26 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class LidpBox() extends Box('lidp') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "// as FFmpeg's ff_isom_write_lvcc writes it\r\nclass LCEVCConfigurationBox extends Box('lvcC') {\r\n\tLCEVCDecoderConfigurationRecord() LCEVCConfig;\r\n}"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "// as FFmpeg's ff_isom_write_lvcc writes it: the byte after the size is 0xFF, the NAL unit arrays as hvcC's\r\naligned(8) class LCEVCDecoderConfigurationRecord {\r\n\tunsigned int(8) configurationVersion = 1;\r\n\tunsigned int(8) LCEVCProfileIndication;\r\n\tunsigned int(8) LCEVCLevelIndication;\r\n\tunsigned int(2) chroma_format_idc;\r\n\tunsigned int(3) bit_depth_luma_minus8;\r\n\tunsigned int(3) bit_depth_chroma_minus8;\r\n\tunsigned int(2) lengthSizeMinusOne;\r\n\tbit(6) reserved = '111111'b;\r\n\tunsigned int(32) pic_width_in_luma_samples;\r\n\tunsigned int(32) pic_height_in_luma_samples;\r\n\tbit(8) reserved0 = 0xFF;\r\n\tunsigned int(8) numOfArrays;\r\n\tfor (j=0; j < numOfArrays; j++) {\r\n\t\tbit(1) array_completeness;\r\n\t\tbit(1) reserved1 = 0;\r\n\t\tunsigned int(6) NAL_unit_type;\r\n\t\tunsigned int(16) numNalus;\r\n\t\tfor (i=0; i< numNalus; i++) {\r\n\t\t\tunsigned int(16) nalUnitLength;\r\n\t\t\tbit(8*nalUnitLength) nalUnit;\r\n\t\t}\r\n\t}\r\n}"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "// the MIME type of a subtitle sample entry's samples; GPAC reads it as its TextConfigBox\r\naligned(8) class MIMEBox() extends FullBox('mime', version = 0, 0) {\r\n\tutf8string content_type;\r\n}"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "// the software that wrote the file, as Apple's mediafilesegmenter writes it: a 3GPP asset's layout\r\naligned(8) class AppleSegmenterSoftwareBox() extends FullBox('swre', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n}"
     }
   ]
 }

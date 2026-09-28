@@ -591,6 +591,8 @@ namespace SharpISOBMFF
                case "lrcu":  return new OMALyricsURLBox();
                case "lsel":  return new LayerSelectorProperty();
                case "ludt":  return new LoudnessBox();
+               case "lvc1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("lvc1"));break;
+               case "lvcC":  return new LCEVCConfigurationBox();
                case "lvlm":  return new LevelMeter2Box();
                case "Lvlm":  return new LevelMeterBox();
                case "m4ae": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("m4ae"));else return new CodecConfigurationBox(IsoStream.FromFourCC("m4ae"));break;
@@ -625,6 +627,7 @@ namespace SharpISOBMFF
                case "mhaC":  return new MhaCBox();
                case "mhaP":  return new MhaPBox();
                case "mhm1": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("mhm1"));else return new CodecConfigurationBox(IsoStream.FromFourCC("mhm1"));break;
+               case "mime":  return new MIMEBox();
                case "minf":  return new MediaInformationBox();
                case "mini":  return new MiniBox();
                case "mjpa": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("mjpa"));break;
@@ -927,6 +930,7 @@ namespace SharpISOBMFF
                case "svpr":  return new PriorityRangeBox();
                case "SVQ1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("SVQ1"));break;
                case "SVQ3": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("SVQ3"));break;
+               case "swre":  return new AppleSegmenterSoftwareBox();
                case "swtc":  return new MultiviewGroupRelationBox();
                case "swtk":  return new SwitchableTracksGroupBox();
                case "sync":  return new SynchronizedTrackBox();

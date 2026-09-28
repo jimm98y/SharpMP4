@@ -558,6 +558,8 @@
 |lrcu|OMALyricsURLBox|
 |lsel|LayerSelectorProperty|
 |ludt|LoudnessBox|
+|lvc1|VisualSampleEntry|
+|lvcC|LCEVCConfigurationBox|
 |lvlm|LevelMeter2Box|
 |Lvlm|LevelMeterBox|
 |m4ae|AudioSampleEntry|
@@ -592,6 +594,7 @@
 |mhaC|MhaCBox|
 |mhaP|MhaPBox|
 |mhm1|AudioSampleEntry|
+|mime|MIMEBox|
 |minf|MediaInformationBox|
 |mini|MiniBox|
 |mjpa|VisualSampleEntry|
@@ -894,6 +897,7 @@
 |svpr|PriorityRangeBox|
 |SVQ1|VisualSampleEntry|
 |SVQ3|VisualSampleEntry|
+|swre|AppleSegmenterSoftwareBox|
 |swtc|MultiviewGroupRelationBox|
 |swtk|SwitchableTracksGroupBox|
 |sync|SynchronizedTrackBox|
