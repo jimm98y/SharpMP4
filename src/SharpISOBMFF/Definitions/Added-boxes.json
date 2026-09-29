@@ -371,7 +371,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AC3SpecificBox() extends Box('dac3') {\r\n bit(8) data[];\r\n } "
+      "syntax": "// ETSI TS 102 366 F.4, as GPAC's gf_odf_ac3_cfg_parse_bs and FFmpeg's mov_read_dac3 read it\r\naligned(8) class AC3SpecificBox() extends Box('dac3') {\r\n\tunsigned int(2) fscod;\r\n\tunsigned int(5) bsid;\r\n\tunsigned int(3) bsmod;\r\n\tunsigned int(3) acmod;\r\n\tunsigned int(1) lfeon;\r\n\tunsigned int(5) bit_rate_code;\r\n\tbit(5) reserved = 0;\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -576,7 +576,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEndiannessBox() extends Box('enda') {\r\n bit(8) data[];\r\n } "
+      "syntax": "// QuickTime's, in a 'wave': 1 when the samples are little-endian; FFmpeg's mov_read_enda reads it\r\naligned(8) class AppleEndiannessBox() extends Box('enda') {\r\n\tunsigned int(16) littleEndian;\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -1119,11 +1119,6 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AC3SpecificBox() extends Box('dac3') {\r\n\t unsigned int(32) vendor;\r\n\t unsigned int(8) decoderVersion;\r\n unsigned int(24) flags;\r\n } "
-    },
-    {
-      "containers": [ "*" ],
-      "type": "Box",
       "syntax": "aligned(8) class EVRCSpecificBox() extends Box('devc') {\r\n\t unsigned int(32) vendor;\r\n\t unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
     },
     {
@@ -1227,9 +1222,14 @@
       "syntax": "aligned(8) class ItemEncryptionBox extends ItemFullProperty('ienc', version, flags=0)\r\n{\r\n      unsigned int(8) reserved = 0;\r\n      if (version==0) { \r\n            unsigned int(8) reserved = 0;\r\n      } else { // version is 1 or greater\r\n            unsigned int(4) crypt_byte_block;\r\n            unsigned int(4) skip_byte_block;\r\n      }\r\n      unsigned int(8) num_keys;\r\n      for (i=1; i<= num_keys; i++) {\r\n         unsigned int(8) Per_Sample_IV_Size;\r\n         unsigned int(8)[16] KID;\r\n         if (Per_Sample_IV_Size == 0) { \r\n            unsigned int(8) constant_IV_size; \r\n            unsigned int(8)[constant_IV_size] constant_IV;\r\n         }\r\n      }\r\n}\r\n"
     },
     {
+      "containers": [ "ipco" ],
+      "type": "Box",
+      "syntax": "// ISO/IEC 23001-7:2016/Amd 1:2019, 8.4: the type of an item's auxiliary information, as a sample's in 14496-12\r\naligned(8) class ItemAuxiliaryInformationBox extends ItemFullProperty('iaux', version=0, flags=0) {\r\n\tunsigned int(32) aux_info_type;\r\n\tunsigned int(32) aux_info_type_parameter;\r\n}"
+    },
+    {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class TrackEncryptionBox() extends FullBox('tenc', version, flags = 0) {\r\n unsigned int(8) reserved = 0;\r\n if (version == 0) {\r\n  unsigned int(8) reserved = 0;\r\n }\r\n else {\r\n  unsigned int(4) default_crypt_byte_block;\r\n  unsigned int(4) default_skip_byte_block;\r\n }\r\n unsigned int(8) default_isProtected;\r\n unsigned int(8) default_Per_Sample_IV_Size;\r\n unsigned int(8) default_KID[16];\r\n if (default_isProtected == 1 && default_Per_Sample_IV_Size == 0) {\r\n  unsigned int(8) defaultConstantIVSize;\r\n  unsigned int(8) defaultConstantIV[defaultConstantIVSize];\r\n }\r\n } "
+      "syntax": "// ISO/IEC 23001-7:2023 DAM 1 (MPEG w25903, 2026-01, a draft): version 2's use_AES_256, whether the key is of 256 bits\r\naligned(8) class TrackEncryptionBox() extends FullBox('tenc', version, flags = 0) {\r\n unsigned int(8) reserved = 0;\r\n if (version == 0) {\r\n  unsigned int(8) reserved = 0;\r\n }\r\n else {\r\n  unsigned int(4) default_crypt_byte_block;\r\n  unsigned int(4) default_skip_byte_block;\r\n  if (version >= 2) {\r\n   unsigned int(1) use_AES_256;\r\n   unsigned int(7) reserved1 = 0;\r\n  }\r\n }\r\n unsigned int(8) default_isProtected;\r\n unsigned int(8) default_Per_Sample_IV_Size;\r\n unsigned int(8) default_KID[16];\r\n if (default_isProtected == 1 && default_Per_Sample_IV_Size == 0) {\r\n  unsigned int(8) defaultConstantIVSize;\r\n  unsigned int(8) defaultConstantIV[defaultConstantIVSize];\r\n }\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -1547,7 +1547,7 @@
       "fourcc": "seig",
       "containers": [ "sgpd" ],
       "type": "SampleGroupDescriptionEntry",
-      "syntax": "// ISO/IEC 23001-7 (3rd edition, not at hand; the 2023 at hand a preview) CENC sample encryption information, the fields of tenc's version 1 as GPAC reads them, not the multi-key form of later editions\r\naligned(8) class CencSampleEncryptionInformationGroupEntry() extends SampleGroupDescriptionEntry('seig') {\r\n unsigned int(8) reserved = 0;\r\n unsigned int(4) crypt_byte_block;\r\n unsigned int(4) skip_byte_block;\r\n unsigned int(8) isProtected;\r\n unsigned int(8) Per_Sample_IV_Size;\r\n unsigned int(8) KID[16];\r\n if (isProtected == 1 && Per_Sample_IV_Size == 0) {\r\n  unsigned int(8) constant_IV_size;\r\n  unsigned int(8) constant_IV[constant_IV_size];\r\n }\r\n } "
+      "syntax": "// ISO/IEC 23001-7:2016/Amd 1:2019, clause 6: a single key, or with multi_key_flag several, each with its IV size and KID (its constant IV's size multi_constant_IV_length here, for the generator's rewriting of constant_IV_size); the single key's fields as they were, its constant IV only where it is protected, as GPAC reads it\r\naligned(8) class CencSampleEncryptionInformationGroupEntry() extends SampleGroupDescriptionEntry('seig') {\r\n unsigned int(1) multi_key_flag;\r\n unsigned int(7) reserved = 0;\r\n unsigned int(4) crypt_byte_block;\r\n unsigned int(4) skip_byte_block;\r\n unsigned int(8) isProtected;\r\n if (multi_key_flag) {\r\n  unsigned int(16) key_count;\r\n  for (i=1; i <= key_count; i++) {\r\n   unsigned int(8) multi_Per_Sample_IV_Size;\r\n   unsigned int(8)[16] multi_KID;\r\n   if (multi_Per_Sample_IV_Size == 0) {\r\n    unsigned int(8) multi_constant_IV_length;\r\n    unsigned int(8)[multi_constant_IV_length] multi_constant_IV;\r\n   }\r\n  }\r\n }\r\n else {\r\n  unsigned int(8) Per_Sample_IV_Size;\r\n  unsigned int(8) KID[16];\r\n  if (isProtected == 1 && Per_Sample_IV_Size == 0) {\r\n   unsigned int(8) constant_IV_size;\r\n   unsigned int(8) constant_IV[constant_IV_size];\r\n  }\r\n }\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -1707,12 +1707,12 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class HvcEBox() extends Box('hvcE') {\r\n bit(8) data[];\r\n } "
+      "syntax": "// Dolby Vision's enhancement layer configuration: an hvcC's record, as GPAC and FFmpeg's mov_read_hvce read it\r\naligned(8) class HvcEBox() extends Box('hvcE') {\r\n\tHEVCDecoderConfigurationRecord() HEVCConfig;\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class RelyBox() extends Box('rely') {\r\n bit(8) data[];\r\n } "
+      "syntax": "// an RTP hint sample entry's reliability, as GPAC's rely_box_read reads it\r\naligned(8) class RelyBox() extends Box('rely') {\r\n\tbit(6) reserved = 0;\r\n\tunsigned int(1) preferred;\r\n\tunsigned int(1) required;\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -1722,7 +1722,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class It35Box() extends Box('it35') {\r\n bit(8) data[];\r\n } "
+      "syntax": "// ITU-T T.35 metadata's sample entry, as Chromium's MetadataIT35SampleEntry reads it\r\nclass It35Box() extends MetaDataSampleEntry('it35') {\r\n\tunsigned int(8) it35_identifier_length;\r\n\tbit(8*it35_identifier_length) it35_prefix;\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -1732,32 +1732,32 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class MhaCBox() extends Box('mhaC') {\r\n bit(8) data[];\r\n } "
+      "syntax": "// MPEG-H 3D Audio's configuration, as GPAC's mhac_box_read and FFmpeg's mov_read_mhac read it\r\naligned(8) class MhaCBox() extends Box('mhaC') {\r\n\tunsigned int(8) configurationVersion = 1;\r\n\tunsigned int(8) mpegh3daProfileLevelIndication;\r\n\tunsigned int(8) referenceChannelLayout;\r\n\tunsigned int(16) mpegh3daConfigLength;\r\n\tbit(8*mpegh3daConfigLength) mpegh3daConfig;\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class MhaPBox() extends Box('mhaP') {\r\n bit(8) data[];\r\n } "
+      "syntax": "// MPEG-H 3D Audio's compatible profile and level sets, as GPAC's mhap_box_read reads them\r\naligned(8) class MhaPBox() extends Box('mhaP') {\r\n\tunsigned int(8) numCompatibleSets;\r\n\tfor (i=0; i < numCompatibleSets; i++) {\r\n\t\tunsigned int(8) CompatibleSetIndication;\r\n\t}\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ACLRBox() extends Box('ACLR') {\r\n bit(8) data[];\r\n } "
+      "syntax": "// Avid's color range, as FFmpeg's mov_write_avid_tag writes it: 1 video range, 2 full range\r\naligned(8) class ACLRBox() extends Box('ACLR') {\r\n\tunsigned int(32) tag;\r\n\tunsigned int(32) version;\r\n\tunsigned int(32) colorRange;\r\n\tunsigned int(32) reserved;\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ADHRBox() extends Box('ADHR') {\r\n bit(8) data[];\r\n } "
+      "syntax": "// Avid's DNxHR header, as FFmpeg's mov_write_avid_tag writes it\r\naligned(8) class ADHRBox() extends Box('ADHR') {\r\n\tunsigned int(32) version;\r\n\tunsigned int(32) compressionId;\r\n\tunsigned int(32) subSamplingControl;\r\n\tunsigned int(32) sampleBitDepth;\r\n\tunsigned int(16) colorFormat;\r\n\tunsigned int(16) colorVolume;\r\n\tunsigned int(16) alphaPresent;\r\n\tunsigned int(16) preMultipliedAlpha;\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class APRGBox() extends Box('APRG') {\r\n bit(8) data[];\r\n } "
+      "syntax": "// Avid's scan, as FFmpeg's mov_write_avid_tag writes it: 1 progressive, 2 interlaced\r\naligned(8) class APRGBox() extends Box('APRG') {\r\n\tunsigned int(32) tag;\r\n\tunsigned int(32) version;\r\n\tunsigned int(32) interlace;\r\n\tunsigned int(32) reserved;\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ARESBox() extends Box('ARES') {\r\n bit(8) data[];\r\n } "
+      "syntax": "// Avid's resolution, as FFmpeg's mov_write_avid_tag writes it and mov_read_ares reads it, then padding\r\naligned(8) class ARESBox() extends Box('ARES') {\r\n\tunsigned int(32) tag;\r\n\tunsigned int(32) version;\r\n\tunsigned int(32) compressionId;\r\n\tunsigned int(32) fieldWidth;\r\n\tunsigned int(32) fieldHeight;\r\n\tunsigned int(32) numFields;\r\n\tunsigned int(32) numBlackLines;\r\n\tunsigned int(32) videoFormat;\r\n\tbit(8) reserved[];\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -1772,7 +1772,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class Dvc1Box() extends Box('dvc1') {\r\n bit(8) data[];\r\n } "
+      "syntax": "// VC-1's configuration (SMPTE RP 2025), as FFmpeg's mov_write_dvc1_structs writes it, the sequence header after\r\naligned(8) class Dvc1Box() extends Box('dvc1') {\r\n\tunsigned int(4) profile;\r\n\tunsigned int(3) level;\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(3) level2;\r\n\tunsigned int(1) cbr;\r\n\tbit(6) reserved0 = 0;\r\n\tunsigned int(1) no_interlace;\r\n\tunsigned int(1) no_multiple_seq;\r\n\tunsigned int(1) no_multiple_entry;\r\n\tunsigned int(1) no_slice_code;\r\n\tunsigned int(1) no_bframe;\r\n\tbit(1) reserved1 = 0;\r\n\tunsigned int(32) framerate;\r\n\tbit(8) sequenceHeader[];\r\n}"
     },
     {
       "containers": [ "*" ],

@@ -103,8 +103,8 @@ namespace SharpMP4.Tracks
                 throw new ArgumentException("NAL unit must not have Annex-B prefix!");
             }
 
-            using (ItuStream stream = new ItuStream(new MemoryStream(buffer, offset, length)))
             {
+                ItuStream stream = NalStream(buffer, offset, length);
                 // for hvc1, SPS, PPS, VPS should not be in MDAT
                 // for hev1, SPS, PPS, VPS may be in MDAT
                 ulong ituSize = 0;

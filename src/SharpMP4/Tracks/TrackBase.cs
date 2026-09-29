@@ -18,7 +18,7 @@ namespace SharpMP4.Tracks
         public int DefaultSampleDuration { get; set; }
         public uint DefaultSampleFlags { get; set; }
 
-        public IMp4Logger Logger { get; set; } = new DefaultMp4Logger();
+        public IMp4Logger Logger { get; set; } = DefaultMp4Logger.Instance;
 
         /// <summary>
         /// Overrides any auto-detected timescale.

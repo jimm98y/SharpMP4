@@ -102,8 +102,8 @@ namespace SharpMP4.Tracks
                 throw new ArgumentException("NAL unit must not have Annex-B prefix!");
             }
 
-            using (ItuStream stream = new ItuStream(new MemoryStream(buffer, offset, length)))
             {
+                ItuStream stream = NalStream(buffer, offset, length);
                 ulong ituSize = 0;
                 var nu = new NalUnit((uint)length);
                 _context.NalHeader = nu;

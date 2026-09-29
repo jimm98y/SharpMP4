@@ -57,7 +57,7 @@ public class AudioSpecificConfigTests
     [DataRow("138856e5a54880", 2, 0, 22050, 44100, 1, true, true, 7ul, DisplayName = "CT_DecoderCheck/File4.mp4: SBR and PS after 0x2b7 and 0x548")]
     [DataRow("140856e5ad4880", 2, 0, 16000, 32000, 1, true, true, 7ul, DisplayName = "tones_afconvert_16000_stereo_aac_he2: SBR and PS after 0x2b7 and 0x548")]
     [DataRow("f8e82000", 39, 0, 44100, 0, 1, false, false, 2ul, DisplayName = "er_eld1001np_44_ep0: ELD, escaped as 31 and 7")]
-    [DataRow("f94643221cc05852002000a04046d0b800", 42, 0, 48000, 0, 2, false, false, 5ul, DisplayName = "usac/xhe_target_level: USAC, its UsacConfig 14 bytes after 19 bits, 5 after them")]
+    [DataRow("f94643221cc05852002000a04046d0b800", 42, 0, 48000, 0, 2, false, false, 1ul, DisplayName = "usac/xhe_target_level: USAC, its UsacConfig from bit 19 to 135, the end of its loudness config extension of 9 bytes, 1 bit after it")]
     [DataRow("1190000000", 2, 0, 48000, 0, 2, false, false, 13ul, DisplayName = "twofields_packet: zeros after the config")]
     public void ReadsAndWritesBackTheSignallingAndWhatFollows(string hex, int objectType, int signalledType, int samplingFrequency,
         int extensionSamplingFrequency, int channelConfiguration, bool sbr, bool ps, ulong remainingBits)

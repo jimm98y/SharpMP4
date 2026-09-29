@@ -31,7 +31,7 @@ namespace SharpISOBMFF
         public StreamWrapper(Stream stream, IMp4Logger logger = null)
         {
             _stream = stream ?? throw new ArgumentNullException(nameof(stream));
-            Logger = logger ?? new DefaultMp4Logger();
+            Logger = logger ?? DefaultMp4Logger.Instance;
         }
 
         public void Flush()

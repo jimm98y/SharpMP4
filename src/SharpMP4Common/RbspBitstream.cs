@@ -21,6 +21,57 @@ namespace SharpMP4.Common
             this._stream = stream;
         }
 
+        /// <summary>
+        /// Reads a NAL unit where it already lies, in an array: no stream in between, so it costs no allocation and no
+        /// virtual call a byte, and <see cref="Reset"/> moves it on to the next one.
+        /// </summary>
+        public RbspBitstream(byte[] buffer, int offset, int length)
+        {
+            Reset(buffer, offset, length);
+        }
+
+        // The array read from, where there is one rather than a stream.
+        private byte[] _source;
+        private int _sourcePosition;
+        private int _sourceEnd;
+
+        /// <summary>
+        /// Starts over on another NAL unit, in an array: every bit of state as a new bitstream has it, the bytes read
+        /// ahead and the mark too.
+        /// </summary>
+        public void Reset(byte[] buffer, int offset, int length)
+        {
+            if (buffer == null)
+                throw new ArgumentNullException(nameof(buffer));
+            if (offset < 0 || length < 0 || offset + length > buffer.Length)
+                throw new ArgumentOutOfRangeException(nameof(length));
+
+            _stream = null;
+            _source = buffer;
+            _sourcePosition = offset;
+            _sourceEnd = offset + length;
+
+            _prevByte = -1;
+            _prevPrevByte = -1;
+            _lastMarkPos = 0;
+            _bitsPosition = 0;
+            _currentBytePosition = -1;
+            _currentByte = 0;
+            _replayPosition = 0;
+            _replayLength = 0;
+            _peekDepth = 0;
+        }
+
+        /// <summary>
+        /// How many bytes are still to be read: of the array, or of the stream where it can tell, and those read ahead
+        /// of the bits to be read again. Throws <see cref="NotSupportedException"/> for a stream that cannot tell.
+        /// </summary>
+        public long RemainingBytes => (_source != null ? _sourceEnd - _sourcePosition : _stream.Length - _stream.Position) + PendingBytes;
+
+        private int ReadSourceByte() => _source != null
+            ? (_sourcePosition < _sourceEnd ? _source[_sourcePosition++] : -1)
+            : _stream.ReadByte();
+
         public Stream BaseStream
         {
             get => _stream;
@@ -69,13 +120,98 @@ namespace SharpMP4.Common
         /// <summary>Moves the mark back by a number of bits, as counted by GetBitsSinceMark.</summary>
         public virtual void MoveMarkBack(long bits) => this._lastMarkPos -= bits;
 
+        // Reading ahead: the bytes taken from the stream while peeking are kept, to be read again once the peek ends,
+        // so a stream is read ahead on as it is - one that cannot seek too - and nothing is copied.
+        private byte[] _replay;
+        private int _replayPosition;
+        private int _replayLength;
+        private int _peekDepth;
+
+        /// <summary>Where the bits were when a peek began, to go back to at its end.</summary>
+        public readonly struct PeekState
+        {
+            internal PeekState(RbspBitstream bitstream)
+            {
+                PrevByte = bitstream._prevByte;
+                PrevPrevByte = bitstream._prevPrevByte;
+                LastMarkPos = bitstream._lastMarkPos;
+                BitsPosition = bitstream._bitsPosition;
+                CurrentBytePosition = bitstream._currentBytePosition;
+                CurrentByte = bitstream._currentByte;
+                ReplayPosition = bitstream._replayPosition;
+            }
+
+            internal int PrevByte { get; }
+            internal int PrevPrevByte { get; }
+            internal long LastMarkPos { get; }
+            internal long BitsPosition { get; }
+            internal long CurrentBytePosition { get; }
+            internal byte CurrentByte { get; }
+            internal int ReplayPosition { get; }
+        }
+
+        /// <summary>
+        /// Begins reading ahead: what is read until <see cref="EndPeek"/> is read again after it. Peeks can be nested.
+        /// </summary>
+        public PeekState BeginPeek()
+        {
+            _peekDepth++;
+            return new PeekState(this);
+        }
+
+        /// <summary>Ends reading ahead, going back to where the bits were when <paramref name="state"/> was taken.</summary>
+        public void EndPeek(PeekState state)
+        {
+            _prevByte = state.PrevByte;
+            _prevPrevByte = state.PrevPrevByte;
+            _lastMarkPos = state.LastMarkPos;
+            _bitsPosition = state.BitsPosition;
+            _currentBytePosition = state.CurrentBytePosition;
+            _currentByte = state.CurrentByte;
+            _replayPosition = state.ReplayPosition;
+            _peekDepth--;
+        }
+
+        /// <summary>The bytes read from the stream ahead of the bits, to be read again: the stream is that far ahead of them.</summary>
+        public int PendingBytes => _replayLength - _replayPosition;
+
+        /// <summary>
+        /// The next byte: of those read ahead first, then of the stream, kept where a peek is on. -1 at the end. Not an
+        /// emulation prevention byte skipped, nor the bits moved on: <see cref="ReadBit"/> and <see cref="ReadBytes"/> do
+        /// that.
+        /// </summary>
+        private int NextByte()
+        {
+            if (_replayPosition < _replayLength)
+                return _replay[_replayPosition++];
+
+            if (_peekDepth == 0)
+            {
+                // nothing left to read again: the buffer starts over
+                _replayPosition = _replayLength = 0;
+                return ReadSourceByte();
+            }
+
+            int b = ReadSourceByte();
+            if (b >= 0)
+            {
+                if (_replay == null)
+                    _replay = new byte[64];
+                else if (_replayLength == _replay.Length)
+                    Array.Resize(ref _replay, _replay.Length * 2);
+                _replay[_replayLength++] = (byte)b;
+                _replayPosition = _replayLength;
+            }
+            return b;
+        }
+
         public int ReadBit()
         {
             long bytePos = _bitsPosition / 8;
 
             if (_currentBytePosition != bytePos)
             {
-                int bb = _stream.ReadByte();
+                int bb = NextByte();
                 if (bb == -1)
                 {
                     return -1;
@@ -86,7 +222,7 @@ namespace SharpMP4.Common
                 if (_skipPreventionBytes && _prevByte == 0 && _currentByte == 0 && b == 0x03)
                 {
                     _prevByte = b;
-                    bb = _stream.ReadByte();
+                    bb = NextByte();
 
                     if (bb == -1)
                     {
@@ -178,7 +314,7 @@ namespace SharpMP4.Common
                 // come out of it without touching the stream.
                 if (_currentBytePosition != bytePos)
                 {
-                    int bb = _stream.ReadByte();
+                    int bb = NextByte();
                     if (bb == -1)
                         break;
 
@@ -187,7 +323,7 @@ namespace SharpMP4.Common
                     if (_skipPreventionBytes && _prevByte == 0 && _currentByte == 0 && b == 0x03)
                     {
                         _prevByte = b;
-                        bb = _stream.ReadByte();
+                        bb = NextByte();
 
                         if (bb == -1)
                             break;

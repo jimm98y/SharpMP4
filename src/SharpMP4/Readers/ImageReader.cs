@@ -25,11 +25,11 @@ namespace SharpMP4.Readers
 
         public ImageReader(IMp4Logger logger)
         {
-            Logger = logger ?? new DefaultMp4Logger();
+            Logger = logger ?? DefaultMp4Logger.Instance;
         }
 
         public ImageReader()
-            : this(new DefaultMp4Logger())
+            : this(DefaultMp4Logger.Instance)
         {
         }
 

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using SharpH26X;
 
 namespace SharpMP4.Tracks
 {
@@ -18,6 +19,23 @@ namespace SharpMP4.Tracks
             DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
             TimescaleFallback = 24000;
             FrameTickFallback = 1001;
+        }
+
+        private ItuStream _nalStream;
+
+        /// <summary>
+        /// The stream a NAL unit is read with: the track's one, reset to each unit, so reading a unit allocates no stream.
+        /// It is the track's until the next call, so it is not kept.
+        /// </summary>
+        protected ItuStream NalStream(byte[] buffer, int offset, int length)
+        {
+            if (_nalStream == null)
+                _nalStream = new ItuStream(buffer, offset, length, Logger);
+            else
+                _nalStream.Reset(buffer, offset, length);
+
+            _nalStream.Logger = Logger;
+            return _nalStream;
         }
 
         /// <summary>Whether the access unit being assembled holds a coded picture.</summary>

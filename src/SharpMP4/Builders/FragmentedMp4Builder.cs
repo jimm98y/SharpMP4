@@ -1,5 +1,6 @@
 ﻿using SharpISOBMFF;
 using SharpMP4.Common;
+using SharpMP4.Encryption;
 using SharpMP4.Tracks;
 using System;
 using System.Collections.Generic;
@@ -14,8 +15,9 @@ namespace SharpMP4.Builders
     {
         private class MediaFragment
         {
-            public MediaFragment(IStorage storage, ulong startTime, ulong endTime, uint[] sampleSizes, uint[] sampleDurations, int[] compositionOffsets)
+            public MediaFragment(IStorage storage, ulong startTime, ulong endTime, uint[] sampleSizes, uint[] sampleDurations, int[] compositionOffsets, SampleEncryption[] encryptions = null)
             {
+                this.Encryptions = encryptions;
                 this.Storage = storage;
                 this.StartTime = startTime;
                 this.EndTime = endTime;
@@ -33,6 +35,9 @@ namespace SharpMP4.Builders
             public int[] CompositionOffsets { get; set; }
 
             public IStorage Storage { get; set; }
+
+            /// <summary>Of a protected track: how each sample is protected.</summary>
+            public SampleEncryption[] Encryptions { get; set; }
         }
 
         private class TrackContext
@@ -69,6 +74,15 @@ namespace SharpMP4.Builders
             public Queue<MediaFragment> ReadyFragments { get; set; } = new Queue<MediaFragment>();
             public List<ulong> MoofOffsets { get; set; } = new List<ulong>();
             public List<ulong> MoofTime { get; set; } = new List<ulong>();
+
+            /// <summary>What protects the track; null where it is not protected.</summary>
+            public TrackEncryptor Encryptor { get; set; }
+
+            /// <summary>How the track is protected; null where it is not.</summary>
+            public TrackProtection Protection => Encryptor?.Protection;
+
+            /// <summary>How each sample of the fragment being assembled is protected.</summary>
+            public List<SampleEncryption> Encryptions { get; set; } = new List<SampleEncryption>();
         }
 
         public uint MovieTimescale { get; set; } = 1000;
@@ -83,7 +97,7 @@ namespace SharpMP4.Builders
         
         private uint _moofSequenceNumber = 1;
 
-        public IMp4Logger Logger { get; set; } = new DefaultMp4Logger();
+        public IMp4Logger Logger { get; set; } = DefaultMp4Logger.Instance;
 
         /// <summary>
         /// Ctor.
@@ -109,6 +123,22 @@ namespace SharpMP4.Builders
             uint trackID = GetNextTrackId();
             track.TrackID = trackID;
             _trackContexts.Add(trackID, new TrackContext(track));
+        }
+
+        /// <summary>
+        /// Adds a track whose samples are protected as they are written (ISO/IEC 23001-7): each with the key, its IV and,
+        /// of H.264, H.265 and H.266 video, its NAL units' slice headers left clear. The sample entry becomes 'encv' or
+        /// 'enca', with a 'sinf' saying what it was and how it is protected, and each fragment says how its samples are
+        /// in 'senc', 'saiz' and 'saio'. <see cref="TrackProtection.Create"/> makes a protection with a scheme's defaults.
+        /// </summary>
+        /// <param name="track">Track to add: <see cref="TrackBase"/>.</param>
+        /// <param name="protection">How the track is protected: its scheme, key ID, IVs and pattern, and the protection systems' headers.</param>
+        /// <param name="key">The 16 byte key; or 32, for AES-256, as the draft of 23001-7:2023 Amendment 1 allows, 'tenc' version 2 saying so.</param>
+        public void AddTrack(ITrack track, TrackProtection protection, byte[] key)
+        {
+            var encryptor = TrackEncryptor.Create(track, protection, key, Logger);
+            AddTrack(track);
+            _trackContexts[track.TrackID].Encryptor = encryptor;
         }
 
         private uint GetNextTrackId()
@@ -190,7 +220,14 @@ namespace SharpMP4.Builders
                 track.SampleSizes.Clear();
                 track.SampleDurations.Clear();
                 track.CompositionOffsets.Clear();
+                track.Encryptions.Clear();
                 track.FragmentCounts++;
+            }
+
+            if (track.Encryptor != null)
+            {
+                sample = track.Encryptor.Protect(track.Track, sample, out var encryption);
+                track.Encryptions.Add(encryption);
             }
 
             track.CurrentFragments.Write(sample.Array, sample.Offset, sample.Count);
@@ -217,8 +254,10 @@ namespace SharpMP4.Builders
 
         private MediaFragment CreateNewFragment(TrackContext track)
         {
-            var ret = new MediaFragment(track.CurrentFragments, track.StartTime, track.EndTime, track.SampleSizes.ToArray(), track.SampleDurations.ToArray(), track.CompositionOffsets.ToArray());
+            var ret = new MediaFragment(track.CurrentFragments, track.StartTime, track.EndTime, track.SampleSizes.ToArray(), track.SampleDurations.ToArray(), track.CompositionOffsets.ToArray(),
+                track.Protection != null ? track.Encryptions.ToArray() : null);
             track.SampleSizes.Clear();
+            track.Encryptions.Clear();
             return ret;
         }
 
@@ -299,7 +338,7 @@ namespace SharpMP4.Builders
             Container fmp4 = new Container();
             uint sequenceNumber = _moofSequenceNumber++;
 
-            CreateMediaFragmentAsync(fmp4, track.Track, fragment, sequenceNumber);
+            CreateMediaFragmentAsync(fmp4, track, fragment, sequenceNumber);
 
             var outputStream = _output.GetStream(sequenceNumber);
             var fragmentStream = new IsoStream(outputStream);
@@ -447,6 +486,7 @@ namespace SharpMP4.Builders
                 stsd.Children = new List<Box>();
                 
                 var sampleEntryBox = track.Track.CreateSampleEntryBox();
+                track.Encryptor?.ProtectSampleEntry(track.Track, sampleEntryBox);
                 sampleEntryBox.SetParent(stsd);
                 stsd.Children.Add(sampleEntryBox);
                 stsd.EntryCount = 1;
@@ -466,6 +506,13 @@ namespace SharpMP4.Builders
                 var stco = new ChunkOffsetBox();
                 stco.SetParent(stbl);
                 stbl.Children.Add(stco);
+            }
+
+            // the protection systems' headers, each once, of all the protected tracks
+            foreach (var pssh in TrackEncryptor.ProtectionSystemHeaders(_trackContexts.Values.Where(x => x.Protection != null).Select(x => x.Protection)))
+            {
+                pssh.SetParent(moov);
+                moov.Children.Add(pssh);
             }
 
             var mvex = new MovieExtendsBox();
@@ -495,8 +542,33 @@ namespace SharpMP4.Builders
             }
         }
 
-        private void CreateMediaFragmentAsync(Container fmp4, ITrack track, MediaFragment fragment, uint sequenceNumber)
+        /// <summary>
+        /// How the samples of a fragment are protected, in its 'traf': each sample's IV and subsamples in 'senc', and the
+        /// same as sample auxiliary information - their sizes in 'saiz', where they are in 'saio', which points into the
+        /// 'senc' - unless there is none, as of samples with a constant IV and no subsamples (7.1, 10.4.1).
+        /// </summary>
+        private static void AddSampleEncryption(MovieFragmentBox moof, TrackFragmentBox traf, MediaFragment fragment, TrackEncryptor encryptor)
         {
+            var (senc, saiz, saio) = encryptor.CreateSampleEncryptionBoxes(fragment.Encryptions, fragment.SampleSizes);
+            foreach (var box in new Box[] { saiz, saio, senc }.Where(x => x != null))
+            {
+                box.SetParent(traf);
+                traf.Children.Add(box);
+            }
+
+            if (saio != null)
+            {
+                // the auxiliary information is the 'senc's samples: where they start, from the start of the 'moof', the
+                // base of the track fragment's offsets (default-base-is-moof)
+                ulong offset = 8 + moof.Children.TakeWhile(x => x != traf).Aggregate(0ul, (total, box) => total + (box.CalculateSize() >> 3)) + 8;
+                offset += traf.Children.TakeWhile(x => x != senc).Aggregate(0ul, (total, box) => total + (box.CalculateSize() >> 3));
+                saio.Offset[0] = offset + 12 + 4; // the 'senc's header, version and flags, then its sample_count
+            }
+        }
+
+        private void CreateMediaFragmentAsync(Container fmp4, TrackContext trackContext, MediaFragment fragment, uint sequenceNumber)
+        {
+            ITrack track = trackContext.Track;
             MovieFragmentBox moof = new MovieFragmentBox();
             moof.SetParent(fmp4);
             fmp4.Children.Add(moof);
@@ -567,6 +639,11 @@ namespace SharpMP4.Builders
             }
             trun.SampleCount = (uint)trun._TrunEntry.Length;
             traf.Children.Add(trun);
+
+            if (trackContext.Encryptor != null && fragment.Encryptions != null)
+            {
+                AddSampleEncryption(moof, traf, fragment, trackContext.Encryptor);
+            }
 
             // recalculate offsets
             ulong offset = (moof.CalculateSize() >> 3) + 8;

@@ -42,7 +42,7 @@ namespace SharpMP4.Builders
             Logger = logger;
         }
 
-        public SingleStreamOutput(Stream output) : this(output, new DefaultMp4Logger())
+        public SingleStreamOutput(Stream output) : this(output, DefaultMp4Logger.Instance)
         {
         }
 
@@ -79,7 +79,7 @@ namespace SharpMP4.Builders
         }
 
         public MultiStreamFileOutput(string path, string fileName, string fileExtension = "mp4")
-            : this(path, fileName, new DefaultMp4Logger(), fileExtension)
+            : this(path, fileName, DefaultMp4Logger.Instance, fileExtension)
         {
         }
 
@@ -144,7 +144,7 @@ namespace SharpMP4.Builders
         }
 
         public FragmentedBlobOutput()
-            : this(new DefaultMp4Logger())
+            : this(DefaultMp4Logger.Instance)
         {
         }
 

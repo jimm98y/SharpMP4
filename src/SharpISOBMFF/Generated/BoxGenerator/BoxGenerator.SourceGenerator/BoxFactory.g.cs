@@ -487,6 +487,7 @@ namespace SharpISOBMFF
                case "iacb":  return new IAConfigurationBox();
                case "IAD1":  return new CanonIAD1Box();
                case "iamf": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("iamf"));else return new CodecConfigurationBox(IsoStream.FromFourCC("iamf"));break;
+               case "iaux":  return new ItemAuxiliaryInformationBox();
                case "icam":  return new IntrinsicCameraParametersBox();
                case "icef":  return new GenericCompressedUnitsItemInfoBox();
                case "icnu":  return new OMAIconURLBox();

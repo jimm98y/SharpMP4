@@ -25,7 +25,7 @@ namespace SharpISOBMFF
             _stream = stream;
             _storageFactory = storageFactory ?? new TemporaryFileStorageFactory();
 
-            this.Logger = logger ?? new DefaultMp4Logger();
+            this.Logger = logger ?? DefaultMp4Logger.Instance;
             this.bitstream = new(new StorageStream(stream));
         }
 
@@ -160,7 +160,8 @@ namespace SharpISOBMFF
         /// </summary>
         public byte InferPerSampleIvSize(ulong boxSize, ulong readSize, byte version, uint flags, uint sampleCount, byte current)
         {
-            if (version != 0 || sampleCount == 0 || readSize == ulong.MaxValue || readSize <= boxSize)
+            // nothing after the sample count - a constant IV and no subsamples, as 'cbcs' audio has - is a size of 0
+            if (version != 0 || sampleCount == 0 || readSize == ulong.MaxValue || readSize < boxSize)
                 return current;
 
             ulong length = (readSize - boxSize) >> 3;

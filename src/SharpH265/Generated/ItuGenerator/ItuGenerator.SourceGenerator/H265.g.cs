@@ -584,8 +584,8 @@ pic_parameter_set_rbsp() {
 		public Pps3dExtension Pps3dExtension { get { return pps_3d_extension; } set { pps_3d_extension = value; } }
 		private PpsSccExtension pps_scc_extension;
 		public PpsSccExtension PpsSccExtension { get { return pps_scc_extension; } set { pps_scc_extension = value; } }
-		private Dictionary<int, byte> pps_extension_data_flag = new Dictionary<int, byte>();
-		public Dictionary<int, byte> PpsExtensionDataFlag { get { return pps_extension_data_flag; } set { pps_extension_data_flag = value; } }
+		private Dictionary<int, byte> pps_extension_data_flag;
+		public Dictionary<int, byte> PpsExtensionDataFlag { get { return pps_extension_data_flag ??= new Dictionary<int, byte>(); } set { pps_extension_data_flag = value; } }
 		private RbspTrailingBits rbsp_trailing_bits;
 		public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -727,7 +727,7 @@ pic_parameter_set_rbsp() {
 				{
 					whileIndex++;
 
-					size += stream.ReadUnsignedInt(size, 1, whileIndex, this.pps_extension_data_flag, "pps_extension_data_flag"); 
+					size += stream.ReadUnsignedInt(size, 1, whileIndex, (this.pps_extension_data_flag ??= new()), "pps_extension_data_flag"); 
 				}
 			}
 			this.rbsp_trailing_bits =  new RbspTrailingBits() ;
@@ -856,7 +856,7 @@ pic_parameter_set_rbsp() {
 				{
 					whileIndex++;
 
-					size += stream.WriteUnsignedInt(1, whileIndex, this.pps_extension_data_flag, "pps_extension_data_flag"); 
+					size += stream.WriteUnsignedInt(1, whileIndex, (this.pps_extension_data_flag ??= new()), "pps_extension_data_flag"); 
 				}
 			}
 			size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits"); 
@@ -1172,8 +1172,8 @@ sei_rbsp() {
     */
     public class SeiRbsp : IItuSerializable
     {
-		private Dictionary<int, SeiMessage> sei_message = new Dictionary<int, SeiMessage>();
-		public Dictionary<int, SeiMessage> SeiMessage { get { return sei_message; } set { sei_message = value; } }
+		private Dictionary<int, SeiMessage> sei_message;
+		public Dictionary<int, SeiMessage> SeiMessage { get { return sei_message ??= new Dictionary<int, SeiMessage>(); } set { sei_message = value; } }
 		private RbspTrailingBits rbsp_trailing_bits;
 		public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -1199,7 +1199,7 @@ sei_rbsp() {
 			{
 				whileIndex++;
 
-				this.sei_message.Add(whileIndex,  new SeiMessage() );
+				(this.sei_message ??= new()).Add(whileIndex,  new SeiMessage() );
 				size +=  stream.ReadClass<SeiMessage>(size, context, this.sei_message[whileIndex], "sei_message"); 
 			} while ( stream.ReadMoreRbspData(this) );
 			this.rbsp_trailing_bits =  new RbspTrailingBits() ;
@@ -1221,7 +1221,7 @@ sei_rbsp() {
 			{
 				whileIndex++;
 
-				size += stream.WriteClass<SeiMessage>(context, whileIndex, this.sei_message, "sei_message"); 
+				size += stream.WriteClass<SeiMessage>(context, whileIndex, (this.sei_message ??= new()), "sei_message"); 
 			} while ( stream.WriteMoreRbspData(this) );
 			size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits"); 
 
@@ -1378,8 +1378,8 @@ rbsp_trailing_bits()
     */
     public class FillerDataRbsp : IItuSerializable
     {
-		private Dictionary<int, uint> ff_byte = new Dictionary<int, uint>();
-		public Dictionary<int, uint> FfByte { get { return ff_byte; } set { ff_byte = value; } }
+		private Dictionary<int, uint> ff_byte;
+		public Dictionary<int, uint> FfByte { get { return ff_byte ??= new Dictionary<int, uint>(); } set { ff_byte = value; } }
 		private RbspTrailingBits rbsp_trailing_bits;
 		public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -1405,7 +1405,7 @@ rbsp_trailing_bits()
 			{
 				whileIndex++;
 
-				size += stream.ReadFixed(size, 8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
+				size += stream.ReadFixed(size, 8, whileIndex, (this.ff_byte ??= new()), "ff_byte"); // equal to 0xFF 
 			}
 			this.rbsp_trailing_bits =  new RbspTrailingBits() ;
 			size +=  stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits, "rbsp_trailing_bits"); 
@@ -1426,7 +1426,7 @@ rbsp_trailing_bits()
 			{
 				whileIndex++;
 
-				size += stream.WriteFixed(8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
+				size += stream.WriteFixed(8, whileIndex, (this.ff_byte ??= new()), "ff_byte"); // equal to 0xFF 
 			}
 			size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits"); 
 
@@ -1448,8 +1448,8 @@ while( !byte_aligned() )
     {
 		private uint rbsp_stop_one_bit;
 		public uint RbspStopOneBit { get { return rbsp_stop_one_bit; } set { rbsp_stop_one_bit = value; } }
-		private Dictionary<int, uint> rbsp_alignment_zero_bit = new Dictionary<int, uint>();
-		public Dictionary<int, uint> RbspAlignmentZeroBit { get { return rbsp_alignment_zero_bit; } set { rbsp_alignment_zero_bit = value; } }
+		private Dictionary<int, uint> rbsp_alignment_zero_bit;
+		public Dictionary<int, uint> RbspAlignmentZeroBit { get { return rbsp_alignment_zero_bit ??= new Dictionary<int, uint>(); } set { rbsp_alignment_zero_bit = value; } }
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
@@ -1474,7 +1474,7 @@ while( !byte_aligned() )
 			{
 				whileIndex++;
 
-				size += stream.ReadFixed(size, 1, whileIndex, this.rbsp_alignment_zero_bit, "rbsp_alignment_zero_bit"); // equal to 0 
+				size += stream.ReadFixed(size, 1, whileIndex, (this.rbsp_alignment_zero_bit ??= new()), "rbsp_alignment_zero_bit"); // equal to 0 
 			}
 
             return size;
@@ -1494,7 +1494,7 @@ while( !byte_aligned() )
 			{
 				whileIndex++;
 
-				size += stream.WriteFixed(1, whileIndex, this.rbsp_alignment_zero_bit, "rbsp_alignment_zero_bit"); // equal to 0 
+				size += stream.WriteFixed(1, whileIndex, (this.rbsp_alignment_zero_bit ??= new()), "rbsp_alignment_zero_bit"); // equal to 0 
 			}
 
             return size;
@@ -1515,8 +1515,8 @@ byte_alignment() {
     {
 		private uint alignment_bit_equal_to_one;
 		public uint AlignmentBitEqualToOne { get { return alignment_bit_equal_to_one; } set { alignment_bit_equal_to_one = value; } }
-		private Dictionary<int, uint> alignment_bit_equal_to_zero = new Dictionary<int, uint>();
-		public Dictionary<int, uint> AlignmentBitEqualToZero { get { return alignment_bit_equal_to_zero; } set { alignment_bit_equal_to_zero = value; } }
+		private Dictionary<int, uint> alignment_bit_equal_to_zero;
+		public Dictionary<int, uint> AlignmentBitEqualToZero { get { return alignment_bit_equal_to_zero ??= new Dictionary<int, uint>(); } set { alignment_bit_equal_to_zero = value; } }
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
@@ -1541,7 +1541,7 @@ byte_alignment() {
 			{
 				whileIndex++;
 
-				size += stream.ReadFixed(size, 1, whileIndex, this.alignment_bit_equal_to_zero, "alignment_bit_equal_to_zero"); // equal to 0 
+				size += stream.ReadFixed(size, 1, whileIndex, (this.alignment_bit_equal_to_zero ??= new()), "alignment_bit_equal_to_zero"); // equal to 0 
 			}
 
             return size;
@@ -1561,7 +1561,7 @@ byte_alignment() {
 			{
 				whileIndex++;
 
-				size += stream.WriteFixed(1, whileIndex, this.alignment_bit_equal_to_zero, "alignment_bit_equal_to_zero"); // equal to 0 
+				size += stream.WriteFixed(1, whileIndex, (this.alignment_bit_equal_to_zero ??= new()), "alignment_bit_equal_to_zero"); // equal to 0 
 			}
 
             return size;
@@ -2446,8 +2446,8 @@ sei_message() {
     */
     public class SeiMessage : IItuSerializable
     {
-		private Dictionary<int, uint> ff_byte = new Dictionary<int, uint>();
-		public Dictionary<int, uint> FfByte { get { return ff_byte; } set { ff_byte = value; } }
+		private Dictionary<int, uint> ff_byte;
+		public Dictionary<int, uint> FfByte { get { return ff_byte ??= new Dictionary<int, uint>(); } set { ff_byte = value; } }
 		private uint last_payload_type_byte;
 		public uint LastPayloadTypeByte { get { return last_payload_type_byte; } set { last_payload_type_byte = value; } }
 		private uint last_payload_size_byte;
@@ -2480,7 +2480,7 @@ sei_message() {
 			{
 				whileIndex++;
 
-				size += stream.ReadFixed(size, 8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
+				size += stream.ReadFixed(size, 8, whileIndex, (this.ff_byte ??= new()), "ff_byte"); // equal to 0xFF 
 				payloadType+= 255;
 			}
 			size += stream.ReadUnsignedInt(size, 8, out this.last_payload_type_byte, "last_payload_type_byte"); 
@@ -2491,7 +2491,7 @@ sei_message() {
 			{
 				whileIndex++;
 
-				size += stream.ReadFixed(size, 8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
+				size += stream.ReadFixed(size, 8, whileIndex, (this.ff_byte ??= new()), "ff_byte"); // equal to 0xFF 
 				payloadSize+= 255;
 			}
 			size += stream.ReadUnsignedInt(size, 8, out this.last_payload_size_byte, "last_payload_size_byte"); 
@@ -2522,7 +2522,7 @@ sei_message() {
 			{
 				whileIndex++;
 
-				size += stream.WriteFixed(8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
+				size += stream.WriteFixed(8, whileIndex, (this.ff_byte ??= new()), "ff_byte"); // equal to 0xFF 
 				payloadType+= 255;
 			}
 			size += stream.WriteUnsignedInt(8, this.last_payload_type_byte, "last_payload_type_byte"); 
@@ -2533,7 +2533,7 @@ sei_message() {
 			{
 				whileIndex++;
 
-				size += stream.WriteFixed(8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
+				size += stream.WriteFixed(8, whileIndex, (this.ff_byte ??= new()), "ff_byte"); // equal to 0xFF 
 				payloadSize+= 255;
 			}
 			size += stream.WriteUnsignedInt(8, this.last_payload_size_byte, "last_payload_size_byte"); 
@@ -3038,8 +3038,8 @@ sei_payload( payloadType, payloadSize ) {
 		public ulong ReservedPayloadExtensionData { get { return reserved_payload_extension_data; } set { reserved_payload_extension_data = value; } }
 		private uint payload_bit_equal_to_one;
 		public uint PayloadBitEqualToOne { get { return payload_bit_equal_to_one; } set { payload_bit_equal_to_one = value; } }
-		private Dictionary<int, uint> payload_bit_equal_to_zero = new Dictionary<int, uint>();
-		public Dictionary<int, uint> PayloadBitEqualToZero { get { return payload_bit_equal_to_zero; } set { payload_bit_equal_to_zero = value; } }
+		private Dictionary<int, uint> payload_bit_equal_to_zero;
+		public Dictionary<int, uint> PayloadBitEqualToZero { get { return payload_bit_equal_to_zero ??= new Dictionary<int, uint>(); } set { payload_bit_equal_to_zero = value; } }
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
@@ -3432,7 +3432,7 @@ sei_payload( payloadType, payloadSize ) {
 				{
 					whileIndex++;
 
-					size += stream.ReadFixed(size, 1, whileIndex, this.payload_bit_equal_to_zero, "payload_bit_equal_to_zero"); // equal to 0 
+					size += stream.ReadFixed(size, 1, whileIndex, (this.payload_bit_equal_to_zero ??= new()), "payload_bit_equal_to_zero"); // equal to 0 
 				}
 			}
 
@@ -3750,7 +3750,7 @@ sei_payload( payloadType, payloadSize ) {
 				{
 					whileIndex++;
 
-					size += stream.WriteFixed(1, whileIndex, this.payload_bit_equal_to_zero, "payload_bit_equal_to_zero"); // equal to 0 
+					size += stream.WriteFixed(1, whileIndex, (this.payload_bit_equal_to_zero ??= new()), "payload_bit_equal_to_zero"); // equal to 0 
 				}
 			}
 
@@ -4361,8 +4361,8 @@ user_data_registered_itu_t_t35( payloadSize ) {
 		public byte ItutT35CountryCode { get { return itu_t_t35_country_code; } set { itu_t_t35_country_code = value; } }
 		private byte itu_t_t35_country_code_extension_byte;
 		public byte ItutT35CountryCodeExtensionByte { get { return itu_t_t35_country_code_extension_byte; } set { itu_t_t35_country_code_extension_byte = value; } }
-		private Dictionary<int, byte> itu_t_t35_payload_byte = new Dictionary<int, byte>();
-		public Dictionary<int, byte> ItutT35PayloadByte { get { return itu_t_t35_payload_byte; } set { itu_t_t35_payload_byte = value; } }
+		private Dictionary<int, byte> itu_t_t35_payload_byte;
+		public Dictionary<int, byte> ItutT35PayloadByte { get { return itu_t_t35_payload_byte ??= new Dictionary<int, byte>(); } set { itu_t_t35_payload_byte = value; } }
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
@@ -4398,7 +4398,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
 			{
 				whileIndex++;
 
-				size += stream.ReadBits(size, 8, whileIndex, this.itu_t_t35_payload_byte, "itu_t_t35_payload_byte"); 
+				size += stream.ReadBits(size, 8, whileIndex, (this.itu_t_t35_payload_byte ??= new()), "itu_t_t35_payload_byte"); 
 				i++;
 			} while ( i < payloadSize );
 
@@ -4430,7 +4430,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
 			{
 				whileIndex++;
 
-				size += stream.WriteBits(8, whileIndex, this.itu_t_t35_payload_byte, "itu_t_t35_payload_byte"); 
+				size += stream.WriteBits(8, whileIndex, (this.itu_t_t35_payload_byte ??= new()), "itu_t_t35_payload_byte"); 
 				i++;
 			} while ( i < payloadSize );
 
@@ -6146,10 +6146,10 @@ scalable_nesting( payloadSize ) {
 		public ulong NestingNumLayersMinus1 { get { return nesting_num_layers_minus1; } set { nesting_num_layers_minus1 = value; } }
 		private uint[] nesting_layer_id;
 		public uint[] NestingLayerId { get { return nesting_layer_id; } set { nesting_layer_id = value; } }
-		private Dictionary<int, byte> nesting_zero_bit = new Dictionary<int, byte>();
-		public Dictionary<int, byte> NestingZeroBit { get { return nesting_zero_bit; } set { nesting_zero_bit = value; } }
-		private Dictionary<int, SeiMessage> sei_message = new Dictionary<int, SeiMessage>();
-		public Dictionary<int, SeiMessage> SeiMessage { get { return sei_message; } set { sei_message = value; } }
+		private Dictionary<int, byte> nesting_zero_bit;
+		public Dictionary<int, byte> NestingZeroBit { get { return nesting_zero_bit ??= new Dictionary<int, byte>(); } set { nesting_zero_bit = value; } }
+		private Dictionary<int, SeiMessage> sei_message;
+		public Dictionary<int, SeiMessage> SeiMessage { get { return sei_message ??= new Dictionary<int, SeiMessage>(); } set { sei_message = value; } }
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
@@ -6210,14 +6210,14 @@ scalable_nesting( payloadSize ) {
 			{
 				whileIndex++;
 
-				size += stream.ReadUnsignedInt(size, 1, whileIndex, this.nesting_zero_bit, "nesting_zero_bit"); // equal to 0 
+				size += stream.ReadUnsignedInt(size, 1, whileIndex, (this.nesting_zero_bit ??= new()), "nesting_zero_bit"); // equal to 0 
 			}
 
 			do
 			{
 				whileIndex++;
 
-				this.sei_message.Add(whileIndex,  new SeiMessage() );
+				(this.sei_message ??= new()).Add(whileIndex,  new SeiMessage() );
 				size +=  stream.ReadClass<SeiMessage>(size, context, this.sei_message[whileIndex], "sei_message"); 
 			} while ( stream.ReadMoreRbspData(this) );
 
@@ -6268,14 +6268,14 @@ scalable_nesting( payloadSize ) {
 			{
 				whileIndex++;
 
-				size += stream.WriteUnsignedInt(1, whileIndex, this.nesting_zero_bit, "nesting_zero_bit"); // equal to 0 
+				size += stream.WriteUnsignedInt(1, whileIndex, (this.nesting_zero_bit ??= new()), "nesting_zero_bit"); // equal to 0 
 			}
 
 			do
 			{
 				whileIndex++;
 
-				size += stream.WriteClass<SeiMessage>(context, whileIndex, this.sei_message, "sei_message"); 
+				size += stream.WriteClass<SeiMessage>(context, whileIndex, (this.sei_message ??= new()), "sei_message"); 
 			} while ( stream.WriteMoreRbspData(this) );
 
             return size;
@@ -8923,8 +8923,8 @@ mcts_extraction_info_sets( payloadSize ) {
 		public uint[][] PpsNuhTemporalIdPlus1 { get { return pps_nuh_temporal_id_plus1; } set { pps_nuh_temporal_id_plus1 = value; } }
 		private ulong[][] pps_rbsp_data_length;
 		public ulong[][] PpsRbspDataLength { get { return pps_rbsp_data_length; } set { pps_rbsp_data_length = value; } }
-		private Dictionary<int, uint> mcts_alignment_bit_equal_to_zero = new Dictionary<int, uint>();
-		public Dictionary<int, uint> MctsAlignmentBitEqualToZero { get { return mcts_alignment_bit_equal_to_zero; } set { mcts_alignment_bit_equal_to_zero = value; } }
+		private Dictionary<int, uint> mcts_alignment_bit_equal_to_zero;
+		public Dictionary<int, uint> MctsAlignmentBitEqualToZero { get { return mcts_alignment_bit_equal_to_zero ??= new Dictionary<int, uint>(); } set { mcts_alignment_bit_equal_to_zero = value; } }
 		private uint[][][] vps_rbsp_data_byte;
 		public uint[][][] VpsRbspDataByte { get { return vps_rbsp_data_byte; } set { vps_rbsp_data_byte = value; } }
 		private uint[][][] sps_rbsp_data_byte;
@@ -9042,7 +9042,7 @@ mcts_extraction_info_sets( payloadSize ) {
 				{
 					whileIndex++;
 
-					size += stream.ReadFixed(size, 1, whileIndex, this.mcts_alignment_bit_equal_to_zero, "mcts_alignment_bit_equal_to_zero"); 
+					size += stream.ReadFixed(size, 1, whileIndex, (this.mcts_alignment_bit_equal_to_zero ??= new()), "mcts_alignment_bit_equal_to_zero"); 
 				}
 
 				this.vps_rbsp_data_byte[ i ] = new uint[ num_vps_in_info_set_minus1[ i ] + 1][];
@@ -9143,7 +9143,7 @@ mcts_extraction_info_sets( payloadSize ) {
 				{
 					whileIndex++;
 
-					size += stream.WriteFixed(1, whileIndex, this.mcts_alignment_bit_equal_to_zero, "mcts_alignment_bit_equal_to_zero"); 
+					size += stream.WriteFixed(1, whileIndex, (this.mcts_alignment_bit_equal_to_zero ??= new()), "mcts_alignment_bit_equal_to_zero"); 
 				}
 
 				for ( j = 0; j <= num_vps_in_info_set_minus1[ i ]; j++ )
@@ -9208,8 +9208,8 @@ sei_message()
 		public ulong[] IdxOfAssociatedMcts { get { return idx_of_associated_mcts; } set { idx_of_associated_mcts = value; } }
 		private ulong num_sei_messages_in_mcts_extraction_nesting_minus1;
 		public ulong NumSeiMessagesInMctsExtractionNestingMinus1 { get { return num_sei_messages_in_mcts_extraction_nesting_minus1; } set { num_sei_messages_in_mcts_extraction_nesting_minus1 = value; } }
-		private Dictionary<int, byte> mcts_nesting_zero_bit = new Dictionary<int, byte>();
-		public Dictionary<int, byte> MctsNestingZeroBit { get { return mcts_nesting_zero_bit; } set { mcts_nesting_zero_bit = value; } }
+		private Dictionary<int, byte> mcts_nesting_zero_bit;
+		public Dictionary<int, byte> MctsNestingZeroBit { get { return mcts_nesting_zero_bit ??= new Dictionary<int, byte>(); } set { mcts_nesting_zero_bit = value; } }
 		private SeiMessage[] sei_message;
 		public SeiMessage[] SeiMessage { get { return sei_message; } set { sei_message = value; } }
 
@@ -9250,7 +9250,7 @@ sei_message()
 			{
 				whileIndex++;
 
-				size += stream.ReadUnsignedInt(size, 1, whileIndex, this.mcts_nesting_zero_bit, "mcts_nesting_zero_bit"); // equal to 0 
+				size += stream.ReadUnsignedInt(size, 1, whileIndex, (this.mcts_nesting_zero_bit ??= new()), "mcts_nesting_zero_bit"); // equal to 0 
 			}
 
 			stream.CheckArrayAllocation((ulong)( num_sei_messages_in_mcts_extraction_nesting_minus1 + 1), "sei_message");
@@ -9290,7 +9290,7 @@ sei_message()
 			{
 				whileIndex++;
 
-				size += stream.WriteUnsignedInt(1, whileIndex, this.mcts_nesting_zero_bit, "mcts_nesting_zero_bit"); // equal to 0 
+				size += stream.WriteUnsignedInt(1, whileIndex, (this.mcts_nesting_zero_bit ??= new()), "mcts_nesting_zero_bit"); // equal to 0 
 			}
 
 			for ( i = 0; i <= num_sei_messages_in_mcts_extraction_nesting_minus1; i++ )
@@ -10277,8 +10277,8 @@ vps_extension() {
 		public uint[] VpsNonVuiExtensionDataByte { get { return vps_non_vui_extension_data_byte; } set { vps_non_vui_extension_data_byte = value; } }
 		private byte vps_vui_present_flag;
 		public byte VpsVuiPresentFlag { get { return vps_vui_present_flag; } set { vps_vui_present_flag = value; } }
-		private Dictionary<int, byte> vps_vui_alignment_bit_equal_to_one = new Dictionary<int, byte>();
-		public Dictionary<int, byte> VpsVuiAlignmentBitEqualToOne { get { return vps_vui_alignment_bit_equal_to_one; } set { vps_vui_alignment_bit_equal_to_one = value; } }
+		private Dictionary<int, byte> vps_vui_alignment_bit_equal_to_one;
+		public Dictionary<int, byte> VpsVuiAlignmentBitEqualToOne { get { return vps_vui_alignment_bit_equal_to_one ??= new Dictionary<int, byte>(); } set { vps_vui_alignment_bit_equal_to_one = value; } }
 		private VpsVui vps_vui;
 		public VpsVui VpsVui { get { return vps_vui; } set { vps_vui = value; } }
 
@@ -10583,7 +10583,7 @@ vps_extension() {
 				{
 					whileIndex++;
 
-					size += stream.ReadUnsignedInt(size, 1, whileIndex, this.vps_vui_alignment_bit_equal_to_one, "vps_vui_alignment_bit_equal_to_one"); 
+					size += stream.ReadUnsignedInt(size, 1, whileIndex, (this.vps_vui_alignment_bit_equal_to_one ??= new()), "vps_vui_alignment_bit_equal_to_one"); 
 				}
 				this.vps_vui =  new VpsVui() ;
 				size +=  stream.ReadClass<VpsVui>(size, context, this.vps_vui, "vps_vui"); 
@@ -10837,7 +10837,7 @@ vps_extension() {
 				{
 					whileIndex++;
 
-					size += stream.WriteUnsignedInt(1, whileIndex, this.vps_vui_alignment_bit_equal_to_one, "vps_vui_alignment_bit_equal_to_one"); 
+					size += stream.WriteUnsignedInt(1, whileIndex, (this.vps_vui_alignment_bit_equal_to_one ??= new()), "vps_vui_alignment_bit_equal_to_one"); 
 				}
 				size += stream.WriteClass<VpsVui>(context, this.vps_vui, "vps_vui"); 
 			}
@@ -12223,8 +12223,8 @@ seq_parameter_set_rbsp() {
 		public Sps3dExtension Sps3dExtension { get { return sps_3d_extension; } set { sps_3d_extension = value; } }
 		private SpsSccExtension sps_scc_extension;
 		public SpsSccExtension SpsSccExtension { get { return sps_scc_extension; } set { sps_scc_extension = value; } }
-		private Dictionary<int, byte> sps_extension_data_flag = new Dictionary<int, byte>();
-		public Dictionary<int, byte> SpsExtensionDataFlag { get { return sps_extension_data_flag; } set { sps_extension_data_flag = value; } }
+		private Dictionary<int, byte> sps_extension_data_flag;
+		public Dictionary<int, byte> SpsExtensionDataFlag { get { return sps_extension_data_flag ??= new Dictionary<int, byte>(); } set { sps_extension_data_flag = value; } }
 		private RbspTrailingBits rbsp_trailing_bits;
 		public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -12439,7 +12439,7 @@ seq_parameter_set_rbsp() {
 				{
 					whileIndex++;
 
-					size += stream.ReadUnsignedInt(size, 1, whileIndex, this.sps_extension_data_flag, "sps_extension_data_flag"); 
+					size += stream.ReadUnsignedInt(size, 1, whileIndex, (this.sps_extension_data_flag ??= new()), "sps_extension_data_flag"); 
 				}
 			}
 			this.rbsp_trailing_bits =  new RbspTrailingBits() ;
@@ -12630,7 +12630,7 @@ seq_parameter_set_rbsp() {
 				{
 					whileIndex++;
 
-					size += stream.WriteUnsignedInt(1, whileIndex, this.sps_extension_data_flag, "sps_extension_data_flag"); 
+					size += stream.WriteUnsignedInt(1, whileIndex, (this.sps_extension_data_flag ??= new()), "sps_extension_data_flag"); 
 				}
 			}
 			size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits"); 
@@ -13539,8 +13539,8 @@ bsp_nesting( payloadSize ) {
 		public ulong BspIdx { get { return bsp_idx; } set { bsp_idx = value; } }
 		private ulong num_seis_in_bsp_minus1;
 		public ulong NumSeisInBspMinus1 { get { return num_seis_in_bsp_minus1; } set { num_seis_in_bsp_minus1 = value; } }
-		private Dictionary<int, byte> bsp_nesting_zero_bit = new Dictionary<int, byte>();
-		public Dictionary<int, byte> BspNestingZeroBit { get { return bsp_nesting_zero_bit; } set { bsp_nesting_zero_bit = value; } }
+		private Dictionary<int, byte> bsp_nesting_zero_bit;
+		public Dictionary<int, byte> BspNestingZeroBit { get { return bsp_nesting_zero_bit ??= new Dictionary<int, byte>(); } set { bsp_nesting_zero_bit = value; } }
 		private SeiMessage[] sei_message;
 		public SeiMessage[] SeiMessage { get { return sei_message; } set { sei_message = value; } }
 
@@ -13571,7 +13571,7 @@ bsp_nesting( payloadSize ) {
 			{
 				whileIndex++;
 
-				size += stream.ReadUnsignedInt(size, 1, whileIndex, this.bsp_nesting_zero_bit, "bsp_nesting_zero_bit"); // equal to 0 
+				size += stream.ReadUnsignedInt(size, 1, whileIndex, (this.bsp_nesting_zero_bit ??= new()), "bsp_nesting_zero_bit"); // equal to 0 
 			}
 
 			stream.CheckArrayAllocation((ulong)( num_seis_in_bsp_minus1 + 1), "sei_message");
@@ -13603,7 +13603,7 @@ bsp_nesting( payloadSize ) {
 			{
 				whileIndex++;
 
-				size += stream.WriteUnsignedInt(1, whileIndex, this.bsp_nesting_zero_bit, "bsp_nesting_zero_bit"); // equal to 0 
+				size += stream.WriteUnsignedInt(1, whileIndex, (this.bsp_nesting_zero_bit ??= new()), "bsp_nesting_zero_bit"); // equal to 0 
 			}
 
 			for ( i = 0; i <= num_seis_in_bsp_minus1; i++ )
@@ -14001,8 +14001,8 @@ overlay_info( payloadSize ) {
 		public ulong[][] OverlayElementLabelMin { get { return overlay_element_label_min; } set { overlay_element_label_min = value; } }
 		private ulong[][] overlay_element_label_max;
 		public ulong[][] OverlayElementLabelMax { get { return overlay_element_label_max; } set { overlay_element_label_max = value; } }
-		private Dictionary<int, uint> overlay_zero_bit = new Dictionary<int, uint>();
-		public Dictionary<int, uint> OverlayZeroBit { get { return overlay_zero_bit; } set { overlay_zero_bit = value; } }
+		private Dictionary<int, uint> overlay_zero_bit;
+		public Dictionary<int, uint> OverlayZeroBit { get { return overlay_zero_bit ??= new Dictionary<int, uint>(); } set { overlay_zero_bit = value; } }
 		private byte[][] overlay_language;
 		public byte[][] OverlayLanguage { get { return overlay_language; } set { overlay_language = value; } }
 		private byte[][] overlay_name;
@@ -14097,7 +14097,7 @@ overlay_info( payloadSize ) {
 				{
 					whileIndex++;
 
-					size += stream.ReadFixed(size, 1, whileIndex, this.overlay_zero_bit, "overlay_zero_bit"); // equal to 0 
+					size += stream.ReadFixed(size, 1, whileIndex, (this.overlay_zero_bit ??= new()), "overlay_zero_bit"); // equal to 0 
 				}
 
 				stream.CheckArrayAllocation((ulong)( num_overlays_minus1 + 1), "overlay_language");
@@ -14185,7 +14185,7 @@ overlay_info( payloadSize ) {
 				{
 					whileIndex++;
 
-					size += stream.WriteFixed(1, whileIndex, this.overlay_zero_bit, "overlay_zero_bit"); // equal to 0 
+					size += stream.WriteFixed(1, whileIndex, (this.overlay_zero_bit ??= new()), "overlay_zero_bit"); // equal to 0 
 				}
 
 				for ( i = 0; i <= num_overlays_minus1; i++ )
@@ -15289,22 +15289,22 @@ layer_id_included_flag[ i ][ j ] u(1)
 		public HrdParameters[] HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
 		private byte vps_extension_flag;
 		public byte VpsExtensionFlag { get { return vps_extension_flag; } set { vps_extension_flag = value; } }
-		private Dictionary<int, byte> vps_extension_alignment_bit_equal_to_one = new Dictionary<int, byte>();
-		public Dictionary<int, byte> VpsExtensionAlignmentBitEqualToOne { get { return vps_extension_alignment_bit_equal_to_one; } set { vps_extension_alignment_bit_equal_to_one = value; } }
+		private Dictionary<int, byte> vps_extension_alignment_bit_equal_to_one;
+		public Dictionary<int, byte> VpsExtensionAlignmentBitEqualToOne { get { return vps_extension_alignment_bit_equal_to_one ??= new Dictionary<int, byte>(); } set { vps_extension_alignment_bit_equal_to_one = value; } }
 		private VpsExtension vps_extension;
 		public VpsExtension VpsExtension { get { return vps_extension; } set { vps_extension = value; } }
 		private byte vps_extension2_flag;
 		public byte VpsExtension2Flag { get { return vps_extension2_flag; } set { vps_extension2_flag = value; } }
 		private byte vps_3d_extension_flag;
 		public byte Vps3dExtensionFlag { get { return vps_3d_extension_flag; } set { vps_3d_extension_flag = value; } }
-		private Dictionary<int, byte> vps_3d_extension_alignment_bit_equal_to_one = new Dictionary<int, byte>();
-		public Dictionary<int, byte> Vps3dExtensionAlignmentBitEqualToOne { get { return vps_3d_extension_alignment_bit_equal_to_one; } set { vps_3d_extension_alignment_bit_equal_to_one = value; } }
+		private Dictionary<int, byte> vps_3d_extension_alignment_bit_equal_to_one;
+		public Dictionary<int, byte> Vps3dExtensionAlignmentBitEqualToOne { get { return vps_3d_extension_alignment_bit_equal_to_one ??= new Dictionary<int, byte>(); } set { vps_3d_extension_alignment_bit_equal_to_one = value; } }
 		private Vps3dExtension vps_3d_extension;
 		public Vps3dExtension Vps3dExtension { get { return vps_3d_extension; } set { vps_3d_extension = value; } }
 		private byte vps_extension3_flag;
 		public byte VpsExtension3Flag { get { return vps_extension3_flag; } set { vps_extension3_flag = value; } }
-		private Dictionary<int, byte> vps_extension_data_flag = new Dictionary<int, byte>();
-		public Dictionary<int, byte> VpsExtensionDataFlag { get { return vps_extension_data_flag; } set { vps_extension_data_flag = value; } }
+		private Dictionary<int, byte> vps_extension_data_flag;
+		public Dictionary<int, byte> VpsExtensionDataFlag { get { return vps_extension_data_flag ??= new Dictionary<int, byte>(); } set { vps_extension_data_flag = value; } }
 		private RbspTrailingBits rbsp_trailing_bits;
 		public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -15408,7 +15408,7 @@ layer_id_included_flag[ i ][ j ] u(1)
 				{
 					whileIndex++;
 
-					size += stream.ReadUnsignedInt(size, 1, whileIndex, this.vps_extension_alignment_bit_equal_to_one, "vps_extension_alignment_bit_equal_to_one"); 
+					size += stream.ReadUnsignedInt(size, 1, whileIndex, (this.vps_extension_alignment_bit_equal_to_one ??= new()), "vps_extension_alignment_bit_equal_to_one"); 
 				}
 				this.vps_extension =  new VpsExtension() ;
 				size +=  stream.ReadClass<VpsExtension>(size, context, this.vps_extension, "vps_extension"); 
@@ -15425,7 +15425,7 @@ layer_id_included_flag[ i ][ j ] u(1)
 						{
 							whileIndex++;
 
-							size += stream.ReadUnsignedInt(size, 1, whileIndex, this.vps_3d_extension_alignment_bit_equal_to_one, "vps_3d_extension_alignment_bit_equal_to_one"); 
+							size += stream.ReadUnsignedInt(size, 1, whileIndex, (this.vps_3d_extension_alignment_bit_equal_to_one ??= new()), "vps_3d_extension_alignment_bit_equal_to_one"); 
 						}
 						this.vps_3d_extension =  new Vps3dExtension() ;
 						size +=  stream.ReadClass<Vps3dExtension>(size, context, this.vps_3d_extension, "vps_3d_extension"); 
@@ -15439,7 +15439,7 @@ layer_id_included_flag[ i ][ j ] u(1)
 						{
 							whileIndex++;
 
-							size += stream.ReadUnsignedInt(size, 1, whileIndex, this.vps_extension_data_flag, "vps_extension_data_flag"); 
+							size += stream.ReadUnsignedInt(size, 1, whileIndex, (this.vps_extension_data_flag ??= new()), "vps_extension_data_flag"); 
 						}
 					}
 				}
@@ -15524,7 +15524,7 @@ layer_id_included_flag[ i ][ j ] u(1)
 				{
 					whileIndex++;
 
-					size += stream.WriteUnsignedInt(1, whileIndex, this.vps_extension_alignment_bit_equal_to_one, "vps_extension_alignment_bit_equal_to_one"); 
+					size += stream.WriteUnsignedInt(1, whileIndex, (this.vps_extension_alignment_bit_equal_to_one ??= new()), "vps_extension_alignment_bit_equal_to_one"); 
 				}
 				size += stream.WriteClass<VpsExtension>(context, this.vps_extension, "vps_extension"); 
 				size += stream.WriteUnsignedInt(1, this.vps_extension2_flag, "vps_extension2_flag"); 
@@ -15540,7 +15540,7 @@ layer_id_included_flag[ i ][ j ] u(1)
 						{
 							whileIndex++;
 
-							size += stream.WriteUnsignedInt(1, whileIndex, this.vps_3d_extension_alignment_bit_equal_to_one, "vps_3d_extension_alignment_bit_equal_to_one"); 
+							size += stream.WriteUnsignedInt(1, whileIndex, (this.vps_3d_extension_alignment_bit_equal_to_one ??= new()), "vps_3d_extension_alignment_bit_equal_to_one"); 
 						}
 						size += stream.WriteClass<Vps3dExtension>(context, this.vps_3d_extension, "vps_3d_extension"); 
 					}
@@ -15553,7 +15553,7 @@ layer_id_included_flag[ i ][ j ] u(1)
 						{
 							whileIndex++;
 
-							size += stream.WriteUnsignedInt(1, whileIndex, this.vps_extension_data_flag, "vps_extension_data_flag"); 
+							size += stream.WriteUnsignedInt(1, whileIndex, (this.vps_extension_data_flag ??= new()), "vps_extension_data_flag"); 
 						}
 					}
 				}
@@ -17183,8 +17183,8 @@ slice_segment_header() {
 		public byte PocMsbCycleValPresentFlag { get { return poc_msb_cycle_val_present_flag; } set { poc_msb_cycle_val_present_flag = value; } }
 		private ulong poc_msb_cycle_val;
 		public ulong PocMsbCycleVal { get { return poc_msb_cycle_val; } set { poc_msb_cycle_val = value; } }
-		private Dictionary<int, byte> slice_segment_header_extension_data_bit = new Dictionary<int, byte>();
-		public Dictionary<int, byte> SliceSegmentHeaderExtensionDataBit { get { return slice_segment_header_extension_data_bit; } set { slice_segment_header_extension_data_bit = value; } }
+		private Dictionary<int, byte> slice_segment_header_extension_data_bit;
+		public Dictionary<int, byte> SliceSegmentHeaderExtensionDataBit { get { return slice_segment_header_extension_data_bit ??= new Dictionary<int, byte>(); } set { slice_segment_header_extension_data_bit = value; } }
 		private ByteAlignment byte_alignment;
 		public ByteAlignment ByteAlignment { get { return byte_alignment; } set { byte_alignment = value; } }
 
@@ -17560,7 +17560,7 @@ slice_segment_header() {
 				{
 					whileIndex++;
 
-					size += stream.ReadUnsignedInt(size, 1, whileIndex, this.slice_segment_header_extension_data_bit, "slice_segment_header_extension_data_bit"); 
+					size += stream.ReadUnsignedInt(size, 1, whileIndex, (this.slice_segment_header_extension_data_bit ??= new()), "slice_segment_header_extension_data_bit"); 
 				}
 			}
 			this.byte_alignment =  new ByteAlignment() ;
@@ -17909,7 +17909,7 @@ slice_segment_header() {
 				{
 					whileIndex++;
 
-					size += stream.WriteUnsignedInt(1, whileIndex, this.slice_segment_header_extension_data_bit, "slice_segment_header_extension_data_bit"); 
+					size += stream.WriteUnsignedInt(1, whileIndex, (this.slice_segment_header_extension_data_bit ??= new()), "slice_segment_header_extension_data_bit"); 
 				}
 			}
 			size += stream.WriteClass<ByteAlignment>(context, this.byte_alignment, "byte_alignment"); 

@@ -6,17 +6,18 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
+// Dolby Vision's enhancement layer configuration: an hvcC's record, as GPAC and FFmpeg's mov_read_hvce read it
 aligned(8) class HvcEBox() extends Box('hvcE') {
- bit(8) data[];
- } 
+	HEVCDecoderConfigurationRecord() HEVCConfig;
+}
 */
 public partial class HvcEBox : Box
 {
 	public const string TYPE = "hvcE";
 	public override string DisplayName { get { return "HvcEBox"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	protected HEVCDecoderConfigurationRecord HEVCConfig; 
+	public HEVCDecoderConfigurationRecord _HEVCConfig { get { return this.HEVCConfig; } set { this.HEVCConfig = value; } }
 
 	public HvcEBox(): base(IsoStream.FromFourCC("hvcE"))
 	{
@@ -26,7 +27,7 @@ public partial class HvcEBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		boxSize += stream.ReadClass(boxSize, readSize, this, () => new HEVCDecoderConfigurationRecord(),  out this.HEVCConfig, "HEVCConfig"); 
 		return boxSize;
 	}
 
@@ -34,7 +35,7 @@ public partial class HvcEBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		boxSize += stream.WriteClass( this.HEVCConfig, "HEVCConfig"); 
 		return boxSize;
 	}
 
@@ -42,7 +43,7 @@ public partial class HvcEBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		boxSize += IsoStream.CalculateClassSize(HEVCConfig); // HEVCConfig
 		return boxSize;
 	}
 }

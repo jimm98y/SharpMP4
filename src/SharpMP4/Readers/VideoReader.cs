@@ -1,6 +1,7 @@
 ﻿using SharpISOBMFF;
 using SharpMP4.Tracks;
 using SharpMP4.Common;
+using SharpMP4.Encryption;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,15 +24,22 @@ namespace SharpMP4.Readers
 
         public IMp4Logger Logger { get; set; }
 
+        /// <summary>
+        /// The key of a key ID, for protected tracks to be read in the clear: each sample of a protected track is then
+        /// decrypted in place as it is read. Null leaves the samples as they are, their <see cref="MediaSample.Encryption"/>
+        /// saying how they are protected; so does a key the provider does not have (null).
+        /// </summary>
+        public Func<byte[], byte[]> KeyProvider { get; set; }
+
         public bool IsQuickTime { get; set; } = false;
         public bool IsFragmented { get; set; } = false;
 
         public VideoReader(IMp4Logger logger)
         {
-            this.Logger = logger ?? new DefaultMp4Logger();
+            this.Logger = logger ?? DefaultMp4Logger.Instance;
         }
 
-        public VideoReader() : this(new DefaultMp4Logger())
+        public VideoReader() : this(DefaultMp4Logger.Instance)
         {
         }
 
@@ -82,14 +90,24 @@ namespace SharpMP4.Readers
                             .Children.OfType<MediaInformationBox>().Single()
                             .Children.OfType<SampleTableBox>().Single();
 
-                        Box sampleEntry = stbl
-                            .Children.OfType<SampleDescriptionBox>().Single()
-                            .Children.Single(); // VisualSampleEntry/AudioSampleEntry/RtpHint
+                        // VisualSampleEntry/AudioSampleEntry/RtpHint: the first of them, as a track's codec is one, though
+                        // a protected track may have a second, in the clear, for its samples in the clear ('encv' and 'avc1')
+                        var sampleEntries = stbl.Children.OfType<SampleDescriptionBox>().Single().Children;
+                        Box sampleEntry = sampleEntries.First();
+
+                        // a protected track's sample entry ('encv', 'enca', ...) holds its 'sinf' beside its configuration
+                        trackContext.Stbl = stbl;
+                        trackContext.EntryProtections = sampleEntries.Select(TrackProtection.FromSampleEntry).ToArray();
+                        trackContext.Protection = trackContext.EntryProtections.FirstOrDefault(x => x != null);
+                        foreach (var protection in trackContext.EntryProtections.Where(x => x != null))
+                        {
+                            protection.Systems.AddRange(this.Moov.Children.Select(ProtectionSystemHeader.From).Where(x => x != null));
+                        }
 
                         // in case of RtpHint, this box has no children
                         if (sampleEntry.Children != null && sampleEntry.Children.Count > 0)
                         {
-                            sampleEntry = sampleEntry.Children.First(); // avcC/hvcC/vvcC/esds/dOps...
+                            sampleEntry = sampleEntry.Children.FirstOrDefault(x => x is not ProtectionSchemeInfoBox) ?? sampleEntry.Children.First(); // avcC/hvcC/vvcC/esds/dOps...
                         }
 
                         trackContext.Stts = stbl.Children.OfType<TimeToSampleBox>().Single();
@@ -127,6 +145,8 @@ namespace SharpMP4.Readers
                         int stscIndex = 0;
                         uint stscNextRun = 0;
                         uint stscSamplesPerChunk = 0;
+                        uint stscSampleDescriptionIndex = 1;
+                        trackContext.EntryOfChunk = new uint[trackContext.ChunkAddressList.Length];
 
                         int chunkIndex;
                         for (chunkIndex = 1; chunkIndex <= trackContext.ChunkAddressList.Length; chunkIndex++)
@@ -134,11 +154,13 @@ namespace SharpMP4.Readers
                             if (chunkIndex >= stscNextRun)
                             {
                                 stscSamplesPerChunk = stsc.SamplesPerChunk[stscIndex];
+                                stscSampleDescriptionIndex = stsc.SampleDescriptionIndex[stscIndex];
                                 stscIndex += 1;
                                 stscNextRun = (stscIndex < stsc.FirstChunk.Length) ? stsc.FirstChunk[stscIndex] : uint.MaxValue;
                             }
 
                             trackContext.FramesInChunkList[chunkIndex - 1] = stscSamplesPerChunk;
+                            trackContext.EntryOfChunk[chunkIndex - 1] = stscSampleDescriptionIndex;
                         }
                     }
                 }
@@ -189,6 +211,7 @@ namespace SharpMP4.Readers
                         {
                             moof = currentMoof;
                             trackContext.Moof = moof;
+                            trackContext.Traf = traf;
                             trackContext.Tfhd = tfhd;
                             trackContext.Truns = traf.Children.OfType<TrackRunBox>().ToArray(); // there can be 1 or multiple trun boxes, depending upon the encoder
                             var tfdt = traf.Children.OfType<TrackFragmentBaseMediaDecodeTimeBox>().SingleOrDefault();
@@ -227,6 +250,7 @@ namespace SharpMP4.Readers
                                 throw new NotSupportedException();
                             }
 
+                            trackContext.FragmentBaseAddress = startAddressBase;
                             trackContext.FragmentSampleStartAddress = new long[sampleCount];
                             trackContext.FragmentSampleDts = new long[sampleCount];
                             trackContext.FragmentSampleTrunIndex = new int[sampleCount];
@@ -286,6 +310,15 @@ namespace SharpMP4.Readers
                         if (currentMdat.Size > 8) // mdat smaller than 8 bytes is empty and invalid
                         {
                             trackContext.Mdat = currentMdat;
+
+                            // the protection of each of the fragment's samples, whose auxiliary information may be anywhere in the
+                            // file: none where the fragment's sample entry is one in the clear
+                            uint entry = (trackContext.Tfhd.Flags & 0x2) == 0x2 ? trackContext.Tfhd.SampleDescriptionIndex : trackContext.Trex?.DefaultSampleDescriptionIndex ?? 1;
+                            var protection = trackContext.ProtectionOfEntry(entry);
+                            trackContext.FragmentEncryption = protection == null ? null :
+                                SampleEncryptionReader.ForFragment(protection, trackContext.Traf, trackContext.Stbl, trackContext.FragmentSampleCount,
+                                    trackContext.FragmentBaseAddress, (offset, length) => ReadAt(currentMdat.Data.Stream, offset, length));
+
                             currentMdat.Data.Stream.SeekFromBeginning(currentMdat.Data.Position);
 
                             // this makes sure next time we call this it will read the next fragment
@@ -422,12 +455,36 @@ namespace SharpMP4.Readers
                 trackContext.SampleBuffer = new byte[capacity];
             }
 
+            // the protection of every sample of the track, once, where it is protected
+            if (trackContext.Protection != null && trackContext.SampleEncryptions == null)
+            {
+                var stream = this.Mdat.Data.Stream;
+                trackContext.SampleEncryptions = SampleEncryptionReader.ForTrack(trackContext.Protection, trackContext.Stbl, trackContext.FramesInChunkList,
+                    (offset, length) => ReadAt(stream, offset, length));
+                stream.SeekFromBeginning(startAddress);
+
+                // none for the samples of a chunk of a sample entry in the clear
+                for (int chunk = 0, sample = 0; chunk < trackContext.FramesInChunkList.Length; chunk++)
+                {
+                    bool clear = trackContext.ProtectionOfEntry(trackContext.EntryOfChunk[chunk]) == null;
+                    for (int k = 0; k < trackContext.FramesInChunkList[chunk] && sample < trackContext.SampleEncryptions.Length; k++, sample++)
+                    {
+                        if (clear)
+                            trackContext.SampleEncryptions[sample] = null;
+                    }
+                }
+            }
+
             ulong size = this.Mdat.Data.Stream.ReadBytes(sampleSize, trackContext.SampleBuffer, 0);
+
+            var mediaSample = new MediaSample(pts, dts, (int)sttsSampleDelta,
+                new ArraySegment<byte>(trackContext.SampleBuffer, 0, (int)sampleSize), isRandomAccessPoint);
+            mediaSample.Encryption = trackContext.SampleEncryptions != null && sampleIndex < trackContext.SampleEncryptions.Length ? trackContext.SampleEncryptions[sampleIndex] : null;
+            Decrypt(trackContext, mediaSample);
 
             trackContext.SampleIndex++;
 
-            return new MediaSample(pts, dts, (int)sttsSampleDelta,
-                new ArraySegment<byte>(trackContext.SampleBuffer, 0, (int)sampleSize), isRandomAccessPoint);
+            return mediaSample;
         }
 
         private MediaSample ReadFragmentedMp4Sample(uint trackID)
@@ -514,9 +571,43 @@ namespace SharpMP4.Readers
 
             ulong size = trackContext.Mdat.Data.Stream.ReadBytes(sampleSize, trackContext.SampleBuffer, 0);
 
-            trackContext.SampleIndex++;
-            return new MediaSample(pts, dts, (int)sampleDuration,
+            var mediaSample = new MediaSample(pts, dts, (int)sampleDuration,
                 new ArraySegment<byte>(trackContext.SampleBuffer, 0, (int)sampleSize));
+            mediaSample.Encryption = trackContext.FragmentEncryption != null && trackContext.SampleIndex < trackContext.FragmentEncryption.Length ? trackContext.FragmentEncryption[trackContext.SampleIndex] : null;
+            Decrypt(trackContext, mediaSample);
+
+            trackContext.SampleIndex++;
+            return mediaSample;
+        }
+
+        /// <summary>A sample of a protected track, decrypted in place where the <see cref="KeyProvider"/> has its key.</summary>
+        private void Decrypt(TrackContext trackContext, MediaSample sample)
+        {
+            if (KeyProvider == null || sample.Encryption == null || !sample.Encryption.IsProtected || sample.Encryption.KeyId == null)
+                return;
+
+            byte[] key = KeyProvider(sample.Encryption.KeyId);
+            if (key == null)
+                return;
+
+            CommonEncryption.Decrypt(trackContext.Protection.Scheme, key, sample.Encryption, sample.Data.Array, sample.Data.Offset, sample.Data.Count);
+            sample.Encryption = null; // it is in the clear now
+        }
+
+        /// <summary>So many bytes at an offset of the file, the stream left where it was.</summary>
+        private static byte[] ReadAt(IsoStream stream, long offset, int length)
+        {
+            long position = stream.GetCurrentOffset();
+            try
+            {
+                stream.SeekFromBeginning(offset);
+                stream.ReadBytes((ulong)length, out byte[] bytes);
+                return bytes;
+            }
+            finally
+            {
+                stream.SeekFromBeginning(position);
+            }
         }
 
         public IEnumerable<ArraySegment<byte>> ParseSample(uint trackID, ArraySegment<byte> sample)
@@ -537,6 +628,24 @@ namespace SharpMP4.Readers
         /// </summary>
         public byte[] SampleBuffer { get; set; }
 
+        /// <summary>How the track is protected, from its sample entry's 'sinf'; null where it is not.</summary>
+        public TrackProtection Protection { get; set; }
+
+        public SampleTableBox Stbl { get; set; }
+
+        /// <summary>Of a protected track that is not fragmented: each sample's protection.</summary>
+        public SampleEncryption[] SampleEncryptions { get; set; }
+
+        /// <summary>The protection of each of the track's sample entries, null for one in the clear.</summary>
+        public TrackProtection[] EntryProtections { get; set; }
+
+        /// <summary>The sample entry of each chunk, by its index from 1.</summary>
+        public uint[] EntryOfChunk { get; set; }
+
+        /// <summary>The protection of the sample entry of an index from 1: null where it is in the clear.</summary>
+        public TrackProtection ProtectionOfEntry(uint index) =>
+            EntryProtections != null && index >= 1 && index <= EntryProtections.Length ? EntryProtections[index - 1] : Protection;
+
         // mp4
         public TimeToSampleBox Stts { get; set; }
         public CompositionOffsetBox Ctts { get; set; }
@@ -550,7 +659,10 @@ namespace SharpMP4.Readers
         public MovieFragmentBox Moof { get; set; }
         public MediaDataBox Mdat { get; set; }
         public TrackRunBox[] Truns { get; set; }
+        public TrackFragmentBox Traf { get; set; }
         public TrackFragmentHeaderBox Tfhd { get; set; }
+        public long FragmentBaseAddress { get; set; }
+        public SampleEncryption[] FragmentEncryption { get; set; }
         public TrackExtendsBox Trex { get; set; }
         public int[] FragmentSampleTrunIndex { get; set; }
         public int[] FragmentSampleTrunEntryIndex { get; set; }

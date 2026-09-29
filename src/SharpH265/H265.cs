@@ -518,8 +518,10 @@ namespace SharpH265
         /// </summary>
         private void DeriveStRefPicSet(ulong stRpsIdx, StRefPicSet set)
         {
-            var s0 = new List<(int Delta, uint Used)>();
-            var s1 = new List<(int Delta, uint Used)>();
+            // collected in the context's own buffers, then copied to arrays of the exact size - the arrays already
+            // there where they are, as a slice's own set is worked out again for every slice at the same index
+            var s0 = new Entries(_s0Delta, _s0Used);
+            var s1 = new Entries(_s1Delta, _s1Used);
 
             if (set.InterRefPicSetPredictionFlag == 0)
             {
@@ -550,8 +552,8 @@ namespace SharpH265
                 int refNegative = (int)ValueAt(NumNegativePics, refIdx);
                 int refPositive = (int)ValueAt(NumPositivePics, refIdx);
                 int refAll = refNegative + refPositive;
-                int[] refS0 = ValueAt(DeltaPocS0, refIdx) ?? new int[0];
-                int[] refS1 = ValueAt(DeltaPocS1, refIdx) ?? new int[0];
+                int[] refS0 = ValueAt(DeltaPocS0, refIdx) ?? Array.Empty<int>();
+                int[] refS1 = ValueAt(DeltaPocS1, refIdx) ?? Array.Empty<int>();
 
                 uint Used(int j) => set.UsedByCurrPicFlag[j];
 
@@ -608,11 +610,52 @@ namespace SharpH265
             NumNegativePics[stRpsIdx] = (ulong)s0.Count;
             NumPositivePics[stRpsIdx] = (ulong)s1.Count;
             NumDeltaPocs[stRpsIdx] = (ulong)(s0.Count + s1.Count); // 7-71
-            DeltaPocS0[stRpsIdx] = s0.Select(x => x.Delta).ToArray();
-            DeltaPocS1[stRpsIdx] = s1.Select(x => x.Delta).ToArray();
-            UsedByCurrPicS0[stRpsIdx] = s0.Select(x => x.Used).ToArray();
-            UsedByCurrPicS1[stRpsIdx] = s1.Select(x => x.Used).ToArray();
+            DeltaPocS0[stRpsIdx] = Copied(DeltaPocS0[stRpsIdx], s0.Delta, s0.Count);
+            DeltaPocS1[stRpsIdx] = Copied(DeltaPocS1[stRpsIdx], s1.Delta, s1.Count);
+            UsedByCurrPicS0[stRpsIdx] = Copied(UsedByCurrPicS0[stRpsIdx], s0.Used, s0.Count);
+            UsedByCurrPicS1[stRpsIdx] = Copied(UsedByCurrPicS1[stRpsIdx], s1.Used, s1.Count);
             _stRefPicSetDerivedFrom[stRpsIdx] = set;
+
+            // kept for the next set, as large as the largest so far
+            (_s0Delta, _s0Used, _s1Delta, _s1Used) = (s0.Delta, s0.Used, s1.Delta, s1.Used);
+        }
+
+        private int[] _s0Delta = new int[16], _s1Delta = new int[16];
+        private uint[] _s0Used = new uint[16], _s1Used = new uint[16];
+
+        /// <summary>A set's pictures of one direction as they are worked out: into buffers that grow where they must.</summary>
+        private struct Entries
+        {
+            public int[] Delta;
+            public uint[] Used;
+            public int Count;
+
+            public Entries(int[] delta, uint[] used)
+            {
+                Delta = delta;
+                Used = used;
+                Count = 0;
+            }
+
+            public void Add((int Delta, uint Used) entry)
+            {
+                if (Count == Delta.Length)
+                {
+                    Array.Resize(ref Delta, Count * 2);
+                    Array.Resize(ref Used, Count * 2);
+                }
+                Delta[Count] = entry.Delta;
+                Used[Count] = entry.Used;
+                Count++;
+            }
+        }
+
+        /// <summary>The first so many of a buffer, in the array given where it is of that size already, else in a new one.</summary>
+        private static T[] Copied<T>(T[] existing, T[] buffer, int count)
+        {
+            var array = existing != null && existing.Length == count ? existing : (count == 0 ? Array.Empty<T>() : new T[count]);
+            Array.Copy(buffer, array, count);
+            return array;
         }
 
         private static T ValueAt<T>(T[] array, ulong index) =>

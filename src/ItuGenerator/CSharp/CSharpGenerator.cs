@@ -362,7 +362,8 @@ namespace Sharp{type}
                 if ((field as ItuField).MakeList)
                 {
                     // special case, create class first, then read it
-                    m = m.Replace("###value###", $"{spacing}this.{name}{typedef}.Add(whileIndex, ");
+                    string list = typedef == "" ? $"(this.{name} ??= new())" : $"this.{name}{typedef}";
+                    m = m.Replace("###value###", $"{spacing}{list}.Add(whileIndex, ");
                     m = m.Replace("###size###", $");\r\n{spacing}{boxSize}");
                     retm = $"{m} this.{name}{typedef}[whileIndex], \"{name}\"); {fieldComment}";
                 }
@@ -378,10 +379,12 @@ namespace Sharp{type}
             {
                 if ((field as ItuField).MakeList)
                 {
+                    // made here, where the syntax first has it
+                    string list = typedef == "" ? $"(this.{name} ??= new())" : $"this.{name}{typedef}";
                     if (methodType == MethodType.Read)
-                        retm = $"{spacing}{boxSize}{m} whileIndex, this.{name}{typedef}, \"{name}\"); {fieldComment}";
+                        retm = $"{spacing}{boxSize}{m} whileIndex, {list}, \"{name}\"); {fieldComment}";
                     else if (methodType == MethodType.Write)
-                        retm = $"{spacing}{boxSize}{m} whileIndex, this.{name}{typedef}, \"{name}\"); {fieldComment}";
+                        retm = $"{spacing}{boxSize}{m} whileIndex, {list}, \"{name}\"); {fieldComment}";
                     else
                         throw new NotSupportedException();
                 }
@@ -1236,10 +1239,13 @@ namespace Sharp{type}
             string defaultInitializer = specificGenerator.GetFieldDefaultValue(field);
             string initializer = string.IsNullOrEmpty(defaultInitializer) ? "" : $"= {defaultInitializer}";
 
+            bool lazy = false;
             if (field.MakeList)
             {
+                // made on first use, not with the class: most of these, of loops the syntax may not have, are never used
                 type = $"Dictionary<int, {type}>";
-                initializer = $" = new {type}()";
+                initializer = "";
+                lazy = true;
             }
             else
             {
@@ -1276,7 +1282,8 @@ namespace Sharp{type}
                 propertyName = $"_{propertyName}";
             }
 
-            return $"\t\tprivate {type} {field.Name.ToFirstLower()}{initializer};\r\n\t\tpublic {type} {propertyName} {{ get {{ return {field.Name.ToFirstLower()}; }} set {{ {field.Name.ToFirstLower()} = value; }} }}\r\n";
+            string getter = lazy ? $"{field.Name.ToFirstLower()} ??= new {type}()" : field.Name.ToFirstLower();
+            return $"\t\tprivate {type} {field.Name.ToFirstLower()}{initializer};\r\n\t\tpublic {type} {propertyName} {{ get {{ return {getter}; }} set {{ {field.Name.ToFirstLower()} = value; }} }}\r\n";
         }
 
         public void AddRequiresAllocation(ItuField field)

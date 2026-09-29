@@ -933,8 +933,8 @@ subset_seq_parameter_set_rbsp() {
 		public SeqParameterSet3davcExtension SeqParameterSet3davcExtension { get { return seq_parameter_set_3davc_extension; } set { seq_parameter_set_3davc_extension = value; } }
 		private byte additional_extension2_flag;
 		public byte AdditionalExtension2Flag { get { return additional_extension2_flag; } set { additional_extension2_flag = value; } }
-		private Dictionary<int, byte> additional_extension2_data_flag = new Dictionary<int, byte>();
-		public Dictionary<int, byte> AdditionalExtension2DataFlag { get { return additional_extension2_data_flag; } set { additional_extension2_data_flag = value; } }
+		private Dictionary<int, byte> additional_extension2_data_flag;
+		public Dictionary<int, byte> AdditionalExtension2DataFlag { get { return additional_extension2_data_flag ??= new Dictionary<int, byte>(); } set { additional_extension2_data_flag = value; } }
 		private RbspTrailingBits rbsp_trailing_bits;
 		public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -1007,7 +1007,7 @@ subset_seq_parameter_set_rbsp() {
 				{
 					whileIndex++;
 
-					size += stream.ReadUnsignedInt(size, 1, whileIndex, this.additional_extension2_data_flag, "additional_extension2_data_flag"); 
+					size += stream.ReadUnsignedInt(size, 1, whileIndex, (this.additional_extension2_data_flag ??= new()), "additional_extension2_data_flag"); 
 				}
 			}
 			this.rbsp_trailing_bits =  new RbspTrailingBits() ;
@@ -1068,7 +1068,7 @@ subset_seq_parameter_set_rbsp() {
 				{
 					whileIndex++;
 
-					size += stream.WriteUnsignedInt(1, whileIndex, this.additional_extension2_data_flag, "additional_extension2_data_flag"); 
+					size += stream.WriteUnsignedInt(1, whileIndex, (this.additional_extension2_data_flag ??= new()), "additional_extension2_data_flag"); 
 				}
 			}
 			size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits"); 
@@ -1451,8 +1451,8 @@ sei_rbsp() {
     */
     public class SeiRbsp : IItuSerializable
     {
-		private Dictionary<int, SeiMessage> sei_message = new Dictionary<int, SeiMessage>();
-		public Dictionary<int, SeiMessage> SeiMessage { get { return sei_message; } set { sei_message = value; } }
+		private Dictionary<int, SeiMessage> sei_message;
+		public Dictionary<int, SeiMessage> SeiMessage { get { return sei_message ??= new Dictionary<int, SeiMessage>(); } set { sei_message = value; } }
 		private RbspTrailingBits rbsp_trailing_bits;
 		public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -1478,7 +1478,7 @@ sei_rbsp() {
 			{
 				whileIndex++;
 
-				this.sei_message.Add(whileIndex,  new SeiMessage() );
+				(this.sei_message ??= new()).Add(whileIndex,  new SeiMessage() );
 				size +=  stream.ReadClass<SeiMessage>(size, context, this.sei_message[whileIndex], "sei_message"); 
 			} while ( stream.ReadMoreRbspData(this) );
 			this.rbsp_trailing_bits =  new RbspTrailingBits() ;
@@ -1500,7 +1500,7 @@ sei_rbsp() {
 			{
 				whileIndex++;
 
-				size += stream.WriteClass<SeiMessage>(context, whileIndex, this.sei_message, "sei_message"); 
+				size += stream.WriteClass<SeiMessage>(context, whileIndex, (this.sei_message ??= new()), "sei_message"); 
 			} while ( stream.WriteMoreRbspData(this) );
 			size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits"); 
 
@@ -1532,8 +1532,8 @@ sei_message() {
     */
     public class SeiMessage : IItuSerializable
     {
-		private Dictionary<int, uint> ff_byte = new Dictionary<int, uint>();
-		public Dictionary<int, uint> FfByte { get { return ff_byte; } set { ff_byte = value; } }
+		private Dictionary<int, uint> ff_byte;
+		public Dictionary<int, uint> FfByte { get { return ff_byte ??= new Dictionary<int, uint>(); } set { ff_byte = value; } }
 		private uint last_payload_type_byte;
 		public uint LastPayloadTypeByte { get { return last_payload_type_byte; } set { last_payload_type_byte = value; } }
 		private uint last_payload_size_byte;
@@ -1566,7 +1566,7 @@ sei_message() {
 			{
 				whileIndex++;
 
-				size += stream.ReadFixed(size, 8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
+				size += stream.ReadFixed(size, 8, whileIndex, (this.ff_byte ??= new()), "ff_byte"); // equal to 0xFF 
 				payloadType+= 255;
 			}
 			size += stream.ReadUnsignedInt(size, 8, out this.last_payload_type_byte, "last_payload_type_byte"); 
@@ -1577,7 +1577,7 @@ sei_message() {
 			{
 				whileIndex++;
 
-				size += stream.ReadFixed(size, 8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
+				size += stream.ReadFixed(size, 8, whileIndex, (this.ff_byte ??= new()), "ff_byte"); // equal to 0xFF 
 				payloadSize+= 255;
 			}
 			size += stream.ReadUnsignedInt(size, 8, out this.last_payload_size_byte, "last_payload_size_byte"); 
@@ -1606,7 +1606,7 @@ sei_message() {
 			{
 				whileIndex++;
 
-				size += stream.WriteFixed(8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
+				size += stream.WriteFixed(8, whileIndex, (this.ff_byte ??= new()), "ff_byte"); // equal to 0xFF 
 				payloadType+= 255;
 			}
 			size += stream.WriteUnsignedInt(8, this.last_payload_type_byte, "last_payload_type_byte"); 
@@ -1617,7 +1617,7 @@ sei_message() {
 			{
 				whileIndex++;
 
-				size += stream.WriteFixed(8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
+				size += stream.WriteFixed(8, whileIndex, (this.ff_byte ??= new()), "ff_byte"); // equal to 0xFF 
 				payloadSize+= 255;
 			}
 			size += stream.WriteUnsignedInt(8, this.last_payload_size_byte, "last_payload_size_byte"); 
@@ -1779,8 +1779,8 @@ filler_data_rbsp() {
     */
     public class FillerDataRbsp : IItuSerializable
     {
-		private Dictionary<int, uint> ff_byte = new Dictionary<int, uint>();
-		public Dictionary<int, uint> FfByte { get { return ff_byte; } set { ff_byte = value; } }
+		private Dictionary<int, uint> ff_byte;
+		public Dictionary<int, uint> FfByte { get { return ff_byte ??= new Dictionary<int, uint>(); } set { ff_byte = value; } }
 		private RbspTrailingBits rbsp_trailing_bits;
 		public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -1806,7 +1806,7 @@ filler_data_rbsp() {
 			{
 				whileIndex++;
 
-				size += stream.ReadFixed(size, 8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
+				size += stream.ReadFixed(size, 8, whileIndex, (this.ff_byte ??= new()), "ff_byte"); // equal to 0xFF 
 			}
 			this.rbsp_trailing_bits =  new RbspTrailingBits() ;
 			size +=  stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits, "rbsp_trailing_bits"); 
@@ -1827,7 +1827,7 @@ filler_data_rbsp() {
 			{
 				whileIndex++;
 
-				size += stream.WriteFixed(8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
+				size += stream.WriteFixed(8, whileIndex, (this.ff_byte ??= new()), "ff_byte"); // equal to 0xFF 
 			}
 			size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits"); 
 
@@ -2172,8 +2172,8 @@ rbsp_trailing_bits() {
     {
 		private uint rbsp_stop_one_bit;
 		public uint RbspStopOneBit { get { return rbsp_stop_one_bit; } set { rbsp_stop_one_bit = value; } }
-		private Dictionary<int, uint> rbsp_alignment_zero_bit = new Dictionary<int, uint>();
-		public Dictionary<int, uint> RbspAlignmentZeroBit { get { return rbsp_alignment_zero_bit; } set { rbsp_alignment_zero_bit = value; } }
+		private Dictionary<int, uint> rbsp_alignment_zero_bit;
+		public Dictionary<int, uint> RbspAlignmentZeroBit { get { return rbsp_alignment_zero_bit ??= new Dictionary<int, uint>(); } set { rbsp_alignment_zero_bit = value; } }
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
@@ -2198,7 +2198,7 @@ rbsp_trailing_bits() {
 			{
 				whileIndex++;
 
-				size += stream.ReadFixed(size, 1, whileIndex, this.rbsp_alignment_zero_bit, "rbsp_alignment_zero_bit"); // equal to 0 
+				size += stream.ReadFixed(size, 1, whileIndex, (this.rbsp_alignment_zero_bit ??= new()), "rbsp_alignment_zero_bit"); // equal to 0 
 			}
 
             return size;
@@ -2218,7 +2218,7 @@ rbsp_trailing_bits() {
 			{
 				whileIndex++;
 
-				size += stream.WriteFixed(1, whileIndex, this.rbsp_alignment_zero_bit, "rbsp_alignment_zero_bit"); // equal to 0 
+				size += stream.WriteFixed(1, whileIndex, (this.rbsp_alignment_zero_bit ??= new()), "rbsp_alignment_zero_bit"); // equal to 0 
 			}
 
             return size;
@@ -2857,12 +2857,12 @@ ref_pic_list_modification() {
     {
 		private byte ref_pic_list_modification_flag_l0;
 		public byte RefPicListModificationFlagL0 { get { return ref_pic_list_modification_flag_l0; } set { ref_pic_list_modification_flag_l0 = value; } }
-		private Dictionary<int, ulong> modification_of_pic_nums_idc = new Dictionary<int, ulong>();
-		public Dictionary<int, ulong> ModificationOfPicNumsIdc { get { return modification_of_pic_nums_idc; } set { modification_of_pic_nums_idc = value; } }
-		private Dictionary<int, ulong> abs_diff_pic_num_minus1 = new Dictionary<int, ulong>();
-		public Dictionary<int, ulong> AbsDiffPicNumMinus1 { get { return abs_diff_pic_num_minus1; } set { abs_diff_pic_num_minus1 = value; } }
-		private Dictionary<int, ulong> long_term_pic_num = new Dictionary<int, ulong>();
-		public Dictionary<int, ulong> LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
+		private Dictionary<int, ulong> modification_of_pic_nums_idc;
+		public Dictionary<int, ulong> ModificationOfPicNumsIdc { get { return modification_of_pic_nums_idc ??= new Dictionary<int, ulong>(); } set { modification_of_pic_nums_idc = value; } }
+		private Dictionary<int, ulong> abs_diff_pic_num_minus1;
+		public Dictionary<int, ulong> AbsDiffPicNumMinus1 { get { return abs_diff_pic_num_minus1 ??= new Dictionary<int, ulong>(); } set { abs_diff_pic_num_minus1 = value; } }
+		private Dictionary<int, ulong> long_term_pic_num;
+		public Dictionary<int, ulong> LongTermPicNum { get { return long_term_pic_num ??= new Dictionary<int, ulong>(); } set { long_term_pic_num = value; } }
 		private byte ref_pic_list_modification_flag_l1;
 		public byte RefPicListModificationFlagL1 { get { return ref_pic_list_modification_flag_l1; } set { ref_pic_list_modification_flag_l1 = value; } }
 
@@ -2895,15 +2895,15 @@ ref_pic_list_modification() {
 					{
 						whileIndex++;
 
-						size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.modification_of_pic_nums_idc, "modification_of_pic_nums_idc"); 
+						size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.modification_of_pic_nums_idc ??= new()), "modification_of_pic_nums_idc"); 
 
 						if (modification_of_pic_nums_idc[whileIndex] == 0 || modification_of_pic_nums_idc[whileIndex] == 1)
 						{
-							size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_pic_num_minus1, "abs_diff_pic_num_minus1"); 
+							size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.abs_diff_pic_num_minus1 ??= new()), "abs_diff_pic_num_minus1"); 
 						}
 						else if (modification_of_pic_nums_idc[whileIndex] == 2)
 						{
-							size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num, "long_term_pic_num"); 
+							size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.long_term_pic_num ??= new()), "long_term_pic_num"); 
 						}
 					} while (modification_of_pic_nums_idc[whileIndex] != 3);
 				}
@@ -2920,16 +2920,16 @@ ref_pic_list_modification() {
 					{
 						whileIndex++;
 
-						size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.modification_of_pic_nums_idc, "modification_of_pic_nums_idc"); 
+						size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.modification_of_pic_nums_idc ??= new()), "modification_of_pic_nums_idc"); 
 
 						if (modification_of_pic_nums_idc[whileIndex] == 0 ||
                     modification_of_pic_nums_idc[whileIndex] == 1)
 						{
-							size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_pic_num_minus1, "abs_diff_pic_num_minus1"); 
+							size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.abs_diff_pic_num_minus1 ??= new()), "abs_diff_pic_num_minus1"); 
 						}
 						else if (modification_of_pic_nums_idc[whileIndex] == 2)
 						{
-							size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num, "long_term_pic_num"); 
+							size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.long_term_pic_num ??= new()), "long_term_pic_num"); 
 						}
 					} while (modification_of_pic_nums_idc[whileIndex] != 3);
 				}
@@ -2958,15 +2958,15 @@ ref_pic_list_modification() {
 					{
 						whileIndex++;
 
-						size += stream.WriteUnsignedIntGolomb( whileIndex, this.modification_of_pic_nums_idc, "modification_of_pic_nums_idc"); 
+						size += stream.WriteUnsignedIntGolomb( whileIndex, (this.modification_of_pic_nums_idc ??= new()), "modification_of_pic_nums_idc"); 
 
 						if (modification_of_pic_nums_idc[whileIndex] == 0 || modification_of_pic_nums_idc[whileIndex] == 1)
 						{
-							size += stream.WriteUnsignedIntGolomb( whileIndex, this.abs_diff_pic_num_minus1, "abs_diff_pic_num_minus1"); 
+							size += stream.WriteUnsignedIntGolomb( whileIndex, (this.abs_diff_pic_num_minus1 ??= new()), "abs_diff_pic_num_minus1"); 
 						}
 						else if (modification_of_pic_nums_idc[whileIndex] == 2)
 						{
-							size += stream.WriteUnsignedIntGolomb( whileIndex, this.long_term_pic_num, "long_term_pic_num"); 
+							size += stream.WriteUnsignedIntGolomb( whileIndex, (this.long_term_pic_num ??= new()), "long_term_pic_num"); 
 						}
 					} while (modification_of_pic_nums_idc[whileIndex] != 3);
 				}
@@ -2983,16 +2983,16 @@ ref_pic_list_modification() {
 					{
 						whileIndex++;
 
-						size += stream.WriteUnsignedIntGolomb( whileIndex, this.modification_of_pic_nums_idc, "modification_of_pic_nums_idc"); 
+						size += stream.WriteUnsignedIntGolomb( whileIndex, (this.modification_of_pic_nums_idc ??= new()), "modification_of_pic_nums_idc"); 
 
 						if (modification_of_pic_nums_idc[whileIndex] == 0 ||
                     modification_of_pic_nums_idc[whileIndex] == 1)
 						{
-							size += stream.WriteUnsignedIntGolomb( whileIndex, this.abs_diff_pic_num_minus1, "abs_diff_pic_num_minus1"); 
+							size += stream.WriteUnsignedIntGolomb( whileIndex, (this.abs_diff_pic_num_minus1 ??= new()), "abs_diff_pic_num_minus1"); 
 						}
 						else if (modification_of_pic_nums_idc[whileIndex] == 2)
 						{
-							size += stream.WriteUnsignedIntGolomb( whileIndex, this.long_term_pic_num, "long_term_pic_num"); 
+							size += stream.WriteUnsignedIntGolomb( whileIndex, (this.long_term_pic_num ??= new()), "long_term_pic_num"); 
 						}
 					} while (modification_of_pic_nums_idc[whileIndex] != 3);
 				}
@@ -3303,16 +3303,16 @@ dec_ref_pic_marking() {
 		public byte LongTermReferenceFlag { get { return long_term_reference_flag; } set { long_term_reference_flag = value; } }
 		private byte adaptive_ref_pic_marking_mode_flag;
 		public byte AdaptiveRefPicMarkingModeFlag { get { return adaptive_ref_pic_marking_mode_flag; } set { adaptive_ref_pic_marking_mode_flag = value; } }
-		private Dictionary<int, ulong> memory_management_control_operation = new Dictionary<int, ulong>();
-		public Dictionary<int, ulong> MemoryManagementControlOperation { get { return memory_management_control_operation; } set { memory_management_control_operation = value; } }
-		private Dictionary<int, ulong> difference_of_pic_nums_minus1 = new Dictionary<int, ulong>();
-		public Dictionary<int, ulong> DifferenceOfPicNumsMinus1 { get { return difference_of_pic_nums_minus1; } set { difference_of_pic_nums_minus1 = value; } }
-		private Dictionary<int, ulong> long_term_pic_num = new Dictionary<int, ulong>();
-		public Dictionary<int, ulong> LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
-		private Dictionary<int, ulong> long_term_frame_idx = new Dictionary<int, ulong>();
-		public Dictionary<int, ulong> LongTermFrameIdx { get { return long_term_frame_idx; } set { long_term_frame_idx = value; } }
-		private Dictionary<int, ulong> max_long_term_frame_idx_plus1 = new Dictionary<int, ulong>();
-		public Dictionary<int, ulong> MaxLongTermFrameIdxPlus1 { get { return max_long_term_frame_idx_plus1; } set { max_long_term_frame_idx_plus1 = value; } }
+		private Dictionary<int, ulong> memory_management_control_operation;
+		public Dictionary<int, ulong> MemoryManagementControlOperation { get { return memory_management_control_operation ??= new Dictionary<int, ulong>(); } set { memory_management_control_operation = value; } }
+		private Dictionary<int, ulong> difference_of_pic_nums_minus1;
+		public Dictionary<int, ulong> DifferenceOfPicNumsMinus1 { get { return difference_of_pic_nums_minus1 ??= new Dictionary<int, ulong>(); } set { difference_of_pic_nums_minus1 = value; } }
+		private Dictionary<int, ulong> long_term_pic_num;
+		public Dictionary<int, ulong> LongTermPicNum { get { return long_term_pic_num ??= new Dictionary<int, ulong>(); } set { long_term_pic_num = value; } }
+		private Dictionary<int, ulong> long_term_frame_idx;
+		public Dictionary<int, ulong> LongTermFrameIdx { get { return long_term_frame_idx ??= new Dictionary<int, ulong>(); } set { long_term_frame_idx = value; } }
+		private Dictionary<int, ulong> max_long_term_frame_idx_plus1;
+		public Dictionary<int, ulong> MaxLongTermFrameIdxPlus1 { get { return max_long_term_frame_idx_plus1 ??= new Dictionary<int, ulong>(); } set { max_long_term_frame_idx_plus1 = value; } }
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
@@ -3348,28 +3348,28 @@ dec_ref_pic_marking() {
 					{
 						whileIndex++;
 
-						size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.memory_management_control_operation, "memory_management_control_operation"); 
+						size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.memory_management_control_operation ??= new()), "memory_management_control_operation"); 
 
 						if ( memory_management_control_operation[whileIndex]  ==  1  || 
      memory_management_control_operation[whileIndex]  ==  3 )
 						{
-							size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.difference_of_pic_nums_minus1, "difference_of_pic_nums_minus1"); 
+							size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.difference_of_pic_nums_minus1 ??= new()), "difference_of_pic_nums_minus1"); 
 						}
 
 						if (memory_management_control_operation[whileIndex]  ==  2  )
 						{
-							size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num, "long_term_pic_num"); 
+							size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.long_term_pic_num ??= new()), "long_term_pic_num"); 
 						}
 
 						if ( memory_management_control_operation[whileIndex]  ==  3  || 
      memory_management_control_operation[whileIndex]  ==  6 )
 						{
-							size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_frame_idx, "long_term_frame_idx"); 
+							size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.long_term_frame_idx ??= new()), "long_term_frame_idx"); 
 						}
 
 						if ( memory_management_control_operation[whileIndex]  ==  4 )
 						{
-							size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.max_long_term_frame_idx_plus1, "max_long_term_frame_idx_plus1"); 
+							size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.max_long_term_frame_idx_plus1 ??= new()), "max_long_term_frame_idx_plus1"); 
 						}
 					} while ( memory_management_control_operation[whileIndex]  !=  0 );
 				}
@@ -3403,28 +3403,28 @@ dec_ref_pic_marking() {
 					{
 						whileIndex++;
 
-						size += stream.WriteUnsignedIntGolomb( whileIndex, this.memory_management_control_operation, "memory_management_control_operation"); 
+						size += stream.WriteUnsignedIntGolomb( whileIndex, (this.memory_management_control_operation ??= new()), "memory_management_control_operation"); 
 
 						if ( memory_management_control_operation[whileIndex]  ==  1  || 
      memory_management_control_operation[whileIndex]  ==  3 )
 						{
-							size += stream.WriteUnsignedIntGolomb( whileIndex, this.difference_of_pic_nums_minus1, "difference_of_pic_nums_minus1"); 
+							size += stream.WriteUnsignedIntGolomb( whileIndex, (this.difference_of_pic_nums_minus1 ??= new()), "difference_of_pic_nums_minus1"); 
 						}
 
 						if (memory_management_control_operation[whileIndex]  ==  2  )
 						{
-							size += stream.WriteUnsignedIntGolomb( whileIndex, this.long_term_pic_num, "long_term_pic_num"); 
+							size += stream.WriteUnsignedIntGolomb( whileIndex, (this.long_term_pic_num ??= new()), "long_term_pic_num"); 
 						}
 
 						if ( memory_management_control_operation[whileIndex]  ==  3  || 
      memory_management_control_operation[whileIndex]  ==  6 )
 						{
-							size += stream.WriteUnsignedIntGolomb( whileIndex, this.long_term_frame_idx, "long_term_frame_idx"); 
+							size += stream.WriteUnsignedIntGolomb( whileIndex, (this.long_term_frame_idx ??= new()), "long_term_frame_idx"); 
 						}
 
 						if ( memory_management_control_operation[whileIndex]  ==  4 )
 						{
-							size += stream.WriteUnsignedIntGolomb( whileIndex, this.max_long_term_frame_idx_plus1, "max_long_term_frame_idx_plus1"); 
+							size += stream.WriteUnsignedIntGolomb( whileIndex, (this.max_long_term_frame_idx_plus1 ??= new()), "max_long_term_frame_idx_plus1"); 
 						}
 					} while ( memory_management_control_operation[whileIndex]  !=  0 );
 				}
@@ -3754,8 +3754,8 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
 		public ReservedSeiMessage ReservedSeiMessage { get { return reserved_sei_message; } set { reserved_sei_message = value; } }
 		private uint bit_equal_to_one;
 		public uint BitEqualToOne { get { return bit_equal_to_one; } set { bit_equal_to_one = value; } }
-		private Dictionary<int, uint> bit_equal_to_zero = new Dictionary<int, uint>();
-		public Dictionary<int, uint> BitEqualToZero { get { return bit_equal_to_zero; } set { bit_equal_to_zero = value; } }
+		private Dictionary<int, uint> bit_equal_to_zero;
+		public Dictionary<int, uint> BitEqualToZero { get { return bit_equal_to_zero ??= new Dictionary<int, uint>(); } set { bit_equal_to_zero = value; } }
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
@@ -4159,7 +4159,7 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
 				{
 					whileIndex++;
 
-					size += stream.ReadFixed(size, 1, whileIndex, this.bit_equal_to_zero, "bit_equal_to_zero"); // equal to 0 
+					size += stream.ReadFixed(size, 1, whileIndex, (this.bit_equal_to_zero ??= new()), "bit_equal_to_zero"); // equal to 0 
 				}
 			}
 
@@ -4484,7 +4484,7 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
 				{
 					whileIndex++;
 
-					size += stream.WriteFixed(1, whileIndex, this.bit_equal_to_zero, "bit_equal_to_zero"); // equal to 0 
+					size += stream.WriteFixed(1, whileIndex, (this.bit_equal_to_zero ??= new()), "bit_equal_to_zero"); // equal to 0 
 				}
 			}
 
@@ -5085,8 +5085,8 @@ user_data_registered_itu_t_t35( payloadSize ) {
 		public byte ItutT35CountryCode { get { return itu_t_t35_country_code; } set { itu_t_t35_country_code = value; } }
 		private byte itu_t_t35_country_code_extension_byte;
 		public byte ItutT35CountryCodeExtensionByte { get { return itu_t_t35_country_code_extension_byte; } set { itu_t_t35_country_code_extension_byte = value; } }
-		private Dictionary<int, byte> itu_t_t35_payload_byte = new Dictionary<int, byte>();
-		public Dictionary<int, byte> ItutT35PayloadByte { get { return itu_t_t35_payload_byte; } set { itu_t_t35_payload_byte = value; } }
+		private Dictionary<int, byte> itu_t_t35_payload_byte;
+		public Dictionary<int, byte> ItutT35PayloadByte { get { return itu_t_t35_payload_byte ??= new Dictionary<int, byte>(); } set { itu_t_t35_payload_byte = value; } }
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
@@ -5122,7 +5122,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
 			{
 				whileIndex++;
 
-				size += stream.ReadBits(size, 8, whileIndex, this.itu_t_t35_payload_byte, "itu_t_t35_payload_byte"); 
+				size += stream.ReadBits(size, 8, whileIndex, (this.itu_t_t35_payload_byte ??= new()), "itu_t_t35_payload_byte"); 
 				i++;
 			} while ( i < payloadSize );
 
@@ -5154,7 +5154,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
 			{
 				whileIndex++;
 
-				size += stream.WriteBits(8, whileIndex, this.itu_t_t35_payload_byte, "itu_t_t35_payload_byte"); 
+				size += stream.WriteBits(8, whileIndex, (this.itu_t_t35_payload_byte ??= new()), "itu_t_t35_payload_byte"); 
 				i++;
 			} while ( i < payloadSize );
 
@@ -8735,8 +8735,8 @@ sei_prefix_indication( payloadSize ) {
 		public uint[] NumBitsInPrefixIndicationMinus1 { get { return num_bits_in_prefix_indication_minus1; } set { num_bits_in_prefix_indication_minus1 = value; } }
 		private byte[][] sei_prefix_data_bit;
 		public byte[][] SeiPrefixDataBit { get { return sei_prefix_data_bit; } set { sei_prefix_data_bit = value; } }
-		private Dictionary<int, uint> byte_alignment_bit_equal_to_one = new Dictionary<int, uint>();
-		public Dictionary<int, uint> ByteAlignmentBitEqualToOne { get { return byte_alignment_bit_equal_to_one; } set { byte_alignment_bit_equal_to_one = value; } }
+		private Dictionary<int, uint> byte_alignment_bit_equal_to_one;
+		public Dictionary<int, uint> ByteAlignmentBitEqualToOne { get { return byte_alignment_bit_equal_to_one ??= new Dictionary<int, uint>(); } set { byte_alignment_bit_equal_to_one = value; } }
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
@@ -8778,7 +8778,7 @@ sei_prefix_indication( payloadSize ) {
 				{
 					whileIndex++;
 
-					size += stream.ReadFixed(size, 1, whileIndex, this.byte_alignment_bit_equal_to_one, "byte_alignment_bit_equal_to_one"); // equal to 1 
+					size += stream.ReadFixed(size, 1, whileIndex, (this.byte_alignment_bit_equal_to_one ??= new()), "byte_alignment_bit_equal_to_one"); // equal to 1 
 				}
 			}
 
@@ -8811,7 +8811,7 @@ sei_prefix_indication( payloadSize ) {
 				{
 					whileIndex++;
 
-					size += stream.WriteFixed(1, whileIndex, this.byte_alignment_bit_equal_to_one, "byte_alignment_bit_equal_to_one"); // equal to 1 
+					size += stream.WriteFixed(1, whileIndex, (this.byte_alignment_bit_equal_to_one ??= new()), "byte_alignment_bit_equal_to_one"); // equal to 1 
 				}
 			}
 
@@ -8907,8 +8907,8 @@ annotated_regions( payloadSize ) {
 		public uint ArObjectConfidenceLengthMinus1 { get { return ar_object_confidence_length_minus1; } set { ar_object_confidence_length_minus1 = value; } }
 		private byte ar_object_label_language_present_flag;
 		public byte ArObjectLabelLanguagePresentFlag { get { return ar_object_label_language_present_flag; } set { ar_object_label_language_present_flag = value; } }
-		private Dictionary<int, uint> ar_bit_equal_to_zero = new Dictionary<int, uint>();
-		public Dictionary<int, uint> ArBitEqualToZero { get { return ar_bit_equal_to_zero; } set { ar_bit_equal_to_zero = value; } }
+		private Dictionary<int, uint> ar_bit_equal_to_zero;
+		public Dictionary<int, uint> ArBitEqualToZero { get { return ar_bit_equal_to_zero ??= new Dictionary<int, uint>(); } set { ar_bit_equal_to_zero = value; } }
 		private byte[] ar_object_label_language;
 		public byte[] ArObjectLabelLanguage { get { return ar_object_label_language; } set { ar_object_label_language = value; } }
 		private ulong ar_num_label_updates;
@@ -8994,7 +8994,7 @@ annotated_regions( payloadSize ) {
 						{
 							whileIndex++;
 
-							size += stream.ReadFixed(size, 1, whileIndex, this.ar_bit_equal_to_zero, "ar_bit_equal_to_zero"); // equal to 0 
+							size += stream.ReadFixed(size, 1, whileIndex, (this.ar_bit_equal_to_zero ??= new()), "ar_bit_equal_to_zero"); // equal to 0 
 						}
 						size += stream.ReadUtf8String(size, out this.ar_object_label_language, "ar_object_label_language"); 
 					}
@@ -9019,7 +9019,7 @@ annotated_regions( payloadSize ) {
 							{
 								whileIndex++;
 
-								size += stream.ReadFixed(size, 1, whileIndex, this.ar_bit_equal_to_zero, "ar_bit_equal_to_zero"); // equal to 0 
+								size += stream.ReadFixed(size, 1, whileIndex, (this.ar_bit_equal_to_zero ??= new()), "ar_bit_equal_to_zero"); // equal to 0 
 							}
 							size += stream.ReadUtf8String(size, out this.ar_label[ ar_label_idx[ i ] ], "ar_label"); 
 						}
@@ -9140,7 +9140,7 @@ annotated_regions( payloadSize ) {
 						{
 							whileIndex++;
 
-							size += stream.WriteFixed(1, whileIndex, this.ar_bit_equal_to_zero, "ar_bit_equal_to_zero"); // equal to 0 
+							size += stream.WriteFixed(1, whileIndex, (this.ar_bit_equal_to_zero ??= new()), "ar_bit_equal_to_zero"); // equal to 0 
 						}
 						size += stream.WriteUtf8String( this.ar_object_label_language, "ar_object_label_language"); 
 					}
@@ -9159,7 +9159,7 @@ annotated_regions( payloadSize ) {
 							{
 								whileIndex++;
 
-								size += stream.WriteFixed(1, whileIndex, this.ar_bit_equal_to_zero, "ar_bit_equal_to_zero"); // equal to 0 
+								size += stream.WriteFixed(1, whileIndex, (this.ar_bit_equal_to_zero ??= new()), "ar_bit_equal_to_zero"); // equal to 0 
 							}
 							size += stream.WriteUtf8String( this.ar_label[ ar_label_idx[ i ] ], "ar_label"); 
 						}
@@ -10126,8 +10126,8 @@ prefix_nal_unit_svc() {
 		public DecRefBasePicMarking DecRefBasePicMarking { get { return dec_ref_base_pic_marking; } set { dec_ref_base_pic_marking = value; } }
 		private byte additional_prefix_nal_unit_extension_flag;
 		public byte AdditionalPrefixNalUnitExtensionFlag { get { return additional_prefix_nal_unit_extension_flag; } set { additional_prefix_nal_unit_extension_flag = value; } }
-		private Dictionary<int, byte> additional_prefix_nal_unit_extension_data_flag = new Dictionary<int, byte>();
-		public Dictionary<int, byte> AdditionalPrefixNalUnitExtensionDataFlag { get { return additional_prefix_nal_unit_extension_data_flag; } set { additional_prefix_nal_unit_extension_data_flag = value; } }
+		private Dictionary<int, byte> additional_prefix_nal_unit_extension_data_flag;
+		public Dictionary<int, byte> AdditionalPrefixNalUnitExtensionDataFlag { get { return additional_prefix_nal_unit_extension_data_flag ??= new Dictionary<int, byte>(); } set { additional_prefix_nal_unit_extension_data_flag = value; } }
 		private RbspTrailingBits rbsp_trailing_bits;
 		public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -10167,7 +10167,7 @@ prefix_nal_unit_svc() {
 					{
 						whileIndex++;
 
-						size += stream.ReadUnsignedInt(size, 1, whileIndex, this.additional_prefix_nal_unit_extension_data_flag, "additional_prefix_nal_unit_extension_data_flag"); 
+						size += stream.ReadUnsignedInt(size, 1, whileIndex, (this.additional_prefix_nal_unit_extension_data_flag ??= new()), "additional_prefix_nal_unit_extension_data_flag"); 
 					}
 				}
 				this.rbsp_trailing_bits =  new RbspTrailingBits() ;
@@ -10180,7 +10180,7 @@ prefix_nal_unit_svc() {
 				{
 					whileIndex++;
 
-					size += stream.ReadUnsignedInt(size, 1, whileIndex, this.additional_prefix_nal_unit_extension_data_flag, "additional_prefix_nal_unit_extension_data_flag"); 
+					size += stream.ReadUnsignedInt(size, 1, whileIndex, (this.additional_prefix_nal_unit_extension_data_flag ??= new()), "additional_prefix_nal_unit_extension_data_flag"); 
 				}
 				this.rbsp_trailing_bits =  new RbspTrailingBits() ;
 				size +=  stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits, "rbsp_trailing_bits"); 
@@ -10215,7 +10215,7 @@ prefix_nal_unit_svc() {
 					{
 						whileIndex++;
 
-						size += stream.WriteUnsignedInt(1, whileIndex, this.additional_prefix_nal_unit_extension_data_flag, "additional_prefix_nal_unit_extension_data_flag"); 
+						size += stream.WriteUnsignedInt(1, whileIndex, (this.additional_prefix_nal_unit_extension_data_flag ??= new()), "additional_prefix_nal_unit_extension_data_flag"); 
 					}
 				}
 				size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits"); 
@@ -10227,7 +10227,7 @@ prefix_nal_unit_svc() {
 				{
 					whileIndex++;
 
-					size += stream.WriteUnsignedInt(1, whileIndex, this.additional_prefix_nal_unit_extension_data_flag, "additional_prefix_nal_unit_extension_data_flag"); 
+					size += stream.WriteUnsignedInt(1, whileIndex, (this.additional_prefix_nal_unit_extension_data_flag ??= new()), "additional_prefix_nal_unit_extension_data_flag"); 
 				}
 				size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits"); 
 			}
@@ -10933,12 +10933,12 @@ dec_ref_base_pic_marking() {
     {
 		private byte adaptive_ref_base_pic_marking_mode_flag;
 		public byte AdaptiveRefBasePicMarkingModeFlag { get { return adaptive_ref_base_pic_marking_mode_flag; } set { adaptive_ref_base_pic_marking_mode_flag = value; } }
-		private Dictionary<int, ulong> memory_management_base_control_operation = new Dictionary<int, ulong>();
-		public Dictionary<int, ulong> MemoryManagementBaseControlOperation { get { return memory_management_base_control_operation; } set { memory_management_base_control_operation = value; } }
-		private Dictionary<int, ulong> difference_of_base_pic_nums_minus1 = new Dictionary<int, ulong>();
-		public Dictionary<int, ulong> DifferenceOfBasePicNumsMinus1 { get { return difference_of_base_pic_nums_minus1; } set { difference_of_base_pic_nums_minus1 = value; } }
-		private Dictionary<int, ulong> long_term_base_pic_num = new Dictionary<int, ulong>();
-		public Dictionary<int, ulong> LongTermBasePicNum { get { return long_term_base_pic_num; } set { long_term_base_pic_num = value; } }
+		private Dictionary<int, ulong> memory_management_base_control_operation;
+		public Dictionary<int, ulong> MemoryManagementBaseControlOperation { get { return memory_management_base_control_operation ??= new Dictionary<int, ulong>(); } set { memory_management_base_control_operation = value; } }
+		private Dictionary<int, ulong> difference_of_base_pic_nums_minus1;
+		public Dictionary<int, ulong> DifferenceOfBasePicNumsMinus1 { get { return difference_of_base_pic_nums_minus1 ??= new Dictionary<int, ulong>(); } set { difference_of_base_pic_nums_minus1 = value; } }
+		private Dictionary<int, ulong> long_term_base_pic_num;
+		public Dictionary<int, ulong> LongTermBasePicNum { get { return long_term_base_pic_num ??= new Dictionary<int, ulong>(); } set { long_term_base_pic_num = value; } }
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
@@ -10966,16 +10966,16 @@ dec_ref_base_pic_marking() {
 				{
 					whileIndex++;
 
-					size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.memory_management_base_control_operation, "memory_management_base_control_operation"); 
+					size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.memory_management_base_control_operation ??= new()), "memory_management_base_control_operation"); 
 
 					if (memory_management_base_control_operation[whileIndex] == 1)
 					{
-						size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.difference_of_base_pic_nums_minus1, "difference_of_base_pic_nums_minus1"); 
+						size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.difference_of_base_pic_nums_minus1 ??= new()), "difference_of_base_pic_nums_minus1"); 
 					}
 
 					if (memory_management_base_control_operation[whileIndex] == 2)
 					{
-						size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_base_pic_num, "long_term_base_pic_num"); 
+						size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.long_term_base_pic_num ??= new()), "long_term_base_pic_num"); 
 					}
 				} while (memory_management_base_control_operation[whileIndex] != 0);
 			}
@@ -11000,16 +11000,16 @@ dec_ref_base_pic_marking() {
 				{
 					whileIndex++;
 
-					size += stream.WriteUnsignedIntGolomb( whileIndex, this.memory_management_base_control_operation, "memory_management_base_control_operation"); 
+					size += stream.WriteUnsignedIntGolomb( whileIndex, (this.memory_management_base_control_operation ??= new()), "memory_management_base_control_operation"); 
 
 					if (memory_management_base_control_operation[whileIndex] == 1)
 					{
-						size += stream.WriteUnsignedIntGolomb( whileIndex, this.difference_of_base_pic_nums_minus1, "difference_of_base_pic_nums_minus1"); 
+						size += stream.WriteUnsignedIntGolomb( whileIndex, (this.difference_of_base_pic_nums_minus1 ??= new()), "difference_of_base_pic_nums_minus1"); 
 					}
 
 					if (memory_management_base_control_operation[whileIndex] == 2)
 					{
-						size += stream.WriteUnsignedIntGolomb( whileIndex, this.long_term_base_pic_num, "long_term_base_pic_num"); 
+						size += stream.WriteUnsignedIntGolomb( whileIndex, (this.long_term_base_pic_num ??= new()), "long_term_base_pic_num"); 
 					}
 				} while (memory_management_base_control_operation[whileIndex] != 0);
 			}
@@ -11308,8 +11308,8 @@ scalability_info( payloadSize ) {
 		public uint[][] PrAvgBitrate { get { return pr_avg_bitrate; } set { pr_avg_bitrate = value; } }
 		private uint[][] pr_max_bitrate;
 		public uint[][] PrMaxBitrate { get { return pr_max_bitrate; } set { pr_max_bitrate = value; } }
-		private Dictionary<int, byte> priority_id_setting_uri = new Dictionary<int, byte>();
-		public Dictionary<int, byte> PriorityIdSettingUri { get { return priority_id_setting_uri; } set { priority_id_setting_uri = value; } }
+		private Dictionary<int, byte> priority_id_setting_uri;
+		public Dictionary<int, byte> PriorityIdSettingUri { get { return priority_id_setting_uri ??= new Dictionary<int, byte>(); } set { priority_id_setting_uri = value; } }
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
@@ -11685,7 +11685,7 @@ scalability_info( payloadSize ) {
 				{
 					whileIndex++;
 
-					size += stream.ReadBits(size, 8, whileIndex, this.priority_id_setting_uri, "priority_id_setting_uri"); 
+					size += stream.ReadBits(size, 8, whileIndex, (this.priority_id_setting_uri ??= new()), "priority_id_setting_uri"); 
 				} while ( priority_id_setting_uri[whileIndex] !=  0 );
 			}
 
@@ -11896,7 +11896,7 @@ scalability_info( payloadSize ) {
 				{
 					whileIndex++;
 
-					size += stream.WriteBits(8, whileIndex, this.priority_id_setting_uri, "priority_id_setting_uri"); 
+					size += stream.WriteBits(8, whileIndex, (this.priority_id_setting_uri ??= new()), "priority_id_setting_uri"); 
 				} while ( priority_id_setting_uri[whileIndex] !=  0 );
 			}
 
@@ -12194,8 +12194,8 @@ scalability_info_2007( payloadSize ) {
 		public uint[][] PrAvgBitrate { get { return pr_avg_bitrate; } set { pr_avg_bitrate = value; } }
 		private uint[][] pr_max_bitrate;
 		public uint[][] PrMaxBitrate { get { return pr_max_bitrate; } set { pr_max_bitrate = value; } }
-		private Dictionary<int, byte> priority_id_setting_uri = new Dictionary<int, byte>();
-		public Dictionary<int, byte> PriorityIdSettingUri { get { return priority_id_setting_uri; } set { priority_id_setting_uri = value; } }
+		private Dictionary<int, byte> priority_id_setting_uri;
+		public Dictionary<int, byte> PriorityIdSettingUri { get { return priority_id_setting_uri ??= new Dictionary<int, byte>(); } set { priority_id_setting_uri = value; } }
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
@@ -12571,7 +12571,7 @@ scalability_info_2007( payloadSize ) {
 				{
 					whileIndex++;
 
-					size += stream.ReadBits(size, 8, whileIndex, this.priority_id_setting_uri, "priority_id_setting_uri"); 
+					size += stream.ReadBits(size, 8, whileIndex, (this.priority_id_setting_uri ??= new()), "priority_id_setting_uri"); 
 				} while ( priority_id_setting_uri[whileIndex] !=  0 );
 			}
 
@@ -12782,7 +12782,7 @@ scalability_info_2007( payloadSize ) {
 				{
 					whileIndex++;
 
-					size += stream.WriteBits(8, whileIndex, this.priority_id_setting_uri, "priority_id_setting_uri"); 
+					size += stream.WriteBits(8, whileIndex, (this.priority_id_setting_uri ??= new()), "priority_id_setting_uri"); 
 				} while ( priority_id_setting_uri[whileIndex] !=  0 );
 			}
 
@@ -13243,10 +13243,10 @@ scalable_nesting( payloadSize ) {
 		public uint[] SeiQualityId { get { return sei_quality_id; } set { sei_quality_id = value; } }
 		private uint sei_temporal_id;
 		public uint SeiTemporalId { get { return sei_temporal_id; } set { sei_temporal_id = value; } }
-		private Dictionary<int, uint> sei_nesting_zero_bit = new Dictionary<int, uint>();
-		public Dictionary<int, uint> SeiNestingZeroBit { get { return sei_nesting_zero_bit; } set { sei_nesting_zero_bit = value; } }
-		private Dictionary<int, SeiMessage> sei_message = new Dictionary<int, SeiMessage>();
-		public Dictionary<int, SeiMessage> SeiMessage { get { return sei_message; } set { sei_message = value; } }
+		private Dictionary<int, uint> sei_nesting_zero_bit;
+		public Dictionary<int, uint> SeiNestingZeroBit { get { return sei_nesting_zero_bit ??= new Dictionary<int, uint>(); } set { sei_nesting_zero_bit = value; } }
+		private Dictionary<int, SeiMessage> sei_message;
+		public Dictionary<int, SeiMessage> SeiMessage { get { return sei_message ??= new Dictionary<int, SeiMessage>(); } set { sei_message = value; } }
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
@@ -13288,14 +13288,14 @@ scalable_nesting( payloadSize ) {
 			{
 				whileIndex++;
 
-				size += stream.ReadFixed(size, 1, whileIndex, this.sei_nesting_zero_bit, "sei_nesting_zero_bit"); // equal to 0 
+				size += stream.ReadFixed(size, 1, whileIndex, (this.sei_nesting_zero_bit ??= new()), "sei_nesting_zero_bit"); // equal to 0 
 			}
 
 			do
 			{
 				whileIndex++;
 
-				this.sei_message.Add(whileIndex,  new SeiMessage() );
+				(this.sei_message ??= new()).Add(whileIndex,  new SeiMessage() );
 				size +=  stream.ReadClass<SeiMessage>(size, context, this.sei_message[whileIndex], "sei_message"); 
 			} while ( stream.ReadMoreRbspData(this) );
 
@@ -13329,14 +13329,14 @@ scalable_nesting( payloadSize ) {
 			{
 				whileIndex++;
 
-				size += stream.WriteFixed(1, whileIndex, this.sei_nesting_zero_bit, "sei_nesting_zero_bit"); // equal to 0 
+				size += stream.WriteFixed(1, whileIndex, (this.sei_nesting_zero_bit ??= new()), "sei_nesting_zero_bit"); // equal to 0 
 			}
 
 			do
 			{
 				whileIndex++;
 
-				size += stream.WriteClass<SeiMessage>(context, whileIndex, this.sei_message, "sei_message"); 
+				size += stream.WriteClass<SeiMessage>(context, whileIndex, (this.sei_message ??= new()), "sei_message"); 
 			} while ( stream.WriteMoreRbspData(this) );
 
             return size;
@@ -14538,14 +14538,14 @@ ref_pic_list_mvc_modification() {
     {
 		private byte ref_pic_list_modification_flag_l0;
 		public byte RefPicListModificationFlagL0 { get { return ref_pic_list_modification_flag_l0; } set { ref_pic_list_modification_flag_l0 = value; } }
-		private Dictionary<int, ulong> modification_of_pic_nums_idc = new Dictionary<int, ulong>();
-		public Dictionary<int, ulong> ModificationOfPicNumsIdc { get { return modification_of_pic_nums_idc; } set { modification_of_pic_nums_idc = value; } }
-		private Dictionary<int, ulong> abs_diff_pic_num_minus1 = new Dictionary<int, ulong>();
-		public Dictionary<int, ulong> AbsDiffPicNumMinus1 { get { return abs_diff_pic_num_minus1; } set { abs_diff_pic_num_minus1 = value; } }
-		private Dictionary<int, ulong> long_term_pic_num = new Dictionary<int, ulong>();
-		public Dictionary<int, ulong> LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
-		private Dictionary<int, ulong> abs_diff_view_idx_minus1 = new Dictionary<int, ulong>();
-		public Dictionary<int, ulong> AbsDiffViewIdxMinus1 { get { return abs_diff_view_idx_minus1; } set { abs_diff_view_idx_minus1 = value; } }
+		private Dictionary<int, ulong> modification_of_pic_nums_idc;
+		public Dictionary<int, ulong> ModificationOfPicNumsIdc { get { return modification_of_pic_nums_idc ??= new Dictionary<int, ulong>(); } set { modification_of_pic_nums_idc = value; } }
+		private Dictionary<int, ulong> abs_diff_pic_num_minus1;
+		public Dictionary<int, ulong> AbsDiffPicNumMinus1 { get { return abs_diff_pic_num_minus1 ??= new Dictionary<int, ulong>(); } set { abs_diff_pic_num_minus1 = value; } }
+		private Dictionary<int, ulong> long_term_pic_num;
+		public Dictionary<int, ulong> LongTermPicNum { get { return long_term_pic_num ??= new Dictionary<int, ulong>(); } set { long_term_pic_num = value; } }
+		private Dictionary<int, ulong> abs_diff_view_idx_minus1;
+		public Dictionary<int, ulong> AbsDiffViewIdxMinus1 { get { return abs_diff_view_idx_minus1 ??= new Dictionary<int, ulong>(); } set { abs_diff_view_idx_minus1 = value; } }
 		private byte ref_pic_list_modification_flag_l1;
 		public byte RefPicListModificationFlagL1 { get { return ref_pic_list_modification_flag_l1; } set { ref_pic_list_modification_flag_l1 = value; } }
 
@@ -14578,21 +14578,21 @@ ref_pic_list_mvc_modification() {
 					{
 						whileIndex++;
 
-						size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.modification_of_pic_nums_idc, "modification_of_pic_nums_idc"); 
+						size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.modification_of_pic_nums_idc ??= new()), "modification_of_pic_nums_idc"); 
 
 						if (modification_of_pic_nums_idc[whileIndex] == 0 ||
                     modification_of_pic_nums_idc[whileIndex] == 1)
 						{
-							size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_pic_num_minus1, "abs_diff_pic_num_minus1"); 
+							size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.abs_diff_pic_num_minus1 ??= new()), "abs_diff_pic_num_minus1"); 
 						}
 						else if (modification_of_pic_nums_idc[whileIndex] == 2)
 						{
-							size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num, "long_term_pic_num"); 
+							size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.long_term_pic_num ??= new()), "long_term_pic_num"); 
 						}
 						else if (modification_of_pic_nums_idc[whileIndex] == 4 ||
                     modification_of_pic_nums_idc[whileIndex] == 5)
 						{
-							size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_view_idx_minus1, "abs_diff_view_idx_minus1"); 
+							size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.abs_diff_view_idx_minus1 ??= new()), "abs_diff_view_idx_minus1"); 
 						}
 					} while (modification_of_pic_nums_idc[whileIndex] != 3);
 				}
@@ -14609,19 +14609,19 @@ ref_pic_list_mvc_modification() {
 					{
 						whileIndex++;
 
-						size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.modification_of_pic_nums_idc, "modification_of_pic_nums_idc"); 
+						size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.modification_of_pic_nums_idc ??= new()), "modification_of_pic_nums_idc"); 
 
 						if (modification_of_pic_nums_idc[whileIndex] == 0 || modification_of_pic_nums_idc[whileIndex] == 1)
 						{
-							size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_pic_num_minus1, "abs_diff_pic_num_minus1"); 
+							size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.abs_diff_pic_num_minus1 ??= new()), "abs_diff_pic_num_minus1"); 
 						}
 						else if (modification_of_pic_nums_idc[whileIndex] == 2)
 						{
-							size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num, "long_term_pic_num"); 
+							size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.long_term_pic_num ??= new()), "long_term_pic_num"); 
 						}
 						else if (modification_of_pic_nums_idc[whileIndex] == 4 || modification_of_pic_nums_idc[whileIndex] == 5)
 						{
-							size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_view_idx_minus1, "abs_diff_view_idx_minus1"); 
+							size += stream.ReadUnsignedIntGolomb(size, whileIndex, (this.abs_diff_view_idx_minus1 ??= new()), "abs_diff_view_idx_minus1"); 
 						}
 					} while (modification_of_pic_nums_idc[whileIndex] != 3);
 				}
@@ -14650,21 +14650,21 @@ ref_pic_list_mvc_modification() {
 					{
 						whileIndex++;
 
-						size += stream.WriteUnsignedIntGolomb( whileIndex, this.modification_of_pic_nums_idc, "modification_of_pic_nums_idc"); 
+						size += stream.WriteUnsignedIntGolomb( whileIndex, (this.modification_of_pic_nums_idc ??= new()), "modification_of_pic_nums_idc"); 
 
 						if (modification_of_pic_nums_idc[whileIndex] == 0 ||
                     modification_of_pic_nums_idc[whileIndex] == 1)
 						{
-							size += stream.WriteUnsignedIntGolomb( whileIndex, this.abs_diff_pic_num_minus1, "abs_diff_pic_num_minus1"); 
+							size += stream.WriteUnsignedIntGolomb( whileIndex, (this.abs_diff_pic_num_minus1 ??= new()), "abs_diff_pic_num_minus1"); 
 						}
 						else if (modification_of_pic_nums_idc[whileIndex] == 2)
 						{
-							size += stream.WriteUnsignedIntGolomb( whileIndex, this.long_term_pic_num, "long_term_pic_num"); 
+							size += stream.WriteUnsignedIntGolomb( whileIndex, (this.long_term_pic_num ??= new()), "long_term_pic_num"); 
 						}
 						else if (modification_of_pic_nums_idc[whileIndex] == 4 ||
                     modification_of_pic_nums_idc[whileIndex] == 5)
 						{
-							size += stream.WriteUnsignedIntGolomb( whileIndex, this.abs_diff_view_idx_minus1, "abs_diff_view_idx_minus1"); 
+							size += stream.WriteUnsignedIntGolomb( whileIndex, (this.abs_diff_view_idx_minus1 ??= new()), "abs_diff_view_idx_minus1"); 
 						}
 					} while (modification_of_pic_nums_idc[whileIndex] != 3);
 				}
@@ -14681,19 +14681,19 @@ ref_pic_list_mvc_modification() {
 					{
 						whileIndex++;
 
-						size += stream.WriteUnsignedIntGolomb( whileIndex, this.modification_of_pic_nums_idc, "modification_of_pic_nums_idc"); 
+						size += stream.WriteUnsignedIntGolomb( whileIndex, (this.modification_of_pic_nums_idc ??= new()), "modification_of_pic_nums_idc"); 
 
 						if (modification_of_pic_nums_idc[whileIndex] == 0 || modification_of_pic_nums_idc[whileIndex] == 1)
 						{
-							size += stream.WriteUnsignedIntGolomb( whileIndex, this.abs_diff_pic_num_minus1, "abs_diff_pic_num_minus1"); 
+							size += stream.WriteUnsignedIntGolomb( whileIndex, (this.abs_diff_pic_num_minus1 ??= new()), "abs_diff_pic_num_minus1"); 
 						}
 						else if (modification_of_pic_nums_idc[whileIndex] == 2)
 						{
-							size += stream.WriteUnsignedIntGolomb( whileIndex, this.long_term_pic_num, "long_term_pic_num"); 
+							size += stream.WriteUnsignedIntGolomb( whileIndex, (this.long_term_pic_num ??= new()), "long_term_pic_num"); 
 						}
 						else if (modification_of_pic_nums_idc[whileIndex] == 4 || modification_of_pic_nums_idc[whileIndex] == 5)
 						{
-							size += stream.WriteUnsignedIntGolomb( whileIndex, this.abs_diff_view_idx_minus1, "abs_diff_view_idx_minus1"); 
+							size += stream.WriteUnsignedIntGolomb( whileIndex, (this.abs_diff_view_idx_minus1 ??= new()), "abs_diff_view_idx_minus1"); 
 						}
 					} while (modification_of_pic_nums_idc[whileIndex] != 3);
 				}
@@ -14896,8 +14896,8 @@ mvc_scalable_nesting( payloadSize ) {
 		public uint[] SeiOpViewId { get { return sei_op_view_id; } set { sei_op_view_id = value; } }
 		private uint sei_op_temporal_id;
 		public uint SeiOpTemporalId { get { return sei_op_temporal_id; } set { sei_op_temporal_id = value; } }
-		private Dictionary<int, uint> sei_nesting_zero_bit = new Dictionary<int, uint>();
-		public Dictionary<int, uint> SeiNestingZeroBit { get { return sei_nesting_zero_bit; } set { sei_nesting_zero_bit = value; } }
+		private Dictionary<int, uint> sei_nesting_zero_bit;
+		public Dictionary<int, uint> SeiNestingZeroBit { get { return sei_nesting_zero_bit ??= new Dictionary<int, uint>(); } set { sei_nesting_zero_bit = value; } }
 		private SeiMessage sei_message;
 		public SeiMessage SeiMessage { get { return sei_message; } set { sei_message = value; } }
 
@@ -14954,7 +14954,7 @@ mvc_scalable_nesting( payloadSize ) {
 			{
 				whileIndex++;
 
-				size += stream.ReadFixed(size, 1, whileIndex, this.sei_nesting_zero_bit, "sei_nesting_zero_bit"); // equal to 0 
+				size += stream.ReadFixed(size, 1, whileIndex, (this.sei_nesting_zero_bit ??= new()), "sei_nesting_zero_bit"); // equal to 0 
 			}
 			this.sei_message =  new SeiMessage() ;
 			size +=  stream.ReadClass<SeiMessage>(size, context, this.sei_message, "sei_message"); 
@@ -15002,7 +15002,7 @@ mvc_scalable_nesting( payloadSize ) {
 			{
 				whileIndex++;
 
-				size += stream.WriteFixed(1, whileIndex, this.sei_nesting_zero_bit, "sei_nesting_zero_bit"); // equal to 0 
+				size += stream.WriteFixed(1, whileIndex, (this.sei_nesting_zero_bit ??= new()), "sei_nesting_zero_bit"); // equal to 0 
 			}
 			size += stream.WriteClass<SeiMessage>(context, this.sei_message, "sei_message"); 
 
@@ -17576,8 +17576,8 @@ mvcd_scalable_nesting( payloadSize ) {
 		public byte[] SeiOpTextureFlag { get { return sei_op_texture_flag; } set { sei_op_texture_flag = value; } }
 		private uint sei_op_temporal_id;
 		public uint SeiOpTemporalId { get { return sei_op_temporal_id; } set { sei_op_temporal_id = value; } }
-		private Dictionary<int, uint> sei_nesting_zero_bit = new Dictionary<int, uint>();
-		public Dictionary<int, uint> SeiNestingZeroBit { get { return sei_nesting_zero_bit; } set { sei_nesting_zero_bit = value; } }
+		private Dictionary<int, uint> sei_nesting_zero_bit;
+		public Dictionary<int, uint> SeiNestingZeroBit { get { return sei_nesting_zero_bit ??= new Dictionary<int, uint>(); } set { sei_nesting_zero_bit = value; } }
 		private SeiMessage sei_message;
 		public SeiMessage SeiMessage { get { return sei_message; } set { sei_message = value; } }
 
@@ -17648,7 +17648,7 @@ mvcd_scalable_nesting( payloadSize ) {
 			{
 				whileIndex++;
 
-				size += stream.ReadFixed(size, 1, whileIndex, this.sei_nesting_zero_bit, "sei_nesting_zero_bit"); // equal to 0 
+				size += stream.ReadFixed(size, 1, whileIndex, (this.sei_nesting_zero_bit ??= new()), "sei_nesting_zero_bit"); // equal to 0 
 			}
 			this.sei_message =  new SeiMessage() ;
 			size +=  stream.ReadClass<SeiMessage>(size, context, this.sei_message, "sei_message"); 
@@ -17704,7 +17704,7 @@ mvcd_scalable_nesting( payloadSize ) {
 			{
 				whileIndex++;
 
-				size += stream.WriteFixed(1, whileIndex, this.sei_nesting_zero_bit, "sei_nesting_zero_bit"); // equal to 0 
+				size += stream.WriteFixed(1, whileIndex, (this.sei_nesting_zero_bit ??= new()), "sei_nesting_zero_bit"); // equal to 0 
 			}
 			size += stream.WriteClass<SeiMessage>(context, this.sei_message, "sei_message"); 
 
@@ -19785,8 +19785,8 @@ depth_parameter_set_rbsp() {
 		public ulong NonlinearDepthRepresentationNum { get { return nonlinear_depth_representation_num; } set { nonlinear_depth_representation_num = value; } }
 		private ulong[] nonlinear_depth_representation_model;
 		public ulong[] NonlinearDepthRepresentationModel { get { return nonlinear_depth_representation_model; } set { nonlinear_depth_representation_model = value; } }
-		private Dictionary<int, byte> depth_param_additional_extension_data_flag = new Dictionary<int, byte>();
-		public Dictionary<int, byte> DepthParamAdditionalExtensionDataFlag { get { return depth_param_additional_extension_data_flag; } set { depth_param_additional_extension_data_flag = value; } }
+		private Dictionary<int, byte> depth_param_additional_extension_data_flag;
+		public Dictionary<int, byte> DepthParamAdditionalExtensionDataFlag { get { return depth_param_additional_extension_data_flag ??= new Dictionary<int, byte>(); } set { depth_param_additional_extension_data_flag = value; } }
 		private RbspTrailingBits rbsp_trailing_bits;
 		public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -19851,7 +19851,7 @@ depth_parameter_set_rbsp() {
 				{
 					whileIndex++;
 
-					size += stream.ReadUnsignedInt(size, 1, whileIndex, this.depth_param_additional_extension_data_flag, "depth_param_additional_extension_data_flag"); 
+					size += stream.ReadUnsignedInt(size, 1, whileIndex, (this.depth_param_additional_extension_data_flag ??= new()), "depth_param_additional_extension_data_flag"); 
 				}
 			}
 			this.rbsp_trailing_bits =  new RbspTrailingBits() ;
@@ -19908,7 +19908,7 @@ depth_parameter_set_rbsp() {
 				{
 					whileIndex++;
 
-					size += stream.WriteUnsignedInt(1, whileIndex, this.depth_param_additional_extension_data_flag, "depth_param_additional_extension_data_flag"); 
+					size += stream.WriteUnsignedInt(1, whileIndex, (this.depth_param_additional_extension_data_flag ??= new()), "depth_param_additional_extension_data_flag"); 
 				}
 			}
 			size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits"); 

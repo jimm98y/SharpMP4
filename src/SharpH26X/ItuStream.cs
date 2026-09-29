@@ -10,7 +10,7 @@ namespace SharpH26X
 {
     public class ItuStream : IDisposable
     {
-        private readonly Stream _stream;
+        private Stream _stream;
 
         private int _rbspDataCounter = -1;
         private int _readNextBitsCounter = -1;
@@ -34,8 +34,41 @@ namespace SharpH26X
         }
 
         public ItuStream(Stream stream)
-            : this(stream, new DefaultMp4Logger())
+            : this(stream, DefaultMp4Logger.Instance)
         {
+        }
+
+        /// <summary>
+        /// Reads a NAL unit where it lies in an array. Made once and <see cref="Reset"/> for each NAL unit, reading a
+        /// stream of them allocates no stream per unit.
+        /// </summary>
+        public ItuStream(byte[] buffer, int offset, int length, IMp4Logger logger = null)
+            : this(new RbspBitstream(buffer, offset, length), logger ?? DefaultMp4Logger.Instance)
+        {
+        }
+
+        /// <summary>Starts over on another NAL unit, in an array, as a stream made for it would.</summary>
+        public void Reset(byte[] buffer, int offset, int length)
+        {
+            if (_isLookahead)
+                throw new InvalidOperationException("A lookahead stream reads the stream it was taken from.");
+
+            this.Bitstream.Reset(buffer, offset, length);
+            _stream = null;
+            _rbspDataCounter = -1;
+            _readNextBitsCounter = -1;
+            _readNextBitsIndex = 0;
+        }
+
+        // Of a stream Lookahead gives: the bits of the stream it was taken from, to go back to when it is disposed.
+        private readonly bool _isLookahead;
+        private readonly RbspBitstream.PeekState _peek;
+
+        private ItuStream(RbspBitstream bitstream, RbspBitstream.PeekState peek)
+            : this(bitstream, null)
+        {
+            _isLookahead = true;
+            _peek = peek;
         }
 
         /// <summary>
@@ -51,26 +84,23 @@ namespace SharpH26X
         /// </remarks>
         public void CheckArrayAllocation(ulong count, string name)
         {
-            long length;
-            long position;
+            long remaining;
             try
             {
-                length = _stream.Length;
-                position = _stream.Position;
+                remaining = this.Bitstream.RemainingBytes;
             }
             catch (NotSupportedException)
             {
                 return; // not seekable, so there is nothing to bound against
             }
 
-            // The bit reader buffers a byte ahead, so the stream position can already sit at the
-            // end while bits are still to be handed out. Allow for that, plus a byte for the one
-            // an emulation prevention scan may have pulled in; the bound is there to stop counts
-            // in the millions, and a couple of bytes of slack costs nothing.
-            ulong remainingBits = (ulong)Math.Max(0, length - position) * 8 + 16;
+            // The bit reader buffers a byte ahead, so the stream can already be at its end while bits are still to be
+            // handed out. Allow for that, plus a byte for the one an emulation prevention scan may have pulled in; the
+            // bound is there to stop counts in the millions, and a couple of bytes of slack costs nothing.
+            ulong remainingBits = (ulong)Math.Max(0, remaining) * 8 + 16;
             if (count > remainingBits)
             {
-                string message = $"Invalid count of '{name}': {count} entries do not fit into the remaining {Math.Max(0, length - position)} bytes";
+                string message = $"Invalid count of '{name}': {count} entries do not fit into the remaining {Math.Max(0, remaining)} bytes";
                 Logger?.LogDebug(message);
                 throw new ItuEndOfStreamException(message);
             }
@@ -78,11 +108,6 @@ namespace SharpH26X
 
         #region Bit read/write
 
-        private int ReadByte()
-        {
-            int ret = _stream.ReadByte();
-            return ret;
-        }
 
         private ulong WriteByte(byte value)
         {
@@ -354,100 +379,53 @@ namespace SharpH26X
         }
 
         /// <summary>
-        /// A copy of this stream from where it is, to read ahead on: reading the copy neither moves
-        /// this stream nor logs anything.
+        /// A stream to read ahead on from where this one is: reading it logs nothing, and disposing it puts this stream
+        /// back where it was. It reads the same bits, the bytes it takes kept to be read again, so nothing is copied and
+        /// the stream need not seek. This stream is not read while it is in use.
         /// </summary>
-        public ItuStream Lookahead()
-        {
-            long position = _stream.Position;
-            byte[] bytes;
-            if (_stream is MemoryStream memory)
-            {
-                bytes = memory.ToArray();
-            }
-            else
-            {
-                bytes = new byte[_stream.Length];
-                _stream.Position = 0;
-                int read = 0;
-                while (read < bytes.Length)
-                {
-                    int count = _stream.Read(bytes, read, bytes.Length - read);
-                    if (count <= 0)
-                        break;
-                    read += count;
-                }
-                _stream.Position = position;
-            }
+        public ItuStream Lookahead() => new ItuStream(this.Bitstream, this.Bitstream.BeginPeek());
 
-            var copy = new MemoryStream(bytes) { Position = position };
-            var bitstream = new RbspBitstream(copy);
-            bitstream.CopyState(this.Bitstream);
-            return new ItuStream(bitstream, new DefaultMp4Logger());
-        }
-
+        /// <summary>
+        /// more_rbsp_data(): whether there is more data before the RBSP's stop bit - a 1 bit with nothing but zero bits
+        /// after it - read ahead and gone back from, so it costs no copy and the stream need not seek.
+        /// </summary>
         public bool ReadMoreRbspData(IItuSerializable serializable, ulong maxPayloadSize = ulong.MaxValue)
         {
-            if (_stream.Position == _stream.Length && this.Bitstream.BitsPosition % 8 == 0)
+            ulong sinceMark = GetBitsPositionSinceLastMark();
+
+            bool more;
+            var state = this.Bitstream.BeginPeek();
+            try
+            {
+                more = MoreRbspDataAhead();
+            }
+            finally
+            {
+                this.Bitstream.EndPeek(state);
+            }
+
+            if (!more || (maxPayloadSize != ulong.MaxValue && sinceMark >= maxPayloadSize * 8))
                 return false;
 
-            // now we have to look ahead - TODO
-            var bytes = (_stream as MemoryStream).ToArray();
+            serializable.HasMoreRbspData++;
+            return true;
+        }
 
-            var msstream = new MemoryStream(bytes);
-            msstream.Seek(_stream.Position, SeekOrigin.Begin);
+        /// <summary>Whether a bit that is not the stop bit is ahead: a 0 bit, or a 1 bit with another 1 bit after it.</summary>
+        private bool MoreRbspDataAhead()
+        {
+            int one = ReadBit();
+            if (one == -1)
+                return false;
+            if (one == 0)
+                return true;
 
-            var newBitstream = new RbspBitstream(msstream);
-            newBitstream.CopyState(this.Bitstream);
+            int lastBit = ReadBit();
+            while (lastBit == 0)
+                lastBit = ReadBit();
 
-            using (var ituStream = new ItuStream(newBitstream, new DefaultMp4Logger()))
-            {
-                int one = ituStream.ReadBit();
-                if (one == -1)
-                    return false;
-
-                if (one == 0)
-                {
-
-                    if (maxPayloadSize == ulong.MaxValue || GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
-                    {
-                        serializable.HasMoreRbspData++;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-
-                int lastBit = ituStream.ReadBit();
-                if (lastBit == -1)
-                    return false;
-
-                while (lastBit == 0)
-                {
-                    lastBit = ituStream.ReadBit();
-                }
-
-                // -1 means that up until the end there are zeros
-                if (lastBit == -1)
-                {
-                    return false;
-                }
-                else
-                {
-
-                    if (maxPayloadSize == ulong.MaxValue || GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
-                    {
-                        serializable.HasMoreRbspData++;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-            }
+            // -1: nothing but zeros up to the end, so the 1 was the stop bit
+            return lastBit != -1;
         }
 
         public bool WriteMoreRbspData(IItuSerializable serializable, ulong maxPayloadSize = ulong.MaxValue) // TODO
@@ -461,21 +439,23 @@ namespace SharpH26X
 
         public int ReadNextBits(IItuSerializable serializable, ulong count)
         {
-            var bytes = (_stream as MemoryStream).ToArray();
-            var msstream = new MemoryStream(bytes);
-            msstream.Seek(_stream.Position, SeekOrigin.Begin);
+            // next_bits(): the byte ahead, read and gone back from
+            int ret;
+            var state = this.Bitstream.BeginPeek();
+            try
+            {
+                ret = (int)ReadBits(8);
+            }
+            finally
+            {
+                this.Bitstream.EndPeek(state);
+            }
 
-            var newBitstream = new RbspBitstream(msstream);
-            newBitstream.CopyState(this.Bitstream);
-
-            using (var ituStream = new ItuStream(newBitstream, new DefaultMp4Logger()))
             {
                 if (serializable.ReadNextBits == null)
                 {
                     serializable.ReadNextBits = new int[1];
                 }
-
-                int ret = (int)ituStream.ReadBits(8);
 
                 if (ret == 0xFF)
                 {
@@ -606,7 +586,7 @@ namespace SharpH26X
             //LogBegin(name);
             List<byte> bytes = new List<byte>();
             int b = -1;
-            while ((b = ReadByte()) != -1)
+            while ((b = (int)ReadBits(8)) != -1) // as every other read: through the bits, emulation prevention bytes skipped
             {
                 if (b == 0)
                     break;
@@ -792,7 +772,12 @@ namespace SharpH26X
             {
                 if (disposing)
                 {
-                    if (_stream != null)
+                    if (_isLookahead)
+                    {
+                        // the stream it was taken from goes on from where it was; its stream is not this one's to close
+                        this.Bitstream.EndPeek(_peek);
+                    }
+                    else if (_stream != null)
                     {
                         _stream.Dispose();
                     }
