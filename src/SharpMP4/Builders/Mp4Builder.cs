@@ -1,6 +1,7 @@
 ﻿using SharpISOBMFF;
 using SharpISOBMFF.Extensions;
 using SharpMP4.Common;
+using SharpMP4.Encryption;
 using SharpMP4.Tracks;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,16 @@ namespace SharpMP4.Builders
             {
                 Track = track;
             }
+
+            /// <summary>What protects the track; null where it is not protected.</summary>
+            public TrackEncryptor Encryptor { get; set; }
+
+            /// <summary>How each sample is protected.</summary>
+            public List<SampleEncryption> Encryptions { get; set; } = new List<SampleEncryption>();
+
+            /// <summary>Of the 'moov' last built: the track's 'senc', and the 'saio' in its 'stbl' that points at it.</summary>
+            public SampleEncryptionBox Senc { get; set; }
+            public SampleAuxiliaryInformationOffsetsBox Saio { get; set; }
         }
 
         public uint MovieTimescale { get; set; } = 1000;
@@ -60,7 +71,7 @@ namespace SharpMP4.Builders
         }
 
         public ITemporaryStorageFactory TemporaryStorageFactory { get; set; } = new TemporaryFileStorageFactory();
-        public IMp4Logger Logger { get; set; } = new DefaultMp4Logger();
+        public IMp4Logger Logger { get; set; } = DefaultMp4Logger.Instance;
 
         /// <summary>
         /// Add a track to the MP4.
@@ -75,6 +86,23 @@ namespace SharpMP4.Builders
             _trackContexts.Add(trackID, new TrackContext(track));
         }
         
+        /// <summary>
+        /// Adds a track whose samples are protected as they are written (ISO/IEC 23001-7): each with the key, its IV and,
+        /// of H.264, H.265 and H.266 video, its NAL units' slice headers left clear. The sample entry becomes 'encv', 'enca'
+        /// or 'enct', with a 'sinf' saying what it was and how it is protected; how each sample is protected is in a 'senc'
+        /// in the 'trak', and in the 'saiz' and 'saio' of its 'stbl', which point into the 'senc'.
+        /// <see cref="TrackProtection.Create"/> makes a protection with a scheme's defaults.
+        /// </summary>
+        /// <param name="track">Track to add: <see cref="TrackBase"/>.</param>
+        /// <param name="protection">How the track is protected: its scheme, key ID, IVs and pattern, and the protection systems' headers.</param>
+        /// <param name="key">The 16 byte key; or 32, for AES-256, as the draft of 23001-7:2023 Amendment 1 allows, 'tenc' version 2 saying so.</param>
+        public void AddTrack(ITrack track, TrackProtection protection, byte[] key)
+        {
+            var encryptor = TrackEncryptor.Create(track, protection, key, Logger);
+            AddTrack(track);
+            _trackContexts[track.TrackID].Encryptor = encryptor;
+        }
+
         private uint GetNextTrackId()
         {
             uint trackID = 1;
@@ -95,6 +123,11 @@ namespace SharpMP4.Builders
 
             uint currentSampleDuration = sampleDuration <= 0 ? (uint)_trackContexts[trackID].Track.DefaultSampleDuration : (uint)sampleDuration;
             var track = _trackContexts[trackID];
+            if (track.Encryptor != null)
+            {
+                sample = track.Encryptor.Protect(track.Track, sample, out var encryption);
+                track.Encryptions.Add(encryption);
+            }
             track.SampleOffsets.Add(_storage.GetPosition());
             _storage.Write(sample.Array, sample.Offset, sample.Count);
             track.SampleSizes.Add((uint)sample.Count);
@@ -239,6 +272,7 @@ namespace SharpMP4.Builders
                 stsd.Children = new List<Box>();
 
                 var sampleEntryBox = track.Track.CreateSampleEntryBox();
+                track.Encryptor?.ProtectSampleEntry(track.Track, sampleEntryBox);
                 sampleEntryBox.SetParent(stsd);
                 stsd.Children.Add(sampleEntryBox);
                 stsd.EntryCount = 1;
@@ -344,6 +378,31 @@ namespace SharpMP4.Builders
                     stco.ChunkOffset = track.SampleOffsets.Select(offset => (uint)offset).ToArray();
                     stco.EntryCount = (uint)track.SampleOffsets.Count;
                 }
+
+                // how each sample is protected: in a 'senc' of the 'trak' (23001-7, 7.2.1), its samples the auxiliary
+                // information the 'saiz' and 'saio' of the 'stbl' give, once FinalizeMedia knows where the 'senc' lies
+                track.Senc = null;
+                track.Saio = null;
+                if (track.Encryptor != null)
+                {
+                    var (senc, saiz, saio) = track.Encryptor.CreateSampleEncryptionBoxes(track.Encryptions, track.SampleSizes);
+                    foreach (var box in new Box[] { saiz, saio }.Where(x => x != null))
+                    {
+                        box.SetParent(stbl);
+                        stbl.Children.Add(box);
+                    }
+                    senc.SetParent(trak);
+                    trak.Children.Add(senc);
+                    track.Senc = senc;
+                    track.Saio = saio;
+                }
+            }
+
+            // the protection systems' headers, each once, of all the protected tracks
+            foreach (var pssh in TrackEncryptor.ProtectionSystemHeaders(_trackContexts.Values.Where(x => x.Encryptor != null).Select(x => x.Encryptor.Protection)))
+            {
+                pssh.SetParent(moov);
+                moov.Children.Add(pssh);
             }
 
             return moov;
@@ -453,6 +512,16 @@ namespace SharpMP4.Builders
             mp4.Children.Add(mdat);
 
             moov.ModifyChunkOffsets(mdatOffset);
+
+            // each 'saio' at its 'senc's samples, by where they lie in the file: the 'moov' comes right after the 'ftyp'
+            foreach (var track in _trackContexts.Values.Where(x => x.Saio != null))
+            {
+                var trak = (Box)track.Senc.GetParent();
+                ulong offset = (ftyp.CalculateSize() >> 3) + 8;
+                offset += moov.Children.TakeWhile(x => x != trak).Aggregate(0ul, (total, box) => total + (box.CalculateSize() >> 3)) + 8;
+                offset += trak.Children.TakeWhile(x => x != track.Senc).Aggregate(0ul, (total, box) => total + (box.CalculateSize() >> 3));
+                track.Saio.Offset[0] = offset + 12 + 4; // the 'senc's header, version and flags, then its sample_count
+            }
 
             var stream = _output.GetStream(0);
             var outputStream = new IsoStream(stream);

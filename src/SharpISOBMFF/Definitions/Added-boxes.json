@@ -1222,9 +1222,14 @@
       "syntax": "aligned(8) class ItemEncryptionBox extends ItemFullProperty('ienc', version, flags=0)\r\n{\r\n      unsigned int(8) reserved = 0;\r\n      if (version==0) { \r\n            unsigned int(8) reserved = 0;\r\n      } else { // version is 1 or greater\r\n            unsigned int(4) crypt_byte_block;\r\n            unsigned int(4) skip_byte_block;\r\n      }\r\n      unsigned int(8) num_keys;\r\n      for (i=1; i<= num_keys; i++) {\r\n         unsigned int(8) Per_Sample_IV_Size;\r\n         unsigned int(8)[16] KID;\r\n         if (Per_Sample_IV_Size == 0) { \r\n            unsigned int(8) constant_IV_size; \r\n            unsigned int(8)[constant_IV_size] constant_IV;\r\n         }\r\n      }\r\n}\r\n"
     },
     {
+      "containers": [ "ipco" ],
+      "type": "Box",
+      "syntax": "// ISO/IEC 23001-7:2016/Amd 1:2019, 8.4: the type of an item's auxiliary information, as a sample's in 14496-12\r\naligned(8) class ItemAuxiliaryInformationBox extends ItemFullProperty('iaux', version=0, flags=0) {\r\n\tunsigned int(32) aux_info_type;\r\n\tunsigned int(32) aux_info_type_parameter;\r\n}"
+    },
+    {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class TrackEncryptionBox() extends FullBox('tenc', version, flags = 0) {\r\n unsigned int(8) reserved = 0;\r\n if (version == 0) {\r\n  unsigned int(8) reserved = 0;\r\n }\r\n else {\r\n  unsigned int(4) default_crypt_byte_block;\r\n  unsigned int(4) default_skip_byte_block;\r\n }\r\n unsigned int(8) default_isProtected;\r\n unsigned int(8) default_Per_Sample_IV_Size;\r\n unsigned int(8) default_KID[16];\r\n if (default_isProtected == 1 && default_Per_Sample_IV_Size == 0) {\r\n  unsigned int(8) defaultConstantIVSize;\r\n  unsigned int(8) defaultConstantIV[defaultConstantIVSize];\r\n }\r\n } "
+      "syntax": "// ISO/IEC 23001-7:2023 DAM 1 (MPEG w25903, 2026-01, a draft): version 2's use_AES_256, whether the key is of 256 bits\r\naligned(8) class TrackEncryptionBox() extends FullBox('tenc', version, flags = 0) {\r\n unsigned int(8) reserved = 0;\r\n if (version == 0) {\r\n  unsigned int(8) reserved = 0;\r\n }\r\n else {\r\n  unsigned int(4) default_crypt_byte_block;\r\n  unsigned int(4) default_skip_byte_block;\r\n  if (version >= 2) {\r\n   unsigned int(1) use_AES_256;\r\n   unsigned int(7) reserved1 = 0;\r\n  }\r\n }\r\n unsigned int(8) default_isProtected;\r\n unsigned int(8) default_Per_Sample_IV_Size;\r\n unsigned int(8) default_KID[16];\r\n if (default_isProtected == 1 && default_Per_Sample_IV_Size == 0) {\r\n  unsigned int(8) defaultConstantIVSize;\r\n  unsigned int(8) defaultConstantIV[defaultConstantIVSize];\r\n }\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -1542,7 +1547,7 @@
       "fourcc": "seig",
       "containers": [ "sgpd" ],
       "type": "SampleGroupDescriptionEntry",
-      "syntax": "// ISO/IEC 23001-7 (3rd edition, not at hand; the 2023 at hand a preview) CENC sample encryption information, the fields of tenc's version 1 as GPAC reads them, not the multi-key form of later editions\r\naligned(8) class CencSampleEncryptionInformationGroupEntry() extends SampleGroupDescriptionEntry('seig') {\r\n unsigned int(8) reserved = 0;\r\n unsigned int(4) crypt_byte_block;\r\n unsigned int(4) skip_byte_block;\r\n unsigned int(8) isProtected;\r\n unsigned int(8) Per_Sample_IV_Size;\r\n unsigned int(8) KID[16];\r\n if (isProtected == 1 && Per_Sample_IV_Size == 0) {\r\n  unsigned int(8) constant_IV_size;\r\n  unsigned int(8) constant_IV[constant_IV_size];\r\n }\r\n } "
+      "syntax": "// ISO/IEC 23001-7:2016/Amd 1:2019, clause 6: a single key, or with multi_key_flag several, each with its IV size and KID (its constant IV's size multi_constant_IV_length here, for the generator's rewriting of constant_IV_size); the single key's fields as they were, its constant IV only where it is protected, as GPAC reads it\r\naligned(8) class CencSampleEncryptionInformationGroupEntry() extends SampleGroupDescriptionEntry('seig') {\r\n unsigned int(1) multi_key_flag;\r\n unsigned int(7) reserved = 0;\r\n unsigned int(4) crypt_byte_block;\r\n unsigned int(4) skip_byte_block;\r\n unsigned int(8) isProtected;\r\n if (multi_key_flag) {\r\n  unsigned int(16) key_count;\r\n  for (i=1; i <= key_count; i++) {\r\n   unsigned int(8) multi_Per_Sample_IV_Size;\r\n   unsigned int(8)[16] multi_KID;\r\n   if (multi_Per_Sample_IV_Size == 0) {\r\n    unsigned int(8) multi_constant_IV_length;\r\n    unsigned int(8)[multi_constant_IV_length] multi_constant_IV;\r\n   }\r\n  }\r\n }\r\n else {\r\n  unsigned int(8) Per_Sample_IV_Size;\r\n  unsigned int(8) KID[16];\r\n  if (isProtected == 1 && Per_Sample_IV_Size == 0) {\r\n   unsigned int(8) constant_IV_size;\r\n   unsigned int(8) constant_IV[constant_IV_size];\r\n  }\r\n }\r\n}"
     },
     {
       "containers": [ "*" ],

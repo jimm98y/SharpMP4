@@ -21,7 +21,7 @@ namespace SharpMP4.Bench
 
             if (command == "help" || command == "--help" || command == "-h")
             {
-                Console.WriteLine("Usage: SharpMP4.Bench [all|bits|parse|fuzz] [file.mp4] [iterations]");
+                Console.WriteLine("Usage: SharpMP4.Bench [all|bits|parse|slices|fuzz] [file.mp4] [iterations]");
                 return 0;
             }
 
@@ -34,6 +34,12 @@ namespace SharpMP4.Bench
             if (command == "bits")
             {
                 Bits.Run();
+                return 0;
+            }
+
+            if (command == "slices")
+            {
+                Slices.Run(path);
                 return 0;
             }
 

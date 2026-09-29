@@ -6,6 +6,7 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
+// ISO/IEC 23001-7:2023 DAM 1 (MPEG w25903, 2026-01, a draft): version 2's use_AES_256, whether the key is of 256 bits
 aligned(8) class TrackEncryptionBox() extends FullBox('tenc', version, flags = 0) {
  unsigned int(8) reserved = 0;
  if (version == 0) {
@@ -14,6 +15,10 @@ aligned(8) class TrackEncryptionBox() extends FullBox('tenc', version, flags = 0
  else {
   unsigned int(4) default_crypt_byte_block;
   unsigned int(4) default_skip_byte_block;
+  if (version >= 2) {
+   unsigned int(1) use_AES_256;
+   unsigned int(7) reserved1 = 0;
+  }
  }
  unsigned int(8) default_isProtected;
  unsigned int(8) default_Per_Sample_IV_Size;
@@ -40,6 +45,12 @@ public partial class TrackEncryptionBox : FullBox
 
 	protected byte default_skip_byte_block; 
 	public byte DefaultSkipByteBlock { get { return this.default_skip_byte_block; } set { this.default_skip_byte_block = value; } }
+
+	protected bool use_AES_256; 
+	public bool UseAES256 { get { return this.use_AES_256; } set { this.use_AES_256 = value; } }
+
+	protected byte reserved1 = 0; 
+	public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
 
 	protected byte default_isProtected; 
 	public byte DefaultIsProtected { get { return this.default_isProtected; } set { this.default_isProtected = value; } }
@@ -75,6 +86,12 @@ public partial class TrackEncryptionBox : FullBox
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.default_crypt_byte_block, "default_crypt_byte_block"); 
 			boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.default_skip_byte_block, "default_skip_byte_block"); 
+
+			if (version >= 2)
+			{
+				boxSize += stream.ReadBit(boxSize, readSize,  out this.use_AES_256, "use_AES_256"); 
+				boxSize += stream.ReadBits(boxSize, readSize, 7,  out this.reserved1, "reserved1"); 
+			}
 		}
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.default_isProtected, "default_isProtected"); 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.default_Per_Sample_IV_Size, "default_Per_Sample_IV_Size"); 
@@ -103,6 +120,12 @@ public partial class TrackEncryptionBox : FullBox
 		{
 			boxSize += stream.WriteBits(4,  this.default_crypt_byte_block, "default_crypt_byte_block"); 
 			boxSize += stream.WriteBits(4,  this.default_skip_byte_block, "default_skip_byte_block"); 
+
+			if (version >= 2)
+			{
+				boxSize += stream.WriteBit( this.use_AES_256, "use_AES_256"); 
+				boxSize += stream.WriteBits(7,  this.reserved1, "reserved1"); 
+			}
 		}
 		boxSize += stream.WriteUInt8( this.default_isProtected, "default_isProtected"); 
 		boxSize += stream.WriteUInt8( this.default_Per_Sample_IV_Size, "default_Per_Sample_IV_Size"); 
@@ -131,6 +154,12 @@ public partial class TrackEncryptionBox : FullBox
 		{
 			boxSize += 4; // default_crypt_byte_block
 			boxSize += 4; // default_skip_byte_block
+
+			if (version >= 2)
+			{
+				boxSize += 1; // use_AES_256
+				boxSize += 7; // reserved1
+			}
 		}
 		boxSize += 8; // default_isProtected
 		boxSize += 8; // default_Per_Sample_IV_Size

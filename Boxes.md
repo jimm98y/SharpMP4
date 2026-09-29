@@ -454,6 +454,7 @@
 |iacb|IAConfigurationBox|
 |IAD1|CanonIAD1Box|
 |iamf|AudioSampleEntry|
+|iaux|ItemAuxiliaryInformationBox|
 |icam|IntrinsicCameraParametersBox|
 |icef|GenericCompressedUnitsItemInfoBox|
 |icnu|OMAIconURLBox|
