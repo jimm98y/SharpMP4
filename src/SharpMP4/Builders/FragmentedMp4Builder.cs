@@ -15,8 +15,9 @@ namespace SharpMP4.Builders
     {
         private class MediaFragment
         {
-            public MediaFragment(IStorage storage, ulong startTime, ulong endTime, uint[] sampleSizes, uint[] sampleDurations, int[] compositionOffsets, SampleEncryption[] encryptions = null)
+            public MediaFragment(IStorage storage, ulong startTime, ulong endTime, uint[] sampleSizes, uint[] sampleDurations, int[] compositionOffsets, bool[] randomAccessPoints, SampleEncryption[] encryptions = null)
             {
+                this.RandomAccessPoints = randomAccessPoints;
                 this.Encryptions = encryptions;
                 this.Storage = storage;
                 this.StartTime = startTime;
@@ -33,6 +34,9 @@ namespace SharpMP4.Builders
 
             /// <summary>Composition time minus decode time, per sample.</summary>
             public int[] CompositionOffsets { get; set; }
+
+            /// <summary>Whether each sample is a random access point: a sync sample.</summary>
+            public bool[] RandomAccessPoints { get; set; }
 
             public IStorage Storage { get; set; }
 
@@ -68,6 +72,10 @@ namespace SharpMP4.Builders
 
             /// <summary>Composition time minus decode time, per sample. Non-zero for B pictures.</summary>
             public List<int> CompositionOffsets { get; set; } = new List<int>();
+
+            /// <summary>Whether each sample is a random access point.</summary>
+            public List<bool> RandomAccessPoints { get; set; } = new List<bool>();
+
             public uint FragmentCounts { get; set; }
 
             public IStorage CurrentFragments { get; set; }
@@ -210,7 +218,10 @@ namespace SharpMP4.Builders
             ulong nextFragmentTime = track.Track.Timescale * _maxFragmentLengthInMs * (track.FragmentCounts + 1);
             ulong currentFragmentTime = track.EndTime * 1000;
 
-            if (track.SampleSizes.Count > 0 && nextFragmentTime <= currentFragmentTime)
+            // a fragment of video starts at a random access point, where it can be decoded from - as a player seeking to it
+            // takes it (tfra) - so it is not cut before one comes; one of any other track can start at any sample
+            bool canStartFragment = isRandomAccessPoint || track.Track.HandlerType != HandlerTypes.Video;
+            if (track.SampleSizes.Count > 0 && nextFragmentTime <= currentFragmentTime && canStartFragment)
             {
                 var fragment = CreateNewFragment(track);
                 track.ReadyFragments.Enqueue(fragment);
@@ -220,6 +231,7 @@ namespace SharpMP4.Builders
                 track.SampleSizes.Clear();
                 track.SampleDurations.Clear();
                 track.CompositionOffsets.Clear();
+                track.RandomAccessPoints.Clear();
                 track.Encryptions.Clear();
                 track.FragmentCounts++;
             }
@@ -234,6 +246,7 @@ namespace SharpMP4.Builders
             track.SampleSizes.Add((uint)sample.Count);
             track.SampleDurations.Add(currentSampleDuration);
             track.CompositionOffsets.Add(compositionOffset);
+            track.RandomAccessPoints.Add(isRandomAccessPoint);
             track.EndTime += currentSampleDuration;
 
             bool isFragmentReady = true;
@@ -255,8 +268,9 @@ namespace SharpMP4.Builders
         private MediaFragment CreateNewFragment(TrackContext track)
         {
             var ret = new MediaFragment(track.CurrentFragments, track.StartTime, track.EndTime, track.SampleSizes.ToArray(), track.SampleDurations.ToArray(), track.CompositionOffsets.ToArray(),
-                track.Protection != null ? track.Encryptions.ToArray() : null);
+                track.RandomAccessPoints.ToArray(), track.Protection != null ? track.Encryptions.ToArray() : null);
             track.SampleSizes.Clear();
+            track.RandomAccessPoints.Clear();
             track.Encryptions.Clear();
             return ret;
         }
@@ -604,14 +618,24 @@ namespace SharpMP4.Builders
 
             TrackRunBox trun = new TrackRunBox();
             trun.SetParent(traf);
-            if (track.HandlerType == HandlerTypes.Video)
+            trun.Flags = 0x301;
+
+            // of video, which sample is a sync sample - the rest take the default flags, of a sample that is not: of the
+            // first alone where it is the only one, else of each sample
+            bool[] randomAccessPoints = fragment.RandomAccessPoints;
+            bool perSampleFlags = false;
+            if (track.HandlerType == HandlerTypes.Video && randomAccessPoints != null)
             {
-                trun.FirstSampleFlags = 0x02000000;
-                trun.Flags = 0x305;
-            }
-            else
-            {
-                trun.Flags = 0x301;
+                perSampleFlags = randomAccessPoints.Skip(1).Any(x => x);
+                if (perSampleFlags)
+                {
+                    trun.Flags |= 0x400;
+                }
+                else if (randomAccessPoints.Length > 0 && randomAccessPoints[0])
+                {
+                    trun.FirstSampleFlags = SyncSampleFlags;
+                    trun.Flags |= 0x4;
+                }
             }
 
             // Pictures coded out of presentation order need the difference between composition and
@@ -634,6 +658,7 @@ namespace SharpMP4.Builders
                     Flags = trun.Flags,
                     SampleDuration = fragment.SampleDurations[k],
                     SampleSize = fragment.SampleSizes[k],
+                    SampleFlags = perSampleFlags ? (randomAccessPoints[k] ? SyncSampleFlags : track.DefaultSampleFlags) : 0,
                     SampleCompositionTimeOffset0 = hasCompositionOffsets ? fragment.CompositionOffsets[k] : 0
                 };
             }
@@ -654,6 +679,9 @@ namespace SharpMP4.Builders
             fmp4.Children.Add(mdat);
             mdat.Data = new StreamMarker(0, fragment.Storage.GetLength(), new IsoStream(fragment.Storage));
         }
+
+        /// <summary>The flags of a sync sample: one that depends on no other (14496-12 8.8.3.1).</summary>
+        private static readonly uint SyncSampleFlags = new SampleFlags() { SampleDependsOn = 2 };
 
         public void FinalizeMedia()
         {

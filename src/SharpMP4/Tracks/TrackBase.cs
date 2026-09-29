@@ -70,6 +70,10 @@ namespace SharpMP4.Tracks
         private byte[] _sample = new byte[64 * 1024];
         private int _sampleLength;
 
+        // The buffer of the sample taken last: the next is assembled in the other, for a track takes a sample and goes on
+        // to put the unit that ended it in the next within the one call - over the sample it hands out, were it the one
+        private byte[] _takenSample;
+
         /// <summary>Whether anything has been put in the sample being assembled.</summary>
         protected bool HasSample => _sampleLength > 0;
 
@@ -89,8 +93,8 @@ namespace SharpMP4.Tracks
         }
 
         /// <summary>
-        /// The finished sample, or nothing if none was assembled. It points into the buffer the
-        /// next sample is assembled in, so the caller writes or copies it before feeding more.
+        /// The finished sample, or nothing if none was assembled. It stays as it is until the next is taken: the caller
+        /// writes or copies it before feeding more.
         /// </summary>
         protected ArraySegment<byte> TakeSample()
         {
@@ -98,6 +102,8 @@ namespace SharpMP4.Tracks
                 return default;
 
             var sample = new ArraySegment<byte>(_sample, 0, _sampleLength);
+            _sample = _takenSample ?? new byte[_sample.Length];
+            _takenSample = sample.Array;
             _sampleLength = 0;
             return sample;
         }

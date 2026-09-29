@@ -22,10 +22,11 @@ namespace SharpMP4.Tracks
         public override string HandlerType => HandlerTypes.Video;
         public override string Language { get; set; } = "eng";
 
-        private bool _sampleContainsKeyframeRandomAccessPoint = false;
-        private bool _sampleContainsDelayedRandomAccessPoint = false;
-        private bool _sampleContainsKeyFrameDependentRecoveryPoint = false;
-        private bool _sampleContainsSequenceHeader = false;
+        // Of the temporal unit being assembled: whether a frame header has come yet, whether a sequence header came before
+        // it, and whether it is a random access point - its first frame a key frame shown, a sequence header before it.
+        private bool _sampleHasFrame = false;
+        private bool _sampleHasSequenceHeaderFirst = false;
+        private bool _sampleIsRandomAccessPoint = false;
 
         /// <summary>
         /// Sequence Header Open Bitstream Unit - raw bytes.
@@ -59,6 +60,34 @@ namespace SharpMP4.Tracks
                 throw new ArgumentException($"Invalid AV1CodecConfigurationBox: {config.FourCC}");
 
             ProcessSample(av01.Av1Config.ConfigOBUs, out _, out _);
+
+            // the configOBUs are no sample's: what they began is dropped, the samples bringing their own
+            if (HasSample)
+                TakeAv1Sample(out _);
+        }
+
+        /// <summary>
+        /// The temporal unit assembled, and whether it is a sync sample - a Random Access Point, as the AV1 binding has it
+        /// (2.4): its first frame a Key Frame with show_frame 1, a Sequence Header OBU before it. Delayed Random Access
+        /// Points and Key Frame Dependent Recovery Points are not: 'av1f' is for them.
+        /// </summary>
+        private ArraySegment<byte> TakeAv1Sample(out bool isRandomAccessPoint)
+        {
+            isRandomAccessPoint = _sampleIsRandomAccessPoint;
+            _sampleHasFrame = false;
+            _sampleHasSequenceHeaderFirst = false;
+            _sampleIsRandomAccessPoint = false;
+            return TakeSample();
+        }
+
+        /// <summary>A frame header of the temporal unit: the first says whether the unit is a random access point.</summary>
+        private void OnFrameHeader()
+        {
+            if (_sampleHasFrame)
+                return;
+            _sampleHasFrame = true;
+            _sampleIsRandomAccessPoint = _sampleHasSequenceHeaderFirst && _context._ShowExistingFrame == 0 &&
+                _context._FrameType == AV1FrameTypes.KEY_FRAME && _context._ShowFrame != 0;
         }
 
         /// <summary>
@@ -124,11 +153,11 @@ namespace SharpMP4.Tracks
                                 SequenceHeaderObu.Read(aomStream, length); 
                             }
                         }
-                        else
-                        {
-                            AppendToSample(buffer, offset, length);
-                            _sampleContainsSequenceHeader = true;
-                        }
+
+                        // in the sample too: a random access point has one before its first frame (2.4)
+                        AppendToSample(buffer, offset, length);
+                        if (!_sampleHasFrame)
+                            _sampleHasSequenceHeaderFirst = true;
 
                         if (Timescale == 0 || DefaultSampleDuration == 0)
                         {
@@ -151,12 +180,7 @@ namespace SharpMP4.Tracks
 
                         if (HasSample)
                         {
-                            output = TakeSample();
-                            isRandomAccessPoint = _sampleContainsKeyframeRandomAccessPoint || _sampleContainsDelayedRandomAccessPoint || _sampleContainsKeyFrameDependentRecoveryPoint;
-                            _sampleContainsKeyframeRandomAccessPoint = false;
-                            _sampleContainsDelayedRandomAccessPoint = false;
-                            _sampleContainsKeyFrameDependentRecoveryPoint = false;
-                            _sampleContainsSequenceHeader = false;
+                            output = TakeAv1Sample(out isRandomAccessPoint);
                         }
 
                         AppendToSample(buffer, offset, length);
@@ -170,15 +194,11 @@ namespace SharpMP4.Tracks
                             _context._ObuSize);
 
                         AppendToSample(buffer, offset, length);
+                        OnFrameHeader();
 
                         if (HasSample && _context._ShowFrame != 0)
                         {
-                            output = TakeSample();
-                            isRandomAccessPoint = _sampleContainsKeyframeRandomAccessPoint || _sampleContainsDelayedRandomAccessPoint || _sampleContainsKeyFrameDependentRecoveryPoint;
-                            _sampleContainsKeyframeRandomAccessPoint = false;
-                            _sampleContainsDelayedRandomAccessPoint = false;
-                            _sampleContainsKeyFrameDependentRecoveryPoint = false;
-                            _sampleContainsSequenceHeader = false;
+                            output = TakeAv1Sample(out isRandomAccessPoint);
                         }
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_TILE_GROUP)
@@ -205,28 +225,11 @@ namespace SharpMP4.Tracks
                             _context._ObuSize);
 
                         AppendToSample(buffer, offset, length);
-
-                        if(_context._FrameType == AV1FrameTypes.KEY_FRAME && _context._ShowFrame != 0)
-                        {
-                            _sampleContainsKeyframeRandomAccessPoint = true; 
-                        }
-                        else if(_context._FrameType == AV1FrameTypes.KEY_FRAME && _context._ShowFrame == 0 && _sampleContainsSequenceHeader)
-                        {
-                            _sampleContainsDelayedRandomAccessPoint = true;
-                        }
-                        else if(_context._ShowExistingFrame == 1 && _context.RefFrameType[_context._FrameToShowMapIdx] == AV1FrameTypes.KEY_FRAME)
-                        {
-                            _sampleContainsKeyFrameDependentRecoveryPoint = true;
-                        }
+                        OnFrameHeader();
 
                         if (HasSample && _context._ShowFrame != 0)
                         {
-                            output = TakeSample();
-                            isRandomAccessPoint = _sampleContainsKeyframeRandomAccessPoint || _sampleContainsDelayedRandomAccessPoint || _sampleContainsKeyFrameDependentRecoveryPoint;
-                            _sampleContainsKeyframeRandomAccessPoint = false;
-                            _sampleContainsDelayedRandomAccessPoint = false;
-                            _sampleContainsKeyFrameDependentRecoveryPoint = false;
-                            _sampleContainsSequenceHeader = false;
+                            output = TakeAv1Sample(out isRandomAccessPoint);
                         }
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_REDUNDANT_FRAME_HEADER)
@@ -237,12 +240,7 @@ namespace SharpMP4.Tracks
 
                         if (HasSample && _context._ShowFrame != 0)
                         {
-                            output = TakeSample();
-                            isRandomAccessPoint = _sampleContainsKeyframeRandomAccessPoint || _sampleContainsDelayedRandomAccessPoint || _sampleContainsKeyFrameDependentRecoveryPoint;
-                            _sampleContainsKeyframeRandomAccessPoint = false;
-                            _sampleContainsDelayedRandomAccessPoint = false;
-                            _sampleContainsKeyFrameDependentRecoveryPoint = false;
-                            _sampleContainsSequenceHeader = false;
+                            output = TakeAv1Sample(out isRandomAccessPoint);
                         }
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_TILE_LIST)

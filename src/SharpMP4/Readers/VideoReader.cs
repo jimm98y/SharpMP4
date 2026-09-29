@@ -508,10 +508,6 @@ namespace SharpMP4.Readers
             var trun = trackContext.Truns[trackContext.FragmentSampleTrunIndex[trackContext.SampleIndex]];
             int trunEntryIndex = trackContext.FragmentSampleTrunEntryIndex[trackContext.SampleIndex];
 
-            uint firstSampleFlags = trun.FirstSampleFlags;
-            if ((trun.Flags & 0x4) != 0x4)
-                firstSampleFlags = trackContext.Tfhd.DefaultSampleFlags;
-
             var entry = trun._TrunEntry[trunEntryIndex];
 
             uint sampleDuration = trackContext.Tfhd.DefaultSampleDuration;
@@ -534,11 +530,20 @@ namespace SharpMP4.Readers
             else
                 throw new Exception("Cannot get sample size");
 
-            uint sampleFlags = trackContext.Tfhd.DefaultSampleFlags;
-            if (trunEntryIndex == 0)
-                sampleFlags = firstSampleFlags;
+            // the first sample's own flags where the run has them, else each sample's, else the track fragment's default,
+            // else the track's (14496-12 8.8.8.3)
+            uint sampleFlags;
+            if (trunEntryIndex == 0 && (trun.Flags & 0x4) == 0x4)
+                sampleFlags = trun.FirstSampleFlags;
             else if ((entry.Flags & 0x400) == 0x400)
                 sampleFlags = entry.SampleFlags;
+            else if ((trackContext.Tfhd.Flags & 0x20) == 0x20)
+                sampleFlags = trackContext.Tfhd.DefaultSampleFlags;
+            else
+                sampleFlags = trackContext.Trex?.DefaultSampleFlags ?? 0;
+
+            // a sync sample: sample_is_non_sync_sample 0
+            bool isRandomAccessPoint = (sampleFlags & 0x10000) == 0;
 
             // CTS
             int sampleCompositionTime = 0;
@@ -572,7 +577,7 @@ namespace SharpMP4.Readers
             ulong size = trackContext.Mdat.Data.Stream.ReadBytes(sampleSize, trackContext.SampleBuffer, 0);
 
             var mediaSample = new MediaSample(pts, dts, (int)sampleDuration,
-                new ArraySegment<byte>(trackContext.SampleBuffer, 0, (int)sampleSize));
+                new ArraySegment<byte>(trackContext.SampleBuffer, 0, (int)sampleSize), isRandomAccessPoint);
             mediaSample.Encryption = trackContext.FragmentEncryption != null && trackContext.SampleIndex < trackContext.FragmentEncryption.Length ? trackContext.FragmentEncryption[trackContext.SampleIndex] : null;
             Decrypt(trackContext, mediaSample);
 

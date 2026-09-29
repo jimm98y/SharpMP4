@@ -41,8 +41,31 @@ namespace SharpMP4.Tracks
         /// <summary>Whether the access unit being assembled holds a coded picture.</summary>
         protected bool SampleHasVcl { get; set; }
 
-        /// <summary>Whether the access unit being assembled starts at a random access point.</summary>
+        /// <summary>
+        /// Whether the access unit being assembled is a random access point - a sync sample (ISO/IEC 14496-15): each of its
+        /// VCL NAL units one of a picture decoding can start at. See <see cref="AddVclNalUnit"/>.
+        /// </summary>
         protected bool SampleHasIdr { get; set; }
+
+        // The nuh_layer_id of the last VCL NAL unit: a picture of a layer no higher starts the next access unit.
+        private int _lastVclLayerId = -1;
+
+        /// <summary>
+        /// Whether a VCL NAL unit that starts a picture starts a new access unit too: where it is of a layer no higher than
+        /// the picture before it - as the base layer's picture, which starts an access unit of more than one layer.
+        /// </summary>
+        protected bool StartsAccessUnit(int layerId) => SampleHasVcl && layerId <= _lastVclLayerId;
+
+        /// <summary>
+        /// A VCL NAL unit of the access unit being assembled, once the one before it has been taken: the access unit is a
+        /// random access point while each of its VCL NAL units is of one.
+        /// </summary>
+        protected void AddVclNalUnit(bool isRandomAccessPoint, int layerId = 0)
+        {
+            SampleHasIdr = SampleHasVcl ? SampleHasIdr && isRandomAccessPoint : isRandomAccessPoint;
+            SampleHasVcl = true;
+            _lastVclLayerId = layerId;
+        }
 
         /// <summary>
         /// Adds a NAL unit to the access unit being assembled, with the length in front of it.
@@ -58,6 +81,75 @@ namespace SharpMP4.Tracks
                 AppendToSample((byte)(length >> (i * 8)));
 
             AppendToSample(buffer, offset, length);
+        }
+
+        // NAL units that came after the last VCL NAL unit of the access unit being assembled and that start the next one
+        // where the VCL NAL unit after them is of a new one - access unit delimiters, prefix SEI, parameter sets kept in the
+        // samples, picture headers - each with its length before it: which access unit they are of, only the VCL NAL unit
+        // after them says (H.264 7.4.1.2.3, H.265 7.4.2.4.4 and Annex F, H.266 7.4.2.4.3). A prefix SEI of the base
+        // layer between the base layer's picture and another layer's, or a prefix NAL unit before each slice of an MVC
+        // base view, is of the access unit it is in.
+        private byte[] _held = new byte[1024];
+        private int _heldLength;
+
+        /// <summary>
+        /// A NAL unit that starts the next access unit if a new one comes next: held until the next VCL NAL unit says. Before
+        /// the access unit has one, it is the access unit's.
+        /// </summary>
+        protected void HoldNalUnit(byte[] buffer, int offset, int length)
+        {
+            if (!SampleHasVcl)
+            {
+                AppendNalUnit(buffer, offset, length);
+                return;
+            }
+
+            if (_heldLength + NalLengthSize + length > _held.Length)
+                Array.Resize(ref _held, Math.Max(_held.Length * 2, _heldLength + NalLengthSize + length));
+            for (int i = NalLengthSize - 1; i >= 0; i--)
+                _held[_heldLength++] = (byte)(length >> (i * 8));
+            System.Buffer.BlockCopy(buffer, offset, _held, _heldLength, length);
+            _heldLength += length;
+        }
+
+        /// <summary>The NAL units held put in the access unit being assembled: of it, as what comes next says.</summary>
+        protected void AttachHeldNalUnits()
+        {
+            if (_heldLength == 0)
+                return;
+            AppendToSample(_held, 0, _heldLength);
+            _heldLength = 0;
+        }
+
+        /// <summary>
+        /// A VCL NAL unit, before it is added: where it starts a new access unit, the one assembled is taken and the NAL
+        /// units held start the new one; where not, they are of the one assembled.
+        /// </summary>
+        protected ArraySegment<byte> StartVclNalUnit(bool startsAccessUnit)
+        {
+            ArraySegment<byte> output = default;
+            if (startsAccessUnit && SampleHasVcl)
+                output = TakeSample();
+            AttachHeldNalUnits();
+            return output;
+        }
+
+        /// <summary>The last access unit, at the end of the stream: with what was held after it.</summary>
+        protected ArraySegment<byte> FlushAccessUnit()
+        {
+            AttachHeldNalUnits();
+            return HasSample && SampleHasVcl ? TakeSample() : default;
+        }
+
+        /// <summary>
+        /// What the NAL units of a configuration record put in the sample being assembled - its declarative SEI messages -
+        /// dropped: they are no sample's, and the samples bring their own.
+        /// </summary>
+        protected void DropConfigurationSample()
+        {
+            _heldLength = 0;
+            if (HasSample)
+                TakeSample();
         }
 
         /// <summary>The finished access unit, which also ends what was being said about it.</summary>
