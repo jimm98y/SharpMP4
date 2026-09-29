@@ -195,6 +195,14 @@ namespace SharpMP4.Builders
                 mdia.SetParent(trak);
                 trak.Children.Add(mdia);
 
+                // what is said of the track - of a forced subtitle track, its 'kind' - after its media (14496-12 8.10.1)
+                var udta = SubtitleTrackBase.CreateUserDataBox(track.Track);
+                if (udta != null)
+                {
+                    udta.SetParent(trak);
+                    trak.Children.Add(udta);
+                }
+
                 MediaHeaderBox mdhd = new MediaHeaderBox();
                 mdhd.SetParent(mdia);
                 mdia.Children = new List<Box>();

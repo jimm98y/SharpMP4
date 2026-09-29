@@ -40,6 +40,12 @@ namespace SharpMP4.Builders
 
             public IStorage Storage { get; set; }
 
+            /// <summary>Where the fragment's samples start in its storage: after those of fragments split off before it.</summary>
+            public long Offset { get; set; }
+
+            /// <summary>The size of the fragment's samples, one after another in its storage.</summary>
+            public long Length => SampleSizes.Sum(size => (long)size);
+
             /// <summary>Of a protected track: how each sample is protected.</summary>
             public SampleEncryption[] Encryptions { get; set; }
         }
@@ -91,6 +97,12 @@ namespace SharpMP4.Builders
 
             /// <summary>How each sample of the fragment being assembled is protected.</summary>
             public List<SampleEncryption> Encryptions { get; set; } = new List<SampleEncryption>();
+
+            /// <summary>Of a track cut where the video is: the next of the video's fragment boundaries it is to be cut at.</summary>
+            public int NextBoundary { get; set; }
+
+            /// <summary>Where the samples not yet in a fragment start in <see cref="CurrentFragments"/>.</summary>
+            public long CurrentOffset { get; set; }
         }
 
         public uint MovieTimescale { get; set; } = 1000;
@@ -104,6 +116,13 @@ namespace SharpMP4.Builders
         private readonly Dictionary<uint, TrackContext> _trackContexts = new Dictionary<uint, TrackContext>();
         
         private uint _moofSequenceNumber = 1;
+
+        // Where the fragments of the leading video track start, but for the first, in its timescale: the other tracks' are
+        // cut there too, so that each span of time has a fragment of each track, video first - as a player reading the
+        // file a fragment at a time wants them. Cut on a clock of their own, every 2 s, against video cut at its key
+        // frames every 2.67 s, no two tracks' fragments met, and VLC, which reads the fragments in order, reached each
+        // video fragment only as its first pictures were due: they were late, and playback stuttered.
+        private readonly List<ulong> _videoBoundaries = new List<ulong>();
 
         public IMp4Logger Logger { get; set; } = DefaultMp4Logger.Instance;
 
@@ -215,18 +234,19 @@ namespace SharpMP4.Builders
         {
             TrackContext track = _trackContexts[trackID];
             uint currentSampleDuration = sampleDuration < 0 ? (uint)track.Track.DefaultSampleDuration : (uint)sampleDuration;
-            ulong nextFragmentTime = track.Track.Timescale * _maxFragmentLengthInMs * (track.FragmentCounts + 1);
-            ulong currentFragmentTime = track.EndTime * 1000;
 
-            // a fragment of video starts at a random access point, where it can be decoded from - as a player seeking to it
-            // takes it (tfra) - so it is not cut before one comes; one of any other track can start at any sample
-            bool canStartFragment = isRandomAccessPoint || track.Track.HandlerType != HandlerTypes.Video;
-            if (track.SampleSizes.Count > 0 && nextFragmentTime <= currentFragmentTime && canStartFragment)
+            var leader = LeadingVideo();
+            if (leader != null && leader != track)
+            {
+                CutAtVideoBoundaries(track, leader);
+            }
+            else if (StartsFragment(track, isRandomAccessPoint))
             {
                 var fragment = CreateNewFragment(track);
                 track.ReadyFragments.Enqueue(fragment);
 
                 track.CurrentFragments = storage;
+                track.CurrentOffset = 0;
                 track.StartTime = _trackContexts[trackID].EndTime;
                 track.SampleSizes.Clear();
                 track.SampleDurations.Clear();
@@ -234,6 +254,18 @@ namespace SharpMP4.Builders
                 track.RandomAccessPoints.Clear();
                 track.Encryptions.Clear();
                 track.FragmentCounts++;
+
+                if (leader == track)
+                {
+                    // where the other tracks' fragments are cut too - of those already past it, as a track fed before the
+                    // video is, what they have
+                    _videoBoundaries.Add(track.StartTime);
+                    foreach (var other in _trackContexts.Values)
+                    {
+                        if (other != track)
+                            CutAtVideoBoundaries(other, leader);
+                    }
+                }
             }
 
             if (track.Encryptor != null)
@@ -265,10 +297,80 @@ namespace SharpMP4.Builders
             }
         }
 
+        /// <summary>The video track the others' fragments are cut with: the first; null where there is none.</summary>
+        private TrackContext LeadingVideo() =>
+            _trackContexts.Values.Where(t => t.Track.HandlerType == HandlerTypes.Video).OrderBy(t => t.Track.TrackID).FirstOrDefault();
+
+        /// <summary>
+        /// Whether the sample about to be added to the leading video track - or to any track, where there is no video - starts
+        /// a fragment: once the fragment has run its length, a video fragment at a random access point, where it can be
+        /// decoded from, as a player seeking to it takes it (tfra).
+        /// </summary>
+        private bool StartsFragment(TrackContext track, bool isRandomAccessPoint)
+        {
+            if (track.SampleSizes.Count == 0)
+                return false;
+
+            ulong nextFragmentTime = track.Track.Timescale * _maxFragmentLengthInMs * (track.FragmentCounts + 1);
+            ulong currentFragmentTime = track.EndTime * 1000;
+            return nextFragmentTime <= currentFragmentTime && (isRandomAccessPoint || track.Track.HandlerType != HandlerTypes.Video);
+        }
+
+        /// <summary>
+        /// A track other than the leading video's cut where the video's fragments start, as far as they are known: its samples
+        /// not yet in a fragment split at the first to start at or past each boundary. A track fed before the video - a
+        /// remuxer's, one track after another - is cut as the video's boundaries come; one fed after, as its samples do.
+        /// </summary>
+        private void CutAtVideoBoundaries(TrackContext track, TrackContext leader)
+        {
+            bool Reached(ulong time, int boundary) =>
+                (decimal)time * leader.Track.Timescale >= (decimal)_videoBoundaries[boundary] * track.Track.Timescale;
+
+            while (track.NextBoundary < _videoBoundaries.Count && track.SampleSizes.Count > 0)
+            {
+                // the first sample at or past the boundary; after all of them, the next to come, which starts at the end
+                int count = 0;
+                ulong time = track.StartTime;
+                while (count < track.SampleSizes.Count && !Reached(time, track.NextBoundary))
+                    time += track.SampleDurations[count++];
+
+                if (count == track.SampleSizes.Count && !Reached(time, track.NextBoundary))
+                    return; // not there yet
+
+                if (count > 0)
+                    SplitFragment(track, count);
+                track.NextBoundary++;
+            }
+        }
+
+        /// <summary>The first samples of those not yet in a fragment made a fragment of their own, in the same storage.</summary>
+        private static void SplitFragment(TrackContext track, int count)
+        {
+            ulong duration = 0;
+            for (int i = 0; i < count; i++)
+                duration += track.SampleDurations[i];
+
+            var fragment = new MediaFragment(track.CurrentFragments, track.StartTime, track.StartTime + duration,
+                track.SampleSizes.Take(count).ToArray(), track.SampleDurations.Take(count).ToArray(), track.CompositionOffsets.Take(count).ToArray(),
+                track.RandomAccessPoints.Take(count).ToArray(), track.Protection != null ? track.Encryptions.Take(count).ToArray() : null)
+            { Offset = track.CurrentOffset };
+            track.ReadyFragments.Enqueue(fragment);
+
+            track.CurrentOffset += fragment.Length;
+            track.StartTime += duration;
+            track.SampleSizes.RemoveRange(0, count);
+            track.SampleDurations.RemoveRange(0, count);
+            track.CompositionOffsets.RemoveRange(0, count);
+            track.RandomAccessPoints.RemoveRange(0, count);
+            if (track.Encryptions.Count >= count)
+                track.Encryptions.RemoveRange(0, count);
+            track.FragmentCounts++;
+        }
+
         private MediaFragment CreateNewFragment(TrackContext track)
         {
             var ret = new MediaFragment(track.CurrentFragments, track.StartTime, track.EndTime, track.SampleSizes.ToArray(), track.SampleDurations.ToArray(), track.CompositionOffsets.ToArray(),
-                track.RandomAccessPoints.ToArray(), track.Protection != null ? track.Encryptions.ToArray() : null);
+                track.RandomAccessPoints.ToArray(), track.Protection != null ? track.Encryptions.ToArray() : null) { Offset = track.CurrentOffset };
             track.SampleSizes.Clear();
             track.RandomAccessPoints.Clear();
             track.Encryptions.Clear();
@@ -290,65 +392,60 @@ namespace SharpMP4.Builders
                 _output.Flush(str, initializationSegmentNumber);
             }
 
-            // all tracks have enough samples to produce a fragment
-            do
-            {
-                // VLC requires the first MOOF to be video, otherwise we get choppy playback
-                // first video tracks
-                foreach(var track in _trackContexts.Values)
-                {
-                    if (track.Track.HandlerType == HandlerTypes.Video)
-                    {
-                        WriteTrackFragment(isFlushing, track);
-                    }
-                }
-
-                // then audio tracks
-                foreach (var track in _trackContexts.Values)
-                {
-                    if (track.Track.HandlerType == HandlerTypes.Sound)
-                    {
-                        WriteTrackFragment(isFlushing, track);
-                    }
-                }
-
-                // then the rest
-                foreach (var track in _trackContexts.Values)
-                {
-                    if (track.Track.HandlerType != HandlerTypes.Video && track.Track.HandlerType != HandlerTypes.Sound)
-                    {
-                        WriteTrackFragment(isFlushing, track);
-                    }
-                }
-            }
-            while (isFlushing && _trackContexts.Values.Any(x => x.ReadyFragments.Count > 0 || x.SampleSizes.Count > 0));
-        }
-
-        private void WriteTrackFragment(bool isFlushing, TrackContext track)
-        {
-            MediaFragment fragment;
-
             if (isFlushing)
             {
-                if (track.ReadyFragments.Count > 0)
+                // what is left of each track: its last fragment
+                foreach (var track in _trackContexts.Values)
                 {
-                    fragment = track.ReadyFragments.Dequeue();
+                    if (track.SampleSizes.Count > 0)
+                        track.ReadyFragments.Enqueue(CreateNewFragment(track));
                 }
-                else if (track.SampleSizes.Count > 0)
-                {
-                    fragment = CreateNewFragment(track);
-                }
-                else
-                {
-                    // at the very end we might not have any samples for a track
-                    return;
-                }
-            }
-            else
-            {
-                fragment = track.ReadyFragments.Dequeue();
             }
 
+            // The fragments in the order of their time, whatever their lengths - a video fragment is a group of pictures,
+            // an audio one the samples of its time - so that a player reading the file finds each track's samples near the
+            // others' of the same time: written a fragment of each track in turn, tracks whose fragments are longer ran ahead
+            // of the others, seconds apart by the end, and playback stalled. Only while every track has a fragment ready -
+            // or at the end - is the earliest known to be.
+            while (true)
+            {
+                TrackContext next = null;
+                foreach (var track in _trackContexts.Values)
+                {
+                    if (track.ReadyFragments.Count == 0)
+                    {
+                        if (isFlushing)
+                            continue;
+                        return;
+                    }
+                    if (next == null || Precedes(track, next))
+                        next = track;
+                }
+                if (next == null)
+                    return;
+
+                WriteTrackFragment(next, next.ReadyFragments.Dequeue());
+            }
+        }
+
+        /// <summary>
+        /// Whether a track's next fragment goes before another's: the earlier, and of two starting together, video before
+        /// audio before the rest - VLC requires the first 'moof' to be video, otherwise playback is choppy.
+        /// </summary>
+        private static bool Precedes(TrackContext track, TrackContext other)
+        {
+            double start = (double)track.ReadyFragments.Peek().StartTime / track.Track.Timescale;
+            double otherStart = (double)other.ReadyFragments.Peek().StartTime / other.Track.Timescale;
+            if (start != otherStart)
+                return start < otherStart;
+            return Rank(track) < Rank(other);
+        }
+
+        private static int Rank(TrackContext track) =>
+            track.Track.HandlerType == HandlerTypes.Video ? 0 : track.Track.HandlerType == HandlerTypes.Sound ? 1 : 2;
+
+        private void WriteTrackFragment(TrackContext track, MediaFragment fragment)
+        {
             Container fmp4 = new Container();
             uint sequenceNumber = _moofSequenceNumber++;
 
@@ -422,6 +519,14 @@ namespace SharpMP4.Builders
                 var mdia = new MediaBox();
                 mdia.SetParent(trak);
                 trak.Children.Add(mdia);
+
+                // what is said of the track - of a forced subtitle track, its 'kind' - after its media (14496-12 8.10.1)
+                var udta = SubtitleTrackBase.CreateUserDataBox(track.Track);
+                if (udta != null)
+                {
+                    udta.SetParent(trak);
+                    trak.Children.Add(udta);
+                }
 
                 MediaHeaderBox mdhd = new MediaHeaderBox();
                 mdhd.SetParent(mdia);
@@ -696,7 +801,7 @@ namespace SharpMP4.Builders
             var mdat = new MediaDataBox();
             mdat.SetParent(fmp4);
             fmp4.Children.Add(mdat);
-            mdat.Data = new StreamMarker(0, fragment.Storage.GetLength(), new IsoStream(fragment.Storage));
+            mdat.Data = new StreamMarker(fragment.Offset, fragment.Length, new IsoStream(fragment.Storage));
         }
 
         /// <summary>The flags of a sync sample: one that depends on no other (14496-12 8.8.3.1).</summary>
@@ -704,7 +809,8 @@ namespace SharpMP4.Builders
 
         public void FinalizeMedia()
         {
-            if (_trackContexts.Values.Any(x => x.CurrentFragments.GetLength() > 0))
+            // what is left: samples not yet in a fragment - of no bytes too, a text track's gaps - and fragments not written
+            if (_trackContexts.Values.Any(x => x.SampleSizes.Count > 0 || x.ReadyFragments.Count > 0))
             {
                 WriteFragment(true);
             }

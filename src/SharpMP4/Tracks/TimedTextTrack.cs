@@ -28,7 +28,13 @@ namespace SharpMP4.Tracks
         public TimedTextTrack(Box entry, uint timescale, string handlerType) : this(timescale, handlerType)
         {
             SampleEntry = entry;
+            // every sample forced, as the entry's display flags say
+            Forced = entry is TextSampleEntrytx3gDup tx3g && (tx3g.DisplayFlags & AllSamplesForced) != 0;
         }
+
+        // Of the display flags of a 3GPP timed text entry: every sample forced, as Apple's and VLC's players read them. VLC
+        // selects a forced track by default, where it selects no other subtitles unless asked; it reads no 'kind' box.
+        private const uint AllSamplesForced = 0x80000000;
 
         public override IReadOnlyList<SubtitleCue> ParseCues(byte[] buffer, int offset, int length, long start, long duration)
         {
@@ -74,7 +80,7 @@ namespace SharpMP4.Tracks
             {
                 DataReferenceIndex = 1,
                 ReservedSampleEntry = new byte[6],
-                DisplayFlags = 0,
+                DisplayFlags = Forced ? AllSamplesForced : 0u,
                 HorizontalJustification = 1,
                 VerticalJustification = 0xFF,
                 BackgroundColorRgba = new byte[4],
@@ -92,6 +98,6 @@ namespace SharpMP4.Tracks
             return entry;
         }
 
-        public override ITrack Clone() => new TimedTextTrack(Timescale, _handlerType) { Language = Language };
+        public override ITrack Clone() => new TimedTextTrack(Timescale, _handlerType) { Language = Language, Forced = Forced };
     }
 }

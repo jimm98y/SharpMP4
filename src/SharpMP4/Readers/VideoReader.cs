@@ -114,6 +114,11 @@ namespace SharpMP4.Readers
 
                         // TODO: review, this is needed because of AV1 where we cannot calculate the sample rate
                         int defaultSampleDuration = trackContext.Stts.SampleDelta != null && trackContext.Stts.SampleDelta.Length > 0 ? (int)trackContext.Stts.SampleDelta[0] : 0;
+                        // of a fragmented file, whose 'stts' is empty: the first fragment's first sample's - without it, a track
+                        // cloned to be written again took a duration of its own, an H.264 track of no timing in its SPS 23.976
+                        // frames a second whatever the file's
+                        if (defaultSampleDuration == 0)
+                            defaultSampleDuration = (int)FirstFragmentSampleDuration(container, trackID, trackContext.Trex);
 
                         ITrack trackImpl = null;
                         try
@@ -129,6 +134,10 @@ namespace SharpMP4.Readers
                         }
 
                         trackImpl?.Logger ??= this.Logger;
+
+                        // a subtitle track forced, as its 'kind' says - of 3GPP timed text, or its sample entry
+                        if (trackImpl is ISubtitleTrack subtitles && SubtitleTrackBase.IsForced(track))
+                            subtitles.Forced = true;
 
                         this.Tracks[trackID].Track = trackImpl;
 
@@ -344,6 +353,31 @@ namespace SharpMP4.Readers
         /// one; else the start of the 'moof' where default-base-is-moof is set, or it is the first track fragment; else
         /// the end of the data of the track fragment before it.
         /// </summary>
+        /// <summary>
+        /// The duration of the first sample of a track's first fragment (14496-12 8.8.8): its own in the 'trun', else the
+        /// 'tfhd's default, else the 'trex's. 0 where the track has no fragment, or no duration is given.
+        /// </summary>
+        private static uint FirstFragmentSampleDuration(Container container, uint trackID, TrackExtendsBox trex)
+        {
+            foreach (var moof in container.Children.OfType<MovieFragmentBox>())
+            {
+                foreach (var traf in moof.Children.OfType<TrackFragmentBox>())
+                {
+                    var tfhd = traf.Children.OfType<TrackFragmentHeaderBox>().FirstOrDefault();
+                    if (tfhd == null || tfhd.TrackID != trackID)
+                        continue;
+
+                    var entry = traf.Children.OfType<TrackRunBox>().FirstOrDefault(t => t.SampleCount > 0)?._TrunEntry?.FirstOrDefault();
+                    if (entry != null && (entry.Flags & 0x100) == 0x100)
+                        return entry.SampleDuration;
+                    if ((tfhd.Flags & 0x8) == 0x8)
+                        return tfhd.DefaultSampleDuration;
+                    return trex?.DefaultSampleDuration ?? 0;
+                }
+            }
+            return trex?.DefaultSampleDuration ?? 0;
+        }
+
         private long BaseDataOffsetOf(MovieFragmentBox moof, TrackFragmentBox target)
         {
             long moofOffset = moof.GetBoxOffset();

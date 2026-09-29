@@ -83,6 +83,6 @@ namespace SharpMP4.Tracks
             return entry;
         }
 
-        public override ITrack Clone() => new WebVttTrack(Timescale) { Config = Config, SourceLabel = SourceLabel, Language = Language };
+        public override ITrack Clone() => new WebVttTrack(Timescale) { Config = Config, SourceLabel = SourceLabel, Language = Language, Forced = Forced };
     }
 }

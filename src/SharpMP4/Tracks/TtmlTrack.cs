@@ -82,6 +82,6 @@ namespace SharpMP4.Tracks
             };
         }
 
-        public override ITrack Clone() => new TtmlTrack(Timescale) { Namespace = Namespace, SchemaLocation = SchemaLocation, AuxiliaryMimeTypes = AuxiliaryMimeTypes, Language = Language };
+        public override ITrack Clone() => new TtmlTrack(Timescale) { Namespace = Namespace, SchemaLocation = SchemaLocation, AuxiliaryMimeTypes = AuxiliaryMimeTypes, Language = Language, Forced = Forced };
     }
 }

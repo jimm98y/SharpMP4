@@ -16,5 +16,12 @@ namespace SharpMP4.Tracks
         /// a gap between them.
         /// </summary>
         byte[] CreateSample(IReadOnlyList<SubtitleCue> cues);
+
+        /// <summary>
+        /// Whether the track is forced: its cues shown whether subtitles are on or not, as a translation of the dialogue in
+        /// another language is. Said by a 'kind' box of the DASH role 'forced-subtitle' (ISO/IEC 14496-12 8.10.4), and of
+        /// 3GPP timed text by its sample entry too.
+        /// </summary>
+        bool Forced { get; set; }
     }
 }

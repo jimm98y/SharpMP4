@@ -65,6 +65,6 @@ namespace SharpMP4.Tracks
             return entry;
         }
 
-        public override ITrack Clone() => new SimpleTextTrack(Timescale) { MimeFormat = MimeFormat, ContentEncoding = ContentEncoding, TextConfig = TextConfig, Language = Language };
+        public override ITrack Clone() => new SimpleTextTrack(Timescale) { MimeFormat = MimeFormat, ContentEncoding = ContentEncoding, TextConfig = TextConfig, Language = Language, Forced = Forced };
     }
 }

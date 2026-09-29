@@ -207,5 +207,88 @@ public class SubtitleWriterTests
         }
     }
 
+    public static IEnumerable<object[]> ForcedTracks() =>
+        from kind in new[] { "wvtt", "stpp", "tx3g", "stxt" }
+        from fragmented in new[] { false, true }
+        from forced in new[] { true, false }
+        select new object[] { kind, fragmented, forced };
+
+    private static byte[] BuildOne(string kind, bool fragmented, bool forced)
+    {
+        using var output = new MemoryStream();
+        var track = Create(kind);
+        track.Forced = forced;
+        IMp4Builder builder = fragmented
+            ? new FragmentedMp4Builder(new SingleStreamOutput(output), maxFragmentLengthInMs: 2000)
+            : new Mp4Builder(new SingleStreamOutput(output));
+        builder.AddTrack(track);
+        builder.ProcessTrackSample(track.TrackID, track.CreateSample(Kept(kind, [new SubtitleCue { Text = "Forced?" }])), 1000);
+        builder.FinalizeMedia();
+        return output.ToArray();
+    }
+
+    /// <summary>
+    /// Forced, a subtitle track of any kind says so in a 'kind' box of the DASH role 'forced-subtitle' in its 'trak' - which
+    /// ffmpeg reads as its forced disposition - and 3GPP timed text in its entry's display flags too, every sample forced,
+    /// 0x80000000, which VLC selects the track by default for. Read back, the track is forced.
+    /// </summary>
+    [TestMethod]
+    [DynamicData(nameof(ForcedTracks), DynamicDataSourceType.Method)]
+    public void WritesWhetherTheTrackIsForced(string kind, bool fragmented, bool forced)
+    {
+        var container = new Container();
+        container.Read(new IsoStream(new StreamWrapper(new MemoryStream(BuildOne(kind, fragmented, forced)))));
+
+        var trak = Boxes.Find<TrackBox>(container);
+        Assert.AreEqual(forced, SubtitleTrackBase.IsForced(trak), "the 'kind' box");
+        if (forced)
+        {
+            var kindBox = Boxes.Find<KindBox>(container);
+            Assert.AreEqual("urn:mpeg:dash:role:2011", kindBox.SchemeURI.Text);
+            Assert.AreEqual("forced-subtitle", kindBox.Value.Text);
+        }
+        if (kind == "tx3g")
+            Assert.AreEqual(forced ? 0x80000000u : 0u, Boxes.Find<TextSampleEntrytx3gDup>(container).DisplayFlags);
+
+        var reader = new VideoReader();
+        reader.Parse(container);
+        var track = (ISubtitleTrack)reader.Tracks.Values.Single().Track;
+        Assert.AreEqual(forced, track.Forced, "read back");
+        Assert.AreEqual(forced, ((ISubtitleTrack)track.Clone()).Forced, "cloned");
+    }
+
+    /// <summary>ffmpeg reads the 'kind' box as the track's forced disposition, of the kinds of track it reads.</summary>
+    [TestMethod]
+    [DataRow("tx3g")]
+    [DataRow("stpp")]
+    [DataRow("stxt")]
+    public void WritesAForcedTrackFfmpegReadsAsForced(string kind)
+    {
+        string? ffmpeg = SharpMP4.Tests.Conformance.ConformanceCorpus.LocateFfmpeg();
+        if (ffmpeg == null)
+            Assert.Inconclusive("no ffmpeg; put one on the PATH, or set SHARPMP4_FFMPEG");
+        string ffprobe = Path.Combine(Path.GetDirectoryName(ffmpeg)!, "ffprobe" + Path.GetExtension(ffmpeg));
+
+        foreach (bool forced in new[] { true, false })
+        {
+            string path = Path.Combine(Path.GetTempPath(), $"sharpmp4-forced-{Guid.NewGuid():N}.mp4");
+            try
+            {
+                File.WriteAllBytes(path, BuildOne(kind, fragmented: false, forced));
+                var start = new ProcessStartInfo(ffprobe) { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true, CreateNoWindow = true };
+                foreach (string arg in new[] { "-v", "error", "-show_entries", "stream_disposition=forced", "-of", "csv=p=0", path })
+                    start.ArgumentList.Add(arg);
+                using var process = Process.Start(start)!;
+                string disposition = process.StandardOutput.ReadToEnd().Trim();
+                process.WaitForExit();
+                Assert.AreEqual(forced ? "1" : "0", disposition, $"forced {forced}");
+            }
+            finally
+            {
+                File.Delete(path);
+            }
+        }
+    }
+
     private static string Time(long ms) => TimeSpan.FromMilliseconds(ms).ToString(@"hh\:mm\:ss\,fff");
 }
