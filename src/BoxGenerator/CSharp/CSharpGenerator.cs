@@ -162,7 +162,6 @@ namespace BoxGenerator.CSharp
                 { "pres_bytes",                       "int pres_bytes = 0" },
                 { "coreSbrFrameLengthIndex",          "int coreSbrFrameLengthIndex = 0" },
                 { "usacConfigExtLength",              "uint usacConfigExtLength = 0" },
-                { "version, flags, Per_Sample_IV_Size",  "byte version, uint flags, byte Per_Sample_IV_Size" },
                 { "version, flags",                   "byte version = 0, uint flags = 0" },
                 { "loudnessType",                     "uint loudnessType" },
                 { "local_key_id",                     "uint local_key_id" },
@@ -1079,7 +1078,8 @@ namespace SharpISOBMFF
             {
                 if (methodType == MethodType.Read)
                 {
-                    spacing += "if (stream.HasMoreData(boxSize, readSize)) ";
+                    // an optional string, not the box after it: boxes may follow a sample entry's strings
+                    spacing += m.Contains("ReadStringZeroTerminated") ? "if (stream.HasStringBeforeBoxes(boxSize, readSize)) " : "if (stream.HasMoreData(boxSize, readSize)) ";
                 }
                 else if (isOptional)
                 {
@@ -1115,16 +1115,6 @@ namespace SharpISOBMFF
                     // and one sized by a call: CalculateStringSize(channel_label[ i ])
                     m = parserDocument.FixNestedInLoopVariables(field, m, "(", ")");
                 }
-            }
-
-            // The IV size of 'senc' is not in the box (ISO/IEC 23001-7): the box's size settles it. PIFF's
-            // gives it where its flags say so.
-            if (methodType == MethodType.Read && name == "samples" && (b.BoxName == "SampleEncryptionBox" || b.BoxName == "PiffSampleEncryptionBox"))
-            {
-                bool piff = b.BoxName == "PiffSampleEncryptionBox";
-                string condition = piff ? "if ((flags & 0x1) == 0) " : "";
-                string layout = piff ? "0" : "version";
-                spacing = $"{spacing}{condition}this.Per_Sample_IV_Size = stream.InferPerSampleIvSize(boxSize, readSize, {layout}, flags, sample_count, Per_Sample_IV_Size);\r\n{spacing}";
             }
 
             if (methodType == MethodType.Read && isOptional)

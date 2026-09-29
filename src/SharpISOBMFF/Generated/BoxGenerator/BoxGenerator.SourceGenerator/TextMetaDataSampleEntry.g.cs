@@ -34,7 +34,7 @@ public partial class TextMetaDataSampleEntry : MetaDataSampleEntry
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		if (stream.HasMoreData(boxSize, readSize)) { boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.content_encoding, "content_encoding"); this.content_encodingPresent = true; } // optional
+		if (stream.HasStringBeforeBoxes(boxSize, readSize)) { boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.content_encoding, "content_encoding"); this.content_encodingPresent = true; } // optional
 		boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.mime_format, "mime_format"); 
 		// if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.TextConfigBox, "TextConfigBox"); // optional
 		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);

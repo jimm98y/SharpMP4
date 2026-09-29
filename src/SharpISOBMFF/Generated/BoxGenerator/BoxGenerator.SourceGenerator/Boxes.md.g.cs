@@ -1032,6 +1032,7 @@
 |vsib|ViewScalabilityInformationSEIBox|
 |vsid|CueSourceIDBox|
 |vtta|VTTAdditionalBox|
+|vttc|VTTCueBox|
 |vttC|WebVTTConfigurationBox|
 |vtte|VTTEmptyBox|
 |vvc1|VisualSampleEntry|

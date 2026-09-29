@@ -21,6 +21,13 @@ namespace SharpMP4.Tracks
 
         private static ITrack DefaultCreateTrackInternal(uint trackID, Box sampleEntry, uint timescale, int sampleDuration, uint handlerType, string handlerName)
         {
+            // subtitles and timed text are known by their sample entry, whichever handler - 'text', 'subt', 'sbtl' - they are of
+            ITrack subtitles = CreateSubtitleTrack(trackID, sampleEntry, timescale, handlerType);
+            if (subtitles != null)
+            {
+                return subtitles;
+            }
+
             if (handlerType == IsoStream.FromFourCC(HandlerTypes.Video))
             {
                 return CreateVideoTrack(trackID, sampleEntry, timescale, sampleDuration);
@@ -72,6 +79,30 @@ namespace SharpMP4.Tracks
 
                 default:
                     throw new NotSupportedException($"Unsupported audio codec: {IsoStream.ToFourCC(sampleEntry.FourCC)}");
+            }
+        }
+
+        /// <summary>
+        /// The track of a sample entry of subtitles or timed text: WebVTT's 'wvtt', TTML's 'stpp', simple text's 'stxt' and
+        /// 3GPP timed text's 'tx3g'. Null of any other.
+        /// </summary>
+        private static ITrack CreateSubtitleTrack(uint trackID, Box box, uint timescale, uint handlerType)
+        {
+            // given the sample entry's first child where it has one: its configuration, as of video and audio
+            Box entry = box is SampleEntry ? box : box?.GetParent() as SampleEntry ?? box;
+            string handler = IsoStream.ToFourCC(handlerType);
+            switch (entry)
+            {
+                case WVTTSampleEntry wvtt:
+                    return new WebVttTrack(wvtt, timescale) { TrackID = trackID };
+                case XMLSubtitleSampleEntry stpp:
+                    return new TtmlTrack(stpp, timescale, handler) { TrackID = trackID };
+                case SimpleTextSampleEntry stxt:
+                    return new SimpleTextTrack(stxt, timescale) { TrackID = trackID };
+                case TextSampleEntrytx3gDup tx3g:
+                    return new TimedTextTrack(tx3g, timescale, handler) { TrackID = trackID };
+                default:
+                    return null;
             }
         }
 

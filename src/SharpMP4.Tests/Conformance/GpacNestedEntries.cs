@@ -368,18 +368,21 @@ public static partial class BoxTreeComparison
             Check(result, senc, at, "FullBoxInfo", info.Attributes, "Flags", senc.Flags);
         }
 
+        // the box keeps its samples as bytes, whose IV size is the track's: split by the size GPAC, which read the track's
+        // 'tenc', gives each, they are to hold the IVs and subsamples GPAC read
         var samples = tree.Where(e => e.Name == "SampleEncryptionEntry").ToList();
+        int IvSizeOf(int i) => i < samples.Count && samples[i].Attributes.TryGetValue("IV_size", out string? size) && int.TryParse(size, out int n) ? n : -1;
+        var entries = SharpMP4.Encryption.SampleEncryptionReader.ReadSampleData(senc.SampleData, (int)senc.SampleCount, senc.Flags, IvSizeOf);
         for (int i = 0; i < samples.Count; i++)
         {
-            if (Missing(result, at, "SampleEncryptionEntry", i, senc.Samples?.Length ?? 0))
+            if (Missing(result, at, "SampleEncryptionEntry", i, entries.Count))
                 break;
-            var sample = senc.Samples![i];
+            var sample = entries[i];
             string element = $"SampleEncryptionEntry[{i}]";
             var gpac = samples[i].Attributes;
             Check(result, senc, at, element, gpac, "sampleNumber", i + 1);
-            Check(result, senc, at, element, gpac, "IV", sample._InitializationVector);
-            Check(result, senc, at, element, gpac, "IV_size", sample._InitializationVector?.Length ?? 0);
-            Check(result, senc, at, element, gpac, "SubsampleCount", sample.SubsampleCount);
+            Check(result, senc, at, element, gpac, "IV", sample.IV ?? []);
+            Check(result, senc, at, element, gpac, "SubsampleCount", sample.Subsamples?.Length ?? 0);
 
             var subsamples = samples[i].Named("SubSampleEncryptionEntry");
             for (int j = 0; j < subsamples.Count; j++)
@@ -387,8 +390,8 @@ public static partial class BoxTreeComparison
                 if (Missing(result, at, $"{element}/SubSampleEncryptionEntry", j, sample.Subsamples?.Length ?? 0))
                     break;
                 var subsample = sample.Subsamples![j];
-                Check(result, senc, at, $"{element}/SubSampleEncryptionEntry[{j}]", subsamples[j].Attributes, "NumClearBytes", subsample._BytesOfClearData);
-                Check(result, senc, at, $"{element}/SubSampleEncryptionEntry[{j}]", subsamples[j].Attributes, "NumEncryptedBytes", subsample._BytesOfProtectedData);
+                Check(result, senc, at, $"{element}/SubSampleEncryptionEntry[{j}]", subsamples[j].Attributes, "NumClearBytes", subsample.ClearBytes);
+                Check(result, senc, at, $"{element}/SubSampleEncryptionEntry[{j}]", subsamples[j].Attributes, "NumEncryptedBytes", subsample.ProtectedBytes);
             }
         }
     }

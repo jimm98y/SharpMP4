@@ -39,6 +39,7 @@ public class SyncSampleTests
         ["fate/mov/test_iibbibb_neg_ctts.mp4"] = RecoveryPoint,
         ["firefox/crashtests/1414444.mp4"] = NoPicture,
         ["firefox/crashtests/1833896.mp4"] = NoPicture,
+        ["firefox/crashtests/1389304.mp4"] = "is a crash test: it marks pictures of non-IDR slices sync samples",
         ["firefox/crashtests/1903669.mp4"] = "is a crash test: a sample of slices whose headers differ as those of new pictures do (7.4.1.2.4)",
         ["mp4parse/mp4parse_capi/no_timescale.mp4"] = NoPicture,
         ["fate/h264/attachment631-small.mp4"] = NoPicture,

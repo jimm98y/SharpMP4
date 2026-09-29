@@ -43,8 +43,8 @@ public partial class XMLSubtitleSampleEntry : SubtitleSampleEntry
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.ns, "ns"); 
-		if (stream.HasMoreData(boxSize, readSize)) { boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.schema_location, "schema_location"); this.schema_locationPresent = true; } // optional 
-		if (stream.HasMoreData(boxSize, readSize)) { boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.auxiliary_mime_types, "auxiliary_mime_types"); this.auxiliary_mime_typesPresent = true; } // optional, required if auxiliary resources are present 
+		if (stream.HasStringBeforeBoxes(boxSize, readSize)) { boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.schema_location, "schema_location"); this.schema_locationPresent = true; } // optional 
+		if (stream.HasStringBeforeBoxes(boxSize, readSize)) { boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.auxiliary_mime_types, "auxiliary_mime_types"); this.auxiliary_mime_typesPresent = true; } // optional, required if auxiliary resources are present 
 		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox, "BitRateBox"); 
 		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
 		return boxSize;

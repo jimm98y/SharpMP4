@@ -241,6 +241,25 @@ namespace SharpMP4.Builders
                         }
                         break;
 
+                    case HandlerTypes.Subtitle:
+                        {
+                            // subtitles, as TTML's (14496-12 12.6.2)
+                            var sthd = new SubtitleMediaHeaderBox();
+                            sthd.SetParent(minf);
+                            minf.Children.Add(sthd);
+                        }
+                        break;
+
+                    case HandlerTypes.Text:
+                    case HandlerTypes.AppleSubtitle:
+                        {
+                            // timed text, WebVTT's and 3GPP's, has no media header of its own (14496-12 12.5.2)
+                            var nmhd = new NullMediaHeaderBox();
+                            nmhd.SetParent(minf);
+                            minf.Children.Add(nmhd);
+                        }
+                        break;
+
                     default:
                         throw new NotSupportedException(track.Track.HandlerType);
                 }

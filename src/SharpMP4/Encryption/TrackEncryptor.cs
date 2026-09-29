@@ -179,37 +179,38 @@ namespace SharpMP4.Encryption
             bool subsamples = encryptions.Any(e => e.Subsamples != null);
             uint flags = subsamples ? 0x2u : 0u;
 
-            var entries = new SampleEncryptionSample[encryptions.Count];
+            // each sample's IV, then its subsamples: a count, and of each its clear and protected bytes (7.2)
+            var data = new List<byte>();
             var sizes = new uint[encryptions.Count];
             for (int i = 0; i < encryptions.Count; i++)
             {
                 var encryption = encryptions[i];
-                var entry = new SampleEncryptionSample(0, flags, ivSize)
-                {
-                    _InitializationVector = ivSize > 0 ? encryption.IV : Array.Empty<byte>(),
-                };
-                int size = ivSize;
+                int start = data.Count;
+                if (ivSize > 0)
+                    data.AddRange(encryption.IV);
                 if (subsamples)
                 {
                     // a sample protected whole, among ones in subsamples, is one subsample of its own
                     var runs = encryption.Subsamples ?? new[] { new EncryptionSubsample(0, sampleSizes[i]) };
-                    entry.SubsampleCount = (uint)runs.Length;
-                    entry.Subsamples = runs.Select(run => new SampleEncryptionSubsample(0)
+                    data.Add((byte)(runs.Length >> 8));
+                    data.Add((byte)runs.Length);
+                    foreach (var run in runs)
                     {
-                        _BytesOfClearData = (ushort)run.ClearBytes,
-                        _BytesOfProtectedData = run.ProtectedBytes,
-                    }).ToArray();
-                    size += 2 + 6 * runs.Length;
+                        data.Add((byte)(run.ClearBytes >> 8));
+                        data.Add((byte)run.ClearBytes);
+                        data.Add((byte)(run.ProtectedBytes >> 24));
+                        data.Add((byte)(run.ProtectedBytes >> 16));
+                        data.Add((byte)(run.ProtectedBytes >> 8));
+                        data.Add((byte)run.ProtectedBytes);
+                    }
                 }
-                entries[i] = entry;
-                sizes[i] = (uint)size;
+                sizes[i] = (uint)(data.Count - start);
             }
 
             var senc = new SampleEncryptionBox(0, flags)
             {
-                SampleCount = (uint)entries.Length,
-                PerSampleIVSize = ivSize,
-                Samples = entries,
+                SampleCount = (uint)encryptions.Count,
+                SampleData = data.ToArray(),
             };
 
             if (!sizes.Any(size => size > 0))

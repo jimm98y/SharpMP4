@@ -86,18 +86,6 @@ namespace BoxGenerator
                     fields.Add(new PseudoField() { Name = "OutputChannelCount", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
                     item.Value.CtorContent = "\t\tthis.OutputChannelCount = OutputChannelCount;\r\n";
                 }
-                else if (item.Value.BoxName == "SampleEncryptionSample")
-                {
-                    fields.Add(new PseudoField() { Name = "version", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
-                    fields.Add(new PseudoField() { Name = "flags", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(24)")) });
-                    fields.Add(new PseudoField() { Name = "Per_Sample_IV_Size", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
-                    item.Value.CtorContent = "\t\tthis.version = version;\r\n\t\tthis.flags = flags;\r\n\t\tthis.Per_Sample_IV_Size = Per_Sample_IV_Size;\r\n";
-                }
-                else if (item.Value.BoxName == "SampleEncryptionSubsample")
-                {
-                    fields.Add(new PseudoField() { Name = "version", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
-                    item.Value.CtorContent = "\t\tthis.version = version;\r\n";
-                }
                 else if (item.Value.BoxName == "TrunEntry")
                 {
                     fields.Add(new PseudoField() { Name = "version", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
@@ -111,10 +99,6 @@ namespace BoxGenerator
                 else if (item.Value.BoxName == "FullBox")
                 {
                     item.Value.CtorContent = "\t\tthis.version = v;\r\n\t\t this.flags = f;";
-                }
-                else if (item.Value.BoxName == "SampleEncryptionBox")
-                {
-                    fields.Add(new PseudoField() { Name = "Per_Sample_IV_Size", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")), Value = " = 16; // TODO: get from the 'tenc' box" });
                 }
                 else if (item.Value.BoxName == "SampleGroupDescriptionEntry")
                 {
