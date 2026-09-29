@@ -1376,7 +1376,7 @@ frame_obu( sz ) {
  endBitPos = get_position()
  headerBytes = (endBitPos - startBitPos) / 8
  sz -= headerBytes
- /*for ( TileNum = tg_start; TileNum <= tg_end; TileNum++ ) {
+ for ( TileNum = tg_start; TileNum <= tg_end; TileNum++ ) {
  tileRow = TileNum / TileCols
  tileCol = TileNum % TileCols
  lastTile = TileNum == tg_end
@@ -1395,8 +1395,7 @@ frame_obu( sz ) {
  init_symbol( tileSize )
  decode_tile()
  exit_symbol()
- }*/
- skip_obu()
+ }
 
  if ( tg_end == NumTiles - 1 ) {
  /* if ( !disable_frame_end_update_cdf ) {

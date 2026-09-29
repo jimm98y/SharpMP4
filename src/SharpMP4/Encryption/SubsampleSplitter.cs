@@ -8,30 +8,24 @@ using System.Linq;
 namespace SharpMP4.Encryption
 {
     /// <summary>
-    /// Splits a sample of NAL units into what is left in the clear and what is protected (ISO/IEC 23001-7, 9.5.2): of a
-    /// VCL NAL unit its length, its NAL unit header and its slice header stay clear, for a decoder to read before the
-    /// data is decrypted, and the rest is protected; any other NAL unit stays clear all through. Protected bytes are
-    /// whole blocks but for 'cbcs', the bytes left over put in the clear before them, as Shaka Packager does; 'cbcs'
-    /// leaves a partial block at the end in the clear of its own.
+    /// Splits a sample into what is left in the clear and what is protected (ISO/IEC 23001-7, 9.5.2): what a decoder reads
+    /// before the data is decrypted stays clear, as the binding of the codec says. Of NAL units (<see cref="NalSubsampleSplitter"/>)
+    /// and of AV1's and AV2's OBUs (<see cref="Av1SubsampleSplitter"/>, <see cref="Av2SubsampleSplitter"/>).
     /// </summary>
     public abstract class SubsampleSplitter
     {
-        private const int BlockSize = 16;
+        protected const int BlockSize = 16;
 
-        protected SubsampleSplitter(int lengthSize, IMp4Logger logger)
+        protected SubsampleSplitter(IMp4Logger logger)
         {
-            LengthSize = lengthSize;
             Logger = logger ?? DefaultMp4Logger.Instance;
         }
-
-        /// <summary>The size of each NAL unit's length before it.</summary>
-        public int LengthSize { get; }
 
         public IMp4Logger Logger { get; set; }
 
         /// <summary>
-        /// The splitter of a sample entry's codec: of H.264, H.265 and H.266. Null for any other, whose samples are
-        /// protected whole.
+        /// The splitter of a sample entry's codec: of H.264, H.265, H.266, AV1 and AV2. Null for any other, whose samples
+        /// are protected whole.
         /// </summary>
         public static SubsampleSplitter For(Box sampleEntry, IMp4Logger logger = null)
         {
@@ -45,14 +39,71 @@ namespace SharpMP4.Encryption
                         return new H265SubsampleSplitter(hvcC._HEVCConfig, logger);
                     case VvcConfigurationBox vvcC:
                         return new H266SubsampleSplitter(vvcC._VvcConfig, logger);
+                    case AV1CodecConfigurationBox av1C:
+                        return new Av1SubsampleSplitter(av1C.Av1Config, logger);
+                    case AV2CodecConfigurationBox av2C:
+                        return new Av2SubsampleSplitter(av2C, logger);
                 }
             }
             return null;
         }
 
+        /// <summary>Whether the codec's binding allows a scheme: all four, but where it says otherwise.</summary>
+        public virtual bool Supports(string scheme) => true;
+
+        /// <summary>The subsamples of a sample: its clear and protected runs, one after another.</summary>
+        /// <param name="wholeBlocks">Whether each protected range is to be whole blocks: of every scheme but 'cbcs'.</param>
+        public abstract EncryptionSubsample[] Split(byte[] buffer, int offset, int length, bool wholeBlocks);
+
+        /// <summary>
+        /// A tile of AV1 or AV2, protected as the AV1 binding has it (4.2): 'cbcs' the whole tile, 'cenc' the whole blocks
+        /// at its end, a tile of less than a block left clear. The bytes from <paramref name="position"/> to the protected
+        /// ones are clear; the position is moved to the tile's end.
+        /// </summary>
+        protected static void AddTile(List<EncryptionSubsample> subsamples, ref long clear, ref int position, int start, int size, bool wholeBlocks)
+        {
+            int protectedBytes = wholeBlocks ? size - size % BlockSize : size;
+            if (protectedBytes <= 0)
+                return;
+
+            // the protected bytes end where the tile ends: those before them, from the last protected, clear
+            clear += start + size - protectedBytes - position;
+            Add(subsamples, ref clear, (uint)protectedBytes);
+            position = start + size;
+        }
+
+        /// <summary>A run of so many clear bytes and so many protected: the clear ones split where there are more than 65535.</summary>
+        protected static void Add(List<EncryptionSubsample> subsamples, ref long clear, uint protectedBytes)
+        {
+            while (clear > ushort.MaxValue)
+            {
+                subsamples.Add(new EncryptionSubsample(ushort.MaxValue, 0));
+                clear -= ushort.MaxValue;
+            }
+            subsamples.Add(new EncryptionSubsample((int)clear, protectedBytes));
+            clear = 0;
+        }
+    }
+
+    /// <summary>
+    /// Splits a sample of NAL units into what is left in the clear and what is protected (ISO/IEC 23001-7, 9.5.2): of a
+    /// VCL NAL unit its length, its NAL unit header and its slice header stay clear, for a decoder to read before the
+    /// data is decrypted, and the rest is protected; any other NAL unit stays clear all through. Protected bytes are
+    /// whole blocks but for 'cbcs', the bytes left over put in the clear before them, as Shaka Packager does; 'cbcs'
+    /// leaves a partial block at the end in the clear of its own.
+    /// </summary>
+    public abstract class NalSubsampleSplitter : SubsampleSplitter
+    {
+        protected NalSubsampleSplitter(int lengthSize, IMp4Logger logger) : base(logger)
+        {
+            LengthSize = lengthSize;
+        }
+
+        /// <summary>The size of each NAL unit's length before it.</summary>
+        public int LengthSize { get; }
+
         /// <summary>The subsamples of a sample: its NAL units' clear and protected runs, one after another.</summary>
-        /// <param name="wholeBlocks">Whether the protected bytes of each NAL unit are to be whole blocks.</param>
-        public EncryptionSubsample[] Split(byte[] buffer, int offset, int length, bool wholeBlocks)
+        public override EncryptionSubsample[] Split(byte[] buffer, int offset, int length, bool wholeBlocks)
         {
             var subsamples = new List<EncryptionSubsample>();
             long clear = 0;
@@ -90,18 +141,6 @@ namespace SharpMP4.Encryption
             if (clear > 0)
                 Add(subsamples, ref clear, 0);
             return subsamples.ToArray();
-        }
-
-        /// <summary>A run of so many clear bytes and so many protected: the clear ones split where there are more than 65535.</summary>
-        private static void Add(List<EncryptionSubsample> subsamples, ref long clear, uint protectedBytes)
-        {
-            while (clear > ushort.MaxValue)
-            {
-                subsamples.Add(new EncryptionSubsample(ushort.MaxValue, 0));
-                clear -= ushort.MaxValue;
-            }
-            subsamples.Add(new EncryptionSubsample((int)clear, protectedBytes));
-            clear = 0;
         }
 
         /// <summary>
@@ -161,10 +200,9 @@ namespace SharpMP4.Encryption
             }
             return i;
         }
-
     }
 
-    internal sealed class H264SubsampleSplitter : SubsampleSplitter
+    internal sealed class H264SubsampleSplitter : NalSubsampleSplitter
     {
         private readonly SharpH264.H264Context _context = new SharpH264.H264Context();
 
@@ -201,7 +239,7 @@ namespace SharpMP4.Encryption
         }
     }
 
-    internal sealed class H265SubsampleSplitter : SubsampleSplitter
+    internal sealed class H265SubsampleSplitter : NalSubsampleSplitter
     {
         private readonly SharpH265.H265Context _context = new SharpH265.H265Context();
 
@@ -246,7 +284,7 @@ namespace SharpMP4.Encryption
         }
     }
 
-    internal sealed class H266SubsampleSplitter : SubsampleSplitter
+    internal sealed class H266SubsampleSplitter : NalSubsampleSplitter
     {
         private readonly SharpH266.H266Context _context = new SharpH266.H266Context();
 

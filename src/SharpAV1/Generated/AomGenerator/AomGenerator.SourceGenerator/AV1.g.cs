@@ -6674,7 +6674,7 @@ tile_group_obu( sz ) {
  endBitPos = get_position()
  headerBytes = (endBitPos - startBitPos) / 8
  sz -= headerBytes
- /*for ( TileNum = tg_start; TileNum <= tg_end; TileNum++ ) {
+ for ( TileNum = tg_start; TileNum <= tg_end; TileNum++ ) {
  tileRow = TileNum / TileCols
  tileCol = TileNum % TileCols
  lastTile = TileNum == tg_end
@@ -6693,8 +6693,7 @@ tile_group_obu( sz ) {
  init_symbol( tileSize )
  decode_tile()
  exit_symbol()
- }*//*
- skip_obu()
+ }
 
  if ( tg_end == NumTiles - 1 ) {
  /* if ( !disable_frame_end_update_cdf ) {
@@ -6713,13 +6712,30 @@ tile_group_obu( sz ) {
 		public int _TgStart { get { return tg_start; } set { tg_start = value; } }
 		private int tg_end;
 		public int _TgEnd { get { return tg_end; } set { tg_end = value; } }
+		private int tile_size_minus_1;
+		public int _TileSizeMinus1 { get { return tile_size_minus_1; } set { tile_size_minus_1 = value; } }
+		private int MiRowStart;
+		public int _MiRowStart { get { return MiRowStart; } set { MiRowStart = value; } }
+		private int MiRowEnd;
+		public int _MiRowEnd { get { return MiRowEnd; } set { MiRowEnd = value; } }
+		private int MiColStart;
+		public int _MiColStart { get { return MiColStart; } set { MiColStart = value; } }
+		private int MiColEnd;
+		public int _MiColEnd { get { return MiColEnd; } set { MiColEnd = value; } }
+		private int CurrentQIndex;
+		public int _CurrentQIndex { get { return CurrentQIndex; } set { CurrentQIndex = value; } }
 
         private void TileGroupObu(int sz)
         {
+			int TileNum = 0;
 			int startBitPos = 0;
 			int tileBits = 0;
 			int endBitPos = 0;
 			int headerBytes = 0;
+			int tileRow = 0;
+			int tileCol = 0;
+			int lastTile = 0;
+			int tileSize = 0;
 			NumTiles = (TileCols * TileRows);
 			startBitPos = get_position();
 			tile_start_and_end_present_flag = 0;
@@ -6744,7 +6760,32 @@ tile_group_obu( sz ) {
 			endBitPos = get_position();
 			headerBytes = ((endBitPos - startBitPos) / 8);
 			sz -= headerBytes;
-			skip_obu(); 
+
+			for (TileNum = tg_start; (TileNum <= tg_end); TileNum++)
+			{
+				tileRow = (TileNum / TileCols);
+				tileCol = (TileNum % TileCols);
+				lastTile = ((TileNum == tg_end) ? 1 : 0);
+
+				if ((lastTile != 0))
+				{
+					tileSize = sz;
+				}
+				else 
+				{
+					stream.ReadLe(TileSizeBytes, out this.tile_size_minus_1, "tile_size_minus_1"); 
+					tileSize = (tile_size_minus_1 + 1);
+					sz -= (tileSize + TileSizeBytes);
+				}
+				MiRowStart = MiRowStarts[tileRow];
+				MiRowEnd = MiRowStarts[(tileRow + 1)];
+				MiColStart = MiColStarts[tileCol];
+				MiColEnd = MiColStarts[(tileCol + 1)];
+				CurrentQIndex = base_q_idx;
+				init_symbol(tileSize); 
+				decode_tile(); 
+				exit_symbol(); 
+			}
 
 			if ((tg_end == (NumTiles - 1)))
 			{
@@ -6759,10 +6800,15 @@ tile_group_obu( sz ) {
 
         private void WriteTileGroupObu(int sz)
         {
+			int TileNum = 0;
 			int startBitPos = 0;
 			int tileBits = 0;
 			int endBitPos = 0;
 			int headerBytes = 0;
+			int tileRow = 0;
+			int tileCol = 0;
+			int lastTile = 0;
+			int tileSize = 0;
 			NumTiles = (TileCols * TileRows);
 			startBitPos = get_position();
 			tile_start_and_end_present_flag = 0;
@@ -6790,7 +6836,33 @@ tile_group_obu( sz ) {
 			endBitPos = get_position();
 			headerBytes = ((endBitPos - startBitPos) / 8);
 			sz -= headerBytes;
-			skip_obu(); 
+
+			for (TileNum = tg_start; (TileNum <= tg_end); TileNum++)
+			{
+				tileRow = (TileNum / TileCols);
+				tileCol = (TileNum % TileCols);
+				lastTile = ((TileNum == tg_end) ? 1 : 0);
+
+				if ((lastTile != 0))
+				{
+					tileSize = sz;
+				}
+				else 
+				{
+					this.tile_size_minus_1 = stream.Pick("tile_size_minus_1", _original != null ? _original.tile_size_minus_1 : this.tile_size_minus_1, _edited != null ? _edited.tile_size_minus_1 : _original != null ? _original.tile_size_minus_1 : this.tile_size_minus_1);
+					stream.WriteLe(TileSizeBytes, this.tile_size_minus_1, "tile_size_minus_1"); 
+					tileSize = (tile_size_minus_1 + 1);
+					sz -= (tileSize + TileSizeBytes);
+				}
+				MiRowStart = MiRowStarts[tileRow];
+				MiRowEnd = MiRowStarts[(tileRow + 1)];
+				MiColStart = MiColStarts[tileCol];
+				MiColEnd = MiColStarts[(tileCol + 1)];
+				CurrentQIndex = base_q_idx;
+				init_symbol(tileSize); 
+				decode_tile(); 
+				exit_symbol(); 
+			}
 
 			if ((tg_end == (NumTiles - 1)))
 			{
@@ -7234,6 +7306,7 @@ mark_ref_frames( idLen ) {
 			public int BitDepth;
 			public int CdefDamping;
 			public int CodedLossless;
+			public int CurrentQIndex;
 			public int DeltaFrameId;
 			public int DeltaQUAc;
 			public int DeltaQUDc;
@@ -7250,8 +7323,12 @@ mark_ref_frames( idLen ) {
 			public int LastActiveSegId;
 			public AomArray<int> LoopRestorationSize;
 			public AomArray<int> LosslessArray;
+			public int MiColEnd;
+			public int MiColStart;
 			public AomArray<int> MiColStarts;
 			public int MiCols;
+			public int MiRowEnd;
+			public int MiRowStart;
 			public AomArray<int> MiRowStarts;
 			public int MiRows;
 			public int N;
@@ -7526,6 +7603,7 @@ mark_ref_frames( idLen ) {
 			public int tile_count_minus_1;
 			public int tile_data_size_minus_1;
 			public int tile_size_bytes_minus_1;
+			public int tile_size_minus_1;
 			public int tile_start_and_end_present_flag;
 			public int time_offset_length;
 			public int time_offset_value;
@@ -7560,6 +7638,7 @@ mark_ref_frames( idLen ) {
 			state.BitDepth = this.BitDepth;
 			state.CdefDamping = this.CdefDamping;
 			state.CodedLossless = this.CodedLossless;
+			state.CurrentQIndex = this.CurrentQIndex;
 			state.DeltaFrameId = this.DeltaFrameId;
 			state.DeltaQUAc = this.DeltaQUAc;
 			state.DeltaQUDc = this.DeltaQUDc;
@@ -7576,8 +7655,12 @@ mark_ref_frames( idLen ) {
 			state.LastActiveSegId = this.LastActiveSegId;
 			state.LoopRestorationSize = this.LoopRestorationSize?.Clone();
 			state.LosslessArray = this.LosslessArray?.Clone();
+			state.MiColEnd = this.MiColEnd;
+			state.MiColStart = this.MiColStart;
 			state.MiColStarts = this.MiColStarts?.Clone();
 			state.MiCols = this.MiCols;
+			state.MiRowEnd = this.MiRowEnd;
+			state.MiRowStart = this.MiRowStart;
 			state.MiRowStarts = this.MiRowStarts?.Clone();
 			state.MiRows = this.MiRows;
 			state.N = this.N;
@@ -7852,6 +7935,7 @@ mark_ref_frames( idLen ) {
 			state.tile_count_minus_1 = this.tile_count_minus_1;
 			state.tile_data_size_minus_1 = this.tile_data_size_minus_1;
 			state.tile_size_bytes_minus_1 = this.tile_size_bytes_minus_1;
+			state.tile_size_minus_1 = this.tile_size_minus_1;
 			state.tile_start_and_end_present_flag = this.tile_start_and_end_present_flag;
 			state.time_offset_length = this.time_offset_length;
 			state.time_offset_value = this.time_offset_value;
@@ -7887,6 +7971,7 @@ mark_ref_frames( idLen ) {
 			this.BitDepth = state.BitDepth;
 			this.CdefDamping = state.CdefDamping;
 			this.CodedLossless = state.CodedLossless;
+			this.CurrentQIndex = state.CurrentQIndex;
 			this.DeltaFrameId = state.DeltaFrameId;
 			this.DeltaQUAc = state.DeltaQUAc;
 			this.DeltaQUDc = state.DeltaQUDc;
@@ -7903,8 +7988,12 @@ mark_ref_frames( idLen ) {
 			this.LastActiveSegId = state.LastActiveSegId;
 			this.LoopRestorationSize = copy ? state.LoopRestorationSize?.Clone() : state.LoopRestorationSize;
 			this.LosslessArray = copy ? state.LosslessArray?.Clone() : state.LosslessArray;
+			this.MiColEnd = state.MiColEnd;
+			this.MiColStart = state.MiColStart;
 			this.MiColStarts = copy ? state.MiColStarts?.Clone() : state.MiColStarts;
 			this.MiCols = state.MiCols;
+			this.MiRowEnd = state.MiRowEnd;
+			this.MiRowStart = state.MiRowStart;
 			this.MiRowStarts = copy ? state.MiRowStarts?.Clone() : state.MiRowStarts;
 			this.MiRows = state.MiRows;
 			this.N = state.N;
@@ -8179,6 +8268,7 @@ mark_ref_frames( idLen ) {
 			this.tile_count_minus_1 = state.tile_count_minus_1;
 			this.tile_data_size_minus_1 = state.tile_data_size_minus_1;
 			this.tile_size_bytes_minus_1 = state.tile_size_bytes_minus_1;
+			this.tile_size_minus_1 = state.tile_size_minus_1;
 			this.tile_start_and_end_present_flag = state.tile_start_and_end_present_flag;
 			this.time_offset_length = state.time_offset_length;
 			this.time_offset_value = state.time_offset_value;

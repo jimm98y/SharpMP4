@@ -2227,6 +2227,14 @@ namespace SharpISOBMFF
             return 8;
         }
 
+        public ulong WriteUInt8(uint value, string name)
+        {
+            ulong size = WriteByte((byte)value);
+
+            LogEnd(name, size, value);
+            return size;
+        }
+
         public ulong ReadInt16(ulong boxSize, ulong readSize, out short value, string name)
         {
             ulong count = ReadUInt16(boxSize, readSize, out ushort v, "");
@@ -2771,6 +2779,33 @@ namespace SharpISOBMFF
         public ulong WriteUInt8Array(uint count, byte[] value, string name)
         {
             ulong size = WriteBytes(count, value);
+
+            LogEnd(name, size, value);
+            return size;
+        }
+
+        /// <summary>Bytes held wider: as a field is where a later version of its box codes it in more bits ('saiz').</summary>
+        public ulong ReadUInt8Array(ulong boxSize, ulong readSize, uint count, out uint[] value, string name)
+        {
+            ulong size = 0;
+            CheckArrayAllocation(boxSize, readSize, count, 8, name);
+            value = new uint[count];
+            for (uint i = 0; i < count; i++)
+            {
+                size += ReadUInt8(boxSize + size, readSize, out value[i], "");
+            }
+
+            LogEnd(name, size, value);
+            return size;
+        }
+
+        public ulong WriteUInt8Array(uint count, uint[] value, string name)
+        {
+            ulong size = 0;
+            for (uint i = 0; i < count; i++)
+            {
+                size += WriteUInt8(value[i], "");
+            }
 
             LogEnd(name, size, value);
             return size;

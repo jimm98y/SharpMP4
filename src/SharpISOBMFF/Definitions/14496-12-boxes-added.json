@@ -114,6 +114,16 @@
       "description": "Multi-source presentation track group (14496-12:2015 8.3.4.3): the fields of a TrackGroupTypeBox alone",
       "type": "Box",
       "syntax": "aligned(8) class MultiSourcePresentationBox extends TrackGroupTypeBox('msrc') {\r\n}"
+    },
+    {
+      "fourcc": "saiz",
+      "containers": [
+        "stbl",
+        "traf"
+      ],
+      "description": "Sample auxiliary information sizes (14496-12 9th edition, as quoted in AOMediaCodec/av2-isobmff#60): versions 1 and 2 give each sample's size in 16 and 32 bits, for the auxiliary information of a sample of many subsamples. Read before the 8th edition's, version 0 alone, and so in place of it",
+      "type": "FullBox",
+      "syntax": "aligned(8) class SampleAuxiliaryInformationSizesBox\r\n\textends FullBox('saiz', version, flags)\r\n{\r\n\tif(version == 0) {\r\n\t\tif (flags & 1) {\r\n\t\t\tunsigned int(32) aux_info_type;\r\n\t\t\tunsigned int(32) aux_info_type_parameter;\r\n\t\t}\r\n\t\tunsigned int(8) default_sample_info_size;\r\n\t\tunsigned int(32) sample_count;\r\n\t\tif (default_sample_info_size == 0) {\r\n\t\t\tunsigned int(8) sample_info_size[ sample_count ];\r\n\t\t}\r\n\t}\r\n\telse if(version == 1) {\r\n\t\tif (flags & 1) {\r\n\t\t\tunsigned int(32) aux_info_type;\r\n\t\t\tunsigned int(32) aux_info_type_parameter;\r\n\t\t}\r\n\t\tunsigned int(16) default_sample_info_size;\r\n\t\tunsigned int(32) sample_count;\r\n\t\tif (default_sample_info_size == 0) {\r\n\t\t\tunsigned int(16) sample_info_size[ sample_count ];\r\n\t\t}\r\n\t}\r\n\telse if(version == 2) {\r\n\t\tif (flags & 1) {\r\n\t\t\tunsigned int(32) aux_info_type;\r\n\t\t\tunsigned int(32) aux_info_type_parameter;\r\n\t\t}\r\n\t\tunsigned int(32) default_sample_info_size;\r\n\t\tunsigned int(32) sample_count;\r\n\t\tif (default_sample_info_size == 0) {\r\n\t\t\tunsigned int(32) sample_info_size[ sample_count ];\r\n\t\t}\r\n\t}\r\n}"
     }
   ]
 }

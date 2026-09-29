@@ -479,8 +479,37 @@ namespace SharpAV2
 
         private long _tileEnd;
 
-        /// <summary>init_symbol( sz ) (8.2.2): the tile's sz bytes are skipped whole by exit_symbol.</summary>
-        private void init_symbol(int sz) => _tileEnd = stream.GetPosition() + (long)sz * 8;
+        private long[] tileStarts = new long[1];
+        private int[] tileSizes = new int[1];
+
+        /// <summary>
+        /// How many tiles the last OBU read or written had - what Common Encryption would protect, tile by tile - their
+        /// bytes found without decoding them (<see cref="TileStart"/>, <see cref="TileSize"/>). A bridge frame's tile
+        /// groups, and those of an inactive BRU frame, have none.
+        /// </summary>
+        public int TileCount { get; private set; }
+
+        /// <summary>Where the tile i of the last OBU starts, in bits from the start of the stream it was read from.</summary>
+        public long TileStart(int i) => i < TileCount ? tileStarts[i] : throw new ArgumentOutOfRangeException(nameof(i));
+
+        /// <summary>The size in bytes of the tile i of the last OBU: of what the OBU holds of it.</summary>
+        public int TileSize(int i) => i < TileCount ? tileSizes[i] : throw new ArgumentOutOfRangeException(nameof(i));
+
+        /// <summary>init_symbol( sz ) (8.2.2): the tile's sz bytes are skipped whole by exit_symbol, and where they lie noted.</summary>
+        private void init_symbol(int sz)
+        {
+            long start = stream.GetPosition();
+            _tileEnd = start + (long)sz * 8;
+
+            if (TileCount == tileStarts.Length)
+            {
+                Array.Resize(ref tileStarts, TileCount * 2);
+                Array.Resize(ref tileSizes, TileCount * 2);
+            }
+            tileStarts[TileCount] = start;
+            tileSizes[TileCount] = (int)Math.Max(0, Math.Min((long)sz, (ObuEndPosition - start) / 8));
+            TileCount++;
+        }
 
         /// <summary>
         /// exit_symbol( ) (8.2.4): to the end of the tile. Its bytes are kept where the OBU is recorded, and

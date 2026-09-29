@@ -110,6 +110,7 @@ namespace SharpAV2
             this.stream = stream ?? throw new ArgumentNullException(nameof(stream));
             ObuEndPosition = stream.GetPosition() + (long)size * 8;
             _paddingLength = -1;
+            TileCount = 0;
             var record = RecordSyntax ? new AomSyntaxRecord() : null;
             stream.Record = record;
             var input = stream.Bitstream.BaseStream;
@@ -150,6 +151,7 @@ namespace SharpAV2
                 throw new ArgumentNullException(nameof(obu));
             ObuEndPosition = stream.GetPosition() + (long)obu.Size * 8;
             _paddingLength = -1;
+            TileCount = 0;
             stream.WriteLimit = stream.GetPosition() + (long)obu.Size * 8;
             stream.Source = obu.Record;
             _original = obu.Read;

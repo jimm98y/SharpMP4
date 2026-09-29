@@ -187,7 +187,7 @@ namespace SharpMP4.Encryption
                 return;
 
             int count = Math.Min(sampleCount, (int)saiz.SampleCount);
-            int SizeOf(int sample) => saiz.DefaultSampleInfoSize != 0 ? saiz.DefaultSampleInfoSize : saiz.SampleInfoSize[sample];
+            int SizeOf(int sample) => (int)(saiz.DefaultSampleInfoSize != 0 ? saiz.DefaultSampleInfoSize : saiz.SampleInfoSize[sample]);
 
             long offset = 0;
             for (int i = 0; i < count; i++)
