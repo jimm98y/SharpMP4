@@ -16,7 +16,6 @@ public partial class MetaDataExtensionsBox : Box
 {
 	public const string TYPE = "exte";
 	public override string DisplayName { get { return "MetaDataExtensionsBox"; } }
-	public IEnumerable<Box> Extensions { get { return this.children.OfType<Box>(); } }
 
 	public MetaDataExtensionsBox(): base(IsoStream.FromFourCC("exte"))
 	{

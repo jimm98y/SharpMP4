@@ -652,13 +652,7 @@ namespace Sharp{type}
                 string type = GetCSharpTypeMapping()[v.Type];
                 if (string.IsNullOrEmpty(v.FieldArray))
                 {
-                    string value = "= 0";
-                    if (!string.IsNullOrWhiteSpace(v.Value))
-                    {
-                        value = v.Value;
-                    }
-
-                    resultCode += $"\t\tprivate {type} {v.Name} {value};\r\n";
+                    // a scalar is a local of each process that uses it (GenerateMethodBody), not a field
                 }
                 else
                 {

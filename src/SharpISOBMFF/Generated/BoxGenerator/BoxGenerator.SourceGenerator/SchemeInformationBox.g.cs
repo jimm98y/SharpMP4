@@ -14,7 +14,6 @@ public partial class SchemeInformationBox : Box
 {
 	public const string TYPE = "schi";
 	public override string DisplayName { get { return "SchemeInformationBox"; } }
-	public IEnumerable<Box> SchemeSpecificData { get { return this.children.OfType<Box>(); } }
 
 	public SchemeInformationBox(): base(IsoStream.FromFourCC("schi"))
 	{

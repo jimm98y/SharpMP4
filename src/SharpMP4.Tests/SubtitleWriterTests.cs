@@ -89,7 +89,7 @@ public class SubtitleWriterTests
     }
 
     [TestMethod]
-    [DynamicData(nameof(Tracks), DynamicDataSourceType.Method)]
+    [DynamicData(nameof(Tracks))]
     public void ReadsBackTheCuesItWasWrittenFrom(string kind, bool fragmented) => ReadsBack(Build(kind, fragmented), kind, null);
 
     public static IEnumerable<object[]> ProtectedTracks() =>
@@ -104,7 +104,7 @@ public class SubtitleWriterTests
     /// it, the cues are the ones written.
     /// </summary>
     [TestMethod]
-    [DynamicData(nameof(ProtectedTracks), DynamicDataSourceType.Method)]
+    [DynamicData(nameof(ProtectedTracks))]
     public void ReadsBackProtectedCues(string kind, bool fragmented, string scheme)
     {
         byte[] file = Build(kind, fragmented, scheme);
@@ -233,7 +233,7 @@ public class SubtitleWriterTests
     /// 0x80000000, which VLC selects the track by default for. Read back, the track is forced.
     /// </summary>
     [TestMethod]
-    [DynamicData(nameof(ForcedTracks), DynamicDataSourceType.Method)]
+    [DynamicData(nameof(ForcedTracks))]
     public void WritesWhetherTheTrackIsForced(string kind, bool fragmented, bool forced)
     {
         var container = new Container();

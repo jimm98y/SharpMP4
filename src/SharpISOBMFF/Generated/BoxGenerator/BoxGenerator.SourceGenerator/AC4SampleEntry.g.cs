@@ -20,7 +20,6 @@ public partial class AC4SampleEntry : AudioSampleEntry
 	public override string DisplayName { get { return "AC4SampleEntry"; } }
 	public AC4SpecificBox _AC4SpecificBox { get { return this.children.OfType<AC4SpecificBox>().FirstOrDefault(); } }
 	public IEnumerable<AC4PresentationLabelBox> _AC4PresentationLabelBox { get { return this.children.OfType<AC4PresentationLabelBox>(); } }
-	public IEnumerable<Box> _Box { get { return this.children.OfType<Box>(); } }
 
 	public AC4SampleEntry(): base(IsoStream.FromFourCC("ac-4"))
 	{

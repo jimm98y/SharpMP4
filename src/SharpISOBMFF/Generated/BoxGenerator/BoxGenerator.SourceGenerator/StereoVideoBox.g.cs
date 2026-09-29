@@ -35,7 +35,6 @@ public partial class StereoVideoBox : FullBox
 
 	protected byte[] stereo_indication_type; 
 	public byte[] StereoIndicationType { get { return this.stereo_indication_type; } set { this.stereo_indication_type = value; } }
-	public IEnumerable<Box> AnyBox { get { return this.children.OfType<Box>(); } }
 
 	public StereoVideoBox(): base(IsoStream.FromFourCC("stvi"), 0, 0)
 	{

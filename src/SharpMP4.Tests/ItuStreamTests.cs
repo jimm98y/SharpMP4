@@ -364,7 +364,7 @@ public class ItuStreamTests
         public ulong Read(IItuContext context, ItuStream stream) => throw new NotSupportedException();
         public ulong Write(IItuContext context, ItuStream stream) => throw new NotSupportedException();
         public int HasMoreRbspData { get; set; }
-        public int[] ReadNextBits { get; set; }
+        public int[] ReadNextBits { get; set; } = [];
     }
 
     /// <summary>A stream read from start to end, as a pipe or a network stream is: it cannot seek, nor tell where it is.</summary>

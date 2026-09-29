@@ -19,7 +19,6 @@ public partial class ItemPropertyContainerBox : Box
 {
 	public const string TYPE = "ipco";
 	public override string DisplayName { get { return "ItemPropertyContainerBox"; } }
-	public IEnumerable<Box> Properties { get { return this.children.OfType<Box>(); } }
 
 	public ItemPropertyContainerBox(): base(IsoStream.FromFourCC("ipco"))
 	{

@@ -315,7 +315,6 @@ obu_extension_data_bit	f(1)
     */
 		private int obu_extension_data_bit;
 		public int _ObuExtensionDataBit { get { return obu_extension_data_bit; } set { obu_extension_data_bit = value; } }
-		private int i = 0;
 
         private void ObuExtensionData(int sz)
         {
@@ -700,14 +699,6 @@ save_sequence_header()
 		public AomArray<AomArray<int>> _MLayerPresenceMap { get { return MLayerPresenceMap; } set { MLayerPresenceMap = value; } }
 		private int film_grain_params_present;
 		public int _FilmGrainParamsPresent { get { return film_grain_params_present; } set { film_grain_params_present = value; } }
-		private int mLayer = 0;
-		private int currTLayer = 0;
-		private int refTLayer = 0;
-		private int currLayer = 0;
-		private int refLayer = 0;
-		private int mlayerId = 0;
-		private int refMlayer = 0;
-		private int depMLayerId = 0;
 
         private void SequenceHeaderObu()
         {
@@ -1724,7 +1715,6 @@ enable_short_refresh_frame_flags	f(1)
 		public int _EnableGlobalMotion { get { return enable_global_motion; } set { enable_global_motion = value; } }
 		private int enable_short_refresh_frame_flags;
 		public int _EnableShortRefreshFrameFlags { get { return enable_short_refresh_frame_flags; } set { enable_short_refresh_frame_flags = value; } }
-		private int mode = 0;
 
         private void SequenceInterConfig()
         {
@@ -2636,7 +2626,6 @@ return (enabled, data)
 		public int _FeatureEnabled { get { return feature_enabled; } set { feature_enabled = value; } }
 		private int feature_value;
 		public int _FeatureValue { get { return feature_value; } set { feature_value = value; } }
-		private int j = 0;
 
         private (AomArray<AomArray<int>>, AomArray<AomArray<int>>) SegInfo(int numSegments)
         {
@@ -3010,7 +2999,6 @@ UserQm[ level ][ t ][ plane ][ row ][ col ] = quant
 		public int _Qm4x8IsTransposeOf8x4 { get { return qm_4x8_is_transpose_of_8x4; } set { qm_4x8_is_transpose_of_8x4 = value; } }
 		private int quant_delta;
 		public int _QuantDelta { get { return quant_delta; } set { quant_delta = value; } }
-		private int c = 0;
 
         private void UserDefinedQm(int level, int t, int plane)
         {
@@ -5874,7 +5862,6 @@ mCount++
 		public AomArray<AomArray<AomArray<AomArray<int>>>> _OpsMlayerMap { get { return ops_mlayer_map; } set { ops_mlayer_map = value; } }
 		private AomArray<AomArray<AomArray<AomArray<AomArray<int>>>>> ops_tlayer_map = new AomArray<AomArray<AomArray<AomArray<AomArray<int>>>>>(() => new AomArray<AomArray<AomArray<AomArray<int>>>>(() => new AomArray<AomArray<AomArray<int>>>(() => new AomArray<AomArray<int>>(() => new AomArray<int>()))));
 		public AomArray<AomArray<AomArray<AomArray<AomArray<int>>>>> _OpsTlayerMap { get { return ops_tlayer_map; } set { ops_tlayer_map = value; } }
-		private int k = 0;
 
         private void OpsMlayerInfo(int obuXLId, int opsID, int opIndex, int xLId)
         {
@@ -7408,7 +7395,6 @@ banding_in_band_unit_present_flag	f(1)
 		public int _HorzSizeInBandBlocksMinus1 { get { return horz_size_in_band_blocks_minus_1; } set { horz_size_in_band_blocks_minus_1 = value; } }
 		private int banding_in_band_unit_present_flag;
 		public int _BandingInBandUnitPresentFlag { get { return banding_in_band_unit_present_flag; } set { banding_in_band_unit_present_flag = value; } }
-		private int r = 0;
 
         private void MetadataBandingHints()
         {
@@ -8757,10 +8743,6 @@ film_grain_config()
 		public int _AllowWarpmvMode { get { return allow_warpmv_mode; } set { allow_warpmv_mode = value; } }
 		private int reduced_tx_set;
 		public int _ReducedTxSet { get { return reduced_tx_set; } set { reduced_tx_set = value; } }
-		private int row = 0;
-		private int col = 0;
-		private int refc = 0;
-		private int segmentId = 0;
 
         private void FrameHeaderInfo()
         {
@@ -14172,9 +14154,6 @@ CcsoFilterOffset[ plane ][ band ][ d0 ][ d1 ] = offset
 		public int _CcsoOffsetIdx { get { return ccso_offset_idx; } set { ccso_offset_idx = value; } }
 		private AomArray<AomArray<AomArray<AomArray<int>>>> CcsoFilterOffset = new AomArray<AomArray<AomArray<AomArray<int>>>>(() => new AomArray<AomArray<AomArray<int>>>(() => new AomArray<AomArray<int>>(() => new AomArray<int>())));
 		public AomArray<AomArray<AomArray<AomArray<int>>>> _CcsoFilterOffset { get { return CcsoFilterOffset; } set { CcsoFilterOffset = value; } }
-		private int d0 = 0;
-		private int d1 = 0;
-		private int band = 0;
 
         private void CcsoParams()
         {
@@ -17256,8 +17235,6 @@ return outc
     */
 		private int txClass;
 		public int _TxClass { get { return txClass; } set { txClass = value; } }
-		private int y = 0;
-		private int x = 0;
 
         private AomArray<int> GetScan(int txSz, int txClass)
         {
@@ -17567,7 +17544,6 @@ j++
 		public AomArray<AomArray<AomArray<AomArray<int>>>> _LrWienerNs { get { return LrWienerNs; } set { LrWienerNs = value; } }
 		private AomArray<AomArray<AomArray<AomArray<int>>>> RefLrWienerNs = new AomArray<AomArray<AomArray<AomArray<int>>>>(() => new AomArray<AomArray<AomArray<int>>>(() => new AomArray<AomArray<int>>(() => new AomArray<int>())));
 		public AomArray<AomArray<AomArray<AomArray<int>>>> _RefLrWienerNs { get { return RefLrWienerNs; } set { RefLrWienerNs = value; } }
-		private int subset = 0;
 
         private void ReadWienernsFilter(int plane, int unitRow, int unitCol, int readFrameFilters)
         {
@@ -18598,7 +18574,6 @@ numRefFilters += 1
 return ( numClasses , numRefFilters , matchIdx , matchCls , matchPlane )
 }
     */
-		private int check = 0;
 
         private (int, int, int, int, int) SearchFrameFilters(int plane, int target)
         {
@@ -19505,7 +19480,6 @@ ClosestFuture = NONE
 		public AomArray<AomArray<int>> _MotionFieldChecked { get { return MotionFieldChecked; } set { MotionFieldChecked = value; } }
 		private int MotionFieldStackCount;
 		public int _MotionFieldStackCount { get { return MotionFieldStackCount; } set { MotionFieldStackCount = value; } }
-		private int rf = 0;
 
         private void MotionFieldEstimation()
         {

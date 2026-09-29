@@ -75,7 +75,6 @@ public partial class DTSUHDSpecificBox : Box
 
 	protected byte[][] PresentationIDTag; 
 	public byte[][] _PresentationIDTag { get { return this.PresentationIDTag; } set { this.PresentationIDTag = value; } }
-	public IEnumerable<Box> _DTSExpansionBox { get { return this.children.OfType<Box>(); } }
 
 	public DTSUHDSpecificBox(): base(IsoStream.FromFourCC("udts"))
 	{

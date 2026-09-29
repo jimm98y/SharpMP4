@@ -37,7 +37,6 @@ public partial class MPEG2TSSampleEntry : HintSampleEntry
 
 	protected byte reserved; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
-	public IEnumerable<Box> Additionaldata { get { return this.children.OfType<Box>(); } }
 
 	public MPEG2TSSampleEntry(uint name): base(name)
 	{

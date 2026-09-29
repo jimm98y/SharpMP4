@@ -271,7 +271,7 @@ namespace SharpISOBMFF
                             elseBlock = $"else return new CodecConfigurationBox({optParams});";
                         }
 
-                        factory.Append($"               case \"{item.Key}\": {optCondition} return new {item.Value.Single().BoxName}({optParams});{(optCondition != "" ? $"{elseBlock}break;" : "")}{comment}\r\n");
+                        factory.Append($"               case \"{item.Key}\": {optCondition} return new {item.Value.Single().BoxName}({optParams});{(optCondition != "" ? (elseBlock != "" ? elseBlock : "break;") : "")}{comment}\r\n");
                     }
                 }
                 else
@@ -924,8 +924,8 @@ namespace SharpISOBMFF
                 {
                     string suffix = fieldType.Contains("[]") ? "" : ".FirstOrDefault()";
                     string ttttt = fieldType.Replace("[]", "");
-                    // 'Box boxes[]' - any boxes, to the end - is Children as it is
-                    if (ttttt == "Box" && propertyName == "Boxes")
+                    // 'Box boxes[]' - any boxes, to the end - is Children as it is, whatever it is named
+                    if (ttttt == "Box" && (propertyName == "Boxes" || fieldType.Contains("[]")))
                         return "";
                     string ttt = fieldType.Contains("[]") ? "IEnumerable<" + fieldType.Replace("[]", "") + ">" : fieldType;
                     return $"\tpublic {ttt} {propertyName} {{ get {{ return this.children.OfType<{ttttt}>(){suffix}; }} }}";

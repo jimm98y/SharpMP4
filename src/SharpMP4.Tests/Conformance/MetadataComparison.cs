@@ -63,7 +63,8 @@ public static partial class MetadataComparison
             if (family == null || tag.Id is "free" or "skip")
                 continue;
 
-            string id = tag.Id, language = null;
+            string id = tag.Id;
+            string? language = null;
             if (family.Value.Family == "UserData")
             {
                 // A track's are Track1tsel in VideoUserData
@@ -92,7 +93,7 @@ public static partial class MetadataComparison
             // one packet, whichever box it is in
             if (tag.Family == MetadataFamily.Xmp)
                 id = "XMP";
-            string language = tag.Family switch
+            string? language = tag.Family switch
             {
                 MetadataFamily.Keys => KeysLanguage(tag.Language),
                 MetadataFamily.UserData => UserDataLanguage(tag.Language, macintosh),

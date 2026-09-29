@@ -611,7 +611,6 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 		public int _EnableRestoration { get { return enable_restoration; } set { enable_restoration = value; } }
 		private int film_grain_params_present;
 		public int _FilmGrainParamsPresent { get { return film_grain_params_present; } set { film_grain_params_present = value; } }
-		private int i = 0;
 
         private void SequenceHeaderObu()
         {
@@ -1849,8 +1848,6 @@ uncompressed_header() {
 		public int _AllowWarpedMotion { get { return allow_warped_motion; } set { allow_warped_motion = value; } }
 		private int reduced_tx_set;
 		public int _ReducedTxSet { get { return reduced_tx_set; } set { reduced_tx_set = value; } }
-		private int opNum = 0;
-		private int segmentId = 0;
 
         private void UncompressedHeader()
         {
@@ -3136,7 +3133,6 @@ tile_info () {
 		public int _TileSizeBytesMinus1 { get { return tile_size_bytes_minus_1; } set { tile_size_bytes_minus_1 = value; } }
 		private int TileSizeBytes;
 		public int _TileSizeBytes { get { return TileSizeBytes; } set { TileSizeBytes = value; } }
-		private int startSb = 0;
 
         private void TileInfo()
         {
@@ -3440,7 +3436,6 @@ tile_log2( blkSize, target ) {
 		public int _BlkSize { get { return blkSize; } set { blkSize = value; } }
 		private int target;
 		public int _Target { get { return target; } set { target = value; } }
-		private int k = 0;
 
         private int TileLog2(int blkSize, int target)
         {
@@ -3752,7 +3747,6 @@ segmentation_params() {
 		public int _SegIdPreSkip { get { return SegIdPreSkip; } set { SegIdPreSkip = value; } }
 		private int LastActiveSegId;
 		public int _LastActiveSegId { get { return LastActiveSegId; } set { LastActiveSegId = value; } }
-		private int j = 0;
 
         private void SegmentationParams()
         {
@@ -5022,7 +5016,6 @@ global_motion_params() {
 		public int _IsRotZoom { get { return is_rot_zoom; } set { is_rot_zoom = value; } }
 		private int is_translation;
 		public int _IsTranslation { get { return is_translation; } set { is_translation = value; } }
-		private int refc = 0;
 
         private void GlobalMotionParams()
         {
@@ -6890,7 +6883,6 @@ tile_list_obu() {
 		public int _OutputFrameHeightInTilesMinus1 { get { return output_frame_height_in_tiles_minus_1; } set { output_frame_height_in_tiles_minus_1 = value; } }
 		private int tile_count_minus_1;
 		public int _TileCountMinus1 { get { return tile_count_minus_1; } set { tile_count_minus_1 = value; } }
-		private int tile = 0;
 
         private void TileListObu()
         {

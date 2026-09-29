@@ -27,7 +27,9 @@ namespace SharpMP4.Bench
                 return;
             }
 
-            int lengthSize = SubsampleSplitter.For(entry).LengthSize;
+            // a splitter made once, as a track makes it, the parameter sets of the sample entry taken in
+            var splitter = (NalSubsampleSplitter)SubsampleSplitter.For(entry);
+            int lengthSize = splitter.LengthSize;
             int units = samples.Sum(s => Units(s, lengthSize));
             Console.WriteLine($"  {IsoStream.ToFourCC(entry.FourCC)}: {samples.Count} samples, {units} NAL units");
 
@@ -40,8 +42,6 @@ namespace SharpMP4.Bench
                 return total;
             });
 
-            // a splitter made once, as a track makes it, the parameter sets of the sample entry taken in
-            var splitter = SubsampleSplitter.For(entry);
             Time("SubsampleSplitter.Split (SharpH26X)", samples.Count, units, () =>
             {
                 int total = 0;

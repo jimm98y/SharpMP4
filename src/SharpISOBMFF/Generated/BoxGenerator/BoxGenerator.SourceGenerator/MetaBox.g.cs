@@ -33,7 +33,6 @@ public partial class MetaBox : FullBox
 	public IPMPControlBox IPMPControl { get { return this.children.OfType<IPMPControlBox>().FirstOrDefault(); } }
 	public ItemReferenceBox ItemRefs { get { return this.children.OfType<ItemReferenceBox>().FirstOrDefault(); } }
 	public ItemDataBox ItemData { get { return this.children.OfType<ItemDataBox>().FirstOrDefault(); } }
-	public IEnumerable<Box> OtherBoxes { get { return this.children.OfType<Box>(); } }
 public bool? HasFullBoxHeader { get; set; }
 public bool IsQuickTime { get { return HasFullBoxHeader ?? (GetParent() == null || (((Box)GetParent()).FourCC == IsoStream.FromFourCC("udta") || ((Box)GetParent()).FourCC == IsoStream.FromFourCC("trak"))); } }
 

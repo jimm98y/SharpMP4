@@ -14,7 +14,6 @@ aligned(8) class HapticSampleEntry(codingname)
 public partial class HapticSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "HapticSampleEntry"; } }
-	public IEnumerable<Box> Otherboxes { get { return this.children.OfType<Box>(); } }
 
 	public HapticSampleEntry(uint codingname = 0): base(codingname)
 	{

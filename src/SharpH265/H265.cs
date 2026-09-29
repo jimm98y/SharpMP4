@@ -1541,7 +1541,6 @@ namespace SharpH265
                 RefPicLayerId = new int[MaxLayersMinus1 + 1];
             }
 
-            int j = 0;
             for (int i = 0; i < (int)NumActiveRefLayerPics; i++)
                 RefPicLayerId[i] = IdRefListLayer[nuh_layer_id][inter_layer_pred_layer_idc[i]];
         }
