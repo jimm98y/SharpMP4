@@ -175,27 +175,29 @@ namespace SharpAV1
             tileGroupEnd = null;
             var record = RecordSyntax ? new AomSyntaxRecord() : null;
             stream.Record = record;
-            var input = stream.Bitstream.BaseStream;
-            long start = record != null && input.CanSeek ? input.Position : -1;
+            // read so that it can be read again: the bytes read of it kept, a stream that cannot seek as well
+            SharpMP4.Common.Bitstream.PeekState? start = record != null ? stream.Bitstream.BeginPeek() : null;
             try
             {
                 OpenBitstreamUnit(size);
                 TileGroupRest();
             }
-            catch when (start >= 0)
+            catch when (start != null)
             {
                 // Kept as its bytes, and the state reading it left: what a writer takes to follow on
-                input.Position = start;
+                stream.Record = null;
+                stream.Bitstream.EndPeek(start.Value);
+                start = null;
+                stream.Bitstream.BitsPosition = (stream.Bitstream.BitsPosition + 7) & ~7L;
                 var bytes = new byte[size];
-                int read = 0, count;
-                while (read < size && (count = input.Read(bytes, read, size - read)) > 0)
-                    read += count;
-                Array.Resize(ref bytes, read);
+                Array.Resize(ref bytes, stream.Bitstream.ReadAvailableBytes(bytes, 0, size));
                 LastObu = new AV1Obu(size, record, Copy()) { Unreadable = bytes };
                 throw;
             }
             finally
             {
+                if (start != null)
+                    stream.Bitstream.AcceptPeek(start.Value);
                 stream.Record = null;
             }
             if (record != null)
@@ -608,22 +610,12 @@ namespace SharpAV1
                 return stream.Source?["obu_padding_byte"].Count ?? 0;
 
             long remainingBits = (long)obu_size * 8 - (stream.GetPosition() - startPosition);
-            var baseStream = stream.Bitstream.BaseStream;
-            if (remainingBits <= 0 || stream.GetPosition() % 8 != 0 || !baseStream.CanSeek)
+            if (remainingBits <= 0 || stream.GetPosition() % 8 != 0)
                 return 0;
 
-            // Byte aligned, so the underlying stream is at the next byte to read.
+            // looked at ahead, and not read: a stream that cannot seek as well
             var rest = new byte[remainingBits / 8];
-            long position = baseStream.Position;
-            int read = 0;
-            while (read < rest.Length)
-            {
-                int count = baseStream.Read(rest, read, rest.Length - read);
-                if (count <= 0)
-                    break;
-                read += count;
-            }
-            baseStream.Position = position;
+            int read = stream.PeekBytes(rest, 0, rest.Length);
 
             int trailing = read > 0 ? Array.FindLastIndex(rest, read - 1, read, b => b != 0) : -1;
             return Math.Max(0, trailing);

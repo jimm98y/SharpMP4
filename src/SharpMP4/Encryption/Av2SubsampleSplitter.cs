@@ -23,7 +23,7 @@ namespace SharpMP4.Encryption
         {
             // the sequence header, and the rest the samples depend on, which the samples do not repeat
             foreach (byte[] obu in config?.ConfigObus ?? Array.Empty<byte[]>())
-                ReadObu(obu, 0, obu.Length);
+                ReadConfigObu(obu);
         }
 
         public override bool Supports(string scheme) => scheme == ProtectionSchemes.Cenc || scheme == ProtectionSchemes.Cbcs;
@@ -35,17 +35,26 @@ namespace SharpMP4.Encryption
             long clear = 0;
             int position = 0;
 
-            for (int obu = 0; obu < length;)
+            // one stream over the sample: each OBU's size, then the OBU, the tiles' positions counted from the sample's start
+            using (var stream = new AomStream(new MemoryStream(buffer, offset, length, writable: false)))
             {
-                int payload = obu;
-                long size = ReadLeb128(buffer, offset, length, ref payload);
-                if (size <= 0 || payload + size > length || !ReadObu(buffer, offset + payload, (int)size))
-                    break;
+                while (stream.GetPosition() < (long)length * 8)
+                {
+                    int size = AV2Context.ReadObuSize(stream, (long)length * 8);
+                    if (size < 0)
+                        break;
 
-                // the tiles, where they are in the OBU: from the sample's start
-                for (int i = 0; i < _context.TileCount; i++)
-                    AddTile(subsamples, ref clear, ref position, payload + (int)(_context.TileStart(i) / 8), _context.TileSize(i), wholeBlocks);
-                obu = payload + (int)size;
+                    // an OBU that cannot be read is left clear: the next is read from where it starts
+                    var error = _context.ReadWhole(stream, size);
+                    if (error != null)
+                    {
+                        if (Logger.IsWarningEnabled)
+                            Logger.LogWarning($"An OBU could not be read, it is left clear: {error.Message}");
+                        continue;
+                    }
+                    for (int i = 0; i < _context.TileCount; i++)
+                        AddTile(subsamples, ref clear, ref position, (int)(_context.TileStart(i) / 8), _context.TileSize(i), wholeBlocks);
+                }
             }
 
             // no run of none clear and none protected (9.5.1): an empty sample has no subsample at all
@@ -55,34 +64,19 @@ namespace SharpMP4.Encryption
             return subsamples.ToArray();
         }
 
-        /// <summary>Reads an OBU into the context; false where it cannot be, the rest of the sample then left clear.</summary>
-        private bool ReadObu(byte[] buffer, int offset, int size)
+        /// <summary>Reads an OBU of the 'av2C' - not led by its size - into the context.</summary>
+        private void ReadConfigObu(byte[] obu)
         {
             try
             {
-                using (var stream = new AomStream(new MemoryStream(buffer, offset, size, writable: false)))
-                    _context.Read(stream, size);
-                return true;
+                using (var stream = new AomStream(new MemoryStream(obu, writable: false)))
+                    _context.Read(stream, obu.Length);
             }
             catch (Exception ex)
             {
                 if (Logger.IsWarningEnabled)
-                    Logger.LogWarning($"An OBU could not be read, the rest of the sample is left clear: {ex.Message}");
-                return false;
+                    Logger.LogWarning($"An OBU of the 'av2C' could not be read: {ex.Message}");
             }
-        }
-
-        private static long ReadLeb128(byte[] buffer, int offset, int length, ref int position)
-        {
-            long value = 0;
-            for (int i = 0; i < 8 && position < length; i++)
-            {
-                byte b = buffer[offset + position++];
-                value |= (long)(b & 0x7f) << (7 * i);
-                if ((b & 0x80) == 0)
-                    return value;
-            }
-            return -1;
         }
     }
 }

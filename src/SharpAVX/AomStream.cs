@@ -41,19 +41,54 @@ namespace SharpAVX
             return (int)this.Bitstream.BitsPosition;
         }
 
+        /// <summary>Moves on over so many bits unread: of a stream that cannot seek as well, and of one read ahead in.</summary>
         public void Skip(long bits)
         {
-            while (this.Bitstream.BitsPosition % 8 != 0)
+            while (bits > 0 && this.Bitstream.BitsPosition % 8 != 0)
             {
                 ReadBit();
                 bits--;
             }
 
-            this.Bitstream.BitsPosition += bits;
-
-            long bytes = (bits >> 3);
-            this.Bitstream.BaseStream.Seek(bytes, SeekOrigin.Current);
+            this.Bitstream.SkipBytes(bits >> 3);
+            for (long rest = bits & 7; rest > 0; rest--)
+                ReadBit();
         }
+
+        /// <summary>
+        /// Up to <paramref name="count"/> of the next whole bytes, at a byte boundary, looked at and not read: fewer where the
+        /// stream ends first. How many. The stream need not seek: the bytes are kept to be read after.
+        /// </summary>
+        public int PeekBytes(byte[] buffer, int offset, int count)
+        {
+            var state = this.Bitstream.BeginPeek();
+            try
+            {
+                return this.Bitstream.ReadAvailableBytes(buffer, offset, count);
+            }
+            finally
+            {
+                this.Bitstream.EndPeek(state);
+            }
+        }
+
+        // Of a stream Lookahead gives: the bits of the stream it was taken from, to go back to when it is disposed.
+        private readonly bool _isLookahead;
+        private readonly Bitstream.PeekState _peek;
+
+        private AomStream(Bitstream bitstream, Bitstream.PeekState peek)
+            : this(bitstream, NullMp4Logger.Instance)
+        {
+            _isLookahead = true;
+            _peek = peek;
+        }
+
+        /// <summary>
+        /// A stream to read ahead on from where this one is, as ItuStream's: reading it logs nothing, and disposing it puts
+        /// this stream back where it was. It reads the same bits, the bytes it takes kept to be read again, so nothing is
+        /// copied and the stream need not seek. This stream is not read while it is in use.
+        /// </summary>
+        public AomStream Lookahead() => new AomStream(this.Bitstream, this.Bitstream.BeginPeek());
 
         #region Bit read/write
 
@@ -735,7 +770,11 @@ namespace SharpAVX
             {
                 if (disposing)
                 {
-                    this.Bitstream.BaseStream.Dispose();
+                    // a lookahead goes back; the stream is the one it was taken from's
+                    if (_isLookahead)
+                        this.Bitstream.EndPeek(_peek);
+                    else
+                        this.Bitstream.BaseStream.Dispose();
                 }
 
                 _disposedValue = true;

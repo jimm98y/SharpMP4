@@ -118,21 +118,12 @@ namespace SharpAV2
         {
             {
                 long remainingBits = ObuEndPosition - stream.GetPosition();
-                var baseStream = stream.Bitstream.BaseStream;
-                if (remainingBits <= 0 || stream.GetPosition() % 8 != 0 || !baseStream.CanSeek)
+                if (remainingBits <= 0 || stream.GetPosition() % 8 != 0)
                     return 0;
 
+                // looked at ahead, and not read: a stream that cannot seek as well
                 var rest = new byte[remainingBits / 8];
-                long position = baseStream.Position;
-                int read = 0;
-                while (read < rest.Length)
-                {
-                    int count = baseStream.Read(rest, read, rest.Length - read);
-                    if (count <= 0)
-                        break;
-                    read += count;
-                }
-                baseStream.Position = position;
+                int read = stream.PeekBytes(rest, 0, rest.Length);
 
                 int trailing = read > 0 ? Array.FindLastIndex(rest, read - 1, read, b => b != 0) : -1;
                 return Math.Max(0, trailing);
