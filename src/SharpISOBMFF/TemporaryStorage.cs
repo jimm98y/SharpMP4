@@ -31,7 +31,7 @@ namespace SharpISOBMFF
         {
             _stream = new MemoryStream();
 
-            Logger = logger ?? new DefaultMp4Logger();
+            Logger = logger ?? DefaultMp4Logger.Instance;
         }
 
         protected virtual void Dispose(bool disposing)
@@ -139,7 +139,7 @@ namespace SharpISOBMFF
             
             _stream = File.Create(Path.GetRandomFileName(), 1024, FileOptions.DeleteOnClose);
 
-            Logger = logger ?? new DefaultMp4Logger();
+            Logger = logger ?? DefaultMp4Logger.Instance;
         }
 
         protected virtual void Dispose(bool disposing)

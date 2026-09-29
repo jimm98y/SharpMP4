@@ -22,7 +22,7 @@ namespace SharpAVX
         public AomStream(Bitstream bitstream, IMp4Logger logger)
         {
             this.Bitstream = bitstream;
-            this.Logger = logger ?? new DefaultMp4Logger();
+            this.Logger = logger ?? DefaultMp4Logger.Instance;
         }
 
         public AomStream(Stream stream, IMp4Logger logger)

@@ -8,6 +8,13 @@ namespace SharpMP4.Common
     /// </summary>
     public sealed class DefaultMp4Logger : IMp4Logger
     {
+        /// <summary>
+        /// The one logger everything uses where it is given none: a logger is consulted on every syntax element, so
+        /// one made for each reader, track and stream - a stream for each NAL unit - is so much garbage. Settings made
+        /// on it hold for all of them.
+        /// </summary>
+        public static DefaultMp4Logger Instance { get; } = new DefaultMp4Logger();
+
         // The level properties report the master switch too, so callers can ask whether a
         // message would be logged and skip building it. Parsers consult these on every syntax
         // element, and formatting a message only for the logger to drop it dominated the cost of

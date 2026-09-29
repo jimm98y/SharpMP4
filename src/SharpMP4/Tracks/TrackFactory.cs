@@ -14,7 +14,7 @@ namespace SharpMP4.Tracks
         {
             ITrack track = DefaultCreateTrackInternal(trackID, sampleEntry, timescale, sampleDuration, handlerType, handlerName);
 
-            track.Logger = logger ?? new DefaultMp4Logger();
+            track.Logger = logger ?? DefaultMp4Logger.Instance;
 
             return track;
         }

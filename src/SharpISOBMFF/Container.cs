@@ -14,7 +14,7 @@ namespace SharpISOBMFF
         public StreamMarker Padding { get; set; }
         public byte[] PaddingBytes { get; set; }
         public List<Box> Children { get; set; } = new List<Box>();
-        public IMp4Logger Logger { get; set; } = new DefaultMp4Logger();
+        public IMp4Logger Logger { get; set; } = DefaultMp4Logger.Instance;
 
         public Container()
         {
