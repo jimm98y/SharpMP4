@@ -310,15 +310,21 @@ namespace SharpH264
         /// </summary>
         public void OnIdrFlag(NalUnitHeaderSvcExtension svc) => IdrPicFlag = svc.IdrFlag;
         public void OnIdrFlag(NalUnitHeaderMvcExtension mvc) => IdrPicFlag = (uint)(mvc.NonIdrFlag == 0 ? 1 : 0);
-        public void OnIdrFlag(NalUnitHeader3davcExtension avc3d) => IdrPicFlag = (uint)(avc3d.NonIdrFlag == 0 ? 1 : 0);
+        public void OnIdrFlag(NalUnitHeader3davcExtension avc3d)
+        {
+            IdrPicFlag = (uint)(avc3d.NonIdrFlag == 0 ? 1 : 0);
+            // read before non_idr_flag: the 3D-AVC extension's own
+            DepthFlag = avc3d.DepthFlag;
+        }
 
         public void OnAvc3dExtensionFlag()
         {
             var nal_unit_type = NalHeader.NalUnitType;
             var avc_3d_extension_flag = NalHeader.Avc3dExtensionFlag;
-            var depth_flag = NalHeader.NalUnitHeader3davcExtension.DepthFlag;
 
-            DepthFlag = (nal_unit_type != 21) ? 0 : (avc_3d_extension_flag != 0 ? depth_flag : 1);
+            // Called as avc_3d_extension_flag is read, before the 3D-AVC extension header that has depth_flag: where there
+            // is one, OnIdrFlag takes depth_flag from it as it is read
+            DepthFlag = (nal_unit_type != 21) ? 0 : (avc_3d_extension_flag != 0 ? 0 : 1);
         }
 
         public void OnVclHrdParametersPresentFlag()

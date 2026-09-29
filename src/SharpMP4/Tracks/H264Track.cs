@@ -81,6 +81,8 @@ namespace SharpMP4.Tracks
             {
                 ProcessSample(ppsBinary, out _, out _);
             }
+
+            DropConfigurationSample();
         }
 
         /// <summary>
@@ -96,10 +98,7 @@ namespace SharpMP4.Tracks
             if (buffer == null)
             {
                 // flush the last AU
-                if (HasSample && SampleHasVcl)
-                {
-                    output = TakeSample();
-                }
+                output = FlushAccessUnit();
                 return;
             }
 
@@ -119,11 +118,8 @@ namespace SharpMP4.Tracks
 
                 if(nu.NalUnitType == H264NALTypes.AUD)
                 {
-                    // access unit delimiter NAL unit(when present)
-                    if (SampleHasVcl)
-                    {
-                        output = TakeSample();
-                    }
+                    // access unit delimiter NAL unit (when present): not kept, where the access unit starts the next
+                    // primary coded picture's first slice says
                 }
                 else if (nu.NalUnitType == H264NALTypes.SPS)
                 {
@@ -160,11 +156,7 @@ namespace SharpMP4.Tracks
                         DefaultSampleDuration = (int)FrameTickOverride;
                     }
 
-                    // sequence parameter set NAL unit (when present)
-                    if (SampleHasVcl)
-                    {
-                        output = TakeSample();
-                    }
+                    // sequence parameter set NAL unit (when present): kept in the sample entry
                 }
                 else if (nu.NalUnitType == H264NALTypes.PPS)
                 {
@@ -176,28 +168,20 @@ namespace SharpMP4.Tracks
                         PpsRaw.Add(_context.PicParameterSetRbsp.PicParameterSetId, CopyOf(buffer, offset, length));
                     }
 
-                    // picture parameter set NAL unit (when present)
-                    if (SampleHasVcl)
-                    {
-                        output = TakeSample();
-                    }
+                    // picture parameter set NAL unit (when present): kept in the sample entry
                 }
                 else if (nu.NalUnitType == H264NALTypes.SEI)
                 {
-                    // SEI NAL unit (when present)
-                    if (SampleHasVcl)
-                    {
-                        output = TakeSample();
-                    }
-
-                    AppendNalUnit(buffer, offset, length);
+                    // SEI NAL unit (when present): of the next access unit where a new primary coded picture comes next
+                    HoldNalUnit(buffer, offset, length);
                 }
                 else if(nu.NalUnitType >= H264NALTypes.PREFIX_NAL && nu.NalUnitType <= H264NALTypes.RESERVED1)
                 {
-                    // NAL units with nal_unit_type in the range of 14 to 18, inclusive (when present),
-                    if (SampleHasVcl)
+                    // NAL units with nal_unit_type in the range of 14 to 18, inclusive (when present): a prefix NAL unit goes
+                    // with the base view slice after it; a subset SPS is kept in the sample entry
+                    if (nu.NalUnitType != H264NALTypes.SUBSET_SPS)
                     {
-                        output = TakeSample();
+                        HoldNalUnit(buffer, offset, length);
                     }
                 }
                 else
@@ -246,9 +230,6 @@ namespace SharpMP4.Tracks
                         }
                         else if (nu.NalUnitType == H264NALTypes.IDR_SLICE) // 5
                         {
-                            // keyframe
-                            SampleHasIdr = true;
-
                             _context.SliceLayerWithoutPartitioningRbsp = new SliceLayerWithoutPartitioningRbsp();
                             _context.SliceLayerWithoutPartitioningRbsp.Read(_context, stream);
                             sliceHeader = _context.SliceLayerWithoutPartitioningRbsp.SliceHeader;
@@ -285,11 +266,12 @@ namespace SharpMP4.Tracks
                             (IdrPicFlag == 1 && last_IdrPicFlag == 1 && idr_pic_id != last_idr_pic_id) // IdrPicFlag is equal to 1 for both and idr_pic_id differs in value
                             )
                         {
-                            if (SampleHasVcl)
-                            {
-                                isRandomAccessPoint = SampleHasIdr;
-                                output = TakeSample();
-                            }
+                            // the first VCL NAL unit of a new primary coded picture (7.4.1.2.4)
+                            output = StartVclNalUnit(true);
+                        }
+                        else
+                        {
+                            StartVclNalUnit(false);
                         }
 
                         last_frame_num = frame_num;
@@ -306,9 +288,12 @@ namespace SharpMP4.Tracks
                         last_idr_pic_id = idr_pic_id;
                         last_filled = true;
 
-                        SampleHasVcl = true;
+                        // a sync sample is an IDR picture's (ISO/IEC 14496-15): marked once the access unit before it is taken
+                        AddVclNalUnit(nu.NalUnitType == H264NALTypes.IDR_SLICE);
                     }
 
+                    // of the access unit being assembled, as is what was held before it
+                    AttachHeldNalUnits();
                     AppendNalUnit(buffer, offset, length);
                 }
             }

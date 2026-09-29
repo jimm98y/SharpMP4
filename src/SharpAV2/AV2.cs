@@ -104,34 +104,80 @@ namespace SharpAV2
         /// <summary>The bit position just after the OBU being read or written.</summary>
         private long ObuEndPosition;
 
+        /// <summary>
+        /// The leb128() obu_size an OBU of a sample is led by (AV2-ISOBMFF); -1 where the stream ends in it, or the OBU of
+        /// that size would pass <paramref name="endBits"/>, the end of what holds it, counted as <see cref="AomStream.GetPosition"/> is.
+        /// </summary>
+        public static int ReadObuSize(AomStream stream, long endBits)
+        {
+            int size;
+            try
+            {
+                stream.ReadLeb128(out size, "obu_size");
+            }
+            catch (EndOfStreamException)
+            {
+                return -1;
+            }
+            return size <= 0 || stream.GetPosition() + (long)size * 8 > endBits ? -1 : size;
+        }
+
+        /// <summary>
+        /// Reads an OBU of <paramref name="size"/> bytes, as <see cref="Read"/>, and moves on to the end of it, whatever its
+        /// syntax read of it: what an OBU that cannot be read leaves, the next is read from where it starts. Read ahead on
+        /// and gone back from, so the stream need not seek. Null, or what reading it threw.
+        /// </summary>
+        public Exception ReadWhole(AomStream stream, int size)
+        {
+            Exception error = null;
+            var start = stream.Bitstream.BeginPeek();
+            try
+            {
+                Read(stream, size);
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+            }
+            finally
+            {
+                stream.Bitstream.EndPeek(start);
+            }
+            stream.Skip((long)size * 8);
+            return error;
+        }
+
         /// <summary>Reads one OBU of sz bytes (AV2 5.3.1, open_bitstream_unit).</summary>
         public void Read(AomStream stream, int size)
         {
             this.stream = stream ?? throw new ArgumentNullException(nameof(stream));
             ObuEndPosition = stream.GetPosition() + (long)size * 8;
             _paddingLength = -1;
+            TileCount = 0;
             var record = RecordSyntax ? new AomSyntaxRecord() : null;
             stream.Record = record;
-            var input = stream.Bitstream.BaseStream;
-            long start = record != null && input.CanSeek ? input.Position : -1;
+            // read so that it can be read again: the bytes read of it kept, a stream that cannot seek as well
+            SharpMP4.Common.Bitstream.PeekState? start = record != null ? stream.Bitstream.BeginPeek() : null;
             try
             {
                 OpenBitstreamUnit(size);
             }
-            catch when (start >= 0)
+            catch when (start != null)
             {
                 // Kept as its bytes, and the state reading it left: what a writer takes to follow on
-                input.Position = start;
+                stream.Record = null;
+                stream.Bitstream.EndPeek(start.Value);
+                start = null;
+                stream.Bitstream.BitsPosition = (stream.Bitstream.BitsPosition + 7) & ~7L;
                 var bytes = new byte[size];
-                int read = 0, count;
-                while (read < size && (count = input.Read(bytes, read, size - read)) > 0)
-                    read += count;
-                Array.Resize(ref bytes, read);
+                Array.Resize(ref bytes, stream.Bitstream.ReadAvailableBytes(bytes, 0, size));
                 LastObu = new AV2Obu(size, record, Copy()) { Unreadable = bytes };
                 throw;
             }
             finally
             {
+                if (start != null)
+                    stream.Bitstream.AcceptPeek(start.Value);
                 stream.Record = null;
             }
             if (record != null)
@@ -150,6 +196,7 @@ namespace SharpAV2
                 throw new ArgumentNullException(nameof(obu));
             ObuEndPosition = stream.GetPosition() + (long)obu.Size * 8;
             _paddingLength = -1;
+            TileCount = 0;
             stream.WriteLimit = stream.GetPosition() + (long)obu.Size * 8;
             stream.Source = obu.Record;
             _original = obu.Read;

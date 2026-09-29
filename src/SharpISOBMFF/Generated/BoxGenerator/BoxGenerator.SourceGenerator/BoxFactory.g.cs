@@ -1063,6 +1063,7 @@ namespace SharpISOBMFF
                case "vsib":  return new ViewScalabilityInformationSEIBox();
                case "vsid":  return new CueSourceIDBox();
                case "vtta":  return new VTTAdditionalBox();
+               case "vttc":  return new VTTCueBox();
                case "vttC":  return new WebVTTConfigurationBox();
                case "vtte":  return new VTTEmptyBox();
                case "vvc1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("vvc1"));break;

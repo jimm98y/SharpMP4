@@ -30,8 +30,16 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
             mapping.Add(inputTrack.TrackID, outputTrack.TrackID);
         }
 
+        // subtitles: 3GPP timed text, in milliseconds - forced, so that players such as VLC show them without being asked
+        var subtitleTrack = new TimedTextTrack(1000) { Language = "eng", Forced = true };
+        outputBuilder.AddTrack(subtitleTrack);
+
+        // how long the movie is: its longest track
+        double durationInSeconds = 0;
+
         foreach (var inputTrack in inputTracks)
         {
+            long trackDuration = 0;
             if (inputTrack.HandlerType == HandlerTypes.Video)
             {
                 var videoUnits = inputTrack.GetContainerSamples();
@@ -43,6 +51,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
                 MediaSample sample = null;
                 while ((sample = inputReader.ReadSample(inputTrack.TrackID)) != null)
                 {
+                    trackDuration += sample.Duration;
                     IEnumerable<ArraySegment<byte>> units = inputReader.ParseSample(inputTrack.TrackID, sample.Data);
                     foreach (var unit in units)
                     {
@@ -55,8 +64,30 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
                 MediaSample sample = null;
                 while ((sample = inputReader.ReadSample(inputTrack.TrackID)) != null)
                 {
+                    trackDuration += sample.Duration;
                     outputBuilder.ProcessTrackSample(mapping[inputTrack.TrackID], sample.Data, sample.Duration);
                 }
+            }
+
+            durationInSeconds = Math.Max(durationInSeconds, (double)trackDuration / inputTrack.Timescale);
+        }
+
+        // a subtitle shown for 3 seconds every 6 seconds, over the whole movie: a sample of the cue, then an empty one for
+        // the 3 seconds nothing is shown - each sample lasts until the next starts
+        const int shownMs = 3000;
+        const int periodMs = 6000;
+        long durationMs = (long)Math.Ceiling(durationInSeconds * 1000);
+        int cueNumber = 1;
+        for (long start = 0; start < durationMs; start += periodMs)
+        {
+            int shown = (int)Math.Min(shownMs, durationMs - start);
+            var cue = new SubtitleCue { Text = $"Sample subtitle {cueNumber++}\nat {TimeSpan.FromMilliseconds(start):m\\:ss}" };
+            outputBuilder.ProcessTrackSample(subtitleTrack.TrackID, subtitleTrack.CreateSample(new[] { cue }), shown);
+
+            int hidden = (int)Math.Min(periodMs - shownMs, durationMs - start - shown);
+            if (hidden > 0)
+            {
+                outputBuilder.ProcessTrackSample(subtitleTrack.TrackID, subtitleTrack.CreateSample(Array.Empty<SubtitleCue>()), hidden);
             }
         }
 

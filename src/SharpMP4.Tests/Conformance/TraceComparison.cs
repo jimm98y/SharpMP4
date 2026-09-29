@@ -86,6 +86,8 @@ public static class TraceComparison
         // trailing zero bytes - so the size it reads is its own. Misread, obu_size would put
         // everything after it out of step anyway.
         "obu_size",
+        // An AV1 tile group's tiles, which ffmpeg's headers do not read: it takes the tile data whole.
+        "tile_size_minus_1", "tile_data",
     ];
 
     /// <summary>

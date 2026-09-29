@@ -82,14 +82,15 @@ namespace SharpMP4.Tracks
             }
 
             int end = offset + length;
-            int position = offset;
-            while (position < end)
+            using var stream = new AomStream(new MemoryStream(buffer, offset, length, writable: false));
+            while (stream.GetPosition() < (long)length * 8)
             {
-                int start = position;
-                long size = ReadLeb128(buffer, ref position, end);
-                if (size <= 0 || position + size > end)
+                int start = offset + stream.GetPosition() / 8;
+                int size = AV2Context.ReadObuSize(stream, (long)length * 8);
+                int position = offset + stream.GetPosition() / 8;
+                if (size < 0)
                 {
-                    if (this.Logger.IsErrorEnabled) this.Logger.LogError($"An OBU of {size} bytes where {end - position} are left, dropping the rest");
+                    if (this.Logger.IsErrorEnabled) this.Logger.LogError($"An OBU past the {end - start} bytes left, dropping the rest");
                     return;
                 }
 
@@ -100,22 +101,15 @@ namespace SharpMP4.Tracks
                     && obuType != AV2Context.OBU_LAYER_CONFIGURATION_RECORD && obuType != AV2Context.OBU_CONTENT_INTERPRETATION)
                 {
                     if (this.Logger.IsErrorEnabled) this.Logger.LogError("OBU Sequence Header missing, dropping OBU");
-                    position += (int)size;
+                    stream.Skip((long)size * 8);
                     continue;
                 }
 
-                try
-                {
-                    using (var stream = new AomStream(new MemoryStream(buffer, position, (int)size)))
-                        _context.Read(stream, (int)size);
-                }
-                catch (Exception ex)
-                {
-                    // Kept all the same: the sample is what the stream has
-                    if (this.Logger.IsWarningEnabled) this.Logger.LogWarning($"OBU type {obuType} could not be read: {ex.Message}");
-                }
+                // Kept all the same where it cannot be read: the sample is what the stream has
+                var error = _context.ReadWhole(stream, size);
+                if (error != null && this.Logger.IsWarningEnabled) this.Logger.LogWarning($"OBU type {obuType} could not be read: {error.Message}");
 
-                int total = position + (int)size - start;
+                int total = position + size - start;
                 switch (obuType)
                 {
                     case AV2Context.OBU_TEMPORAL_DELIMITER:
@@ -163,8 +157,6 @@ namespace SharpMP4.Tracks
                         AppendToSample(buffer, start, total);
                         break;
                 }
-
-                position += (int)size;
             }
         }
 
@@ -347,27 +339,18 @@ namespace SharpMP4.Tracks
         public override IEnumerable<ArraySegment<byte>> ParseSample(byte[] buffer, int offset, int length)
         {
             var result = new List<ArraySegment<byte>>();
-            int end = offset + length;
-            int position = offset;
-            while (position < end)
+            using var stream = new AomStream(new MemoryStream(buffer, offset, length, writable: false));
+            while (stream.GetPosition() < (long)length * 8)
             {
-                int start = position;
-                long size = ReadLeb128(buffer, ref position, end);
-                if (size <= 0 || position + size > end)
+                int start = offset + stream.GetPosition() / 8;
+                int size = AV2Context.ReadObuSize(stream, (long)length * 8);
+                if (size < 0)
                     break;
 
-                try
-                {
-                    using (var stream = new AomStream(new MemoryStream(buffer, position, (int)size)))
-                        _context.Read(stream, (int)size);
-                }
-                catch (Exception ex)
-                {
-                    if (this.Logger.IsWarningEnabled) this.Logger.LogWarning($"An OBU could not be read: {ex.Message}");
-                }
+                var error = _context.ReadWhole(stream, size);
+                if (error != null && this.Logger.IsWarningEnabled) this.Logger.LogWarning($"An OBU could not be read: {error.Message}");
 
-                position += (int)size;
-                result.Add(new ArraySegment<byte>(buffer, start, position - start));
+                result.Add(new ArraySegment<byte>(buffer, start, offset + stream.GetPosition() / 8 - start));
             }
             return result;
         }
@@ -385,18 +368,6 @@ namespace SharpMP4.Tracks
             return new AV2Track(Timescale, DefaultSampleDuration);
         }
 
-        private static long ReadLeb128(byte[] buffer, ref int position, int end)
-        {
-            long value = 0;
-            for (int i = 0; i < 8 && position < end; i++)
-            {
-                byte b = buffer[position++];
-                value |= (long)(b & 0x7f) << (7 * i);
-                if ((b & 0x80) == 0)
-                    break;
-            }
-            return value;
-        }
 
         /// <summary>An OBU led by its length, as the samples and the 'av2C' box hold it.</summary>
         private static byte[] Framed(byte[] obu)

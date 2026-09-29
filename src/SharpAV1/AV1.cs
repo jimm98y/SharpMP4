@@ -171,28 +171,33 @@ namespace SharpAV1
             if (Strict)
                 stream.Validate = CheckValue;
             foundRefs = 0;
+            TileCount = 0;
+            tileGroupEnd = null;
             var record = RecordSyntax ? new AomSyntaxRecord() : null;
             stream.Record = record;
-            var input = stream.Bitstream.BaseStream;
-            long start = record != null && input.CanSeek ? input.Position : -1;
+            // read so that it can be read again: the bytes read of it kept, a stream that cannot seek as well
+            SharpMP4.Common.Bitstream.PeekState? start = record != null ? stream.Bitstream.BeginPeek() : null;
             try
             {
                 OpenBitstreamUnit(size);
+                TileGroupRest();
             }
-            catch when (start >= 0)
+            catch when (start != null)
             {
                 // Kept as its bytes, and the state reading it left: what a writer takes to follow on
-                input.Position = start;
+                stream.Record = null;
+                stream.Bitstream.EndPeek(start.Value);
+                start = null;
+                stream.Bitstream.BitsPosition = (stream.Bitstream.BitsPosition + 7) & ~7L;
                 var bytes = new byte[size];
-                int read = 0, count;
-                while (read < size && (count = input.Read(bytes, read, size - read)) > 0)
-                    read += count;
-                Array.Resize(ref bytes, read);
+                Array.Resize(ref bytes, stream.Bitstream.ReadAvailableBytes(bytes, 0, size));
                 LastObu = new AV1Obu(size, record, Copy()) { Unreadable = bytes };
                 throw;
             }
             finally
             {
+                if (start != null)
+                    stream.Bitstream.AcceptPeek(start.Value);
                 stream.Record = null;
             }
             if (record != null)
@@ -211,6 +216,8 @@ namespace SharpAV1
             if (obu == null)
                 throw new ArgumentNullException(nameof(obu));
             stream.WriteLimit = stream.GetPosition() + (long)obu.Size * 8;
+            TileCount = 0;
+            tileGroupEnd = null;
             stream.Source = obu.Record;
             _original = obu.Read;
             _edited = obu.Edited;
@@ -228,6 +235,7 @@ namespace SharpAV1
             try
             {
                 WriteOpenBitstreamUnit(obu.Size);
+                TileGroupRest();
             }
             finally
             {
@@ -602,22 +610,12 @@ namespace SharpAV1
                 return stream.Source?["obu_padding_byte"].Count ?? 0;
 
             long remainingBits = (long)obu_size * 8 - (stream.GetPosition() - startPosition);
-            var baseStream = stream.Bitstream.BaseStream;
-            if (remainingBits <= 0 || stream.GetPosition() % 8 != 0 || !baseStream.CanSeek)
+            if (remainingBits <= 0 || stream.GetPosition() % 8 != 0)
                 return 0;
 
-            // Byte aligned, so the underlying stream is at the next byte to read.
+            // looked at ahead, and not read: a stream that cannot seek as well
             var rest = new byte[remainingBits / 8];
-            long position = baseStream.Position;
-            int read = 0;
-            while (read < rest.Length)
-            {
-                int count = baseStream.Read(rest, read, rest.Length - read);
-                if (count <= 0)
-                    break;
-                read += count;
-            }
-            baseStream.Position = position;
+            int read = stream.PeekBytes(rest, 0, rest.Length);
 
             int trailing = read > 0 ? Array.FindLastIndex(rest, read - 1, read, b => b != 0) : -1;
             return Math.Max(0, trailing);
@@ -731,7 +729,103 @@ namespace SharpAV1
             return SelectedOperatingPoint;
         }
 
-        private void skip_obu() => RestOfObu("obu_rest");
+        private long[] tileStarts = new long[1];
+        private int[] tileSizes = new int[1];
+
+        /// <summary>
+        /// How many tiles the last OBU read or written had: what Common Encryption protects, tile by tile. Their
+        /// bytes are found without decoding them (<see cref="TileStart"/>, <see cref="TileSize"/>).
+        /// </summary>
+        public int TileCount { get; private set; }
+
+        /// <summary>Where the tile i of the last OBU starts, in bits from the start of the stream it was read from.</summary>
+        public long TileStart(int i) => i < TileCount ? tileStarts[i] : throw new ArgumentOutOfRangeException(nameof(i));
+
+        /// <summary>The size in bytes of the tile i of the last OBU.</summary>
+        public int TileSize(int i) => i < TileCount ? tileSizes[i] : throw new ArgumentOutOfRangeException(nameof(i));
+
+        /// <summary>
+        /// What a tile group's tiles leave of its OBU - of a malformed one, whose tiles are not all there: taken as the rest
+        /// of any OBU the syntax does not read, for no trailing bits end a tile group (5.3.1).
+        /// </summary>
+        private void TileGroupRest()
+        {
+            if (obu_type == AV1ObuTypes.OBU_TILE_GROUP || obu_type == AV1ObuTypes.OBU_FRAME)
+                RestOfObu("obu_rest");
+
+            // a tile group whose tiles ran past it, ended early: what it said, and what the end of its frame does
+            if (tileGroupEnd != null)
+            {
+                bool frameEnded = tg_end == NumTiles - 1;
+                tg_end = tileGroupEnd.Value;
+                tileGroupEnd = null;
+                if (!frameEnded && tg_end == NumTiles - 1)
+                {
+                    decode_frame_wrapup();
+                    SeenFrameHeader = 0;
+                }
+            }
+        }
+
+        // Of a tile group whose tiles ran past its OBU: the tg_end it was read with.
+        private int? tileGroupEnd;
+
+        /// <summary>
+        /// init_symbol (8.2.2), where a tile's decoding starts: the tile is not decoded, so its bytes are taken as they
+        /// are - skipped, or recorded and written back as they were read - and where they lie noted.
+        /// </summary>
+        private void init_symbol(int sz)
+        {
+            // a tile the OBU does not hold: its size, or those of the tiles before it, wrong. As ffmpeg - whose headers do
+            // not read the tiles - reads on, even Strict, the tile takes what the OBU has left and is the group's last, the
+            // tile sizes after it not read from past the OBU (TileGroupRest puts tg_end back)
+            long remainingBits = (long)obu_size * 8 - (stream.GetPosition() - startPosition);
+            if (sz < 0 || (long)sz * 8 > remainingBits)
+            {
+                sz = (int)Math.Max(0, remainingBits / 8);
+                if (tileGroupEnd == null)
+                {
+                    tileGroupEnd = tg_end;
+                    tg_end = tg_start + TileCount; // this tile's TileNum: the loop ends with it
+                }
+            }
+
+            if (TileCount == tileStarts.Length)
+            {
+                Array.Resize(ref tileStarts, TileCount * 2);
+                Array.Resize(ref tileSizes, TileCount * 2);
+            }
+            tileStarts[TileCount] = stream.GetPosition();
+            tileSizes[TileCount] = sz;
+            TileCount++;
+
+            if (sz <= 0)
+                return;
+            if (_writing)
+            {
+                byte[] tile = stream.Pick("tile_data", (byte[])null, null)
+                    ?? throw new InvalidOperationException("The tile_data was not recorded: SharpAV1 writes it as it was read.");
+                stream.WriteBytes(sz * 8, tile, "tile_data");
+            }
+            else if (stream.Record != null)
+            {
+                stream.ReadBytes(sz * 8, out _, "tile_data");
+            }
+            else
+            {
+                stream.Skip((long)sz * 8);
+            }
+        }
+
+        /// <summary>decode_tile (5.11.2): not decoded - <see cref="init_symbol"/> took its bytes.</summary>
+        private void decode_tile()
+        {
+        }
+
+        /// <summary>exit_symbol (8.2.4), where a tile's decoding ends: nothing of it is left to take.</summary>
+        private void exit_symbol()
+        {
+        }
 
         private void frame_header_copy()
         {

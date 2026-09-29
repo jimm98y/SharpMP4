@@ -97,7 +97,7 @@ public partial class ItemInfoEntry : FullBox
 			boxSize += stream.ReadUInt16(boxSize, readSize,  out this.item_protection_index, "item_protection_index"); 
 			boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.item_name, "item_name"); 
 			boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.content_type, "content_type"); 
-			if (stream.HasMoreData(boxSize, readSize)) { boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.content_encoding, "content_encoding"); this.content_encodingPresent = true; } //optional
+			if (stream.HasStringBeforeBoxes(boxSize, readSize)) { boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.content_encoding, "content_encoding"); this.content_encodingPresent = true; } //optional
 		}
 
 		if (version == 1)
@@ -134,7 +134,7 @@ public partial class ItemInfoEntry : FullBox
 			if (item_type==IsoStream.FromFourCC("mime"))
 			{
 				boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.content_type, "content_type"); 
-				if (stream.HasMoreData(boxSize, readSize)) { boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.content_encoding, "content_encoding"); this.content_encodingPresent = true; } //optional
+				if (stream.HasStringBeforeBoxes(boxSize, readSize)) { boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.content_encoding, "content_encoding"); this.content_encodingPresent = true; } //optional
 			}
 
 			else if (item_type == IsoStream.FromFourCC("uri "))

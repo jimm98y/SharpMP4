@@ -8,6 +8,15 @@ namespace SharpISOBMFF
         public const string Video = "vide";
         public const string Sound = "soun";
         public const string Hint = "hint";
+
+        /// <summary>Timed text: WebVTT (ISO/IEC 14496-30), 3GPP timed text, simple text.</summary>
+        public const string Text = "text";
+
+        /// <summary>Subtitles: TTML and IMSC (ISO/IEC 14496-30).</summary>
+        public const string Subtitle = "subt";
+
+        /// <summary>Apple's subtitles: 3GPP timed text ('tx3g') as QuickTime and Apple's players have it.</summary>
+        public const string AppleSubtitle = "sbtl";
     }
 
     public static class HandlerNames
@@ -15,6 +24,8 @@ namespace SharpISOBMFF
         public const string Video = "Video Handler\0";
         public const string Sound = "Sound Handler\0";
         public const string Hint = "Hint Handler\0";
+        public const string Text = "Text Handler\0";
+        public const string Subtitle = "Subtitle Handler\0";
     }
 
     public class SampleFlags

@@ -114,6 +114,11 @@ namespace SharpMP4.Readers
 
                         // TODO: review, this is needed because of AV1 where we cannot calculate the sample rate
                         int defaultSampleDuration = trackContext.Stts.SampleDelta != null && trackContext.Stts.SampleDelta.Length > 0 ? (int)trackContext.Stts.SampleDelta[0] : 0;
+                        // of a fragmented file, whose 'stts' is empty: the first fragment's first sample's - without it, a track
+                        // cloned to be written again took a duration of its own, an H.264 track of no timing in its SPS 23.976
+                        // frames a second whatever the file's
+                        if (defaultSampleDuration == 0)
+                            defaultSampleDuration = (int)FirstFragmentSampleDuration(container, trackID, trackContext.Trex);
 
                         ITrack trackImpl = null;
                         try
@@ -129,6 +134,10 @@ namespace SharpMP4.Readers
                         }
 
                         trackImpl?.Logger ??= this.Logger;
+
+                        // a subtitle track forced, as its 'kind' says - of 3GPP timed text, or its sample entry
+                        if (trackImpl is ISubtitleTrack subtitles && SubtitleTrackBase.IsForced(track))
+                            subtitles.Forced = true;
 
                         this.Tracks[trackID].Track = trackImpl;
 
@@ -214,6 +223,23 @@ namespace SharpMP4.Readers
                             trackContext.Traf = traf;
                             trackContext.Tfhd = tfhd;
                             trackContext.Truns = traf.Children.OfType<TrackRunBox>().ToArray(); // there can be 1 or multiple trun boxes, depending upon the encoder
+                            foreach (var trun in trackContext.Truns)
+                            {
+                                // a run whose samples have none of their own fields - every one the defaults - has entries of
+                                // no bytes, which reading the box, as it ends, does not make: sample_count of them
+                                var entries = trun._TrunEntry ?? Array.Empty<TrunEntry>();
+                                if (entries.Length < trun.SampleCount && (trun.Flags & 0xF00) == 0)
+                                {
+                                    var all = new TrunEntry[trun.SampleCount];
+                                    Array.Copy(entries, all, entries.Length);
+                                    for (int e = entries.Length; e < all.Length; e++)
+                                    {
+                                        all[e] = new TrunEntry(trun.Version, trun.Flags) { Flags = trun.Flags };
+                                        all[e].SetParent(trun);
+                                    }
+                                    trun._TrunEntry = all;
+                                }
+                            }
                             var tfdt = traf.Children.OfType<TrackFragmentBaseMediaDecodeTimeBox>().SingleOrDefault();
 
                             // pre-calculate DTS and address for the fragment
@@ -228,27 +254,10 @@ namespace SharpMP4.Readers
 
                             trackContext.FragmentSampleCount = sampleCount;
 
-                            long dts = (long)tfdt.BaseMediaDecodeTime;
-                            if (tfdt != null)
-                            {
-                                dts = (long)tfdt.BaseMediaDecodeTime;
-                            }
+                            // without a 'tfdt', the fragment starts where the track's previous one ended
+                            long dts = tfdt != null ? (long)tfdt.BaseMediaDecodeTime : trackContext.FragmentEndDts;
 
-                            long startAddressBase = 0; // TODO: default?
-                            bool defaultBaseIsMoof = (trackContext.Tfhd.Flags & 0x20000u) == 0x20000u;
-                            if ((trackContext.Tfhd.Flags & 0x1) == 0x1)
-                            {
-                                startAddressBase = (long)trackContext.Tfhd.BaseDataOffset;
-                            }
-                            else if (defaultBaseIsMoof)
-                            {
-                                startAddressBase = trackContext.Moof.GetBoxOffset();
-                            }
-                            else
-                            {
-                                // TODO: review, possibly move to MDAT...
-                                throw new NotSupportedException();
-                            }
+                            long startAddressBase = BaseDataOffsetOf(currentMoof, traf);
 
                             trackContext.FragmentBaseAddress = startAddressBase;
                             trackContext.FragmentSampleStartAddress = new long[sampleCount];
@@ -257,10 +266,12 @@ namespace SharpMP4.Readers
                             trackContext.FragmentSampleTrunEntryIndex = new int[sampleCount];
 
                             int sampleIndex = 0;
-                            long startAddress = 0;
+                            long startAddress = startAddressBase;
                             for (int k = 0; k < trackContext.Truns.Length; k++)
                             {
-                                startAddress = startAddressBase + trackContext.Truns[k].DataOffset;
+                                // a run without a data offset starts where the one before it ends, the first at the base (8.8.8.3)
+                                if ((trackContext.Truns[k].Flags & 0x1) == 0x1)
+                                    startAddress = startAddressBase + trackContext.Truns[k].DataOffset;
 
                                 for (int j = 0; j < trackContext.Truns[k]._TrunEntry.Length; j++)
                                 {
@@ -298,6 +309,7 @@ namespace SharpMP4.Readers
                                     sampleIndex++;
                                 }
                             }
+                            trackContext.FragmentEndDts = dts;
                         }
                     }
                 }
@@ -307,7 +319,9 @@ namespace SharpMP4.Readers
                     {
                         var currentMdat = (MediaDataBox)container.Children[i];
 
-                        if (currentMdat.Size > 8) // mdat smaller than 8 bytes is empty and invalid
+                        // an mdat of its header alone is of a fragment whose samples are all empty - a gap in a text
+                        // track - or are elsewhere; one smaller is invalid
+                        if (currentMdat.Size >= 8)
                         {
                             trackContext.Mdat = currentMdat;
 
@@ -319,7 +333,7 @@ namespace SharpMP4.Readers
                                 SampleEncryptionReader.ForFragment(protection, trackContext.Traf, trackContext.Stbl, trackContext.FragmentSampleCount,
                                     trackContext.FragmentBaseAddress, (offset, length) => ReadAt(currentMdat.Data.Stream, offset, length));
 
-                            currentMdat.Data.Stream.SeekFromBeginning(currentMdat.Data.Position);
+                            currentMdat.Data?.Stream?.SeekFromBeginning(currentMdat.Data.Position);
 
                             // this makes sure next time we call this it will read the next fragment
                             trackContext.FragmentIndex = i;
@@ -332,6 +346,67 @@ namespace SharpMP4.Readers
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Where a track fragment's data offsets count from (ISO/IEC 14496-12 8.8.7.1): its base-data-offset where it has
+        /// one; else the start of the 'moof' where default-base-is-moof is set, or it is the first track fragment; else
+        /// the end of the data of the track fragment before it.
+        /// </summary>
+        /// <summary>
+        /// The duration of the first sample of a track's first fragment (14496-12 8.8.8): its own in the 'trun', else the
+        /// 'tfhd's default, else the 'trex's. 0 where the track has no fragment, or no duration is given.
+        /// </summary>
+        private static uint FirstFragmentSampleDuration(Container container, uint trackID, TrackExtendsBox trex)
+        {
+            foreach (var moof in container.Children.OfType<MovieFragmentBox>())
+            {
+                foreach (var traf in moof.Children.OfType<TrackFragmentBox>())
+                {
+                    var tfhd = traf.Children.OfType<TrackFragmentHeaderBox>().FirstOrDefault();
+                    if (tfhd == null || tfhd.TrackID != trackID)
+                        continue;
+
+                    var entry = traf.Children.OfType<TrackRunBox>().FirstOrDefault(t => t.SampleCount > 0)?._TrunEntry?.FirstOrDefault();
+                    if (entry != null && (entry.Flags & 0x100) == 0x100)
+                        return entry.SampleDuration;
+                    if ((tfhd.Flags & 0x8) == 0x8)
+                        return tfhd.DefaultSampleDuration;
+                    return trex?.DefaultSampleDuration ?? 0;
+                }
+            }
+            return trex?.DefaultSampleDuration ?? 0;
+        }
+
+        private long BaseDataOffsetOf(MovieFragmentBox moof, TrackFragmentBox target)
+        {
+            long moofOffset = moof.GetBoxOffset();
+            long previousEnd = moofOffset;
+            bool first = true;
+            foreach (var traf in moof.Children.OfType<TrackFragmentBox>())
+            {
+                var tfhd = traf.Children.OfType<TrackFragmentHeaderBox>().Single();
+                long baseOffset = (tfhd.Flags & 0x1) == 0x1 ? (long)tfhd.BaseDataOffset
+                    : (tfhd.Flags & 0x20000) == 0x20000 || first ? moofOffset
+                    : previousEnd;
+                if (traf == target)
+                    return baseOffset;
+
+                // where this track fragment's data ends: after the last byte of its runs
+                var trex = this.Mvex?.Children.OfType<TrackExtendsBox>().FirstOrDefault(x => x.TrackID == tfhd.TrackID);
+                long position = baseOffset;
+                previousEnd = baseOffset;
+                foreach (var trun in traf.Children.OfType<TrackRunBox>())
+                {
+                    if ((trun.Flags & 0x1) == 0x1)
+                        position = baseOffset + trun.DataOffset;
+                    foreach (var entry in trun._TrunEntry)
+                        position += (entry.Flags & 0x200) == 0x200 ? entry.SampleSize : (tfhd.Flags & 0x10) == 0x10 ? tfhd.DefaultSampleSize : trex?.DefaultSampleSize ?? 0;
+                    previousEnd = Math.Max(previousEnd, position);
+                }
+                first = false;
+            }
+            return moofOffset;
         }
 
         public MediaSample ReadSample(uint trackID)
@@ -508,10 +583,6 @@ namespace SharpMP4.Readers
             var trun = trackContext.Truns[trackContext.FragmentSampleTrunIndex[trackContext.SampleIndex]];
             int trunEntryIndex = trackContext.FragmentSampleTrunEntryIndex[trackContext.SampleIndex];
 
-            uint firstSampleFlags = trun.FirstSampleFlags;
-            if ((trun.Flags & 0x4) != 0x4)
-                firstSampleFlags = trackContext.Tfhd.DefaultSampleFlags;
-
             var entry = trun._TrunEntry[trunEntryIndex];
 
             uint sampleDuration = trackContext.Tfhd.DefaultSampleDuration;
@@ -534,11 +605,20 @@ namespace SharpMP4.Readers
             else
                 throw new Exception("Cannot get sample size");
 
-            uint sampleFlags = trackContext.Tfhd.DefaultSampleFlags;
-            if (trunEntryIndex == 0)
-                sampleFlags = firstSampleFlags;
+            // the first sample's own flags where the run has them, else each sample's, else the track fragment's default,
+            // else the track's (14496-12 8.8.8.3)
+            uint sampleFlags;
+            if (trunEntryIndex == 0 && (trun.Flags & 0x4) == 0x4)
+                sampleFlags = trun.FirstSampleFlags;
             else if ((entry.Flags & 0x400) == 0x400)
                 sampleFlags = entry.SampleFlags;
+            else if ((trackContext.Tfhd.Flags & 0x20) == 0x20)
+                sampleFlags = trackContext.Tfhd.DefaultSampleFlags;
+            else
+                sampleFlags = trackContext.Trex?.DefaultSampleFlags ?? 0;
+
+            // a sync sample: sample_is_non_sync_sample 0
+            bool isRandomAccessPoint = (sampleFlags & 0x10000) == 0;
 
             // CTS
             int sampleCompositionTime = 0;
@@ -554,7 +634,8 @@ namespace SharpMP4.Readers
             long pts = dts + sampleCompositionTime;
 
             long startAddress = trackContext.FragmentSampleStartAddress[trackContext.SampleIndex];
-            if (trackContext.Mdat.Data.Stream.GetCurrentOffset() != startAddress)
+            // an empty sample has nothing to read, where an mdat of its header alone may have no stream
+            if (sampleSize > 0 && trackContext.Mdat.Data.Stream.GetCurrentOffset() != startAddress)
             {
                 trackContext.Mdat.Data.Stream.SeekFromBeginning(startAddress);
             }
@@ -569,10 +650,10 @@ namespace SharpMP4.Readers
                 trackContext.SampleBuffer = new byte[capacity];
             }
 
-            ulong size = trackContext.Mdat.Data.Stream.ReadBytes(sampleSize, trackContext.SampleBuffer, 0);
+            ulong size = sampleSize == 0 ? 0 : trackContext.Mdat.Data.Stream.ReadBytes(sampleSize, trackContext.SampleBuffer, 0);
 
             var mediaSample = new MediaSample(pts, dts, (int)sampleDuration,
-                new ArraySegment<byte>(trackContext.SampleBuffer, 0, (int)sampleSize));
+                new ArraySegment<byte>(trackContext.SampleBuffer, 0, (int)sampleSize), isRandomAccessPoint);
             mediaSample.Encryption = trackContext.FragmentEncryption != null && trackContext.SampleIndex < trackContext.FragmentEncryption.Length ? trackContext.FragmentEncryption[trackContext.SampleIndex] : null;
             Decrypt(trackContext, mediaSample);
 
@@ -662,6 +743,9 @@ namespace SharpMP4.Readers
         public TrackFragmentBox Traf { get; set; }
         public TrackFragmentHeaderBox Tfhd { get; set; }
         public long FragmentBaseAddress { get; set; }
+
+        /// <summary>Where the decode time of the track's fragments has got to: the start of the next, without a 'tfdt'.</summary>
+        public long FragmentEndDts { get; set; }
         public SampleEncryption[] FragmentEncryption { get; set; }
         public TrackExtendsBox Trex { get; set; }
         public int[] FragmentSampleTrunIndex { get; set; }

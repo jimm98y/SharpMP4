@@ -72,6 +72,8 @@ namespace SharpMP4.Tracks
                     ProcessSample(nalu, out _, out _);
                 }
             }
+
+            DropConfigurationSample();
         }
 
         /// <summary>
@@ -88,10 +90,7 @@ namespace SharpMP4.Tracks
             if (buffer == null)
             {
                 // flush the last AU
-                if (HasSample && SampleHasVcl)
-                {
-                    output = TakeSample();
-                }
+                output = FlushAccessUnit();
                 return;
             }
 
@@ -108,35 +107,21 @@ namespace SharpMP4.Tracks
                 var nu = new NalUnit((uint)length);
                 _context.NalHeader = nu;
                 ituSize += nu.Read(_context, stream);
+                int layerId = (int)nu.NalUnitHeader.NuhLayerId;
 
                 if (nu.NalUnitHeader.NalUnitType == H266NALTypes.AUD_NUT)
                 {
-                    if (SampleHasVcl)
-                    {
-                        output = TakeSample();
-                    }
-
-                    AppendNalUnit(buffer, offset, length);
+                    HoldNalUnit(buffer, offset, length);
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.OPI_NUT)
                 {
                     _context.OperatingPointInformationRbsp = new OperatingPointInformationRbsp();
                     _context.OperatingPointInformationRbsp.Read(_context, stream);
-                    if (SampleHasVcl)
-                    {
-                        output = TakeSample();
-                    }
-
-                    AppendNalUnit(buffer, offset, length);
+                    HoldNalUnit(buffer, offset, length);
                 }
-                if(nu.NalUnitHeader.NalUnitType == H266NALTypes.DCI_NUT)
+                else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.DCI_NUT)
                 {
-                    if (SampleHasVcl)
-                    {
-                        output = TakeSample();
-                    }
-
-                    AppendNalUnit(buffer, offset, length);
+                    HoldNalUnit(buffer, offset, length);
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.VPS_NUT)
                 {
@@ -148,10 +133,7 @@ namespace SharpMP4.Tracks
                         VpsRaw.Add(_context.VideoParameterSetRbsp.VpsVideoParameterSetId, CopyOf(buffer, offset, length));
                     }
 
-                    if (SampleHasVcl)
-                    {
-                        output = TakeSample();
-                    }
+                    // kept in the sample entry
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.SPS_NUT)
                 {
@@ -188,10 +170,7 @@ namespace SharpMP4.Tracks
                         DefaultSampleDuration = FrameTickOverride;
                     }
 
-                    if (SampleHasVcl)
-                    {
-                        output = TakeSample();
-                    }
+                    // kept in the sample entry
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.PPS_NUT)
                 {
@@ -203,19 +182,18 @@ namespace SharpMP4.Tracks
                         PpsRaw.Add(_context.PicParameterSetRbsp.PpsPicParameterSetId, CopyOf(buffer, offset, length));
                     }
 
-                    if (SampleHasVcl)
-                    {
-                        output = TakeSample();
-                    }
+                    // kept in the sample entry
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.PREFIX_APS_NUT || nu.NalUnitHeader.NalUnitType == H266NALTypes.PH_NUT)
                 {
-                    if (SampleHasVcl)
+                    // of a picture unit: of the next access unit where its picture is of a layer no higher than the one before
+                    if (nu.NalUnitHeader.NalUnitType == H266NALTypes.PH_NUT)
                     {
-                        output = TakeSample();
+                        _pictureHeader = ReadPictureHeader(stream);
+                        _pictureStarts = true;
                     }
 
-                    AppendNalUnit(buffer, offset, length);
+                    HoldNalUnit(buffer, offset, length);
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.PREFIX_SEI_NUT)
                 {
@@ -227,44 +205,84 @@ namespace SharpMP4.Tracks
                         PrefixSeiRaw.Add(CopyOf(buffer, offset, length));
                     }
 
-                    if (SampleHasVcl)
-                    {
-                        output = TakeSample();
-                    }
-
-                    AppendNalUnit(buffer, offset, length);
+                    HoldNalUnit(buffer, offset, length);
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.RSV_NVCL_26 || nu.NalUnitHeader.NalUnitType == H266NALTypes.UNSPEC_28 || nu.NalUnitHeader.NalUnitType == H266NALTypes.UNSPEC_29)
                 {
-                    if (SampleHasVcl)
-                    {
-                        output = TakeSample();
-                    }
-
-                    AppendNalUnit(buffer, offset, length);
+                    HoldNalUnit(buffer, offset, length);
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.EOS_NUT)
                 {
-                    if (SampleHasVcl)
-                    {
-                        output = TakeSample();
-                    }
+                    // the end of a coded video sequence: of the access unit it ends
+                    AttachHeldNalUnits();
+                    AppendNalUnit(buffer, offset, length);
                 }
                 else
                 {
                     if (nu.NalUnitHeader.NalUnitType >= H266NALTypes.TRAIL_NUT && nu.NalUnitHeader.NalUnitType <= H266NALTypes.RSV_IRAP_11)
                     {
-                        if (nu.NalUnitHeader.NalUnitType >= H266NALTypes.IDR_W_RADL && nu.NalUnitHeader.NalUnitType <= H266NALTypes.GDR_NUT)
-                        {
-                            // keyframe
-                            SampleHasIdr = true;
-                        }
+                        // a picture whose header is in its slice header - sh_picture_header_in_slice_header_flag, the
+                        // slice header's first bit - is of that one slice: it starts a picture unit, as a PH NAL unit does
+                        uint type = nu.NalUnitHeader.NalUnitType;
+                        bool pictureHeaderInSliceHeader = (buffer[offset + 2] & 0x80) != 0;
+                        output = StartVclNalUnit((pictureHeaderInSliceHeader || _pictureStarts) && StartsAccessUnit(layerId));
+                        _pictureStarts = false;
 
-                        SampleHasVcl = true;
+                        // a sync sample is of IRAP pictures, or of GDR pictures with ph_recovery_poc_cnt 0 (ISO/IEC
+                        // 14496-15): marked once the access unit before it is taken
+                        bool isSyncPicture = (type >= H266NALTypes.IDR_W_RADL && type <= H266NALTypes.CRA_NUT) || type == H266NALTypes.RSV_IRAP_11;
+                        if (type == H266NALTypes.GDR_NUT)
+                        {
+                            var pictureHeader = pictureHeaderInSliceHeader ? ReadSliceHeaderPictureHeader(stream) : _pictureHeader;
+                            isSyncPicture = pictureHeader != null && pictureHeader.PhGdrPicFlag != 0 && pictureHeader.PhRecoveryPocCnt == 0;
+                        }
+                        AddVclNalUnit(isSyncPicture, layerId);
                     }
 
+                    // of the access unit being assembled, as is what was held before it
+                    AttachHeldNalUnits();
                     AppendNalUnit(buffer, offset, length);
                 }
+            }
+        }
+
+        // Whether a PH NAL unit has come since the last VCL NAL unit: the slices after it start a picture.
+        private bool _pictureStarts;
+
+        // The picture header of the last PH NAL unit: of the slices after it.
+        private PictureHeaderStructure _pictureHeader;
+
+        /// <summary>The picture header of a PH NAL unit; null where it cannot be read.</summary>
+        private PictureHeaderStructure ReadPictureHeader(ItuStream stream)
+        {
+            try
+            {
+                var rbsp = new PictureHeaderRbsp();
+                _context.PictureHeaderRbsp = rbsp;
+                rbsp.Read(_context, stream);
+                return rbsp.PictureHeaderStructure;
+            }
+            catch (Exception ex)
+            {
+                if (this.Logger.IsWarningEnabled) this.Logger.LogWarning($"A picture header could not be read: {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>The picture header in a slice's header; null where it cannot be read.</summary>
+        private PictureHeaderStructure ReadSliceHeaderPictureHeader(ItuStream stream)
+        {
+            try
+            {
+                var slice = new SliceHeader();
+                _context.SliceLayerRbsp = new SliceLayerRbsp { SliceHeader = slice };
+                slice.Read(_context, stream);
+                return slice.PictureHeaderStructure;
+            }
+            catch (Exception ex)
+            {
+                if (this.Logger.IsWarningEnabled) this.Logger.LogWarning($"A slice header could not be read: {ex.Message}");
+                return null;
             }
         }
 

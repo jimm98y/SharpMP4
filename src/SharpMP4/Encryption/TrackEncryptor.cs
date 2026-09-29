@@ -89,7 +89,9 @@ namespace SharpMP4.Encryption
                 {
                     _splitter = SubsampleSplitter.For(track.CreateSampleEntryBox(), Logger);
                     if (_splitter == null)
-                        throw new NotSupportedException("Of video, only H.264, H.265 and H.266 can be protected: the subsamples of the others' samples are not known.");
+                        throw new NotSupportedException("Of video, only H.264, H.265, H.266, AV1 and AV2 can be protected: the subsamples of the others' samples are not known.");
+                    if (!_splitter.Supports(Protection.Scheme))
+                        throw new NotSupportedException($"The binding of the track's codec does not allow the scheme '{Protection.Scheme}'.");
                 }
             }
 
@@ -168,7 +170,8 @@ namespace SharpMP4.Encryption
         /// How the samples are protected: each sample's IV and subsamples in a 'senc', and the same as sample auxiliary
         /// information - their sizes in 'saiz', where they are in 'saio', for the builder to point at the 'senc's samples,
         /// which start 16 bytes into it - unless there is none, as of samples with a constant IV and no subsamples (7.1,
-        /// 10.4.1), or it is too large for 'saiz' to give its size; then those two are null.
+        /// 10.4.1); then those two are null. A sample's information of more than 255 bytes - of more than 40 subsamples,
+        /// as of AV1's many tiles - takes 'saiz' version 1, of 16 bit sizes, or 2, of 32 (14496-12 9th edition).
         /// </summary>
         public (SampleEncryptionBox Senc, SampleAuxiliaryInformationSizesBox Saiz, SampleAuxiliaryInformationOffsetsBox Saio) CreateSampleEncryptionBoxes(IList<SampleEncryption> encryptions, IList<uint> sampleSizes)
         {
@@ -176,48 +179,50 @@ namespace SharpMP4.Encryption
             bool subsamples = encryptions.Any(e => e.Subsamples != null);
             uint flags = subsamples ? 0x2u : 0u;
 
-            var entries = new SampleEncryptionSample[encryptions.Count];
-            var sizes = new byte[encryptions.Count];
-            bool fits = true;
+            // each sample's IV, then its subsamples: a count, and of each its clear and protected bytes (7.2)
+            var data = new List<byte>();
+            var sizes = new uint[encryptions.Count];
             for (int i = 0; i < encryptions.Count; i++)
             {
                 var encryption = encryptions[i];
-                var entry = new SampleEncryptionSample(0, flags, ivSize)
-                {
-                    _InitializationVector = ivSize > 0 ? encryption.IV : Array.Empty<byte>(),
-                };
-                int size = ivSize;
+                int start = data.Count;
+                if (ivSize > 0)
+                    data.AddRange(encryption.IV);
                 if (subsamples)
                 {
                     // a sample protected whole, among ones in subsamples, is one subsample of its own
                     var runs = encryption.Subsamples ?? new[] { new EncryptionSubsample(0, sampleSizes[i]) };
-                    entry.SubsampleCount = (uint)runs.Length;
-                    entry.Subsamples = runs.Select(run => new SampleEncryptionSubsample(0)
+                    data.Add((byte)(runs.Length >> 8));
+                    data.Add((byte)runs.Length);
+                    foreach (var run in runs)
                     {
-                        _BytesOfClearData = (ushort)run.ClearBytes,
-                        _BytesOfProtectedData = run.ProtectedBytes,
-                    }).ToArray();
-                    size += 2 + 6 * runs.Length;
+                        data.Add((byte)(run.ClearBytes >> 8));
+                        data.Add((byte)run.ClearBytes);
+                        data.Add((byte)(run.ProtectedBytes >> 24));
+                        data.Add((byte)(run.ProtectedBytes >> 16));
+                        data.Add((byte)(run.ProtectedBytes >> 8));
+                        data.Add((byte)run.ProtectedBytes);
+                    }
                 }
-                entries[i] = entry;
-                fits &= size <= byte.MaxValue;
-                sizes[i] = (byte)Math.Min(size, byte.MaxValue);
+                sizes[i] = (uint)(data.Count - start);
             }
 
             var senc = new SampleEncryptionBox(0, flags)
             {
-                SampleCount = (uint)entries.Length,
-                PerSampleIVSize = ivSize,
-                Samples = entries,
+                SampleCount = (uint)encryptions.Count,
+                SampleData = data.ToArray(),
             };
 
-            if (!fits || !sizes.Any(size => size > 0))
+            if (!sizes.Any(size => size > 0))
                 return (senc, null, null);
 
+            // version 0 where the sizes fit its 8 bits, as readers before the 9th edition read it
+            uint largest = sizes.Max();
+            byte version = largest <= byte.MaxValue ? (byte)0 : largest <= ushort.MaxValue ? (byte)1 : (byte)2;
             bool same = sizes.All(size => size == sizes[0]);
-            var saiz = new SampleAuxiliaryInformationSizesBox(0)
+            var saiz = new SampleAuxiliaryInformationSizesBox(version)
             {
-                DefaultSampleInfoSize = same ? sizes[0] : (byte)0,
+                DefaultSampleInfoSize = same ? sizes[0] : 0u,
                 SampleCount = (uint)sizes.Length,
                 SampleInfoSize = same ? null : sizes,
             };

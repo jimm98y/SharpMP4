@@ -33,9 +33,9 @@ namespace SharpMP4.Encryption
             var senc = traf.Children.OfType<SampleEncryptionBox>().FirstOrDefault();
             var piff = traf.Children.OfType<PiffSampleEncryptionBox>().FirstOrDefault();
             if (senc != null)
-                ApplySampleEncryptionBox(samples, senc.Samples, senc.Flags);
+                ApplySampleEncryptionBox(samples, ivSizes, senc);
             else if (piff != null)
-                ApplySampleEncryptionBox(samples, piff.Samples, piff.Flags);
+                ApplySampleEncryptionBox(samples, ivSizes, piff);
             else
                 ApplyAuxiliaryInformation(samples, ivSizes, traf.Children, sampleCount, read, offsetOfEntry: _ => auxiliaryBase, chunkOfSample: null);
 
@@ -59,12 +59,12 @@ namespace SharpMP4.Encryption
             var piff = boxes.OfType<PiffSampleEncryptionBox>().FirstOrDefault();
             if (senc != null)
             {
-                ApplySampleEncryptionBox(samples, senc.Samples, senc.Flags);
+                ApplySampleEncryptionBox(samples, ivSizes, senc);
                 return samples;
             }
             if (piff != null)
             {
-                ApplySampleEncryptionBox(samples, piff.Samples, piff.Flags);
+                ApplySampleEncryptionBox(samples, ivSizes, piff);
                 return samples;
             }
 
@@ -156,20 +156,76 @@ namespace SharpMP4.Encryption
             return samples;
         }
 
-        /// <summary>Each sample's IV, where it has one of its own, and its subsamples, from a 'senc'.</summary>
-        private static void ApplySampleEncryptionBox(SampleEncryption[] samples, SampleEncryptionSample[] entries, uint flags)
+        private static void ApplySampleEncryptionBox(SampleEncryption[] samples, int[] ivSizes, SampleEncryptionBox senc)
         {
-            if (entries == null)
-                return;
+            // version 1, of the multiple IVs of several keys (23001-7:2016/Amd 1), is not read: its samples keep their defaults
+            if (senc.Version == 0)
+                ApplySampleData(samples, ivSizes, senc.SampleData, (int)senc.SampleCount, senc.Flags, boxIvSize: -1);
+        }
 
-            for (int i = 0; i < samples.Length && i < entries.Length; i++)
+        private static void ApplySampleEncryptionBox(SampleEncryption[] samples, int[] ivSizes, PiffSampleEncryptionBox piff)
+        {
+            // PIFF's gives the IV size of all its samples where its flags say so, and has no multiple IVs, whatever its version
+            int boxIvSize = (piff.Flags & 0x1) != 0 ? piff.PerSampleIVSize : -1;
+            ApplySampleData(samples, ivSizes, piff.SampleData, (int)piff.SampleCount, piff.Flags, boxIvSize);
+        }
+
+        private static void ApplySampleData(SampleEncryption[] samples, int[] ivSizes, byte[] data, int sampleCount, uint flags, int boxIvSize)
+        {
+            var entries = ReadSampleData(data, Math.Min(sampleCount, samples.Length), flags, i => boxIvSize >= 0 ? boxIvSize : ivSizes[i]);
+            for (int i = 0; i < entries.Count; i++)
             {
-                var entry = entries[i];
-                if (entry._InitializationVector != null && entry._InitializationVector.Length > 0)
-                    samples[i].IV = entry._InitializationVector;
-                if ((flags & 0x2) != 0 && entry.Subsamples != null)
-                    samples[i].Subsamples = entry.Subsamples.Select(s => new EncryptionSubsample(s._BytesOfClearData, s._BytesOfProtectedData)).ToArray();
+                if (entries[i].IV != null)
+                    samples[i].IV = entries[i].IV;
+                if (entries[i].Subsamples != null)
+                    samples[i].Subsamples = entries[i].Subsamples;
             }
+        }
+
+        /// <summary>
+        /// The IVs and subsamples of a 'senc's samples, one after another (23001-7, 7.2): the IV of each of the size
+        /// <paramref name="ivSizeOf"/> gives - its 'seig' group's or its track's 'tenc's, which the box does not have - and
+        /// the subsamples where <paramref name="flags"/> say they are there. Read to the first sample whose IV size is not
+        /// known (below 0), or that the bytes do not hold: as many as there are.
+        /// </summary>
+        private static byte[] Copy(byte[] data, int offset, int count)
+        {
+            var copy = new byte[count];
+            Buffer.BlockCopy(data, offset, copy, 0, count);
+            return copy;
+        }
+
+        public static IReadOnlyList<SampleEncryption> ReadSampleData(byte[] data, int sampleCount, uint flags, Func<int, int> ivSizeOf)
+        {
+            var entries = new List<SampleEncryption>();
+            if (data == null)
+                return entries;
+
+            bool hasSubsamples = (flags & 0x2) != 0;
+            int p = 0;
+            for (int i = 0; i < sampleCount; i++)
+            {
+                int ivSize = ivSizeOf(i);
+                if (ivSize < 0 || p + ivSize > data.Length)
+                    break;
+                var entry = new SampleEncryption { IV = ivSize > 0 ? Copy(data, p, ivSize) : null };
+                p += ivSize;
+
+                if (hasSubsamples)
+                {
+                    if (p + 2 > data.Length)
+                        break;
+                    int count = data[p] << 8 | data[p + 1];
+                    p += 2;
+                    if (p + 6 * count > data.Length)
+                        break;
+                    entry.Subsamples = new EncryptionSubsample[count];
+                    for (int k = 0; k < count; k++, p += 6)
+                        entry.Subsamples[k] = new EncryptionSubsample(data[p] << 8 | data[p + 1], (uint)(data[p + 2] << 24 | data[p + 3] << 16 | data[p + 4] << 8 | data[p + 5]));
+                }
+                entries.Add(entry);
+            }
+            return entries;
         }
 
         /// <summary>
@@ -187,7 +243,7 @@ namespace SharpMP4.Encryption
                 return;
 
             int count = Math.Min(sampleCount, (int)saiz.SampleCount);
-            int SizeOf(int sample) => saiz.DefaultSampleInfoSize != 0 ? saiz.DefaultSampleInfoSize : saiz.SampleInfoSize[sample];
+            int SizeOf(int sample) => (int)(saiz.DefaultSampleInfoSize != 0 ? saiz.DefaultSampleInfoSize : saiz.SampleInfoSize[sample]);
 
             long offset = 0;
             for (int i = 0; i < count; i++)

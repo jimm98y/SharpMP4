@@ -1235,7 +1235,7 @@
       "containers": [ "*" ],
       "type": "Box",
       "originalSyntax": "aligned(8) class SampleEncryptionBox extends FullBox('senc', version, flags)\r\n{\r\n   unsigned int(32)  sample_count;\r\n   {\r\n      if (version==0) {\r\n         unsigned int(Per_Sample_IV_Size*8) InitializationVector;\r\n         if (flags & 0x000002) {\r\n            unsigned int(16) subsample_count;\r\n            {\r\n               unsigned int(16) BytesOfClearData;\r\n               unsigned int(32) BytesOfProtectedData;\r\n            } [subsample_count ]\r\n         }\r\n  } else if (version==1) {\r\n         unsigned int(16) multi_IV_count;\r\n         for (i=1; i <= multi _IV_count; i++) {\r\n            unsigned int(8) multi_subindex_IV;\r\n            unsigned int(Per_Sample_IV_Size*8) IV;\r\n         }\r\n         unsigned int(32) subsample_count;\r\n         {\r\n            unsigned int(16) multi_subindex;\r\n            unsigned int(16) BytesOfClearData;\r\n            unsigned int(32) BytesOfProtectedData;\r\n         } [subsample_count]\r\n      }\r\n   }[ sample_count ]\r\n}",
-      "syntax": "aligned(8) class SampleEncryptionBox extends FullBox('senc', version, flags)\r\n{\r\n   unsigned int(32)  sample_count;\r\n   SampleEncryptionSample(version, flags, Per_Sample_IV_Size) samples[sample_count];\r\n}\r\n\r\naligned(8) class SampleEncryptionSample(version, flags, Per_Sample_IV_Size) {\r\n      if (version == 0) {\r\n         unsigned int(Per_Sample_IV_Size*8) InitializationVector;\r\n         if (flags & 0x000002) {            unsigned int(16) subsample_count;\r\n            SampleEncryptionSubsample(version) subsamples[subsample_count];\r\n         }\r\n      } else if (version==1) {\r\n         unsigned int(16) multi_IV_count;\r\n         for (i=1; i <= multi_IV_count; i++) {\r\n            unsigned int(8) multi_subindex_IV;\r\n            unsigned int(Per_Sample_IV_Size*8) IV;\r\n         }\r\n          unsigned int(32) subsample_count;\r\n          SampleEncryptionSubsample(version) subsamples[subsample_count];\r\n      }\r\n}\r\n\r\naligned(8) class SampleEncryptionSubsample(version) {\r\n  if (version==0) {\r\n     unsigned int(16) BytesOfClearData;\r\n     unsigned int(32) BytesOfProtectedData;\r\n  }\r\n  else if(version == 1) {\r\n     unsigned int(16) multi_subindex;\r\n     unsigned int(16) BytesOfClearData;\r\n     unsigned int(32) BytesOfProtectedData;\r\n  }\r\n}"
+      "syntax": "aligned(8) class SampleEncryptionBox extends FullBox('senc', version, flags)\r\n{\r\n   unsigned int(32)  sample_count;\r\n   unsigned int(8) sample_data[]; // each sample's IV and subsamples (23001-7 7.2), whose IV size is the track's - its 'tenc', or the sample's 'seig' group - and not in the box: SharpMP4's SampleEncryptionReader reads them\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -1370,7 +1370,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class PiffSampleEncryptionBox() extends FullBox('uuid a2394f525a9b4f14a2446c427c648df4', version, flags) \r\n{\r\n if(flags & 0x1) {\r\n unsigned int(24) algorithmID;\r\n unsigned int(8) Per_Sample_IV_Size;\r\n unsigned int(8) kid[16];\r\n }\r\n  unsigned int(32)  sample_count;\r\n   SampleEncryptionSample(0, flags, Per_Sample_IV_Size) samples[sample_count]; // PIFF has no multi IV samples, whatever its version\r\n}\r\n"
+      "syntax": "aligned(8) class PiffSampleEncryptionBox() extends FullBox('uuid a2394f525a9b4f14a2446c427c648df4', version, flags) \r\n{\r\n if(flags & 0x1) {\r\n unsigned int(24) algorithmID;\r\n unsigned int(8) Per_Sample_IV_Size;\r\n unsigned int(8) kid[16];\r\n }\r\n  unsigned int(32)  sample_count;\r\n   unsigned int(8) sample_data[]; // each sample's IV and subsamples, the IV of the size above where the flags give one, else of the track's\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -1803,6 +1803,11 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "// the software that wrote the file, as Apple's mediafilesegmenter writes it: a 3GPP asset's layout\r\naligned(8) class AppleSegmenterSoftwareBox() extends FullBox('swre', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n}"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "// ISO/IEC 14496-30 7.4 - left out of the spec text MPEG's repository has: a WebVTT cue, in a sample of a 'wvtt' track - its source ID, ID, time, settings and payload\r\naligned(8) class VTTCueBox() extends Box('vttc') {\r\n\tBox boxes[];\r\n}"
     }
   ]
 }

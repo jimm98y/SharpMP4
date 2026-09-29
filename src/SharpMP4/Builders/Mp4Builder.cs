@@ -195,6 +195,14 @@ namespace SharpMP4.Builders
                 mdia.SetParent(trak);
                 trak.Children.Add(mdia);
 
+                // what is said of the track - of a forced subtitle track, its 'kind' - after its media (14496-12 8.10.1)
+                var udta = SubtitleTrackBase.CreateUserDataBox(track.Track);
+                if (udta != null)
+                {
+                    udta.SetParent(trak);
+                    trak.Children.Add(udta);
+                }
+
                 MediaHeaderBox mdhd = new MediaHeaderBox();
                 mdhd.SetParent(mdia);
                 mdia.Children = new List<Box>();
@@ -237,6 +245,25 @@ namespace SharpMP4.Builders
                         {
                             var nmhd = new NullMediaHeaderBox();
                             nmhd.SetParent(mdia);
+                            minf.Children.Add(nmhd);
+                        }
+                        break;
+
+                    case HandlerTypes.Subtitle:
+                        {
+                            // subtitles, as TTML's (14496-12 12.6.2)
+                            var sthd = new SubtitleMediaHeaderBox();
+                            sthd.SetParent(minf);
+                            minf.Children.Add(sthd);
+                        }
+                        break;
+
+                    case HandlerTypes.Text:
+                    case HandlerTypes.AppleSubtitle:
+                        {
+                            // timed text, WebVTT's and 3GPP's, has no media header of its own (14496-12 12.5.2)
+                            var nmhd = new NullMediaHeaderBox();
+                            nmhd.SetParent(minf);
                             minf.Children.Add(nmhd);
                         }
                         break;

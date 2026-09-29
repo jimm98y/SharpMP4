@@ -14,9 +14,8 @@ aligned(8) class PiffSampleEncryptionBox() extends FullBox('uuid a2394f525a9b4f1
  unsigned int(8) kid[16];
  }
   unsigned int(32)  sample_count;
-   SampleEncryptionSample(0, flags, Per_Sample_IV_Size) samples[sample_count]; // PIFF has no multi IV samples, whatever its version
+   unsigned int(8) sample_data[]; // each sample's IV and subsamples, the IV of the size above where the flags give one, else of the track's
 }
-
 */
 public partial class PiffSampleEncryptionBox : FullBox
 {
@@ -35,8 +34,8 @@ public partial class PiffSampleEncryptionBox : FullBox
 	protected uint sample_count; 
 	public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
 
-	protected SampleEncryptionSample[] samples;  //  PIFF has no multi IV samples, whatever its version
-	public SampleEncryptionSample[] Samples { get { return this.samples; } set { this.samples = value; } }
+	protected byte[] sample_data;  //  each sample's IV and subsamples, the IV of the size above where the flags give one, else of the track's
+	public byte[] SampleData { get { return this.sample_data; } set { this.sample_data = value; } }
 
 	public PiffSampleEncryptionBox(byte version = 0, uint flags = 0): base(IsoStream.FromFourCC("uuid"), version, flags)
 	{
@@ -55,8 +54,7 @@ public partial class PiffSampleEncryptionBox : FullBox
 			boxSize += stream.ReadUInt8Array(boxSize, readSize, 16,  out this.kid, "kid"); 
 		}
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.sample_count, "sample_count"); 
-		if ((flags & 0x1) == 0) this.Per_Sample_IV_Size = stream.InferPerSampleIvSize(boxSize, readSize, 0, flags, sample_count, Per_Sample_IV_Size);
-		boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(sample_count), () => new SampleEncryptionSample(0, flags, Per_Sample_IV_Size),  out this.samples, "samples"); // PIFF has no multi IV samples, whatever its version
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.sample_data, "sample_data"); // each sample's IV and subsamples, the IV of the size above where the flags give one, else of the track's
 		return boxSize;
 	}
 
@@ -72,7 +70,7 @@ public partial class PiffSampleEncryptionBox : FullBox
 			boxSize += stream.WriteUInt8Array(16,  this.kid, "kid"); 
 		}
 		boxSize += stream.WriteUInt32( this.sample_count, "sample_count"); 
-		boxSize += stream.WriteClass( this.samples, "samples"); // PIFF has no multi IV samples, whatever its version
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.sample_data, "sample_data"); // each sample's IV and subsamples, the IV of the size above where the flags give one, else of the track's
 		return boxSize;
 	}
 
@@ -88,7 +86,7 @@ public partial class PiffSampleEncryptionBox : FullBox
 			boxSize += 16 * 8; // kid
 		}
 		boxSize += 32; // sample_count
-		boxSize += IsoStream.CalculateClassSize(samples); // samples
+		boxSize += ((ulong)sample_data.Length * 8); // sample_data
 		return boxSize;
 	}
 }

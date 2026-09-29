@@ -178,6 +178,62 @@ public class EncryptedTrackTests
         }
     }
 
+    /// <summary>
+    /// Split as SharpMP4 splits a sample to protect it, each protected sample of an AV1 clip made by Shaka Packager has
+    /// the subsamples it was protected with: one to a tile, its headers clear.
+    /// </summary>
+    [TestMethod]
+    [DataRow("bear-av1-cenc.mp4", "cenc")]
+    [DataRow("bear-av1-320x180-10bit-cenc.mp4", "cenc")]
+    public void SplitsAV1AsItWasSplit(string protectedName, string scheme)
+    {
+        string? root = ConformanceCorpus.Locate();
+        string path = Path.Combine(root ?? "", "chromium", protectedName);
+        if (root == null || !File.Exists(path))
+            Assert.Inconclusive("no Chromium files; run DownloadConformance.ps1 -Codec Chromium");
+
+        // how each sample was protected, read without the key
+        var subsamples = new List<EncryptionSubsample[]?>();
+        using (var stream = File.OpenRead(path))
+        {
+            var container = new Container();
+            container.Read(new IsoStream(new StreamWrapper(stream)));
+            var reader = new VideoReader();
+            reader.Parse(container);
+            uint trackID = reader.Tracks.Keys.Single();
+            Assert.AreEqual(scheme, reader.Tracks[trackID].Protection.Scheme);
+            for (var sample = reader.ReadSample(trackID); sample != null; sample = reader.ReadSample(trackID))
+                subsamples.Add(sample.Encryption?.Subsamples);
+        }
+
+        using (var stream = File.OpenRead(path))
+        {
+            var container = new Container();
+            container.Read(new IsoStream(new StreamWrapper(stream)));
+            var reader = new VideoReader { KeyProvider = KeyOf! };
+            reader.Parse(container);
+            uint trackID = reader.Tracks.Keys.Single();
+            var entry = reader.Tracks[trackID].Stbl.Children.OfType<SampleDescriptionBox>().Single().Children.First();
+            var splitter = SubsampleSplitter.For(entry);
+            Assert.IsInstanceOfType(splitter, typeof(Av1SubsampleSplitter));
+
+            int i = 0, compared = 0;
+            for (var sample = reader.ReadSample(trackID); sample != null; sample = reader.ReadSample(trackID), i++)
+            {
+                // every sample split, as the context follows the stream
+                var split = splitter.Split(sample.Data.Array!, sample.Data.Offset, sample.Data.Count, wholeBlocks: scheme != "cbcs");
+                if (subsamples[i] == null)
+                    continue;
+                Assert.AreEqual(Describe(subsamples[i]!), Describe(split), $"sample {i}");
+                compared++;
+            }
+            Assert.AreEqual(subsamples.Count, i, "sample count");
+            Assert.IsTrue(compared > 0, "no protected sample");
+        }
+    }
+
+    private static string Describe(EncryptionSubsample[] subsamples) => string.Join(" | ", subsamples.Select(s => $"{s.ClearBytes}+{s.ProtectedBytes}"));
+
     private static List<byte[]> Samples(string path, Func<byte[], byte[]?>? keyProvider, out TrackProtection? protection)
     {
         using var stream = File.OpenRead(path);

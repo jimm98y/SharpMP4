@@ -73,6 +73,8 @@ namespace SharpMP4.Tracks
                     ProcessSample(nalu, out _, out _);
                 }
             }
+
+            DropConfigurationSample();
         }
 
         /// <summary>
@@ -89,10 +91,7 @@ namespace SharpMP4.Tracks
             if (buffer == null)
             {
                 // flush the last AU
-                if (HasSample && SampleHasVcl)
-                {
-                    output = TakeSample();
-                }
+                output = FlushAccessUnit();
                 return;
             }
 
@@ -116,17 +115,15 @@ namespace SharpMP4.Tracks
                 // this specification's to parse (LAYERID63_A puts random data there).
                 if (nu.NalUnitHeader.NuhLayerId == 63)
                 {
+                    AttachHeldNalUnits();
                     AppendNalUnit(buffer, offset, length);
                     return;
                 }
 
                 if (nu.NalUnitHeader.NalUnitType == H265NALTypes.AUD_NUT)
                 {
-                    // access unit delimiter NAL unit with nuh_layer_id equal to 0(when present)
-                    if (SampleHasVcl && nu.NalUnitHeader.NuhLayerId == 0)
-                    {
-                        output = TakeSample();
-                    }
+                    // access unit delimiter NAL unit with nuh_layer_id equal to 0 (when present): not kept, where the access
+                    // unit starts the next base layer picture's first slice says
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.SPS_NUT)
                 {
@@ -163,11 +160,7 @@ namespace SharpMP4.Tracks
                         DefaultSampleDuration = FrameTickOverride;
                     }
 
-                    // SPS NAL unit with nuh_layer_id equal to 0 (when present)
-                    if (SampleHasVcl && nu.NalUnitHeader.NuhLayerId == 0)
-                    {
-                        output = TakeSample();
-                    }
+                    // SPS NAL unit with nuh_layer_id equal to 0 (when present): kept in the sample entry
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PPS_NUT)
                 {
@@ -179,11 +172,7 @@ namespace SharpMP4.Tracks
                         PpsRaw.Add(_context.PicParameterSetRbsp.PpsPicParameterSetId, CopyOf(buffer, offset, length));
                     }
 
-                    // PPS NAL unit with nuh_layer_id equal to 0 (when present)
-                    if (SampleHasVcl && nu.NalUnitHeader.NuhLayerId == 0)
-                    {
-                        output = TakeSample();
-                    }
+                    // PPS NAL unit with nuh_layer_id equal to 0 (when present): kept in the sample entry
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.VPS_NUT)
                 {
@@ -195,11 +184,7 @@ namespace SharpMP4.Tracks
                         VpsRaw.Add(_context.VideoParameterSetRbsp.VpsVideoParameterSetId, CopyOf(buffer, offset, length));
                     }
 
-                    // VPS NAL unit with nuh_layer_id equal to 0 (when present)
-                    if (SampleHasVcl && nu.NalUnitHeader.NuhLayerId == 0)
-                    {
-                        output = TakeSample();
-                    }
+                    // VPS NAL unit with nuh_layer_id equal to 0 (when present): kept in the sample entry
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PREFIX_SEI_NUT || nu.NalUnitHeader.NalUnitType == H265NALTypes.SUFFIX_SEI_NUT)
                 {
@@ -214,52 +199,44 @@ namespace SharpMP4.Tracks
                         }
                     }
 
-                    // Prefix SEI NAL unit with nuh_layer_id equal to 0 (when present)
-                    if (SampleHasVcl && nu.NalUnitHeader.NuhLayerId == 0)
+                    // Prefix SEI NAL unit (when present): of the next access unit where a new one comes next; a suffix SEI NAL
+                    // unit follows the picture it is of, in its access unit
+                    if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PREFIX_SEI_NUT)
                     {
-                        output = TakeSample();
+                        HoldNalUnit(buffer, offset, length);
                     }
-
-                    AppendNalUnit(buffer, offset, length);
+                    else
+                    {
+                        AttachHeldNalUnits();
+                        AppendNalUnit(buffer, offset, length);
+                    }
                 }
                 else if(nu.NalUnitHeader.NalUnitType >= H265NALTypes.RSV_NVCL41 && nu.NalUnitHeader.NalUnitType <= H265NALTypes.RSV_NVCL44)
                 {
-                    // NAL units with nal_unit_type in the range of RSV_NVCL41..RSV_NVCL44 with nuh_layer_id equal to 0 (when present)
-                    if (SampleHasVcl && nu.NalUnitHeader.NuhLayerId == 0)
-                    {
-                        output = TakeSample();
-                    }
+                    // NAL units with nal_unit_type in the range of RSV_NVCL41..RSV_NVCL44 (when present): not kept
                 }
                 else if (nu.NalUnitHeader.NalUnitType >= H265NALTypes.UNSPEC48 && nu.NalUnitHeader.NalUnitType <= H265NALTypes.UNSPEC55)
                 {
-                    // NAL units with nal_unit_type in the range of UNSPEC48..UNSPEC55 with nuh_layer_id equal to 0 (when present)
-                    if (SampleHasVcl && nu.NalUnitHeader.NuhLayerId == 0)
-                    {
-                        output = TakeSample();
-                    }
+                    // NAL units with nal_unit_type in the range of UNSPEC48..UNSPEC55 (when present): not kept - of them,
+                    // ISO/IEC 14496-15's aggregators and extractors are a file's, not a stream's
                 }
                 else
                 {
                     if (nu.NalUnitHeader.NalUnitType >= H265NALTypes.TRAIL_N && nu.NalUnitHeader.NalUnitType <= H265NALTypes.RSV_VCL31)
                     {
-                        if (nu.NalUnitHeader.NalUnitType >= H265NALTypes.BLA_W_LP && nu.NalUnitHeader.NalUnitType <= H265NALTypes.CRA_NUT)
-                        {
-                            // keyframe
-                            SampleHasIdr = true;
-                        }
+                        // first VCL NAL unit of the coded picture shall have first_slice_segment_in_pic_flag equal to 1; of
+                        // the access unit, the first of a picture of a layer no higher than the one before it (H.265 Annex F)
+                        int layerId = (int)nu.NalUnitHeader.NuhLayerId;
+                        // https://stackoverflow.com/questions/69373668/ffmpeg-error-first-slice-in-a-frame-missing-when-decoding-h-265-stream
+                        output = StartVclNalUnit((buffer[offset + 2] & 0x80) != 0 && StartsAccessUnit(layerId));
 
-                        // first VCL NAL unit of the coded picture shall have first_slice_segment_in_pic_flag equal to 1
-                        if ((buffer[offset + 2] & 0x80) != 0) // https://stackoverflow.com/questions/69373668/ffmpeg-error-first-slice-in-a-frame-missing-when-decoding-h-265-stream
-                        {
-                            if (SampleHasVcl)
-                            {
-                                output = TakeSample();
-                            }
-                        }
-
-                        SampleHasVcl = true;
+                        // a sync sample is of IRAP pictures (ISO/IEC 14496-15): marked once the access unit before it is taken
+                        uint type = nu.NalUnitHeader.NalUnitType;
+                        AddVclNalUnit(type >= H265NALTypes.BLA_W_LP && type <= H265NALTypes.RSV_IRAP_VCL23, layerId);
                     }
 
+                    // of the access unit being assembled, as is what was held before it
+                    AttachHeldNalUnits();
                     AppendNalUnit(buffer, offset, length);
                 }
             }

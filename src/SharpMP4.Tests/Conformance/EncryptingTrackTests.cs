@@ -102,7 +102,7 @@ public class EncryptingTrackTests
             if (saio == null)
             {
                 // none only where there is no auxiliary information: a constant IV and no subsamples (7.1)
-                Assert.IsTrue(senc.Samples.All(e => (e._InitializationVector?.Length ?? 0) == 0 && (senc.Flags & 2) == 0), "no 'saio' for auxiliary information");
+                Assert.IsTrue((senc.SampleData?.Length ?? 0) == 0 && (senc.Flags & 2) == 0, "no 'saio' for auxiliary information");
                 continue;
             }
             Assert.AreEqual(senc.GetBoxOffset() + 16, baseOffset + (long)saio.Offset[0], "'saio' not at the 'senc's samples");

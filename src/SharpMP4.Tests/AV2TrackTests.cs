@@ -1,5 +1,6 @@
 using SharpISOBMFF;
 using SharpMP4.Builders;
+using SharpMP4.Encryption;
 using SharpMP4.Readers;
 using SharpMP4.Tracks;
 
@@ -74,6 +75,58 @@ public class AV2TrackTests
         var obus = track.ParseSample(sample).Select(o => o.ToArray()).ToList();
         CollectionAssert.AreEqual(SplitObus(sample).ToList(), obus, new BytesComparer());
         Assert.AreEqual(1, obus.Count, "the key frame's tile group");
+    }
+
+    /// <summary>
+    /// Protected as the AV1 binding protects AV1 - the AV2 binding has no Common Encryption yet - each tile is a subsample
+    /// and all else is clear: split again, the protected sample has the same subsamples, its headers read as they were;
+    /// and it decrypts to the sample it was.
+    /// </summary>
+    [TestMethod]
+    [DataRow("cenc")]
+    [DataRow("cbcs")]
+    public void ProtectsTheTilesAndDecryptsBack(string scheme)
+    {
+        byte[] keyId = Enumerable.Range(1, 16).Select(x => (byte)x).ToArray(), key = Enumerable.Range(17, 16).Select(x => (byte)x).ToArray();
+        using var output = new MemoryStream();
+        var builder = new Mp4Builder(new SingleStreamOutput(output));
+        var track = new AV2Track(30000, 1001);
+        builder.AddTrack(track, TrackProtection.Create(scheme, keyId, isVideo: true), key);
+        foreach (string unit in TemporalUnits)
+            builder.ProcessTrackSample(track.TrackID, Convert.FromHexString(unit));
+        builder.FinalizeMedia();
+        byte[] file = output.ToArray();
+
+        // read without the key: how each sample is protected
+        var container = new Container();
+        container.Read(new IsoStream(new StreamWrapper(new MemoryStream(file))));
+        var reader = new VideoReader();
+        reader.Parse(container);
+        uint trackID = reader.Tracks.Keys.Single();
+        Assert.AreEqual(scheme, reader.Tracks[trackID].Protection.Scheme);
+        var splitter = new Av2SubsampleSplitter(Boxes.Find<AV2CodecConfigurationBox>(container), null);
+        int protectedBytes = 0;
+        for (var sample = reader.ReadSample(trackID); sample != null; sample = reader.ReadSample(trackID))
+        {
+            var subsamples = sample.Encryption.Subsamples ?? [];
+            Assert.AreEqual(sample.Data.Count, subsamples.Sum(s => s.ClearBytes + (long)s.ProtectedBytes), "the subsamples cover the sample");
+            string Describe(EncryptionSubsample[] runs) => string.Join(" | ", runs.Select(s => $"{s.ClearBytes}+{s.ProtectedBytes}"));
+            var again = splitter.Split(sample.Data.Array!, sample.Data.Offset, sample.Data.Count, wholeBlocks: scheme != "cbcs");
+            Assert.AreEqual(Describe(subsamples), Describe(again), "split again, protected: its headers are clear");
+            protectedBytes += subsamples.Sum(s => (int)s.ProtectedBytes);
+        }
+        Assert.IsTrue(protectedBytes > 0, "the key frame's tile is protected");
+
+        // read with it: the samples they were
+        container = new Container();
+        container.Read(new IsoStream(new StreamWrapper(new MemoryStream(file))));
+        reader = new VideoReader { KeyProvider = id => id.SequenceEqual(keyId) ? key : null };
+        reader.Parse(container);
+        var expected = TemporalUnits.Select(Convert.FromHexString).Select(WithoutDelimiterAndSequenceHeader).ToList();
+        int i = 0;
+        for (var sample = reader.ReadSample(trackID); sample != null; sample = reader.ReadSample(trackID), i++)
+            CollectionAssert.AreEqual(expected[i], sample.Data.ToArray(), $"sample {i}");
+        Assert.AreEqual(expected.Count, i);
     }
 
     /// <summary>A sample as it was read: the reader reuses the buffer it hands a sample in.</summary>
