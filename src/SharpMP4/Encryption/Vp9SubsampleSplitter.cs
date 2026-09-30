@@ -1,4 +1,4 @@
-using SharpAVX;
+﻿using SharpAVX;
 using SharpMP4.Common;
 using SharpVP9;
 using System;

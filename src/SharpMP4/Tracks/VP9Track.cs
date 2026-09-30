@@ -1,4 +1,4 @@
-using SharpAVX;
+﻿using SharpAVX;
 using SharpISOBMFF;
 using SharpVP9;
 using System;

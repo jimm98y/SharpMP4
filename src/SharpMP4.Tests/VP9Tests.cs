@@ -1,4 +1,4 @@
-using SharpAVX;
+﻿using SharpAVX;
 using SharpISOBMFF;
 using SharpMP4.Readers;
 using SharpMP4.Tests.Conformance;
