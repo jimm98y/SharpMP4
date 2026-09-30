@@ -89,7 +89,7 @@ namespace SharpMP4.Encryption
                 {
                     _splitter = SubsampleSplitter.For(track.CreateSampleEntryBox(), Logger);
                     if (_splitter == null)
-                        throw new NotSupportedException("Of video, only H.264, H.265, H.266, AV1 and AV2 can be protected: the subsamples of the others' samples are not known.");
+                        throw new NotSupportedException("Of video, only H.264, H.265, H.266, AV1, AV2 and VP9 can be protected: the subsamples of the others' samples are not known.");
                     if (!_splitter.Supports(Protection.Scheme))
                         throw new NotSupportedException($"The binding of the track's codec does not allow the scheme '{Protection.Scheme}'.");
                 }

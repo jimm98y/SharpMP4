@@ -29,6 +29,9 @@ namespace AomGenerator.CSharp
         /// </summary>
         IEnumerable<string> FieldSets { get; }
 
+        /// <summary>Fields the field sets leave out: state that is not kept with the rest, as VP9's probability tables.</summary>
+        ISet<string> UnsavedFields { get; }
+
         /// <summary>Called with every syntax structure before any is generated, to learn what it needs of them.</summary>
         void Prepare(IEnumerable<AomMethod> methods);
 
@@ -226,6 +229,7 @@ namespace Sharp{type}
                             pending.Push(call);
                     }
                 }
+                fields.ExceptWith(specificGenerator.UnsavedFields);
 
                 string name2 = all ? "Context" : structure.ToPropertyCase();
                 string copy(string value, string type) =>

@@ -38,7 +38,7 @@ namespace SharpAVX
     public sealed class AomSyntaxRecord
     {
         // In the order they were read: an OBU written again takes them in the same order
-        private readonly List<(string Name, AomSyntaxValue Value)> _entries = new List<(string, AomSyntaxValue)>();
+        private readonly Entries _entries = new Entries();
 
         // Each element's occurrences, where they are in _entries: made when first asked for by name
         private Dictionary<string, List<int>> _index;
@@ -58,8 +58,9 @@ namespace SharpAVX
             {
                 var names = new List<string>();
                 var seen = new HashSet<string>();
-                foreach (var (name, _) in _entries)
+                for (int i = 0; i < _entries.Count; i++)
                 {
+                    string name = _entries[i].Name;
                     if (seen.Add(name))
                         names.Add(name);
                 }
@@ -130,6 +131,38 @@ namespace SharpAVX
         {
             int position = Occurrences(name, create: false)[occurrence];
             _entries[position] = (name, new AomSyntaxValue(0, bytes.Length * 8, bytes));
+        }
+
+        /// <summary>
+        /// The entries, in blocks of a fixed size: a VP9 frame's compressed header has thousands, and a list grown to hold
+        /// them copied them over as it grew, frame after frame, into arrays past what the large object heap takes.
+        /// </summary>
+        private sealed class Entries
+        {
+            private const int BlockBits = 8;
+            private const int BlockSize = 1 << BlockBits;
+
+            private readonly List<(string Name, AomSyntaxValue Value)[]> _blocks = new List<(string, AomSyntaxValue)[]>();
+
+            public int Count { get; private set; }
+
+            public ref (string Name, AomSyntaxValue Value) this[int index]
+            {
+                get
+                {
+                    if ((uint)index >= (uint)Count)
+                        throw new ArgumentOutOfRangeException(nameof(index));
+                    return ref _blocks[index >> BlockBits][index & (BlockSize - 1)];
+                }
+            }
+
+            public void Add((string Name, AomSyntaxValue Value) entry)
+            {
+                if ((Count & (BlockSize - 1)) == 0)
+                    _blocks.Add(new (string, AomSyntaxValue)[BlockSize]);
+                _blocks[Count >> BlockBits][Count & (BlockSize - 1)] = entry;
+                Count++;
+            }
         }
     }
 }

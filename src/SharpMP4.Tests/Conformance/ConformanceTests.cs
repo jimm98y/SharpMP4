@@ -37,6 +37,61 @@ public class ConformanceTests
         path => Path.GetExtension(path).Equals(".ivf", StringComparison.OrdinalIgnoreCase) ? null : SharpTrace.ObusToIvf(path));
 
     /// <summary>
+    /// libvpx's VP9 test vectors, WebM files but for a few IVF ones - told apart by their signature, as some named .ivf
+    /// are WebM. Only the uncompressed header is compared, all ffmpeg reads.
+    /// </summary>
+    [TestMethod]
+    public void VP9HeadersReadAsFfmpegReadsThem() => Run("vp9", path => SharpTrace.IsIvf(path) ? "ivf" : "matroska", SharpTrace.ReadVp9);
+
+    /// <summary>
+    /// Reads every VP9 conformance stream and writes each frame, and each superframe's index, again with a context that
+    /// has only written, which must give the stream's bytes: the headers, the compressed header's Boolean coding, and the
+    /// tile data. Needs no ffmpeg.
+    /// </summary>
+    [TestMethod]
+    public void VP9FramesWriteBackAsTheyWere()
+    {
+        string? root = ConformanceCorpus.Locate();
+        if (root == null)
+            Assert.Inconclusive("no conformance bitstreams; run DownloadConformance.ps1, or set SHARPMP4_CONFORMANCE");
+
+        var streams = ConformanceCorpus.Streams(root, "vp9");
+        if (streams.Count == 0)
+            Assert.Inconclusive($"no vp9 bitstreams under {root}; run DownloadConformance.ps1 -Codec VP9");
+
+        var results = new ConcurrentBag<StreamResult>();
+        Parallel.ForEach(streams, new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, Environment.ProcessorCount / 2) }, path =>
+        {
+            StreamResult result;
+            try
+            {
+                result = AomRoundTrip.CheckVp9(path);
+            }
+            catch (Exception ex)
+            {
+                result = new StreamResult
+                {
+                    Path = path,
+                    Outcome = Outcome.SharpFailed,
+                    Detail = ex.ToString(),
+                    Key = $"harness: {ex.GetType().Name}",
+                };
+            }
+            results.Add(result);
+        });
+
+        var ordered = results.OrderBy(r => r.Path, StringComparer.Ordinal).ToList();
+        string summary = Summarise("vp9 round trip", root, ordered);
+        var recordOnly = new StringBuilder("\nOnly in the record - elements the state they were read into does not give back:\n");
+        foreach (var (name, total) in AomRoundTrip.Vp9RecordOnly.OrderByDescending(e => e.Value.Streams))
+            recordOnly.Append($"  {name}: {total.Occurrences} occurrences in {total.Streams} streams\n");
+        File.WriteAllText(Path.Combine(root, "report-vp9-roundtrip.txt"), summary + recordOnly + Details(root, ordered));
+
+        int failing = ordered.Count(r => r.Outcome is Outcome.Diverged or Outcome.SharpFailed);
+        Assert.AreEqual(0, failing, summary);
+    }
+
+    /// <summary>
     /// Reads every file format conformance file and checks SharpMP4 finds the boxes GPAC's dump
     /// has, where it has them and as large, and the fields of each as GPAC gives them. Needs no
     /// ffmpeg: the dumps come with the files. GPAC's fields SharpMP4 has none of the name of are
@@ -845,7 +900,8 @@ public class ConformanceTests
             $"{results.Count(r => r.Outcome == Outcome.Diverged)} diverge, " +
             $"{results.Count(r => r.Outcome == Outcome.SharpFailed)} throw, " +
             $"{results.Count(r => r.Outcome == Outcome.NoReference)} without a reference" +
-            (results.Any(r => r.Outcome == Outcome.Malformed) ? $", {results.Count(r => r.Outcome == Outcome.Malformed)} malformed and kept as they were; " : "; ") +
+            (results.Any(r => r.Outcome == Outcome.Malformed) ? $", {results.Count(r => r.Outcome == Outcome.Malformed)} malformed and kept as they were" : "") +
+            (results.Any(r => r.Outcome == Outcome.Equivalent) ? $", {results.Count(r => r.Outcome == Outcome.Equivalent)} written as they read" : "") + "; " +
             $"{results.Sum(r => r.FieldsCompared):N0} fields compared.");
 
         // A stream failing several ways counts under each.

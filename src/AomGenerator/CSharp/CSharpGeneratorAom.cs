@@ -23,6 +23,8 @@ namespace AomGenerator.CSharp
         /// <summary>The structures whose fields are kept together (<see cref="ICustomGenerator.FieldSets"/>): at least "*", the whole context.</summary>
         public virtual IEnumerable<string> FieldSets => new[] { "*" };
 
+        public virtual ISet<string> UnsavedFields => new HashSet<string>();
+
         /// <summary>The classes whose constants the generated code names without them: using static.</summary>
         public virtual IEnumerable<string> StaticUsings => Array.Empty<string>();
 

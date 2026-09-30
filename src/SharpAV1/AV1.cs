@@ -4,18 +4,6 @@ using System.IO;
 
 namespace SharpAV1
 {
-    public interface IAomContext : IAomSerializable
-    {
-        int SelectedOperatingPoint { get; set; }
-        int ObuSizeLen { get; }
-        byte[] LastObuFrameHeader { get; set; }
-    }
-
-    public interface IAomSerializable
-    {
-        void Read(AomStream stream, int size);
-    }
-
     /// <summary>
     /// An OBU as it was read, for writing it again: its size, its syntax elements as they were read, and
     /// the state they were read into. Changed through <see cref="Edit"/>, it is written with the changes.
@@ -59,7 +47,7 @@ namespace SharpAV1
         public AV1Obu FromState() => new AV1Obu(Size, new AomSyntaxRecord(), Read) { Edited = Edited };
     }
 
-    public partial class AV1Context
+    public partial class AV1Context : IAomObuContext
     {
         private AomStream stream;
 

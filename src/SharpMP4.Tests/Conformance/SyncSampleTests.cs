@@ -82,7 +82,7 @@ public class SyncSampleTests
         TestContext.WriteLine($"{tracks} video tracks, {samples} samples, {failures.Count} not as the file has them, {known.Count} where the file is not as a stream is");
         foreach (string failure in failures.Concat(known))
             TestContext.WriteLine(failure);
-        Assert.IsTrue(tracks > 0, "no video track of H.264, H.265, H.266 or AV1");
+        Assert.IsTrue(tracks > 0, "no video track of H.264, H.265, H.266, AV1 or VP9");
         Assert.AreEqual(0, failures.Count, string.Join(Environment.NewLine, failures.Take(50)));
     }
 
@@ -111,7 +111,7 @@ public class SyncSampleTests
             foreach (uint trackID in reader.Tracks.Keys.ToList())
             {
                 var info = reader.Tracks[trackID];
-                if (info.Protection != null || info.Track is not (H264Track or H265Track or H266Track or AV1Track))
+                if (info.Protection != null || info.Track is not (H264Track or H265Track or H266Track or AV1Track or VP9Track))
                     continue;
 
                 Result result;
@@ -140,7 +140,9 @@ public class SyncSampleTests
             _ => 0,
         }).FirstOrDefault(x => x > 0);
         bool av1 = track is AV1Track;
-        if (!av1 && lengthSize == 0)
+        // a VP9 sample is given whole: a frame, or a superframe
+        bool vp9 = track is VP9Track;
+        if (!av1 && !vp9 && lengthSize == 0)
             return new Result(0, null);
 
         // the file's samples, read first: a track the reader cannot read yet is the reader's tests' business
@@ -167,16 +169,16 @@ public class SyncSampleTests
         var actual = new List<(List<byte[]> Units, bool Sync)>();
         foreach (var (data, sync) in fileSamples)
         {
-            var units = av1 ? Obus(data) : NalUnits(data, lengthSize);
+            var units = vp9 ? [data] : av1 ? Obus(data) : NalUnits(data, lengthSize);
             expected.Add((Comparable(track, units), sync));
             foreach (byte[] unit in units)
             {
                 track.ProcessSample(unit, out var output, out bool isSync);
                 if (output.Array != null)
-                    actual.Add((Comparable(track, av1 ? Obus(output.ToArray()) : NalUnits(output.ToArray(), outputLengthSize)), isSync));
+                    actual.Add((Comparable(track, vp9 ? [output.ToArray()] : av1 ? Obus(output.ToArray()) : NalUnits(output.ToArray(), outputLengthSize)), isSync));
             }
         }
-        if (!av1)
+        if (!av1 && !vp9)
         {
             track.ProcessSample(null, out var last, out bool lastSync);
             if (last.Array != null)

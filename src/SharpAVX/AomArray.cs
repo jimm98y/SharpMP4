@@ -51,25 +51,33 @@ namespace SharpAVX
         {
             get
             {
-                if (index < 0)
-                    throw new IndexOutOfRangeException($"Index {index} is negative");
-
-                if (index >= _items.Length)
-                {
-                    int size = _items.Length;
-                    while (size <= index)
-                        size *= 2;
-                    Array.Resize(ref _items, size);
-                }
-
-                if (index >= Length)
-                    Length = index + 1;
-
-                if (_create != null && _items[index] == null)
-                    _items[index] = _create();
-
-                return ref _items[index];
+                // an element reached before, as most are: nothing to grow or make
+                if ((uint)index < (uint)Length && (_create == null || _items[index] != null))
+                    return ref _items[index];
+                return ref Reach(index);
             }
+        }
+
+        private ref T Reach(int index)
+        {
+            if (index < 0)
+                throw new IndexOutOfRangeException($"Index {index} is negative");
+
+            if (index >= _items.Length)
+            {
+                int size = _items.Length;
+                while (size <= index)
+                    size *= 2;
+                Array.Resize(ref _items, size);
+            }
+
+            if (index >= Length)
+                Length = index + 1;
+
+            if (_create != null && _items[index] == null)
+                _items[index] = _create();
+
+            return ref _items[index];
         }
 
         // Whether an element can be an array of its own, to be copied too: an int cannot.

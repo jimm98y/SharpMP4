@@ -24,6 +24,10 @@ namespace AomGenerator
             {
                 customGenerator = new CSharpGeneratorAV2();
             }
+            else if (path.Contains("VP9"))
+            {
+                customGenerator = new CSharpGeneratorVP9();
+            }
             else
             {
                 throw new NotSupportedException();

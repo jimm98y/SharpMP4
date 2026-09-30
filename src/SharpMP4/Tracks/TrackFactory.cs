@@ -61,6 +61,10 @@ namespace SharpMP4.Tracks
                 case "av2C":
                     return new AV2Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
+                // of a 'vp09' entry - VP8's 'vp08' has one too
+                case "vpcC" when sampleEntry.GetParent() is Box entry && Encryption.SubsampleSplitter.CodingOf(entry) == "vp09":
+                    return new VP9Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
+
                 default:
                     throw new NotSupportedException($"Unsupported video codec: {IsoStream.ToFourCC(sampleEntry.FourCC)}");
             }

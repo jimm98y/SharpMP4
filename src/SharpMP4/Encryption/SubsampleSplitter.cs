@@ -9,8 +9,9 @@ namespace SharpMP4.Encryption
 {
     /// <summary>
     /// Splits a sample into what is left in the clear and what is protected (ISO/IEC 23001-7, 9.5.2): what a decoder reads
-    /// before the data is decrypted stays clear, as the binding of the codec says. Of NAL units (<see cref="NalSubsampleSplitter"/>)
-    /// and of AV1's and AV2's OBUs (<see cref="Av1SubsampleSplitter"/>, <see cref="Av2SubsampleSplitter"/>).
+    /// before the data is decrypted stays clear, as the binding of the codec says. Of NAL units (<see cref="NalSubsampleSplitter"/>),
+    /// of AV1's and AV2's OBUs (<see cref="Av1SubsampleSplitter"/>, <see cref="Av2SubsampleSplitter"/>) and of VP9's frames
+    /// (<see cref="Vp9SubsampleSplitter"/>).
     /// </summary>
     public abstract class SubsampleSplitter
     {
@@ -24,7 +25,7 @@ namespace SharpMP4.Encryption
         public IMp4Logger Logger { get; set; }
 
         /// <summary>
-        /// The splitter of a sample entry's codec: of H.264, H.265, H.266, AV1 and AV2. Null for any other, whose samples
+        /// The splitter of a sample entry's codec: of H.264, H.265, H.266, AV1, AV2 and VP9. Null for any other, whose samples
         /// are protected whole.
         /// </summary>
         public static SubsampleSplitter For(Box sampleEntry, IMp4Logger logger = null)
@@ -43,10 +44,17 @@ namespace SharpMP4.Encryption
                         return new Av1SubsampleSplitter(av1C.Av1Config, logger);
                     case AV2CodecConfigurationBox av2C:
                         return new Av2SubsampleSplitter(av2C, logger);
+                    // VP8's entry has one too, whose binding is another
+                    case VPCodecConfigurationBox when CodingOf(sampleEntry) == "vp09":
+                        return new Vp9SubsampleSplitter(logger);
                 }
             }
             return null;
         }
+
+        /// <summary>The coding of a sample entry: of a protected one, what it was before it was protected ('frma').</summary>
+        public static string CodingOf(Box sampleEntry) =>
+            TrackProtection.FromSampleEntry(sampleEntry)?.OriginalFormat ?? IsoStream.ToFourCC(sampleEntry.FourCC);
 
         /// <summary>Whether the codec's binding allows a scheme: all four, but where it says otherwise.</summary>
         public virtual bool Supports(string scheme) => true;

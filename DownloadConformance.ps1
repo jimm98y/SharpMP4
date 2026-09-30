@@ -3,7 +3,7 @@
 Downloads the conformance bitstreams and files the parsers are tested against.
 
 .DESCRIPTION
-Fetches the published conformance suites for H.264, H.265, H.266 and AV1 into the
+Fetches the published conformance suites for H.264, H.265, H.266, AV1 and VP9 into the
 conformance folder next to this script, which git ignores. Each suite is laid out as
 
     conformance\<codec>\<set>\<stream or archive name>\...
@@ -24,6 +24,8 @@ Sources:
     H.266  ITU-T JVET    https://www.itu.int/wftp3/av-arch/jvet-site/bitstream_exchange/VVC/FDIS_r1/
     AV1    libaom test vectors  https://storage.googleapis.com/aom-test-data/ (av1-1-*)
     AV1    Argon Streams        https://aomedia.org/av1-video-decoder-verification-tool/
+    VP9    libvpx test vectors  https://storage.googleapis.com/downloads.webmproject.org/test_data/libvpx/
+                                (vp90-2-* to vp93-2-*, those of libvpx's test/test_vectors.cc)
     ISOBMFF  MPEG file format conformance (ISO/IEC 14496-32)
                                 https://github.com/MPEGGroup/FileFormatConformance
     FATE     FFmpeg's samples that are ISOBMFF or QuickTime files
@@ -99,8 +101,8 @@ Everything, about 25 GB.
 param(
     [string]$Destination,
 
-    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2', 'Mp4parse', 'Shaka')]
-    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2', 'Mp4parse', 'Shaka'),
+    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'VP9', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2', 'Mp4parse', 'Shaka')]
+    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'VP9', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2', 'Mp4parse', 'Shaka'),
 
     [switch]$IncludeSvc,
     [switch]$IncludeArgon,
@@ -301,30 +303,30 @@ function Get-ItuSet([string]$CodecFolder, $Set) {
     }
 }
 
-# libaom's test vectors, listed through the storage bucket's JSON API, each checked against
-# the MD5 the bucket keeps for it.
-function Get-LibaomVectors {
-    $target = Join-Path (Join-Path $Destination 'av1') 'libaom'
+# Test vectors kept in a storage bucket, listed through its JSON API by prefix - those whose name matches the pattern -
+# each checked against the MD5 the bucket keeps for it, and kept under conformance\<codec>\<set> by the name after the
+# prefix's folder.
+function Get-BucketVectors([string]$Bucket, [string]$Prefix, [string]$Pattern, [string]$Codec, [string]$Set) {
+    $target = Join-Path (Join-Path $Destination $Codec) $Set
     $objects = New-Object System.Collections.Generic.List[object]
     $token = $null
 
     do {
-        $url = 'https://storage.googleapis.com/storage/v1/b/aom-test-data/o?prefix=av1-1-&maxResults=1000&fields=items(name,size,md5Hash),nextPageToken'
+        $url = "https://storage.googleapis.com/storage/v1/b/$Bucket/o?prefix=$([Uri]::EscapeDataString($Prefix))&maxResults=1000&fields=items(name,size,md5Hash),nextPageToken"
         if ($token) { $url += '&pageToken=' + [Uri]::EscapeDataString($token) }
         $page = Invoke-RestMethod -Uri $url
-        # The .orig files are backups of a few vectors, and not public.
-        if ($page.items) { $objects.AddRange([object[]]@($page.items | Where-Object { $_.name -notmatch '\.orig$' })) }
+        if ($page.items) { $objects.AddRange([object[]]@($page.items | Where-Object { ($_.name -split '/')[-1] -match $Pattern })) }
         $token = $page.nextPageToken
     } while ($token)
 
     $bytes = 0L
     foreach ($object in $objects) { $bytes += [long]$object.size }
     $megabytes = [math]::Round($bytes / 1MB)
-    Write-Host "av1/libaom: $($objects.Count) files, $megabytes MB"
+    Write-Host "$Codec/${Set}: $($objects.Count) files, $megabytes MB"
 
     foreach ($object in $objects) {
-        $path = Join-Path $target $object.name
-        $url = 'https://storage.googleapis.com/aom-test-data/' + $object.name
+        $path = Join-Path $target ($object.name -split '/')[-1]
+        $url = "https://storage.googleapis.com/$Bucket/" + $object.name
         $known = Test-Path -LiteralPath $path
 
         if ((Save-File $url $path ([long]$object.size)) -and -not $known) {
@@ -337,6 +339,17 @@ function Get-LibaomVectors {
             }
         }
     }
+}
+
+# libaom's test vectors. The .orig files are backups of a few vectors, and not public.
+function Get-LibaomVectors {
+    Get-BucketVectors 'aom-test-data' 'av1-1-' '^av1-1-.*(?<!\.orig)$' 'av1' 'libaom'
+}
+
+# libvpx's VP9 test vectors: those its decoder tests read (test/test_vectors.cc), of profiles 0 to 3, and the MD5 of
+# each one's decoded frames beside it. The older vp90-00-* are encoder test clips.
+function Get-LibvpxVectors {
+    Get-BucketVectors 'downloads.webmproject.org' 'test_data/libvpx/vp9' '^vp9[0-3]-2-' 'vp9' 'libvpx'
 }
 
 # Argon Streams: one archive, checked against the MD5 published beside it.
@@ -590,6 +603,9 @@ foreach ($c in $Codec) {
     if ($c -eq 'AV1') {
         Get-LibaomVectors
         if ($IncludeArgon) { Get-Argon }
+    }
+    elseif ($c -eq 'VP9') {
+        Get-LibvpxVectors
     }
     elseif ($c -eq 'IsoBmff') {
         Get-FileFormatConformance

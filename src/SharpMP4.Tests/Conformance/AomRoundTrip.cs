@@ -1,6 +1,7 @@
 using SharpAV1;
 using SharpAVX;
 using SharpMP4.Common;
+using SharpVP9;
 
 namespace SharpMP4.Tests.Conformance;
 
@@ -15,6 +16,9 @@ public static class AomRoundTrip
     /// gives otherwise, and in how many streams: what only the record says, which an edit cannot reach.
     /// </summary>
     public static readonly System.Collections.Concurrent.ConcurrentDictionary<string, (int Occurrences, int Streams)> RecordOnly = new();
+
+    /// <summary>The same, of VP9's streams.</summary>
+    public static readonly System.Collections.Concurrent.ConcurrentDictionary<string, (int Occurrences, int Streams)> Vp9RecordOnly = new();
 
     public static StreamResult CheckAv1(string path)
     {
@@ -118,6 +122,146 @@ public static class AomRoundTrip
         else if (result.Keys.Count == 0)
             result.Outcome = Outcome.Match;
         return result;
+    }
+
+    /// <summary>
+    /// Reads a VP9 stream frame by frame - and each superframe's index - recording each, and writes each again with a
+    /// context of its own, checking the bytes are the stream's: the headers, the compressed header's Boolean coding,
+    /// and the tile data.
+    /// </summary>
+    public static StreamResult CheckVp9(string path)
+    {
+        var result = new StreamResult { Path = path };
+        var reader = new VP9Context { RecordSyntax = true };
+        var writer = new VP9Context();
+        // what was written, read again: where it differs from the stream, it has to read as the stream did
+        var reread = new VP9Context { RecordSyntax = true };
+        string? equivalent = null;
+
+        var recordOnly = new Dictionary<string, int>();
+        int units = 0;
+        string? unreadable = null;
+        foreach (byte[] chunk in SharpTrace.Vp9Chunks(path))
+        {
+            int[]? sizes = VP9Context.SuperframeFrameSizes(chunk, 0, chunk.Length);
+            var parts = (sizes ?? [chunk.Length]).Select(size => (Size: size, Index: false)).ToList();
+            if (sizes != null)
+                parts.Add((chunk.Length - sizes.Sum(), true));
+
+            int offset = 0;
+            foreach (var (size, index) in parts)
+            {
+                if (size <= 0 || size > chunk.Length - offset)
+                {
+                    result.Fail(Outcome.SharpFailed, "read: size", $"unit {units} at {offset}: {size} bytes of {chunk.Length - offset}");
+                    result.UnitsCompared = units;
+                    return result;
+                }
+
+                try
+                {
+                    using var input = new AomStream(new MemoryStream(chunk, offset, size), NullMp4Logger.Instance);
+                    if (index)
+                        reader.ReadSuperframeIndex(input, size);
+                    else
+                        reader.Read(input, size);
+                }
+                catch (Exception ex)
+                {
+                    // As ffmpeg drops its packet: the rest of the chunk is kept as it was, and the stream read on
+                    unreadable ??= $"unit {units} at {offset}: reading threw: {ex.Message}; the rest of its chunk kept as it was";
+
+                    var kept = new MemoryStream();
+                    using (var output = new AomStream(kept, NullMp4Logger.Instance))
+                        writer.Write(output, reader.LastUnit);
+                    if (reader.LastUnit?.Unreadable == null || FirstDifference(kept.ToArray(), chunk, offset, size) >= 0)
+                    {
+                        result.Fail(Outcome.Diverged, "unreadable unit: not kept", $"unit {units} at {offset}: not written as it was");
+                        result.UnitsCompared = units;
+                        return result;
+                    }
+                    break;
+                }
+
+                var written = new MemoryStream();
+                var positions = new Positions();
+                try
+                {
+                    using var output = new AomStream(written, NullMp4Logger.Instance) { RecordOnly = recordOnly, ElementEnded = positions.Add };
+                    writer.Write(output, reader.LastUnit);
+                }
+                catch (Exception ex)
+                {
+                    result.Fail(Outcome.SharpFailed, $"write {(index ? "superframe index" : "frame")}: {ex.GetType().Name}", $"unit {units} at {offset}: writing threw: {ex.Message} {ex.StackTrace?.Split('\n').FirstOrDefault()?.Trim()}" + (unreadable != null ? $"; before it, {unreadable}" : ""));
+                    result.UnitsCompared = units;
+                    return result;
+                }
+
+                byte[] bytes = written.ToArray();
+                try
+                {
+                    using var again = new AomStream(new MemoryStream(bytes), NullMp4Logger.Instance);
+                    if (index)
+                        reread.ReadSuperframeIndex(again, bytes.Length);
+                    else
+                        reread.Read(again, bytes.Length);
+                }
+                catch (Exception)
+                {
+                    // compared below: what cannot be read again is not what was read
+                }
+
+                int differs = FirstDifference(bytes, chunk, offset, size);
+                if (differs >= 0)
+                {
+                    long bit = differs * 8L + FirstBit(differs < bytes.Length ? bytes[differs] : 0, offset + differs < chunk.Length && differs < size ? chunk[offset + differs] : 0);
+                    string element = positions.At(bit);
+                    string where = $"unit {units} at {offset}: written as {bytes.Length} bytes of {size}, first differing at bit {bit}, in {element}";
+                    if (bytes.Length != size || !SameSyntax(reader.LastUnit?.Record, reread.LastUnit?.Record))
+                    {
+                        result.Fail(Outcome.Diverged, $"{(index ? "superframe index" : "frame")}: {element}", where);
+                        result.UnitsCompared = units;
+                        return result;
+                    }
+                    equivalent ??= where + ", but reads as it did";
+                }
+
+                offset += size;
+                units++;
+            }
+        }
+
+        foreach (var (name, count) in recordOnly)
+            Vp9RecordOnly.AddOrUpdate(name, (count, 1), (_, total) => (total.Occurrences + count, total.Streams + 1));
+        result.UnitsCompared = units;
+        if (result.Keys.Count == 0 && unreadable != null)
+        {
+            result.Outcome = Outcome.Malformed;
+            result.Detail = "malformed, and kept as it was: " + unreadable;
+        }
+        else if (result.Keys.Count == 0 && equivalent != null)
+        {
+            result.Outcome = Outcome.Equivalent;
+            result.Detail = equivalent;
+        }
+        else if (result.Keys.Count == 0)
+            result.Outcome = Outcome.Match;
+        return result;
+    }
+
+    /// <summary>Whether two records have the same elements, in the same order, of the same values and widths.</summary>
+    private static bool SameSyntax(AomSyntaxRecord? a, AomSyntaxRecord? b)
+    {
+        if (a == null || b == null || a.Count != b.Count)
+            return false;
+        for (int i = 0; i < a.Count; i++)
+        {
+            var (x, y) = (a.ValueAt(i), b.ValueAt(i));
+            if (a.NameAt(i) != b.NameAt(i) || x.Value != y.Value || x.Bits != y.Bits
+                || (x.Bytes != null) != (y.Bytes != null) || x.Bytes != null && !x.Bytes.AsSpan().SequenceEqual(y.Bytes))
+                return false;
+        }
+        return true;
     }
 
     /// <summary>The first byte written that is not the stream's, or past what either has; -1 if none.</summary>

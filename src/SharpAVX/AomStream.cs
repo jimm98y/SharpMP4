@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SharpAVX
 {
-    public class AomStream : IDisposable
+    public partial class AomStream : IDisposable
     {
         private bool _disposedValue;
 

@@ -21,6 +21,12 @@ public enum Outcome
     /// for and no others, and wrote back byte for byte, defects and all.
     /// </summary>
     Malformed,
+
+    /// <summary>
+    /// Written back other than it was, but read again as the same syntax elements: VP9's Boolean coded compressed header,
+    /// whose encoder chose another value than libvpx's of those that decode as the same bools.
+    /// </summary>
+    Equivalent,
 }
 
 /// <summary>What comparing one stream found.</summary>
