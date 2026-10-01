@@ -16,6 +16,7 @@ public static class ConformanceCorpus
         ["av1"] = [".ivf", ".obu"],
         ["vp9"] = [".webm", ".ivf"],
         ["h263"] = [".h263", ".263"],
+        ["mpeg4"] = [".m4v", ".cmp", ".bits"],
         ["h262"] = [".bits", ".bs", ".m2v", ".m1v", ".mpv", ".mpg", ".vob", ".ts"],
     };
 

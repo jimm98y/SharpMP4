@@ -67,6 +67,11 @@ namespace SharpMP4.Tracks
                     && H262Track.IsH262(config.ObjectTypeIndication):
                     return new H262Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
+                // of an 'mp4v' entry of MPEG-4 Visual
+                case "esds" when sampleEntry is ESDBox esds && esds._ES?.Children?.OfType<DecoderConfigDescriptor>().FirstOrDefault() is DecoderConfigDescriptor config
+                    && MPEG4VisualTrack.IsMPEG4Visual(config.ObjectTypeIndication):
+                    return new MPEG4VisualTrack(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
+
                 // of an 's263' or 'h263' entry (3GPP TS 26.244)
                 case "d263":
                     return new H263Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
