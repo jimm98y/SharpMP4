@@ -28,6 +28,14 @@ public static class ItuGenerator
         {
             customGenerator = new CSharpGeneratorH262();
         }
+        else if (path.Contains("H263"))
+        {
+            customGenerator = new CSharpGeneratorH263();
+        }
+        else if (path.Contains("MPEG4"))
+        {
+            customGenerator = new CSharpGeneratorMPEG4();
+        }
         else
         {
             throw new NotSupportedException();
