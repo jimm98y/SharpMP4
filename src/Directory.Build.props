@@ -11,7 +11,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/jimm98y/SharpMP4</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>video;audio;isobmff;mp4;fmp4;m4v;mov;heif;heic;avif;h264;h265;h266;av1;av2;aac;opus;net8;net10</PackageTags>
+		<PackageTags>video;audio;isobmff;mp4;fmp4;m4v;mov;heif;heic;avif;h261;h262;h263;mpeg4;h264;h265;h266;vp9;av1;av2;aac;opus;net8;net10</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<AssemblyVersion>1.0.0</AssemblyVersion>
 		<FileVersion>$(Version)</FileVersion>
