@@ -3,7 +3,7 @@
 Downloads the conformance bitstreams and files the parsers are tested against.
 
 .DESCRIPTION
-Fetches the published conformance suites for H.264, H.265, H.266, AV1 and VP9 into the
+Fetches the published conformance suites for H.264, H.265, H.266, AV1 and VP9, and H.262 samples, into the
 conformance folder next to this script, which git ignores. Each suite is laid out as
 
     conformance\<codec>\<set>\<stream or archive name>\...
@@ -26,6 +26,7 @@ Sources:
     AV1    Argon Streams        https://aomedia.org/av1-video-decoder-verification-tool/
     VP9    libvpx test vectors  https://storage.googleapis.com/downloads.webmproject.org/test_data/libvpx/
                                 (vp90-2-* to vp93-2-*, those of libvpx's test/test_vectors.cc)
+    H.262  FFmpeg's samples      https://fate-suite.ffmpeg.org/mpeg2/ (conformance bitstreams among them)
     ISOBMFF  MPEG file format conformance (ISO/IEC 14496-32)
                                 https://github.com/MPEGGroup/FileFormatConformance
     FATE     FFmpeg's samples that are ISOBMFF or QuickTime files
@@ -101,8 +102,8 @@ Everything, about 25 GB.
 param(
     [string]$Destination,
 
-    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'VP9', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2', 'Mp4parse', 'Shaka')]
-    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'VP9', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2', 'Mp4parse', 'Shaka'),
+    [ValidateSet('H264', 'H265', 'H266', 'AV1', 'VP9', 'H262', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2', 'Mp4parse', 'Shaka')]
+    [string[]]$Codec = @('H264', 'H265', 'H266', 'AV1', 'VP9', 'H262', 'IsoBmff', 'Fate', 'Metadata', 'Chromium', 'Firefox', 'Libavif', 'Avif', 'Exiv2', 'Mp4parse', 'Shaka'),
 
     [switch]$IncludeSvc,
     [switch]$IncludeArgon,
@@ -459,6 +460,18 @@ function Test-IsoBmffStart([string]$Path) {
     return $read -eq 8 -and [Text.Encoding]::ASCII.GetString($bytes, 4, 4) -cin $fateFirstBoxes
 }
 
+# FFmpeg's MPEG-2 video samples - elementary streams, the conformance bitstreams its own tests of the headers read among
+# them, and program and transport streams - all of the folder, whatever they are named.
+function Get-FateMpeg2 {
+    $target = Join-Path (Join-Path $Destination 'h262') 'fate'
+    $html = Get-Text ($fateUrl + 'mpeg2/')
+    $files = @([regex]::Matches($html, '<a href="([^"?/][^"?]*)">') | ForEach-Object { [Net.WebUtility]::HtmlDecode($_.Groups[1].Value) })
+    Write-Host "h262/fate: $($files.Count) files"
+    foreach ($name in $files) {
+        Save-File ($fateUrl + 'mpeg2/' + [Uri]::EscapeDataString($name)) (Join-Path $target $name) | Out-Null
+    }
+}
+
 function Get-FateSuite {
     $target = Join-Path $Destination 'fate'
     $files = @(Get-FateListing '')
@@ -606,6 +619,9 @@ foreach ($c in $Codec) {
     }
     elseif ($c -eq 'VP9') {
         Get-LibvpxVectors
+    }
+    elseif ($c -eq 'H262') {
+        Get-FateMpeg2
     }
     elseif ($c -eq 'IsoBmff') {
         Get-FileFormatConformance

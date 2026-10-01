@@ -298,7 +298,11 @@ namespace SharpH26X
             long ret = ReadBits((int)count);
             if (ret == -1)
                 throw new EndOfStreamException();
+            // two's complement of count bits: H.262's simsbf of 7 to 22 bits, H.26x's i(32)
+            if (count < 64 && (ret & (1L << ((int)count - 1))) != 0)
+                ret -= 1L << (int)count;
             value = unchecked((int)ret);
+            LogEnd(name, count, value);
             return (ulong)count;
         }
 

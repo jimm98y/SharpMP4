@@ -157,6 +157,9 @@ public static class TraceComparison
         // HRD's copy of the NAL HRD's, in an H.264 buffering period.
         ("initial_cpb_removal_delay", "initial_cpb_removal_delay0"),
         ("initial_cpb_removal_delay_offset", "initial_cpb_removal_delay_offset0"),
+        // ffmpeg traces H.262's chroma quantiser matrices of the quant matrix extension under the names of the others
+        ("intra_quantiser_matrix", "chroma_intra_quantiser_matrix"),
+        ("non_intra_quantiser_matrix", "chroma_non_intra_quantiser_matrix"),
     ];
 
     private static bool SameName(string sharp, string ffmpeg) =>

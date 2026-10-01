@@ -115,8 +115,10 @@ namespace Sharp{type}
             var ret = new StringBuilder(@$"
     public partial class {type}Context : IItuContext
     {{
-        public NalUnit NalHeader {{ get; set; }}
 ");
+            // the header of the NAL unit being read, of the codecs of NAL units: H.262's are start codes
+            if (ituClasses.Any(x => x.ClassName == "nal_unit"))
+                ret.Append("        public NalUnit NalHeader { get; set; }\r\n");
             var rbsp = ituClasses.Where(x => x.ClassName.EndsWith("rbsp")).ToArray();
             foreach (var cls in rbsp)
             {
@@ -204,7 +206,7 @@ namespace Sharp{type}
 
             foreach (var v in ituClass.RequiresDefinition)
             {
-                string type = GetCSharpTypeMapping()[v.Type];
+                string type = CSharpTypeOf(v.Type);
                 if (string.IsNullOrEmpty(v.FieldArray))
                 {
                     string value = "= 0";
@@ -528,6 +530,10 @@ namespace Sharp{type}
                     {
                         return $"stream.WriteClass<{ituField.ClassType.ToPropertyCase()}>(context,";
                     }
+                    if (Width(ituField.Type, "u") > 0)
+                        return $"stream.WriteUnsignedInt({Width(ituField.Type, "u")},";
+                    if (Width(ituField.Type, "i") > 0)
+                        return $"stream.WriteSignedInt({Width(ituField.Type, "i")}, ";
                     throw new NotImplementedException();
             }
         }
@@ -621,9 +627,34 @@ namespace Sharp{type}
                         par = $"({string.Join(", ", parameters)})";
                         return $"###value### new {ituField.ClassType.ToPropertyCase()}{par} ###size### stream.ReadClass<{ituField.ClassType.ToPropertyCase()}>(size, context,";
                     }
+                    if (Width(ituField.Type, "u") > 0)
+                        return $"stream.ReadUnsignedInt(size, {Width(ituField.Type, "u")},";
+                    if (Width(ituField.Type, "i") > 0)
+                        return $"stream.ReadSignedInt(size, {Width(ituField.Type, "i")},";
                     throw new NotImplementedException();
             }
         }      
+
+        /// <summary>
+        /// The C# type of a descriptor: as the map has it, or of a u(n) or i(n) of any other width - H.262's fields are of
+        /// many - the unsigned or signed integer that holds it.
+        /// </summary>
+        private static string CSharpTypeOf(string descriptor)
+        {
+            if (GetCSharpTypeMapping().TryGetValue(descriptor, out string type))
+                return type;
+            int width = Width(descriptor, "u");
+            if (width > 0)
+                return width <= 32 ? "uint" : "ulong";
+            if (Width(descriptor, "i") > 0)
+                return "int";
+            throw new KeyNotFoundException(descriptor);
+        }
+
+        /// <summary>The n of a descriptor "u(n)" of the kind given, or 0 if it is another.</summary>
+        private static int Width(string descriptor, string kind) =>
+            descriptor != null && descriptor.StartsWith(kind + "(") && descriptor.EndsWith(")") &&
+            int.TryParse(descriptor.Substring(kind.Length + 1, descriptor.Length - kind.Length - 2), out int width) ? width : 0;
 
         private static Dictionary<string, string> GetCSharpTypeMapping()
         {
@@ -715,7 +746,7 @@ namespace Sharp{type}
                 arraySuffix.Append("[]");
             }
 
-            return map[field.Type] + arraySuffix.ToString();
+            return CSharpTypeOf(field.Type) + arraySuffix.ToString();
         }
 
         private string BuildComment(ItuComment comment, int level, MethodType methodType)
@@ -1233,7 +1264,7 @@ namespace Sharp{type}
             {
                 // NumOutputLayerSets - adding a calculated field as a property
                 if (string.IsNullOrEmpty(field.Type))
-                    type = GetCSharpTypeMapping()[ituClass.AddedFields.FirstOrDefault(x => x.Name == field.Name).Type];
+                    type = CSharpTypeOf(ituClass.AddedFields.FirstOrDefault(x => x.Name == field.Name).Type);
             }
 
             string defaultInitializer = specificGenerator.GetFieldDefaultValue(field);

@@ -15,6 +15,7 @@ public static class ConformanceCorpus
         ["h266"] = [".bit", ".bin", ".266", ".vvc"],
         ["av1"] = [".ivf", ".obu"],
         ["vp9"] = [".webm", ".ivf"],
+        ["h262"] = [".bits", ".bs", ".m2v", ".m1v", ".mpv", ".mpg", ".vob", ".ts"],
     };
 
     /// <summary>

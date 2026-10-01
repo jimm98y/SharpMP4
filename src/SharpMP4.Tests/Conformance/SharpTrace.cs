@@ -245,6 +245,102 @@ public static partial class SharpTrace
         return (units, null);
     }
 
+    /// <summary>
+    /// H.262: the units of the video elementary stream, each from its start code to the next. ffmpeg traces a start code as
+    /// the 8 bits of its value, and a slice's as slice_vertical_position; elements SharpH262 names otherwise, the loops'
+    /// being kept by their index, as the spec names them.
+    /// </summary>
+    public static (List<TracedUnit> Units, Exception? Error) ReadH262(string path)
+    {
+        var capture = new FieldCapture();
+        var units = new List<TracedUnit>();
+        var context = new SharpH262.H262Context();
+        try
+        {
+            byte[] data = H262ElementaryStream(path);
+            foreach (var (offset, length) in SharpH262.H262Context.Units(data, 0, data.Length))
+            {
+                capture.Fields = [];
+                Exception? error = null;
+                SharpH26X.IItuSerializable? read = null;
+                try
+                {
+                    read = context.ReadUnit(SharpH262.H262Context.StreamOf(data, offset, length, capture));
+                }
+                catch (Exception ex)
+                {
+                    error = ex;
+                }
+
+                // a unit the syntax does not describe ffmpeg does not trace either
+                if (read is SharpH262.UnknownUnit)
+                    continue;
+
+                var unit = new TracedUnit($"unit {data[offset + 3]:x2} at {offset}") { Error = error };
+                foreach (var field in capture.Fields)
+                {
+                    var f = field;
+                    if (f.Bits == 32 && f.Name is "sequence_header_code" or "extension_start_code" or "group_start_code" or "picture_start_code"
+                        or "user_data_start_code" or "sequence_end_code" or "slice_start_code")
+                        f = new TracedField(f.Name == "slice_start_code" ? "slice_vertical_position" : f.Name, 8, f.Value & 0xFF);
+                    f = f.Name switch
+                    {
+                        "loop_marker_bit" => f with { Name = "marker_bit" },
+                        "last_extra_bit_picture" => f with { Name = "extra_bit_picture" },
+                        "last_extra_bit_slice" => f with { Name = "extra_bit_slice" },
+                        _ => f,
+                    };
+                    unit.Fields.Add(f);
+                }
+                units.Add(unit);
+            }
+        }
+        catch (Exception ex)
+        {
+            return (units, ex);
+        }
+        return (units, null);
+    }
+
+    /// <summary>ffmpeg's demuxer of an H.262 stream: raw, or in a program or transport stream.</summary>
+    public static string H262Format(string path) => Path.GetExtension(path).ToLowerInvariant() switch
+    {
+        ".ts" => "mpegts",
+        ".mpg" or ".vob" => "mpeg",
+        _ => "mpegvideo",
+    };
+
+    /// <summary>
+    /// The video elementary stream of an H.262 file: a raw one as it is; of a program or transport stream, as ffmpeg copies
+    /// it out.
+    /// </summary>
+    internal static byte[] H262ElementaryStream(string path)
+    {
+        if (H262Format(path) == "mpegvideo")
+            return File.ReadAllBytes(path);
+
+        string ffmpeg = ConformanceCorpus.LocateFfmpeg() ?? throw new InvalidOperationException("no ffmpeg to demux with; set SHARPMP4_FFMPEG");
+        string es = Path.Combine(Path.GetTempPath(), $"sharpmp4-h262-{Guid.NewGuid():N}.m2v");
+        try
+        {
+            var start = new System.Diagnostics.ProcessStartInfo(ffmpeg) { UseShellExecute = false, RedirectStandardError = true, CreateNoWindow = true };
+            foreach (string argument in new[] { "-hide_banner", "-nostdin", "-v", "error", "-f", H262Format(path), "-i", path, "-map", "0:v:0", "-c", "copy", "-copyinkf", "-f", "data", es })
+                start.ArgumentList.Add(argument);
+            using (var process = System.Diagnostics.Process.Start(start)!)
+            {
+                string errors = process.StandardError.ReadToEnd();
+                process.WaitForExit();
+                if (process.ExitCode != 0)
+                    throw new InvalidOperationException($"ffmpeg could not copy the video of {path} out: {errors}");
+            }
+            return File.ReadAllBytes(es);
+        }
+        finally
+        {
+            File.Delete(es);
+        }
+    }
+
     /// <summary>Whether a file is IVF, by its signature: some of libvpx's test vectors named .ivf are WebM.</summary>
     public static bool IsIvf(string path)
     {
