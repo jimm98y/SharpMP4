@@ -1,4 +1,4 @@
-namespace SharpMP4.Tests.Conformance;
+﻿namespace SharpMP4.Tests.Conformance;
 
 /// <summary>
 /// Where the conformance bitstreams and an ffmpeg to compare against are found. The bitstreams
@@ -15,6 +15,7 @@ public static class ConformanceCorpus
         ["h266"] = [".bit", ".bin", ".266", ".vvc"],
         ["av1"] = [".ivf", ".obu"],
         ["vp9"] = [".webm", ".ivf"],
+        ["h263"] = [".h263", ".263"],
         ["h262"] = [".bits", ".bs", ".m2v", ".m1v", ".mpv", ".mpg", ".vob", ".ts"],
     };
 

@@ -67,6 +67,10 @@ namespace SharpMP4.Tracks
                     && H262Track.IsH262(config.ObjectTypeIndication):
                     return new H262Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
+                // of an 's263' or 'h263' entry (3GPP TS 26.244)
+                case "d263":
+                    return new H263Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
+
                 // of a 'vp09' entry - VP8's 'vp08' has one too
                 case "vpcC" when sampleEntry.GetParent() is Box entry && Encryption.SubsampleSplitter.CodingOf(entry) == "vp09":
                     return new VP9Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
