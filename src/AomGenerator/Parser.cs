@@ -98,8 +98,10 @@ namespace AomGenerator
             Try(String("NS(numSyms - mk)")),
             Try(String("uvlc()")),
             Try(String("leb128()")),
-            // AV2 has many more widths of these: any argument, as the spec writes it.
-            Try(OneOf(Try(String("svlc")), Try(String("tu")), Try(String("rg")), Try(String("le")), Try(String("su")), Try(String("ns")), Try(String("f")))
+            // AV2 has many more widths of these: any argument, as the spec writes it. VP9's s(n), B(p) and L(n) last:
+            // "s" is the start of "su" and "svlc", which are tried first.
+            Try(OneOf(Try(String("svlc")), Try(String("tu")), Try(String("rg")), Try(String("le")), Try(String("su")), Try(String("ns")), Try(String("f")),
+                    Try(String("s")), Try(String("B")), Try(String("L")))
                 .Then(Parentheses, (name, argument) => name + argument))
             );
 

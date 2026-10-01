@@ -548,7 +548,7 @@ ulong ReadSample(int length, object context, VideoFormat format, StreamMarker ma
     }
     else if (format == VideoFormat.AV1)
     {
-        return ReadAVXSample(length, (IAomContext)context, format, marker, sampleSizeInBytes, dts, pts, duration);
+        return ReadAVXSample(length, (IAomObuContext)context, format, marker, sampleSizeInBytes, dts, pts, duration);
     }
     else
     {
@@ -1196,7 +1196,7 @@ void ParseH266NALU(H266Context context, byte[] sampleData)
     }
 }
 
-ulong ReadAVXSample(int length, IAomContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
+ulong ReadAVXSample(int length, IAomObuContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
 {
     ulong size = 0;
 

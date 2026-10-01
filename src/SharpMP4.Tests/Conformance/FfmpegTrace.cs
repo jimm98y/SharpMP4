@@ -195,7 +195,8 @@ public static partial class FfmpegTrace
             }
 
             string name = match.Groups[2].Value;
-            if (heading != null && name is "forbidden_zero_bit" or "obu_forbidden_bit")
+            // VP9's frames start with frame_marker, and a superframe's index with superframe_marker
+            if (heading != null && name is "forbidden_zero_bit" or "obu_forbidden_bit" or "frame_marker" or "superframe_marker")
             {
                 current = new TracedUnit(heading);
                 units.Add(current);
@@ -264,6 +265,8 @@ public static partial class FfmpegTrace
         ["tile_size_bytes_minus1"] = "tile_size_bytes_minus_1",
         ["golden_frame_idx"] = "gold_frame_idx",
         ["delta_frame_id_minus1"] = "delta_frame_id_minus_1",
+        // VP9
+        ["raw_interpolation_filter_type"] = "raw_interpolation_filter",
     };
 
     /// <summary>
@@ -289,10 +292,26 @@ public static partial class FfmpegTrace
         return Aliases.TryGetValue(name, out string? spec) ? spec : name;
     }
 
-    /// <summary>"delta_poc_s0_minus1[0]" to "delta_poc_s0_minus1": SharpMP4 names an element without its indices.</summary>
+    /// <summary>
+    /// "delta_poc_s0_minus1[0]" to "delta_poc_s0_minus1": SharpMP4 names an element without its indices. Only the
+    /// indices go: VP9's "segmentation_tree_probs[0].prob_coded" is the prob_coded of read_prob.
+    /// </summary>
     public static string StripIndices(string name)
     {
         int bracket = name.IndexOf('[');
-        return bracket < 0 ? name : name.Substring(0, bracket);
+        if (bracket < 0)
+            return name;
+        var plain = new System.Text.StringBuilder(name.Length);
+        int depth = 0;
+        foreach (char c in name)
+        {
+            if (c == '[')
+                depth++;
+            else if (c == ']')
+                depth--;
+            else if (depth == 0)
+                plain.Append(c);
+        }
+        return plain.ToString();
     }
 }

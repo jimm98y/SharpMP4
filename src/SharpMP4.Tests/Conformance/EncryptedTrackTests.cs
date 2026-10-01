@@ -185,7 +185,18 @@ public class EncryptedTrackTests
     [TestMethod]
     [DataRow("bear-av1-cenc.mp4", "cenc")]
     [DataRow("bear-av1-320x180-10bit-cenc.mp4", "cenc")]
-    public void SplitsAV1AsItWasSplit(string protectedName, string scheme)
+    public void SplitsAV1AsItWasSplit(string protectedName, string scheme) => SplitsAsItWasSplit<Av1SubsampleSplitter>(protectedName, scheme);
+
+    /// <summary>
+    /// Split as SharpMP4 splits a sample to protect it, each protected sample of a VP9 clip made by Shaka Packager has the
+    /// subsamples it was protected with: one to a frame, its uncompressed header clear, the rest whole blocks.
+    /// </summary>
+    [TestMethod]
+    [DataRow("bear-320x240-v_frag-vp9-cenc.mp4", "cenc")]
+    [DataRow("bear-320x240-v-vp9_profile2_subsample_cenc-v.mp4", "cenc")]
+    public void SplitsVP9AsItWasSplit(string protectedName, string scheme) => SplitsAsItWasSplit<Vp9SubsampleSplitter>(protectedName, scheme);
+
+    private static void SplitsAsItWasSplit<TSplitter>(string protectedName, string scheme) where TSplitter : SubsampleSplitter
     {
         string? root = ConformanceCorpus.Locate();
         string path = Path.Combine(root ?? "", "chromium", protectedName);
@@ -215,7 +226,7 @@ public class EncryptedTrackTests
             uint trackID = reader.Tracks.Keys.Single();
             var entry = reader.Tracks[trackID].Stbl.Children.OfType<SampleDescriptionBox>().Single().Children.First();
             var splitter = SubsampleSplitter.For(entry);
-            Assert.IsInstanceOfType(splitter, typeof(Av1SubsampleSplitter));
+            Assert.IsInstanceOfType(splitter, typeof(TSplitter));
 
             int i = 0, compared = 0;
             for (var sample = reader.ReadSample(trackID); sample != null; sample = reader.ReadSample(trackID), i++)

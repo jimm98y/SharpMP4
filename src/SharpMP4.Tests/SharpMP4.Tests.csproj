@@ -25,6 +25,7 @@
     <ProjectReference Include="..\SharpH266\SharpH266.csproj" />
     <ProjectReference Include="..\SharpISOBMFF\SharpISOBMFF.csproj" />
     <ProjectReference Include="..\SharpMP4\SharpMP4.csproj" />
+    <ProjectReference Include="..\SharpVP9\SharpVP9.csproj" />
   </ItemGroup>
 
   <ItemGroup>

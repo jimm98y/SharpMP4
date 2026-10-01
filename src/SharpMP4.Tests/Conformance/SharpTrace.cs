@@ -158,6 +158,195 @@ public static partial class SharpTrace
     }
 
     /// <summary>
+    /// VP9: each chunk - an IVF frame, or a WebM block - frame by frame, and a superframe's index before its frames, where
+    /// ffmpeg reads it: the syntax has it after them (Annex B), but it is found first (B.4). Only the uncompressed header
+    /// is kept of a frame, to its trailing bits: ffmpeg's reader goes no further.
+    /// </summary>
+    public static (List<TracedUnit> Units, Exception? Error) ReadVp9(string path)
+    {
+        var capture = new FieldCapture();
+        var units = new List<TracedUnit>();
+        var context = new SharpVP9.VP9Context { Strict = true };
+
+        try
+        {
+            foreach (byte[] chunk in Vp9Chunks(path))
+            {
+                int[]? sizes = SharpVP9.VP9Context.SuperframeFrameSizes(chunk, 0, chunk.Length);
+
+                // A frame whose final byte is a superframe_marker, which conformance does not allow (B.4) - a fuzzed
+                // stream's: B.4 reads it as a frame, but ffmpeg rejects the packet, and reads on with the next
+                if (sizes == null && chunk.Length > 0 && (chunk[^1] & 0xe0) == 0xc0)
+                    continue;
+
+                if (sizes != null)
+                {
+                    int index = chunk.Length - sizes.Sum();
+                    capture.Fields = [];
+                    Exception? error = null;
+                    using (var reader = new SharpAVX.AomStream(new MemoryStream(chunk, chunk.Length - index, index), capture))
+                    {
+                        try
+                        {
+                            context.ReadSuperframeIndex(reader, index);
+                        }
+                        catch (Exception ex)
+                        {
+                            error = ex;
+                        }
+                    }
+                    var indexUnit = new TracedUnit("superframe_index") { Error = error };
+                    indexUnit.Fields.AddRange(capture.Fields);
+                    units.Add(indexUnit);
+                }
+
+                int offset = 0;
+                foreach (int size in sizes ?? [chunk.Length])
+                {
+                    if (size <= 0 || size > chunk.Length - offset)
+                        throw new InvalidDataException($"a frame of {size} bytes at {offset} of a chunk of {chunk.Length}");
+
+                    capture.Fields = [];
+                    var ends = new List<long>();
+                    Exception? error = null;
+                    using (var reader = new SharpAVX.AomStream(new MemoryStream(chunk, offset, size), capture) { ElementEnded = (_, end) => ends.Add(end) })
+                    {
+                        try
+                        {
+                            context.Read(reader, size);
+                        }
+                        catch (Exception ex)
+                        {
+                            error = ex;
+                        }
+                    }
+
+                    // To the end of the uncompressed header; a frame shown again has no more
+                    long end = context.UncompressedHeaderSize > 0 ? 8L * context.UncompressedHeaderSize : long.MaxValue;
+                    int kept = ends.Count(e => e <= end);
+                    var unit = new TracedUnit($"frame at {offset}") { Error = error };
+                    // VP9's tile_rows_log2 is the first of the one bit increments ffmpeg traces as one
+                    unit.Fields.AddRange(capture.Fields.Take(kept).Where(f => f.Name != "padding_bit")
+                        .Select(f => f.Name == "tile_rows_log2" ? f with { Name = "increment_tile_rows_log2" } : f));
+                    units.Add(unit);
+
+                    offset += size;
+                    // After a frame it cannot read, ffmpeg drops the rest of its packet
+                    if (error != null)
+                        break;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            return (units, ex);
+        }
+
+        return (units, null);
+    }
+
+    /// <summary>Whether a file is IVF, by its signature: some of libvpx's test vectors named .ivf are WebM.</summary>
+    public static bool IsIvf(string path)
+    {
+        using var file = File.OpenRead(path);
+        var signature = new byte[4];
+        return file.Read(signature, 0, 4) == 4 && signature.AsSpan().SequenceEqual("DKIF"u8);
+    }
+
+    /// <summary>The chunks of a VP9 stream, as its container has them: the frames of an IVF file, or the blocks of a WebM file.</summary>
+    internal static IEnumerable<byte[]> Vp9Chunks(string path) => IsIvf(path) ? IvfFrames(path) : WebmBlocks(path, "V_VP9");
+
+    /// <summary>
+    /// The frames of a WebM (Matroska) file's track of a codec, in the order of the file: its SimpleBlocks and Blocks.
+    /// The elements are read one after another, into those that hold others - so a cluster of unknown size, or one an
+    /// element runs past the end of, as some test vectors have, is read as ffmpeg reads it.
+    /// </summary>
+    internal static IEnumerable<byte[]> WebmBlocks(string path, string codec)
+    {
+        const uint Segment = 0x18538067, Cluster = 0x1F43B675, BlockGroup = 0xA0, Tracks = 0x1654AE6B, TrackEntry = 0xAE;
+        const uint TrackNumber = 0xD7, CodecId = 0x86, SimpleBlock = 0xA3, Block = 0xA1;
+
+        byte[] data = File.ReadAllBytes(path);
+        long track = -1, entryNumber = -1;
+        string? entryCodec = null;
+        int at = 0;
+        while (at < data.Length)
+        {
+            uint id = (uint)ReadVint(data, ref at, keepMarker: true);
+            long size = ReadVint(data, ref at, keepMarker: false);
+            if (id == 0 || at > data.Length)
+                yield break;
+
+            if (id is Segment or Cluster or BlockGroup or Tracks or TrackEntry)
+            {
+                if (id == TrackEntry)
+                    (entryNumber, entryCodec) = (-1, null);
+                continue;
+            }
+
+            long end = size < 0 ? data.Length : Math.Min(data.Length, at + size);
+            if (id == TrackNumber)
+                entryNumber = ReadUnsigned(data, at, (int)(end - at));
+            else if (id == CodecId)
+                entryCodec = System.Text.Encoding.ASCII.GetString(data, at, (int)(end - at)).TrimEnd('\0');
+            else if (id is SimpleBlock or Block && track >= 0)
+            {
+                int header = at;
+                long number = ReadVint(data, ref header, keepMarker: false);
+                byte flags = data[header + 2];
+                if (number == track)
+                {
+                    if ((flags & 0x06) != 0)
+                        throw new NotSupportedException($"{path}: a laced block of the video track");
+                    int start = header + 3;
+                    yield return data.AsSpan(start, (int)(end - start)).ToArray();
+                }
+            }
+
+            if (track < 0 && entryNumber >= 0 && entryCodec == codec)
+                track = entryNumber;
+            at = (int)end;
+        }
+
+        if (track < 0)
+            throw new InvalidDataException($"{path}: no {codec} track");
+    }
+
+    /// <summary>An EBML variable length integer: an element's ID, with its length marker kept, or a size, -1 where unknown.</summary>
+    private static long ReadVint(byte[] data, ref int at, bool keepMarker)
+    {
+        if (at >= data.Length)
+        {
+            at = data.Length + 1;
+            return 0;
+        }
+        int first = data[at];
+        int length = 1;
+        while (length <= 8 && (first & (0x80 >> (length - 1))) == 0)
+            length++;
+        if (length > 8 || at + length > data.Length)
+        {
+            at = data.Length + 1;
+            return 0;
+        }
+
+        long value = keepMarker ? first : first & ((0x80 >> (length - 1)) - 1);
+        for (int i = 1; i < length; i++)
+            value = (value << 8) | data[at + i];
+        at += length;
+        // a size of all ones is unknown
+        return !keepMarker && value == (1L << (7 * length)) - 1 ? -1 : value;
+    }
+
+    private static long ReadUnsigned(byte[] data, int at, int length)
+    {
+        long value = 0;
+        for (int i = 0; i < length; i++)
+            value = (value << 8) | data[at + i];
+        return value;
+    }
+
+    /// <summary>
     /// Whether a stream is in the length delimited format of Annex B, which Argon Streams uses for
     /// all but its not_annexb sets; everything else here is a sequence of OBUs, each with its size.
     /// </summary>

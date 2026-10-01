@@ -14,6 +14,7 @@ public static class ConformanceCorpus
         ["h265"] = [".bit", ".bin"],
         ["h266"] = [".bit", ".bin", ".266", ".vvc"],
         ["av1"] = [".ivf", ".obu"],
+        ["vp9"] = [".webm", ".ivf"],
     };
 
     /// <summary>
