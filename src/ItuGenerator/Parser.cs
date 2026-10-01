@@ -87,7 +87,9 @@ namespace ItuGenerator
             Try(String("st(v)")),
             Try(String("u(v)")),
             Try(String("ae(v)")),
-            Try(String("ce(v)"))
+            Try(String("ce(v)")),
+            // any width: H.262's fields are of many, which its generator gives as u(n) and i(n)
+            Try(Map((kind, width, close) => kind + width + close, OneOf(Try(String("u(")), Try(String("i("))), Digit.AtLeastOnceString(), String(")")))
             );
 
         public static Parser<char, string> FieldValue =>

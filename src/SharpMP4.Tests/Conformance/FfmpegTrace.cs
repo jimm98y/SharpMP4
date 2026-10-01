@@ -168,6 +168,9 @@ public static partial class FfmpegTrace
         string? heading = null;
         // one string per name, not one per line
         var names = new Dictionary<string, string>(StringComparer.Ordinal);
+        // The units of the stream's extradata - of H.262 the first sequence header and its extension, which the first
+        // packet has too - are left out: a stream read from its start has them once
+        bool extradata = false;
 
         for (string? line = process.StandardError.ReadLine(); line != null; line = process.StandardError.ReadLine())
         {
@@ -175,7 +178,14 @@ public static partial class FfmpegTrace
             if (text == null)
                 continue;
 
-            if (text.Length == 0 || text.StartsWith("Packet:", StringComparison.Ordinal) || text == "Extradata")
+            if (text == "Extradata" || text.StartsWith("Packet:", StringComparison.Ordinal))
+            {
+                extradata = text == "Extradata";
+                current = null;
+                heading = null;
+                continue;
+            }
+            if (text.Length == 0 || extradata)
                 continue;
 
             if (text.StartsWith("Failed to read unit", StringComparison.Ordinal))
@@ -195,8 +205,11 @@ public static partial class FfmpegTrace
             }
 
             string name = match.Groups[2].Value;
-            // VP9's frames start with frame_marker, and a superframe's index with superframe_marker
-            if (heading != null && name is "forbidden_zero_bit" or "obu_forbidden_bit" or "frame_marker" or "superframe_marker")
+            // VP9's frames start with frame_marker, and a superframe's index with superframe_marker; H.262's units with
+            // the value of their start code, a slice's its slice_vertical_position
+            if (heading != null && name is "forbidden_zero_bit" or "obu_forbidden_bit" or "frame_marker" or "superframe_marker"
+                or "sequence_header_code" or "extension_start_code" or "group_start_code" or "picture_start_code"
+                or "slice_vertical_position" or "user_data_start_code" or "sequence_end_code")
             {
                 current = new TracedUnit(heading);
                 units.Add(current);

@@ -1723,27 +1723,23 @@ namespace SharpISOBMFF
             return sizeBytes << 3;
         }
 
+        /// <summary>
+        /// A descriptor's size (14496-1, 8.3.3): seven bits to a byte, the high first, each byte but the last with its top bit
+        /// set - in as many bytes as it was read in, where that is more. Of a size past 127 the top bit of the bytes before the
+        /// last was left clear, so a decoder config descriptor of a long decoder specific information read as of a byte.
+        /// </summary>
         private ulong WriteDescriptorSize(ulong sizeOfInstance, ulong sizeOfSize)
         {
             uint sizeBytesCount = CalculatePackedNumberLength(sizeOfInstance, sizeOfSize);
 
-            ulong i = 0;
             byte[] buffer = new byte[sizeBytesCount];
-            if (sizeOfInstance > 0)
+            for (uint i = 0; i < sizeBytesCount; i++)
             {
-                while (sizeOfInstance > 0 || i < sizeOfSize)
-                {
-                    i++;
-                    if (sizeOfInstance > 0)
-                    {
-                        buffer[sizeBytesCount - i] = (byte)(sizeOfInstance & 0x7f);
-                    }
-                    else
-                    {
-                        buffer[sizeBytesCount - i] = 0x80;
-                    }
-                    sizeOfInstance = sizeOfInstance >> 7;
-                }
+                int shift = 7 * (int)(sizeBytesCount - 1 - i);
+                byte b = shift < 64 ? (byte)((sizeOfInstance >> shift) & 0x7f) : (byte)0;
+                if (i < sizeBytesCount - 1)
+                    b |= 0x80;
+                buffer[i] = b;
             }
 
             foreach (byte b in buffer)
@@ -1763,7 +1759,8 @@ namespace SharpISOBMFF
                 size = (int)((uint)size >> 7);
                 i++;
             }
-            return (uint)i;
+            // a size of 0 takes a byte too
+            return (uint)Math.Max(1, i);
         }
 
         #endregion // Descriptors

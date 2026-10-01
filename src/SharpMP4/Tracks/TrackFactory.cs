@@ -1,6 +1,7 @@
 ﻿using SharpISOBMFF;
 using SharpMP4.Common;
 using System;
+using System.Linq;
 
 namespace SharpMP4.Tracks
 {
@@ -60,6 +61,11 @@ namespace SharpMP4.Tracks
 
                 case "av2C":
                     return new AV2Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
+
+                // of an 'mp4v' entry of MPEG-2 or MPEG-1 video - MPEG-4 Visual's has one too
+                case "esds" when sampleEntry is ESDBox esds && esds._ES?.Children?.OfType<DecoderConfigDescriptor>().FirstOrDefault() is DecoderConfigDescriptor config
+                    && H262Track.IsH262(config.ObjectTypeIndication):
+                    return new H262Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
                 // of a 'vp09' entry - VP8's 'vp08' has one too
                 case "vpcC" when sampleEntry.GetParent() is Box entry && Encryption.SubsampleSplitter.CodingOf(entry) == "vp09":

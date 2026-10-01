@@ -44,6 +44,51 @@ public class ConformanceTests
     public void VP9HeadersReadAsFfmpegReadsThem() => Run("vp9", path => SharpTrace.IsIvf(path) ? "ivf" : "matroska", SharpTrace.ReadVp9);
 
     /// <summary>
+    /// H.262's samples - elementary streams, program and transport streams, the video of which ffmpeg copies out for
+    /// SharpMP4 - read as ffmpeg reads their headers: every unit to the slices' data.
+    /// </summary>
+    [TestMethod]
+    public void H262HeadersReadAsFfmpegReadsThem() => Run("h262", SharpTrace.H262Format, SharpTrace.ReadH262);
+
+    /// <summary>
+    /// Reads every H.262 sample and writes each unit again with a context that has only written, which must give the
+    /// stream's bytes: the headers, the stuffing before each start code, and the slices' data.
+    /// </summary>
+    [TestMethod]
+    public void H262UnitsWriteBackAsTheyWere()
+    {
+        string? root = ConformanceCorpus.Locate();
+        if (root == null)
+            Assert.Inconclusive("no conformance bitstreams; run DownloadConformance.ps1, or set SHARPMP4_CONFORMANCE");
+
+        var streams = ConformanceCorpus.Streams(root, "h262");
+        if (streams.Count == 0)
+            Assert.Inconclusive($"no h262 streams under {root}; run DownloadConformance.ps1 -Codec H262");
+
+        var results = new ConcurrentBag<StreamResult>();
+        Parallel.ForEach(streams, new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, Environment.ProcessorCount / 2) }, path =>
+        {
+            StreamResult result;
+            try
+            {
+                result = H262RoundTrip.Check(path);
+            }
+            catch (Exception ex)
+            {
+                result = new StreamResult { Path = path, Outcome = Outcome.SharpFailed, Detail = ex.ToString(), Key = $"harness: {ex.GetType().Name}" };
+            }
+            results.Add(result);
+        });
+
+        var ordered = results.OrderBy(r => r.Path, StringComparer.Ordinal).ToList();
+        string summary = Summarise("h262 round trip", root, ordered);
+        File.WriteAllText(Path.Combine(root, "report-h262-roundtrip.txt"), summary + Details(root, ordered));
+
+        int failing = ordered.Count(r => r.Outcome is Outcome.Diverged or Outcome.SharpFailed);
+        Assert.AreEqual(0, failing, summary);
+    }
+
+    /// <summary>
     /// Reads every VP9 conformance stream and writes each frame, and each superframe's index, again with a context that
     /// has only written, which must give the stream's bytes: the headers, the compressed header's Boolean coding, and the
     /// tile data. Needs no ffmpeg.

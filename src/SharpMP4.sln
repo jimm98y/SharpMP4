@@ -61,6 +61,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAV2", "SharpAV2\SharpA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpVP9", "SharpVP9\SharpVP9.csproj", "{0BEEDBFA-D6AB-DA59-D517-9E74BB3FB74A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpH262", "SharpH262\SharpH262.csproj", "{70C6C65E-7735-4164-93D8-2530885D17AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -359,6 +361,18 @@ Global
 		{0BEEDBFA-D6AB-DA59-D517-9E74BB3FB74A}.Release|x64.Build.0 = Release|Any CPU
 		{0BEEDBFA-D6AB-DA59-D517-9E74BB3FB74A}.Release|x86.ActiveCfg = Release|Any CPU
 		{0BEEDBFA-D6AB-DA59-D517-9E74BB3FB74A}.Release|x86.Build.0 = Release|Any CPU
+		{70C6C65E-7735-4164-93D8-2530885D17AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70C6C65E-7735-4164-93D8-2530885D17AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70C6C65E-7735-4164-93D8-2530885D17AE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{70C6C65E-7735-4164-93D8-2530885D17AE}.Debug|x64.Build.0 = Debug|Any CPU
+		{70C6C65E-7735-4164-93D8-2530885D17AE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{70C6C65E-7735-4164-93D8-2530885D17AE}.Debug|x86.Build.0 = Debug|Any CPU
+		{70C6C65E-7735-4164-93D8-2530885D17AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70C6C65E-7735-4164-93D8-2530885D17AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70C6C65E-7735-4164-93D8-2530885D17AE}.Release|x64.ActiveCfg = Release|Any CPU
+		{70C6C65E-7735-4164-93D8-2530885D17AE}.Release|x64.Build.0 = Release|Any CPU
+		{70C6C65E-7735-4164-93D8-2530885D17AE}.Release|x86.ActiveCfg = Release|Any CPU
+		{70C6C65E-7735-4164-93D8-2530885D17AE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
