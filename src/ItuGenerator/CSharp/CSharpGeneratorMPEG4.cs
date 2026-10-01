@@ -48,19 +48,6 @@ namespace ItuGenerator.CSharp
         {
             definitions = definitions.Replace("\r\n", "\n");
 
-            // Typos of the text: of a name, a keyword, a mnemonic, a quote
-            definitions = Fix(definitions, "not_8_ bit", "not_8_bit");
-            definitions = Fix(definitions, "backward_shape_ height", "backward_shape_height");
-            definitions = Fix(definitions, "short_video _end_marker", "short_video_end_marker");
-            definitions = Fix(definitions, "iIf (!motion_compensation_complexity_disable)", "if (!motion_compensation_complexity_disable)");
-            definitions = definitions.Replace(" blsbf\n", " bslbf\n");
-            definitions = Fix(definitions, "shape_complexity_estimation_disable 1\nif (!shape_complexity_estimation_disable) { bslbf",
-                "shape_complexity_estimation_disable 1 bslbf\nif (!shape_complexity_estimation_disable) {");
-            definitions = Fix(definitions, "\"still texture\nID\"", "\"still texture ID\"");
-            definitions = Fix(definitions, "`'binary only`'", "\"binary only\"");
-            definitions = Fix(definitions, "\" binary only\"", "\"binary only\"");
-            definitions = definitions.Replace("`", "'");
-
             // The units: each read on its own, from its start code to the next, the user data after a header one of them
             definitions = definitions.Replace("next_start_code()\nwhile ( next_bits()== user_data_start_code){\nuser_data()\n}\n", "next_start_code()\n");
 

@@ -526,7 +526,7 @@ marker_bit_10 u(1)
 }
 }
 video_object_layer_shape u(2)
-if (video_object_layer_shape == 3
+    if (video_object_layer_shape == 3
 && video_object_layer_verid != 1)
 video_object_layer_shape_extension u(4)
 marker_bit_11 u(1)
@@ -545,7 +545,7 @@ marker_bit_15 u(1)
 }
 interlaced u(1)
 obmc_disable u(1)
-if (video_object_layer_verid == 1)
+    if (video_object_layer_verid == 1)
 sprite_enable u(1)
 else
 sprite_enable u(2)
@@ -566,7 +566,7 @@ sprite_brightness_change u(1)
 if (sprite_enable != 2)
 low_latency_sprite_enable u(1)
 }
-if (video_object_layer_verid != 1 &&
+    if (video_object_layer_verid != 1 &&
 video_object_layer_shape != 0)
 sadct_disable u(1)
 not_8_bit u(1)
@@ -598,7 +598,7 @@ nonintra_quant_mat_grayscale( i )
 }
 }
 }
-if (video_object_layer_verid != 1)
+    if (video_object_layer_verid != 1)
 quarter_sample u(1)
 complexity_estimation_disable u(1)
 if (!complexity_estimation_disable)
@@ -625,8 +625,7 @@ hor_sampling_factor_m u(5)
 vert_sampling_factor_n u(5)
 vert_sampling_factor_m u(5)
 enhancement_type u(1)
-if(video_object_layer_shape == 1 &&
-hierarchy_type == 0) {
+    if (video_object_layer_shape == 1 && hierarchy_type == 0) {
 use_ref_shape u(1)
 use_ref_texture u(1)
 shape_hor_sampling_factor_n u(5)
@@ -1184,8 +1183,7 @@ ituContext.VideoObjectLayer.VideoObjectLayerShape != 0)
 						size += stream.ReadUnsignedInt(size, 5, out this.vert_sampling_factor_m, "vert_sampling_factor_m"); 
 						size += stream.ReadUnsignedInt(size, 1, out this.enhancement_type, "enhancement_type"); 
 
-						if (ituContext.VideoObjectLayer.VideoObjectLayerShape == 1 &&
-hierarchy_type == 0)
+						if (ituContext.VideoObjectLayer.VideoObjectLayerShape == 1 && hierarchy_type == 0)
 						{
 							size += stream.ReadUnsignedInt(size, 1, out this.use_ref_shape, "use_ref_shape"); 
 							size += stream.ReadUnsignedInt(size, 1, out this.use_ref_texture, "use_ref_texture"); 
@@ -1510,8 +1508,7 @@ ituContext.VideoObjectLayer.VideoObjectLayerShape != 0)
 						size += stream.WriteUnsignedInt(5, this.vert_sampling_factor_m, "vert_sampling_factor_m"); 
 						size += stream.WriteUnsignedInt(1, this.enhancement_type, "enhancement_type"); 
 
-						if (ituContext.VideoObjectLayer.VideoObjectLayerShape == 1 &&
-hierarchy_type == 0)
+						if (ituContext.VideoObjectLayer.VideoObjectLayerShape == 1 && hierarchy_type == 0)
 						{
 							size += stream.WriteUnsignedInt(1, this.use_ref_shape, "use_ref_shape"); 
 							size += stream.WriteUnsignedInt(1, this.use_ref_texture, "use_ref_texture"); 
@@ -1620,7 +1617,7 @@ stuffing_byte u(8)
 
 define_vop_complexity_estimation_header() {
 estimation_method u(2)
-if (estimation_method == 0 || estimation_method == 1) {
+    if (estimation_method == 0 || estimation_method == 1) {
 shape_complexity_estimation_disable u(1)
 if (!shape_complexity_estimation_disable) {
 opaque u(1)
@@ -1655,7 +1652,7 @@ halfpel2 u(1)
 halfpel4 u(1)
 }
 marker_bit_2 u(1)
-if(estimation_method == 1) {
+        if (estimation_method == 1) {
 version2_complexity_estimation_disable u(1)
 if (!version2_complexity_estimation_disable) {
 sadct u(1)
@@ -2671,7 +2668,7 @@ if (interpolate_mc_q) dcecs_interpolate_mc_q u(8)
 if (sadct) dcecs_sadct u(8)
 if (quarterpel) dcecs_quarterpel u(8)
 }
-if (vop_coding_type == 3&& sprite_enable == 1) {
+    if (vop_coding_type == 3&& sprite_enable == 1) {
 if (intra_blocks) dcecs_intra_blocks u(8)
 if (not_coded_blocks) dcecs_not_coded_blocks u(8)
 if (dct_coefs) dcecs_dct_coefs u(8)

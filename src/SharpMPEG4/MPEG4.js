@@ -24,8 +24,7 @@ visual_object_verid 4 uimsbf
 visual_object_priority 3 uimsbf
 }
 visual_object_type 4 uimsbf
-if (visual_object_type == "video ID" || visual_object_type == "still texture
-ID") {
+if (visual_object_type == "video ID" || visual_object_type == "still texture ID") {
 video_signal_type()
 }
 next_start_code()
@@ -68,7 +67,7 @@ matrix_coefficients 8 uimsbf
 
 user_data() {
 user_data_start_code 32 bslbf
-while( next_bits() != `0000 0000 0000 0000 0000 0001' ) {
+while( next_bits() != '0000 0000 0000 0000 0000 0001' ) {
 user_data 8 uimsbf
 }
 }
@@ -146,7 +145,7 @@ vol_control_parameters 1 bslbf
 if (vol_control_parameters) {
 chroma_format 2 uimsbf
 low_delay 1 uimsbf
-vbv_parameters 1 blsbf
+vbv_parameters 1 bslbf
 if (vbv_parameters) {
 first_half_bit_rate 15 uimsbf
 marker_bit 1 bslbf
@@ -156,14 +155,14 @@ first_half_vbv_buffer_size 15 uimsbf
 marker_bit 1 bslbf
 latter_half_vbv_buffer_size 3 uimsbf
 first_half_vbv_occupancy 11 uimsbf
-marker_bit 1 blsbf
+marker_bit 1 bslbf
 latter_half_vbv_occupancy 15 uimsbf
-marker_bit 1 blsbf
+marker_bit 1 bslbf
 }
 }
 video_object_layer_shape 2 uimsbf
-if (video_object_layer_shape == "grayscale"
-&& video_object_layer_verid != `0001')
+    if (video_object_layer_shape == "grayscale"
+&& video_object_layer_verid != '0001')
 video_object_layer_shape_extension 4 uimsbf
 marker_bit 1 bslbf
 vop_time_increment_resolution 16 uimsbf
@@ -181,7 +180,7 @@ marker_bit 1 bslbf
 }
 interlaced 1 bslbf
 obmc_disable 1 bslbf
-if (video_object_layer_verid == `0001')
+    if (video_object_layer_verid == '0001')
 sprite_enable 1 bslbf
 else
 sprite_enable 2 uimsbf
@@ -202,11 +201,11 @@ sprite_brightness_change 1 bslbf
 if (sprite_enable != "GMC")
 low_latency_sprite_enable 1 bslbf
 }
-if (video_object_layer_verid != `0001' &&
+    if (video_object_layer_verid != '0001' &&
 video_object_layer_shape != "rectangular")
 sadct_disable 1 bslbf
 not_8_bit 1 bslbf
-if (not_8_ bit) {
+if (not_8_bit) {
 quant_precision 4 uimsbf
 bits_per_pixel 4 uimsbf
 }
@@ -234,7 +233,7 @@ nonintra_quant_mat_grayscale[i] 8*[2-64] uimsbf
 }
 }
 }
-if (video_object_layer_verid != `0001')
+    if (video_object_layer_verid != '0001')
 quarter_sample 1 bslbf
 complexity_estimation_disable 1 bslbf
 if (!complexity_estimation_disable)
@@ -261,8 +260,7 @@ hor_sampling_factor_m 5 uimsbf
 vert_sampling_factor_n 5 uimsbf
 vert_sampling_factor_m 5 uimsbf
 enhancement_type 1 bslbf
-if(video_object_layer_shape == "binary" &&
-hierarchy_type== `0') {
+    if (video_object_layer_shape == "binary" && hierarchy_type== '0') {
 use_ref_shape 1 bslbf
 use_ref_texture 1 bslbf
 shape_hor_sampling_factor_n 5 uimsbf
@@ -300,7 +298,7 @@ preceding_vop_coding_type == "S" ||
 video_object_layer_shape != "rectangular") &&
 next_bits() == stuffing_start_code) {
 stuffing_start_code 32 bslbf
-while (next_bits() != `0000 0000 0000 0000 0000 0001')
+while (next_bits() != '0000 0000 0000 0000 0000 0001')
 stuffing_byte 8 bslbf
 }
 } while ((next_bits() == group_of_vop_start_code) ||
@@ -316,9 +314,9 @@ video_plane_with_short_header()
 
 define_vop_complexity_estimation_header() {
 estimation_method 2 uimsbf
-if (estimation_method =='00' || estimation_method == `01') {
-shape_complexity_estimation_disable 1
-if (!shape_complexity_estimation_disable) { bslbf
+    if (estimation_method =='00' || estimation_method == '01') {
+shape_complexity_estimation_disable 1 bslbf
+if (!shape_complexity_estimation_disable) {
 opaque 1 bslbf
 transparent 1 bslbf
 intra_cae 1 bslbf
@@ -342,7 +340,7 @@ vlc_symbols 1 bslbf
 vlc_bits 1 bslbf
 }
 motion_compensation_complexity_disable 1 bslbf
-iIf (!motion_compensation_complexity_disable) {
+if (!motion_compensation_complexity_disable) {
 apm 1 bslbf
 npm 1 bslbf
 interpolate_mc_q 1 bslbf
@@ -351,7 +349,7 @@ halfpel2 1 bslbf
 halfpel4 1 bslbf
 }
 marker_bit 1 bslbf
-if(estimation_method == `01') {
+        if (estimation_method == '01') {
 version2_complexity_estimation_disable 1 bslbf
 if (!version2_complexity_estimation_disable) {
 sadct 1 bslbf
@@ -377,7 +375,7 @@ vop_start_code 32 bslbf
 vop_coding_type 2 uimsbf
 do {
 modulo_time_base 1 bslbf
-} while (modulo_time_base != `0')
+} while (modulo_time_base != '0')
 marker_bit 1 bslbf
 vop_time_increment 1-16 uimsbf
 marker_bit 1 bslbf
@@ -412,7 +410,7 @@ marker_bit 1 bslbf
 vop_vertical_mc_spatial_ref 13 simsbf
 marker_bit 1 bslbf
 }
-if ((video_object_layer_shape != " binary only") &&
+if ((video_object_layer_shape != "binary only") &&
 scalability && enhancement_type)
 background_composition 1 bslbf
 change_conv_ratio_disable 1 bslbf
@@ -420,7 +418,7 @@ vop_constant_alpha 1 bslbf
 if (vop_constant_alpha)
 vop_constant_alpha_value 8 bslbf
 }
-if (video_object_layer_shape != `'binary only`')
+if (video_object_layer_shape != "binary only")
 if (!complexity_estimation_disable)
 read_vop_complexity_estimation_header()
 if (video_object_layer_shape != "binary only") {
@@ -476,7 +474,7 @@ load_backward_shape 1 bslbf
 if (load_backward_shape) {
 backward_shape_width 13 uimsbf
 marker_bit 1 bslbf
-backward_shape_ height 13 uimsbf
+backward_shape_height 13 uimsbf
 marker_bit 1 bslbf
 backward_shape_horizontal_mc_spatial_ref 13 simsbf
 marker_bit 1 bslbf
@@ -573,7 +571,7 @@ if (interpolate_mc_q) dcecs_interpolate_mc_q 8 uimsbf
 if (sadct) dcecs_sadct 8 uimsbf
 if (quarterpel) dcecs_quarterpel 8 uimsbf
 }
-if (vop_coding_type==`S'&& sprite_enable == "static") {
+    if (vop_coding_type=='S'&& sprite_enable == "static") {
 if (intra_blocks) dcecs_intra_blocks 8 uimsbf
 if (not_coded_blocks) dcecs_not_coded_blocks 8 uimsbf
 if (dct_coefs) dcecs_dct_coefs 8 uimsbf
@@ -614,7 +612,7 @@ gob_number = 0
 for(i=0; i<num_gobs_in_vop; i++)
 gob_layer()
 if(next_bits() == short_video_end_marker)
-short_video _end_marker 22 uimsbf
+short_video_end_marker 22 uimsbf
 while(!bytealigned())
 zero_bit 1 bslbf
 }
