@@ -106,6 +106,94 @@ public class H262TrackTests
     }
 
     /// <summary>
+    /// QuickTime files of MPEG-1 and MPEG-2 video in QuickTime's own entries - Apple's, IMX's, XDCAM's - as ffmpeg makes them
+    /// into h262/quicktime: the entry is read as a visual sample entry, its boxes among its children; the track is one of
+    /// H.262, of the entry's size; and written again from it, in the same entry, the file decodes to the same pictures.
+    /// </summary>
+    [TestMethod]
+    public void ReadsQuickTimeEntriesAndWritesThemAgain()
+    {
+        string? root = ConformanceCorpus.Locate();
+        if (root == null)
+            Assert.Inconclusive("no conformance files; run DownloadConformance.ps1, or set SHARPMP4_CONFORMANCE");
+        string? ffmpeg = ConformanceCorpus.LocateFfmpeg();
+        if (ffmpeg == null)
+            Assert.Inconclusive("no ffmpeg; put one on the PATH, or set SHARPMP4_FFMPEG");
+        string folder = Path.Combine(root, "h262", "quicktime");
+        var files = Directory.Exists(folder) ? Directory.GetFiles(folder, "*.mov").OrderBy(f => f, StringComparer.Ordinal).ToList() : [];
+        if (files.Count == 0)
+            Assert.Inconclusive($"no files under {folder}: ffmpeg makes them, of mpeg1video and mpeg2video with -tag:v");
+
+        var failures = new List<string>();
+        foreach (string path in files)
+        {
+            string name = Path.GetRelativePath(root, path);
+            string written = Path.Combine(Path.GetTempPath(), $"sharpmp4-h262-{Guid.NewGuid():N}.mov");
+            try
+            {
+                var samples = new List<(byte[] Data, int Duration, bool IsRandomAccessPoint)>();
+                ITrack track;
+                using (var stream = File.OpenRead(path))
+                {
+                    var container = new Container();
+                    container.Read(new IsoStream(new StreamWrapper(stream)));
+
+                    var entry = container.Children.OfType<MovieBox>().Single().Children.OfType<TrackBox>().Single()
+                        .Children.OfType<MediaBox>().Single().Children.OfType<MediaInformationBox>().Single()
+                        .Children.OfType<SampleTableBox>().Single().Children.OfType<SampleDescriptionBox>().Single().Children.Single();
+                    string type = IsoStream.ToFourCC(entry.FourCC);
+                    if (entry is not VisualSampleEntry visual)
+                    {
+                        failures.Add($"{name}: '{type}' read as {entry.GetType().Name}");
+                        continue;
+                    }
+                    if (visual.Children == null || visual.Children.Count == 0 || visual.Children.Any(child => child is UnknownBox))
+                        failures.Add($"{name}: the boxes of '{type}' not read as its children");
+
+                    var reader = new VideoReader();
+                    reader.Parse(container);
+                    uint trackID = reader.Tracks.Keys.Single();
+                    track = reader.Tracks[trackID].Track;
+                    if (track is not H262Track h262 || h262.SampleEntryType != type)
+                    {
+                        failures.Add($"{name}: '{type}' read as {track.GetType().Name}");
+                        continue;
+                    }
+                    for (var sample = reader.ReadSample(trackID); sample != null; sample = reader.ReadSample(trackID))
+                        samples.Add((sample.Data.ToArray(), sample.Duration, sample.IsRandomAccessPoint));
+
+                    var box = (VisualSampleEntry)track.CreateSampleEntryBox();
+                    if (box.Width != visual.Width || box.Height != visual.Height || IsoStream.ToFourCC(box.FourCC) != type)
+                        failures.Add($"{name}: written as '{IsoStream.ToFourCC(box.FourCC)}' {box.Width}x{box.Height} of '{type}' {visual.Width}x{visual.Height}");
+                }
+
+                using (var output = File.Create(written))
+                {
+                    var builder = new Mp4Builder(new SingleStreamOutput(output));
+                    builder.AddTrack(track);
+                    foreach (var (data, duration, isRandomAccessPoint) in samples)
+                        builder.ProcessRawSample(track.TrackID, data, duration, isRandomAccessPoint);
+                    builder.FinalizeMedia();
+                }
+
+                var fromFile = FrameHashes(ffmpeg, "mov", path);
+                var fromWritten = FrameHashes(ffmpeg, "mov", written);
+                if (fromFile.Count == 0 || !fromFile.SequenceEqual(fromWritten))
+                    failures.Add($"{name}: written again, decoded to {fromWritten.Count} pictures of the file's {fromFile.Count}, or other ones");
+            }
+            catch (Exception ex)
+            {
+                failures.Add($"{name}: threw {ex.GetType().Name}: {ex.Message}");
+            }
+            finally
+            {
+                File.Delete(written);
+            }
+        }
+        Assert.AreEqual(0, failures.Count, string.Join(Environment.NewLine, failures));
+    }
+
+    /// <summary>
     /// Writes a stream in MP4, unit by unit through a track: the sync flag of each sample, and whether its first picture is
     /// an I picture, as the stream says.
     /// </summary>

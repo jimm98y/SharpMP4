@@ -80,6 +80,45 @@ namespace SharpMP4.Tracks
             }
         }
 
+        /// <summary>
+        /// A track of one of QuickTime's own MPEG-1 or MPEG-2 entries (<see cref="QuickTimeEntries"/>), which have no
+        /// configuration - the sequence header is in the samples: of its size the entry's, written again as the same entry.
+        /// </summary>
+        /// <param name="coding">The entry's coding: its type, or of a protected entry what it was before ('frma').</param>
+        public H262Track(VisualSampleEntry entry, string coding, uint timescale, int sampleDuration) : this(timescale, sampleDuration)
+        {
+            if (!QuickTimeEntries.TryGetValue(coding, out bool mpeg1))
+                throw new ArgumentException($"Not a QuickTime entry of MPEG-1 or MPEG-2 video: {coding}");
+            SampleEntryType = coding;
+            _objectTypeIndication = mpeg1 ? MPEG1 : MPEG2_MAIN;
+            _width = entry.Width;
+            _height = entry.Height;
+        }
+
+        /// <summary>
+        /// The sample entry the track is written in: 'mp4v' with an 'esds' (ISO/IEC 14496-14), unless the track is of one of
+        /// QuickTime's own entries, which it is written in again - without a configuration, as QuickTime has it.
+        /// </summary>
+        public string SampleEntryType { get; set; } = "mp4v";
+
+        /// <summary>
+        /// QuickTime's sample entries of MPEG-1 video (true) and MPEG-2 video (false), as FFmpeg knows them
+        /// (libavformat/isom_tags.c): Apple's camcorder and CoreMedia types, HDV, IMX, XDCAM, Avid's and Final Cut Pro's.
+        /// </summary>
+        public static readonly IReadOnlyDictionary<string, bool> QuickTimeEntries = new Dictionary<string, bool>
+        {
+            { "m1v ", true }, { "m1v1", true }, { "mpeg", true }, { "mp1v", true },
+            { "m2v1", false }, { "mp2v", false }, { "AVmp", false },
+            { "hdv1", false }, { "hdv2", false }, { "hdv3", false }, { "hdv4", false }, { "hdv5", false }, { "hdv6", false },
+            { "hdv7", false }, { "hdv8", false }, { "hdv9", false }, { "hdva", false },
+            { "mx3n", false }, { "mx3p", false }, { "mx4n", false }, { "mx4p", false }, { "mx5n", false }, { "mx5p", false },
+            { "xd51", false }, { "xd54", false }, { "xd55", false }, { "xd59", false }, { "xd5a", false }, { "xd5b", false },
+            { "xd5c", false }, { "xd5d", false }, { "xd5e", false }, { "xd5f", false },
+            { "xdv1", false }, { "xdv2", false }, { "xdv3", false }, { "xdv4", false }, { "xdv5", false }, { "xdv6", false },
+            { "xdv7", false }, { "xdv8", false }, { "xdv9", false }, { "xdva", false }, { "xdvb", false }, { "xdvc", false },
+            { "xdvd", false }, { "xdve", false }, { "xdvf", false }, { "xdhd", false }, { "xdh2", false },
+        };
+
         /// <summary>Whether a sample entry's objectTypeIndication is MPEG-2 video, of any profile, or MPEG-1 video.</summary>
         public static bool IsH262(byte objectTypeIndication) =>
             objectTypeIndication >= MPEG2_SIMPLE && objectTypeIndication <= MPEG2_422 || objectTypeIndication == MPEG1;
@@ -239,7 +278,7 @@ namespace SharpMP4.Tracks
 
         public override Box CreateSampleEntryBox()
         {
-            var entry = new VisualSampleEntry(IsoStream.FromFourCC("mp4v"));
+            var entry = new VisualSampleEntry(IsoStream.FromFourCC(SampleEntryType));
             entry.Children = new List<Box>();
             entry.ReservedSampleEntry = new byte[6];
             entry.PreDefined0 = new uint[3];
@@ -251,6 +290,13 @@ namespace SharpMP4.Tracks
             entry.Width = (ushort)_width;
             entry.Height = (ushort)_height;
             entry.Compressorname = BinaryUTF8String.GetBytes("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+
+            // QuickTime's own entries have no configuration: the sequence header is in the samples
+            if (SampleEntryType != "mp4v")
+            {
+                AddPixelAspectRatio(entry);
+                return entry;
+            }
 
             var esds = new ESDBox();
             esds.SetParent(entry);
@@ -284,14 +330,18 @@ namespace SharpMP4.Tracks
             slConfig.SetParent(descriptor);
             descriptor.Children.Add(slConfig);
 
+            AddPixelAspectRatio(entry);
+            return entry;
+        }
+
+        private void AddPixelAspectRatio(VisualSampleEntry entry)
+        {
             if (_pixelAspectH != _pixelAspectV)
             {
                 var pasp = new PixelAspectRatioBox { HSpacing = _pixelAspectH, VSpacing = _pixelAspectV };
                 pasp.SetParent(entry);
                 entry.Children.Add(pasp);
             }
-
-            return entry;
         }
 
         // The first sequence header and its extension, as ffmpeg writes them
@@ -325,6 +375,7 @@ namespace SharpMP4.Tracks
         {
             var clone = new H262Track(Timescale, DefaultSampleDuration)
             {
+                SampleEntryType = SampleEntryType,
                 _objectTypeIndication = _objectTypeIndication,
                 _width = _width,
                 _height = _height,

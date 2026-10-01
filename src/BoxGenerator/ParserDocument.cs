@@ -177,7 +177,9 @@ namespace BoxGenerator
             // FLAC in ISOBMFF (Xiph, isoflac.txt 3.3.1), its 'dfLa' a box of it
             "fLaC",
             // met in Chromium's: AC-4 (ETSI TS 103 190-2, E.4), IAMF (AOMedia IAMF, 6.2), DTS-UHD (ETSI TS 103 491, B)
-            "ac-4","iamf","dtsx","dtsy"
+            "ac-4","iamf","dtsx","dtsy",
+            // of FFmpeg's QuickTime tags (libavformat/isom_tags.c, ff_codec_movaudio_tags) not given above
+            "apac","sac3","DTS ","vdva","ilbc",".mp1",".mp2","mp3 ","nmos","NELL","42ni","23ni","Qclq","spex","SPXN"
             };
             string[] visualSampleEntryTypes = new string[]
             {
@@ -186,7 +188,7 @@ namespace BoxGenerator
             "avc2","avc3","avc4","vp08","vp09","vp10","av02","apcn","dvhe","dvav","mjpg","uncv","j2ki",
             // quicktime https://developer.apple.com/documentation/quicktime-file-format/video_sample_description
             "cvid","jpeg","smc ","rle ","rpza","kpcd","png ","mjpa","mjpb","SVQ1","SVQ3","dvc ","dvcp","gif ","h263","tiff","raw ","2vuY","yuv2","v308","v408",
-            "v216","v410","v210","qhvc","j420",
+            "v216","v410","v210","qhvc","j420","H261",
             // met in FFmpeg's samples: ProRes, DNxHD/HR and Avid, Hap, DXV, CineForm, AIC, DVCPRO HD, Pixlet,
             // QuickDraw, Media 100, Indeo 3, VP6 with alpha, 8BPS and VC-1
             "apch","apco","apcs","ap4h","AVdn","AVdh","AVDJ","Hap1","Hap5","HapY","HapM","HapA","DXD3","DXDI",
@@ -194,7 +196,19 @@ namespace BoxGenerator
             // met in Chromium's: Dolby Vision in ISOBMFF, its HEVC and AVC entries whose parameter sets are in the configuration
             "dvh1","dva1",
             // met in Shaka Player's: LCEVC's enhancement track, its configuration in an 'lvcC'
-            "lvc1"
+            "lvc1",
+            // of FFmpeg's QuickTime tags (libavformat/isom_tags.c, ff_codec_movvideo_tags) not given above: raw RGB and YUV,
+            // AVC-Intra, MPEG-1 and MPEG-2 of Apple, HDV, IMX and XDCAM, DV, DivX and Xvid, MagicYUV, SheerVideo, ProRes RAW,
+            // APV, AVS2 and AVS3 among them
+            "2vuy","yuvs","L555","L565","B565","24BG","BGRA","RGBA","ABGR","b16g","b48r","b64a","bxbg","bxrg","bxyv","NO16","DVOO","R420","R411","R10k","R10g",
+            "r210","AVUI","AVrp","SUDS","bxy2","Y41P","yuv4","Y216","AVRn","dmb1","svq1","svqi","DIVX","XVID","3IV2","dvlp","dvl ","dvpp","dv5p","dv5n","AVdv",
+            "AVd1","dvhp","dvh4","dvh6","dvh3","VP31","rle1","WRLE","QkBk","WRAW","ai5p","ai5q","ai52","ai53","ai55","ai56","ai1p","ai1q","ai12","ai13","ai15",
+            "ai16","AVin","aivx","rv64","xalg","avlg","dav1","m1v ","m1v1","mpeg","mp1v","m2v1","hdv1","hdv2","hdv3","hdv4","hdv5","hdv6","hdv7","hdv8","hdv9",
+            "hdva","mx5n","mx5p","mx4n","mx4p","mx3n","mx3p","xd51","xd54","xd55","xd59","xd5a","xd5b","xd5c","xd5d","xd5e","xd5f","xdv1","xdv2","xdv3","xdv4",
+            "xdv5","xdv6","xdv7","xdv8","xdv9","xdva","xdvb","xdvc","xdvd","xdve","xdvf","xdhd","xdh2","AVmp","mp2v","mjp2","tga ","MNG ","avs2","drac","H263",
+            "3IVD","AV1x","AVup","sgi ","dpx ","exr ","ap4x","aprn","aprh","flic","M0R0","M0RA","M0RG","M0Y0","M0Y2","M0Y4","M8RG","M8RA","M8G0","M8Y0","M8Y2",
+            "M8Y4","M8YA","M2RA","M2RG","M4RA","M4RG","Shr0","Shr1","Shr2","Shr3","Shr4","Shr5","Shr6","Shr7","nclc","BGGR","601N","601P","dtnt","dtNT","dtpa",
+            "avs3","apv1"
             };
 
             foreach (var type in audioSampleEntryTypes)
