@@ -24,6 +24,10 @@ public static class ItuGenerator
         {
             customGenerator = new CSharpGeneratorH266();
         }
+        else if (path.Contains("H261"))
+        {
+            customGenerator = new CSharpGeneratorH261();
+        }
         else if (path.Contains("H262"))
         {
             customGenerator = new CSharpGeneratorH262();

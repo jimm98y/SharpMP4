@@ -45,6 +45,17 @@ namespace SharpMP4.Tracks
 
         private static ITrack CreateVideoTrack(uint trackID, Box sampleEntry, uint timescale, int sampleDuration)
         {
+            // QuickTime's entries of H.261, MPEG-1 and MPEG-2 video have no configuration: known by their own coding, whichever
+            // of their boxes - 'fiel', 'colr', 'pasp' - is given
+            if ((sampleEntry as VisualSampleEntry ?? sampleEntry.GetParent() as VisualSampleEntry) is VisualSampleEntry visualEntry)
+            {
+                string coding = Encryption.SubsampleSplitter.CodingOf(visualEntry);
+                if (coding == "H261")
+                    return new H261Track(visualEntry, timescale, sampleDuration) { TrackID = trackID };
+                if (H262Track.QuickTimeEntries.ContainsKey(coding))
+                    return new H262Track(visualEntry, coding, timescale, sampleDuration) { TrackID = trackID };
+            }
+
             switch (IsoStream.ToFourCC(sampleEntry.FourCC))
             {
                 case "avcC":

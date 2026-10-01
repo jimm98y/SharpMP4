@@ -12,6 +12,8 @@
 |!mov|CompressedMovieBox|
 |!six|CompressedSegmentIndexBox|
 |!ssx|CompressedSubsegmentIndexBox|
+|.mp1|AudioSampleEntry|
+|.mp2|AudioSampleEntry|
 |.mp3|AudioSampleEntry|
 |@day|RicohAppleRecordingYear2Box|
 |@mak|RicohAppleMakBox|
@@ -116,10 +118,18 @@
 |&copy;ysp|AppleSpeedYBox|
 |&copy;zsp|AppleSpeedZBox|
 |0000|ZeroBox|
+|23ni|AudioSampleEntry|
+|24BG|VisualSampleEntry|
+|2vuy|VisualSampleEntry|
 |2vuY|VisualSampleEntry|
 |3dpr|MVDDepthResolutionBox|
 |3gf |PittasoftAccelerometerBox|
+|3IV2|VisualSampleEntry|
+|3IVD|VisualSampleEntry|
 |3sib|MVDScalabilityInformationSEIBox|
+|42ni|AudioSampleEntry|
+|601N|VisualSampleEntry|
+|601P|VisualSampleEntry|
 |8BPS|VisualSampleEntry|
 |a1lx|AV1LayeredImageIndexingProperty|
 |a1op|OperatingPointSelectorProperty|
@@ -130,6 +140,7 @@
 |a3dC|A3DConfigurationBox|
 |AACR|AudibleAACRBox|
 |aART|AppleArtist2Box|
+|ABGR|VisualSampleEntry|
 |ac-3|AudioSampleEntry|
 |ac-4|AudioSampleEntry|
 |acgl|SubpicCommonGroupBox|
@@ -139,7 +150,20 @@
 |adze|AdzeBox|
 |adzm|AdzmBox|
 |agsm|AudioSampleEntry|
+|ai12|VisualSampleEntry|
+|ai13|VisualSampleEntry|
+|ai15|VisualSampleEntry|
+|ai16|VisualSampleEntry|
+|ai1p|VisualSampleEntry|
+|ai1q|VisualSampleEntry|
+|ai52|VisualSampleEntry|
+|ai53|VisualSampleEntry|
+|ai55|VisualSampleEntry|
+|ai56|VisualSampleEntry|
+|ai5p|VisualSampleEntry|
+|ai5q|VisualSampleEntry|
 |ainf|AssetInformationBox|
+|aivx|VisualSampleEntry|
 |akID|ITunesAccountTypeBox|
 |alac|AudioSampleEntry|
 |alaw|AudioSampleEntry|
@@ -159,6 +183,8 @@
 |amve|AmbientViewingEnvironmentBox|
 |angl|CameraAngleBox|
 |ap4h|VisualSampleEntry|
+|ap4x|VisualSampleEntry|
+|apac|AudioSampleEntry|
 |apch|VisualSampleEntry|
 |apcn|VisualSampleEntry|
 |apco|VisualSampleEntry|
@@ -167,6 +193,9 @@
 |apmd|AppleApertureModeBox|
 |APRF|PspAprfBox|
 |APRG|APRGBox|
+|aprh|VisualSampleEntry|
+|aprn|VisualSampleEntry|
+|apv1|VisualSampleEntry|
 |ardt|ARDroneFileBox|
 |ARES|ARESBox|
 |assp|AlternativeStartupSequencePropertiesBox|
@@ -178,6 +207,7 @@
 |av01|VisualSampleEntry|
 |av02|VisualSampleEntry|
 |av1C|AV1CodecConfigurationBox|
+|AV1x|VisualSampleEntry|
 |av2C|AV2CodecConfigurationBox|
 |avc1|VisualSampleEntry|
 |avc2|VisualSampleEntry|
@@ -186,9 +216,26 @@
 |avcC|AVCConfigurationBox|
 |avcn|AvcNalUnitStorageBox|
 |avcp|VisualSampleEntry|
+|AVd1|VisualSampleEntry|
 |AVdh|VisualSampleEntry|
 |AVDJ|VisualSampleEntry|
 |AVdn|VisualSampleEntry|
+|AVdv|VisualSampleEntry|
+|AVin|VisualSampleEntry|
+|avlg|VisualSampleEntry|
+|AVmp|VisualSampleEntry|
+|AVRn|VisualSampleEntry|
+|AVrp|VisualSampleEntry|
+|avs2|VisualSampleEntry|
+|avs3|VisualSampleEntry|
+|AVUI|VisualSampleEntry|
+|AVup|VisualSampleEntry|
+|b16g|VisualSampleEntry|
+|b48r|VisualSampleEntry|
+|B565|VisualSampleEntry|
+|b64a|VisualSampleEntry|
+|BGGR|VisualSampleEntry|
+|BGRA|VisualSampleEntry|
 |blin|StereoCameraSystemBaselineBox|
 |bloc|BaseLocationBox|
 |bmdc|BmdcBox|
@@ -197,7 +244,11 @@
 |btec|GlamourSettingsBox|
 |btrt|BitRateBox|
 |buff|BufferingBox|
+|bxbg|VisualSampleEntry|
 |bxml|BinaryXMLBox|
+|bxrg|VisualSampleEntry|
+|bxy2|VisualSampleEntry|
+|bxyv|VisualSampleEntry|
 |c608|C608Box|
 |CAME|CameraFirmwareBox|
 |camm|CameraMotionMetadataSampleEntry|
@@ -294,6 +345,7 @@
 |damr|AmrSpecificBox|
 |data|DataBox|
 |date|DateTimeOriginalBox|
+|dav1|VisualSampleEntry|
 |DcMD|KodakDcMDBox|
 |dcom|AppleDecompressorBox|
 |ddts|DTSSpecificBox|
@@ -308,20 +360,28 @@
 |dims|LivePhotoDimensionsBox|
 |dinf|DataInformationBox|
 |disk|DiskNumberBox|
+|DIVX|VisualSampleEntry|
 |dmax|HintLongestPacket|
+|dmb1|VisualSampleEntry|
 |dmed|hintmediaBytesSent|
 |dmix|DownMixInstructions|
 |dmlp|MLPSpecificBox|
 |dOps|OpusSpecificBox|
 |dpnd|DpndBox|
+|dpx |VisualSampleEntry|
 |dqcp|QCELPSpecificBox|
+|drac|VisualSampleEntry|
 |dref|DataReferenceBox|
 |drep|hintrepeatedBytesSent|
 |drmi|VisualSampleEntry|
 |drms|AudioSampleEntry|
 |dscp|ThreeGPPDescriptionBox|
 |dsmv|SMVSpecificBox|
+|dtnt|VisualSampleEntry|
+|dtNT|VisualSampleEntry|
+|dtpa|VisualSampleEntry|
 |dtPA|VisualSampleEntry|
+|DTS |AudioSampleEntry|
 |dtsc|AudioSampleEntry|
 |dtse|AudioSampleEntry|
 |dtsh|AudioSampleEntry|
@@ -329,6 +389,8 @@
 |dtsx|AudioSampleEntry|
 |dtsy|AudioSampleEntry|
 |dtyp|MetaDatatypeDefinitionBox|
+|dv5n|VisualSampleEntry|
+|dv5p|VisualSampleEntry|
 |dva1|VisualSampleEntry|
 |dvav|VisualSampleEntry|
 |dvc |VisualSampleEntry|
@@ -338,9 +400,17 @@
 |dvcp|VisualSampleEntry|
 |dvh1|VisualSampleEntry|
 |dvh2|VisualSampleEntry|
+|dvh3|VisualSampleEntry|
+|dvh4|VisualSampleEntry|
 |dvh5|VisualSampleEntry|
+|dvh6|VisualSampleEntry|
 |dvhe|VisualSampleEntry|
+|dvhp|VisualSampleEntry|
 |dvhq|VisualSampleEntry|
+|dvl |VisualSampleEntry|
+|dvlp|VisualSampleEntry|
+|DVOO|VisualSampleEntry|
+|dvpp|VisualSampleEntry|
 |dvvC|DvvCBox|
 |DXD3|VisualSampleEntry|
 |DXDI|VisualSampleEntry|
@@ -365,6 +435,7 @@
 |evs2|VisualSampleEntry|
 |evsC|EVCSliceComponentTrackConfigurationBox|
 |Exif|ExifBox|
+|exr |VisualSampleEntry|
 |exte|MetaDataExtensionsBox|
 |eyes|StereoViewBox|
 |fade|FadeTransitionEffectProperty|
@@ -382,6 +453,7 @@
 |fl32|AudioSampleEntry|
 |fl64|AudioSampleEntry|
 |fLaC|AudioSampleEntry|
+|flic|VisualSampleEntry|
 |flvr|AppleFlvrBox|
 |folw|SubtitleTrackBox|
 |forc|ForcedSubtitleTrackBox|
@@ -420,13 +492,25 @@
 |gsst|GoogleStartTimeBox|
 |gstd|GoogleTrackDurationBox|
 |GUID|GUIDBox|
+|H261|VisualSampleEntry|
 |h263|VisualSampleEntry|
+|H263|VisualSampleEntry|
 |Hap1|VisualSampleEntry|
 |Hap5|VisualSampleEntry|
 |HapA|VisualSampleEntry|
 |HapM|VisualSampleEntry|
 |HapY|VisualSampleEntry|
 |hdlr|HandlerBox|
+|hdv1|VisualSampleEntry|
+|hdv2|VisualSampleEntry|
+|hdv3|VisualSampleEntry|
+|hdv4|VisualSampleEntry|
+|hdv5|VisualSampleEntry|
+|hdv6|VisualSampleEntry|
+|hdv7|VisualSampleEntry|
+|hdv8|VisualSampleEntry|
+|hdv9|VisualSampleEntry|
+|hdva|VisualSampleEntry|
 |hdvd|HdvdBox|
 |hequ|HalfEquirectangularProjectionBox|
 |hero|HeroStereoEyeDescriptionBox|
@@ -471,6 +555,7 @@
 |iicc|AppleICCProfileBox|
 |iinf|ItemInfoBox|
 |iKMS|ISMAKMSBox|
+|ilbc|AudioSampleEntry|
 |iloc|ItemLocationBox|
 |ilst|AppleItemListBox|
 |ima4|AudioSampleEntry|
@@ -534,6 +619,8 @@
 |kstb|KandaoKSTBBox|
 |kvar|KandaoKVARBox|
 |kywd|ThreeGPPKeywordsBox|
+|L555|VisualSampleEntry|
+|L565|VisualSampleEntry|
 |lac4|AC4PresentationLabelBox|
 |ldep|TierDependencyBox|
 |ldes|AppleLongDescriptionBox|
@@ -565,8 +652,28 @@
 |lvcC|LCEVCConfigurationBox|
 |lvlm|LevelMeter2Box|
 |Lvlm|LevelMeterBox|
+|M0R0|VisualSampleEntry|
+|M0RA|VisualSampleEntry|
+|M0RG|VisualSampleEntry|
+|M0Y0|VisualSampleEntry|
+|M0Y2|VisualSampleEntry|
+|M0Y4|VisualSampleEntry|
+|m1v |VisualSampleEntry|
+|m1v1|VisualSampleEntry|
+|M2RA|VisualSampleEntry|
+|M2RG|VisualSampleEntry|
+|m2v1|VisualSampleEntry|
 |m4ae|AudioSampleEntry|
 |m4ds|MPEG4ExtensionDescriptorsBox|
+|M4RA|VisualSampleEntry|
+|M4RG|VisualSampleEntry|
+|M8G0|VisualSampleEntry|
+|M8RA|VisualSampleEntry|
+|M8RG|VisualSampleEntry|
+|M8Y0|VisualSampleEntry|
+|M8Y2|VisualSampleEntry|
+|M8Y4|VisualSampleEntry|
+|M8YA|VisualSampleEntry|
 |MAC3|AudioSampleEntry|
 |MAC6|AudioSampleEntry|
 |manu|MakeBox|
@@ -600,19 +707,25 @@
 |mime|MIMEBox|
 |minf|MediaInformationBox|
 |mini|MiniBox|
+|mjp2|VisualSampleEntry|
 |mjpa|VisualSampleEntry|
 |mjpb|VisualSampleEntry|
 |mjpg|VisualSampleEntry|
 |mlpa|AudioSampleEntry|
 |MMA0|MinoltaMMA0Box|
 |MMA1|MinoltaMMA1Box|
+|MNG |VisualSampleEntry|
 |moat|MoatBox|
 |modl|ModelBoxmodlDup|
 |moof|MovieFragmentBox|
 |moov|MovieBox|
+|mp1v|VisualSampleEntry|
+|mp2v|VisualSampleEntry|
+|mp3 |AudioSampleEntry|
 |mp4a|AudioSampleEntry|
 |mp4s|MpegSampleEntry|
 |mp4v|VisualSampleEntry|
+|mpeg|VisualSampleEntry|
 |mpod|MpodBox|
 |mpvd|MotionPhotoVideoBox|
 |mrld|MarlinDictionaryBox|
@@ -643,6 +756,12 @@
 |mvhd|MovieHeaderBox|
 |mvra|MultiviewRelationAttributeBox|
 |MVTG|FujiFilmMVTGBox|
+|mx3n|VisualSampleEntry|
+|mx3p|VisualSampleEntry|
+|mx4n|VisualSampleEntry|
+|mx4p|VisualSampleEntry|
+|mx5n|VisualSampleEntry|
+|mx5p|VisualSampleEntry|
 |nail|ThumbnailTIFFBox|
 |name|AppleName2Box|
 |nbmt|NextbaseMetaBox|
@@ -650,12 +769,16 @@
 |NCDB|NikonNCDBBox|
 |NCDT|NikonNCDTBox|
 |NCHD|NikonMakerNoteVersionBox|
+|nclc|VisualSampleEntry|
 |NCM1|NikonCameraPreviewImage1Box|
 |NCM2|NikonCameraPreviewImage2Box|
 |NCTG|NikonExifBox|
 |NCTH|NikonCameraThumbnailImageBox|
 |NCVW|NikonCameraPreviewImageBox|
+|NELL|AudioSampleEntry|
 |nmhd|NullMediaHeaderBox|
+|nmos|AudioSampleEntry|
+|NO16|VisualSampleEntry|
 |NONE|AudioSampleEntry|
 |npck|hintPacketsSentnpckDup|
 |nsav|AppleNoSaveBox|
@@ -729,14 +852,21 @@
 |PXTH|PentaxPreviewBox|
 |pymd|ImagePyramidEntityGroupBox|
 |Qclp|AudioSampleEntry|
+|Qclq|AudioSampleEntry|
 |QDCA|QDCABox|
 |QDM2|AudioSampleEntry|
 |QDMC|AudioSampleEntry|
 |qdrw|VisualSampleEntry|
 |qhvc|VisualSampleEntry|
+|QkBk|VisualSampleEntry|
 |qlif|SVCPriorityLayerInfoBox|
 |qtvr|AppleQTVRTrackBox|
 |QVMI|CasioQVMIBox|
+|R10g|VisualSampleEntry|
+|R10k|VisualSampleEntry|
+|r210|VisualSampleEntry|
+|R411|VisualSampleEntry|
+|R420|VisualSampleEntry|
 |rads|RadsBox|
 |rate|RatingPercentBox|
 |rati|AppleRating2Box|
@@ -754,11 +884,13 @@
 |rely|RelyBox|
 |resa|AudioSampleEntry|
 |resv|VisualSampleEntry|
+|RGBA|VisualSampleEntry|
 |RICO|RicohRICOBox|
 |righ|RightsBox|
 |rinf|RestrictedSchemeInfoBox|
 |rldt|ReleaseDateBox|
 |rle |VisualSampleEntry|
+|rle1|VisualSampleEntry|
 |rloc|RelativeLocationProperty|
 |rm2t|MPEG2TSReceptionSampleEntry|
 |rmcd|AppleComponentDetectBox|
@@ -784,8 +916,10 @@
 |RTHU|RTHUPreviewImageBox|
 |rtng|AppleRatingBox|
 |rtp |RtpMovieHintInformation|
+|rv64|VisualSampleEntry|
 |s263|VisualSampleEntry|
 |SA3D|SpatialAudioBox|
+|sac3|AudioSampleEntry|
 |saio|SampleAuxiliaryInformationOffsetsBox|
 |saiz|SampleAuxiliaryInformationSizesBox|
 |samr|AudioSampleEntry|
@@ -817,8 +951,17 @@
 |setu|MetaDataSetupBox|
 |sevc|AudioSampleEntry|
 |sfID|ITunesCountryCodeBox|
+|sgi |VisualSampleEntry|
 |sgpd|SampleGroupDescriptionBox|
 |shot|ShotNameBox|
+|Shr0|VisualSampleEntry|
+|Shr1|VisualSampleEntry|
+|Shr2|VisualSampleEntry|
+|Shr3|VisualSampleEntry|
+|Shr4|VisualSampleEntry|
+|Shr5|VisualSampleEntry|
+|Shr6|VisualSampleEntry|
+|Shr7|VisualSampleEntry|
 |shwm|ShowMovementBox|
 |sidx|SegmentIndexBox|
 |SIGM|SigmaEXIFBox|
@@ -845,9 +988,11 @@
 |sonm|TrackSortBox|
 |sosn|TVShowSortBox|
 |sowt|AudioSampleEntry|
+|spex|AudioSampleEntry|
 |spid|VvcSubpicIDProperty|
 |splt|SplitTransitionEffectProperty|
 |spor|VvcSubpicOrderProperty|
+|SPXN|AudioSampleEntry|
 |sqcp|AudioSampleEntry|
 |srat|SamplingRateBox|
 |srpp|SRTPProcessBox|
@@ -887,6 +1032,7 @@
 |styp|SegmentTypeBox|
 |stz2|CompactSampleSizeBox|
 |subs|SubSampleInformationBox|
+|SUDS|VisualSampleEntry|
 |sv3d|SphericalVideoBox|
 |svc1|VisualSampleEntry|
 |svc2|VisualSampleEntry|
@@ -898,8 +1044,10 @@
 |svip|InitialParameterSetBox|
 |svmC|SVCMetadataSampleConfigBox|
 |svpr|PriorityRangeBox|
+|svq1|VisualSampleEntry|
 |SVQ1|VisualSampleEntry|
 |SVQ3|VisualSampleEntry|
+|svqi|VisualSampleEntry|
 |swre|AppleSegmenterSoftwareBox|
 |swtc|MultiviewGroupRelationBox|
 |swtk|SwitchableTracksGroupBox|
@@ -914,6 +1062,7 @@
 |tfdt|TrackFragmentBaseMediaDecodeTimeBox|
 |tfhd|TrackFragmentHeaderBox|
 |tfra|TrackFragmentRandomAccessBox|
+|tga |VisualSampleEntry|
 |thm |ThumbnailImageBox|
 |thma|KodakThumbnailImageBox|
 |thmb|AppleThumbnailReferenceBox|
@@ -1014,6 +1163,7 @@
 |vcmC|VcmCBox|
 |vcmM|VcmMSampleEntry|
 |vdep|TrackReferenceTypeBoxvdepDup|
+|vdva|AudioSampleEntry|
 |ver |KodakVersionBox|
 |VERS|ProductVersionBox|
 |vexu|VideoExtendedUsageBox|
@@ -1024,6 +1174,7 @@
 |vp08|VisualSampleEntry|
 |vp09|VisualSampleEntry|
 |vp10|VisualSampleEntry|
+|VP31|VisualSampleEntry|
 |VP6A|VisualSampleEntry|
 |vpcC|VPCodecConfigurationBox|
 |vplx|TrackReferenceTypeBoxvplxDup|
@@ -1050,13 +1201,48 @@
 |wipe|WipeTransitionEffectProperty|
 |WLOC|AppleWindowLocationBox|
 |wma |AudioSampleEntry|
+|WRAW|VisualSampleEntry|
+|WRLE|VisualSampleEntry|
 |wvtt|WVTTSampleEntry|
+|xalg|VisualSampleEntry|
+|xd51|VisualSampleEntry|
+|xd54|VisualSampleEntry|
+|xd55|VisualSampleEntry|
+|xd59|VisualSampleEntry|
+|xd5a|VisualSampleEntry|
+|xd5b|VisualSampleEntry|
+|xd5c|VisualSampleEntry|
+|xd5d|VisualSampleEntry|
+|xd5e|VisualSampleEntry|
+|xd5f|VisualSampleEntry|
+|xdh2|VisualSampleEntry|
+|xdhd|VisualSampleEntry|
+|xdv1|VisualSampleEntry|
+|xdv2|VisualSampleEntry|
+|xdv3|VisualSampleEntry|
+|xdv4|VisualSampleEntry|
+|xdv5|VisualSampleEntry|
+|xdv6|VisualSampleEntry|
+|xdv7|VisualSampleEntry|
+|xdv8|VisualSampleEntry|
+|xdv9|VisualSampleEntry|
+|xdva|VisualSampleEntry|
+|xdvb|VisualSampleEntry|
+|xdvc|VisualSampleEntry|
+|xdvd|VisualSampleEntry|
+|xdve|VisualSampleEntry|
+|xdvf|VisualSampleEntry|
 |xid |AppleXidBox|
 |xml |XMLBox|
 |XMP\_|XMPBox|
 |Xtra|WindowsMediaXtraBox|
+|XVID|VisualSampleEntry|
+|Y216|VisualSampleEntry|
+|Y41P|VisualSampleEntry|
 |yrrc|ThreeGPPRecordingYearBox|
 |yuv2|VisualSampleEntry|
+|yuv4|VisualSampleEntry|
+|yuvs|VisualSampleEntry|
 |zoom|ZoomTransitionEffectProperty|
 # Supported entries
 | 4CC | Name |
