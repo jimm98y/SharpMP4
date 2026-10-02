@@ -744,7 +744,7 @@ public class ConformanceTests
                 var container = new SharpISOBMFF.Container();
                 using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 1 << 16);
                 container.Read(new SharpISOBMFF.IsoStream(new SharpISOBMFF.StreamWrapper(stream)));
-                var tags = SharpMP4.Readers.MetadataReader.Read(container);
+                var tags = SharpMP4.Readers.ContainerExtensions.ReadMetadata(container);
                 result = MetadataComparison.Compare(path, tags, theirs.TryGetValue(Path.GetFullPath(path), out var t) ? t : [], macintosh, xmpPrefixes);
             }
             catch (Exception ex)

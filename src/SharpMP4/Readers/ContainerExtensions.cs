@@ -9,88 +9,12 @@ using System.Xml.Linq;
 
 namespace SharpMP4.Readers
 {
-    /// <summary>The kind of metadata a tag is.</summary>
-    public enum MetadataFamily
-    {
-        /// <summary>An iTunes item of 'ilst', keyed by its box type (©nam, trkn, covr).</summary>
-        ItemList,
-
-        /// <summary>An iTunes '----' item, keyed by its name, in the namespace of its mean (com.apple.iTunes).</summary>
-        Freeform,
-
-        /// <summary>A QuickTime keyed item: 'ilst' with a 'keys' table, keyed by the key (com.apple.quicktime.make).</summary>
-        Keys,
-
-        /// <summary>An item of 'udta': QuickTime's (©nam, ©day, WLOC), 3GPP's (titl, perf, cprt) or a vendor's, keyed by its box type.</summary>
-        UserData,
-
-        /// <summary>
-        /// An XMP packet (ISO 16684-1), as text: QuickTime's 'XMP_' in 'udta', or the 'uuid' box of the XMP
-        /// Specification Part 3; keyed by its box type.
-        /// </summary>
-        Xmp,
-    }
-
-    /// <summary>A metadata tag as the file has it: its key, language and value.</summary>
-    public sealed class MetadataTag
-    {
-        public MetadataFamily Family { get; set; }
-
-        /// <summary>The track it is in; 0 for the movie's.</summary>
-        public uint TrackID { get; set; }
-
-        /// <summary>The box type (ItemList, UserData), the name (Freeform) or the key (Keys).</summary>
-        public string Key { get; set; }
-
-        /// <summary>A freeform item's mean, a key's namespace (mdta); null for the others.</summary>
-        public string Namespace { get; set; }
-
-        /// <summary>
-        /// ISO 639-2/T, with an ISO 3166 country where the value has one (deu-DE); a Macintosh language code
-        /// as "mac:n" (QuickTime strings); null where there is none.
-        /// </summary>
-        public string Language { get; set; }
-
-        /// <summary>
-        /// The value: string for text; long for integers; double for floats; int[] for the number and total of
-        /// trkn and disk, and a window's location; string[] for a kind's scheme and value; MetadataChapter[] for
-        /// a chapter list; byte[] for images and what has no well-known type.
-        /// </summary>
-        public object Value { get; set; }
-
-        /// <summary>The well-known data type of its 'data' box (Apple, QuickTime File Format); -1 where it has none.</summary>
-        public int DataType { get; set; } = -1;
-
-        /// <summary>The box the value is in.</summary>
-        public Box Box { get; set; }
-
-        public override string ToString() => $"{Family} {(TrackID != 0 ? $"track {TrackID} " : "")}{Key}{(Language != null ? "-" + Language : "")} = {ValueText(Value)}";
-
-        internal static string ValueText(object value) => value switch
-        {
-            null => "",
-            byte[] bytes => $"byte[{bytes.Length}]",
-            int[] numbers => string.Join(" ", numbers),
-            _ => Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture),
-        };
-    }
-
-    /// <summary>A chapter of a chapter list: where it starts, and its title.</summary>
-    public sealed class MetadataChapter
-    {
-        public TimeSpan Start { get; set; }
-
-        public string Title { get; set; }
-
-        public override string ToString() => $"{Start} {Title}";
-    }
-
     /// <summary>
     /// Reads the metadata tags of a file: the iTunes item list, QuickTime keyed metadata and the strings of
     /// 'udta', of the movie and of each track; and XMP, in a box or an item. An item's bytes are read from
     /// the file, which is then to be open still.
     /// </summary>
-    public static class MetadataReader
+    public static class ContainerExtensions
     {
         public static List<MetadataTag> ReadMetadata(this Container file)
         {
@@ -492,10 +416,16 @@ namespace SharpMP4.Readers
                 case 5: // UTF-16, sort
                     return Encoding.BigEndianUnicode.GetString(bytes);
                 case 21: // big-endian signed integer, 1 to 8 bytes
-                case 65: case 66: case 67: case 74:
+                case 65:
+                case 66:
+                case 67:
+                case 74:
                     return bytes.Length is 1 or 2 or 3 or 4 or 8 ? SignedInteger(bytes) : (object)bytes;
                 case 22: // big-endian unsigned integer
-                case 75: case 76: case 77: case 78:
+                case 75:
+                case 76:
+                case 77:
+                case 78:
                     return bytes.Length is 1 or 2 or 3 or 4 or 8 ? (long)UnsignedInteger(bytes) : (object)bytes;
                 case 23: // big-endian float32
                     return bytes.Length == 4 ? (double)BitConverter.ToSingle(BigEndian(bytes), 0) : (object)bytes;
@@ -559,6 +489,82 @@ namespace SharpMP4.Readers
                 return "mac:" + code;
             return new string(new[] { (char)(((code >> 10) & 0x1f) + 0x60), (char)(((code >> 5) & 0x1f) + 0x60), (char)((code & 0x1f) + 0x60) });
         }
+    }
+
+    /// <summary>The kind of metadata a tag is.</summary>
+    public enum MetadataFamily
+    {
+        /// <summary>An iTunes item of 'ilst', keyed by its box type (©nam, trkn, covr).</summary>
+        ItemList,
+
+        /// <summary>An iTunes '----' item, keyed by its name, in the namespace of its mean (com.apple.iTunes).</summary>
+        Freeform,
+
+        /// <summary>A QuickTime keyed item: 'ilst' with a 'keys' table, keyed by the key (com.apple.quicktime.make).</summary>
+        Keys,
+
+        /// <summary>An item of 'udta': QuickTime's (©nam, ©day, WLOC), 3GPP's (titl, perf, cprt) or a vendor's, keyed by its box type.</summary>
+        UserData,
+
+        /// <summary>
+        /// An XMP packet (ISO 16684-1), as text: QuickTime's 'XMP_' in 'udta', or the 'uuid' box of the XMP
+        /// Specification Part 3; keyed by its box type.
+        /// </summary>
+        Xmp,
+    }
+
+    /// <summary>A metadata tag as the file has it: its key, language and value.</summary>
+    public sealed class MetadataTag
+    {
+        public MetadataFamily Family { get; set; }
+
+        /// <summary>The track it is in; 0 for the movie's.</summary>
+        public uint TrackID { get; set; }
+
+        /// <summary>The box type (ItemList, UserData), the name (Freeform) or the key (Keys).</summary>
+        public string Key { get; set; }
+
+        /// <summary>A freeform item's mean, a key's namespace (mdta); null for the others.</summary>
+        public string Namespace { get; set; }
+
+        /// <summary>
+        /// ISO 639-2/T, with an ISO 3166 country where the value has one (deu-DE); a Macintosh language code
+        /// as "mac:n" (QuickTime strings); null where there is none.
+        /// </summary>
+        public string Language { get; set; }
+
+        /// <summary>
+        /// The value: string for text; long for integers; double for floats; int[] for the number and total of
+        /// trkn and disk, and a window's location; string[] for a kind's scheme and value; MetadataChapter[] for
+        /// a chapter list; byte[] for images and what has no well-known type.
+        /// </summary>
+        public object Value { get; set; }
+
+        /// <summary>The well-known data type of its 'data' box (Apple, QuickTime File Format); -1 where it has none.</summary>
+        public int DataType { get; set; } = -1;
+
+        /// <summary>The box the value is in.</summary>
+        public Box Box { get; set; }
+
+        public override string ToString() => $"{Family} {(TrackID != 0 ? $"track {TrackID} " : "")}{Key}{(Language != null ? "-" + Language : "")} = {ValueText(Value)}";
+
+        internal static string ValueText(object value) => value switch
+        {
+            null => "",
+            byte[] bytes => $"byte[{bytes.Length}]",
+            int[] numbers => string.Join(" ", numbers),
+            _ => Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture),
+        };
+    }
+
+    /// <summary>A chapter of a chapter list: where it starts, and its title.</summary>
+    public sealed class MetadataChapter
+    {
+        public TimeSpan Start { get; set; }
+
+        public string Title { get; set; }
+
+        public override string ToString() => $"{Start} {Title}";
     }
 
     /// <summary>A step of the path to an XMP value: a property or a field of a structure, or an item of an array.</summary>

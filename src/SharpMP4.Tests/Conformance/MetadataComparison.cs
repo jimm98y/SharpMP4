@@ -6,7 +6,7 @@ using SharpMP4.Readers;
 namespace SharpMP4.Tests.Conformance;
 
 /// <summary>
-/// Compares the metadata tags SharpMP4 reads (<see cref="MetadataReader"/>) with those ExifTool reads: the
+/// Compares the metadata tags SharpMP4 reads (<see cref="ContainerExtensions"/>) with those ExifTool reads: the
 /// iTunes items, the freeform items, keyed metadata and the strings of 'udta', of the movie and its tracks.
 /// A tag is its scope (movie or track), family, id and language; the values of a tag are compared as a
 /// set, each as ExifTool gives it.
@@ -310,7 +310,7 @@ public static partial class MetadataComparison
             forms.Add($"Entity={FourBytes(rating.RatingEntity)} Criteria={FourBytes(rating.RatingCriteria)} {forms[0]}");
         // What ExifTool does not read it gives as bytes: the box's, as it has them
         if (tag.Family == MetadataFamily.UserData && tag.Box != null)
-            forms.Add("base64:" + Convert.ToBase64String(MetadataReader.Payload(tag.Box)));
+            forms.Add("base64:" + Convert.ToBase64String(ContainerExtensions.Payload(tag.Box)));
         return new Value(forms);
     }
 

@@ -4,12 +4,12 @@ using SharpMP4.Readers;
 namespace SharpMP4.Tests;
 
 /// <summary>
-/// Tests against <see cref="MetadataReader"/> and <see cref="XmpReader"/>, with files ExifTool wrote the
+/// Tests against <see cref="ContainerExtensions"/> and <see cref="XmpReader"/>, with files ExifTool wrote the
 /// tags of (TestData/Metadata/README.md): each tag reads as it was written, and the file writes back
 /// byte for byte.
 /// </summary>
 [TestClass]
-public class MetadataReaderTests
+public class ContainerExtensionsTests
 {
     private static string File(string name) => Path.Combine(AppContext.BaseDirectory, "TestData", "Metadata", name);
 
@@ -18,7 +18,7 @@ public class MetadataReaderTests
         using var stream = System.IO.File.OpenRead(File(name));
         var container = new Container();
         container.Read(new IsoStream(new StreamWrapper(stream)));
-        return MetadataReader.Read(container);
+        return ContainerExtensions.ReadMetadata(container);
     }
 
     private static object? Value(List<MetadataTag> tags, MetadataFamily family, string key) =>
