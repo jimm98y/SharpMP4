@@ -7,6 +7,16 @@ using System.Linq;
 
 namespace SharpMP4.Readers
 {
+    public class ImageSample
+    {
+        public byte[] Data { get; set; }
+
+        public ImageSample(byte[] data)
+        {
+            this.Data = data;
+        }
+    }
+
     /// <summary>
     /// Experimental reader for heif/heic/avif images. 
     /// </summary>
