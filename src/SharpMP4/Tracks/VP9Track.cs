@@ -20,7 +20,7 @@ namespace SharpMP4.Tracks
 
         public override string HandlerName => HandlerNames.Video;
         public override string HandlerType => HandlerTypes.Video;
-        public override string Language { get; set; } = "eng";
+        public override string Language { get; set; } = "und";
 
         private readonly VP9Context _context = new VP9Context();
 
@@ -227,8 +227,18 @@ namespace SharpMP4.Tracks
             tkhd.Height = (uint)_renderHeight << 16;
         }
 
-        /// <summary>The frames of a sample, and the index of a superframe after them.</summary>
+        /// <summary>
+        /// The sample, whole: what <see cref="ProcessSample(byte[], int, int, out ArraySegment{byte}, out bool)"/> takes is a
+        /// sample - a frame, or a superframe with its index - so what this hands out, given to it, makes the same sample, as
+        /// the NAL units and OBUs of the other tracks do. <see cref="ParseFrames"/> splits a superframe.
+        /// </summary>
         public override IEnumerable<ArraySegment<byte>> ParseSample(byte[] sample, int sampleOffset, int sampleLength)
+        {
+            return new[] { new ArraySegment<byte>(sample, sampleOffset, sampleLength) };
+        }
+
+        /// <summary>The frames of a sample, and the index of a superframe after them.</summary>
+        public static IEnumerable<ArraySegment<byte>> ParseFrames(byte[] sample, int sampleOffset, int sampleLength)
         {
             var units = new List<ArraySegment<byte>>();
             int[] sizes = VP9Context.SuperframeFrameSizes(sample, sampleOffset, sampleLength);
@@ -252,7 +262,7 @@ namespace SharpMP4.Tracks
 
         public override ITrack Clone()
         {
-            return new VP9Track(Timescale, DefaultSampleDuration)
+            return CopySettingsTo(new VP9Track(Timescale, DefaultSampleDuration)
             {
                 _configured = _configured,
                 _profile = _profile,
@@ -268,7 +278,7 @@ namespace SharpMP4.Tracks
                 ColourPrimaries = ColourPrimaries,
                 TransferCharacteristics = TransferCharacteristics,
                 MatrixCoefficients = MatrixCoefficients,
-            };
+            });
         }
     }
 }

@@ -41,7 +41,46 @@ namespace SharpMP4.Tracks
                 .Any(kind => kind.SchemeURI.Text == DashRoleScheme && kind.Value.Text == ForcedSubtitleRole) ?? false;
 
         /// <summary>The sample entry the track was read with, which it writes back as it was; null of a track made to be written.</summary>
-        public Box SampleEntry { get; protected set; }
+        public Box SampleEntry
+        {
+            get => _sampleEntry;
+            protected set
+            {
+                _sampleEntryCopy?.Dispose();
+                _sampleEntry = value;
+                _sampleEntryCopy = SampleEntryCopy.Of(value);
+            }
+        }
+
+        private Box _sampleEntry;
+        private SampleEntryCopy _sampleEntryCopy;
+
+        /// <summary>
+        /// The sample entry the track was read with, a box of its own each time - the writer puts what it is given in its
+        /// 'stsd' - or null of a track made to be written.
+        /// </summary>
+        protected Box CopyOfSampleEntry() => _sampleEntryCopy?.Create() ?? _sampleEntry;
+
+        /// <summary>
+        /// A clone with the sample entry of this track: the bytes kept of it shared, not written again, with a stream of the
+        /// clone's own, which it disposes.
+        /// </summary>
+        protected T WithSampleEntryOf<T>(T clone) where T : SubtitleTrackBase
+        {
+            clone._sampleEntry = _sampleEntry;
+            clone._sampleEntryCopy = _sampleEntryCopy?.Clone();
+            return clone;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _sampleEntryCopy?.Dispose();
+                _sampleEntryCopy = null;
+            }
+            base.Dispose(disposing);
+        }
 
         public override void ProcessSample(byte[] buffer, int offset, int length, out ArraySegment<byte> output, out bool isRandomAccessPoint)
         {

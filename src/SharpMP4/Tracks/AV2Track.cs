@@ -1,4 +1,4 @@
-using SharpAV2;
+﻿using SharpAV2;
 using SharpAVX;
 using SharpISOBMFF;
 using System;
@@ -22,7 +22,12 @@ namespace SharpMP4.Tracks
 
         public override string HandlerName => HandlerNames.Video;
         public override string HandlerType => HandlerTypes.Video;
-        public override string Language { get; set; } = "eng";
+        public override string Language { get; set; } = "und";
+        public override bool ReturnsPreviousSample => true;
+
+        // Whether the timing is the fallback's: the timing_info of a content interpretation OBU after the sequence header
+        // takes its place.
+        private bool _timingFallenBack;
 
         private readonly AV2Context _context = new AV2Context();
 
@@ -39,7 +44,6 @@ namespace SharpMP4.Tracks
 
         public AV2Track()
         {
-            CompatibleBrand = BRAND; // av02
             DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
             TimescaleFallback = 24000;
             FrameTickFallback = 1001;
@@ -145,6 +149,8 @@ namespace SharpMP4.Tracks
                         // In the 'av2C' box, not in a sample
                         if (!_configObus.Exists(o => SameAs(o, buffer, start, total)))
                             _configObus.Add(CopyOf(buffer, start, total));
+                        if (obuType == AV2Context.OBU_CONTENT_INTERPRETATION && error == null && _context._CiTimingInfoPresentFlag != 0)
+                            SetTimingInfo();
                         break;
 
                     case AV2Context.OBU_PADDING:
@@ -176,7 +182,33 @@ namespace SharpMP4.Tracks
             {
                 Timescale = TimescaleFallback;
                 DefaultSampleDuration = FrameTickFallback;
+                _timingFallenBack = true;
             }
+            if (TimescaleOverride != 0)
+                Timescale = TimescaleOverride;
+            if (FrameTickOverride != 0)
+                DefaultSampleDuration = FrameTickOverride;
+        }
+
+        /// <summary>
+        /// The timescale and frame duration of a content interpretation OBU's timing_info (AV2 6.10.6), where the track has
+        /// none, or the fallback's: a tick of num_units_in_display_tick of time_scale, a picture num_ticks_per_picture of
+        /// them where the interval is equal. The overrides above it.
+        /// </summary>
+        private void SetTimingInfo()
+        {
+            if (Timescale != 0 && DefaultSampleDuration != 0 && !_timingFallenBack)
+                return;
+
+            uint timeScale = (uint)_context._TimeScale;
+            uint tick = (uint)_context._NumUnitsInDisplayTick;
+            long duration = _context._EqualPictureInterval != 0 ? tick * ((long)(uint)_context._NumTicksPerPictureMinus1 + 1) : tick;
+            if (timeScale == 0 || duration <= 0 || duration > int.MaxValue)
+                return;
+
+            Timescale = timeScale;
+            DefaultSampleDuration = (int)duration;
+            _timingFallenBack = false;
             if (TimescaleOverride != 0)
                 Timescale = TimescaleOverride;
             if (FrameTickOverride != 0)
@@ -358,14 +390,16 @@ namespace SharpMP4.Tracks
         /// <summary>The OBUs of the 'av2C' box, each with its length: what goes before the first sample.</summary>
         public override IEnumerable<byte[]> GetContainerSamples()
         {
-            if (_configObus.Count == 0)
-                return null;
             return _configObus.ToArray();
         }
 
+        /// <summary>A track of the same configuration: the OBUs of its 'av2C' read into it, so it writes a sample entry at once.</summary>
         public override ITrack Clone()
         {
-            return new AV2Track(Timescale, DefaultSampleDuration);
+            var clone = CopySettingsTo(new AV2Track(Timescale, DefaultSampleDuration));
+            foreach (byte[] obu in _configObus)
+                clone.ProcessSample(obu, 0, obu.Length, out _, out _);
+            return clone;
         }
 
 

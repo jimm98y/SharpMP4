@@ -72,6 +72,11 @@ outputBuilder.ProcessTrackSample(videoTrack.TrackID, nalu);
 byte[] aac = ...;
 outputBuilder.ProcessTrackSample(audioTrack.TrackID, aac);
 ```
+`ProcessTrackSample` takes H.264/H.265/H.266 NAL units without their start codes. To pass the Annex B byte stream as an encoder hands it out - one or more NAL units, each behind a start code - use `ProcessAnnexBTrackSample`, which strips the start codes:
+```cs
+byte[] annexB = ...; // 00 00 00 01 67 ... 00 00 00 01 68 ... 00 00 01 65 ...
+outputBuilder.ProcessAnnexBTrackSample(videoTrack.TrackID, annexB);
+```
 When done, call `FinalizeMedia` to create the video file:
 ```cs
 outputBuilder.FinalizeMedia();

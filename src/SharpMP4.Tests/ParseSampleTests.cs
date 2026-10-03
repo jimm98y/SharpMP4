@@ -3,9 +3,10 @@ using SharpMP4.Tracks;
 namespace SharpMP4.Tests;
 
 /// <summary>
-/// Tests against <see cref="H26XTrackBase.ParseSample(byte[])"/>, which splits a sample into its
-/// NAL units whichever way it carries them: behind their lengths, as a file holds them, or behind
-/// start codes, as an encoder hands them out.
+/// Tests against the splitting of H.26x NAL units: <see cref="H26XTrackBase.ParseSample(byte[])"/>
+/// splits a sample as a file holds it, each unit behind its length; <see cref="H26XTrackBase.ParseAnnexB"/>
+/// and the stream overload split the Annex B byte stream, each unit behind a start code, as an
+/// encoder hands them out.
 /// </summary>
 [TestClass]
 public class ParseSampleTests
@@ -17,11 +18,43 @@ public class ParseSampleTests
         byte[] sample = [0, 0, 0, 3, 0x40, 0x01, 0xAA,
                          0, 0, 0, 4, 0x42, 0x01, 0xBB, 0xCC];
 
-        var units = Parse(sample);
+        var units = Copy(Track().ParseSample(sample));
 
         Assert.AreEqual(2, units.Count);
         CollectionAssert.AreEqual(new byte[] { 0x40, 0x01, 0xAA }, units[0]);
         CollectionAssert.AreEqual(new byte[] { 0x42, 0x01, 0xBB, 0xCC }, units[1]);
+    }
+
+    /// <summary>
+    /// A length field is not part of a NAL unit, so emulation prevention does not keep it from
+    /// reading as a start code: the length of a unit of 256 to 511 bytes is 00 00 01 xx, and of a unit
+    /// of one byte 00 00 00 01. A sample used to be taken for the Annex B byte stream when it began so,
+    /// its units run together and cut at the wrong places.
+    /// </summary>
+    [TestMethod]
+    [DataRow(300)]
+    [DataRow(256)]
+    [DataRow(511)]
+    [DataRow(1)]
+    public void DoesNotTakeALengthForAStartCode(int firstLength)
+    {
+        var first = new byte[firstLength];
+        first[0] = 0x02;                                   // TRAIL_R, of H.265's two byte header
+        for (int i = 1; i < first.Length; i++)
+            first[i] = 0x55;
+        byte[] second = [0x4E, 0x01, 0x77, 0x77];          // a prefix SEI
+        var sample = new List<byte>();
+        foreach (var unit in new[] { first, second })
+        {
+            sample.AddRange([(byte)(unit.Length >> 24), (byte)(unit.Length >> 16), (byte)(unit.Length >> 8), (byte)unit.Length]);
+            sample.AddRange(unit);
+        }
+
+        var units = Copy(Track().ParseSample(sample.ToArray()));
+
+        Assert.AreEqual(2, units.Count);
+        CollectionAssert.AreEqual(first, units[0]);
+        CollectionAssert.AreEqual(second, units[1]);
     }
 
     /// <summary>Both start code lengths appear in the same stream, and either may separate two units.</summary>
@@ -96,7 +129,7 @@ public class ParseSampleTests
                          0, 0, 1, 0x42, 0x01, 0xBB,
                          0, 0, 0, 1, 0x44, 0x01, 0xCC, 0x00];
 
-        var units = Copy(Track().ParseSample(new DripStream(stream, perRead), bufferSize));
+        var units = Copy(Track().ParseAnnexB(new DripStream(stream, perRead), bufferSize));
 
         Assert.AreEqual(3, units.Count);
         CollectionAssert.AreEqual(new byte[] { 0x40, 0x01, 0x00, 0x00, 0x03, 0xAA }, units[0]);
@@ -120,7 +153,7 @@ public class ParseSampleTests
     [TestMethod]
     public void ReadsNothingFromAnEmptyOrStartCodeOnlyStream()
     {
-        Assert.AreEqual(0, Track().ParseSample(new MemoryStream([])).Count());
+        Assert.AreEqual(0, Track().ParseAnnexB(new MemoryStream([])).Count());
         Assert.AreEqual(0, Parse([0, 0, 0, 1]).Count);
     }
 
@@ -128,7 +161,7 @@ public class ParseSampleTests
     [TestMethod]
     public void SkipsWhatComesBeforeTheFirstStartCode()
     {
-        var units = Copy(Track().ParseSample(new MemoryStream([0xDE, 0xAD, 0, 0, 1, 0x40, 0x01, 0x11])));
+        var units = Copy(Track().ParseAnnexB(new MemoryStream([0xDE, 0xAD, 0, 0, 1, 0x40, 0x01, 0x11])));
 
         CollectionAssert.AreEqual(new byte[] { 0x40, 0x01, 0x11 }, units.Single());
     }
@@ -169,7 +202,7 @@ public class ParseSampleTests
 
             var data = stream.ToArray();
             var expected = ScanWholeBuffer(data);
-            var actual = Copy(Track().ParseSample(new DripStream(data, random.Next(1, 8)), random.Next(1, 16)));
+            var actual = Copy(Track().ParseAnnexB(new DripStream(data, random.Next(1, 8)), random.Next(1, 16)));
 
             Assert.AreEqual(expected.Count, actual.Count, $"trial {trial}: {Convert.ToHexString(data)}");
             for (int i = 0; i < expected.Count; i++)
@@ -187,23 +220,24 @@ public class ParseSampleTests
         byte[] stream = [0, 0, 0, 1, 0x40, 0x01, 0xAA, 0, 0, 0, 1, 0x42, 0x01, 0xBB];
         var track = Track();
 
-        using var first = track.ParseSample(new MemoryStream(stream)).GetEnumerator();
+        using var first = track.ParseAnnexB(new MemoryStream(stream)).GetEnumerator();
         Assert.IsTrue(first.MoveNext());
 
         Assert.ThrowsExactly<InvalidOperationException>(
-            () => track.ParseSample(new MemoryStream(stream)).ToList());
+            () => track.ParseAnnexB(new MemoryStream(stream)).ToList());
 
         // The first reader carries on undisturbed, and once it is done another may start.
         Assert.IsTrue(first.MoveNext());
         CollectionAssert.AreEqual(new byte[] { 0x42, 0x01, 0xBB }, first.Current.ToArray());
         Assert.IsFalse(first.MoveNext());
 
-        Assert.AreEqual(2, track.ParseSample(new MemoryStream(stream)).Count());
+        Assert.AreEqual(2, track.ParseAnnexB(new MemoryStream(stream)).Count());
     }
 
     private static H265Track Track() => new H265Track(30000, 1001);
 
-    private static List<byte[]> Parse(byte[] sample) => Copy(Track().ParseSample(sample));
+    /// <summary>The NAL units of a buffer of the Annex B byte stream.</summary>
+    private static List<byte[]> Parse(byte[] stream) => Copy(Track().ParseAnnexB(stream, 0, stream.Length));
 
     /// <summary>
     /// The units as arrays of their own. What the track hands out points into a buffer it reuses,

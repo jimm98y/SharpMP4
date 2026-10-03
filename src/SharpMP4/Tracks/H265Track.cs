@@ -49,7 +49,6 @@ namespace SharpMP4.Tracks
         /// </summary>
         public H265Track() : base()
         {
-            CompatibleBrand = BRAND; // hvc1
         }
 
         public H265Track(uint timescale, int sampleDuration) : this()
@@ -66,15 +65,7 @@ namespace SharpMP4.Tracks
 
             NalLengthSize = hvcC._HEVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
 
-            foreach (var nalus in hvcC._HEVCConfig.NalUnit)
-            {
-                foreach (var nalu in nalus)
-                {
-                    ProcessSample(nalu, out _, out _);
-                }
-            }
-
-            DropConfigurationSample();
+            ProcessConfiguration((hvcC._HEVCConfig.NalUnit ?? []).Where(x => x != null).SelectMany(x => x));
         }
 
         /// <summary>
@@ -85,13 +76,17 @@ namespace SharpMP4.Tracks
         /// <param name="isRandomAccessPoint">true when the sample contains a keyframe.</param>
         public override void ProcessSample(byte[] buffer, int offset, int length, out ArraySegment<byte> output, out bool isRandomAccessPoint)
         {
-            isRandomAccessPoint = SampleHasIdr;
+            // of the access unit being assembled: said of it only where it is the one handed out, not of a call that hands
+            // out nothing
+            bool sampleIsRandomAccessPoint = SampleHasIdr;
+            isRandomAccessPoint = false;
             output = default;
 
             if (buffer == null)
             {
                 // flush the last AU
                 output = FlushAccessUnit();
+                isRandomAccessPoint = output.Array != null && sampleIsRandomAccessPoint;
                 return;
             }
 
@@ -99,7 +94,7 @@ namespace SharpMP4.Tracks
             if (length >= 3 && buffer[offset] == 0 && buffer[offset + 1] == 0
                 && (buffer[offset + 2] == 1 || (length >= 4 && buffer[offset + 2] == 0 && buffer[offset + 3] == 1)))
             {
-                throw new ArgumentException("NAL unit must not have Annex-B prefix!");
+                throw new ArgumentException("A NAL unit is given without its start code: give Annex B byte stream to ProcessAnnexBTrackSample.");
             }
 
             {
@@ -120,20 +115,46 @@ namespace SharpMP4.Tracks
                     return;
                 }
 
+                // The sample entry's 'hvcC' is of the base layer: its parameter sets have nuh_layer_id 0. Those of another
+                // layer - which an 'lhvC' would hold, of a track the samples of every layer are in - are read, for the
+                // slices that refer to them, and stay in the samples rather than take the place of the base layer's of
+                // the same ID.
+                bool baseLayer = nu.NalUnitHeader.NuhLayerId == 0;
+
                 if (nu.NalUnitHeader.NalUnitType == H265NALTypes.AUD_NUT)
                 {
                     // access unit delimiter NAL unit with nuh_layer_id equal to 0 (when present): not kept, where the access
                     // unit starts the next base layer picture's first slice says
                 }
+                else if (!baseLayer && (nu.NalUnitHeader.NalUnitType == H265NALTypes.VPS_NUT ||
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.SPS_NUT || nu.NalUnitHeader.NalUnitType == H265NALTypes.PPS_NUT))
+                {
+                    if (nu.NalUnitHeader.NalUnitType == H265NALTypes.SPS_NUT)
+                    {
+                        _context.SeqParameterSetRbsp = new SeqParameterSetRbsp();
+                        _context.SeqParameterSetRbsp.Read(_context, stream);
+                    }
+                    else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PPS_NUT)
+                    {
+                        _context.PicParameterSetRbsp = new PicParameterSetRbsp();
+                        _context.PicParameterSetRbsp.Read(_context, stream);
+                    }
+                    else
+                    {
+                        _context.VideoParameterSetRbsp = new VideoParameterSetRbsp();
+                        _context.VideoParameterSetRbsp.Read(_context, stream);
+                    }
+
+                    // parameter set NAL unit of a layer other than the base layer: of the next access unit where a new
+                    // one comes next, as a prefix SEI NAL unit is
+                    HoldNalUnit(buffer, offset, length);
+                }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.SPS_NUT)
                 {
                     _context.SeqParameterSetRbsp = new SeqParameterSetRbsp();
                     _context.SeqParameterSetRbsp.Read(_context, stream);
-                    if (!Sps.ContainsKey(_context.SeqParameterSetRbsp.SpsSeqParameterSetId))
-                    {
-                        Sps.Add(_context.SeqParameterSetRbsp.SpsSeqParameterSetId, _context.SeqParameterSetRbsp);
-                        SpsRaw.Add(_context.SeqParameterSetRbsp.SpsSeqParameterSetId, CopyOf(buffer, offset, length));
-                    }
+                    KeepParameterSet("SPS", Sps, SpsRaw, _context.SeqParameterSetRbsp.SpsSeqParameterSetId, _context.SeqParameterSetRbsp,
+                        buffer, offset, length);
 
                     // if SPS contains the timescale, set it
                     if (Timescale == 0 || DefaultSampleDuration == 0)
@@ -166,11 +187,8 @@ namespace SharpMP4.Tracks
                 {
                     _context.PicParameterSetRbsp = new PicParameterSetRbsp();
                     _context.PicParameterSetRbsp.Read(_context, stream);
-                    if (!Pps.ContainsKey(_context.PicParameterSetRbsp.PpsPicParameterSetId))
-                    {
-                        Pps.Add(_context.PicParameterSetRbsp.PpsPicParameterSetId, _context.PicParameterSetRbsp);
-                        PpsRaw.Add(_context.PicParameterSetRbsp.PpsPicParameterSetId, CopyOf(buffer, offset, length));
-                    }
+                    KeepParameterSet("PPS", Pps, PpsRaw, _context.PicParameterSetRbsp.PpsPicParameterSetId, _context.PicParameterSetRbsp,
+                        buffer, offset, length);
 
                     // PPS NAL unit with nuh_layer_id equal to 0 (when present): kept in the sample entry
                 }
@@ -178,11 +196,8 @@ namespace SharpMP4.Tracks
                 {
                     _context.VideoParameterSetRbsp = new VideoParameterSetRbsp();
                     _context.VideoParameterSetRbsp.Read(_context, stream);
-                    if (!Vps.ContainsKey(_context.VideoParameterSetRbsp.VpsVideoParameterSetId))
-                    {
-                        Vps.Add(_context.VideoParameterSetRbsp.VpsVideoParameterSetId, _context.VideoParameterSetRbsp);
-                        VpsRaw.Add(_context.VideoParameterSetRbsp.VpsVideoParameterSetId, CopyOf(buffer, offset, length));
-                    }
+                    KeepParameterSet("VPS", Vps, VpsRaw, _context.VideoParameterSetRbsp.VpsVideoParameterSetId, _context.VideoParameterSetRbsp,
+                        buffer, offset, length);
 
                     // VPS NAL unit with nuh_layer_id equal to 0 (when present): kept in the sample entry
                 }
@@ -192,10 +207,13 @@ namespace SharpMP4.Tracks
                     {
                         _context.SeiRbsp = new SeiRbsp();
                         _context.SeiRbsp.Read(_context, stream);
-                        if (!PrefixSei.Contains(_context.SeiRbsp))
+
+                        // in the sample entry too, of the base layer: those of the configuration record, and the stream's
+                        // of declarative messages, each once
+                        if (baseLayer && (ReadingConfiguration || IsDeclarativeSei(_context.SeiRbsp.SeiMessage.Values.Select(x => x.SeiPayload?.PayloadType ?? uint.MaxValue)))
+                            && KeepConfigurationSei(PrefixSeiRaw, buffer, offset, length))
                         {
                             PrefixSei.Add(_context.SeiRbsp);
-                            PrefixSeiRaw.Add(CopyOf(buffer, offset, length));
                         }
                     }
 
@@ -229,6 +247,7 @@ namespace SharpMP4.Tracks
                         int layerId = (int)nu.NalUnitHeader.NuhLayerId;
                         // https://stackoverflow.com/questions/69373668/ffmpeg-error-first-slice-in-a-frame-missing-when-decoding-h-265-stream
                         output = StartVclNalUnit((buffer[offset + 2] & 0x80) != 0 && StartsAccessUnit(layerId));
+                        isRandomAccessPoint = output.Array != null && sampleIsRandomAccessPoint;
 
                         // a sync sample is of IRAP pictures (ISO/IEC 14496-15): marked once the access unit before it is taken
                         uint type = nu.NalUnitHeader.NalUnitType;
@@ -272,7 +291,7 @@ namespace SharpMP4.Tracks
             hevcConfigurationBox._HEVCConfig.BitDepthChromaMinus8 = (byte)sps.BitDepthChromaMinus8;
             hevcConfigurationBox._HEVCConfig.BitDepthLumaMinus8 = (byte)sps.BitDepthLumaMinus8;
             hevcConfigurationBox._HEVCConfig.TemporalIdNested = sps.SpsTemporalIdNestingFlag != 0;
-            hevcConfigurationBox._HEVCConfig.LengthSizeMinusOne = 3; // 4 bytes size block inserted in between NAL units
+            hevcConfigurationBox._HEVCConfig.LengthSizeMinusOne = (byte)(NalLengthSize - 1); // the size of the lengths the samples are written with
 
             int nalArrayCount = 3 + (PrefixSei.Count > 0 ? 1 : 0);
 
@@ -344,12 +363,20 @@ namespace SharpMP4.Tracks
 
             visualSampleEntry.Children.Add(hevcConfigurationBox);
 
+            SampleEntryCreated = true;
             return visualSampleEntry;
         }
 
         public override void FillTkhdBox(TrackHeaderBox tkhd)
         {
-            var dim = Sps.FirstOrDefault().Value.CalculateDimensions();
+            // no SPS yet, no size: the header is left as it is
+            if (Sps.Count == 0)
+            {
+                if (Logger.IsWarningEnabled) Logger.LogWarning("No SPS has been read: the track header has no width and height");
+                return;
+            }
+
+            var dim = Sps.First().Value.CalculateDimensions();
             tkhd.Width = dim.Width << 16; // TODO: simplify API
             tkhd.Height = dim.Height << 16; // TODO: simplify API
         }
@@ -455,9 +482,15 @@ namespace SharpMP4.Tracks
             return VpsRaw.Values.ToArray().Concat(SpsRaw.Values.ToArray()).Concat(PpsRaw.Values.ToArray()).Concat(PrefixSeiRaw).ToArray();
         }
 
+        /// <summary>
+        /// A track of the same configuration: its parameter sets and SEI NAL units read into it as the configuration
+        /// record's are, so it writes a sample entry at once and reads the slices that refer to them.
+        /// </summary>
         public override ITrack Clone()
         {
-            return new H265Track(Timescale, DefaultSampleDuration); 
+            var clone = CopySettingsTo(new H265Track(Timescale, DefaultSampleDuration) { NalLengthSize = NalLengthSize });
+            clone.ProcessConfiguration(VpsRaw.Values.Concat(SpsRaw.Values).Concat(PpsRaw.Values).Concat(PrefixSeiRaw).ToList());
+            return clone;
         }
     }
 }

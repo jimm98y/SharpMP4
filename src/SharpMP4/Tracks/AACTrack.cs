@@ -7,7 +7,9 @@ using System.Linq;
 namespace SharpMP4.Tracks
 {
     /// <summary>
-    /// AAC Track. Supports AAC-LC (Low Complexity) only. Samples should be provided with or without ADTS header.
+    /// AAC Track. Made to be written, it is AAC-LC (Low Complexity); read from a file, it is whatever AAC the file's
+    /// AudioSpecificConfig says - HE-AAC, Main, multichannel - which it writes back as it was. Samples should be provided
+    /// with or without ADTS header.
     /// </summary>
     public class AACTrack : TrackBase
     {
@@ -22,9 +24,24 @@ namespace SharpMP4.Tracks
         public byte ChannelConfiguration { get; private set; }
         public AudioSpecificConfig AudioSpecificConfig { get; private set; }
 
+        /// <summary>
+        /// The decoder specific info - the AudioSpecificConfig - of the file the track was read from, as its bytes: what the
+        /// sample entry is written with, so nothing of it the track does not read - SBR, PS, a program config element - is
+        /// lost. Null of a track made to be written, whose AAC-LC config is made of its rate and channels.
+        /// </summary>
+        public byte[] DecoderSpecificInfo { get; private set; }
+
+        /// <summary>The objectTypeIndication of the decoder config: MPEG-4 Audio (0x40), or one of MPEG-2 AAC's.</summary>
+        public byte ObjectTypeIndication { get; private set; } = AAC_OBJECT_TYPE_INDICATION;
+
+        // of the decoder config the track was read with, written back as they were
+        private uint _maxBitrate;
+        private uint _avgBitrate;
+        private uint _bufferSizeDB;
+
         public override string HandlerName => HandlerNames.Sound;
         public override string HandlerType => HandlerTypes.Sound;
-        public override string Language { get; set; } = "eng";
+        public override string Language { get; set; } = "und";
 
         /// <summary>
         /// Ctor.
@@ -40,15 +57,18 @@ namespace SharpMP4.Tracks
         /// Ctor.
         /// </summary>
         /// <param name="channelCount">Number of audio channels.</param>
-        /// <param name="samplingRateInHz">Audio sampling rate in HZ. Must be one of the supported sampling rates.</param>
+        /// <param name="samplingRateInHz">
+        /// Audio sampling rate in HZ: one of the table's (ISO/IEC 14496-3 Table 1.18) is written as its index, any other as
+        /// itself, after the escape index 0xF.
+        /// </param>
         /// <param name="sampleSizeInBits">Size of 1 sample in bits. </param>
         /// <param name="channelConfiguration">Channel configuration from the ADTS header.</param>
         public AACTrack(byte channelCount, uint samplingRateInHz, ushort sampleSizeInBits, byte channelConfiguration)
         {
-            if (!AudioSpecificConfigDescriptor.SamplingFrequencyMap.ContainsKey(samplingRateInHz))
-                throw new ArgumentOutOfRangeException("Invalid sampling rate!");
+            if (samplingRateInHz == 0 || samplingRateInHz > 0xFFFFFF)
+                throw new ArgumentOutOfRangeException(nameof(samplingRateInHz), "A sampling rate of AAC is more than 0 and fits 24 bits");
 
-            if(sampleSizeInBits % 8 != 0) 
+            if(sampleSizeInBits % 8 != 0)
                 throw new ArgumentOutOfRangeException("Invalid sample size!");
 
             Timescale = samplingRateInHz;
@@ -80,10 +100,11 @@ namespace SharpMP4.Tracks
 
             DefaultSampleDuration = sampleDuration <= 0 ? AAC_SAMPLE_SIZE : sampleDuration;
 
+            // the channels as the entry has them: of 5.1, 6, which the entry is written back with
             if (config.GetParent() is AudioSampleEntry audioSampleEntry)
             {
-                Timescale = timescale == 0 ? audioSampleEntry.Samplerate >> 16 : timescale; 
-                ChannelCount = (byte)Math.Min(2, (int)audioSampleEntry.Channelcount); // must only be 1 or 2
+                Timescale = timescale == 0 ? audioSampleEntry.Samplerate >> 16 : timescale;
+                ChannelCount = (byte)audioSampleEntry.Channelcount;
                 SamplingRate = Timescale;
                 SampleSize = audioSampleEntry.Samplesize;
                 ChannelConfiguration = (byte)audioSampleEntry.Channelcount;
@@ -91,7 +112,7 @@ namespace SharpMP4.Tracks
             else if(config.GetParent() is AudioSampleEntryV1 audioSampleEntryV1)
             {
                 Timescale = timescale == 0 ? audioSampleEntryV1.Samplerate >> 16 : timescale;
-                ChannelCount = (byte)Math.Min(2, (int)audioSampleEntryV1.Channelcount);
+                ChannelCount = (byte)audioSampleEntryV1.Channelcount;
                 SamplingRate = Timescale;
                 SampleSize = audioSampleEntryV1.Samplesize;
                 ChannelConfiguration = (byte)audioSampleEntryV1.Channelcount;
@@ -104,6 +125,12 @@ namespace SharpMP4.Tracks
             DecoderConfigDescriptor decoderConfigDescriptor = esd._ES.Children.OfType<DecoderConfigDescriptor>().SingleOrDefault();
             if (decoderConfigDescriptor != null)
             {
+                ObjectTypeIndication = decoderConfigDescriptor.ObjectTypeIndication;
+                _maxBitrate = decoderConfigDescriptor.MaxBitrate;
+                _avgBitrate = decoderConfigDescriptor.AvgBitrate;
+                _bufferSizeDB = decoderConfigDescriptor.BufferSizeDB;
+                DecoderSpecificInfo = DecoderSpecificInfoOf(decoderConfigDescriptor);
+
                 AudioSpecificConfig audioSpecificConfig = null;
                 audioSpecificConfig = decoderConfigDescriptor.Children.OfType<AudioSpecificConfig>().SingleOrDefault();
                 if (audioSpecificConfig == null)
@@ -180,21 +207,37 @@ namespace SharpMP4.Tracks
             decoderConfigDescriptor.SetParent(descriptor);
             descriptor.Children.Add(decoderConfigDescriptor);
             decoderConfigDescriptor.Children = new List<Descriptor>();
-            decoderConfigDescriptor.ObjectTypeIndication = AAC_OBJECT_TYPE_INDICATION; // AAC LC
+            decoderConfigDescriptor.ObjectTypeIndication = ObjectTypeIndication;
             decoderConfigDescriptor.StreamType = AAC_STREAM_TYPE;
-            decoderConfigDescriptor.MaxBitrate = 0; // this.SamplingRate;
-            decoderConfigDescriptor.AvgBitrate = 0; // TODO: this.SamplingRate;
-            decoderConfigDescriptor.BufferSizeDB = 0; // TODO: ???
+            decoderConfigDescriptor.MaxBitrate = _maxBitrate;
+            decoderConfigDescriptor.AvgBitrate = _avgBitrate;
+            decoderConfigDescriptor.BufferSizeDB = _bufferSizeDB;
 
-            AudioSpecificConfig = new AudioSpecificConfig() 
+            if (DecoderSpecificInfo != null)
             {
-                SamplingFrequencyIndex = (byte)AudioSpecificConfigDescriptor.SamplingFrequencyMap[SamplingRate],
-                ChannelConfiguration = ChannelConfiguration // TODO: from the ADTS header
-            };
-            AudioSpecificConfig.AudioObjectType = new GetAudioObjectType() { AudioObjectType = AAC_AUDIO_OBJECT_TYPE }; // TODO simplify API
-            AudioSpecificConfig._GASpecificConfig = new GASpecificConfig((int)AudioSpecificConfigDescriptor.SamplingFrequencyMap[SamplingRate], ChannelCount, AAC_AUDIO_OBJECT_TYPE);
-            AudioSpecificConfig.SetParent(decoderConfigDescriptor);
-            decoderConfigDescriptor.Children.Add(AudioSpecificConfig);
+                // read from a file: its config as it was, whatever of it the track does not read
+                var decoderSpecificInfo = new GenericDecoderSpecificInfo { Data = (byte[])DecoderSpecificInfo.Clone() };
+                decoderSpecificInfo.SetParent(decoderConfigDescriptor);
+                decoderConfigDescriptor.Children.Add(decoderSpecificInfo);
+            }
+            else
+            {
+                // a rate the table has goes as its index; any other as itself, after the escape index (ISO/IEC 14496-3 1.6.2.1)
+                bool tabled = AudioSpecificConfigDescriptor.SamplingFrequencyMap.TryGetValue(SamplingRate, out uint samplingFrequencyIndex);
+                if (!tabled)
+                    samplingFrequencyIndex = 0xF;
+
+                AudioSpecificConfig = new AudioSpecificConfig()
+                {
+                    SamplingFrequencyIndex = (byte)samplingFrequencyIndex,
+                    SamplingFrequency = tabled ? 0 : SamplingRate,
+                    ChannelConfiguration = ChannelConfiguration // TODO: from the ADTS header
+                };
+                AudioSpecificConfig.AudioObjectType = new GetAudioObjectType() { AudioObjectType = AAC_AUDIO_OBJECT_TYPE }; // TODO simplify API
+                AudioSpecificConfig._GASpecificConfig = new GASpecificConfig((int)samplingFrequencyIndex, ChannelCount, AAC_AUDIO_OBJECT_TYPE);
+                AudioSpecificConfig.SetParent(decoderConfigDescriptor);
+                decoderConfigDescriptor.Children.Add(AudioSpecificConfig);
+            }
 
             SLConfigDescriptor slConfigDescriptor = new SLConfigDescriptor();
             slConfigDescriptor.Predefined = 2;
@@ -213,7 +256,93 @@ namespace SharpMP4.Tracks
 
         public override ITrack Clone()
         {
-            return new AACTrack(ChannelCount, SamplingRate, SampleSize, ChannelConfiguration);
+            return CopySettingsTo(new AACTrack(ChannelCount, SamplingRate, SampleSize, ChannelConfiguration)
+            {
+                AudioSpecificConfig = AudioSpecificConfig,
+                DecoderSpecificInfo = DecoderSpecificInfo,
+                ObjectTypeIndication = ObjectTypeIndication,
+                _maxBitrate = _maxBitrate,
+                _avgBitrate = _avgBitrate,
+                _bufferSizeDB = _bufferSizeDB,
+            });
+        }
+
+        /// <summary>The object types of MPEG-4 Audio of AAC (ISO/IEC 14496-3 Table 1.17), whose samples this track takes.</summary>
+        private static readonly HashSet<int> AacObjectTypes = new HashSet<int>
+        {
+            1,  // AAC Main
+            2,  // AAC LC
+            3,  // AAC SSR
+            4,  // AAC LTP
+            5,  // SBR, HE-AAC
+            6,  // AAC Scalable
+            17, // ER AAC LC
+            19, // ER AAC LTP
+            20, // ER AAC Scalable
+            22, // ER BSAC
+            23, // ER AAC LD
+            29, // PS, HE-AAC v2
+            39, // ER AAC ELD
+            42, // USAC
+        };
+
+        /// <summary>
+        /// Whether an 'esds' - or the 'wave' of QuickTime it is in - is of AAC: of MPEG-2 AAC's object type indications
+        /// (0x66 to 0x68), or MPEG-4 Audio's (0x40) of an object type of AAC. Others - MP3 (0x69, 0x6B), and MPEG-4 Audio
+        /// of MPEG-1 layers, ALS and the like - are not: their samples are not AAC's, an ADTS header taken off them would
+        /// cut a frame of theirs.
+        /// </summary>
+        public static bool IsAac(Box config)
+        {
+            ESDBox esd = config as ESDBox ?? config?.Children?.OfType<ESDBox>().FirstOrDefault();
+            DecoderConfigDescriptor decoderConfig = esd?._ES?.Children?.OfType<DecoderConfigDescriptor>().FirstOrDefault();
+            if (decoderConfig == null)
+                return false;
+
+            switch (decoderConfig.ObjectTypeIndication)
+            {
+                case 0x66: // MPEG-2 AAC Main
+                case 0x67: // MPEG-2 AAC LC
+                case 0x68: // MPEG-2 AAC SSR
+                    return true;
+                case AAC_OBJECT_TYPE_INDICATION:
+                    // the object type of the AudioSpecificConfig: its first five bits, or after them six more (1.6.2.1)
+                    byte[] info = DecoderSpecificInfoOf(decoderConfig);
+                    if (info == null || info.Length == 0)
+                        return true;
+                    int objectType = info[0] >> 3;
+                    if (objectType == 31)
+                        objectType = info.Length > 1 ? 32 + (((info[0] & 0x7) << 3) | (info[1] >> 5)) : -1;
+                    return AacObjectTypes.Contains(objectType);
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>The decoder specific info of a decoder config as its bytes, after its tag and size; null where it has none.</summary>
+        private static byte[] DecoderSpecificInfoOf(DecoderConfigDescriptor decoderConfig)
+        {
+            Descriptor info = decoderConfig.Children?.FirstOrDefault(x => x.Tag == DescriptorTags.DecSpecificInfoTag);
+            if (info == null)
+                return null;
+
+            byte[] bytes;
+            using (var memory = new MemoryStream())
+            {
+                new IsoStream(new StreamWrapper(memory)).WriteDescriptor(info, "");
+                bytes = memory.ToArray();
+            }
+
+            // the tag, then the size, in bytes of seven bits each but the last with its top bit set
+            int start = 1;
+            while (start < bytes.Length && (bytes[start] & 0x80) != 0)
+                start++;
+            start++;
+            if (start >= bytes.Length)
+                return Array.Empty<byte>();
+            var payload = new byte[bytes.Length - start];
+            Buffer.BlockCopy(bytes, start, payload, 0, payload.Length);
+            return payload;
         }
     }
 

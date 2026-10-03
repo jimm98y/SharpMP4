@@ -1,4 +1,4 @@
-using SharpISOBMFF;
+﻿using SharpISOBMFF;
 using SharpMP4.Readers;
 using SharpMP4.Tracks;
 
@@ -45,6 +45,9 @@ public class SyncSampleTests
         ["fate/h264/attachment631-small.mp4"] = NoPicture,
         ["firefox/pixel_aspect_ratio.mp4"] = "has an IDR slice with nal_ref_idc 0, which H.264 7.4.1 does not allow: a new picture, by 7.4.1.2.4",
         ["fate/h264/mixed-nal-coding.mp4"] = "has both fields of a frame in one sample, where each field is an access unit",
+        // read as H.264 since the reader takes the 'avcC' after the 'pasp' of their entries, where it took the 'pasp'
+        ["fate/h264/twofields_packet.mp4"] = "has both fields of a frame in one sample, where each field is an access unit",
+        ["fate/h264/interlaced_crop.mp4"] = RecoveryPoint,
     };
 
     [TestMethod]
@@ -178,12 +181,10 @@ public class SyncSampleTests
                     actual.Add((Comparable(track, vp9 ? [output.ToArray()] : av1 ? Obus(output.ToArray()) : NalUnits(output.ToArray(), outputLengthSize)), isSync));
             }
         }
-        if (!av1 && !vp9)
-        {
-            track.ProcessSample(null, out var last, out bool lastSync);
-            if (last.Array != null)
-                actual.Add((Comparable(track, NalUnits(last.ToArray(), outputLengthSize)), lastSync));
-        }
+        // the last sample, which the end of the stream ends - of AV1 too, whose temporal unit ends at what comes after it
+        track.ProcessSample(null, out var last, out bool lastSync);
+        if (last.Array != null)
+            actual.Add((Comparable(track, vp9 ? [last.ToArray()] : av1 ? Obus(last.ToArray()) : NalUnits(last.ToArray(), outputLengthSize)), lastSync));
 
         if (expected.Count == 0)
             return new Result(0, null);

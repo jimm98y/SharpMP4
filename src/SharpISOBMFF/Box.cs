@@ -25,8 +25,13 @@ namespace SharpISOBMFF
         public virtual uint FourCC { get; set; }
         public abstract string DisplayName { get; }
 
-        public SafeBoxHeader Header { get; set; } 
+        public SafeBoxHeader Header { get; set; }
 
+        /// <summary>
+        /// Whether the size of the box counts the 8 bytes of a largesize: a box read with one, or of more than 4 GB. One
+        /// made rather than read knows it is that large only once its fields are counted - <see cref="IsoStream.CalculateBoxSize(Box)"/>.
+        /// </summary>
+        public bool IsCountingLargeSize => size > uint.MaxValue || hasLargeSize;
 
         protected byte[] uuid = null;
         public byte[] Uuid { get { return uuid; } set { uuid = value; } }
@@ -80,7 +85,7 @@ namespace SharpISOBMFF
 
         public virtual ulong CalculateSize()
         {
-            return (ulong)(32 + 32 + ((ulong)(size >> 3) > uint.MaxValue || hasLargeSize ? 64 : 0)) /* + IsoStream.CalculateBoxArray(this) */ + (ulong)(padding != null ? 8 * padding.Length : 0) + 8 * (ulong)(uuid != null ? uuid.Length : 0);
+            return (ulong)(32 + 32 + (IsCountingLargeSize ? 64 : 0)) /* + IsoStream.CalculateBoxArray(this) */ + (ulong)(padding != null ? 8 * padding.Length : 0) + 8 * (ulong)(uuid != null ? uuid.Length : 0);
         }
     }
 

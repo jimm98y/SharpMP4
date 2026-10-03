@@ -15,6 +15,7 @@ namespace SharpISOBMFF
         public byte[] PaddingBytes { get; set; }
         public List<Box> Children { get; set; } = new List<Box>();
         public IMp4Logger Logger { get; set; } = DefaultMp4Logger.Instance;
+        public bool IsTruncated { get; set; }
 
         public Container()
         {
@@ -29,6 +30,9 @@ namespace SharpISOBMFF
         {
             Box box = null;
             ulong size = 0;
+
+            // where the stream ends here, it ends where a box does, as a file does; anywhere else, the file is cut short
+            bool atEnd = stream.Peek(1).Length == 0;
 
             try
             {
@@ -47,13 +51,18 @@ namespace SharpISOBMFF
             }
             catch (EndOfStreamException)
             {
-                // This is to be expected
+                // This is to be expected at the end of the file; within a box, the file is cut short
+                if (!atEnd)
+                    IsTruncated = true;
             }
             catch (Exception ex)
             {
                 this.Logger.LogDebug($"Error: {ex.Message}");
                 throw;
             }
+
+            if (stream.HasReadPastEnd)
+                IsTruncated = true;
 
             return size;
         }
@@ -107,7 +116,7 @@ namespace SharpISOBMFF
             ulong size = 0;
             for (int i = 0; i < Children.Count; i++)
             {
-                size += Children[i].CalculateSize();
+                size += IsoStream.CalculateBoxSize(Children[i]);
             }
 
             if (this.Padding != null)

@@ -14,7 +14,8 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", F
     var mp4 = new Container(logger);
     mp4.Read(new IsoStream(inputFileStream) { Logger = logger });
 
-    VideoReader inputReader = new VideoReader(logger);
+    // the reader disposes the tracks it made; the clones written below are ours to dispose
+    using VideoReader inputReader = new VideoReader(logger);
     inputReader.Parse(mp4);
     IEnumerable<ITrack> inputTracks = inputReader.GetTracks();
 
@@ -22,10 +23,12 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", F
     {
         IMp4Builder outputBuilder = new Mp4Builder(new SingleStreamOutput(output)) { Logger = logger };
         Dictionary<uint, uint> mapping = new Dictionary<uint, uint>();
+        List<ITrack> outputTracks = new List<ITrack>();
 
         foreach (var inputTrack in inputTracks)
         {
             var outputTrack = inputTrack.Clone();
+            outputTracks.Add(outputTrack);
             outputBuilder.AddTrack(outputTrack);
             mapping.Add(inputTrack.TrackID, outputTrack.TrackID);
         }
@@ -61,5 +64,8 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", F
         }
 
         outputBuilder.FinalizeMedia();
+        outputBuilder.Dispose();
+        foreach (var outputTrack in outputTracks)
+            outputTrack.Dispose();
     }
 }

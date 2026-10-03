@@ -296,7 +296,7 @@ public class ConformanceTests
     private static readonly Dictionary<string, (string Why, string[] Defects)> MalformedAudioConfigFiles = new()
     {
         [Path.Combine("metadata", "mutagen", "ep7.m4b")] =
-            ("a config of 2 bytes whose dependsOnCoreCoder says a coreCoderDelay of 14 bits follows, which it has not", ["read: EndOfStreamException"]),
+            ("a config of 2 bytes whose dependsOnCoreCoder says a coreCoderDelay of 14 bits follows, which it has not - found not to fit before it is read", ["read: InvalidDataException"]),
     };
 
     /// <summary>

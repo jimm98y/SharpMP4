@@ -13,9 +13,29 @@ namespace SharpMP4.Tracks
 
         public static ITrack DefaultCreateTrack(uint trackID, Box sampleEntry, uint timescale, int sampleDuration, uint handlerType, string handlerName, IMp4Logger logger)
         {
-            ITrack track = DefaultCreateTrackInternal(trackID, sampleEntry, timescale, sampleDuration, handlerType, handlerName);
+            logger ??= DefaultMp4Logger.Instance;
 
-            track.Logger = logger ?? DefaultMp4Logger.Instance;
+            ITrack track;
+            try
+            {
+                track = DefaultCreateTrackInternal(trackID, sampleEntry, timescale, sampleDuration, handlerType, handlerName);
+            }
+            catch (Exception ex) when (ex is not OutOfMemoryException)
+            {
+                // A codec no track reads, or a configuration its track cannot make sense of - a box of a form it does not
+                // expect, a parameter set it cannot parse: the samples are passed through, under the sample entry as it was,
+                // rather than the track lost.
+                if (logger.IsWarningEnabled)
+                {
+                    string codec = sampleEntry == null ? "" : IsoStream.ToFourCC(sampleEntry.FourCC);
+                    logger.LogWarning(ex is NotSupportedException
+                        ? $"Track {trackID}: {ex.Message}, its samples passed through as they are"
+                        : $"Track {trackID}: its configuration '{codec}' could not be read ({ex.GetType().Name}: {ex.Message}), its samples passed through as they are");
+                }
+                track = CreateGenericTrack(trackID, sampleEntry, timescale, sampleDuration, handlerType, handlerName);
+            }
+
+            track.Logger = logger;
 
             return track;
         }
@@ -80,8 +100,8 @@ namespace SharpMP4.Tracks
 
                 // of an 'mp4v' entry of MPEG-4 Visual
                 case "esds" when sampleEntry is ESDBox esds && esds._ES?.Children?.OfType<DecoderConfigDescriptor>().FirstOrDefault() is DecoderConfigDescriptor config
-                    && MPEG4VisualTrack.IsMPEG4Visual(config.ObjectTypeIndication):
-                    return new MPEG4VisualTrack(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
+                    && MPEG4Track.IsMPEG4Visual(config.ObjectTypeIndication):
+                    return new MPEG4Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
                 // of an 's263' or 'h263' entry (3GPP TS 26.244)
                 case "d263":
@@ -100,8 +120,9 @@ namespace SharpMP4.Tracks
         {
             switch (IsoStream.ToFourCC(sampleEntry.FourCC))
             {
-                case "esds": // mp4
-                case "wave": // quicktime
+                // of AAC; an 'esds' of another codec - MP3's, of 0x69 or 0x6B - is passed through as it is
+                case "esds" when AACTrack.IsAac(sampleEntry): // mp4
+                case "wave" when AACTrack.IsAac(sampleEntry): // quicktime
                     return new AACTrack(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
                 case "dOps":

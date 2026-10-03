@@ -1,4 +1,4 @@
-using SharpISOBMFF;
+﻿using SharpISOBMFF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +45,7 @@ namespace SharpMP4.Tracks
         public override Box CreateSampleEntryBox()
         {
             if (SampleEntry != null)
-                return SampleEntry;
+                return CopyOfSampleEntry();
 
             var entry = new SimpleTextSampleEntry
             {
@@ -65,6 +65,6 @@ namespace SharpMP4.Tracks
             return entry;
         }
 
-        public override ITrack Clone() => new SimpleTextTrack(Timescale) { MimeFormat = MimeFormat, ContentEncoding = ContentEncoding, TextConfig = TextConfig, Language = Language, Forced = Forced };
+        public override ITrack Clone() => CopySettingsTo(WithSampleEntryOf(new SimpleTextTrack(Timescale) { MimeFormat = MimeFormat, ContentEncoding = ContentEncoding, TextConfig = TextConfig, Forced = Forced }));
     }
 }

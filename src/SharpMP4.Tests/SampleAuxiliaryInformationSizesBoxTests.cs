@@ -1,4 +1,4 @@
-using SharpISOBMFF;
+﻿using SharpISOBMFF;
 using SharpMP4.Builders;
 using SharpMP4.Encryption;
 using SharpMP4.Readers;
@@ -69,9 +69,9 @@ public class SampleAuxiliaryInformationSizesBoxTests
 
         byte[] keyId = Enumerable.Range(1, 16).Select(x => (byte)x).ToArray(), key = Enumerable.Range(17, 16).Select(x => (byte)x).ToArray();
         using var output = new MemoryStream();
-        var builder = new FragmentedMp4Builder(new SingleStreamOutput(output), maxFragmentLengthInMs: 60_000);
+        var builder = new FragmentedMp4Builder(new SingleStreamOutput(output), maxFragmentLengthInMs: 60_000) { TemporaryStorageFactory = new TemporaryMemoryStorageFactory() };
         builder.AddTrack(track, TrackProtection.Create(ProtectionSchemes.Cenc, keyId, isVideo: true), key);
-        builder.ProcessRawSample(track.TrackID, sample.ToArray(), 1000, true, new TemporaryMemory());
+        builder.ProcessRawSample(track.TrackID, sample.ToArray(), 1000, true);
         builder.FinalizeMedia();
 
         var container = new Container();

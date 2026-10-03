@@ -61,14 +61,14 @@ public class FragmentedMp4BuilderTests
         var audio = new AACTrack(2, 22050, 16);
 
         using var output = new MemoryStream();
-        var builder = new FragmentedMp4Builder(new SingleStreamOutput(output), maxFragmentLengthInMs: 2000);
+        var builder = new FragmentedMp4Builder(new SingleStreamOutput(output), maxFragmentLengthInMs: 2000) { TemporaryStorageFactory = new TemporaryMemoryStorageFactory() };
         builder.AddTrack(audio);
         builder.AddTrack(video);
 
         // a minute of each: the video's key frames every 64 frames, so its fragments are of 2.67 s
         int frame = (int)(video.Timescale / 24);
-        void Audio() { for (int i = 0; i < 22050 * 60 / 1024; i++) builder.ProcessRawSample(audio.TrackID, new byte[16], 1024, true, new TemporaryMemory()); }
-        void Video() { for (int i = 0; i < 24 * 60; i++) builder.ProcessRawSample(video.TrackID, new byte[64], frame, i % 64 == 0, new TemporaryMemory()); }
+        void Audio() { for (int i = 0; i < 22050 * 60 / 1024; i++) builder.ProcessRawSample(audio.TrackID, new byte[16], 1024, true); }
+        void Video() { for (int i = 0; i < 24 * 60; i++) builder.ProcessRawSample(video.TrackID, new byte[64], frame, i % 64 == 0); }
         if (audioFirst) { Audio(); Video(); } else { Video(); Audio(); }
         builder.FinalizeMedia();
 
@@ -108,16 +108,22 @@ public class FragmentedMp4BuilderTests
         var audio = new AACTrack(2, 44100, 16);
 
         using var output = new MemoryStream();
-        var builder = new FragmentedMp4Builder(new SingleStreamOutput(output), maxFragmentLengthInMs: 2000);
+        // a remuxer feeding one track after another waits for the audio however long it takes: by default, video so far
+        // ahead of the audio would be written without waiting for it
+        var builder = new FragmentedMp4Builder(new SingleStreamOutput(output), maxFragmentLengthInMs: 2000)
+        {
+            TemporaryStorageFactory = new TemporaryMemoryStorageFactory(),
+            MaxFragmentDelayInMs = ulong.MaxValue,
+        };
         builder.AddTrack(video);
         builder.AddTrack(audio);
 
         // a minute of each, the video fed first, as a remuxer reading one track after another does
         int frame = (int)(video.Timescale / 24);
         for (int i = 0; i < 24 * 60; i++)
-            builder.ProcessRawSample(video.TrackID, new byte[64], frame, i % 64 == 0, new TemporaryMemory());
+            builder.ProcessRawSample(video.TrackID, new byte[64], frame, i % 64 == 0);
         for (int i = 0; i < 44100 * 60 / 1024; i++)
-            builder.ProcessRawSample(audio.TrackID, new byte[16], 1024, true, new TemporaryMemory());
+            builder.ProcessRawSample(audio.TrackID, new byte[16], 1024, true);
         builder.FinalizeMedia();
 
         var container = new Container();
@@ -155,10 +161,10 @@ public class FragmentedMp4BuilderTests
         var keyFrames = new HashSet<int> { 0, 7, 12, 30 };
         int duration = (int)(track.Timescale / 10);
         using var output = new MemoryStream();
-        var builder = new FragmentedMp4Builder(new SingleStreamOutput(output), maxFragmentLengthInMs: 1000);
+        var builder = new FragmentedMp4Builder(new SingleStreamOutput(output), maxFragmentLengthInMs: 1000) { TemporaryStorageFactory = new TemporaryMemoryStorageFactory() };
         builder.AddTrack(track);
         for (int i = 0; i < 40; i++)
-            builder.ProcessRawSample(track.TrackID, new byte[64], duration, keyFrames.Contains(i), new TemporaryMemory());
+            builder.ProcessRawSample(track.TrackID, new byte[64], duration, keyFrames.Contains(i));
         builder.FinalizeMedia();
 
         var container = new Container();
@@ -186,7 +192,7 @@ public class FragmentedMp4BuilderTests
     private static Container BuildFile(int sampleCount, Func<int, int> compositionOffset)
     {
         using var output = new MemoryStream();
-        var builder = new FragmentedMp4Builder(new SingleStreamOutput(output), maxFragmentLengthInMs: 60_000);
+        var builder = new FragmentedMp4Builder(new SingleStreamOutput(output), maxFragmentLengthInMs: 60_000) { TemporaryStorageFactory = new TemporaryMemoryStorageFactory() };
 
         var track = new AACTrack(2, 44100, 16);
         builder.AddTrack(track);
@@ -194,7 +200,7 @@ public class FragmentedMp4BuilderTests
         for (int i = 0; i < sampleCount; i++)
         {
             builder.ProcessRawSample(track.TrackID, new byte[64], 20,
-                isRandomAccessPoint: true, new TemporaryMemory(), compositionOffset(i));
+                isRandomAccessPoint: true, compositionOffset(i));
         }
 
         builder.FinalizeMedia();

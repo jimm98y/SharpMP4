@@ -12,7 +12,7 @@ namespace SharpMP4.Tests.Conformance;
 /// <summary>
 /// MPEG-4 Visual streams as ffmpeg's encoders - its own and Xvid's - make them, and FFmpeg's samples of it: there is no
 /// conformance set to fetch, nor a trace of ffmpeg's to compare the headers with, so each unit is written back as it was,
-/// each plane's type and size are those ffprobe gives it, and put in MP4 by <see cref="MPEG4VisualTrack"/> the stream
+/// each plane's type and size are those ffprobe gives it, and put in MP4 by <see cref="MPEG4Track"/> the stream
 /// decodes to the same pictures.
 /// </summary>
 [TestClass]
@@ -165,7 +165,7 @@ public class MPEG4Tests
             try
             {
                 byte[] data = File.ReadAllBytes(path);
-                var track = new MPEG4VisualTrack(30000, 1001);
+                var track = new MPEG4Track(30000, 1001);
                 using (var output = File.Create(mp4))
                 {
                     var builder = new Mp4Builder(new SingleStreamOutput(output));
@@ -207,7 +207,7 @@ public class MPEG4Tests
                     var reader = new VideoReader();
                     reader.Parse(container);
                     var read = reader.Tracks.Values.Single().Track;
-                    if (read is not MPEG4VisualTrack)
+                    if (read is not MPEG4Track)
                         failures.Add($"{name}: read back as {read.GetType().Name}");
                 }
             }

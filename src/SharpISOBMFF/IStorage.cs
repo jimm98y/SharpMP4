@@ -85,7 +85,7 @@ namespace SharpISOBMFF
             {
                 if (disposing)
                 {
-                    _stream.Dispose();
+                    //_stream.Dispose();
                 }
 
                 _disposedValue = true;

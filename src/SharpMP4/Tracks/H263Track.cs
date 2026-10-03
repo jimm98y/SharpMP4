@@ -162,7 +162,7 @@ namespace SharpMP4.Tracks
 
         public override ITrack Clone()
         {
-            return new H263Track(Timescale, DefaultSampleDuration)
+            return CopySettingsTo(new H263Track(Timescale, DefaultSampleDuration)
             {
                 Vendor = Vendor,
                 Profile = Profile,
@@ -171,7 +171,7 @@ namespace SharpMP4.Tracks
                 _height = _height,
                 _pixelAspectH = _pixelAspectH,
                 _pixelAspectV = _pixelAspectV,
-            };
+            });
         }
     }
 }

@@ -1,4 +1,4 @@
-using SharpISOBMFF;
+﻿using SharpISOBMFF;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -67,7 +67,7 @@ namespace SharpMP4.Tracks
         public override Box CreateSampleEntryBox()
         {
             if (SampleEntry != null)
-                return SampleEntry;
+                return CopyOfSampleEntry();
 
             return new XMLSubtitleSampleEntry
             {
@@ -82,6 +82,6 @@ namespace SharpMP4.Tracks
             };
         }
 
-        public override ITrack Clone() => new TtmlTrack(Timescale) { Namespace = Namespace, SchemaLocation = SchemaLocation, AuxiliaryMimeTypes = AuxiliaryMimeTypes, Language = Language, Forced = Forced };
+        public override ITrack Clone() => CopySettingsTo(WithSampleEntryOf(new TtmlTrack(Timescale) { Namespace = Namespace, SchemaLocation = SchemaLocation, AuxiliaryMimeTypes = AuxiliaryMimeTypes, Forced = Forced }));
     }
 }
