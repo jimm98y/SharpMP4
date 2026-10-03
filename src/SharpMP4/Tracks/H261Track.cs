@@ -27,6 +27,8 @@ namespace SharpMP4.Tracks
             DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
             TimescaleFallback = 30000;
             FrameTickFallback = 1001;
+            // 'H261' is QuickTime's entry only: the file is a QuickTime file
+            CompatibleBrand = QuickTimeBrand;
         }
 
         public H261Track(uint timescale, int sampleDuration) : this()
@@ -100,11 +102,11 @@ namespace SharpMP4.Tracks
 
         public override ITrack Clone()
         {
-            return new H261Track(Timescale, DefaultSampleDuration)
+            return CopySettingsTo(new H261Track(Timescale, DefaultSampleDuration)
             {
                 _width = _width,
                 _height = _height,
-            };
+            });
         }
     }
 }

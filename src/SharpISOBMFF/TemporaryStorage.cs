@@ -128,6 +128,9 @@ namespace SharpISOBMFF
 
         public Stream Stream { get { return _stream; } }
 
+        /// <summary>Where the file is: in the temporary folder, until it is disposed of.</summary>
+        public string FilePath { get { return _stream.Name; } }
+
         private bool _disposedValue;
 
         public IMp4Logger Logger { get; set; }
@@ -137,7 +140,9 @@ namespace SharpISOBMFF
             // NOTE: Make sure to only log if the user actually passed a valid logger
             logger?.LogInfo($"Temporary Storage: Using {nameof(TemporaryFile)}");
             
-            _stream = File.Create(Path.GetRandomFileName(), 1024, FileOptions.DeleteOnClose);
+            // in the temporary folder, not the current directory - which may not be writable, and is not where such a file
+            // is looked for - deleted as it is closed
+            _stream = File.Create(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()), 1024, FileOptions.DeleteOnClose);
 
             Logger = logger ?? DefaultMp4Logger.Instance;
         }
@@ -220,5 +225,76 @@ namespace SharpISOBMFF
         {
             return _stream.Read(buffer, offset, length);
         }
+    }
+
+    /// <summary>
+    /// A stream that cannot seek, which counts the bytes read from it and written to it: its position, which it cannot
+    /// tell itself. Where it started at the start of a file, that is an offset of the file.
+    /// </summary>
+    internal sealed class ForwardOnlyStorage : IStorage
+    {
+        private readonly IStorage _inner;
+        private long _position;
+
+        public ForwardOnlyStorage(IStorage inner)
+        {
+            _inner = inner;
+        }
+
+        public IMp4Logger Logger
+        {
+            get => _inner.Logger;
+            set => _inner.Logger = value;
+        }
+
+        public bool CanStreamSeek() => false;
+
+        public long GetPosition() => _position;
+
+        public long GetLength() => _inner.GetLength();
+
+        public int Read(byte[] buffer, int offset, int length)
+        {
+            int read = _inner.Read(buffer, offset, length);
+            if (read > 0)
+                _position += read;
+            return read;
+        }
+
+        public int ReadByte()
+        {
+            int b = _inner.ReadByte();
+            if (b >= 0)
+                _position++;
+            return b;
+        }
+
+        public void ReadExactly(byte[] data, int offset, int length)
+        {
+            _inner.ReadExactly(data, offset, length);
+            _position += length;
+        }
+
+        public void Write(byte[] buffer, int offset, int length)
+        {
+            _inner.Write(buffer, offset, length);
+            _position += length;
+        }
+
+        public void WriteByte(byte value)
+        {
+            _inner.WriteByte(value);
+            _position++;
+        }
+
+        public void Flush() => _inner.Flush();
+
+        public long SeekFromBeginning(long offset) => _position = _inner.SeekFromBeginning(offset);
+
+        public long SeekFromCurrent(long offset) => _position = _inner.SeekFromCurrent(offset);
+
+        public long SeekFromEnd(long offset) => _position = _inner.SeekFromEnd(offset);
+
+        public void Dispose() => _inner.Dispose();
     }
 }

@@ -12,11 +12,12 @@ namespace SharpMP4.Tracks
     /// and the stuffing after it; in an 'mp4v' sample entry, whose 'esds' is of objectTypeIndication 0x20 (ISO/IEC 14496-1,
     /// Table 5) and has the headers before the first plane as its decoder specific information (ISO/IEC 14496-14, 3.1.2).
     /// </summary>
-    public class MPEG4VisualTrack : TrackBase
+    public class MPEG4Track : TrackBase
     {
         public override string HandlerName => HandlerNames.Video;
         public override string HandlerType => HandlerTypes.Video;
         public override string Language { get; set; } = "und";
+        public override bool ReturnsPreviousSample => true;
 
         /// <summary>The objectTypeIndication of MPEG-4 Visual (14496-1, Table 5).</summary>
         public const byte VISUAL_ISO_14496_2 = 0x20;
@@ -36,21 +37,21 @@ namespace SharpMP4.Tracks
         private uint _width, _height, _bitRate, _bufferSize;
         private uint _pixelAspectH = 1, _pixelAspectV = 1;
 
-        public MPEG4VisualTrack()
+        public MPEG4Track()
         {
             DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
             TimescaleFallback = 30000;
             FrameTickFallback = 1001;
         }
 
-        public MPEG4VisualTrack(uint timescale, int sampleDuration) : this()
+        public MPEG4Track(uint timescale, int sampleDuration) : this()
         {
             Timescale = timescale;
             DefaultSampleDuration = sampleDuration;
         }
 
         /// <summary>A track of an 'mp4v' entry's 'esds', as a file has it: its decoder specific information read, where it has one.</summary>
-        public MPEG4VisualTrack(Box config, uint timescale, int sampleDuration) : this(timescale, sampleDuration)
+        public MPEG4Track(Box config, uint timescale, int sampleDuration) : this(timescale, sampleDuration)
         {
             var decoderConfig = (config as ESDBox)?._ES?.Children?.OfType<DecoderConfigDescriptor>().FirstOrDefault()
                 ?? throw new ArgumentException($"Invalid ESDBox: {config?.FourCC}");
@@ -92,7 +93,7 @@ namespace SharpMP4.Tracks
 
             if (length < 4 || buffer[offset] != 0 || buffer[offset + 1] != 0 || buffer[offset + 2] != 1)
             {
-                if (Logger.IsWarningEnabled) Logger.LogWarning("An MPEG-4 Visual unit starts with a start code: dropped");
+                if (Logger.IsWarningEnabled) Logger.LogWarning("An MPEG-4 Visual unit does not start with a start code: dropped");
                 return;
             }
 
@@ -272,7 +273,7 @@ namespace SharpMP4.Tracks
 
         public override ITrack Clone()
         {
-            var clone = new MPEG4VisualTrack(Timescale, DefaultSampleDuration)
+            var clone = new MPEG4Track(Timescale, DefaultSampleDuration)
             {
                 _width = _width,
                 _height = _height,
@@ -283,7 +284,7 @@ namespace SharpMP4.Tracks
                 _decoderSpecificInfo = DecoderSpecificInfo(),
                 _configurationComplete = true,
             };
-            return clone;
+            return CopySettingsTo(clone);
         }
     }
 }

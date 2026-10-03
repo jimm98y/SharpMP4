@@ -102,15 +102,26 @@ namespace SharpMP4.Encryption
     /// </summary>
     public abstract class NalSubsampleSplitter : SubsampleSplitter
     {
+        private ItuStream _stream;
+
+        /// <summary>
+        /// The size of the codec's NAL unit header.
+        /// </summary>
+        protected abstract int HeaderBytes { get; }
+
+        /// <summary>
+        /// The size of each NAL unit's length before it.
+        /// </summary>
+        public int LengthSize { get; }
+
         protected NalSubsampleSplitter(int lengthSize, IMp4Logger logger) : base(logger)
         {
             LengthSize = lengthSize;
         }
 
-        /// <summary>The size of each NAL unit's length before it.</summary>
-        public int LengthSize { get; }
-
-        /// <summary>The subsamples of a sample: its NAL units' clear and protected runs, one after another.</summary>
+        /// <summary>
+        /// The subsamples of a sample: its NAL units' clear and protected runs, one after another.
+        /// </summary>
         public override EncryptionSubsample[] Split(byte[] buffer, int offset, int length, bool wholeBlocks)
         {
             var subsamples = new List<EncryptionSubsample>();
@@ -175,11 +186,6 @@ namespace SharpMP4.Encryption
                 return HeaderBytes;
             }
         }
-
-        private ItuStream _stream;
-
-        /// <summary>The size of the codec's NAL unit header.</summary>
-        protected abstract int HeaderBytes { get; }
 
         /// <summary>
         /// Reads a NAL unit's header and, of a slice, its slice header, returning the bits they take; null where it is not
@@ -339,6 +345,7 @@ namespace SharpMP4.Encryption
                 _context.SliceLayerRbsp = new SharpH266.SliceLayerRbsp { SliceHeader = slice };
                 return bits + slice.Read(_context, stream);
             }
+
             return null;
         }
     }

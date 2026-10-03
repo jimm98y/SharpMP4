@@ -10,8 +10,14 @@ namespace SharpMP4.Tracks
     {
         public override string HandlerName => HandlerNames.Video;
         public override string HandlerType => HandlerTypes.Video;
-        public override string Language { get; set; } = "eng";
+        public override string Language { get; set; } = "und";
+        public override bool ReturnsPreviousSample => true;
+        private bool _toldOfConfigurationSei;
 
+        /// <summary>
+        /// The size of the length before each NAL unit of a sample: of a file, its configuration record's; 4 of a track made
+        /// to be written. The samples are written with it and the sample entry says it.
+        /// </summary>
         public int NalLengthSize { get; set; } = 4;
 
         protected H26XTrackBase() : base()
@@ -19,6 +25,117 @@ namespace SharpMP4.Tracks
             DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
             TimescaleFallback = 24000;
             FrameTickFallback = 1001;
+        }
+
+        /// <summary>Whether a sample entry has been made of the parameter sets: a set that changes after it is not in it.</summary>
+        protected bool SampleEntryCreated { get; set; }
+
+        /// <summary>
+        /// Whether the NAL units given are those of a configuration record - read from a file's, or a clone's of its
+        /// original's - rather than a stream's: its SEI NAL units are the record's, whatever their messages.
+        /// </summary>
+        protected bool ReadingConfiguration { get; set; }
+
+        /// <summary>
+        /// A parameter set for the sample entry: the latest of its id, as a stream that changes one means the pictures
+        /// after it to be decoded with the new one. One that changes after the sample entry has been made is not in that
+        /// entry - which the samples after it then need - so that is said.
+        /// </summary>
+        protected void KeepParameterSet<T>(string kind, Dictionary<ulong, T> sets, Dictionary<ulong, byte[]> raw, ulong id, T set,
+            byte[] buffer, int offset, int length)
+        {
+            if (raw.TryGetValue(id, out byte[] kept))
+            {
+                if (SameBytes(kept, buffer, offset, length))
+                    return;
+
+                if (SampleEntryCreated && Logger.IsWarningEnabled)
+                    Logger.LogWarning($"The {kind} of ID {id} changed after the sample entry was made: the entry has the one before, the samples after it need the new one");
+            }
+
+            sets[id] = set;
+            raw[id] = CopyOf(buffer, offset, length);
+        }
+
+        /// <summary>
+        /// The most SEI NAL units a configuration record is given of a stream: each one new, so that a stream that repeats
+        /// a message of its own - an encoder's settings in a user data SEI at each key frame - adds it once, and one that
+        /// says something new at each does not grow the record without end.
+        /// </summary>
+        protected const int MaxConfigurationSeiNalUnits = 8;
+
+        /// <summary>
+        /// The SEI messages of a declarative nature, of the stream as a whole rather than a picture of it, which ISO/IEC
+        /// 14496-15 puts in a configuration record - its example is a user data SEI: by their payloadType, as H.265 Annex D
+        /// and H.274 number them. A message of a picture - buffering period, picture timing, recovery point, decoded picture
+        /// hash, closed captions in a registered user data SEI - is the sample's.
+        /// </summary>
+        private static readonly HashSet<uint> DeclarativeSeiPayloadTypes = new HashSet<uint>
+        {
+            5,   // user_data_unregistered
+            137, // mastering_display_colour_volume
+            144, // content_light_level_info
+            147, // alternative_transfer_characteristics
+            148, // ambient_viewing_environment
+            149, // content_colour_volume
+            150, // equirectangular_projection
+            151, // cubemap_projection
+            154, // sphere_rotation
+            155, // regionwise_packing
+            156, // omni_viewport
+            176, // three_dimensional_reference_displays_info
+            200, // sei_manifest
+            201, // sei_prefix_indication
+        };
+
+        /// <summary>Whether an SEI NAL unit's messages are all declarative ones, and it has any.</summary>
+        protected static bool IsDeclarativeSei(IEnumerable<uint> payloadTypes)
+        {
+            bool any = false;
+            foreach (uint payloadType in payloadTypes)
+            {
+                if (!DeclarativeSeiPayloadTypes.Contains(payloadType))
+                    return false;
+                any = true;
+            }
+            return any;
+        }
+
+        /// <summary>
+        /// An SEI NAL unit for the configuration record, unless it has one of the same bytes, or as many as it is given:
+        /// whether it was kept.
+        /// </summary>
+        protected bool KeepConfigurationSei(List<byte[]> raw, byte[] buffer, int offset, int length)
+        {
+            foreach (byte[] kept in raw)
+            {
+                if (SameBytes(kept, buffer, offset, length))
+                    return false;
+            }
+
+            if (raw.Count >= MaxConfigurationSeiNalUnits && !ReadingConfiguration)
+            {
+                if (!_toldOfConfigurationSei && Logger.IsWarningEnabled)
+                    Logger.LogWarning($"More than {MaxConfigurationSeiNalUnits} declarative SEI NAL units: those after them are left in the samples, not put in the sample entry");
+                _toldOfConfigurationSei = true;
+                return false;
+            }
+
+            raw.Add(CopyOf(buffer, offset, length));
+            return true;
+        }
+
+        protected static bool SameBytes(byte[] kept, byte[] buffer, int offset, int length)
+        {
+            // compared byte by byte: .NET Framework has no spans without a package the library does not take
+            if (kept.Length != length)
+                return false;
+            for (int i = 0; i < length; i++)
+            {
+                if (kept[i] != buffer[offset + i])
+                    return false;
+            }
+            return true;
         }
 
         private ItuStream _nalStream;
@@ -152,6 +269,26 @@ namespace SharpMP4.Tracks
                 TakeSample();
         }
 
+        /// <summary>
+        /// The NAL units of a configuration record, read as the stream's are - its parameter sets and SEI messages kept for
+        /// the sample entry, and read into the context the samples are read with - but put in no sample.
+        /// </summary>
+        protected void ProcessConfiguration(IEnumerable<byte[]> nalUnits)
+        {
+            ReadingConfiguration = true;
+            try
+            {
+                foreach (byte[] nalUnit in nalUnits)
+                    ProcessSample(nalUnit, out _, out _);
+            }
+            finally
+            {
+                ReadingConfiguration = false;
+            }
+
+            DropConfigurationSample();
+        }
+
         /// <summary>The finished access unit, which also ends what was being said about it.</summary>
         protected new ArraySegment<byte> TakeSample()
         {
@@ -163,20 +300,21 @@ namespace SharpMP4.Tracks
         private long MaxNalUnitLength => NalLengthSize >= 4 ? uint.MaxValue : (1L << (NalLengthSize * 8)) - 1;
 
         /// <summary>
-        /// The NAL units of a sample, whichever way it carries them: each one behind its length,
-        /// as a sample in a file holds them, or behind a start code, as an encoder hands them out
-        /// and as a .264 or .265 file holds them.
+        /// The NAL units of a sample as a file holds them: each one behind its length, of
+        /// <see cref="NalLengthSize"/> bytes. Start codes are not looked for: a length field is not
+        /// part of a NAL unit, so emulation prevention does not keep it from reading 00 00 01 - the
+        /// length of a unit of 256 to 511 bytes does. NAL units behind start codes, as an encoder
+        /// hands them out, are read by <see cref="ParseAnnexB"/> and <see cref="ParseAnnexB(Stream, int)"/>.
         /// </summary>
-        public override IEnumerable<ArraySegment<byte>> ParseSample(byte[] buffer, int offset, int length)
-        {
-            if (buffer != null && length >= 3 && buffer[offset] == 0 && buffer[offset + 1] == 0
-                && (buffer[offset + 2] == 1 || (length >= 4 && buffer[offset + 2] == 0 && buffer[offset + 3] == 1)))
-            {
-                return ParseSample(new MemoryStream(buffer, offset, length));
-            }
+        public override IEnumerable<ArraySegment<byte>> ParseSample(byte[] buffer, int offset, int length) =>
+            ParseLengthPrefixed(buffer, offset, length);
 
-            return ParseLengthPrefixed(buffer, offset, length);
-        }
+        /// <summary>
+        /// The NAL units of a buffer of the Annex B byte stream - each behind a start code of three or
+        /// four bytes, as an encoder hands them out - each without its start code.
+        /// </summary>
+        public IEnumerable<ArraySegment<byte>> ParseAnnexB(byte[] buffer, int offset, int length) =>
+            ParseAnnexB(new MemoryStream(buffer, offset, length, writable: false));
 
         /// <summary>
         /// Reading an Annex B stream: the chunk in hand and how far through it the read has got,
@@ -199,7 +337,7 @@ namespace SharpMP4.Tracks
         /// unit in it.
         /// </summary>
         /// <param name="bufferSize">How much of the stream is read at a time.</param>
-        public IEnumerable<ArraySegment<byte>> ParseSample(Stream sample, int bufferSize = 64 * 1024)
+        public IEnumerable<ArraySegment<byte>> ParseAnnexB(Stream sample, int bufferSize = 64 * 1024)
         {
             if (sample == null)
                 throw new ArgumentNullException(nameof(sample));
@@ -225,7 +363,7 @@ namespace SharpMP4.Tracks
 
                 // A slice of the buffer the next NAL unit is read into: it is used before the
                 // next one is asked for, or copied by whoever keeps it.
-                while (ReadNalUnit(sample))
+                while (ReadAnnexBNalUnit(sample))
                     yield return new ArraySegment<byte>(_nalUnit, 0, _nalUnitLength);
             }
             finally
@@ -238,7 +376,7 @@ namespace SharpMP4.Tracks
         /// Reads up to the start of the next NAL unit, leaving the one before it in
         /// <see cref="_nalUnit"/>. False once the stream holds no more.
         /// </summary>
-        private bool ReadNalUnit(Stream stream)
+        private bool ReadAnnexBNalUnit(Stream stream)
         {
             _nalUnitLength = 0;
 

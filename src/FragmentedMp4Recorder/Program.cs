@@ -14,7 +14,8 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
     var fmp4 = new Container(logger);
     fmp4.Read(new IsoStream(inputFileStream) { Logger = logger });
 
-    VideoReader inputReader = new VideoReader(logger);
+    // the reader disposes the tracks it made; the clones written below are ours to dispose
+    using VideoReader inputReader = new VideoReader(logger);
     inputReader.Parse(fmp4);
     IEnumerable<ITrack> inputTracks = inputReader.GetTracks();
 
@@ -22,16 +23,19 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
     {
         IMp4Builder outputBuilder = new FragmentedMp4Builder(new SingleStreamOutput(output), 2000);
         Dictionary<uint, uint> mapping = new Dictionary<uint, uint>();
+        List<ITrack> outputTracks = new List<ITrack>();
 
         foreach (var inputTrack in inputTracks)
         {
             var outputTrack = inputTrack.Clone();
+            outputTracks.Add(outputTrack);
             outputBuilder.AddTrack(outputTrack);
             mapping.Add(inputTrack.TrackID, outputTrack.TrackID);
         }
 
         // subtitles: 3GPP timed text, in milliseconds - forced, so that players such as VLC show them without being asked
         var subtitleTrack = new TimedTextTrack(1000) { Language = "eng", Forced = true };
+        outputTracks.Add(subtitleTrack);
         outputBuilder.AddTrack(subtitleTrack);
 
         // how long the movie is: its longest track
@@ -92,5 +96,8 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
         }
 
         outputBuilder.FinalizeMedia();
+        outputBuilder.Dispose();
+        foreach (var outputTrack in outputTracks)
+            outputTrack.Dispose();
     }
 }

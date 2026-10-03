@@ -18,6 +18,7 @@ namespace SharpMP4.Tracks
         public override string HandlerName => HandlerNames.Video;
         public override string HandlerType => HandlerTypes.Video;
         public override string Language { get; set; } = "und";
+        public override bool ReturnsPreviousSample => true;
 
         // The objectTypeIndication values of MPEG-2 video by profile, and of MPEG-1 video (14496-1, Table 5)
         public const byte MPEG2_SIMPLE = 0x60;
@@ -99,7 +100,18 @@ namespace SharpMP4.Tracks
         /// The sample entry the track is written in: 'mp4v' with an 'esds' (ISO/IEC 14496-14), unless the track is of one of
         /// QuickTime's own entries, which it is written in again - without a configuration, as QuickTime has it.
         /// </summary>
-        public string SampleEntryType { get; set; } = "mp4v";
+        public string SampleEntryType
+        {
+            get => _sampleEntryType;
+            set
+            {
+                _sampleEntryType = value;
+                // QuickTime's own entries make the file a QuickTime file
+                CompatibleBrand = value == "mp4v" ? null : QuickTimeBrand;
+            }
+        }
+
+        private string _sampleEntryType = "mp4v";
 
         /// <summary>
         /// QuickTime's sample entries of MPEG-1 video (true) and MPEG-2 video (false), as FFmpeg knows them
@@ -143,7 +155,7 @@ namespace SharpMP4.Tracks
 
             if (length < 4 || buffer[offset] != 0 || buffer[offset + 1] != 0 || buffer[offset + 2] != 1)
             {
-                if (Logger.IsWarningEnabled) Logger.LogWarning("An H.262 unit starts with a start code: dropped");
+                if (Logger.IsWarningEnabled) Logger.LogWarning("An H.262 unit does not start with a start code: dropped");
                 return;
             }
 
@@ -387,7 +399,7 @@ namespace SharpMP4.Tracks
                 _sequenceExtension = _sequenceExtension,
                 _decoderSpecificInfo = _decoderSpecificInfo,
             };
-            return clone;
+            return CopySettingsTo(clone);
         }
     }
 }

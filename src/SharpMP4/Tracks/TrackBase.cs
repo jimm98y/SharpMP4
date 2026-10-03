@@ -15,8 +15,13 @@ namespace SharpMP4.Tracks
         public uint TrackID { get; set; } = 1;
         public string CompatibleBrand { get; set; } = null;
 
+        /// <summary>The brand of a QuickTime file: of a track of a sample entry only QuickTime has, which makes the file one.</summary>
+        public const string QuickTimeBrand = "qt  ";
+
         public int DefaultSampleDuration { get; set; }
         public uint DefaultSampleFlags { get; set; }
+
+        public virtual bool ReturnsPreviousSample => false;
 
         public IMp4Logger Logger { get; set; } = DefaultMp4Logger.Instance;
 
@@ -134,5 +139,35 @@ namespace SharpMP4.Tracks
         }
 
         public abstract ITrack Clone();
+
+        /// <summary>
+        /// What every track has, put on a clone: its timing, its flags, its language and the overrides and fallbacks of
+        /// its timing, so a clone writes the sample entry and the tables its original would.
+        /// </summary>
+        protected T CopySettingsTo<T>(T clone) where T : TrackBase
+        {
+            clone.Timescale = Timescale;
+            clone.DefaultSampleDuration = DefaultSampleDuration;
+            clone.DefaultSampleFlags = DefaultSampleFlags;
+            clone.CompatibleBrand = CompatibleBrand;
+            clone.Language = Language;
+            clone.TimescaleOverride = TimescaleOverride;
+            clone.FrameTickOverride = FrameTickOverride;
+            clone.TimescaleFallback = TimescaleFallback;
+            clone.FrameTickFallback = FrameTickFallback;
+            clone.Logger = Logger;
+            return clone;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>Lets go of what the track keeps: nothing, but of a track that keeps a stream.</summary>
+        protected virtual void Dispose(bool disposing)
+        {
+        }
     }
 }

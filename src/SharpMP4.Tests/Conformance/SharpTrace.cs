@@ -37,7 +37,7 @@ public static partial class SharpTrace
 
         try
         {
-            foreach (var nalu in splitter.ParseSample(file))
+            foreach (var nalu in splitter.ParseAnnexB(file))
             {
                 if (nalu.Count < 2)
                     continue;

@@ -146,7 +146,10 @@ namespace SharpMP4.Encryption
         private static void CbcEncryptBlock(ICryptoTransform cipher, CipherState state, byte[] buffer, int offset)
         {
             for (int i = 0; i < BlockSize; i++)
+            {
                 state.Block[i] = (byte)(buffer[offset + i] ^ state.Chain[i]);
+            }
+
             cipher.TransformBlock(state.Block, 0, BlockSize, buffer, offset);
             Buffer.BlockCopy(buffer, offset, state.Chain, 0, BlockSize);
         }

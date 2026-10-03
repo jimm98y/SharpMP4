@@ -23,7 +23,10 @@ namespace SharpISOBMFF
         public IsoStream(IStorage stream, ITemporaryStorageFactory storageFactory = null, IMp4Logger logger = null)
         {
             // looked ahead in by keeping what is looked at, not by seeking back: a box reads the same on a stream that
-            // cannot seek as on one that can
+            // cannot seek as on one that can; of one that cannot, the bytes read are counted, so that a box still knows
+            // where in the file it was, which the offsets of a sample table or a fragment are counted in
+            if (stream != null && !(stream is PeekableStorage) && !stream.CanStreamSeek())
+                stream = new ForwardOnlyStorage(stream);
             _stream = stream is PeekableStorage || stream == null ? stream : new PeekableStorage(stream);
             _storageFactory = storageFactory ?? new TemporaryFileStorageFactory();
 
@@ -127,6 +130,23 @@ namespace SharpISOBMFF
         {
             return _stream.CanStreamSeek();
         }
+
+        /// <summary>
+        /// Where the stream is in what it reads: of a stream that seeks, its offset; of one that does not, how many of its
+        /// bytes were read, those looked ahead at left out. Either is an offset of the file, where the stream starts at
+        /// its start. -1 where neither is known.
+        /// </summary>
+        public long GetStreamPosition()
+        {
+            if (CanStreamSeek())
+                return GetCurrentOffset();
+            return _stream is PeekableStorage peekable && peekable.Inner is ForwardOnlyStorage ? peekable.GetPosition() : -1;
+        }
+
+        /// <summary>
+        /// Whether a box read from the stream said it was longer than what was left of the stream: the file was cut short.
+        /// </summary>
+        internal bool HasReadPastEnd { get; private set; }
 
         public long GetCurrentOffset()
         {
@@ -282,6 +302,7 @@ namespace SharpISOBMFF
 
             if (correctedLength < length)
             {
+                HasReadPastEnd = true;
                 throw new IsoEndOfStreamException(new StreamMarker(GetCurrentOffset(), GetStreamLength() - GetCurrentOffset(), this));
             }
 
@@ -349,6 +370,7 @@ namespace SharpISOBMFF
 
         public ulong ReadBit(ulong boxSize, ulong readSize, out bool value, string name)
         {
+            CheckFieldFits(boxSize, readSize, 1, name);
             value = ReadBitInternal() != 0;
             LogEnd(name, 1, value);
             return 1;
@@ -408,6 +430,7 @@ namespace SharpISOBMFF
 
         public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out uint value, string name)
         {
+            CheckFieldFits(boxSize, readSize, count, name);
             if (count > 32) throw new ArgumentException();
             uint originalCount = count;
             int res = 0;
@@ -432,6 +455,7 @@ namespace SharpISOBMFF
 
         public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out ulong value, string name)
         {
+            CheckFieldFits(boxSize, readSize, count, name);
             if (count > 64) throw new ArgumentException();
             uint originalCount = count;
             long res = 0;
@@ -528,6 +552,7 @@ namespace SharpISOBMFF
 
         public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out byte[] value, string name)
         {
+            CheckFieldFits(boxSize, readSize, count, name);
             value = new byte[(count >> 3) + (count % 8)];
             int i = 0;
             int c = (int)count;
@@ -925,7 +950,7 @@ namespace SharpISOBMFF
             if(value.Header == null)
             {
                 header = new SafeBoxHeader();
-                ulong boxSizeBits = value.CalculateSize();
+                ulong boxSizeBits = CalculateBoxSize(value);
                 ulong boxSize = boxSizeBits >> 3;
                 if (boxSize > uint.MaxValue || value.HasLargeSize)
                 {
@@ -958,6 +983,8 @@ namespace SharpISOBMFF
 
             SafeBoxHeader header;
             long headerOffset = this.GetCurrentOffset();
+            // where the box is in the file, of a stream that cannot seek too, as a 'moof' the data offsets of its runs count from
+            long boxOffset = headerOffset >= 0 ? headerOffset : GetStreamPosition();
             ulong headerSize = ReadBoxHeader(out header);
 
             ulong availableSize = readSize == ulong.MaxValue ? ulong.MaxValue : (readSize - boxSize - headerSize);
@@ -1018,7 +1045,7 @@ namespace SharpISOBMFF
 
             if (value != null)
             {
-                value.SetBoxOffset(headerOffset);
+                value.SetBoxOffset(boxOffset);
                 value.Size = header.GetBoxSizeInBits() >> 3;
             }
 
@@ -1315,7 +1342,7 @@ namespace SharpISOBMFF
                 }
             }
 
-            ulong calculatedSize = box.CalculateSize();
+            ulong calculatedSize = CalculateBoxSize(box);
             if (calculatedSize != GetBoxSize(header))
             {
                 if (box.FourCC != FromFourCC("mdat"))
@@ -1344,8 +1371,20 @@ namespace SharpISOBMFF
 
             foreach (IHasBoxChildren box in boxes)
             {
-                size += box.CalculateSize();
+                size += box is Box b ? CalculateBoxSize(b) : box.CalculateSize();
             }
+            return size;
+        }
+
+        /// <summary>
+        /// The size of a box, in bits, as it is written: one of more than 4 GB with a largesize (14496-12 4.2), whose 8 bytes
+        /// a box made rather than read does not count, as it does not know how large it is until its fields are counted.
+        /// </summary>
+        public static ulong CalculateBoxSize(Box box)
+        {
+            ulong size = box.CalculateSize();
+            if (!box.IsCountingLargeSize && (size >> 3) > uint.MaxValue)
+                size += 64;
             return size;
         }
 
@@ -1425,7 +1464,7 @@ namespace SharpISOBMFF
             ulong size = 0;
             foreach (IMp4Serializable c in value)
             {
-                size += c.CalculateSize();
+                size += c is Box box ? CalculateBoxSize(box) : c.CalculateSize();
             }
             return size;
         }
@@ -1787,6 +1826,8 @@ namespace SharpISOBMFF
                     long remaining = (long)(readSize - boxSize);
                     long count = remaining >> 3;
                     marker = new StreamMarker(GetCurrentOffset(), count, this);
+                    if (marker.Position + count > GetStreamLength())
+                        HasReadPastEnd = true;
                     SeekFromCurrent(count);
                     value = marker;
                     size = (ulong)(marker.Length << 3);
@@ -1801,11 +1842,14 @@ namespace SharpISOBMFF
                 storage.SeekFromEnd(0); // move at the end of our storage
                 long offset = storage.GetCurrentOffset();
 
+                // where the bytes were in the file, which what points at them - a chunk offset, a run's data offset - says
+                long sourcePosition = GetStreamPosition();
+
                 if (readSize == ulong.MaxValue)
                 {
                     ulong count = CopyStream(_stream, storage._stream);
 
-                    marker = new StreamMarker(offset, (long)count, storage);
+                    marker = new StreamMarker(offset, (long)count, storage) { SourcePosition = sourcePosition, IsCopy = true };
                     value = marker;
                     size = count << 3;
                     LogEnd(name, size, value);
@@ -1816,9 +1860,11 @@ namespace SharpISOBMFF
                     long remaining = (long)(readSize - boxSize);
                     long count = remaining >> 3;
                     ulong copied = CopyStream(_stream, storage._stream, count);
+                    if ((long)copied < count)
+                        HasReadPastEnd = true;
 
                     // of what the box says, as where the stream seeks: the stream may end first, a box running past it
-                    marker = new StreamMarker(offset, count, storage);
+                    marker = new StreamMarker(offset, count, storage) { SourcePosition = sourcePosition, IsCopy = true };
                     value = marker;
                     size = (ulong)count << 3;
                     LogEnd(name, size, value);
@@ -1962,6 +2008,18 @@ namespace SharpISOBMFF
         /// </summary>
         /// <summary>A count of entries allocated without checking they fit: at most half a megabyte of references.</summary>
         private const ulong SmallArrayCount = 1 << 16;
+
+        /// <summary>
+        /// Verifies that a field of <paramref name="bits"/> bits ends within its box: a box whose syntax asks for more than
+        /// the box holds - an 'rtp ' entry without the fields of its hint track - would otherwise read the start of the box
+        /// after it as its own, and go on reading from there. Thrown, the box is kept as its bytes, as one cut short by the
+        /// end of the stream is. Bounded by nothing where the size of the box is not known.
+        /// </summary>
+        private static void CheckFieldFits(ulong boxSize, ulong readSize, ulong bits, string name)
+        {
+            if (readSize != ulong.MaxValue && (boxSize > readSize || bits > readSize - boxSize))
+                throw new InvalidDataException($"'{name}' of {bits} bits does not fit in what is left of its box: {(boxSize > readSize ? 0 : readSize - boxSize)} bits");
+        }
 
         private void CheckArrayAllocation(ulong boxSize, ulong readSize, ulong count, ulong minBitsPerEntry, string name)
         {
@@ -2176,6 +2234,7 @@ namespace SharpISOBMFF
 
         public ulong ReadInt8(ulong boxSize, ulong readSize, out sbyte value, string name)
         {
+            CheckFieldFits(boxSize, readSize, 8, name);
             ulong count = unchecked(ReadUInt8(boxSize, readSize, out byte v, ""));
             value = unchecked((sbyte)v);
             
@@ -2193,6 +2252,7 @@ namespace SharpISOBMFF
 
         public ulong ReadUInt8(ulong boxSize, ulong readSize, out byte value, string name)
         {
+            CheckFieldFits(boxSize, readSize, 8, name);
             value = ReadByte();
             
             LogEnd(name, 8, value);
@@ -2241,6 +2301,7 @@ namespace SharpISOBMFF
 
         public ulong ReadInt16(ulong boxSize, ulong readSize, out short value, string name)
         {
+            CheckFieldFits(boxSize, readSize, 16, name);
             ulong count = ReadUInt16(boxSize, readSize, out ushort v, "");
             value = unchecked((short)v);
             
@@ -2255,6 +2316,7 @@ namespace SharpISOBMFF
 
         public ulong ReadUInt16(ulong boxSize, ulong readSize, out ushort value, string name)
         {
+            CheckFieldFits(boxSize, readSize, 16, name);
             int b1 = ReadByteInternal();
             if(b1 == -1)
             {
@@ -2304,6 +2366,7 @@ namespace SharpISOBMFF
 
         public ulong ReadUInt24(ulong boxSize, ulong readSize, out uint value, string name)
         {
+            CheckFieldFits(boxSize, readSize, 24, name);
             int b1 = ReadByteInternal();
             if(b1 == -1)
             {
@@ -2345,6 +2408,7 @@ namespace SharpISOBMFF
 
         public ulong ReadInt32(ulong boxSize, ulong readSize, out int value, string name)
         {
+            CheckFieldFits(boxSize, readSize, 32, name);
             ulong count = ReadUInt32(boxSize, readSize, out uint v, "");
             value = unchecked((int)v);
 
@@ -2386,6 +2450,7 @@ namespace SharpISOBMFF
 
         public ulong ReadUInt32(ulong boxSize, ulong readSize, out uint value, string name)
         {
+            CheckFieldFits(boxSize, readSize, 32, name);
             int b1 = ReadByteInternal();
             if(b1 == -1) 
             { 
@@ -2451,6 +2516,7 @@ namespace SharpISOBMFF
 
         public ulong ReadUInt48(ulong boxSize, ulong readSize, out ulong value, string name)
         {
+            CheckFieldFits(boxSize, readSize, 48, name);
             int b1 = ReadByteInternal();
             if (b1 == -1)
             {
@@ -2513,6 +2579,7 @@ namespace SharpISOBMFF
 
         public ulong ReadInt64(ulong boxSize, ulong readSize, out long value, string name)
         {
+            CheckFieldFits(boxSize, readSize, 64, name);
             ulong count = unchecked(ReadUInt64(boxSize, readSize, out ulong v, ""));
             value = unchecked((long)v);
             
@@ -2530,6 +2597,7 @@ namespace SharpISOBMFF
 
         public ulong ReadUInt64(ulong boxSize, ulong readSize, out ulong value, string name)
         {
+            CheckFieldFits(boxSize, readSize, 64, name);
             int b1 = ReadByteInternal();
             if (b1 == -1)
             {
@@ -2610,6 +2678,7 @@ namespace SharpISOBMFF
 
         public ulong ReadFixedPoint1616(ulong boxSize, ulong readSize, out double value, string name)
         {
+            CheckFieldFits(boxSize, readSize, 32, name);
             int b1 = ReadByteInternal();
             if (b1 == -1)
             {
@@ -2754,7 +2823,7 @@ namespace SharpISOBMFF
 
         public static ulong CalculateClassSize(IMp4Serializable value)
         {
-            return value.CalculateSize();
+            return value is Box box ? CalculateBoxSize(box) : value.CalculateSize();
         }
 
         public static ulong CalculateBoxArray(IHasBoxChildren value)
@@ -2774,6 +2843,7 @@ namespace SharpISOBMFF
 
         public ulong ReadUInt8Array(ulong boxSize, ulong readSize, uint count, out byte[] value, string name)
         {
+            CheckFieldFits(boxSize, readSize, (ulong)count * 8, name);
             ulong size = ReadBytes(count, out value);
            
             LogEnd(name, size, value);
@@ -2919,8 +2989,11 @@ namespace SharpISOBMFF
             {
                 if (disposing)
                 {
-                    // TODO: dispose managed state (managed objects)
                     _stream.Dispose();
+
+                    // what was copied out of a stream that cannot seek - a temporary file, deleted as it is closed
+                    _temp?.Dispose();
+                    _temp = null;
                 }
 
                 _disposedValue = true;
@@ -2943,11 +3016,23 @@ namespace SharpISOBMFF
         public long Position { get; set; }
         public long Length { get; set; }
         public IsoStream Stream { get; set; }
+
+        /// <summary>
+        /// Where the bytes are in the file they were read from: <see cref="Position"/> itself, but of bytes copied out of a
+        /// stream that cannot seek into temporary storage (<see cref="IsCopy"/>), how far into that stream they were. A
+        /// sample's chunk offset or a run's data offset is of the file, and is found in the copy from it. -1 where unknown.
+        /// </summary>
+        public long SourcePosition { get; set; }
+
+        /// <summary>Whether the bytes are a copy, in temporary storage, of bytes of a stream that cannot seek.</summary>
+        public bool IsCopy { get; set; }
+
         public StreamMarker(long position, long length, IsoStream stream)
         {
             Position = position;
             Length = length;
             Stream = stream;
+            SourcePosition = position;
         }
 
         protected virtual void Dispose(bool disposing)

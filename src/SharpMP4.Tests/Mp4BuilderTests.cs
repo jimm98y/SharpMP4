@@ -61,17 +61,52 @@ public class Mp4BuilderTests
 
     /// <summary>
     /// Sample positions used to be truncated to 32 bits, so past 4 GB of media data the offsets
-    /// wrapped and the file pointed at the wrong bytes with nothing reported.
+    /// wrapped and the file pointed at the wrong bytes with nothing reported. And past 4 GB the
+    /// 'mdat' header is 16 bytes, with its size in the largesize, while the offsets were counted
+    /// from an 8 byte one: every sample 8 bytes off. Over 5 GB really goes through the builder
+    /// here, from a storage that keeps only its length to an output that keeps only the start.
     /// </summary>
     [TestMethod]
     public void WritesSixtyFourBitOffsetsWhenTheMediaIsLargerThanFourGigabytes()
     {
-        var file = BuildFile(4, _ => 20, _ => 0, new HugeStorage(5_000_000_000));
+        const int sampleSize = 64 << 20;
+        const int sampleCount = 80; // 5.4 GB
+        var output = new HeadStream(1 << 20);
+        var builder = new Mp4Builder(new SingleStreamOutput(output)) { TemporaryStorageFactory = new BlankStorageFactory() };
+        var track = new AACTrack(2, 44100, 16);
+        builder.AddTrack(track);
+
+        // a second each, so that each is a chunk of its own
+        var sample = new ArraySegment<byte>(new byte[sampleSize]);
+        for (int i = 0; i < sampleCount; i++)
+            builder.ProcessRawSample(track.TrackID, sample, 44100, isRandomAccessPoint: true);
+        builder.FinalizeMedia();
+
+        long mediaLength = (long)sampleSize * sampleCount;
+        var file = new Container();
+        var iso = new IsoStream(new StreamWrapper(new MemoryStream(output.Head)));
+        while (Boxes.FindOrNull<MovieBox>(file) == null && file.ReadSingleBox(iso) != 0)
+        {
+        }
 
         Assert.IsNull(Boxes.FindOrNull<ChunkOffsetBox>(file));
         var co64 = Boxes.Find<ChunkLargeOffsetBox>(file);
-        Assert.IsTrue(co64.ChunkOffset.All(offset => offset > uint.MaxValue),
-            "every chunk offset should sit past the 32-bit range");
+        Assert.AreEqual((uint)sampleCount, co64.EntryCount);
+
+        // the 'mdat' right after the 'moov', its size in the largesize: its samples start 16 bytes into it
+        long mdat = file.Children.Sum(box => (long)(box.CalculateSize() >> 3));
+        var header = output.Head.AsSpan((int)mdat, 16).ToArray();
+        Assert.AreEqual(1u, (uint)(header[0] << 24 | header[1] << 16 | header[2] << 8 | header[3]), "a size of 1: the size is in the largesize");
+        Assert.AreEqual("mdat", System.Text.Encoding.ASCII.GetString(header, 4, 4));
+        ulong largesize = 0;
+        for (int i = 8; i < 16; i++)
+            largesize = largesize << 8 | header[i];
+        Assert.AreEqual((ulong)(mediaLength + 16), largesize);
+
+        Assert.AreEqual((ulong)(mdat + 16), co64.ChunkOffset[0], "the first sample right after the 16 byte header");
+        Assert.AreEqual((ulong)(mdat + 16 + (long)sampleSize * (sampleCount - 1)), co64.ChunkOffset[sampleCount - 1]);
+        Assert.IsTrue(co64.ChunkOffset[sampleCount - 1] > uint.MaxValue);
+        Assert.AreEqual(mdat + 16 + mediaLength, output.Length, "the file ends where the last sample does");
     }
 
     [TestMethod]
@@ -98,13 +133,10 @@ public class Mp4BuilderTests
     private static Container BuildFile(
         int sampleCount,
         Func<int, int> duration,
-        Func<int, int> compositionOffset,
-        IStorage? storage = null)
+        Func<int, int> compositionOffset)
     {
         using var output = new MemoryStream();
         var builder = new Mp4Builder(new SingleStreamOutput(output));
-        if (storage != null)
-            builder.Storage = storage;
 
         var track = new AACTrack(2, 44100, 16);
         builder.AddTrack(track);
@@ -117,8 +149,7 @@ public class Mp4BuilderTests
 
         builder.FinalizeMedia();
 
-        // Read only as far as the moov. The mdat that follows it is the media itself, and with a
-        // storage that reports positions past 4 GB there are not that many bytes behind it.
+        // Read only as far as the moov: the mdat that follows it is the media itself.
         var container = new Container();
         var iso = new IsoStream(new StreamWrapper(new MemoryStream(output.ToArray())));
         while (Boxes.FindOrNull<MovieBox>(container) == null && container.ReadSingleBox(iso) != 0)
@@ -128,31 +159,75 @@ public class Mp4BuilderTests
         return container;
     }
 
-    /// <summary>
-    /// Reports positions past 4 GB without writing that much, so the switch to 64-bit chunk
-    /// offsets can be exercised without a five gigabyte temporary file.
-    /// </summary>
-    private sealed class HugeStorage : IStorage
+    /// <summary>Makes storages that keep only how much was written to them, and read back as zeros.</summary>
+    private sealed class BlankStorageFactory : ITemporaryStorageFactory
     {
-        private readonly MemoryStream _inner = new();
-        private readonly long _base;
+        public IStorage Create(IMp4Logger? logger = null) => new BlankStorage();
+    }
 
-        public HugeStorage(long baseOffset) => _base = baseOffset;
+    /// <summary>
+    /// Keeps only its length, so gigabytes can go through the builder without being kept anywhere: what is read back is
+    /// zeros, as the samples written to it were.
+    /// </summary>
+    private sealed class BlankStorage : IStorage
+    {
+        private long _length;
+        private long _position;
 
         public IMp4Logger Logger { get; set; } = new DefaultMp4Logger();
 
-        public long GetPosition() => _base + _inner.Position;
-        public long GetLength() => _base + _inner.Length;
+        public long GetPosition() => _position;
+        public long GetLength() => _length;
         public bool CanStreamSeek() => true;
-        public void Flush() => _inner.Flush();
-        public void Write(byte[] buffer, int offset, int length) => _inner.Write(buffer, offset, length);
-        public void WriteByte(byte value) => _inner.WriteByte(value);
-        public int ReadByte() => _inner.ReadByte();
-        public int Read(byte[] buffer, int offset, int length) => _inner.Read(buffer, offset, length);
-        public void ReadExactly(byte[] data, int offset, int length) => _inner.ReadExactly(data, offset, length);
-        public long SeekFromCurrent(long offset) => _base + _inner.Seek(offset, SeekOrigin.Current);
-        public long SeekFromEnd(long offset) => _base + _inner.Seek(offset, SeekOrigin.End);
-        public long SeekFromBeginning(long offset) => _base + _inner.Seek(Math.Max(0, offset - _base), SeekOrigin.Begin);
-        public void Dispose() => _inner.Dispose();
+        public void Flush() { }
+        public void Write(byte[] buffer, int offset, int length) { _position += length; _length = Math.Max(_length, _position); }
+        public void WriteByte(byte value) => Write(new[] { value }, 0, 1);
+        public int ReadByte() => _position < _length ? Zero(ref _position) : -1;
+        public int Read(byte[] buffer, int offset, int length)
+        {
+            int count = (int)Math.Min(length, _length - _position);
+            Array.Clear(buffer, offset, count);
+            _position += count;
+            return count;
+        }
+        public void ReadExactly(byte[] data, int offset, int length)
+        {
+            if (Read(data, offset, length) != length)
+                throw new EndOfStreamException();
+        }
+        public long SeekFromCurrent(long offset) => _position += offset;
+        public long SeekFromEnd(long offset) => _position = _length + offset;
+        public long SeekFromBeginning(long offset) => _position = offset;
+        public void Dispose() { }
+
+        private static int Zero(ref long position) { position++; return 0; }
+    }
+
+    /// <summary>An output that keeps the first bytes written to it - the 'ftyp' and 'moov' - and counts the rest.</summary>
+    private sealed class HeadStream : Stream
+    {
+        private readonly MemoryStream _head = new();
+        private readonly int _keep;
+        private long _length;
+
+        public HeadStream(int keep) => _keep = keep;
+
+        public byte[] Head => _head.ToArray();
+
+        public override bool CanRead => false;
+        public override bool CanSeek => false;
+        public override bool CanWrite => true;
+        public override long Length => _length;
+        public override long Position { get => _length; set => throw new NotSupportedException(); }
+        public override void Flush() { }
+        public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            int kept = (int)Math.Max(0, Math.Min(count, _keep - _head.Length));
+            _head.Write(buffer, offset, kept);
+            _length += count;
+        }
     }
 }

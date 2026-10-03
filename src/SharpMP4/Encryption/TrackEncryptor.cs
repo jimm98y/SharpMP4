@@ -19,6 +19,10 @@ namespace SharpMP4.Encryption
         private bool _splitterMade;
         private byte[] _nextIV;
 
+        public TrackProtection Protection { get; }
+        public byte[] Key { get; }
+        public IMp4Logger Logger { get; }
+
         private TrackEncryptor(TrackProtection protection, byte[] key, IMp4Logger logger)
         {
             Protection = protection;
@@ -28,11 +32,9 @@ namespace SharpMP4.Encryption
                 _nextIV = TrackProtection.RandomBytes(protection.DefaultPerSampleIVSize);
         }
 
-        public TrackProtection Protection { get; }
-        public byte[] Key { get; }
-        public IMp4Logger Logger { get; }
-
-        /// <summary>The encryptor of a track, its protection and key checked; the protection says what the key is.</summary>
+        /// <summary>
+        /// The encryptor of a track, its protection and key checked; the protection says what the key is.
+        /// </summary>
         public static TrackEncryptor Create(ITrack track, TrackProtection protection, byte[] key, IMp4Logger logger)
         {
             if (protection == null)

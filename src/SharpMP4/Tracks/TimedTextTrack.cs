@@ -1,4 +1,4 @@
-using SharpISOBMFF;
+﻿using SharpISOBMFF;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -72,8 +72,9 @@ namespace SharpMP4.Tracks
 
         public override Box CreateSampleEntryBox()
         {
+            // the entry the track was read with, a copy of it: the writer puts what it is given in its own 'stsd'
             if (SampleEntry != null)
-                return SampleEntry;
+                return CopyOfSampleEntry();
 
             // as ffmpeg's mov_text writes it: at the bottom, centred, white on transparent, the font of ID 1 'Serif', 18
             var entry = new TextSampleEntrytx3gDup
@@ -98,6 +99,6 @@ namespace SharpMP4.Tracks
             return entry;
         }
 
-        public override ITrack Clone() => new TimedTextTrack(Timescale, _handlerType) { Language = Language, Forced = Forced };
+        public override ITrack Clone() => CopySettingsTo(WithSampleEntryOf(new TimedTextTrack(Timescale, _handlerType) { Forced = Forced }));
     }
 }

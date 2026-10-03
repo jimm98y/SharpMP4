@@ -72,17 +72,7 @@ namespace SharpMP4.Tracks
 
             NalLengthSize = avcC._AVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
 
-            foreach (var spsBinary in avcC._AVCConfig.SequenceParameterSetNALUnit)
-            {
-                ProcessSample(spsBinary, out _, out _);
-            }
-
-            foreach (var ppsBinary in avcC._AVCConfig.PictureParameterSetNALUnit)
-            {
-                ProcessSample(ppsBinary, out _, out _);
-            }
-
-            DropConfigurationSample();
+            ProcessConfiguration((avcC._AVCConfig.SequenceParameterSetNALUnit ?? []).Concat(avcC._AVCConfig.PictureParameterSetNALUnit ?? []));
         }
 
         /// <summary>
@@ -92,13 +82,17 @@ namespace SharpMP4.Tracks
         /// <param name="isRandomAccessPoint">true when the sample contains a keyframe.</param>
         public override void ProcessSample(byte[] buffer, int offset, int length, out ArraySegment<byte> output, out bool isRandomAccessPoint)
         {
-            isRandomAccessPoint = SampleHasIdr;
+            // of the access unit being assembled: said of it only where it is the one handed out, not of a call that hands
+            // out nothing
+            bool sampleIsRandomAccessPoint = SampleHasIdr;
+            isRandomAccessPoint = false;
             output = default;
 
             if (buffer == null)
             {
                 // flush the last AU
                 output = FlushAccessUnit();
+                isRandomAccessPoint = output.Array != null && sampleIsRandomAccessPoint;
                 return;
             }
 
@@ -106,7 +100,7 @@ namespace SharpMP4.Tracks
             if (length >= 3 && buffer[offset] == 0 && buffer[offset + 1] == 0
                 && (buffer[offset + 2] == 1 || (length >= 4 && buffer[offset + 2] == 0 && buffer[offset + 3] == 1)))
             {
-                throw new ArgumentException("NAL unit must not have Annex-B prefix!");
+                throw new ArgumentException("A NAL unit is given without its start code: give Annex B byte stream to ProcessAnnexBTrackSample.");
             }
 
             {
@@ -125,11 +119,8 @@ namespace SharpMP4.Tracks
                 {
                     _context.SeqParameterSetRbsp = new SeqParameterSetRbsp();
                     _context.SeqParameterSetRbsp.Read(_context, stream);
-                    if (!Sps.ContainsKey(_context.SeqParameterSetRbsp.SeqParameterSetData.SeqParameterSetId))
-                    {
-                        Sps.Add(_context.SeqParameterSetRbsp.SeqParameterSetData.SeqParameterSetId, _context.SeqParameterSetRbsp);
-                        SpsRaw.Add(_context.SeqParameterSetRbsp.SeqParameterSetData.SeqParameterSetId, CopyOf(buffer, offset, length));
-                    }
+                    KeepParameterSet("SPS", Sps, SpsRaw, _context.SeqParameterSetRbsp.SeqParameterSetData.SeqParameterSetId, _context.SeqParameterSetRbsp,
+                        buffer, offset, length);
 
                     // if SPS contains the timescale, set it
                     if (Timescale == 0 || DefaultSampleDuration == 0)
@@ -162,11 +153,8 @@ namespace SharpMP4.Tracks
                 {
                     _context.PicParameterSetRbsp = new PicParameterSetRbsp();
                     _context.PicParameterSetRbsp.Read(_context, stream);
-                    if (!Pps.ContainsKey(_context.PicParameterSetRbsp.PicParameterSetId))
-                    {
-                        Pps.Add(_context.PicParameterSetRbsp.PicParameterSetId, _context.PicParameterSetRbsp);
-                        PpsRaw.Add(_context.PicParameterSetRbsp.PicParameterSetId, CopyOf(buffer, offset, length));
-                    }
+                    KeepParameterSet("PPS", Pps, PpsRaw, _context.PicParameterSetRbsp.PicParameterSetId, _context.PicParameterSetRbsp,
+                        buffer, offset, length);
 
                     // picture parameter set NAL unit (when present): kept in the sample entry
                 }
@@ -178,11 +166,9 @@ namespace SharpMP4.Tracks
                 else if(nu.NalUnitType >= H264NALTypes.PREFIX_NAL && nu.NalUnitType <= H264NALTypes.RESERVED1)
                 {
                     // NAL units with nal_unit_type in the range of 14 to 18, inclusive (when present): a prefix NAL unit goes
-                    // with the base view slice after it; a subset SPS is kept in the sample entry
-                    if (nu.NalUnitType != H264NALTypes.SUBSET_SPS)
-                    {
-                        HoldNalUnit(buffer, offset, length);
-                    }
+                    // with the base view slice after it; a subset SPS - of MVC or SVC, whose 'mvcC' or 'svcC' would hold it,
+                    // which 'avcC' cannot - stays in the samples, as the parameter sets of 'avc3' do, rather than be lost
+                    HoldNalUnit(buffer, offset, length);
                 }
                 else
                 {
@@ -268,6 +254,7 @@ namespace SharpMP4.Tracks
                         {
                             // the first VCL NAL unit of a new primary coded picture (7.4.1.2.4)
                             output = StartVclNalUnit(true);
+                            isRandomAccessPoint = output.Array != null && sampleIsRandomAccessPoint;
                         }
                         else
                         {
@@ -337,7 +324,8 @@ namespace SharpMP4.Tracks
             avcConfigurationBox._AVCConfig.BitDepthChromaMinus8 = (byte)sps.SeqParameterSetData.BitDepthChromaMinus8;
             avcConfigurationBox._AVCConfig.ChromaFormat = (byte)sps.SeqParameterSetData.ChromaFormatIdc;
             avcConfigurationBox._AVCConfig.ConfigurationVersion = 1;
-            avcConfigurationBox._AVCConfig.LengthSizeMinusOne = 3;
+            // the size of the lengths the samples are written with
+            avcConfigurationBox._AVCConfig.LengthSizeMinusOne = (byte)(NalLengthSize - 1);
             avcConfigurationBox._AVCConfig.ProfileCompatibility =
                 (byte)((sps.SeqParameterSetData.ConstraintSet0Flag != 0 ? 128 : 0) +
                        (sps.SeqParameterSetData.ConstraintSet1Flag != 0 ? 64 : 0) +
@@ -347,25 +335,39 @@ namespace SharpMP4.Tracks
                        (sps.SeqParameterSetData.ReservedZero2bits & 0x3));
             visualSampleEntry.Children.Add(avcConfigurationBox);
 
+            SampleEntryCreated = true;
             return visualSampleEntry;
         }
 
         public override void FillTkhdBox(TrackHeaderBox tkhd)
         {
+            // no SPS yet, no size: the header is left as it is
+            if (Sps.Count == 0)
+            {
+                if (Logger.IsWarningEnabled) Logger.LogWarning("No SPS has been read: the track header has no width and height");
+                return;
+            }
+
             var dim = Sps.First().Value.CalculateDimensions();
             // convert to fixed point 1616
             tkhd.Width = dim.Width << 16; // TODO: simplify API
             tkhd.Height = dim.Height << 16; // TODO: simplify API
-        }      
+        }
 
         public override IEnumerable<byte[]> GetContainerSamples()
         {
             return SpsRaw.Values.ToArray().Concat(PpsRaw.Values.ToArray()).ToArray();
         }
 
+        /// <summary>
+        /// A track of the same configuration: its parameter sets read into it as the configuration record's are, so it
+        /// writes a sample entry at once and reads the slices that refer to them.
+        /// </summary>
         public override ITrack Clone()
         {
-            return new H264Track(Timescale, DefaultSampleDuration);
+            var clone = CopySettingsTo(new H264Track(Timescale, DefaultSampleDuration) { NalLengthSize = NalLengthSize });
+            clone.ProcessConfiguration(SpsRaw.Values.Concat(PpsRaw.Values).ToList());
+            return clone;
         }
     }
 }

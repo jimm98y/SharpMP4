@@ -1,4 +1,4 @@
-using SharpISOBMFF;
+﻿using SharpISOBMFF;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -72,7 +72,7 @@ namespace SharpMP4.Tracks
         public override Box CreateSampleEntryBox()
         {
             if (SampleEntry != null)
-                return SampleEntry;
+                return CopyOfSampleEntry();
 
             var entry = new WVTTSampleEntry { DataReferenceIndex = 1, ReservedSampleEntry = new byte[6], Children = new List<Box>() };
             entry.Children.Add(new WebVTTConfigurationBox { Config = new BinaryUTF8String(Config) { IsZeroTerminated = false } });
@@ -83,6 +83,6 @@ namespace SharpMP4.Tracks
             return entry;
         }
 
-        public override ITrack Clone() => new WebVttTrack(Timescale) { Config = Config, SourceLabel = SourceLabel, Language = Language, Forced = Forced };
+        public override ITrack Clone() => CopySettingsTo(WithSampleEntryOf(new WebVttTrack(Timescale) { Config = Config, SourceLabel = SourceLabel, Forced = Forced }));
     }
 }

@@ -5,7 +5,11 @@ using System.Collections.Generic;
 
 namespace SharpMP4.Tracks
 {
-    public interface ITrack
+    /// <summary>
+    /// A track: what makes its samples and sample entry. Disposed, it lets go of what it keeps - of a track that writes back
+    /// the entry it was read with, the stream the entries it hands out are read from.
+    /// </summary>
+    public interface ITrack : IDisposable
     {
         string HandlerName { get; }
         string HandlerType { get; }
@@ -16,6 +20,13 @@ namespace SharpMP4.Tracks
         string CompatibleBrand { get; set; }
 
         int DefaultSampleDuration { get; set; }
+
+        /// <summary>
+        /// Whether <see cref="ProcessSample(byte[], out ArraySegment{byte}, out bool)"/> gives a sample back only once the
+        /// next one starts - the previous access unit, as only what follows it says where it ends - rather than the one
+        /// it was given. A builder writes the sample with the timing given for it, not with that of the call it came back from.
+        /// </summary>
+        bool ReturnsPreviousSample { get; }
         uint DefaultSampleFlags { get; set; }
 
         uint TimescaleOverride { get; set; }
