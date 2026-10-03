@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SharpISOBMFF;
 
 namespace SharpMP4.Tracks
