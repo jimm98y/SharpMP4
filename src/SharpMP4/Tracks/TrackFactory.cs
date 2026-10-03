@@ -72,6 +72,8 @@ namespace SharpMP4.Tracks
                 string coding = Encryption.SubsampleSplitter.CodingOf(visualEntry);
                 if (coding == "H261")
                     return new H261Track(visualEntry, timescale, sampleDuration) { TrackID = trackID };
+                if (ProResTrack.IsProRes(coding))
+                    return new ProResTrack(visualEntry, coding, timescale, sampleDuration) { TrackID = trackID };
                 if (H262Track.QuickTimeEntries.ContainsKey(coding))
                     return new H262Track(visualEntry, coding, timescale, sampleDuration) { TrackID = trackID };
             }

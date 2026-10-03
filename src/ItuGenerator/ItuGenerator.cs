@@ -24,6 +24,10 @@ public static class ItuGenerator
         {
             customGenerator = new CSharpGeneratorH266();
         }
+        else if (path.Contains("ProRes"))
+        {
+            customGenerator = new CSharpGeneratorProRes();
+        }
         else if (path.Contains("H261"))
         {
             customGenerator = new CSharpGeneratorH261();
