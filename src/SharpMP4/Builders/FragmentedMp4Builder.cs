@@ -120,6 +120,9 @@ namespace SharpMP4.Builders
 
         public uint MovieTimescale { get; set; } = 1000;
 
+        /// <inheritdoc/>
+        public Mp4FileFormat FileFormat { get; set; } = Mp4FileFormat.Mp4;
+
         /// <summary>Where the samples of each fragment wait until it is written. Temporary files by default.</summary>
         public ITemporaryStorageFactory TemporaryStorageFactory { get; set; } = new TemporaryFileStorageFactory();
 
@@ -204,6 +207,9 @@ namespace SharpMP4.Builders
             // default one, so it is replaced too.
             if (track.Logger == null || track.Logger == DefaultMp4Logger.Instance)
                 track.Logger = this.Logger;
+
+            // the format's constraints, before the track is the builder's
+            FileBrands.Validate(FileFormat, _trackContexts.Values.Select(x => x.Track).Append(track).ToList(), Logger);
 
             uint trackID = GetNextTrackId();
             track.TrackID = trackID;
@@ -668,9 +674,9 @@ namespace SharpMP4.Builders
             ulong creationTime = MovieTime.ToIsoTime(CreationTime ?? DateTime.UtcNow);
             ulong movieDuration = _durationInMs * MovieTimescale / 1000;
 
-            var ftyp = FileBrands.Create(_trackContexts.Values.Select(x => x.Track), fragmented: true,
+            var ftyp = FileBrands.Create(FileFormat, _trackContexts.Values.Select(x => x.Track).ToList(), fragmented: true,
                 isProtected: _trackContexts.Values.Any(x => x.Encryptor != null),
-                hasSubtitleMediaHeader: _trackContexts.Values.Any(x => x.Track.HandlerType == HandlerTypes.Subtitle));
+                hasSubtitleMediaHeader: _trackContexts.Values.Any(x => x.Track.HandlerType == HandlerTypes.Subtitle), Logger);
             ftyp.SetParent(fmp4);
             fmp4.Children.Add(ftyp);
 

@@ -80,6 +80,9 @@ namespace SharpMP4.Builders
 
         public uint MovieTimescale { get; set; } = 1000;
 
+        /// <inheritdoc/>
+        public Mp4FileFormat FileFormat { get; set; } = Mp4FileFormat.Mp4;
+
         /// <summary>
         /// How long the samples of a track run in one chunk before the next track's samples of the same time follow them,
         /// in milliseconds. A player reads the tracks' samples of the same time from near each other, and a file written as
@@ -138,6 +141,9 @@ namespace SharpMP4.Builders
             // default one, so it is replaced too.
             if (track.Logger == null || track.Logger == DefaultMp4Logger.Instance)
                 track.Logger = this.Logger;
+
+            // the format's constraints, before the track is the builder's
+            FileBrands.Validate(FileFormat, _trackContexts.Values.Select(x => x.Track).Append(track).ToList(), Logger);
 
             uint trackID = GetNextTrackId();
             track.TrackID = trackID;
@@ -689,9 +695,9 @@ namespace SharpMP4.Builders
 
             var mp4 = new Container();
 
-            var ftyp = FileBrands.Create(_trackContexts.Values.Select(x => x.Track), fragmented: false,
+            var ftyp = FileBrands.Create(FileFormat, _trackContexts.Values.Select(x => x.Track).ToList(), fragmented: false,
                 isProtected: _trackContexts.Values.Any(x => x.Encryptor != null),
-                hasSubtitleMediaHeader: _trackContexts.Values.Any(x => x.Track.HandlerType == HandlerTypes.Subtitle));
+                hasSubtitleMediaHeader: _trackContexts.Values.Any(x => x.Track.HandlerType == HandlerTypes.Subtitle), Logger);
             ftyp.SetParent(mp4);
             mp4.Children.Add(ftyp);
 

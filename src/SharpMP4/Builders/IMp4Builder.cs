@@ -17,6 +17,13 @@ namespace SharpMP4.Builders
         uint MovieTimescale { get; set; }
 
         /// <summary>
+        /// The format of the file: what its 'ftyp' says it is - MP4 unless set - and what of the format's constraints the
+        /// tracks are held to as they are added and as the file is written, a track the format cannot hold throwing
+        /// <see cref="System.InvalidOperationException"/>. Set it before adding tracks.
+        /// </summary>
+        Mp4FileFormat FileFormat { get; set; }
+
+        /// <summary>
         /// MP4 logger. The logger is also passed to the tracks and can be used for logging inside the track logic. The logger can be set at any time, but it is recommended to set it before adding any tracks or processing any samples.
         /// The default logger is <see cref="DefaultMp4Logger"/>.
         /// </summary>

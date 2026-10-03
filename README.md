@@ -53,6 +53,10 @@ For fragmented MP4 output, use `FragmentedMp4Builder` with the fragment duration
 // use fragment duration 2 seconds
 IMp4Builder outputBuilder = new FragmentedMp4Builder(new SingleStreamOutput(output), 2000);
 ```
+To write another format of the MP4 family - `.m4v`, `.m4a`, `.m4b`, `.3gp`, `.3g2` or `.mov` - set `FileFormat` before adding the tracks. The `ftyp` then says what the file is, and the builder refuses a track the format cannot hold, such as video in an `.m4a` or a second audio track in a 3GP file of the Basic profile:
+```cs
+outputBuilder.FileFormat = Mp4FileFormat.M4A;
+```
 
 Add the H264 video track to the builder instance:
 ```cs
