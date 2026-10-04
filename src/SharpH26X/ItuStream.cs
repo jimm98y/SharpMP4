@@ -235,6 +235,13 @@ namespace SharpH26X
         /// </summary>
         public void WriteBytes(byte[] buffer, int offset, int count) => Bitstream.WriteBytes(buffer, offset, count);
 
+        /// <summary>
+        /// Ends a NAL unit being written: a final 0x03 where it would otherwise end in 0x00, as one ending in a
+        /// cabac_zero_word does - see <see cref="RbspBitstream.EndNalUnit"/>. For a writer that writes a slice's data
+        /// after its header; nothing else can end in 0x00.
+        /// </summary>
+        public void EndNalUnit() => Bitstream.EndNalUnit();
+
         public ulong WriteUnsignedInt(ulong count, byte value, string name)
         {
             if (count > 8)

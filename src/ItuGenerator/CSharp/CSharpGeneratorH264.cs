@@ -15,7 +15,28 @@ namespace ItuGenerator.CSharp
                 retm = $"{spacing}stream.MarkCurrentBitsPosition();\r\n{retm}";
             }
 
+            // What a structure leaves out and the spec infers is put in only as it is read: written, the values in it are
+            // the ones to write, and an inference made on the way would write over one that is coded further on.
+            string inferred = methodType == MethodType.Read ? Inferred(name) : null;
+            if (inferred != null)
+            {
+                retm = $"{retm}\r\n{spacing}{inferred}";
+            }
+
             return retm;
+        }
+
+        /// <summary>The inference made once an element has been read, for what follows it: see <see cref="AppendMethod"/>.</summary>
+        private static string Inferred(string name)
+        {
+            switch (name)
+            {
+                case "profile_idc":
+                    // The first element of seq_parameter_set_data(): chroma_format_idc, coded only for some profiles.
+                    return "ituContext.OnProfileIdc(this);";
+                default:
+                    return null;
+            }
         }
 
         public string PreprocessDefinitionsFile(string definitions)
@@ -352,10 +373,6 @@ namespace ItuGenerator.CSharp
                     return "ituContext.SetPicParameterSetId(pic_parameter_set_id, this);";
                 case "seq_parameter_set_id":
                     return "ituContext.SetSeqParameterSetId(seq_parameter_set_id, this);";
-                case "profile_idc":
-                    // The first element of seq_parameter_set_data().
-                    return "ituContext.OnProfileIdc(this);";
-
                 case "pic_struct":
                     return "ituContext.OnPicStruct(pic_struct);";
                 case "enable_rle_skip_flag":

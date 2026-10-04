@@ -452,7 +452,8 @@ namespace SharpH265
         /// come from the picture parameter set unless the slice overrides them, and
         /// collocated_from_l0_flag, coded for B slices only, is 1. Later elements are conditioned on
         /// all three - collocated_ref_idx on the count of the list it names, the weight tables and
-        /// list modifications on both - so leaving them 0 read a different header.
+        /// list modifications on both - so leaving them 0 read a different header. Only as a slice
+        /// is read: written, it wrote a B slice's coded collocated_from_l0_flag over with the 1.
         /// </summary>
         public void OnNumRefIdxActiveOverrideFlag(SliceSegmentHeader header)
         {

@@ -876,7 +876,6 @@ video_parameter_set_rbsp() {
 			uint firstSubLayer = 0;
 			size += stream.WriteUnsignedInt(4, this.vps_video_parameter_set_id, "vps_video_parameter_set_id"); 
 			size += stream.WriteUnsignedInt(6, this.vps_max_layers_minus1, "vps_max_layers_minus1"); 
-			ituContext.OnVpsMaxLayersMinus1(this);
 			size += stream.WriteUnsignedInt(3, this.vps_max_sublayers_minus1, "vps_max_sublayers_minus1"); 
 
 			if ( vps_max_layers_minus1 > 0  &&  vps_max_sublayers_minus1 > 0 )
@@ -1492,8 +1491,8 @@ seq_parameter_set_rbsp() {
 		public byte SpsRpl1SameAsRpl0Flag { get { return sps_rpl1_same_as_rpl0_flag; } set { sps_rpl1_same_as_rpl0_flag = value; } }
 		private ulong[] sps_num_ref_pic_lists;
 		public ulong[] SpsNumRefPicLists { get { return sps_num_ref_pic_lists; } set { sps_num_ref_pic_lists = value; } }
-		private RefPicListStruct ref_pic_list_struct;
-		public RefPicListStruct RefPicListStruct { get { return ref_pic_list_struct; } set { ref_pic_list_struct = value; } }
+		private RefPicListStruct[][] ref_pic_list_struct;
+		public RefPicListStruct[][] RefPicListStruct { get { return ref_pic_list_struct; } set { ref_pic_list_struct = value; } }
 		private byte sps_ref_wraparound_enabled_flag;
 		public byte SpsRefWraparoundEnabledFlag { get { return sps_ref_wraparound_enabled_flag; } set { sps_ref_wraparound_enabled_flag = value; } }
 		private byte sps_temporal_mvp_enabled_flag;
@@ -1900,30 +1899,17 @@ seq_parameter_set_rbsp() {
 
 			stream.CheckArrayAllocation((ulong)( ( sps_rpl1_same_as_rpl0_flag != 0 ? 1 : 2 )), "sps_num_ref_pic_lists");
 			this.sps_num_ref_pic_lists = new ulong[ ( sps_rpl1_same_as_rpl0_flag != 0 ? 1 : 2 )];
-ituContext.num_ref_entries = new ulong[2][];
-            ituContext.ltrp_in_header_flag = new byte[2][];
-            ituContext.inter_layer_ref_pic_flag = new byte[2][][];
-            ituContext.st_ref_pic_flag = new byte[2][][];
-            ituContext.abs_delta_poc_st = new ulong[2][][];
-            ituContext.strp_entry_sign_flag = new byte[2][][];
-            ituContext.rpls_poc_lsb_lt = new ulong[2][][];
-            ituContext.ilrp_idx = new ulong[2][][];
+			stream.CheckArrayAllocation((ulong)( ( sps_rpl1_same_as_rpl0_flag != 0 ? 1 : 2 )), "ref_pic_list_struct");
+			this.ref_pic_list_struct = new RefPicListStruct[ ( sps_rpl1_same_as_rpl0_flag != 0 ? 1 : 2 )][];
 			for ( i = 0; i < ( sps_rpl1_same_as_rpl0_flag != 0 ? 1 : 2 ); i++ )
 			{
 				size += stream.ReadUnsignedIntGolomb(size, out this.sps_num_ref_pic_lists[ i ], "sps_num_ref_pic_lists"); 
 
-ituContext.num_ref_entries[i] = new ulong[sps_num_ref_pic_lists[i] + 1];
-                ituContext.ltrp_in_header_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1];
-                ituContext.inter_layer_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];
-                ituContext.st_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];
-                ituContext.abs_delta_poc_st[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];
-                ituContext.strp_entry_sign_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];
-                ituContext.rpls_poc_lsb_lt[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];
-                ituContext.ilrp_idx[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];
+				this.ref_pic_list_struct[ i ] = new RefPicListStruct[ sps_num_ref_pic_lists[ i ]];
 				for ( j = 0; j < sps_num_ref_pic_lists[ i ]; j++)
 				{
-					this.ref_pic_list_struct =  new RefPicListStruct( i,  j ) ;
-					size +=  stream.ReadClass<RefPicListStruct>(size, context, this.ref_pic_list_struct, "ref_pic_list_struct"); 
+					this.ref_pic_list_struct[ i ][ j ] =  new RefPicListStruct( i,  j ) ;
+					size +=  stream.ReadClass<RefPicListStruct>(size, context, this.ref_pic_list_struct[ i ][ j ], "ref_pic_list_struct"); 
 				}
 			}
 			size += stream.ReadUnsignedInt(size, 1, out this.sps_ref_wraparound_enabled_flag, "sps_ref_wraparound_enabled_flag"); 
@@ -2377,9 +2363,7 @@ ituContext.num_ref_entries[i] = new ulong[sps_num_ref_pic_lists[i] + 1];
 
 				for ( j = 0; j < sps_num_ref_pic_lists[ i ]; j++)
 				{
-this.ref_pic_list_struct.ListIdx = i;
-                    this.ref_pic_list_struct.RplsIdx = j;
-					size += stream.WriteClass<RefPicListStruct>(context, this.ref_pic_list_struct, "ref_pic_list_struct"); 
+					size += stream.WriteClass<RefPicListStruct>(context, this.ref_pic_list_struct[ i ][ j ], "ref_pic_list_struct"); 
 				}
 			}
 			size += stream.WriteUnsignedInt(1, this.sps_ref_wraparound_enabled_flag, "sps_ref_wraparound_enabled_flag"); 
@@ -3841,6 +3825,7 @@ slice_header() {
 
 			uint i = 0;
 			size += stream.ReadUnsignedInt(size, 1, out this.sh_picture_header_in_slice_header_flag, "sh_picture_header_in_slice_header_flag"); 
+			ituContext.InferSliceHeader(this);
 			ituContext.OnShPictureHeaderInSliceHeaderFlag(this);
 
 			if (sh_picture_header_in_slice_header_flag != 0)
@@ -4763,6 +4748,7 @@ ph_extension_data_byte[ i ] u(8)
 			uint i = 0;
 			uint presenceFlag = 0;
 			size += stream.ReadUnsignedInt(size, 1, out this.ph_gdr_or_irap_pic_flag, "ph_gdr_or_irap_pic_flag"); 
+			ituContext.InferPictureHeader(this);
 			ituContext.OnPhGdrOrIrapPicFlag(this);
 			size += stream.ReadUnsignedInt(size, 1, out this.ph_non_ref_pic_flag, "ph_non_ref_pic_flag"); 
 
@@ -5475,8 +5461,8 @@ ref_pic_lists() {
 		public byte[] RplSpsFlag { get { return rpl_sps_flag; } set { rpl_sps_flag = value; } }
 		private ulong[] rpl_idx;
 		public ulong[] RplIdx { get { return rpl_idx; } set { rpl_idx = value; } }
-		private RefPicListStruct ref_pic_list_struct;
-		public RefPicListStruct RefPicListStruct { get { return ref_pic_list_struct; } set { ref_pic_list_struct = value; } }
+		private RefPicListStruct[] ref_pic_list_struct;
+		public RefPicListStruct[] RefPicListStruct { get { return ref_pic_list_struct; } set { ref_pic_list_struct = value; } }
 		private ulong[][] poc_lsb_lt;
 		public ulong[][] PocLsbLt { get { return poc_lsb_lt; } set { poc_lsb_lt = value; } }
 		private byte[][] delta_poc_msb_cycle_present_flag;
@@ -5507,22 +5493,8 @@ ref_pic_lists() {
 			this.rpl_sps_flag = new byte[ 2];
 			stream.CheckArrayAllocation((ulong)( 2), "rpl_idx");
 			this.rpl_idx = new ulong[ 2];
-if (ituContext.num_ref_entries == null)
-                ituContext.num_ref_entries = new ulong[2][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1] };
-            if (ituContext.ltrp_in_header_flag == null)
-                ituContext.ltrp_in_header_flag = new byte[2][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1] };
-            if (ituContext.inter_layer_ref_pic_flag == null)
-                ituContext.inter_layer_ref_pic_flag = new byte[2][][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
-            if (ituContext.st_ref_pic_flag == null)
-                ituContext.st_ref_pic_flag = new byte[2][][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
-            if (ituContext.abs_delta_poc_st == null)
-                ituContext.abs_delta_poc_st = new ulong[2][][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
-            if (ituContext.strp_entry_sign_flag == null)
-                ituContext.strp_entry_sign_flag = new byte[2][][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
-            if (ituContext.rpls_poc_lsb_lt == null)
-                ituContext.rpls_poc_lsb_lt = new ulong[2][][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
-            if (ituContext.ilrp_idx == null)
-                ituContext.ilrp_idx = new ulong[2][][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
+			stream.CheckArrayAllocation((ulong)( 2), "ref_pic_list_struct");
+			this.ref_pic_list_struct = new RefPicListStruct[ 2];
 			stream.CheckArrayAllocation((ulong)( 2), "poc_lsb_lt");
 			this.poc_lsb_lt = new ulong[ 2][];
 			stream.CheckArrayAllocation((ulong)( 2), "delta_poc_msb_cycle_present_flag");
@@ -5550,8 +5522,8 @@ if (ituContext.num_ref_entries == null)
 				}
 				else 
 				{
-					this.ref_pic_list_struct =  new RefPicListStruct(i,  ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[i]) ;
-					size +=  stream.ReadClass<RefPicListStruct>(size, context, this.ref_pic_list_struct, "ref_pic_list_struct"); 
+					this.ref_pic_list_struct[i ] =  new RefPicListStruct(i,  ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[i]) ;
+					size +=  stream.ReadClass<RefPicListStruct>(size, context, this.ref_pic_list_struct[i ], "ref_pic_list_struct"); 
 				}
 
 				this.poc_lsb_lt[i ] = new ulong[ ituContext.NumLtrpEntries[i][ituContext.RplsIdx[i]]];
@@ -5607,9 +5579,7 @@ if (ituContext.num_ref_entries == null)
 				}
 				else 
 				{
-this.ref_pic_list_struct.ListIdx = i;
-                    this.ref_pic_list_struct.RplsIdx = ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[i];
-					size += stream.WriteClass<RefPicListStruct>(context, this.ref_pic_list_struct, "ref_pic_list_struct"); 
+					size += stream.WriteClass<RefPicListStruct>(context, this.ref_pic_list_struct[i ], "ref_pic_list_struct"); 
 				}
 
 				for (j = 0; j < ituContext.NumLtrpEntries[i][ituContext.RplsIdx[i]]; j++)
@@ -8742,27 +8712,37 @@ ref_pic_list_struct( listIdx, rplsIdx ) {
 			uint i = 0;
 			uint j = 0;
     
-this.num_ref_entries = ituContext.num_ref_entries;
-            this.ltrp_in_header_flag = ituContext.ltrp_in_header_flag;
-            this.inter_layer_ref_pic_flag = ituContext.inter_layer_ref_pic_flag;
-            this.st_ref_pic_flag = ituContext.st_ref_pic_flag;
-            this.abs_delta_poc_st = ituContext.abs_delta_poc_st;
-            this.strp_entry_sign_flag = ituContext.strp_entry_sign_flag;
-            this.rpls_poc_lsb_lt = ituContext.rpls_poc_lsb_lt;
-            this.ilrp_idx = ituContext.ilrp_idx;
+this.num_ref_entries = new ulong[listIdx + 1][];
+            this.num_ref_entries[listIdx] = new ulong[rplsIdx + 1];
+            this.ltrp_in_header_flag = new byte[listIdx + 1][];
+            this.ltrp_in_header_flag[listIdx] = new byte[rplsIdx + 1];
+            this.inter_layer_ref_pic_flag = new byte[listIdx + 1][][];
+            this.inter_layer_ref_pic_flag[listIdx] = new byte[rplsIdx + 1][];
+            this.st_ref_pic_flag = new byte[listIdx + 1][][];
+            this.st_ref_pic_flag[listIdx] = new byte[rplsIdx + 1][];
+            this.abs_delta_poc_st = new ulong[listIdx + 1][][];
+            this.abs_delta_poc_st[listIdx] = new ulong[rplsIdx + 1][];
+            this.strp_entry_sign_flag = new byte[listIdx + 1][][];
+            this.strp_entry_sign_flag[listIdx] = new byte[rplsIdx + 1][];
+            this.rpls_poc_lsb_lt = new ulong[listIdx + 1][][];
+            this.rpls_poc_lsb_lt[listIdx] = new ulong[rplsIdx + 1][];
+            this.ilrp_idx = new ulong[listIdx + 1][][];
+            this.ilrp_idx[listIdx] = new ulong[rplsIdx + 1][];
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_entries[ listIdx ][ rplsIdx ], "num_ref_entries"); 
- ituContext.inter_layer_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];
-            ituContext.st_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];
-            ituContext.abs_delta_poc_st[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];
-            ituContext.strp_entry_sign_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];
-            ituContext.rpls_poc_lsb_lt[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];
-            ituContext.ilrp_idx[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];
-            ituContext.ltrp_in_header_flag[listIdx][rplsIdx] = (byte)(rplsIdx == ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[listIdx] ? 1 : 0);
+            this.inter_layer_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];
+            this.st_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];
+            this.abs_delta_poc_st[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];
+            this.strp_entry_sign_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];
+            this.rpls_poc_lsb_lt[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];
+            this.ilrp_idx[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];
+            this.ltrp_in_header_flag[listIdx][rplsIdx] = (byte)(rplsIdx == ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[listIdx] ? 1 : 0);
+			ituContext.OnRefPicListStruct(this);
 
 			if ( ituContext.SeqParameterSetRbsp.SpsLongTermRefPicsFlag != 0  &&  rplsIdx < ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[ listIdx ]  && 
    num_ref_entries[ listIdx ][ rplsIdx ] > 0 )
 			{
 				size += stream.ReadUnsignedInt(size, 1, out this.ltrp_in_header_flag[ listIdx ][ rplsIdx ], "ltrp_in_header_flag"); 
+				ituContext.OnRefPicListStruct(this);
 			}
 
 			for ( i = 0, j = 0; i < num_ref_entries[ listIdx ][ rplsIdx ]; i++)
@@ -8819,11 +8799,13 @@ this.num_ref_entries = ituContext.num_ref_entries;
 			uint i = 0;
 			uint j = 0;
 			size += stream.WriteUnsignedIntGolomb( this.num_ref_entries[ listIdx ][ rplsIdx ], "num_ref_entries"); 
+			ituContext.OnRefPicListStruct(this);
 
 			if ( ituContext.SeqParameterSetRbsp.SpsLongTermRefPicsFlag != 0  &&  rplsIdx < ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[ listIdx ]  && 
    num_ref_entries[ listIdx ][ rplsIdx ] > 0 )
 			{
 				size += stream.WriteUnsignedInt(1, this.ltrp_in_header_flag[ listIdx ][ rplsIdx ], "ltrp_in_header_flag"); 
+				ituContext.OnRefPicListStruct(this);
 			}
 
 			for ( i = 0, j = 0; i < num_ref_entries[ listIdx ][ rplsIdx ]; i++)

@@ -1140,21 +1140,27 @@ namespace SharpH266
         }
 
         /// <summary>
-        /// What a slice header leaves out and the spec infers, set before it is read so that what
-        /// is read overwrites it: sh_slice_type is I when the picture allows no inter slices
+        /// Called as a slice header starts, read or written: sh_subpic_id, when not coded, is of the
+        /// only subpicture.
+        /// </summary>
+        public void OnShPictureHeaderInSliceHeaderFlag(SliceHeader header)
+        {
+            CurrSubpicIdx = 0;
+        }
+
+        /// <summary>
+        /// What a slice header leaves out and the spec infers, set as it starts to be read so that
+        /// what is read overwrites it: sh_slice_type is I when the picture allows no inter slices
         /// (7.4.8), sh_num_ref_idx_active_override_flag is 1, and sh_collocated_from_l0_flag,
         /// coded for B slices only, is 1. Left 0 - B, and no override - intra slices read the
         /// reference counts of a B slice, and P slices looked for their collocated picture in the
-        /// wrong list.
+        /// wrong list. Only as it is read: written, it would write over the values coded.
         /// </summary>
-        public void OnShPictureHeaderInSliceHeaderFlag(SliceHeader header)
+        public void InferSliceHeader(SliceHeader header)
         {
             header.ShSliceType = H266FrameTypes.I;
             header.ShNumRefIdxActiveOverrideFlag = 1;
             header.ShCollocatedFromL0Flag = 1;
-
-            // sh_subpic_id, when not coded, is of the only subpicture.
-            CurrSubpicIdx = 0;
         }
 
         /// <summary>
@@ -1166,16 +1172,23 @@ namespace SharpH266
         public PictureHeaderStructure PictureHeader { get; set; }
 
         /// <summary>
-        /// Called as a picture header starts: it becomes the one in force, and
-        /// ph_collocated_from_l0_flag, coded only when list 1 has entries, is 1 otherwise (7.4.3.8).
+        /// Called as a picture header starts, read or written: it becomes the one in force.
         /// </summary>
         public void OnPhGdrOrIrapPicFlag(PictureHeaderStructure header)
         {
             PictureHeader = header;
-            header.PhCollocatedFromL0Flag = 1;
+        }
 
-            // ph_intra_slice_allowed_flag is coded only when inter slices are allowed, and is 1
-            // otherwise (7.4.3.8): left 0, an intra-only picture's intra slice parameters went unread.
+        /// <summary>
+        /// What a picture header leaves out and the spec infers, set as it starts to be read:
+        /// ph_collocated_from_l0_flag, coded only when list 1 has entries, is 1 otherwise, and
+        /// ph_intra_slice_allowed_flag, coded only when inter slices are allowed, is 1 otherwise
+        /// (7.4.3.8) - left 0, an intra-only picture's intra slice parameters went unread. Only as it
+        /// is read: written, it would write over the values coded.
+        /// </summary>
+        public void InferPictureHeader(PictureHeaderStructure header)
+        {
+            header.PhCollocatedFromL0Flag = 1;
             header.PhIntraSliceAllowedFlag = 1;
         }
 
@@ -1203,6 +1216,16 @@ namespace SharpH266
                     Array.Copy(list0, list1, (int)Math.Min(lists, (ulong)list0.Length));
                 return list1;
             }
+
+            // the tables are there once the SPS is read; one with no structures, written, has none yet
+            num_ref_entries ??= new ulong[2][];
+            inter_layer_ref_pic_flag ??= new byte[2][][];
+            st_ref_pic_flag ??= new byte[2][][];
+            abs_delta_poc_st ??= new ulong[2][][];
+            strp_entry_sign_flag ??= new byte[2][][];
+            rpls_poc_lsb_lt ??= new ulong[2][][];
+            ilrp_idx ??= new ulong[2][][];
+            ltrp_in_header_flag ??= new byte[2][];
 
             num_ref_entries[1] = Copy(num_ref_entries[0]);
             inter_layer_ref_pic_flag[1] = Copy(inter_layer_ref_pic_flag[0]);
@@ -1234,8 +1257,11 @@ namespace SharpH266
 
             if (lists.RplSpsFlag[i] != 0)
             {
-                // Read over when coded, by OnRplIdx.
-                lists.RplIdx[i] = rpl1FromRpl0 && sps_num_ref_pic_lists[1] > 1 ? lists.RplIdx[0] : 0;
+                // Inferred only where it is not coded: written, the coded one was written over before it was written.
+                // Where it is coded, a read puts it in after this, by OnRplIdx.
+                bool idxCoded = sps_num_ref_pic_lists[i] > 1 && !rpl1FromRpl0;
+                if (!idxCoded)
+                    lists.RplIdx[i] = rpl1FromRpl0 && sps_num_ref_pic_lists[1] > 1 ? lists.RplIdx[0] : 0;
                 RplsIdx[i] = lists.RplIdx[i];
             }
             else
@@ -1433,10 +1459,47 @@ namespace SharpH266
             if(AbsDeltaPocSt[listIdx][rplsIdx] == null || AbsDeltaPocSt[listIdx][rplsIdx].Length < (int)num_ref_entries[listIdx][rplsIdx])
                 AbsDeltaPocSt[listIdx][rplsIdx] = new ulong[num_ref_entries[listIdx][rplsIdx]];
 
+            // the structure's own, which a context that has only written has no table of
+            var abs_delta_poc_st = refPicListStruct.AbsDeltaPocSt;
             if ((sps_weighted_pred_flag != 0 || sps_weighted_bipred_flag != 0) && i != 0)
                 AbsDeltaPocSt[listIdx][rplsIdx][i] = abs_delta_poc_st[listIdx][rplsIdx][i];
             else
                 AbsDeltaPocSt[listIdx][rplsIdx][i] = abs_delta_poc_st[listIdx][rplsIdx][i] + 1;
+        }
+
+        /// <summary>
+        /// A reference picture list structure, as it is read or written: its entry goes into the tables the picture and
+        /// slice headers look lists up in, at [ listIdx ][ rplsIdx ]. Called as its count and its ltrp_in_header_flag are
+        /// known - the rest of it are arrays, which the tables then share.
+        /// </summary>
+        public void OnRefPicListStruct(RefPicListStruct rpl)
+        {
+            uint listIdx = rpl.ListIdx;
+            ulong rplsIdx = rpl.RplsIdx;
+
+            Ensure(ref num_ref_entries, listIdx, rplsIdx)[rplsIdx] = rpl.NumRefEntries[listIdx][rplsIdx];
+            Ensure(ref ltrp_in_header_flag, listIdx, rplsIdx)[rplsIdx] = rpl.LtrpInHeaderFlag[listIdx][rplsIdx];
+            Ensure(ref inter_layer_ref_pic_flag, listIdx, rplsIdx)[rplsIdx] = rpl.InterLayerRefPicFlag[listIdx][rplsIdx];
+            Ensure(ref st_ref_pic_flag, listIdx, rplsIdx)[rplsIdx] = rpl.StRefPicFlag[listIdx][rplsIdx];
+            Ensure(ref abs_delta_poc_st, listIdx, rplsIdx)[rplsIdx] = rpl.AbsDeltaPocSt[listIdx][rplsIdx];
+            Ensure(ref strp_entry_sign_flag, listIdx, rplsIdx)[rplsIdx] = rpl.StrpEntrySignFlag[listIdx][rplsIdx];
+            Ensure(ref rpls_poc_lsb_lt, listIdx, rplsIdx)[rplsIdx] = rpl.RplsPocLsbLt[listIdx][rplsIdx];
+            Ensure(ref ilrp_idx, listIdx, rplsIdx)[rplsIdx] = rpl.IlrpIdx[listIdx][rplsIdx];
+        }
+
+        /// <summary>The list's row of a table, there and long enough for rplsIdx: the SPS sizes them as it is read, a context that has only written as they are needed.</summary>
+        private static T[] Ensure<T>(ref T[][] table, uint listIdx, ulong rplsIdx)
+        {
+            table ??= new T[2][];
+            T[] row = table[listIdx];
+            if (row == null || (ulong)row.Length <= rplsIdx)
+            {
+                var grown = new T[rplsIdx + 1];
+                if (row != null)
+                    Array.Copy(row, grown, row.Length);
+                table[listIdx] = row = grown;
+            }
+            return row;
         }
     
         /// <summary>

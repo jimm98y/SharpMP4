@@ -9800,6 +9800,8 @@ hrd_parameters( commonInfPresentFlag, maxNumSubLayersMinus1 ) {
 		public ulong[] CpbCntMinus1 { get { return cpb_cnt_minus1; } set { cpb_cnt_minus1 = value; } }
 		private SubLayerHrdParameters[] sub_layer_hrd_parameters;
 		public SubLayerHrdParameters[] SubLayerHrdParameters { get { return sub_layer_hrd_parameters; } set { sub_layer_hrd_parameters = value; } }
+		private SubLayerHrdParameters[] sub_layer_hrd_parameters0;
+		public SubLayerHrdParameters[] SubLayerHrdParameters0 { get { return sub_layer_hrd_parameters0; } set { sub_layer_hrd_parameters0 = value; } }
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
@@ -9863,6 +9865,8 @@ hrd_parameters( commonInfPresentFlag, maxNumSubLayersMinus1 ) {
 			this.cpb_cnt_minus1 = new ulong[ maxNumSubLayersMinus1 + 1];
 			stream.CheckArrayAllocation((ulong)( maxNumSubLayersMinus1 + 1), "sub_layer_hrd_parameters");
 			this.sub_layer_hrd_parameters = new SubLayerHrdParameters[ maxNumSubLayersMinus1 + 1];
+			stream.CheckArrayAllocation((ulong)( maxNumSubLayersMinus1 + 1), "sub_layer_hrd_parameters0");
+			this.sub_layer_hrd_parameters0 = new SubLayerHrdParameters[ maxNumSubLayersMinus1 + 1];
 			for ( i = 0; i <= maxNumSubLayersMinus1; i++ )
 			{
 				size += stream.ReadUnsignedInt(size, 1, out this.fixed_pic_rate_general_flag[ i ], "fixed_pic_rate_general_flag"); 
@@ -9896,8 +9900,8 @@ hrd_parameters( commonInfPresentFlag, maxNumSubLayersMinus1 ) {
 
 				if ( vcl_hrd_parameters_present_flag != 0 )
 				{
-					this.sub_layer_hrd_parameters[ i ] =  new SubLayerHrdParameters( i ) ;
-					size +=  stream.ReadClass<SubLayerHrdParameters>(size, context, this.sub_layer_hrd_parameters[ i ], "sub_layer_hrd_parameters"); 
+					this.sub_layer_hrd_parameters0[ i ] =  new SubLayerHrdParameters( i ) ;
+					size +=  stream.ReadClass<SubLayerHrdParameters>(size, context, this.sub_layer_hrd_parameters0[ i ], "sub_layer_hrd_parameters0"); 
 				}
 			}
 
@@ -9976,7 +9980,7 @@ hrd_parameters( commonInfPresentFlag, maxNumSubLayersMinus1 ) {
 
 				if ( vcl_hrd_parameters_present_flag != 0 )
 				{
-					size += stream.WriteClass<SubLayerHrdParameters>(context, this.sub_layer_hrd_parameters[ i ], "sub_layer_hrd_parameters"); 
+					size += stream.WriteClass<SubLayerHrdParameters>(context, this.sub_layer_hrd_parameters0[ i ], "sub_layer_hrd_parameters0"); 
 				}
 			}
 
@@ -17739,7 +17743,6 @@ slice_segment_header() {
 				if (H265FrameTypes.IsP(slice_type) || H265FrameTypes.IsB(slice_type))
 				{
 					size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag, "num_ref_idx_active_override_flag"); 
-					ituContext.OnNumRefIdxActiveOverrideFlag(this);
 
 					if (num_ref_idx_active_override_flag != 0)
 					{

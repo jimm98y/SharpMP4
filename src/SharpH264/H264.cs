@@ -436,7 +436,8 @@ namespace SharpH264
         /// <summary>
         /// Called as seq_parameter_set_data() starts. chroma_format_idc is coded only for the high
         /// profiles and is 1 otherwise (7.4.2.1.1); left 0, a monochrome SPS was read as 4:2:0 and
-        /// back, depending on which was parsed last.
+        /// back, depending on which was parsed last. Only as it is read: written, a high profile
+        /// SPS's coded chroma_format_idc was written over with the 1.
         /// </summary>
         public void OnProfileIdc(SeqParameterSetData data)
         {

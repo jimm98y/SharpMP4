@@ -1292,7 +1292,6 @@ namespace Sharp{type}
                     {
                         if (
                             field.Name != "rpls_poc_lsb_lt" &&
-                            field.Name != "ref_pic_list_struct" &&
                             field.Name != "sublayer_hrd_parameters"
                             ) // h266
                         {
@@ -1503,7 +1502,10 @@ namespace Sharp{type}
                         AddNewDuplicatedField(ret, field, name);
                     }
                     else if(
-                        field.Name == "hrd_parameters"
+                        field.Name == "hrd_parameters" ||
+                        // h265: the NAL HRD's and then the VCL HRD's, of the same sub-layer - sharing a field, both
+                        // were written with the VCL HRD's
+                        field.Name == "sub_layer_hrd_parameters"
                         )
                     {
                         AddNewDuplicatedField(ret, field, name);
