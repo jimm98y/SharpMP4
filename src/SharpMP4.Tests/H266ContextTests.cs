@@ -90,7 +90,7 @@ public class H266ContextTests
         var context = new H266Context();
         var header = new SliceHeader();
 
-        context.OnShPictureHeaderInSliceHeaderFlag(header);
+        context.InferSliceHeader(header);
 
         Assert.AreEqual(H266FrameTypes.I, header.ShSliceType);
         Assert.AreEqual<byte>(1, header.ShNumRefIdxActiveOverrideFlag);
@@ -128,6 +128,38 @@ public class H266ContextTests
         context.OnPhGdrOrIrapPicFlag(pictureHeader);
 
         Assert.AreSame(pictureHeader, context.PictureHeader);
+    }
+
+    /// <summary>
+    /// What a picture header leaves out is inferred as it is read (7.4.3.8): the collocated picture
+    /// is in list 0, and intra slices are allowed. Only as it is read - written, the values coded
+    /// would be written over - so it is a step of its own, apart from making the header current.
+    /// </summary>
+    [TestMethod]
+    public void InfersWhatAPictureHeaderLeavesOut()
+    {
+        var context = new H266Context();
+        var pictureHeader = new PictureHeaderStructure();
+
+        context.InferPictureHeader(pictureHeader);
+
         Assert.AreEqual<byte>(1, pictureHeader.PhCollocatedFromL0Flag);
+        Assert.AreEqual<byte>(1, pictureHeader.PhIntraSliceAllowedFlag);
+    }
+
+    /// <summary>
+    /// Making a picture header current infers nothing into it: done as it is written too, it would
+    /// write over the values coded.
+    /// </summary>
+    [TestMethod]
+    public void MakingAPictureHeaderCurrentLeavesItsValues()
+    {
+        var context = new H266Context();
+        var pictureHeader = new PictureHeaderStructure { PhCollocatedFromL0Flag = 0, PhIntraSliceAllowedFlag = 0 };
+
+        context.OnPhGdrOrIrapPicFlag(pictureHeader);
+
+        Assert.AreEqual<byte>(0, pictureHeader.PhCollocatedFromL0Flag);
+        Assert.AreEqual<byte>(0, pictureHeader.PhIntraSliceAllowedFlag);
     }
 }
