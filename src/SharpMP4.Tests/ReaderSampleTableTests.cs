@@ -79,6 +79,115 @@ public class ReaderSampleTableTests
     }
 
     /// <summary>
+    /// The times a player seeks by are those reading gives each sample, and a track moved to a sample reads it next: what
+    /// a seek to a sync sample, then decoding on to the time wanted, needs.
+    /// </summary>
+    [TestMethod]
+    public void GivesEachSamplesTimesAndSeeksToAny()
+    {
+        const int count = 60;
+        var (file, data) = BuildFile(count, i => 10 + (i * 7) % 50, compositionOffset: i => (i % 3) * 20, rap: i => i % 7 == 0);
+        var reader = new VideoReader();
+        reader.Parse(Read(file));
+        uint trackID = reader.Tracks.Keys.Single();
+
+        var timings = reader.GetSampleTimings(trackID);
+        var read = ReadAll(reader, trackID);
+        Assert.AreEqual(read.Count, timings.Length);
+        for (int i = 0; i < count; i++)
+        {
+            Assert.AreEqual(read[i].PTS, timings[i].PTS, $"sample {i}: presentation time");
+            Assert.AreEqual(read[i].DTS, timings[i].DTS, $"sample {i}: decode time");
+            Assert.AreEqual(read[i].Duration, timings[i].Duration, $"sample {i}: duration");
+            Assert.AreEqual(read[i].IsRandomAccessPoint, timings[i].IsSyncSample, $"sample {i}: sync sample");
+        }
+
+        // after the last sample, and back, and on
+        foreach (uint index in new uint[] { 42, 0, 7, 59, 13 })
+        {
+            reader.SeekSample(trackID, index);
+            var sample = reader.ReadSample(trackID);
+            CollectionAssert.AreEqual(data[index], sample.Data.ToArray(), $"sample {index}");
+            Assert.AreEqual(timings[index].PTS, sample.PTS);
+        }
+        reader.SeekSample(trackID, count);
+        Assert.IsNull(reader.ReadSample(trackID), "moved past the last sample");
+    }
+
+    /// <summary>
+    /// A fragmented file's samples are timed and sought as those of one that is not: of every fragment, in the order they
+    /// are read, with the times reading gives them - a seek into a fragment reads it, from the sample sought, and on into
+    /// the fragments after it.
+    /// </summary>
+    [TestMethod]
+    public void GivesEachSamplesTimesOfAFragmentedFileAndSeeksToAny()
+    {
+        const int count = 60;
+        var data = Samples(count, i => 10 + (i * 7) % 50);
+        using var output = new MemoryStream();
+        var builder = new FragmentedMp4Builder(new SingleStreamOutput(output), maxFragmentLengthInMs: 2);
+        var track = new AACTrack(2, 44100, 16);
+        builder.AddTrack(track);
+        for (int i = 0; i < count; i++)
+            builder.ProcessRawSample(track.TrackID, data[i], 20, i % 7 == 0, (i % 3) * 20);
+        builder.FinalizeMedia();
+
+        var container = Read(output.ToArray());
+        Assert.IsTrue(container.Children.OfType<MovieFragmentBox>().Count() > 3, "fragments");
+        AssertTimesAndSeeks(container, data);
+    }
+
+    /// <summary>The samples of a 'moov' and those of the fragments after it are timed and sought as one track.</summary>
+    [TestMethod]
+    public void GivesEachSamplesTimesOfTheMoovAndTheFragmentsAndSeeksToAny()
+    {
+        var (file, data) = BuildFileWithSamplesInMoovAndFragments(5, 12);
+        AssertTimesAndSeeks(Read(file), data);
+    }
+
+    private static void AssertTimesAndSeeks(Container container, byte[][] data)
+    {
+        var reader = new VideoReader();
+        reader.Parse(container);
+        Assert.IsTrue(reader.IsFragmented);
+        uint trackID = reader.Tracks.Keys.Single();
+
+        var timings = reader.GetSampleTimings(trackID);
+        var read = ReadAll(reader, trackID);
+        Assert.AreEqual(data.Length, read.Count, "samples read");
+        Assert.AreEqual(read.Count, timings.Length, "samples timed");
+        for (int i = 0; i < read.Count; i++)
+        {
+            Assert.AreEqual(read[i].PTS, timings[i].PTS, $"sample {i}: presentation time");
+            Assert.AreEqual(read[i].DTS, timings[i].DTS, $"sample {i}: decode time");
+            Assert.AreEqual(read[i].Duration, timings[i].Duration, $"sample {i}: duration");
+            Assert.AreEqual(read[i].IsRandomAccessPoint, timings[i].IsSyncSample, $"sample {i}: sync sample");
+        }
+
+        // after the last sample, and back, and on - each seek then read on for a few samples, across fragments
+        int last = data.Length - 1;
+        foreach (int index in new[] { last / 2, 0, 7 % data.Length, last, 3, last - 2, 1 })
+        {
+            reader.SeekSample(trackID, (uint)index);
+            for (int i = index; i < Math.Min(data.Length, index + 5); i++)
+            {
+                var sample = reader.ReadSample(trackID);
+                Assert.IsNotNull(sample, $"sample {i}, after a seek to {index}");
+                CollectionAssert.AreEqual(data[i], sample.Data.ToArray(), $"sample {i}, after a seek to {index}");
+                Assert.AreEqual(timings[i].PTS, sample.PTS, $"sample {i}, after a seek to {index}: presentation time");
+                Assert.AreEqual(timings[i].DTS, sample.DTS, $"sample {i}, after a seek to {index}: decode time");
+            }
+        }
+
+        reader.SeekSample(trackID, (uint)data.Length);
+        Assert.IsNull(reader.ReadSample(trackID), "moved past the last sample");
+
+        // and all of it again, from the start
+        reader.SeekSample(trackID, 0);
+        Assert.AreEqual(data.Length, ReadAll(reader, trackID).Count, "samples read again");
+    }
+
+    /// <summary>
     /// Reading a track is linear in its samples: each is found from where the one before it is, not by walking its
     /// chunks, its durations and its composition offsets from the start. A track of 200000 samples, one a chunk, took
     /// 2·10^10 steps to read so.

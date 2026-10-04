@@ -9,6 +9,29 @@ using System.Linq;
 
 namespace SharpMP4.Readers
 {
+    /// <summary>A sample's times, in its track's timescale, and whether a decoder can start at it - see <see cref="VideoReader.GetSampleTimings"/>.</summary>
+    public readonly struct SampleTiming
+    {
+        public SampleTiming(long pts, long dts, long duration, bool isSyncSample)
+        {
+            PTS = pts;
+            DTS = dts;
+            Duration = duration;
+            IsSyncSample = isSyncSample;
+        }
+
+        /// <summary>When it is shown: its decode time and its composition offset, as <see cref="MediaSample.PTS"/>.</summary>
+        public long PTS { get; }
+
+        /// <summary>When it is decoded.</summary>
+        public long DTS { get; }
+
+        public long Duration { get; }
+
+        /// <summary>Whether a decoder can start at it: a sync sample, by 'stss', or every sample where there is none.</summary>
+        public bool IsSyncSample { get; }
+    }
+
     public class MediaSample
     {
         // audio/video specific
@@ -325,22 +348,7 @@ namespace SharpMP4.Readers
                             trackContext.Tfhd = tfhd;
                             trackContext.Truns = traf.Children.OfType<TrackRunBox>().ToArray(); // there can be 1 or multiple trun boxes, depending upon the encoder
                             foreach (var trun in trackContext.Truns)
-                            {
-                                // a run whose samples have none of their own fields - every one the defaults - has entries of
-                                // no bytes, which reading the box, as it ends, does not make: sample_count of them
-                                var entries = trun._TrunEntry ?? Array.Empty<TrunEntry>();
-                                if (entries.Length < trun.SampleCount && (trun.Flags & 0xF00) == 0)
-                                {
-                                    var all = new TrunEntry[trun.SampleCount];
-                                    Array.Copy(entries, all, entries.Length);
-                                    for (int e = entries.Length; e < all.Length; e++)
-                                    {
-                                        all[e] = new TrunEntry(trun.Version, trun.Flags) { Flags = trun.Flags };
-                                        all[e].SetParent(trun);
-                                    }
-                                    trun._TrunEntry = all;
-                                }
-                            }
+                                EntriesOf(trun);
                             var tfdt = traf.Children.OfType<TrackFragmentBaseMediaDecodeTimeBox>().SingleOrDefault();
 
                             // pre-calculate DTS and address for the fragment
@@ -460,6 +468,55 @@ namespace SharpMP4.Readers
         private static uint RequiredSizeOf(uint trackID, TrunEntry entry, TrackFragmentHeaderBox tfhd, TrackExtendsBox trex) =>
             SizeOf(entry, tfhd, trex) ?? throw new InvalidDataException(
                 $"A sample of a fragment of track {trackID} has no size: none in its 'trun', and no default in the 'tfhd' or a 'trex'.");
+
+        /// <summary>
+        /// The entries of a track run, one a sample. A run whose samples have none of their own fields - every one the
+        /// defaults - has entries of no bytes, which reading the box, as it ends, does not make: sample_count of them are
+        /// made, once, and kept in the run.
+        /// </summary>
+        private static TrunEntry[] EntriesOf(TrackRunBox trun)
+        {
+            var entries = trun._TrunEntry ?? Array.Empty<TrunEntry>();
+            if (entries.Length < trun.SampleCount && (trun.Flags & 0xF00) == 0)
+            {
+                var all = new TrunEntry[trun.SampleCount];
+                Array.Copy(entries, all, entries.Length);
+                for (int e = entries.Length; e < all.Length; e++)
+                {
+                    all[e] = new TrunEntry(trun.Version, trun.Flags) { Flags = trun.Flags };
+                    all[e].SetParent(trun);
+                }
+                trun._TrunEntry = all;
+                entries = all;
+            }
+            return entries;
+        }
+
+        /// <summary>
+        /// The flags of a sample of a track run: the first sample's own where the run has them, else each sample's, else the
+        /// track fragment's default, else the track's (14496-12 8.8.8.3).
+        /// </summary>
+        private static uint SampleFlagsOf(TrackRunBox trun, int entryIndex, TrunEntry entry, TrackFragmentHeaderBox tfhd, TrackExtendsBox trex)
+        {
+            if (entryIndex == 0 && (trun.Flags & 0x4) == 0x4)
+                return trun.FirstSampleFlags;
+            if ((entry.Flags & 0x400) == 0x400)
+                return entry.SampleFlags;
+            if ((tfhd.Flags & 0x20) == 0x20)
+                return tfhd.DefaultSampleFlags;
+            return trex?.DefaultSampleFlags ?? 0;
+        }
+
+        /// <summary>Whether a sample of these flags is a sync sample: sample_is_non_sync_sample 0.</summary>
+        private static bool IsSyncSampleOf(uint sampleFlags) => (sampleFlags & 0x10000) == 0;
+
+        /// <summary>How far from its decode time a sample of a track run is shown: 0 where the run gives no offsets.</summary>
+        private static int CompositionOffsetOf(TrunEntry entry)
+        {
+            if ((entry.Flags & 0x800) != 0x800)
+                return 0;
+            return entry.Version == 0 ? (int)entry.SampleCompositionTimeOffset : entry.SampleCompositionTimeOffset0;
+        }
 
         /// <summary>
         /// The duration of the first sample of a track's first fragment (14496-12 8.8.8): its own in the 'trun', else the
@@ -633,30 +690,9 @@ namespace SharpMP4.Readers
             uint sampleDuration = RequiredDurationOf(trackID, entry, trackContext.Tfhd, trackContext.Trex);
             uint sampleSize = RequiredSizeOf(trackID, entry, trackContext.Tfhd, trackContext.Trex);
 
-            // the first sample's own flags where the run has them, else each sample's, else the track fragment's default,
-            // else the track's (14496-12 8.8.8.3)
-            uint sampleFlags;
-            if (trunEntryIndex == 0 && (trun.Flags & 0x4) == 0x4)
-                sampleFlags = trun.FirstSampleFlags;
-            else if ((entry.Flags & 0x400) == 0x400)
-                sampleFlags = entry.SampleFlags;
-            else if ((trackContext.Tfhd.Flags & 0x20) == 0x20)
-                sampleFlags = trackContext.Tfhd.DefaultSampleFlags;
-            else
-                sampleFlags = trackContext.Trex?.DefaultSampleFlags ?? 0;
-
-            // a sync sample: sample_is_non_sync_sample 0
-            bool isRandomAccessPoint = (sampleFlags & 0x10000) == 0;
-
-            // CTS
-            int sampleCompositionTime = 0;
-            if ((entry.Flags & 0x800) == 0x800)
-            {
-                if (entry.Version == 0)
-                    sampleCompositionTime = (int)entry.SampleCompositionTimeOffset;
-                else
-                    sampleCompositionTime = entry.SampleCompositionTimeOffset0;
-            }
+            uint sampleFlags = SampleFlagsOf(trun, trunEntryIndex, entry, trackContext.Tfhd, trackContext.Trex);
+            bool isRandomAccessPoint = IsSyncSampleOf(sampleFlags);
+            int sampleCompositionTime = CompositionOffsetOf(entry);
 
             long dts = trackContext.FragmentSampleDts[trackContext.SampleIndex];
             long pts = dts + sampleCompositionTime;
@@ -756,6 +792,158 @@ namespace SharpMP4.Readers
         {
             var trackContext = TrackContextOf(trackID);
             return trackContext.Track.ParseSample(sample.Array, sample.Offset, sample.Count);
+        }
+
+        /// <summary>
+        /// The times of each of a track's samples, and which a decoder can start at: by index, in the order
+        /// <see cref="ReadSample"/> reads them - the 'moov's, then those of the fragments - and with the times it gives
+        /// them: what a player seeks by.
+        /// </summary>
+        public SampleTiming[] GetSampleTimings(uint trackID)
+        {
+            var trackContext = TrackContextOf(trackID);
+            var timings = new List<SampleTiming>((int)Math.Min(trackContext.SampleCount, int.MaxValue));
+            for (uint i = 0; i < trackContext.SampleCount; i++)
+            {
+                // walked along, as reading walks it; a sample in no chunk is past the end, as reading finds it
+                if (!trackContext.MoveTo(i))
+                    break;
+
+                long dts = trackContext.CursorDts;
+                timings.Add(new SampleTiming(dts + trackContext.CursorCompositionOffset, dts, trackContext.CursorDuration, trackContext.CursorIsSyncSample));
+            }
+
+            if (this.IsFragmented)
+                FragmentsOf(trackID, trackContext, timings);
+
+            return timings.ToArray();
+        }
+
+        /// <summary>
+        /// Moves where a track is read: the sample <see cref="ReadSample"/> returns next is the one of this index, of
+        /// <see cref="GetSampleTimings"/> - of the 'moov', or of a fragment. A decoder starts at a sync sample, so that is
+        /// where a player seeks to, and decodes on to the time it wants. An index past the last sample leaves nothing to
+        /// read.
+        /// </summary>
+        public void SeekSample(uint trackID, uint sampleIndex)
+        {
+            var trackContext = TrackContextOf(trackID);
+            trackContext.Moof = null;
+            trackContext.Mdat = null;
+
+            if (sampleIndex < trackContext.SampleCount || !this.IsFragmented)
+            {
+                // of the 'moov': the fragments are read again from the first, after its samples
+                trackContext.SampleIndex = Math.Min(sampleIndex, trackContext.SampleCount);
+                trackContext.IsReadingFragments = false;
+                trackContext.FragmentIndex = 0;
+                trackContext.FragmentEndDts = trackContext.SampleTableDuration();
+                return;
+            }
+
+            // of a fragment: it is read from its 'moof' - with the decode time it starts at, where it has no 'tfdt' - and the
+            // sample found in it
+            trackContext.IsReadingFragments = true;
+            uint index = sampleIndex - trackContext.SampleCount;
+            foreach (var fragment in FragmentsOf(trackID, trackContext, null))
+            {
+                if (index < fragment.FirstSample || index >= fragment.FirstSample + fragment.SampleCount)
+                    continue;
+
+                trackContext.FragmentIndex = fragment.MoofIndex;
+                trackContext.FragmentEndDts = fragment.StartDts;
+                ReadFragment(trackID, trackContext);
+                trackContext.SampleIndex = index - fragment.FirstSample;
+                return;
+            }
+
+            // past the last: no fragment is left to read
+            trackContext.FragmentIndex = this.Container.Children.Count;
+            trackContext.SampleIndex = 0;
+        }
+
+        /// <summary>A fragment of a track: where its 'moof' is, the indexes of its samples after the 'moov's, and its decode time.</summary>
+        private readonly struct FragmentOfTrack
+        {
+            public FragmentOfTrack(int moofIndex, uint firstSample, uint sampleCount, long startDts)
+            {
+                MoofIndex = moofIndex;
+                FirstSample = firstSample;
+                SampleCount = sampleCount;
+                StartDts = startDts;
+            }
+
+            public int MoofIndex { get; }
+            public uint FirstSample { get; }
+            public uint SampleCount { get; }
+            public long StartDts { get; }
+        }
+
+        private readonly Dictionary<uint, List<FragmentOfTrack>> _fragmentsOfTrack = new Dictionary<uint, List<FragmentOfTrack>>();
+
+        /// <summary>
+        /// The fragments of a track, as reading finds them - a 'moof' with a fragment of the track, then an 'mdat' - with the
+        /// times of their samples added to <paramref name="timings"/> where it is given. Without a 'tfdt' a fragment starts
+        /// where the one before it ended, the first where the 'moov's samples do.
+        /// </summary>
+        private List<FragmentOfTrack> FragmentsOf(uint trackID, TrackContext trackContext, List<SampleTiming> timings)
+        {
+            if (timings == null && _fragmentsOfTrack.TryGetValue(trackID, out var known))
+                return known;
+
+            var fragments = new List<FragmentOfTrack>();
+            var children = this.Container.Children;
+            long endDts = trackContext.SampleTableDuration();
+            uint first = 0;
+            int moofIndex = -1;
+            TrackFragmentBox found = null;
+
+            for (int i = 0; i < children.Count; i++)
+            {
+                if (children[i] is MovieFragmentBox moof)
+                {
+                    foreach (var traf in moof.Children.OfType<TrackFragmentBox>())
+                    {
+                        if (traf.Children.OfType<TrackFragmentHeaderBox>().Single().TrackID == trackID)
+                        {
+                            moofIndex = i;
+                            found = traf;
+                        }
+                    }
+                }
+                else if (children[i] is MediaDataBox mdat && found != null)
+                {
+                    // where reading stops: an invalid 'mdat' after a fragment of the track
+                    if (mdat.Size < 8)
+                        break;
+
+                    var tfhd = found.Children.OfType<TrackFragmentHeaderBox>().Single();
+                    var tfdt = found.Children.OfType<TrackFragmentBaseMediaDecodeTimeBox>().SingleOrDefault();
+                    long startDts = tfdt != null ? (long)tfdt.BaseMediaDecodeTime : endDts;
+                    long dts = startDts;
+                    uint count = 0;
+                    foreach (var trun in found.Children.OfType<TrackRunBox>())
+                    {
+                        var entries = EntriesOf(trun);
+                        for (int j = 0; j < entries.Length; j++)
+                        {
+                            long duration = RequiredDurationOf(trackID, entries[j], tfhd, trackContext.Trex);
+                            timings?.Add(new SampleTiming(dts + CompositionOffsetOf(entries[j]), dts, duration,
+                                IsSyncSampleOf(SampleFlagsOf(trun, j, entries[j], tfhd, trackContext.Trex))));
+                            dts += duration;
+                            count++;
+                        }
+                    }
+
+                    fragments.Add(new FragmentOfTrack(moofIndex, first, count, startDts));
+                    first += count;
+                    endDts = dts;
+                    found = null;
+                }
+            }
+
+            _fragmentsOfTrack[trackID] = fragments;
+            return fragments;
         }
 
         /// <summary>Disposes the tracks the reader made. The container, and the stream it was read from, are the caller's.</summary>
