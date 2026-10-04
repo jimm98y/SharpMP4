@@ -283,6 +283,27 @@ namespace SharpMP4.Common
         }
 
         /// <summary>
+        /// Ends a NAL unit being written. Where its last byte is 0x00 - which only a cabac_zero_word leaves - a final 0x03
+        /// follows it, as the NAL unit semantics of H.264, H.265 and H.266 have it: a NAL unit may not end in 0x00, which
+        /// would be taken for part of the next start code.
+        /// </summary>
+        public void EndNalUnit()
+        {
+            if (_bitsPosition % 8 != 0)
+                throw new InvalidOperationException("A NAL unit ends on a byte boundary.");
+
+            if (_insertPreventionBytes && _prevByte == 0x00)
+            {
+                _bytes.WriteByte(0x03);
+                _bitsPosition += 8;
+                _lastMarkPos += 8;
+                _prevPrevByte = _prevByte;
+                _prevByte = 0x03;
+                _currentBytePosition = _bitsPosition / 8;
+            }
+        }
+
+        /// <summary>
         /// Writes whole bytes at a byte aligned position, putting emulation prevention bytes in
         /// exactly as <see cref="WriteBit"/> does, and leaves the state as eight calls to it per
         /// byte would. The counterpart of <see cref="ReadBytes"/>.

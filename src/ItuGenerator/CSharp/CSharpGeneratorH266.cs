@@ -27,29 +27,28 @@ namespace ItuGenerator.CSharp
             }
             else if (name == "num_ref_entries")
             {
+                // A structure keeps what it reads in arrays of its own, indexed as the syntax indexes them - only the
+                // entry [ listIdx ][ rplsIdx ] is there - and puts it into the context's tables as it is read and as it
+                // is written (OnRefPicListStruct), for the headers to look lists up in. Kept in the context's tables
+                // themselves, a structure written after another was read wrote that one's entries, and a context that
+                // had only written had no tables at all.
                 if (methodType == MethodType.Read)
-                    retm = "    \r\nthis.num_ref_entries = ituContext.num_ref_entries;\r\n            this.ltrp_in_header_flag = ituContext.ltrp_in_header_flag;\r\n            this.inter_layer_ref_pic_flag = ituContext.inter_layer_ref_pic_flag;\r\n            this.st_ref_pic_flag = ituContext.st_ref_pic_flag;\r\n            this.abs_delta_poc_st = ituContext.abs_delta_poc_st;\r\n            this.strp_entry_sign_flag = ituContext.strp_entry_sign_flag;\r\n            this.rpls_poc_lsb_lt = ituContext.rpls_poc_lsb_lt;\r\n            this.ilrp_idx = ituContext.ilrp_idx;\r\n" + retm + "\r\n ituContext.inter_layer_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.st_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.abs_delta_poc_st[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.strp_entry_sign_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.rpls_poc_lsb_lt[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.ilrp_idx[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.ltrp_in_header_flag[listIdx][rplsIdx] = (byte)(rplsIdx == ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[listIdx] ? 1 : 0);";
+                    retm = "    \r\nthis.num_ref_entries = new ulong[listIdx + 1][];\r\n            this.num_ref_entries[listIdx] = new ulong[rplsIdx + 1];\r\n            this.ltrp_in_header_flag = new byte[listIdx + 1][];\r\n            this.ltrp_in_header_flag[listIdx] = new byte[rplsIdx + 1];\r\n            this.inter_layer_ref_pic_flag = new byte[listIdx + 1][][];\r\n            this.inter_layer_ref_pic_flag[listIdx] = new byte[rplsIdx + 1][];\r\n            this.st_ref_pic_flag = new byte[listIdx + 1][][];\r\n            this.st_ref_pic_flag[listIdx] = new byte[rplsIdx + 1][];\r\n            this.abs_delta_poc_st = new ulong[listIdx + 1][][];\r\n            this.abs_delta_poc_st[listIdx] = new ulong[rplsIdx + 1][];\r\n            this.strp_entry_sign_flag = new byte[listIdx + 1][][];\r\n            this.strp_entry_sign_flag[listIdx] = new byte[rplsIdx + 1][];\r\n            this.rpls_poc_lsb_lt = new ulong[listIdx + 1][][];\r\n            this.rpls_poc_lsb_lt[listIdx] = new ulong[rplsIdx + 1][];\r\n            this.ilrp_idx = new ulong[listIdx + 1][][];\r\n            this.ilrp_idx[listIdx] = new ulong[rplsIdx + 1][];\r\n" + retm + "\r\n            this.inter_layer_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            this.st_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            this.abs_delta_poc_st[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            this.strp_entry_sign_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            this.rpls_poc_lsb_lt[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            this.ilrp_idx[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            this.ltrp_in_header_flag[listIdx][rplsIdx] = (byte)(rplsIdx == ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[listIdx] ? 1 : 0);";
+            }
+
+            // What a structure leaves out and the spec infers is put in only as it is read: written, the values in it are
+            // the ones to write, and an inference made on the way would write over one that is coded further on - every
+            // slice was written as an I slice.
+            string inferred = methodType == MethodType.Read ? Inferred(name) : null;
+            if (inferred != null)
+            {
+                retm = $"{retm}\r\n{spacing}{inferred}";
             }
 
             if (methodType == MethodType.Write)
             {
                 string setVariables = "";
-                if ((field as ItuField).ClassType == "ref_pic_list_struct")
-                {
-                    if ((field as ItuField).Parameter == "( i, j )")
-                    {
-                        setVariables = "this.ref_pic_list_struct.ListIdx = i;\r\n                    this.ref_pic_list_struct.RplsIdx = j;\r\n";
-                    }
-                    else if ((field as ItuField).Parameter == "(i, sps_num_ref_pic_lists[i])")
-                    {
-                        setVariables = "this.ref_pic_list_struct.ListIdx = i;\r\n                    this.ref_pic_list_struct.RplsIdx = ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[i];\r\n";
-                    }
-                    else
-                    {
-                        throw new NotImplementedException();
-                    }
-                }
-                else if ((field as ItuField).ClassType == "sublayer_hrd_parameters")
+                if ((field as ItuField).ClassType == "sublayer_hrd_parameters")
                 {
                     setVariables = "sublayer_hrd_parameters.SubLayerId = i;\r\n";
                 }
@@ -57,6 +56,23 @@ namespace ItuGenerator.CSharp
             }
 
             return retm;
+        }
+
+        /// <summary>The inference made once an element has been read, for what follows it: see <see cref="AppendMethod"/>.</summary>
+        private static string Inferred(string name)
+        {
+            switch (name)
+            {
+                case "vps_max_layers_minus1":
+                    return "ituContext.OnVpsMaxLayersMinus1(this);";
+                case "sh_picture_header_in_slice_header_flag":
+                    // The first element of every slice header: the inferred values go in before anything else is read.
+                    return "ituContext.InferSliceHeader(this);";
+                case "ph_gdr_or_irap_pic_flag":
+                    return "ituContext.InferPictureHeader(this);";
+                default:
+                    return null;
+            }
         }
 
         public string PreprocessDefinitionsFile(string definitions)
@@ -431,8 +447,6 @@ namespace ItuGenerator.CSharp
 
                 case "general_timing_hrd_parameters":
                     return "ituContext.SetGeneralTimingHrdParameters(general_timing_hrd_parameters);";
-                case "vps_max_layers_minus1":
-                    return "ituContext.OnVpsMaxLayersMinus1(this);";
                 case "vps_num_dpb_params_minus1":
                     return "ituContext.OnVpsNumDpbParamsMinus1();";
                 case "vps_direct_ref_layer_flag":
@@ -456,15 +470,18 @@ namespace ItuGenerator.CSharp
                 case "pps_cabac_init_present_flag":
                     // The first element after the PPS's partitioning.
                     return "ituContext.OnPpsCabacInitPresentFlag();";
-                case "rpl_idx": 
+                case "num_ref_entries":
+                case "ltrp_in_header_flag":
+                    // What a reference picture list structure holds goes into the context's tables as it is known.
+                    return "ituContext.OnRefPicListStruct(this);";
+                case "rpl_idx":
                     return "ituContext.OnRplIdx(this, i);";
                 case "sh_num_ref_idx_active_minus1": 
                     return "ituContext.OnShNumRefIdxActiveMinus1();";
                 case "fixed_pic_rate_general_flag":
                     return "ituContext.OnFixedPicRateGeneralFlag(this, i);";
                 case "sh_picture_header_in_slice_header_flag":
-                    // The first element of every slice header: the inferred values go in before
-                    // anything else is read.
+                    // The first element of every slice header.
                     return "ituContext.OnShPictureHeaderInSliceHeaderFlag(this);";
                 case "ph_gdr_or_irap_pic_flag":
                     return "ituContext.OnPhGdrOrIrapPicFlag(this);";
@@ -774,18 +791,7 @@ namespace ItuGenerator.CSharp
             if (variableName == "vps_hrd_max_tid")
                 return $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};\r\n{spacing}for (int k = 0; k < this.vps_hrd_max_tid.Length; k++) this.vps_hrd_max_tid[k] = vps_max_sublayers_minus1; // inferred (7.4.3.3)";
 
-            if (variableName == "ref_pic_list_struct")
-            {
-                if (variableType == "RefPicListStruct[ 2]")
-                    ret = "\r\nif (ituContext.num_ref_entries == null)\r\n                ituContext.num_ref_entries = new ulong[2][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1] };\r\n            if (ituContext.ltrp_in_header_flag == null)\r\n                ituContext.ltrp_in_header_flag = new byte[2][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1] };\r\n            if (ituContext.inter_layer_ref_pic_flag == null)\r\n                ituContext.inter_layer_ref_pic_flag = new byte[2][][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.st_ref_pic_flag == null)\r\n                ituContext.st_ref_pic_flag = new byte[2][][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.abs_delta_poc_st == null)\r\n                ituContext.abs_delta_poc_st = new ulong[2][][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.strp_entry_sign_flag == null)\r\n                ituContext.strp_entry_sign_flag = new byte[2][][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.rpls_poc_lsb_lt == null)\r\n                ituContext.rpls_poc_lsb_lt = new ulong[2][][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.ilrp_idx == null)\r\n                ituContext.ilrp_idx = new ulong[2][][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };";
-                else
-                    ret = "\r\nituContext.num_ref_entries = new ulong[2][];\r\n            ituContext.ltrp_in_header_flag = new byte[2][];\r\n            ituContext.inter_layer_ref_pic_flag = new byte[2][][];\r\n            ituContext.st_ref_pic_flag = new byte[2][][];\r\n            ituContext.abs_delta_poc_st = new ulong[2][][];\r\n            ituContext.strp_entry_sign_flag = new byte[2][][];\r\n            ituContext.rpls_poc_lsb_lt = new ulong[2][][];\r\n            ituContext.ilrp_idx = new ulong[2][][];";
-            }
-            else if (variableName == "ref_pic_list_struct[ i ]")
-            {
-                ret = "\r\nituContext.num_ref_entries[i] = new ulong[sps_num_ref_pic_lists[i] + 1];\r\n                ituContext.ltrp_in_header_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1];\r\n                ituContext.inter_layer_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                ituContext.st_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                ituContext.abs_delta_poc_st[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];\r\n                ituContext.strp_entry_sign_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                ituContext.rpls_poc_lsb_lt[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];\r\n                ituContext.ilrp_idx[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];";
-            }
-            else if (variableName.StartsWith("sublayer_hrd_parameters"))
+            if (variableName.StartsWith("sublayer_hrd_parameters"))
             {
                 ret = "\r\nif(ituContext.cbr_flag == null)\r\n                ituContext.cbr_flag = new byte[MaxSubLayersVal + 1][];\r\n            if(ituContext.bit_rate_du_value_minus1 == null)\r\n                ituContext.bit_rate_du_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n            if(ituContext.cpb_size_du_value_minus1 == null)\r\n                ituContext.cpb_size_du_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n            if(ituContext.bit_rate_value_minus1 == null)\r\n                ituContext.bit_rate_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n            if(ituContext.cpb_size_value_minus1 == null)\r\n                ituContext.cpb_size_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n";
             }
@@ -858,10 +864,8 @@ namespace ItuGenerator.CSharp
             if (field != null && field.Name == "scaling_list_dc_coef")
                 ret.RemoveAll(index => index.Replace(" ", "") == "[id]");
 
-            if (field != null && (
-                field.Name == "ref_pic_list_struct" ||
-                field.Name == "sublayer_hrd_parameters"
-                ))
+            // A reference picture list structure is one of the SPS's [ i ][ j ], or of a header's [ i ]: each keeps its own.
+            if (field != null && field.Name == "sublayer_hrd_parameters")
             {
                 ret.Clear();
             }

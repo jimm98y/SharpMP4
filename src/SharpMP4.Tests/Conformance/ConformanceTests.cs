@@ -89,6 +89,54 @@ public class ConformanceTests
     }
 
     /// <summary>
+    /// Reads every H.264 conformance stream and writes each NAL unit again with a context that has only written, which
+    /// must give the stream's bytes. Needs no ffmpeg.
+    /// </summary>
+    [TestMethod]
+    public void H264UnitsWriteBackAsTheyWere() => WriteBack("h264");
+
+    /// <summary>The same for H.265: a value the reading infers must not be written over one a unit coded.</summary>
+    [TestMethod]
+    public void H265UnitsWriteBackAsTheyWere() => WriteBack("h265");
+
+    /// <summary>The same for H.266.</summary>
+    [TestMethod]
+    public void H266UnitsWriteBackAsTheyWere() => WriteBack("h266");
+
+    private static void WriteBack(string codec)
+    {
+        string? root = ConformanceCorpus.Locate();
+        if (root == null)
+            Assert.Inconclusive("no conformance bitstreams; run DownloadConformance.ps1, or set SHARPMP4_CONFORMANCE");
+
+        var streams = ConformanceCorpus.Streams(root, codec);
+        if (streams.Count == 0)
+            Assert.Inconclusive($"no {codec} streams under {root}; run DownloadConformance.ps1");
+
+        var results = new ConcurrentBag<StreamResult>();
+        Parallel.ForEach(streams, new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, Environment.ProcessorCount / 2) }, path =>
+        {
+            StreamResult result;
+            try
+            {
+                result = H26xRoundTrip.Check(path, codec);
+            }
+            catch (Exception ex)
+            {
+                result = new StreamResult { Path = path, Outcome = Outcome.SharpFailed, Detail = ex.ToString(), Key = $"harness: {ex.GetType().Name}" };
+            }
+            results.Add(result);
+        });
+
+        var ordered = results.OrderBy(r => r.Path, StringComparer.Ordinal).ToList();
+        string summary = Summarise($"{codec} round trip", root, ordered);
+        File.WriteAllText(Path.Combine(root, $"report-{codec}-roundtrip.txt"), summary + Details(root, ordered));
+
+        int failing = ordered.Count(r => r.Outcome is Outcome.Diverged or Outcome.SharpFailed);
+        Assert.AreEqual(0, failing, summary);
+    }
+
+    /// <summary>
     /// Reads every VP9 conformance stream and writes each frame, and each superframe's index, again with a context that
     /// has only written, which must give the stream's bytes: the headers, the compressed header's Boolean coding, and the
     /// tile data. Needs no ffmpeg.

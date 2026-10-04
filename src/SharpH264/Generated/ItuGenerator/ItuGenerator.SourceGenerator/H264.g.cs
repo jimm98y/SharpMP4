@@ -575,7 +575,6 @@ seq_parameter_set_data() {
 
 			uint i = 0;
 			size += stream.WriteUnsignedInt(8, this.profile_idc, "profile_idc"); 
-			ituContext.OnProfileIdc(this);
 			size += stream.WriteUnsignedInt(1, this.constraint_set0_flag, "constraint_set0_flag"); 
 			size += stream.WriteUnsignedInt(1, this.constraint_set1_flag, "constraint_set1_flag"); 
 			size += stream.WriteUnsignedInt(1, this.constraint_set2_flag, "constraint_set2_flag"); 

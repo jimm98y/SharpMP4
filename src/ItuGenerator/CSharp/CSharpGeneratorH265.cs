@@ -25,7 +25,28 @@ namespace ItuGenerator.CSharp
                 retm = $"{retm}\r\n{spacing}stream.MarkCurrentBitsPosition();";
             }
 
+            // What a structure leaves out and the spec infers is put in only as it is read: written, the values in it are
+            // the ones to write, and an inference made on the way would write over one that is coded further on - a B
+            // slice's collocated_from_l0_flag was written as the 1 inferred for a P slice.
+            string inferred = methodType == MethodType.Read ? Inferred(name) : null;
+            if (inferred != null)
+            {
+                retm = $"{retm}\r\n{spacing}{inferred}";
+            }
+
             return retm;
+        }
+
+        /// <summary>The inference made once an element has been read, for what follows it: see <see cref="AppendMethod"/>.</summary>
+        private static string Inferred(string name)
+        {
+            switch (name)
+            {
+                case "num_ref_idx_active_override_flag":
+                    return "ituContext.OnNumRefIdxActiveOverrideFlag(this);";
+                default:
+                    return null;
+            }
         }
 
         public string PreprocessDefinitionsFile(string definitions)
@@ -338,8 +359,6 @@ namespace ItuGenerator.CSharp
                     return "ituContext.OnCrossLayerPicTypeAlignedFlag(this);";
                 case "inter_layer_pred_enabled_flag":
                     return "ituContext.OnInterLayerPredEnabledFlag();";
-                case "num_ref_idx_active_override_flag":
-                    return "ituContext.OnNumRefIdxActiveOverrideFlag(this);";
                 case "abs_delta_rps_minus1":
                     // The last element before a predicted set reads its entries, whose number is
                     // NumDeltaPocs of the set it is predicted from: RefRpsIdx has to be known, and
