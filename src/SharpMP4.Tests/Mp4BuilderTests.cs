@@ -60,6 +60,38 @@ public class Mp4BuilderTests
     }
 
     /// <summary>
+    /// Apple writes negative composition offsets as they are, in version 0, which its readers and
+    /// ffmpeg read as signed: written so, they come back as they went in, unshifted, so that a file
+    /// remuxed from Apple's has Apple's timing - and a reader that does not honour edit lists, as
+    /// Windows' does not, shows each picture at its own time.
+    /// </summary>
+    [TestMethod]
+    public void WritesNegativeCompositionOffsetsAsAppleDoes()
+    {
+        var offsets = new[] { 0, 60, 0, -40, -20, 60, 0, -40 };
+        var file = BuildFile(offsets.Length, _ => 20, i => offsets[i], NegativeCompositionOffsets.AsApple);
+
+        var ctts = Boxes.Find<CompositionOffsetBox>(file);
+        Assert.AreEqual<byte>(0, ctts.Version);
+        CollectionAssert.AreEqual(offsets, Expand(ctts.SampleCount, ctts.SampleOffset));
+    }
+
+    /// <summary>The same in version 1 of 'ctts', which the standard defines as signed.</summary>
+    [TestMethod]
+    public void WritesNegativeCompositionOffsetsInVersion1()
+    {
+        var offsets = new[] { 0, 60, 0, -40, -20, 60, 0, -40 };
+        var file = BuildFile(offsets.Length, _ => 20, i => offsets[i], NegativeCompositionOffsets.Version1);
+
+        var ctts = Boxes.Find<CompositionOffsetBox>(file);
+        Assert.AreEqual<byte>(1, ctts.Version);
+        var written = new List<int>();
+        for (int i = 0; i < ctts.SampleCount.Length; i++)
+            written.AddRange(Enumerable.Repeat(ctts.SampleOffset0[i], (int)ctts.SampleCount[i]));
+        CollectionAssert.AreEqual(offsets, written);
+    }
+
+    /// <summary>
     /// Sample positions used to be truncated to 32 bits, so past 4 GB of media data the offsets
     /// wrapped and the file pointed at the wrong bytes with nothing reported. And past 4 GB the
     /// 'mdat' header is 16 bytes, with its size in the largesize, while the offsets were counted
@@ -133,10 +165,11 @@ public class Mp4BuilderTests
     private static Container BuildFile(
         int sampleCount,
         Func<int, int> duration,
-        Func<int, int> compositionOffset)
+        Func<int, int> compositionOffset,
+        NegativeCompositionOffsets negativeOffsets = NegativeCompositionOffsets.Shifted)
     {
         using var output = new MemoryStream();
-        var builder = new Mp4Builder(new SingleStreamOutput(output));
+        var builder = new Mp4Builder(new SingleStreamOutput(output)) { NegativeCompositionOffsets = negativeOffsets };
 
         var track = new AACTrack(2, 44100, 16);
         builder.AddTrack(track);

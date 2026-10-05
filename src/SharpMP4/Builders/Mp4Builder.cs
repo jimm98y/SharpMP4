@@ -80,6 +80,12 @@ namespace SharpMP4.Builders
 
         public uint MovieTimescale { get; set; } = 1000;
 
+        /// <summary>
+        /// How composition offsets are written where any is negative: shifted, the default, as Apple writes them, or in
+        /// version 1 of 'ctts'. See <see cref="SharpMP4.Builders.NegativeCompositionOffsets"/>.
+        /// </summary>
+        public NegativeCompositionOffsets NegativeCompositionOffsets { get; set; } = NegativeCompositionOffsets.Shifted;
+
         /// <inheritdoc/>
         public Mp4FileFormat FileFormat { get; set; } = Mp4FileFormat.Mp4;
 
@@ -302,8 +308,11 @@ namespace SharpMP4.Builders
                 moov.Children.Add(trak);
 
                 // Version 0 of 'ctts' carries unsigned offsets, so where any is negative they are all shifted by the most
-                // negative one. The composition times move with them, which the edit list below takes back out.
-                int bias = Math.Min(0, track.CompositionOffsets.Count > 0 ? track.CompositionOffsets.Min() : 0);
+                // negative one, unless they are to be written as they are. The composition times move with them, which the
+                // edit list below takes back out.
+                int bias = NegativeCompositionOffsets == NegativeCompositionOffsets.Shifted
+                    ? Math.Min(0, track.CompositionOffsets.Count > 0 ? track.CompositionOffsets.Min() : 0)
+                    : 0;
 
                 // The earliest composition time: where the presentation starts in the media, which the edit list maps to
                 // the start of the movie, as ffmpeg does. Without it, the first picture of a stream with B pictures is shown
@@ -344,7 +353,12 @@ namespace SharpMP4.Builders
                 tkhd.ModificationTime = creationTime;
                 tkhd.Version = MovieTime.Version(tkhd.Duration, creationTime);
 
-                if (firstCompositionTime != 0)
+                // Apple writes an edit list from the media's start even where it starts where the media does; a
+                // presentation starting before the media's start - an offset as it is, of the first picture shown - cannot
+                // be said, and starts at it.
+                bool asApple = NegativeCompositionOffsets == NegativeCompositionOffsets.AsApple;
+                firstCompositionTime = Math.Max(0, firstCompositionTime);
+                if (firstCompositionTime != 0 || (asApple && track.Track.HandlerType == HandlerTypes.Video))
                 {
                     var edts = new EditBox();
                     edts.SetParent(trak);
@@ -514,16 +528,18 @@ namespace SharpMP4.Builders
                 if (track.CompositionOffsets.Any(offset => offset - bias != 0))
                 {
                     // Pictures are coded out of presentation order, so the difference between
-                    // composition and decode time has to be recorded.
-                    var ctts = new CompositionOffsetBox();
+                    // composition and decode time has to be recorded: in version 1, signed, or in version 0 - of
+                    // offsets shifted to be positive, or as Apple writes them, a negative one in two's complement.
+                    bool signed = NegativeCompositionOffsets == NegativeCompositionOffsets.Version1;
+                    var ctts = new CompositionOffsetBox(signed ? (byte)1 : (byte)0);
                     ctts.SetParent(stbl);
                     stbl.Children.Add(ctts);
 
                     var counts = new List<uint>();
-                    var offsets = new List<uint>();
+                    var offsets = new List<int>();
                     foreach (var offset in track.CompositionOffsets)
                     {
-                        uint value = (uint)(offset - bias);
+                        int value = offset - bias;
                         if (offsets.Count > 0 && offsets[offsets.Count - 1] == value)
                             counts[counts.Count - 1]++;
                         else
@@ -534,7 +550,10 @@ namespace SharpMP4.Builders
                     }
 
                     ctts.SampleCount = counts.ToArray();
-                    ctts.SampleOffset = offsets.ToArray();
+                    if (signed)
+                        ctts.SampleOffset0 = offsets.ToArray();
+                    else
+                        ctts.SampleOffset = offsets.Select(offset => unchecked((uint)offset)).ToArray();
                     ctts.EntryCount = (uint)counts.Count;
                 }
 
