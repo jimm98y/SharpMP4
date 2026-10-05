@@ -48,6 +48,16 @@ namespace SharpMP4.Tracks
         private uint _width, _height, _bitRate, _bufferSize;
         private uint _pixelAspectH = 1, _pixelAspectV = 1;
 
+        /// <summary>
+        /// The objectTypeIndication of the video (ISO/IEC 14496-1, Table 5): of an MPEG-2 profile, <see cref="MPEG2_SIMPLE"/>
+        /// to <see cref="MPEG2_422"/>, or <see cref="MPEG1"/>. The sample entry's, then the stream's once its sequence
+        /// header is read: MPEG-1 where no sequence extension follows it.
+        /// </summary>
+        public byte ObjectTypeIndication => _objectTypeIndication;
+
+        /// <summary>Whether the video is MPEG-1 video (ISO/IEC 11172-2) rather than MPEG-2.</summary>
+        public bool IsMpeg1 => _objectTypeIndication == MPEG1;
+
         public H262Track()
         {
             DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };

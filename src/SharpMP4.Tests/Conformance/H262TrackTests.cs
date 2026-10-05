@@ -76,8 +76,10 @@ public class H262TrackTests
                     reader.Parse(container);
                     uint trackID = reader.Tracks.Keys.Single();
                     var track = reader.Tracks[trackID];
-                    if (track.Track is not H262Track)
+                    if (track.Track is not H262Track h262)
                         failures.Add($"{name}: read back as {track.Track.GetType().Name}");
+                    else if (h262.IsMpeg1 != IsMpeg1(es))
+                        failures.Add($"{name}: read back as {(h262.IsMpeg1 ? "MPEG-1" : "MPEG-2")} video, objectTypeIndication 0x{h262.ObjectTypeIndication:X2}");
                     int read = 0;
                     for (var sample = reader.ReadSample(trackID); sample != null; sample = reader.ReadSample(trackID))
                     {
@@ -159,6 +161,8 @@ public class H262TrackTests
                         failures.Add($"{name}: '{type}' read as {track.GetType().Name}");
                         continue;
                     }
+                    if (h262.IsMpeg1 != H262Track.QuickTimeEntries[type])
+                        failures.Add($"{name}: '{type}' read as {(h262.IsMpeg1 ? "MPEG-1" : "MPEG-2")} video");
                     for (var sample = reader.ReadSample(trackID); sample != null; sample = reader.ReadSample(trackID))
                         samples.Add((sample.Data.ToArray(), sample.Duration, sample.IsRandomAccessPoint));
 
@@ -224,6 +228,17 @@ public class H262TrackTests
         Add(last, lastSync);
         builder.FinalizeMedia();
         return (sync, iPictures);
+    }
+
+    // MPEG-1 video has no extensions: an MPEG-2 stream's sequence header is followed by its sequence extension
+    private static bool IsMpeg1(byte[] es)
+    {
+        foreach (var (offset, length) in H262Context.Units(es, 0, es.Length))
+        {
+            if (es[offset + 3] == H262StartCodes.EXTENSION)
+                return false;
+        }
+        return true;
     }
 
     // picture_coding_type of a sample's first picture header: the 3 bits after temporal_reference's 10
