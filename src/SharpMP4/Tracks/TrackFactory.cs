@@ -120,15 +120,39 @@ namespace SharpMP4.Tracks
 
         private static ITrack CreateAudioTrack(uint trackID, Box sampleEntry, uint timescale, int sampleDuration)
         {
+            // QuickTime's MP3 entry has no configuration: known by its own coding, whichever of its boxes - 'chan' - is given
+            if (Mp3Track.IsMp3(sampleEntry) && (sampleEntry as AudioSampleEntry ?? sampleEntry.GetParent() as AudioSampleEntry) is AudioSampleEntry quickTimeEntry
+                && Mp3Track.IsQuickTimeMp3(Encryption.SubsampleSplitter.CodingOf(quickTimeEntry)))
+                return new Mp3Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
+
             switch (IsoStream.ToFourCC(sampleEntry.FourCC))
             {
-                // of AAC; an 'esds' of another codec - MP3's, of 0x69 or 0x6B - is passed through as it is
+                // of AAC; an 'esds' of another codec - MP3's, of 0x69 or 0x6B - is of its own track below
                 case "esds" when AACTrack.IsAac(sampleEntry): // mp4
                 case "wave" when AACTrack.IsAac(sampleEntry): // quicktime
                     return new AACTrack(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
                 case "dOps":
                     return new OpusTrack(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
+
+                // MPEG-1 and MPEG-2 audio - MP3 - in an 'esds', or QuickTime's 'wave' it is in
+                case "esds" when Mp3Track.IsMp3(sampleEntry):
+                case "wave" when Mp3Track.IsMp3(sampleEntry):
+                    return new Mp3Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
+
+                case "dac3":
+                    return new AC3Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
+
+                case "dec3":
+                    return new EAC3Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
+
+                case "dfLa":
+                    return new FlacTrack(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
+
+                // the 'alac' box of an 'alac' entry; of QuickTime's, the 'wave' it is in
+                case "alac" when AlacTrack.IsAlac(sampleEntry):
+                case "wave" when AlacTrack.IsAlac(sampleEntry):
+                    return new AlacTrack(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
                 default:
                     throw new NotSupportedException($"Unsupported audio codec: {IsoStream.ToFourCC(sampleEntry.FourCC)}");
