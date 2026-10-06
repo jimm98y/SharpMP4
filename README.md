@@ -1,5 +1,5 @@
 # SharpMP4
-Simple lightweight mp4/fmp4/mov/m4v reader/writer. Supports H261/H262/H263/MPEG4/H264/H265/H266/VP9/AV1/AV2/ProRes for video and AAC/Opus for audio. No platform dependencies, easily portable cross-platform. It was designed to be a stream-in and stream-out solution for recording streams from IP cameras into MP4 and fragmented MP4.
+Simple lightweight mp4/fmp4/mov/m4v reader/writer. Supports H261/H262/H263/MPEG4/H264/H265/H266/VP9/AV1/AV2/ProRes for video and AAC/Opus/MP3/FLAC/ALAC/AC-3/E-AC-3 for audio. No platform dependencies, easily portable cross-platform. It was designed to be a stream-in and stream-out solution for recording streams from IP cameras into MP4 and fragmented MP4.
 
 [![NuGet version](https://img.shields.io/nuget/v/SharpMP4.svg?style=flat-square)](https://www.nuget.org/packages/SharpMP4)
 
@@ -81,6 +81,16 @@ outputBuilder.ProcessTrackSample(audioTrack.TrackID, aac);
 byte[] annexB = ...; // 00 00 00 01 67 ... 00 00 00 01 68 ... 00 00 01 65 ...
 outputBuilder.ProcessAnnexBTrackSample(videoTrack.TrackID, annexB);
 ```
+The other audio tracks are made of their codec's configuration, as an encoder hands it out or a file has it, and take a frame a sample:
+```cs
+var flac = new FlacTrack(FlacTrack.ParseStreamHeader(header)); // 'fLaC' and the metadata blocks, STREAMINFO first
+var alac = new AlacTrack(alacSpecificConfig);                   // the 24 byte magic cookie
+var mp3 = new Mp3Track(2, 44100);                              // MPEG-1 or MPEG-2 audio, by the rate
+var ac3 = AC3Track.TryParseSyncFrame(frame, 0, out var track) ? track : null; // of a sync frame's bit stream information
+var eac3 = new EAC3Track(dataRate, substreams);                 // 'dec3''s data rate and independent substreams
+```
+An MP3 encoder hands out one frame or several at a time: `Mp3Track.ParseFrames` splits them, a sample each.
+
 When done, call `FinalizeMedia` to create the video file:
 ```cs
 outputBuilder.FinalizeMedia();

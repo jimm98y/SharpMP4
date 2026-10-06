@@ -58,14 +58,11 @@ public class TrackConformanceTests
     }
 
     /// <summary>
-    /// A track of a codec none reads - AC-3, E-AC-3, FLAC, MP3 - written again as a remux writes it has its sample entry
-    /// as the file had it, byte for byte: the entry's first box was written where the entry belongs.
+    /// A track of a codec none reads - AMR-WB - written again as a remux writes it has its sample entry as the file had it,
+    /// byte for byte: the entry's first box was written where the entry belongs.
     /// </summary>
     [TestMethod]
-    [DataRow("chromium/bear-ac3-only-frag.mp4")]
-    [DataRow("chromium/bear-eac3-only-frag.mp4")]
-    [DataRow("chromium/bear-flac.mp4")]
-    [DataRow("fate/mpegaudio/packed_maindata.mp3.mp4")]
+    [DataRow("mp4parse/mp4parse/amr_wb_1f.3gp")]
     public void WritesTheSampleEntryOfACodecNoneReadsAsItWas(string name)
     {
         string? root = ConformanceCorpus.Locate();
@@ -100,6 +97,81 @@ public class TrackConformanceTests
         // the original's tree is as it was: its entry still its 'stsd''s
         var stsd = Boxes.Find<SampleDescriptionBox>(container);
         Assert.AreSame(stsd, stsd.Children[0].GetParent());
+    }
+
+    /// <summary>
+    /// AC-3, E-AC-3, FLAC, MP3 and ALAC of others' muxers - Chromium's, FFmpeg's, iTunes' - read by their own tracks and
+    /// written again as a remux writes them: every sample as it was, and the configuration - the 'dac3', 'dec3', 'dfLa' or
+    /// 'alac' - byte for byte; of MP3, whose 'esds' is written as the track writes one, its object type and bit rates.
+    /// </summary>
+    [TestMethod]
+    [DataRow("chromium/bear-ac3-only-frag.mp4", typeof(AC3Track))]
+    [DataRow("chromium/bear-eac3-only-frag.mp4", typeof(EAC3Track))]
+    [DataRow("chromium/bear-flac.mp4", typeof(FlacTrack))]
+    [DataRow("fate/mpegaudio/packed_maindata.mp3.mp4", typeof(Mp3Track))]
+    [DataRow("fate/lossless-audio/inside.m4a", typeof(AlacTrack))]
+    [DataRow("metadata/mutagen/alac.m4a", typeof(AlacTrack))]
+    public void RemuxesTheAudioOfOthers(string name, Type type)
+    {
+        string? root = ConformanceCorpus.Locate();
+        string path = Path.Combine(root ?? "", name);
+        if (root == null || !File.Exists(path))
+            Assert.Inconclusive($"no {name}; run DownloadConformance.ps1, or set SHARPMP4_CONFORMANCE");
+
+        using var input = File.OpenRead(path);
+        var container = new Container();
+        container.Read(new IsoStream(new StreamWrapper(input)));
+        var reader = new VideoReader();
+        reader.Parse(container);
+        uint trackID = reader.Tracks.Keys.Single(k => reader.Tracks[k].Track.HandlerType == HandlerTypes.Sound);
+        var track = reader.Tracks[trackID].Track;
+        Assert.IsInstanceOfType(track, type);
+
+        using var output = new MemoryStream();
+        var builder = new Mp4Builder(new SingleStreamOutput(output));
+        var clone = track.Clone();
+        builder.AddTrack(clone);
+        var samples = new List<byte[]>();
+        for (var sample = reader.ReadSample(trackID); sample != null; sample = reader.ReadSample(trackID))
+        {
+            samples.Add(sample.Data.ToArray());
+            builder.ProcessTrackSample(clone.TrackID, sample.Data, sample.Duration);
+        }
+        builder.FinalizeMedia();
+        Assert.IsTrue(samples.Count > 0);
+
+        var written = new Container();
+        written.Read(new IsoStream(new StreamWrapper(new MemoryStream(output.ToArray()))));
+        var rereader = new VideoReader();
+        rereader.Parse(written);
+        uint writtenID = rereader.Tracks.Keys.Single();
+        var reread = rereader.Tracks[writtenID].Track;
+        Assert.IsInstanceOfType(reread, type);
+        int index = 0;
+        for (var sample = rereader.ReadSample(writtenID); sample != null; sample = rereader.ReadSample(writtenID), index++)
+            CollectionAssert.AreEqual(samples[index], sample.Data.ToArray(), $"sample {index}");
+        Assert.AreEqual(samples.Count, index);
+
+        if (reread is Mp3Track mp3)
+        {
+            var read = (Mp3Track)track;
+            Assert.AreEqual((read.ObjectTypeIndication, read.ChannelCount, read.SamplingRate, read.MaxBitrate, read.AvgBitrate, read.BufferSizeDB),
+                (mp3.ObjectTypeIndication, mp3.ChannelCount, mp3.SamplingRate, mp3.MaxBitrate, mp3.AvgBitrate, mp3.BufferSizeDB));
+        }
+        else
+        {
+            CollectionAssert.AreEqual(ConfigBytes(container), ConfigBytes(written));
+        }
+    }
+
+    /// <summary>The bytes of the codec configuration of a file's first sample entry: its first box but a 'btrt' or 'chan'.</summary>
+    private static byte[] ConfigBytes(Container container)
+    {
+        var entry = Boxes.Find<SampleDescriptionBox>(container).Children[0];
+        var config = entry.Children.First(x => x.FourCC != IsoStream.FromFourCC("btrt") && x.FourCC != IsoStream.FromFourCC("chan"));
+        using var memory = new MemoryStream();
+        new IsoStream(new StreamWrapper(memory)).WriteBox(config, "");
+        return memory.ToArray();
     }
 
     private static byte[] EntryBytes(Container container)

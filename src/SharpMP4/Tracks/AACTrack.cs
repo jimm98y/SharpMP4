@@ -320,7 +320,7 @@ namespace SharpMP4.Tracks
         }
 
         /// <summary>The decoder specific info of a decoder config as its bytes, after its tag and size; null where it has none.</summary>
-        private static byte[] DecoderSpecificInfoOf(DecoderConfigDescriptor decoderConfig)
+        internal static byte[] DecoderSpecificInfoOf(DecoderConfigDescriptor decoderConfig)
         {
             Descriptor info = decoderConfig.Children?.FirstOrDefault(x => x.Tag == DescriptorTags.DecSpecificInfoTag);
             if (info == null)

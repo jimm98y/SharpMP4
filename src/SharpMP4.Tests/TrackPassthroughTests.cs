@@ -11,11 +11,12 @@ namespace SharpMP4.Tests;
 [TestClass]
 public class TrackPassthroughTests
 {
-    // An 'stsd' of one 'ac-3' sample entry, 2 channels of 48000 Hz, and its 'dac3'
-    private const string AC3Stsd =
-        "0000003f" + "73747364" + "00000000" + "00000001" +
-        "0000002f" + "61632d33" + "000000000000" + "0001" + "0000000000000000" + "0002" + "0010" + "0000" + "0000" + "bb800000" +
-        "0000000b" + "64616333" + "103dc0";
+    // An 'stsd' of one 'sawb' sample entry - AMR-WB, which no track reads - 1 channel of 16000 Hz, and its 'damr': vendor
+    // 'ffmp', decoder version 0, mode set 0x81ff, mode change period 0, a frame a sample
+    private const string AmrWbStsd =
+        "00000045" + "73747364" + "00000000" + "00000001" +
+        "00000035" + "73617762" + "000000000000" + "0001" + "0000000000000000" + "0001" + "0010" + "0000" + "0000" + "3e800000" +
+        "00000011" + "64616d72" + "66666d70" + "00" + "81ff" + "00" + "01";
 
     private static SampleDescriptionBox ReadStsd(string hex)
     {
@@ -25,30 +26,30 @@ public class TrackPassthroughTests
 
     /// <summary>
     /// A track of a codec none reads writes its whole sample entry as it was, and a copy of it: it wrote the entry's first
-    /// box - 'dac3' - where the entry belongs, and handed the reader's own box to a writer to put in its tree.
+    /// box - 'damr' - where the entry belongs, and handed the reader's own box to a writer to put in its tree.
     /// </summary>
     [TestMethod]
     public void WritesTheWholeSampleEntryOfACodecNoneReads()
     {
-        var stsd = ReadStsd(AC3Stsd);
+        var stsd = ReadStsd(AmrWbStsd);
         Box entry = stsd.Children[0];
-        Box dac3 = entry.Children[0];
+        Box damr = entry.Children[0];
 
         var logger = new CapturingLogger();
-        ITrack track = TrackFactory.DefaultCreateTrack(1, dac3, 48000, 1536, IsoStream.FromFourCC(HandlerTypes.Sound), "SoundHandler", logger);
+        ITrack track = TrackFactory.DefaultCreateTrack(1, damr, 16000, 320, IsoStream.FromFourCC(HandlerTypes.Sound), "SoundHandler", logger);
         Assert.IsInstanceOfType<GenericTrack>(track);
         Assert.AreEqual(1, logger.Warnings.Count, "a codec none reads, said");
 
         foreach (var written in new[] { track.CreateSampleEntryBox(), track.Clone().CreateSampleEntryBox() })
         {
-            Assert.AreEqual("ac-3", IsoStream.ToFourCC(written.FourCC));
+            Assert.AreEqual("sawb", IsoStream.ToFourCC(written.FourCC));
             Assert.AreNotSame(entry, written);
             CollectionAssert.AreEqual(BytesOf(entry), BytesOf(written));
 
             // a writer puts it in its own tree: the reader's is as it was
             written.SetParent(new SampleDescriptionBox());
             Assert.AreSame(stsd, entry.GetParent());
-            Assert.AreSame(entry, dac3.GetParent());
+            Assert.AreSame(entry, damr.GetParent());
         }
     }
 
