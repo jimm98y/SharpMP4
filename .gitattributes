@@ -1,0 +1,3 @@
+# What the generators write: Windows line endings on disk, on every platform; LF in the repository, as committed
+*.g.cs text eol=crlf
+/Boxes.md text eol=crlf

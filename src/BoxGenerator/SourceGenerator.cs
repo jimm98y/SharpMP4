@@ -25,9 +25,15 @@ namespace BoxGenerator
 
                 foreach (var file in code)
                 {
-                    productionContext.AddSource($"{file.Key}.g.cs", file.Value);
+                    productionContext.AddSource($"{file.Key}.g.cs", WithCrlf(file.Value));
                 }
             });
         }
+
+        /// <summary>
+        /// The code with Windows line endings, whatever the platform it is generated on: the generator's own "\r\n"s and
+        /// the "\n"s of AppendLine and of verbatim strings off a Unix checkout alike, so the files are the same everywhere.
+        /// </summary>
+        private static string WithCrlf(string code) => code.Replace("\r\n", "\n").Replace("\n", "\r\n");
     }
 }

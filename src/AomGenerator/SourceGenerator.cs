@@ -28,8 +28,14 @@ namespace AomGenerator
             initContext.RegisterSourceOutput(families, (spc, nameAndContent) =>
             {
                 string code = AomGenerator.Generate(nameAndContent.name, nameAndContent.content);
-                spc.AddSource($"{nameAndContent.name}.g.cs", code);
+                spc.AddSource($"{nameAndContent.name}.g.cs", WithCrlf(code));
             });
         }
+
+        /// <summary>
+        /// The code with Windows line endings, whatever the platform it is generated on: the generator's own "\r\n"s and
+        /// the "\n"s of AppendLine and of verbatim strings off a Unix checkout alike, so the files are the same everywhere.
+        /// </summary>
+        private static string WithCrlf(string code) => code.Replace("\r\n", "\n").Replace("\n", "\r\n");
     }
 }
