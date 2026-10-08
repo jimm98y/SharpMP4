@@ -597,6 +597,52 @@ namespace SharpMP4.Readers
             return ReadFragmentedMp4Sample(trackID, trackContext);
         }
 
+        /// <summary>
+        /// The next samples of a track, up to so many, as one: those that follow one another in the file, of the same
+        /// composition offset and the same sync, its duration theirs together - for PCM, whose every frame is a sample, the
+        /// frames of a chunk in one read rather than a read of each. Its times are its first's. Of a protected track, or
+        /// of a fragment, a sample at a time, as <see cref="ReadSample"/>. Null after the last.
+        /// </summary>
+        public MediaSample ReadSamples(uint trackID, int maxCount)
+        {
+            var trackContext = TrackContextOf(trackID);
+            uint first = trackContext.SampleIndex;
+            if (maxCount <= 1 || trackContext.IsReadingFragments || trackContext.Protection != null
+                || first >= trackContext.SampleCount || !trackContext.MoveTo(first))
+                return ReadSample(trackID);
+
+            long startAddress = trackContext.CursorAddress;
+            long dts = trackContext.CursorDts;
+            int compositionOffset = trackContext.CursorCompositionOffset;
+            bool isRandomAccessPoint = trackContext.CursorIsSyncSample;
+
+            long size = 0, duration = 0;
+            uint count = 0;
+            do
+            {
+                long next = size + trackContext.SampleSizeAt(first + count);
+                if (next > MaxBufferLength)
+                    break;
+                size = next;
+                duration += trackContext.CursorDuration;
+                count++;
+            }
+            while (count < maxCount && first + count < trackContext.SampleCount && trackContext.MoveTo(first + count)
+                && trackContext.CursorAddress == startAddress + size
+                && trackContext.CursorCompositionOffset == compositionOffset
+                && trackContext.CursorIsSyncSample == isRandomAccessPoint);
+
+            if (count == 0)
+                return ReadSample(trackID);
+
+            trackContext.SampleBuffer = BufferFor(trackContext.SampleBuffer, (uint)size, size);
+            ReadSampleData(startAddress, (uint)size, trackContext.SampleBuffer);
+            trackContext.SampleIndex = first + count;
+
+            return new MediaSample(dts + compositionOffset, dts, duration,
+                new ArraySegment<byte>(trackContext.SampleBuffer, 0, (int)size), isRandomAccessPoint);
+        }
+
         private MediaSample ReadMp4Sample(uint trackID, TrackContext trackContext)
         {
             uint sampleIndex = trackContext.SampleIndex;

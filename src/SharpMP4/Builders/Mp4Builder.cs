@@ -581,7 +581,11 @@ namespace SharpMP4.Builders
                 var stsz = new SampleSizeBox();
                 stsz.SetParent(stbl);
                 stbl.Children.Add(stsz);
-                stsz.EntrySize = track.SampleSizes.ToArray();
+                // of PCM, whose frames are all of a size, that size alone, as QuickTime writes it: not an entry of each frame
+                if (track.Track is PcmTrack && track.SampleSizes.Count > 0 && track.SampleSizes.All(size => size == track.SampleSizes[0]))
+                    stsz.SampleSize = track.SampleSizes[0];
+                else
+                    stsz.EntrySize = track.SampleSizes.ToArray();
                 stsz.SampleCount = (uint)track.SampleSizes.Count;
 
                 // Offsets are still relative to the start of the media data here; the header size
@@ -662,7 +666,8 @@ namespace SharpMP4.Builders
 
             if (processedSample.Array != null)
             {
-                WriteSample(track, processedSample, sampleDuration, isRandomAccessPoint, compositionOffset);
+                foreach (var (frame, duration) in PcmFrames.SamplesOf(track.Track, processedSample, sampleDuration))
+                    WriteSample(track, frame, duration, isRandomAccessPoint, compositionOffset);
             }
         }
 

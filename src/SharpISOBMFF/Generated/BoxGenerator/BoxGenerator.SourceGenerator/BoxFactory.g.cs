@@ -490,7 +490,7 @@ namespace SharpISOBMFF
                case "forc":  return new ForcedSubtitleTrackBox();
                case "FOV\0":  return new FieldOfViewBox();
                case "fpar":  return new FilePartitionBox();
-               case "fpcm":  return new FpcmBox();
+               case "fpcm": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("fpcm"));else return new CodecConfigurationBox(IsoStream.FromFourCC("fpcm"));
                case "FPRF":  return new PspFprfBox();
                case "frea":  return new KodakFreaBox();
                case "free":  return new FreeSpaceBox();
@@ -604,7 +604,7 @@ namespace SharpISOBMFF
                case "infu":  return new OMAInfoURLBox();
                case "inst":  return new Insta360InfoBox();
                case "iods":  return new AppleInitialObjectDescriptorBox();
-               case "ipcm":  return new IpcmBox();
+               case "ipcm": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ipcm"));else return new CodecConfigurationBox(IsoStream.FromFourCC("ipcm"));
                case "ipco":  return new ItemPropertyContainerBox();
                case "ipir":  return new IpirBox();
                case "ipma":  return new ItemPropertyAssociationBox();

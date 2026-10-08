@@ -459,7 +459,7 @@
 |forc|ForcedSubtitleTrackBox|
 |FOV\0|FieldOfViewBox|
 |fpar|FilePartitionBox|
-|fpcm|FpcmBox|
+|fpcm|AudioSampleEntry|
 |FPRF|PspFprfBox|
 |frea|KodakFreaBox|
 |free|FreeSpaceBox|
@@ -573,7 +573,7 @@
 |infu|OMAInfoURLBox|
 |inst|Insta360InfoBox|
 |iods|AppleInitialObjectDescriptorBox|
-|ipcm|IpcmBox|
+|ipcm|AudioSampleEntry|
 |ipco|ItemPropertyContainerBox|
 |ipir|IpirBox|
 |ipma|ItemPropertyAssociationBox|

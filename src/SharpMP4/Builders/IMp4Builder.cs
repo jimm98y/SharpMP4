@@ -1,5 +1,6 @@
 ﻿using SharpMP4.Common;
 using System;
+using System.Collections.Generic;
 using SharpMP4.Encryption;
 using SharpMP4.Tracks;
 
@@ -199,6 +200,31 @@ namespace SharpMP4.Builders
                 _isGiven = isGiven;
                 _duration = duration;
                 _compositionOffset = offset;
+            }
+        }
+    }
+
+    /// <summary>The samples a builder writes of a sample a track gives back.</summary>
+    internal static class PcmFrames
+    {
+        /// <summary>
+        /// Of PCM, a block of frames as a sample of each, as QuickTime has it, the block's duration shared out among them -
+        /// the last given what the division leaves; of any other track, the sample itself.
+        /// </summary>
+        public static IEnumerable<(ArraySegment<byte> Sample, int Duration)> SamplesOf(ITrack track, ArraySegment<byte> sample, int sampleDuration)
+        {
+            if (track is not PcmTrack pcm || sample.Count <= pcm.BytesPerFrame || sample.Count % pcm.BytesPerFrame != 0)
+            {
+                yield return (sample, sampleDuration);
+                yield break;
+            }
+
+            int frames = sample.Count / pcm.BytesPerFrame;
+            int each = sampleDuration < 0 ? -1 : sampleDuration / frames;
+            for (int i = 0; i < frames; i++)
+            {
+                int duration = sampleDuration < 0 ? -1 : i == frames - 1 ? sampleDuration - each * (frames - 1) : each;
+                yield return (new ArraySegment<byte>(sample.Array, sample.Offset + i * pcm.BytesPerFrame, pcm.BytesPerFrame), duration);
             }
         }
     }

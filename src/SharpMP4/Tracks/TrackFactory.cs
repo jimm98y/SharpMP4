@@ -120,6 +120,10 @@ namespace SharpMP4.Tracks
 
         private static ITrack CreateAudioTrack(uint trackID, Box sampleEntry, uint timescale, int sampleDuration)
         {
+            // PCM, QuickTime's and ISO's: known by its entry's coding, whichever of its boxes - 'wave', 'pcmC', 'chan' - is given
+            if (PcmTrack.IsPcm(sampleEntry))
+                return new PcmTrack(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
+
             // QuickTime's MP3 entry has no configuration: known by its own coding, whichever of its boxes - 'chan' - is given
             if (Mp3Track.IsMp3(sampleEntry) && (sampleEntry as AudioSampleEntry ?? sampleEntry.GetParent() as AudioSampleEntry) is AudioSampleEntry quickTimeEntry
                 && Mp3Track.IsQuickTimeMp3(Encryption.SubsampleSplitter.CodingOf(quickTimeEntry)))

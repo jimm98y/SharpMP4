@@ -285,7 +285,8 @@ namespace SharpMP4.Builders
 
             if (processedSample.Array != null)
             {
-                AppendSample(track, processedSample, sampleDuration, isRandomAccessPoint, compositionOffset);
+                foreach (var (frame, duration) in PcmFrames.SamplesOf(track.Track, processedSample, sampleDuration))
+                    AppendSample(track, frame, duration, isRandomAccessPoint, compositionOffset);
             }
         }
 

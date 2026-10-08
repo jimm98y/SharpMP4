@@ -1,5 +1,5 @@
 # SharpMP4
-Simple lightweight mp4/fmp4/mov/m4v reader/writer. Supports H261/H262/H263/MPEG4/H264/H265/H266/VP9/AV1/AV2/ProRes for video and AAC/Opus/MP3/FLAC/ALAC/AC-3/E-AC-3 for audio. No platform dependencies, easily portable cross-platform. It was designed to be a stream-in and stream-out solution for recording streams from IP cameras into MP4 and fragmented MP4.
+Simple lightweight mp4/fmp4/mov/m4v reader/writer. Supports H261/H262/H263/MPEG4/H264/H265/H266/VP9/AV1/AV2/ProRes for video and AAC/Opus/MP3/FLAC/ALAC/AC-3/E-AC-3/PCM for audio. No platform dependencies, easily portable cross-platform. It was designed to be a stream-in and stream-out solution for recording streams from IP cameras into MP4 and fragmented MP4.
 
 [![NuGet version](https://img.shields.io/nuget/v/SharpMP4.svg?style=flat-square)](https://www.nuget.org/packages/SharpMP4)
 
@@ -90,6 +90,13 @@ var ac3 = AC3Track.TryParseSyncFrame(frame, 0, out var track) ? track : null; //
 var eac3 = new EAC3Track(dataRate, substreams);                 // 'dec3''s data rate and independent substreams
 ```
 An MP3 encoder hands out one frame or several at a time: `Mp3Track.ParseFrames` splits them, a sample each.
+
+PCM is made of its format and written as QuickTime's `lpcm`, as Apple's devices write it. It takes a block of frames at a time and writes a sample of each, as QuickTime has it. Reading it, QuickTime's `lpcm`, `sowt`, `twos`, `raw `, `in24`, `in32`, `fl32` and `fl64` and ISO's `ipcm` and `fpcm` are read, and `ReadSamples` reads a run of frames at once rather than a read of each:
+```cs
+var pcm = new PcmTrack(48000, 2, 16);                           // rate, channels, bits; isFloat and isLittleEndian optional
+outputBuilder.ProcessTrackSample(pcm.TrackID, block, block.Length / pcm.BytesPerFrame);
+var run = reader.ReadSamples(trackID, 4800);                    // up to 4800 frames, their duration together
+```
 
 When done, call `FinalizeMedia` to create the video file:
 ```cs

@@ -179,7 +179,10 @@ namespace BoxGenerator
             // met in Chromium's: AC-4 (ETSI TS 103 190-2, E.4), IAMF (AOMedia IAMF, 6.2), DTS-UHD (ETSI TS 103 491, B)
             "ac-4","iamf","dtsx","dtsy",
             // of FFmpeg's QuickTime tags (libavformat/isom_tags.c, ff_codec_movaudio_tags) not given above
-            "apac","sac3","DTS ","vdva","ilbc",".mp1",".mp2","mp3 ","nmos","NELL","42ni","23ni","Qclq","spex","SPXN"
+            "apac","sac3","DTS ","vdva","ilbc",".mp1",".mp2","mp3 ","nmos","NELL","42ni","23ni","Qclq","spex","SPXN",
+            // PCM in ISOBMFF (ISO/IEC 23003-5, 5.1): integer and floating point, each of a 'pcmC' - in a sample description an
+            // audio sample entry, not a box of boxes
+            "ipcm","fpcm"
             };
             string[] visualSampleEntryTypes = new string[]
             {
