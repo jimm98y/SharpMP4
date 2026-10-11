@@ -303,6 +303,35 @@ namespace SharpMP4.Builders
                     else
                         ctts.SampleOffset = offsets.Select(offset => unchecked((uint)offset)).ToArray();
                     ctts.EntryCount = (uint)counts.Count;
+
+                    // Of offsets written negative, how far they run, and the composition times they make: Apple's readers
+                    // take the shift that makes every composition time come after its decode time from the 'cslg'
+                    // (14496-12 8.6.1.4), as Apple writes it with them.
+                    int least = offsets.Min();
+                    if (least < 0)
+                    {
+                        long start = long.MaxValue, end = long.MinValue, decodeTime = 0;
+                        for (int i = 0; i < track.SampleSizes.Count; i++)
+                        {
+                            long compositionTime = decodeTime + track.CompositionOffsets[i] - bias;
+                            start = Math.Min(start, compositionTime);
+                            end = Math.Max(end, compositionTime + track.SampleDurations[i]);
+                            decodeTime += track.SampleDurations[i];
+                        }
+
+                        int greatest = offsets.Max();
+                        bool large = start < int.MinValue || end > int.MaxValue;
+                        var cslg = new CompositionToDecodeBox(large ? (byte)1 : (byte)0)
+                        {
+                            CompositionToDTSShift = -least,
+                            LeastDecodeToDisplayDelta = least,
+                            GreatestDecodeToDisplayDelta = greatest,
+                            CompositionStartTime = start,
+                            CompositionEndTime = end,
+                        };
+                        cslg.SetParent(stbl);
+                        stbl.Children.Add(cslg);
+                    }
                 }
 
                 // The samples are in chunks, each of the track's samples of about ChunkDurationInMs, between those of the

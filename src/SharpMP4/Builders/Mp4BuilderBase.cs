@@ -68,6 +68,13 @@ namespace SharpMP4.Builders
         /// <summary>The tracks, in the order they were added.</summary>
         private protected IEnumerable<BuilderTrack> Tracks => _tracks.Values;
 
+        /// <summary>
+        /// Whether the file is QuickTime's: of the format, or made so by a track of a sample entry only QuickTime has, as its
+        /// 'ftyp' is. Its boxes are then QuickTime's where QuickTime's differ from those of the ISO base media file format.
+        /// </summary>
+        private protected bool IsQuickTime =>
+            FileFormat == Mp4FileFormat.QuickTime || _tracks.Values.Any(x => x.Track.CompatibleBrand == TrackBase.QuickTimeBrand);
+
         /// <summary>Whether <see cref="FinalizeMedia"/> has written the file: after it, nothing more is taken.</summary>
         private protected bool IsFinalized { get; set; }
 
@@ -254,9 +261,11 @@ namespace SharpMP4.Builders
         /// <param name="trackDuration">The track's duration, in the movie's timescale.</param>
         /// <param name="mediaDuration">The media's duration, in the track's timescale: 0 where it is in fragments.</param>
         /// <param name="edit">The edit that maps the media to the movie, as its duration in the movie's timescale and where it starts in the media; null for none.</param>
-        private protected static SampleTableBox AddTrackBox(MovieBox moov, BuilderTrack track, uint tkhdFlags, ulong trackDuration, ulong mediaDuration,
+        private protected SampleTableBox AddTrackBox(MovieBox moov, BuilderTrack track, uint tkhdFlags, ulong trackDuration, ulong mediaDuration,
             ulong creationTime, (ulong Duration, long MediaTime)? edit, out TrackBox trak)
         {
+            bool quickTime = IsQuickTime;
+
             trak = new TrackBox();
             trak.SetParent(moov);
             trak.Children = new List<Box>();
@@ -317,12 +326,15 @@ namespace SharpMP4.Builders
             mdhd.ModificationTime = creationTime;
             mdhd.Version = MovieTime.Version(mediaDuration, creationTime);
 
+            // QuickTime's handler is a component: of the media, 'mhlr', its name counted rather than zero terminated
             HandlerBox hdlr = new HandlerBox();
             hdlr.SetParent(mdia);
             mdia.Children.Add(hdlr);
             hdlr.HandlerType = IsoStream.FromFourCC(track.Track.HandlerType);
-            hdlr.Name = new BinaryUTF8String(track.Track.HandlerName);
+            hdlr.Name = quickTime ? CountedName(track.Track.HandlerName) : new BinaryUTF8String(track.Track.HandlerName);
             hdlr.Reserved = new uint[3]; // TODO simplify API
+            if (quickTime)
+                hdlr.PreDefined = IsoStream.FromFourCC("mhlr");
 
             MediaInformationBox minf = new MediaInformationBox();
             minf.SetParent(mdia);
@@ -366,6 +378,25 @@ namespace SharpMP4.Builders
 
                 case HandlerTypes.Text:
                 case HandlerTypes.AppleSubtitle:
+                    if (quickTime)
+                    {
+                        // QuickTime's text has the base media header, of a 'gmin' and the text's own 'text', without
+                        // which Apple's players do not show it
+                        var gmhd = new GenericMediaHeaderAtom();
+                        gmhd.SetParent(minf);
+                        gmhd.Children = new List<Box>();
+                        minf.Children.Add(gmhd);
+
+                        // dither copy, of a grey opcolor, as ffmpeg writes it
+                        var gmin = new BaseMediaInfoAtom { GraphicsMode = 0x40, OpColorR = 0x8000, OpColorG = 0x8000, OpColorB = 0x8000 };
+                        gmin.SetParent(gmhd);
+                        gmhd.Children.Add(gmin);
+
+                        var text = new TextGmhdMediaBox { TextData = (byte[])TextMatrix.Clone() };
+                        text.SetParent(gmhd);
+                        gmhd.Children.Add(text);
+                    }
+                    else
                     {
                         // timed text, WebVTT's and 3GPP's, has no media header of its own (14496-12 12.5.2)
                         var nmhd = new NullMediaHeaderBox();
@@ -376,6 +407,18 @@ namespace SharpMP4.Builders
 
                 default:
                     throw new NotSupportedException(track.Track.HandlerType);
+            }
+
+            if (quickTime)
+            {
+                // QuickTime's data handler, of the alias the data reference below is: the media is in this file
+                var dhlr = new HandlerBox();
+                dhlr.SetParent(minf);
+                minf.Children.Add(dhlr);
+                dhlr.PreDefined = IsoStream.FromFourCC("dhlr");
+                dhlr.HandlerType = IsoStream.FromFourCC("alis");
+                dhlr.Name = CountedName("DataHandler");
+                dhlr.Reserved = new uint[3]; // TODO simplify API
             }
 
             var dinf = new DataInformationBox();
@@ -389,10 +432,12 @@ namespace SharpMP4.Builders
             dref.Children = new List<Box>();
             dref.EntryCount = 1;
 
-            var url = new DataEntryUrlBox();
-            url.Flags = 1;
-            url.SetParent(dref);
-            dref.Children.Add(url);
+            // the media in this file (flags 1): of QuickTime an alias, as Apple writes it, of no more than that
+            Box dataEntry = quickTime
+                ? new AppleDataReferenceAliasBox { Flags = 1, Data = new byte[0] }
+                : new DataEntryUrlBox { Flags = 1 };
+            dataEntry.SetParent(dref);
+            dref.Children.Add(dataEntry);
 
             var stbl = new SampleTableBox();
             stbl.SetParent(minf);
@@ -404,13 +449,100 @@ namespace SharpMP4.Builders
             stbl.Children.Add(stsd);
             stsd.Children = new List<Box>();
 
+            // Of a protected track, QuickTime's entry protected as any: renamed 'enca', its 'sinf' after the 'wave', whose
+            // 'frma' still says the coding - as ffmpeg writes CENC in a movie.
             var sampleEntryBox = track.Track.CreateSampleEntryBox();
+            if (quickTime)
+                sampleEntryBox = QuickTimeSoundDescription(track.Track, sampleEntryBox);
             track.Encryptor?.ProtectSampleEntry(track.Track, sampleEntryBox);
             sampleEntryBox.SetParent(stsd);
             stsd.Children.Add(sampleEntryBox);
             stsd.EntryCount = 1;
 
             return stbl;
+        }
+
+        /// <summary>The matrix of QuickTime's text media information - identity, as ffmpeg writes it - in its 'text'.</summary>
+        private static readonly byte[] TextMatrix =
+        {
+            0x00, 0x01, 0x00, 0x00, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0x00, 0x01, 0x00, 0x00, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0x40, 0x00, 0x00, 0x00,
+        };
+
+        /// <summary>A name as QuickTime's components have it: its length in a byte, then its UTF-8, of 255 bytes at most.</summary>
+        private static BinaryUTF8String CountedName(string name)
+        {
+            byte[] text = System.Text.Encoding.UTF8.GetBytes(name ?? "");
+            int length = Math.Min(text.Length, 255);
+            var counted = new byte[1 + length];
+            counted[0] = (byte)length;
+            Array.Copy(text, 0, counted, 1, length);
+            return new BinaryUTF8String(counted);
+        }
+
+        /// <summary>
+        /// Of AAC and ALAC, the sample entry as QuickTime has it: a version 1 sound description, of compressed audio of
+        /// variable bit rate, its codec's box in a 'wave' after the 'frma' that says the coding, then a terminator - as Apple
+        /// and ffmpeg write it. Of any other track, the entry as it is: of the ISO base media file format's version 0 entry,
+        /// laid out as QuickTime's version 0 sound description.
+        /// </summary>
+        private static Box QuickTimeSoundDescription(ITrack track, Box entry)
+        {
+            if (!(entry is AudioSampleEntryV1 iso) || iso.EntryVersion != 0)
+                return entry;
+
+            string coding = IsoStream.ToFourCC(iso.FourCC);
+            Box codecBox = coding switch
+            {
+                "mp4a" => iso.Children?.OfType<ESDBox>().FirstOrDefault(),
+                "alac" => iso.Children?.FirstOrDefault(x => x.FourCC == IsoStream.FromFourCC("alac")),
+                _ => null,
+            };
+            if (codecBox == null)
+                return entry;
+
+            var quickTime = new AudioSampleEntry(iso.FourCC)
+            {
+                Children = new List<Box>(),
+                ReservedSampleEntry = new byte[6],
+                DataReferenceIndex = iso.DataReferenceIndex,
+                Soundversion = 1,
+                Channelcount = iso.Channelcount,
+                Samplesize = 16,
+                PreDefined = 0xFFFE, // the compression ID: -2, of variable bit rate
+                Samplerate = iso.Samplerate,
+                // a packet is a sample: of its frames, as many as the track's samples run; of bytes, as many as it has
+                SamplesPerPacket = (uint)Math.Max(0, track.DefaultSampleDuration),
+                BytesPerPacket = 0,
+                BytesPerFrame = 0,
+                BytesPerSample = 2,
+            };
+
+            var wave = new AppleWaveBox { Children = new List<Box>() };
+            var frma = new OriginalFormatBox { DataFormat = iso.FourCC };
+            var waveBoxes = new List<Box> { frma };
+            if (coding == "mp4a")
+                waveBoxes.Add(new Mp4aBox { Data = new byte[4] });
+            waveBoxes.Add(codecBox);
+            waveBoxes.Add(new TerminatorBox { Data = new byte[0] });
+            foreach (var box in waveBoxes)
+            {
+                box.SetParent(wave);
+                wave.Children.Add(box);
+            }
+
+            wave.SetParent(quickTime);
+            quickTime.Children.Add(wave);
+
+            // the entry's other boxes - a 'btrt', a 'chan' - after the 'wave', where they were
+            foreach (var box in iso.Children.Where(x => x != codecBox))
+            {
+                box.SetParent(quickTime);
+                quickTime.Children.Add(box);
+            }
+
+            return quickTime;
         }
 
         /// <summary>The protection systems' headers, each once, of all the protected tracks, at the end of the 'moov'.</summary>
