@@ -46,6 +46,14 @@ namespace SharpMP4.Builders
         void AddTrack(ITrack track, TrackProtection protection, byte[] key);
 
         /// <summary>
+        /// The track of an ID that <see cref="AddTrack(ITrack)"/> gave it.
+        /// </summary>
+        /// <param name="trackID">Track ID</param>
+        /// <exception cref="ArgumentException">There is no track of the ID.</exception>
+        /// <exception cref="InvalidOperationException">The media has been finalized.</exception>
+        ITrack GetTrack(uint trackID);
+
+        /// <summary>
         /// Process the sample before storing it in the MP4 container. This calls codec-specific logic inside the track and results in 0 or 1 sample to store in the MP4 container. For video, 
         ///  this call expects the individual NALUs. For AAC audio, this call expects samples with or without ADTS headers.
         /// </summary>
@@ -69,39 +77,61 @@ namespace SharpMP4.Builders
         void ProcessTrackSample(uint trackID, ArraySegment<byte> sample, int sampleDuration = -1, int compositionOffset = 0);
 
         /// <summary>
-        /// Processes NAL units of the Annex B byte stream - each behind a start code of three or four bytes, as an
-        /// encoder hands them out and a .264, .265 or .266 file holds them - as <see cref="ProcessTrackSample(uint, byte[], int, int)"/>
-        /// processes one: the start codes stripped, each NAL unit given to the track in turn, with the duration and
-        /// composition offset given. The buffer may hold one NAL unit or many - an access unit, or any part of the stream
-        /// that ends where a NAL unit ends. Of H.264, H.265 and H.266 tracks only; the end of the stream is still told
-        /// with <see cref="ProcessTrackSample(uint, byte[], int, int)"/> and no sample.
-        /// </summary>
-        /// <param name="trackID">Track ID</param>
-        /// <param name="sample">NAL units, each behind its start code.</param>
-        /// <param name="sampleDuration">Duration of the sample in the timescale of the track.</param>
-        /// <param name="compositionOffset">Composition time minus decode time, in track timescale units.</param>
-        /// <exception cref="NotSupportedException">The track is not of H.264, H.265 or H.266.</exception>
-        void ProcessAnnexBTrackSample(uint trackID, byte[] sample, int sampleDuration = -1, int compositionOffset = 0);
-
-        /// <summary>
-        /// The same, for NAL units that sit inside a larger buffer, so they do not have to be copied out first.
-        /// </summary>
-        void ProcessAnnexBTrackSample(uint trackID, ArraySegment<byte> sample, int sampleDuration = -1, int compositionOffset = 0);
-
-        /// <summary>
         /// Store the sample bytes into the MP4 container "as is". For video, this expects the entire AU consisting of multiple NALUs each prefixed by the length.
         /// </summary>
         /// <param name="trackID">Track ID</param>
         /// <param name="sample">Sample bytes.</param>
         /// <param name="sampleDuration">Duration of the sample in the timescale of the track; negative for the track's default, 0 for a sample of none.</param>
         /// <param name="isRandomAccessPoint">true if the sample is a random access point that can be used while seeking. For video this means keyframes, for audio in most cases all the samples are random access points.</param>
-        void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration = -1, bool isRandomAccessPoint = true);
+        /// <param name="compositionOffset">
+        /// Composition time minus decode time, in track timescale units. Needed whenever pictures
+        /// are coded out of presentation order; leave at 0 for streams that are not reordered.
+        /// </param>
+        void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration = -1, bool isRandomAccessPoint = true, int compositionOffset = 0);
+
+        /// <summary>
+        /// The same, for a sample that sits inside a larger buffer - one a caller fills again for
+        /// each sample - so it does not have to be copied out into an array of its own first.
+        /// </summary>
+        void ProcessRawSample(uint trackID, ArraySegment<byte> sample, int sampleDuration = -1, bool isRandomAccessPoint = true, int compositionOffset = 0);
 
         /// <summary>
         /// Called at the very end when there are no more samples. Writes the final boxes and finalizes the output file. It is
         /// called once; samples and tracks added after it are refused.
         /// </summary>
         void FinalizeMedia();
+    }
+
+    /// <summary>
+    /// What any <see cref="IMp4Builder"/> does with what its own methods do.
+    /// </summary>
+    public static class Mp4BuilderExtensions
+    {
+        /// <summary>
+        /// Processes NAL units of the Annex B byte stream - each behind a start code of three or four bytes, as an
+        /// encoder hands them out and a .264, .265 or .266 file holds them - as <see cref="IMp4Builder.ProcessTrackSample(uint, byte[], int, int)"/>
+        /// processes one: the start codes stripped, each NAL unit given to the track in turn, with the duration and
+        /// composition offset given. The buffer may hold one NAL unit or many - an access unit, or any part of the stream
+        /// that ends where a NAL unit ends. Of H.264, H.265 and H.266 tracks only; the end of the stream is still told
+        /// with <see cref="IMp4Builder.ProcessTrackSample(uint, byte[], int, int)"/> and no sample.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <param name="trackID">Track ID</param>
+        /// <param name="sample">NAL units, each behind its start code.</param>
+        /// <param name="sampleDuration">Duration of the sample in the timescale of the track.</param>
+        /// <param name="compositionOffset">Composition time minus decode time, in track timescale units.</param>
+        /// <exception cref="NotSupportedException">The track is not of H.264, H.265 or H.266.</exception>
+        public static void ProcessAnnexBTrackSample(this IMp4Builder builder, uint trackID, byte[] sample, int sampleDuration = -1, int compositionOffset = 0) =>
+            builder.ProcessAnnexBTrackSample(trackID, new ArraySegment<byte>(sample), sampleDuration, compositionOffset);
+
+        /// <summary>
+        /// The same, for NAL units that sit inside a larger buffer, so they do not have to be copied out first.
+        /// </summary>
+        public static void ProcessAnnexBTrackSample(this IMp4Builder builder, uint trackID, ArraySegment<byte> sample, int sampleDuration = -1, int compositionOffset = 0)
+        {
+            foreach (var nalUnit in Utils.NalUnits(builder.GetTrack(trackID), trackID, sample))
+                builder.ProcessTrackSample(trackID, nalUnit, sampleDuration, compositionOffset);
+        }
     }
 
     /// <summary>
