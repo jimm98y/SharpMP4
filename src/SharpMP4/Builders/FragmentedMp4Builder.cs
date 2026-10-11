@@ -11,7 +11,7 @@ namespace SharpMP4.Builders
     /// <summary>
     /// Creates Fragmented MP4.
     /// </summary>
-    public class FragmentedMp4Builder : IMp4Builder, IDisposable
+    public class FragmentedMp4Builder : Mp4BuilderBase
     {
         private class MediaFragment
         {
@@ -58,14 +58,11 @@ namespace SharpMP4.Builders
             public uint SampleNumber;
         }
 
-        private class TrackContext
+        private class TrackContext : BuilderTrack
         {
-            public TrackContext(ITrack track)
+            public TrackContext(ITrack track) : base(track)
             {
-                Track = track;
             }
-
-            public ITrack Track { get; set; }
 
             public ulong StartTime { get; set; }
             public ulong EndTime { get; set; }
@@ -90,12 +87,6 @@ namespace SharpMP4.Builders
             /// <summary>The 'tfra' entries of the fragments written.</summary>
             public List<RandomAccessEntry> RandomAccessEntries { get; } = new List<RandomAccessEntry>();
 
-            /// <summary>What protects the track; null where it is not protected.</summary>
-            public TrackEncryptor Encryptor { get; set; }
-
-            /// <summary>How the track is protected; null where it is not.</summary>
-            public TrackProtection Protection => Encryptor?.Protection;
-
             /// <summary>How each sample of the fragment being assembled is protected.</summary>
             public List<SampleEncryption> Encryptions { get; set; } = new List<SampleEncryption>();
 
@@ -104,9 +95,6 @@ namespace SharpMP4.Builders
 
             /// <summary>Where the samples not yet in a fragment start in <see cref="CurrentFragments"/>.</summary>
             public long CurrentOffset { get; set; }
-
-            /// <summary>The timing given for the sample the track is assembling.</summary>
-            public PendingSampleTiming Timing { get; } = new PendingSampleTiming();
 
             /// <summary>Whether the track has had a sample: until it has, it may have one of any time, and its sample entry may not be known.</summary>
             public bool HasSamples { get; set; }
@@ -117,14 +105,6 @@ namespace SharpMP4.Builders
 
         /// <summary>Of a time in a track's timescale, the seconds.</summary>
         private static double Seconds(TrackContext track, ulong time) => track.Track.Timescale == 0 ? 0 : (double)time / track.Track.Timescale;
-
-        public uint MovieTimescale { get; set; } = 1000;
-
-        /// <inheritdoc/>
-        public Mp4FileFormat FileFormat { get; set; } = Mp4FileFormat.Mp4;
-
-        /// <summary>Where the samples of each fragment wait until it is written. Temporary files by default.</summary>
-        public ITemporaryStorageFactory TemporaryStorageFactory { get; set; } = new TemporaryFileStorageFactory();
 
         /// <summary>
         /// How far, in milliseconds, the fragments ready to be written may run past where a track that has none ready has
@@ -137,26 +117,14 @@ namespace SharpMP4.Builders
         /// </summary>
         public ulong MaxFragmentDelayInMs { get; set; }
 
-        /// <summary>
-        /// The creation and modification time the movie, track and media headers say. Null - the default - for the time
-        /// the initialization segment is written; set it for output that is the same each time it is written.
-        /// </summary>
-        public DateTime? CreationTime { get; set; }
-
-        private readonly IMp4Output _output;
-
         private readonly ulong _maxFragmentLengthInMs;
         private readonly ulong _durationInMs = 0;
         private readonly bool _appendMovieFragmentRandomAccessBox;
-
-        private readonly Dictionary<uint, TrackContext> _trackContexts = new Dictionary<uint, TrackContext>();
 
         private uint _moofSequenceNumber = 1;
 
         // Whether the initialization segment - the 'ftyp' and 'moov' - has been written: after it, no track can be added.
         private bool _isInitialized;
-        private bool _isFinalized;
-        private bool _isDisposed;
 
         // How many bytes have been written, of all the streams of the output one after another: where the next 'moof' is in
         // the file they make, as the 'tfra' gives it. Of a SingleStreamOutput, the file itself; of an output of a stream per
@@ -170,8 +138,6 @@ namespace SharpMP4.Builders
         // video fragment only as its first pictures were due: they were late, and playback stuttered.
         private readonly List<ulong> _videoBoundaries = new List<ulong>();
 
-        public IMp4Logger Logger { get; set; } = DefaultMp4Logger.Instance;
-
         /// <summary>
         /// Ctor.
         /// </summary>
@@ -183,130 +149,30 @@ namespace SharpMP4.Builders
         /// <param name="durationInMs">Duration of the movie. Default value is 0 for live recordings.</param>
         /// <param name="appendMovieFragmentRandomAccessBox">Append Movie Fragment Random Access box at the end of the fragmented MP4.</param>
         public FragmentedMp4Builder(IMp4Output output, ulong maxFragmentLengthInMs, ulong durationInMs = 0, bool appendMovieFragmentRandomAccessBox = true)
+            : base(output)
         {
-            _output = output ?? throw new ArgumentNullException(nameof(output));
             _maxFragmentLengthInMs = maxFragmentLengthInMs;
             _durationInMs = durationInMs;
             _appendMovieFragmentRandomAccessBox = appendMovieFragmentRandomAccessBox;
             MaxFragmentDelayInMs = maxFragmentLengthInMs > ulong.MaxValue / 2 ? ulong.MaxValue : 2 * maxFragmentLengthInMs;
         }
 
-        /// <summary>
-        /// Add a track to the Fragmented MP4.
-        /// </summary>
-        /// <param name="track">Track to add: <see cref="TrackBase"/>.</param>
-        public void AddTrack(ITrack track)
+        private protected override string FinalizedMessage => "The fragmented MP4 was already finalized: FinalizeMedia has written its last fragment, and it takes nothing more.";
+
+        private IEnumerable<TrackContext> TrackContexts => Tracks.Cast<TrackContext>();
+
+        private protected override BuilderTrack CreateTrack(ITrack track) => new TrackContext(track);
+
+        private protected override void OnAddingTrack()
         {
-            if (track == null)
-                throw new ArgumentNullException(nameof(track));
-            ThrowIfFinished();
             if (_isInitialized)
                 throw new InvalidOperationException("A track cannot be added once the initialization segment, which lists the tracks, has been written: add every track before the first fragment is complete.");
-
-            // A track logs where the builder does, unless it was given a logger of its own: TrackBase starts with the
-            // default one, so it is replaced too.
-            if (track.Logger == null || track.Logger == DefaultMp4Logger.Instance)
-                track.Logger = this.Logger;
-
-            // the format's constraints, before the track is the builder's
-            FileBrands.Validate(FileFormat, _trackContexts.Values.Select(x => x.Track).Append(track).ToList(), Logger);
-
-            uint trackID = GetNextTrackId();
-            track.TrackID = trackID;
-            _trackContexts.Add(trackID, new TrackContext(track));
         }
 
-        /// <summary>
-        /// Adds a track whose samples are protected as they are written (ISO/IEC 23001-7): each with the key, its IV and,
-        /// of H.264, H.265 and H.266 video, its NAL units' slice headers left clear. The sample entry becomes 'encv' or
-        /// 'enca', with a 'sinf' saying what it was and how it is protected, and each fragment says how its samples are
-        /// in 'senc', 'saiz' and 'saio'. <see cref="TrackProtection.Create"/> makes a protection with a scheme's defaults.
-        /// </summary>
-        /// <param name="track">Track to add: <see cref="TrackBase"/>.</param>
-        /// <param name="protection">How the track is protected: its scheme, key ID, IVs and pattern, and the protection systems' headers.</param>
-        /// <param name="key">The 16 byte key; or 32, for AES-256, as the draft of 23001-7:2023 Amendment 1 allows, 'tenc' version 2 saying so.</param>
-        public void AddTrack(ITrack track, TrackProtection protection, byte[] key)
+        private protected override void AppendSample(BuilderTrack builderTrack, ArraySegment<byte> sample, int sampleDuration, bool isRandomAccessPoint, int compositionOffset)
         {
-            if (track == null)
-                throw new ArgumentNullException(nameof(track));
-            ThrowIfFinished();
+            var track = (TrackContext)builderTrack;
 
-            var encryptor = TrackEncryptor.Create(track, protection, key, Logger);
-            AddTrack(track);
-            _trackContexts[track.TrackID].Encryptor = encryptor;
-        }
-
-        private uint GetNextTrackId()
-        {
-            uint trackID = 1;
-            while (_trackContexts.ContainsKey(trackID))
-                trackID++;
-            return trackID;
-        }
-
-        private void ThrowIfFinished()
-        {
-            if (_isDisposed)
-                throw new ObjectDisposedException(nameof(FragmentedMp4Builder));
-            if (_isFinalized)
-                throw new InvalidOperationException("The fragmented MP4 was already finalized: FinalizeMedia has written its last fragment, and it takes nothing more.");
-        }
-
-        private TrackContext GetTrack(uint trackID)
-        {
-            ThrowIfFinished();
-            if (!_trackContexts.TryGetValue(trackID, out var track))
-                throw new ArgumentException($"There is no track {trackID}: a track is added with AddTrack, which gives it its ID.", nameof(trackID));
-            return track;
-        }
-
-        /// <inheritdoc/>
-        ITrack IMp4Builder.GetTrack(uint trackID) => GetTrack(trackID).Track;
-
-        /// <summary>The same, for a sample that sits inside a larger buffer.</summary>
-        public void ProcessTrackSample(uint trackID, ArraySegment<byte> sample, int sampleDuration = -1, int compositionOffset = 0) =>
-            ProcessTrackSample(GetTrack(trackID), sample, sampleDuration, compositionOffset);
-
-        /// <summary>
-        /// Appends a sample, recording how far its composition time sits from its decode time.
-        /// </summary>
-        /// <param name="sampleDuration">The duration of the sample - of the access unit the NAL unit is of, for video given a NAL unit at a time - in the track's timescale; negative for the track's default.</param>
-        /// <param name="compositionOffset">
-        /// Composition time minus decode time, in track timescale units. Needed whenever pictures
-        /// are coded out of presentation order; leave at 0 for streams that are not reordered.
-        /// </param>
-        public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration = -1, int compositionOffset = 0) =>
-            ProcessTrackSample(GetTrack(trackID), sample == null ? default : new ArraySegment<byte>(sample), sampleDuration, compositionOffset);
-
-        private void ProcessTrackSample(TrackContext track, ArraySegment<byte> sample, int sampleDuration, int compositionOffset)
-        {
-            track.Track.ProcessSample(sample.Array, sample.Offset, sample.Count,
-                out var processedSample, out var isRandomAccessPoint);
-
-            // A track that gives back the access unit before the one it was given gives it the timing given with it.
-            track.Timing.Resolve(track.Track, sample.Array == null, processedSample.Array != null, ref sampleDuration, ref compositionOffset);
-
-            if (processedSample.Array != null)
-            {
-                foreach (var (frame, duration) in PcmFrames.SamplesOf(track.Track, processedSample, sampleDuration))
-                    AppendSample(track, frame, duration, isRandomAccessPoint, compositionOffset);
-            }
-        }
-
-        /// <inheritdoc/>
-        public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration = -1, bool isRandomAccessPoint = true, int compositionOffset = 0)
-        {
-            AppendSample(GetTrack(trackID), new ArraySegment<byte>(sample), sampleDuration, isRandomAccessPoint, compositionOffset);
-        }
-
-        /// <inheritdoc/>
-        public void ProcessRawSample(uint trackID, ArraySegment<byte> sample, int sampleDuration = -1, bool isRandomAccessPoint = true, int compositionOffset = 0)
-        {
-            AppendSample(GetTrack(trackID), sample, sampleDuration, isRandomAccessPoint, compositionOffset);
-        }
-
-        private void AppendSample(TrackContext track, ArraySegment<byte> sample, int sampleDuration, bool isRandomAccessPoint, int compositionOffset)
-        {
             // A negative duration is the track's default; 0 is a sample of no duration, as a text track's can be.
             uint currentSampleDuration = sampleDuration < 0 ? (uint)track.Track.DefaultSampleDuration : (uint)sampleDuration;
 
@@ -325,7 +191,7 @@ namespace SharpMP4.Builders
                     // where the other tracks' fragments are cut too - of those already past it, as a track fed before the
                     // video is, what they have
                     _videoBoundaries.Add(track.StartTime);
-                    foreach (var other in _trackContexts.Values)
+                    foreach (var other in TrackContexts)
                     {
                         if (other != track)
                             CutAtVideoBoundaries(other, leader);
@@ -359,7 +225,7 @@ namespace SharpMP4.Builders
         /// <summary>The video track the others' fragments are cut with: the first; null where there is none.</summary>
         private TrackContext LeadingVideo()
         {
-            return _trackContexts.Values.Where(t => t.Track.HandlerType == HandlerTypes.Video).OrderBy(t => t.Track.TrackID).FirstOrDefault();
+            return TrackContexts.Where(t => t.Track.HandlerType == HandlerTypes.Video).OrderBy(t => t.Track.TrackID).FirstOrDefault();
         }
 
         /// <summary>
@@ -477,7 +343,7 @@ namespace SharpMP4.Builders
             if (isFlushing)
             {
                 // what is left of each track: its last fragment
-                foreach (var track in _trackContexts.Values)
+                foreach (var track in TrackContexts)
                 {
                     if (track.SampleSizes.Count > 0)
                     {
@@ -493,7 +359,7 @@ namespace SharpMP4.Builders
             while (true)
             {
                 TrackContext next = null;
-                foreach (var track in _trackContexts.Values)
+                foreach (var track in TrackContexts)
                 {
                     if (track.ReadyFragments.Count > 0 && (next == null || Precedes(track, next)))
                     {
@@ -540,7 +406,7 @@ namespace SharpMP4.Builders
             double start = Seconds(next, next.ReadyFragments.Peek().StartTime);
             double readyEnd = Seconds(next, next.ReadyFragments.Last().EndTime);
 
-            foreach (var other in _trackContexts.Values)
+            foreach (var other in TrackContexts)
             {
                 if (other == next || other.ReadyFragments.Count > 0)
                     continue;
@@ -590,10 +456,10 @@ namespace SharpMP4.Builders
             CreateMediaInitialization(init);
 
             const uint initializationSegmentNumber = 0; // sequence ID 0 is used to indicate "initialization"
-            var str = _output.GetStream(initializationSegmentNumber);
+            var str = Output.GetStream(initializationSegmentNumber);
             IsoStream initializationStream = new IsoStream(str);
             _bytesWritten += init.Write(initializationStream) >> 3;
-            _output.Flush(str, initializationSegmentNumber);
+            Output.Flush(str, initializationSegmentNumber);
             _isInitialized = true;
         }
 
@@ -622,10 +488,10 @@ namespace SharpMP4.Builders
                 decodeTime += fragment.SampleDurations[i];
             }
 
-            var outputStream = _output.GetStream(sequenceNumber);
+            var outputStream = Output.GetStream(sequenceNumber);
             var fragmentStream = new IsoStream(outputStream);
             _bytesWritten += fmp4.Write(fragmentStream) >> 3;
-            _output.Flush(outputStream, sequenceNumber);
+            Output.Flush(outputStream, sequenceNumber);
         }
 
         /// <summary>
@@ -660,9 +526,7 @@ namespace SharpMP4.Builders
             ulong creationTime = MovieTime.ToIsoTime(CreationTime ?? DateTime.UtcNow);
             ulong movieDuration = _durationInMs * MovieTimescale / 1000;
 
-            var ftyp = FileBrands.Create(FileFormat, _trackContexts.Values.Select(x => x.Track).ToList(), fragmented: true,
-                isProtected: _trackContexts.Values.Any(x => x.Encryptor != null),
-                hasSubtitleMediaHeader: _trackContexts.Values.Any(x => x.Track.HandlerType == HandlerTypes.Subtitle), Logger);
+            var ftyp = CreateFileType(fragmented: true);
             ftyp.SetParent(fmp4);
             fmp4.Children.Add(ftyp);
 
@@ -670,176 +534,25 @@ namespace SharpMP4.Builders
             moov.SetParent(fmp4);
             fmp4.Children.Add(moov);
 
-            var mvhd = new MovieHeaderBox();
-            mvhd.SetParent(moov);
-            moov.Children = new List<Box>();
-            moov.Children.Add(mvhd);
+            var mvhd = AddMovieHeader(moov, creationTime);
             mvhd.Duration = movieDuration;
-            mvhd.NextTrackID = 0xFFFFFFFF; // TODO simplify API
-            mvhd.Timescale = MovieTimescale; // just for movie time: https://stackoverflow.com/questions/77803940/diffrence-between-mvhd-box-timescale-and-mdhd-box-timescale-in-isobmff-format
-            mvhd.CreationTime = creationTime;
-            mvhd.ModificationTime = creationTime;
             mvhd.Version = MovieTime.Version(movieDuration, creationTime);
-            mvhd.Reserved0 = new uint[2]; // TODO simplify API
-            mvhd.PreDefined = new uint[6]; // TODO simplify API
 
-            foreach (var track in _trackContexts.Values)
+            foreach (var track in TrackContexts)
             {
-                var trak = new TrackBox();
-                trak.SetParent(moov);
-                trak.Children = new List<Box>();
-                moov.Children.Add(trak);
-
-                var tkhd = new TrackHeaderBox();
-                tkhd.SetParent(trak);
-                trak.Children.Add(tkhd);
-                tkhd.TrackID = track.Track.TrackID;
-                tkhd.Reserved1 = new uint[2]; // TODO simplify API
-                tkhd.Flags = 0x07;
-                track.Track.FillTkhdBox(tkhd);
-                tkhd.Duration = movieDuration;
-                tkhd.CreationTime = creationTime;
-                tkhd.ModificationTime = creationTime;
-                tkhd.Version = MovieTime.Version(movieDuration, creationTime);
-
                 // Where the presentation starts in the media, mapped to the start of the movie, as in the non fragmented
                 // file - of pictures coded out of order, the first is shown at 0, not as late as it is reordered by. The
                 // edit runs to the end of the media: of a duration of 0, as ffmpeg writes it, where that is not known yet.
                 long firstCompositionTime = FirstCompositionTime(track);
+                (ulong, long)? edit = null;
                 if (firstCompositionTime > 0)
                 {
-                    var edts = new EditBox();
-                    edts.SetParent(trak);
-                    edts.Children = new List<Box>();
-                    trak.Children.Add(edts);
-
                     ulong editDuration = movieDuration == 0 ? 0 : (ulong)Math.Max(0, (long)movieDuration - (long)MovieTime.Rescale((ulong)firstCompositionTime, track.Track.Timescale, MovieTimescale));
-                    var elst = new EditListBox();
-                    elst.SetParent(edts);
-                    edts.Children.Add(elst);
-                    elst.EntryCount = 1;
-                    elst.EditDuration = new ulong[] { editDuration };
-                    elst.MediaTime = new long[] { firstCompositionTime };
-                    elst.MediaRateInteger = new short[] { 1 };
-                    elst.MediaRateFraction = new short[] { 0 };
-                    elst.Version = MovieTime.Version(editDuration, (ulong)firstCompositionTime);
+                    edit = (editDuration, firstCompositionTime);
                 }
 
-                var mdia = new MediaBox();
-                mdia.SetParent(trak);
-                trak.Children.Add(mdia);
-
-                // what is said of the track - of a forced subtitle track, its 'kind' - after its media (14496-12 8.10.1)
-                var udta = SubtitleTrackBase.CreateUserDataBox(track.Track);
-                if (udta != null)
-                {
-                    udta.SetParent(trak);
-                    trak.Children.Add(udta);
-                }
-
-                MediaHeaderBox mdhd = new MediaHeaderBox();
-                mdhd.SetParent(mdia);
-                mdia.Children = new List<Box>();
-                mdia.Children.Add(mdhd);
-                mdhd.Duration = 0; // the media is in the fragments
-                mdhd.Timescale = track.Track.Timescale;
-                mdhd.Language = track.Track.Language;
-                mdhd.CreationTime = creationTime;
-                mdhd.ModificationTime = creationTime;
-                mdhd.Version = MovieTime.Version(creationTime);
-
-                HandlerBox hdlr = new HandlerBox();
-                hdlr.SetParent(mdia);
-                mdia.Children.Add(hdlr);
-                hdlr.HandlerType = IsoStream.FromFourCC(track.Track.HandlerType);
-                hdlr.Name = new BinaryUTF8String(track.Track.HandlerName);
-                hdlr.Reserved = new uint[3]; // TODO simplify API
-
-                MediaInformationBox minf = new MediaInformationBox();
-                minf.SetParent(mdia);
-                mdia.Children.Add(minf);
-                minf.Children = new List<Box>();
-
-                switch (track.Track.HandlerType)
-                {
-                    case HandlerTypes.Video:
-                        {
-                            var vmhd = new VideoMediaHeaderBox();
-                            vmhd.SetParent(mdia);
-                            minf.Children.Add(vmhd);
-                        }
-                        break;
-
-                    case HandlerTypes.Sound:
-                        {
-                            var smhd = new SoundMediaHeaderBox();
-                            smhd.SetParent(mdia);
-                            minf.Children.Add(smhd);
-                        }
-                        break;
-
-                    case HandlerTypes.Hint:
-                        {
-                            var nmhd = new NullMediaHeaderBox();
-                            nmhd.SetParent(mdia);
-                            minf.Children.Add(nmhd);
-                        }
-                        break;
-
-                    case HandlerTypes.Subtitle:
-                        {
-                            // subtitles, as TTML's (14496-12 12.6.2)
-                            var sthd = new SubtitleMediaHeaderBox();
-                            sthd.SetParent(minf);
-                            minf.Children.Add(sthd);
-                        }
-                        break;
-
-                    case HandlerTypes.Text:
-                    case HandlerTypes.AppleSubtitle:
-                        {
-                            // timed text, WebVTT's and 3GPP's, has no media header of its own (14496-12 12.5.2)
-                            var nmhd = new NullMediaHeaderBox();
-                            nmhd.SetParent(minf);
-                            minf.Children.Add(nmhd);
-                        }
-                        break;
-
-                    default:
-                        throw new NotSupportedException(track.Track.HandlerType);
-                }
-
-                DataInformationBox dinf = new DataInformationBox();
-                dinf.SetParent(minf);
-                minf.Children.Add(dinf);
-                dinf.Children = new List<Box>();
-
-                var dref = new DataReferenceBox();
-                dref.SetParent(dinf);
-                dinf.Children.Add(dref);
-                dref.Children = new List<Box>();
-                dref.EntryCount = 1;
-
-                var url = new DataEntryUrlBox();
-                url.Flags = 1;
-                url.SetParent(dref);
-                dref.Children.Add(url);
-
-                SampleTableBox stbl = new SampleTableBox();
-                stbl.SetParent(minf);
-                minf.Children.Add(stbl);
-                stbl.Children = new List<Box>();
-
-                var stsd = new SampleDescriptionBox();
-                stsd.SetParent(stbl);
-                stbl.Children.Add(stsd);
-                stsd.Children = new List<Box>();
-
-                var sampleEntryBox = track.Track.CreateSampleEntryBox();
-                track.Encryptor?.ProtectSampleEntry(track.Track, sampleEntryBox);
-                sampleEntryBox.SetParent(stsd);
-                stsd.Children.Add(sampleEntryBox);
-                stsd.EntryCount = 1;
+                // the media is in the fragments: the sample tables are empty
+                var stbl = AddTrackBox(moov, track, 0x07, movieDuration, 0, creationTime, edit, out _);
 
                 var stsz = new SampleSizeBox();
                 stsz.SetParent(stbl);
@@ -858,12 +571,7 @@ namespace SharpMP4.Builders
                 stbl.Children.Add(stco);
             }
 
-            // the protection systems' headers, each once, of all the protected tracks
-            foreach (var pssh in TrackEncryptor.ProtectionSystemHeaders(_trackContexts.Values.Where(x => x.Protection != null).Select(x => x.Protection)))
-            {
-                pssh.SetParent(moov);
-                moov.Children.Add(pssh);
-            }
+            AddProtectionSystemHeaders(moov);
 
             var mvex = new MovieExtendsBox();
             mvex.SetParent(moov);
@@ -880,7 +588,7 @@ namespace SharpMP4.Builders
                 mehd.Version = MovieTime.Version(movieDuration);
             }
 
-            foreach (var track in _trackContexts.Values)
+            foreach (var track in TrackContexts)
             {
                 TrackExtendsBox trex = new TrackExtendsBox();
                 trex.SetParent(mvex);
@@ -1019,25 +727,16 @@ namespace SharpMP4.Builders
         }
 
         /// <summary>
-        /// Writes what is left: the access unit each track is still assembling, the fragments not yet written and, unless
-        /// it was turned off, the 'mfra' that says where each track's sync samples are. Given no samples, it writes the
-        /// initialization segment alone. It is called once.
+        /// Writes what is left: the fragments not yet written and, unless it was turned off, the 'mfra' that says where each
+        /// track's sync samples are. Given no samples, it writes the initialization segment alone.
         /// </summary>
-        public void FinalizeMedia()
+        private protected override void WriteMedia()
         {
-            ThrowIfFinished();
-
-            // the access unit each track that gives back the previous one is still assembling - lost, before
-            foreach (var track in _trackContexts.Values)
-            {
-                ProcessTrackSample(track, default, -1, 0);
-            }
-
             // what is left: samples not yet in a fragment - of no bytes too, a text track's gaps - and fragments not written
             WriteFragment(true);
             if (!_isInitialized)
                 WriteInitialization();
-            _isFinalized = true;
+            IsFinalized = true;
 
             if (_appendMovieFragmentRandomAccessBox)
             {
@@ -1048,7 +747,7 @@ namespace SharpMP4.Builders
                 fmp4.Children.Add(mfra);
                 mfra.Children = new List<Box>();
 
-                foreach (var track in _trackContexts.Values)
+                foreach (var track in TrackContexts)
                 {
                     var entries = track.RandomAccessEntries;
                     var tfra = new TrackFragmentRandomAccessBox();
@@ -1077,18 +776,22 @@ namespace SharpMP4.Builders
                 mfra.Children.Add(mfro);
                 mfro.ParentSize = (uint)(mfra.CalculateSize() >> 3);
 
-                var fstr = _output.GetStream(_moofSequenceNumber);
+                var fstr = Output.GetStream(_moofSequenceNumber);
                 var fragmentStream = new IsoStream(fstr);
                 _bytesWritten += fmp4.Write(fragmentStream) >> 3;
-                _output.Flush(fstr, _moofSequenceNumber);
+                Output.Flush(fstr, _moofSequenceNumber);
             }
 
             DisposeStorages();
         }
 
-        private void DisposeStorages()
+        /// <summary>
+        /// Lets go of where the samples of fragments not yet written wait. Without <see cref="Mp4BuilderBase.FinalizeMedia"/>
+        /// before it, nothing more is written: the fragments written are all there is.
+        /// </summary>
+        private protected override void DisposeStorages()
         {
-            foreach (var track in _trackContexts.Values)
+            foreach (var track in TrackContexts)
             {
                 var storages = track.ReadyFragments.Select(x => x.Storage).Append(track.CurrentFragments).Where(x => x != null).Distinct().ToList();
                 foreach (var storage in storages)
@@ -1096,26 +799,6 @@ namespace SharpMP4.Builders
                 track.ReadyFragments.Clear();
                 track.CurrentFragments = null;
             }
-        }
-
-        /// <summary>
-        /// Lets go of where the samples of fragments not yet written wait. Without <see cref="FinalizeMedia"/> before it,
-        /// nothing more is written: the fragments written are all there is.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_isDisposed)
-                return;
-
-            if (disposing)
-                DisposeStorages();
-            _isDisposed = true;
         }
     }
 }
