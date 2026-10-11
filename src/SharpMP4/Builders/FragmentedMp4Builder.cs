@@ -260,6 +260,9 @@ namespace SharpMP4.Builders
             return track;
         }
 
+        /// <inheritdoc/>
+        ITrack IMp4Builder.GetTrack(uint trackID) => GetTrack(trackID).Track;
+
         /// <summary>The same, for a sample that sits inside a larger buffer.</summary>
         public void ProcessTrackSample(uint trackID, ArraySegment<byte> sample, int sampleDuration = -1, int compositionOffset = 0) =>
             ProcessTrackSample(GetTrack(trackID), sample, sampleDuration, compositionOffset);
@@ -291,31 +294,13 @@ namespace SharpMP4.Builders
         }
 
         /// <inheritdoc/>
-        public void ProcessAnnexBTrackSample(uint trackID, byte[] sample, int sampleDuration = -1, int compositionOffset = 0) =>
-            ProcessAnnexBTrackSample(trackID, new ArraySegment<byte>(sample), sampleDuration, compositionOffset);
-
-        /// <inheritdoc/>
-        public void ProcessAnnexBTrackSample(uint trackID, ArraySegment<byte> sample, int sampleDuration = -1, int compositionOffset = 0)
-        {
-            foreach (var nalUnit in Utils.NalUnits(GetTrack(trackID).Track, trackID, sample))
-                ProcessTrackSample(trackID, nalUnit, sampleDuration, compositionOffset);
-        }
-
-        public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
-        {
-            AppendSample(GetTrack(trackID), new ArraySegment<byte>(sample), sampleDuration, isRandomAccessPoint, 0);
-        }
-
-        public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint, int compositionOffset)
+        public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration = -1, bool isRandomAccessPoint = true, int compositionOffset = 0)
         {
             AppendSample(GetTrack(trackID), new ArraySegment<byte>(sample), sampleDuration, isRandomAccessPoint, compositionOffset);
         }
 
-        /// <summary>
-        /// The same, for a sample that sits inside a larger buffer - one a caller fills again for
-        /// each sample - so it does not have to be copied out into an array of its own first.
-        /// </summary>
-        public void ProcessRawSample(uint trackID, ArraySegment<byte> sample, int sampleDuration, bool isRandomAccessPoint, int compositionOffset = 0)
+        /// <inheritdoc/>
+        public void ProcessRawSample(uint trackID, ArraySegment<byte> sample, int sampleDuration = -1, bool isRandomAccessPoint = true, int compositionOffset = 0)
         {
             AppendSample(GetTrack(trackID), sample, sampleDuration, isRandomAccessPoint, compositionOffset);
         }
