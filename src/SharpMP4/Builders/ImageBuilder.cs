@@ -72,18 +72,23 @@ namespace SharpMP4.Builders
     }
 
     /// <summary>
-    /// An image of a HEIF file - the primary image, its alpha, or a thumbnail of it - and what makes it: the coded pictures
-    /// given, and the track that reads them.
+    /// Builders of HEIF images, which write a file of one image from its coded pictures - of one, or of the tiles of a grid
+    /// - and of its alpha and thumbnails, of theirs. Each is given its pictures as the image is, one way or the other: the
+    /// codec's units, which its own track reads and makes its configuration of, or, after its configuration, pictures stored
+    /// as they are; once given one stored as it is, what its track makes of units given after it is no picture of it.
     /// </summary>
-    public interface IImagePlane
+    public interface IImageBuilder : IDisposable
     {
-        /// <summary>The track that reads the codec's units and makes the image's configuration of them: of HEVC or AV1.</summary>
+        /// <summary>The format of the file.</summary>
+        ImageFormat Format { get; }
+
+        /// <summary>The track that reads the image's units and makes its configuration of them: of HEVC or AV1.</summary>
         ITrack Track { get; }
 
         /// <summary>
         /// A unit of the image - an HEVC NAL unit, without its start code, or an AV1 OBU - processed by <see cref="Track"/>,
         /// as <see cref="IMp4Builder.ProcessTrackSample(uint, byte[], int, int)"/> processes video: parameter sets and
-        /// sequence headers make the configuration, and each picture is an image, or the next tile of a grid.
+        /// sequence headers make the configuration, and each picture is the image, or the next tile of a grid.
         /// </summary>
         void ProcessImageSample(byte[] sample);
 
@@ -96,30 +101,38 @@ namespace SharpMP4.Builders
 
         /// <summary>
         /// A coded picture stored as it is - HEVC NAL units each behind its length, as an MP4 sample has them, or AV1 OBUs -
-        /// as an image, or the next tile; the configuration is of what <see cref="ProcessImageSample"/> was given, before
-        /// it. A plane is given its pictures one way or the other: once given one stored as it is, what the track makes of
-        /// units given after it is no picture of the plane.
+        /// as the image, or the next tile; the configuration is of what <see cref="ProcessImageSample"/> was given before it.
         /// </summary>
         void ProcessRawImage(byte[] image);
-    }
-
-    /// <summary>
-    /// Builders of HEIF images, which write a file of one image from its coded pictures - of one, or of the tiles of a grid
-    /// - and of its alpha and thumbnails, of theirs. What the builder is given itself is of the primary image.
-    /// </summary>
-    public interface IImageBuilder : IImagePlane, IDisposable
-    {
-        /// <summary>The format of the file.</summary>
-        ImageFormat Format { get; }
 
         /// <summary>
-        /// The alpha of the image, an auxiliary image of its transparency, coded as a picture of one channel: of a grid, a
-        /// grid of the same tiles. It is the file's once asked for, and is then to be given its pictures.
+        /// A unit of the image's alpha, as <see cref="ProcessImageSample"/> is of the image: an auxiliary image of its
+        /// transparency, coded as a picture of one channel, of a track of its own; of a grid, a grid of the same tiles. The
+        /// first of the alpha makes the file have one.
         /// </summary>
-        IImagePlane Alpha { get; }
+        void ProcessAlphaSample(byte[] sample);
 
-        /// <summary>A thumbnail of the image, of a picture of its own, smaller: one more each time it is called.</summary>
-        IImagePlane AddThumbnail();
+        /// <summary>The alpha's HEVC NAL units of the Annex B byte stream, as <see cref="ProcessAnnexBImageSample"/>.</summary>
+        void ProcessAnnexBAlphaSample(byte[] sample);
+
+        /// <summary>A picture of the alpha stored as it is, as <see cref="ProcessRawImage"/>.</summary>
+        void ProcessRawAlphaImage(byte[] image);
+
+        /// <summary>
+        /// A unit of a thumbnail of the image, as <see cref="ProcessImageSample"/> is of the image: a smaller image of a
+        /// picture of its own, of a track of its own. Of more than one, each has its index, from 0: the first of the next
+        /// index makes the file have one more.
+        /// </summary>
+        /// <param name="sample">The unit.</param>
+        /// <param name="thumb">Which thumbnail: of those the file has, or the next.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Of an index past the next.</exception>
+        void ProcessThumbSample(byte[] sample, int thumb = 0);
+
+        /// <summary>A thumbnail's HEVC NAL units of the Annex B byte stream, as <see cref="ProcessAnnexBImageSample"/>.</summary>
+        void ProcessAnnexBThumbSample(byte[] sample, int thumb = 0);
+
+        /// <summary>A thumbnail's picture stored as it is, as <see cref="ProcessRawImage"/>.</summary>
+        void ProcessRawThumbImage(byte[] image, int thumb = 0);
 
         /// <summary>Writes the file: of the pictures the tracks are still assembling too. It is called once.</summary>
         void FinalizeImage();
@@ -162,7 +175,7 @@ namespace SharpMP4.Builders
         }
 
         /// <summary>An image of the file, and what makes it: its pictures, and the track that reads them.</summary>
-        private sealed class Plane : IImagePlane
+        private sealed class Plane
         {
             private readonly HeifImageBuilder _builder;
 
@@ -356,27 +369,22 @@ namespace SharpMP4.Builders
 
         public IMp4Logger Logger { get; }
 
-        /// <inheritdoc/>
-        public IImagePlane Alpha
-        {
-            get
-            {
-                if (_alpha == null)
-                {
-                    ThrowIfFinished();
-                    _alpha = new Plane(this, PlaneKind.Alpha, PictureCountOfGrid, CreateTrack());
-                }
-                return _alpha;
-            }
-        }
-
-        /// <inheritdoc/>
-        public IImagePlane AddThumbnail()
+        /// <summary>The alpha, made by the first of it.</summary>
+        private Plane Alpha()
         {
             ThrowIfFinished();
-            var thumbnail = new Plane(this, PlaneKind.Thumbnail, 1, CreateTrack());
-            _thumbnails.Add(thumbnail);
-            return thumbnail;
+            return _alpha ??= new Plane(this, PlaneKind.Alpha, PictureCountOfGrid, CreateTrack());
+        }
+
+        /// <summary>The thumbnail of an index: of those there are, or the next, made by the first of it.</summary>
+        private Plane Thumb(int thumb)
+        {
+            ThrowIfFinished();
+            if (thumb < 0 || thumb > _thumbnails.Count)
+                throw new ArgumentOutOfRangeException(nameof(thumb), thumb, $"The file has {_thumbnails.Count} thumbnails: a thumbnail is of their index, or the next, {_thumbnails.Count}.");
+            if (thumb == _thumbnails.Count)
+                _thumbnails.Add(new Plane(this, PlaneKind.Thumbnail, 1, CreateTrack()));
+            return _thumbnails[thumb];
         }
 
         private bool IsGrid => _options.GridColumns > 0;
@@ -400,6 +408,24 @@ namespace SharpMP4.Builders
 
         /// <inheritdoc/>
         public void ProcessRawImage(byte[] image) => _image.ProcessRawImage(image);
+
+        /// <inheritdoc/>
+        public void ProcessAlphaSample(byte[] sample) => Alpha().ProcessImageSample(sample);
+
+        /// <inheritdoc/>
+        public void ProcessAnnexBAlphaSample(byte[] sample) => Alpha().ProcessAnnexBImageSample(sample);
+
+        /// <inheritdoc/>
+        public void ProcessRawAlphaImage(byte[] image) => Alpha().ProcessRawImage(image);
+
+        /// <inheritdoc/>
+        public void ProcessThumbSample(byte[] sample, int thumb = 0) => Thumb(thumb).ProcessImageSample(sample);
+
+        /// <inheritdoc/>
+        public void ProcessAnnexBThumbSample(byte[] sample, int thumb = 0) => Thumb(thumb).ProcessAnnexBImageSample(sample);
+
+        /// <inheritdoc/>
+        public void ProcessRawThumbImage(byte[] image, int thumb = 0) => Thumb(thumb).ProcessRawImage(image);
 
         /// <summary>
         /// Whether a unit a track gives back is a picture. AV1's gives back what it holds whatever it is - of a sequence

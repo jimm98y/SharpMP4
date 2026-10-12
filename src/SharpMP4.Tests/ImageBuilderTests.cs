@@ -339,10 +339,10 @@ public class ImageBuilderTests
             foreach (string unit in config)
             {
                 builder.ProcessImageSample(Hex(unit));
-                builder.Alpha.ProcessImageSample(Hex(unit));
+                builder.ProcessAlphaSample(Hex(unit));
             }
             builder.ProcessRawImage(image);
-            builder.Alpha.ProcessRawImage(alpha);
+            builder.ProcessRawAlphaImage(alpha);
         });
 
         var meta = Meta(container);
@@ -370,11 +370,11 @@ public class ImageBuilderTests
         var (container, reader) = Write(ImageFormat.Avif, new ImageBuilderOptions { GridColumns = 2, GridRows = 1 }, builder =>
         {
             builder.ProcessImageSample(Hex(Av1SequenceHeader));
-            builder.Alpha.ProcessImageSample(Hex(Av1SequenceHeader));
+            builder.ProcessAlphaSample(Hex(Av1SequenceHeader));
             builder.ProcessRawImage(Hex("2201a1"));
             builder.ProcessRawImage(Hex("2201a2"));
-            builder.Alpha.ProcessRawImage(Hex("2201b1"));
-            builder.Alpha.ProcessRawImage(Hex("2201b2"));
+            builder.ProcessRawAlphaImage(Hex("2201b1"));
+            builder.ProcessRawAlphaImage(Hex("2201b2"));
         });
 
         // the image's tiles 1 and 2, its grid 3; the alpha's tiles 4 and 5, its grid 6
@@ -414,9 +414,8 @@ public class ImageBuilderTests
         {
             foreach (string unit in new[] { H265Vps, H265Sps, H265Pps, H265Idr })
                 builder.ProcessImageSample(Hex(unit));
-            var thumbnail = builder.AddThumbnail();
             foreach (string unit in new[] { H265Vps, H265Sps, H265Pps, H265Idr })
-                thumbnail.ProcessImageSample(Hex(unit));
+                builder.ProcessThumbSample(Hex(unit));
         });
 
         var meta = Meta(container);
@@ -433,13 +432,36 @@ public class ImageBuilderTests
         Assert.AreEqual(1, meta.Children.OfType<ItemPropertiesBox>().Single().PropertyContainer.Children.OfType<ColourInformationBox>().Count(), "the one 'colr', of both");
     }
 
+    /// <summary>Thumbnails of their index: each of its own pictures, the next index making one more, one past it refused.</summary>
+    [TestMethod]
+    public void WritesThumbnailsOfTheirIndex()
+    {
+        var (container, reader) = Write(ImageFormat.Avif, null, builder =>
+        {
+            builder.ProcessImageSample(Hex(Av1SequenceHeader));
+            builder.ProcessRawImage(Hex("2201aa"));
+            builder.ProcessThumbSample(Hex(Av1SequenceHeader));
+            builder.ProcessThumbSample(Hex(Av1SequenceHeader), 1);
+            builder.ProcessRawThumbImage(Hex("2201bb"));
+            builder.ProcessRawThumbImage(Hex("2201cc"), 1);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => builder.ProcessRawThumbImage(Hex("2201dd"), 3));
+        });
+
+        var meta = Meta(container);
+        CollectionAssert.AreEqual(new uint[] { 1 }, References(meta, "thmb", 2));
+        CollectionAssert.AreEqual(new uint[] { 1 }, References(meta, "thmb", 3));
+        CollectionAssert.AreEqual(Hex("2201aa"), reader.ReadSample()!.Data);
+        CollectionAssert.AreEqual(Hex("2201bb"), reader.ReadSample()!.Data, "thumbnail 0");
+        CollectionAssert.AreEqual(Hex("2201cc"), reader.ReadSample()!.Data, "thumbnail 1");
+    }
+
     [TestMethod]
     public void RefusesAnAlphaOfNoPicture()
     {
         using var builder = ImageBuilder.Create(new SingleStreamOutput(new MemoryStream()), ImageFormat.Avif);
         builder.ProcessImageSample(Hex(Av1SequenceHeader));
         builder.ProcessRawImage(Hex("2200"));
-        builder.Alpha.ProcessImageSample(Hex(Av1SequenceHeader));
+        builder.ProcessAlphaSample(Hex(Av1SequenceHeader));
         var e = Assert.ThrowsExactly<InvalidOperationException>(() => builder.FinalizeImage());
         StringAssert.Contains(e.Message, "alpha");
     }
