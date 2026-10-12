@@ -91,6 +91,7 @@ public class QuickTimeBoxesTests
         Assert.AreEqual("mhlr", IsoStream.ToFourCC(hdlr.PreDefined));
         string name = Text(hdlr.Name);
         Assert.AreEqual(name.Length - 1, (int)name[0], "counted: its length, then its text");
+        Assert.IsFalse(name.EndsWith('\0'), "without the zero of an ISO name");
 
         var minf = Minf(trak);
         var dhlr = minf.Children.OfType<HandlerBox>().Single();

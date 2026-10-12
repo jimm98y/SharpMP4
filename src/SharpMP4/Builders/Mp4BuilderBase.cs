@@ -470,10 +470,13 @@ namespace SharpMP4.Builders
             0, 0, 0, 0, 0, 0, 0, 0, 0x40, 0x00, 0x00, 0x00,
         };
 
-        /// <summary>A name as QuickTime's components have it: its length in a byte, then its UTF-8, of 255 bytes at most.</summary>
+        /// <summary>
+        /// A name as QuickTime's components have it: its length in a byte, then its UTF-8, of 255 bytes at most - without
+        /// the zero the ISO's names end in, which the handler names have.
+        /// </summary>
         private static BinaryUTF8String CountedName(string name)
         {
-            byte[] text = System.Text.Encoding.UTF8.GetBytes(name ?? "");
+            byte[] text = System.Text.Encoding.UTF8.GetBytes((name ?? "").TrimEnd('\0'));
             int length = Math.Min(text.Length, 255);
             var counted = new byte[1 + length];
             counted[0] = (byte)length;
