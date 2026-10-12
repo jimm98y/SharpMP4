@@ -42,6 +42,9 @@ namespace SharpMP4.Readers
         // where the items are, of a stream that seeks and of one that does not alike
         private FileDataLocator _data;
 
+        // the configurations of the codecs of images: HEVC, VVC, AVC, AV1 and AV2
+        private static readonly HashSet<string> CodecConfigurations = new HashSet<string> { "hvcC", "vvcC", "avcC", "av1C", "av2C" };
+
         private static readonly uint Grid = IsoStream.FromFourCC("grid");
         private static readonly uint DerivedImage = IsoStream.FromFourCC("dimg");
 
@@ -95,19 +98,41 @@ namespace SharpMP4.Readers
                     propertyBoxes = PropertiesOf(ipco, ipma, tileID.Value); // let's hope all tiles share the same config
             }
 
-            // try to create a track for any of the property boxes
-            foreach (var box in propertyBoxes)
+            // The track of the codec's configuration, whichever of the properties it is: tried first, as the factory makes a
+            // track of any box - a pass-through one, of a box of no codec - and the first property is often the size or the
+            // colour, as an AVIF's is. A pass-through track only where nothing else made a track.
+            ITrack generic = null;
+            foreach (var box in propertyBoxes.OrderBy(x => CodecConfigurations.Contains(IsoStream.ToFourCC(x.FourCC)) ? 0 : 1))
             {
+                ITrack track;
                 try
                 {
-                    this.Track = TrackFactory.CreateTrack(0, box, 0, 0, IsoStream.FromFourCC(HandlerTypes.Video), HandlerNames.Video, Logger);
-                    break;
+                    track = TrackFactory.CreateTrack(0, box, 0, 0, IsoStream.FromFourCC(HandlerTypes.Video), HandlerNames.Video, Logger);
                 }
                 catch (NotSupportedException)
                 {
-                    // ignore
+                    continue;
                 }
+
+                if (track is GenericTrack && generic == null)
+                {
+                    generic = track;
+                    continue;
+                }
+                if (track is GenericTrack)
+                {
+                    track.Dispose();
+                    continue;
+                }
+
+                this.Track = track;
+                break;
             }
+
+            if (this.Track == null)
+                this.Track = generic;
+            else
+                generic?.Dispose();
 
             if (this.Track == null)
                 throw new NotSupportedException("No supported track found in image file.");
