@@ -314,6 +314,13 @@ namespace SharpMP4.Tracks
         }
 
         /// <summary>The frame's size as shown, or the sequence's largest before a frame has been read.</summary>
+        /// <summary>
+        /// The size of the last frame read, as coded: its upscaled width and its height (AV1 7.21) - of an image, its size,
+        /// which HEIF's 'ispe' says (AVIF 2.2.1). Null before a frame header was read.
+        /// </summary>
+        public (int Width, int Height)? FrameSize =>
+            _context._UpscaledWidth > 0 && _context._FrameHeight > 0 ? (_context._UpscaledWidth, _context._FrameHeight) : null;
+
         private int Width => _context._RenderWidth > 0 ? _context._RenderWidth : SequenceHeaderObu == null ? 0 : SequenceHeaderObu._MaxFrameWidthMinus1 + 1;
 
         private int Height => _context._RenderHeight > 0 ? _context._RenderHeight : SequenceHeaderObu == null ? 0 : SequenceHeaderObu._MaxFrameHeightMinus1 + 1;

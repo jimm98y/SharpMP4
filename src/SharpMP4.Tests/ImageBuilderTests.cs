@@ -1,4 +1,4 @@
-using SharpISOBMFF;
+﻿using SharpISOBMFF;
 using SharpMP4.Builders;
 using SharpMP4.Readers;
 using SharpMP4.Tracks;
@@ -97,7 +97,7 @@ public class ImageBuilderTests
     [TestMethod]
     public void WritesAnAvifImage()
     {
-        byte[] picture = Hex("32050102030405");
+        byte[] picture = Hex("22050102030405");
         var (container, reader) = Write(ImageFormat.Avif, null, builder =>
         {
             builder.ProcessImageSample(Hex(Av1SequenceHeader));
@@ -123,7 +123,7 @@ public class ImageBuilderTests
     [TestMethod]
     public void WritesAGridOfTiles()
     {
-        var tiles = Enumerable.Range(0, 6).Select(i => Hex("3203" + i.ToString("x2") + "aabb")).ToArray();
+        var tiles = Enumerable.Range(0, 6).Select(i => Hex("2203" + i.ToString("x2") + "aabb")).ToArray();
         var options = new ImageBuilderOptions { GridColumns = 3, GridRows = 2, OutputWidth = 40, OutputHeight = 30 };
         var (container, reader) = Write(ImageFormat.Avif, options, builder =>
         {
@@ -167,8 +167,8 @@ public class ImageBuilderTests
         var (_, reader) = Write(ImageFormat.Avif, new ImageBuilderOptions { GridColumns = 2, GridRows = 1 }, builder =>
         {
             builder.ProcessImageSample(Hex(Av1SequenceHeader));
-            builder.ProcessRawImage(Hex("3200"));
-            builder.ProcessRawImage(Hex("3200"));
+            builder.ProcessRawImage(Hex("2200"));
+            builder.ProcessRawImage(Hex("2200"));
         });
         reader.ReadSample();
         reader.ReadSample();
@@ -177,8 +177,8 @@ public class ImageBuilderTests
         using var builder = ImageBuilder.Create(new SingleStreamOutput(new MemoryStream()), ImageFormat.Avif,
             new ImageBuilderOptions { GridColumns = 2, GridRows = 1, OutputWidth = 33, OutputHeight = 16 });
         builder.ProcessImageSample(Hex(Av1SequenceHeader));
-        builder.ProcessRawImage(Hex("3200"));
-        builder.ProcessRawImage(Hex("3200"));
+        builder.ProcessRawImage(Hex("2200"));
+        builder.ProcessRawImage(Hex("2200"));
         Assert.ThrowsExactly<InvalidOperationException>(() => builder.FinalizeImage());
     }
 
@@ -186,12 +186,12 @@ public class ImageBuilderTests
     public void RefusesAPictureMoreThanTheImageIsOf()
     {
         using var single = ImageBuilder.Create(new SingleStreamOutput(new MemoryStream()), ImageFormat.Avif);
-        single.ProcessRawImage(Hex("3200"));
-        Assert.ThrowsExactly<InvalidOperationException>(() => single.ProcessRawImage(Hex("3200")));
+        single.ProcessRawImage(Hex("2200"));
+        Assert.ThrowsExactly<InvalidOperationException>(() => single.ProcessRawImage(Hex("2200")));
 
         using var grid = ImageBuilder.Create(new SingleStreamOutput(new MemoryStream()), ImageFormat.Avif, new ImageBuilderOptions { GridColumns = 2, GridRows = 2 });
         grid.ProcessImageSample(Hex(Av1SequenceHeader));
-        grid.ProcessRawImage(Hex("3200"));
+        grid.ProcessRawImage(Hex("2200"));
         var e = Assert.ThrowsExactly<InvalidOperationException>(() => grid.FinalizeImage());
         StringAssert.Contains(e.Message, "4 tiles");
     }
@@ -230,8 +230,8 @@ public class ImageBuilderTests
         var (container, _) = Write(ImageFormat.Avif, new ImageBuilderOptions { GridColumns = 2, GridRows = 1, Colour = colour }, builder =>
         {
             builder.ProcessImageSample(Hex(Av1SequenceHeader));
-            builder.ProcessRawImage(Hex("3200"));
-            builder.ProcessRawImage(Hex("3200"));
+            builder.ProcessRawImage(Hex("2200"));
+            builder.ProcessRawImage(Hex("2200"));
         });
 
         var iprp = Meta(container).Children.OfType<ItemPropertiesBox>().Single();
@@ -245,7 +245,7 @@ public class ImageBuilderTests
         (container, _) = Write(ImageFormat.Avif, null, builder =>
         {
             builder.ProcessImageSample(Hex(Av1SequenceHeader));
-            builder.ProcessRawImage(Hex("3200"));
+            builder.ProcessRawImage(Hex("2200"));
         });
         Assert.IsFalse(Boxes.FindAll<ColourInformationBox>(container).Any());
     }
@@ -282,7 +282,7 @@ public class ImageBuilderTests
         {
             builder.ProcessImageSample(Hex(Av1SequenceHeader));
             for (int i = 0; i < (grid ? 2 : 1); i++)
-                builder.ProcessRawImage(Hex("3200"));
+                builder.ProcessRawImage(Hex("2200"));
         });
 
         var meta = Meta(container);
@@ -308,6 +308,140 @@ public class ImageBuilderTests
         Assert.AreEqual((byte)1, iprp.PropertyContainer.Children.OfType<ImageRotation>().Single().Angle);
         Assert.IsTrue(iprp.PropertyContainer.Children.OfType<ImageMirror>().Single().Axis);
         Assert.AreEqual(12u, iprp.PropertyContainer.Children.OfType<CleanApertureBox>().Single().CleanApertureWidthN);
+    }
+
+    private static string[] PropertiesOf(MetaBox meta, uint item)
+    {
+        var iprp = meta.Children.OfType<ItemPropertiesBox>().Single();
+        var ipma = iprp.Association.Single();
+        int entry = Array.IndexOf(ipma.ItemID, item);
+        return entry < 0 ? Array.Empty<string>() : ipma.PropertyIndex[entry].Select(i => IsoStream.ToFourCC(iprp.PropertyContainer.Children[i - 1].FourCC)).ToArray();
+    }
+
+    private static uint[] References(MetaBox meta, string type, uint from) =>
+        meta.ItemRefs.References.Where(r => IsoStream.ToFourCC(r.FourCC) == type && r.FromItemID == from).SelectMany(r => r.ToItemID).Select(x => (uint)x).ToArray();
+
+    /// <summary>
+    /// An alpha: an auxiliary image of its own pictures, of the type of alpha of the format, that is an alpha of the image
+    /// ('auxl'), of its rotation too; read back as it was written.
+    /// </summary>
+    [TestMethod]
+    [DataRow(ImageFormat.Avif, "urn:mpeg:mpegB:cicp:systems:auxiliary:alpha")]
+    [DataRow(ImageFormat.Heic, "urn:mpeg:hevc:2015:auxid:1")]
+    public void WritesAnAlphaOfTheImage(ImageFormat format, string alphaType)
+    {
+        byte[] image = format == ImageFormat.Avif ? Hex("2201aa") : Hex("00000008" + H265Idr);
+        byte[] alpha = format == ImageFormat.Avif ? Hex("2201bb") : Hex("00000008" + H265Idr);
+        string[] config = format == ImageFormat.Avif ? new[] { Av1SequenceHeader } : new[] { H265Vps, H265Sps, H265Pps };
+
+        var (container, reader) = Write(format, new ImageBuilderOptions { Rotation = new ImageRotation { Angle = 3 } }, builder =>
+        {
+            foreach (string unit in config)
+            {
+                builder.ProcessImageSample(Hex(unit));
+                builder.Alpha.ProcessImageSample(Hex(unit));
+            }
+            builder.ProcessRawImage(image);
+            builder.Alpha.ProcessRawImage(alpha);
+        });
+
+        var meta = Meta(container);
+        Assert.AreEqual(1u, meta.PrimaryResource.ItemID);
+        Assert.AreEqual(2, meta.ItemInfos.ItemInfos.Count());
+        CollectionAssert.AreEqual(new uint[] { 1 }, References(meta, "auxl", 2), "the alpha, of the image");
+        var auxC = meta.Children.OfType<ItemPropertiesBox>().Single().PropertyContainer.Children.OfType<AuxiliaryTypeProperty>().Single();
+        Assert.AreEqual(alphaType + "\0", System.Text.Encoding.ASCII.GetString(auxC.AuxType.Bytes));
+        CollectionAssert.Contains(PropertiesOf(meta, 2), "auxC");
+        CollectionAssert.DoesNotContain(PropertiesOf(meta, 1), "auxC");
+        Assert.AreEqual("irot", PropertiesOf(meta, 1)[^1]);
+        Assert.AreEqual("irot", PropertiesOf(meta, 2)[^1], "the alpha shown as the image is");
+
+        CollectionAssert.AreEqual(image, reader.ReadSample()!.Data);
+        CollectionAssert.AreEqual(alpha, reader.ReadSample()!.Data);
+    }
+
+    /// <summary>
+    /// The alpha of a grid: a grid of its own tiles, of the image's layout and size, that is an alpha of the image's grid;
+    /// its tiles hidden, of the type of alpha as its grid is.
+    /// </summary>
+    [TestMethod]
+    public void WritesAnAlphaGridOfAGrid()
+    {
+        var (container, reader) = Write(ImageFormat.Avif, new ImageBuilderOptions { GridColumns = 2, GridRows = 1 }, builder =>
+        {
+            builder.ProcessImageSample(Hex(Av1SequenceHeader));
+            builder.Alpha.ProcessImageSample(Hex(Av1SequenceHeader));
+            builder.ProcessRawImage(Hex("2201a1"));
+            builder.ProcessRawImage(Hex("2201a2"));
+            builder.Alpha.ProcessRawImage(Hex("2201b1"));
+            builder.Alpha.ProcessRawImage(Hex("2201b2"));
+        });
+
+        // the image's tiles 1 and 2, its grid 3; the alpha's tiles 4 and 5, its grid 6
+        var meta = Meta(container);
+        Assert.AreEqual(3u, meta.PrimaryResource.ItemID);
+        var items = meta.ItemInfos.ItemInfos.ToDictionary(x => x.ItemID);
+        Assert.AreEqual("grid", IsoStream.ToFourCC(items[6].ItemType));
+        Assert.IsTrue(new uint[] { 1, 2, 4, 5 }.All(id => items[id].Flags == 1), "tiles, hidden");
+        CollectionAssert.AreEqual(new uint[] { 1, 2 }, References(meta, "dimg", 3));
+        CollectionAssert.AreEqual(new uint[] { 4, 5 }, References(meta, "dimg", 6));
+        CollectionAssert.AreEqual(new uint[] { 3 }, References(meta, "auxl", 6));
+        Assert.IsTrue(new uint[] { 4, 5, 6 }.All(id => PropertiesOf(meta, id).Contains("auxC")));
+
+        foreach (string tile in new[] { "2201a1", "2201a2" })
+            CollectionAssert.AreEqual(Hex(tile), reader.ReadSample()!.Data);
+        var gridDescription = reader.ReadSample()!.Data;
+        foreach (string tile in new[] { "2201b1", "2201b2" })
+            CollectionAssert.AreEqual(Hex(tile), reader.ReadSample()!.Data);
+        CollectionAssert.AreEqual(gridDescription, reader.ReadSample()!.Data, "the alpha's grid of the same layout and size");
+    }
+
+    /// <summary>
+    /// A thumbnail: an image of a picture of its own ('thmb'), of its own configuration and size, rotated as the image is
+    /// but not cropped as it is, the crop being of the image's size; of the image's colour.
+    /// </summary>
+    [TestMethod]
+    public void WritesAThumbnailOfTheImage()
+    {
+        var colour = new ColourInformationBox { ColourType = IsoStream.FromFourCC("nclx"), ColourPrimaries = 1, TransferCharacteristics = 13, MatrixCoefficients = 6, FullRangeFlag = true };
+        var options = new ImageBuilderOptions
+        {
+            Colour = colour,
+            Rotation = new ImageRotation { Angle = 1 },
+            CleanAperture = new CleanApertureBox { CleanApertureWidthN = 8, CleanApertureWidthD = 1, CleanApertureHeightN = 8, CleanApertureHeightD = 1, HorizOffD = 1, VertOffD = 1 },
+        };
+        var (container, _) = Write(ImageFormat.Heic, options, builder =>
+        {
+            foreach (string unit in new[] { H265Vps, H265Sps, H265Pps, H265Idr })
+                builder.ProcessImageSample(Hex(unit));
+            var thumbnail = builder.AddThumbnail();
+            foreach (string unit in new[] { H265Vps, H265Sps, H265Pps, H265Idr })
+                thumbnail.ProcessImageSample(Hex(unit));
+        });
+
+        var meta = Meta(container);
+        CollectionAssert.AreEqual(new uint[] { 1 }, References(meta, "thmb", 2));
+        Assert.AreEqual(0u, meta.ItemInfos.ItemInfos.Single(x => x.ItemID == 2).Flags);
+        // the descriptive properties in any order - the 'colr' is the image's, before the thumbnail's own - then the
+        // transformative, as they are applied
+        var ofImage = PropertiesOf(meta, 1);
+        CollectionAssert.AreEquivalent(new[] { "hvcC", "ispe", "pixi", "colr" }, ofImage[..^2]);
+        CollectionAssert.AreEqual(new[] { "clap", "irot" }, ofImage[^2..]);
+        var ofThumbnail = PropertiesOf(meta, 2);
+        CollectionAssert.AreEquivalent(new[] { "hvcC", "ispe", "pixi", "colr" }, ofThumbnail[..^1]);
+        Assert.AreEqual("irot", ofThumbnail[^1], "rotated, not cropped");
+        Assert.AreEqual(1, meta.Children.OfType<ItemPropertiesBox>().Single().PropertyContainer.Children.OfType<ColourInformationBox>().Count(), "the one 'colr', of both");
+    }
+
+    [TestMethod]
+    public void RefusesAnAlphaOfNoPicture()
+    {
+        using var builder = ImageBuilder.Create(new SingleStreamOutput(new MemoryStream()), ImageFormat.Avif);
+        builder.ProcessImageSample(Hex(Av1SequenceHeader));
+        builder.ProcessRawImage(Hex("2200"));
+        builder.Alpha.ProcessImageSample(Hex(Av1SequenceHeader));
+        var e = Assert.ThrowsExactly<InvalidOperationException>(() => builder.FinalizeImage());
+        StringAssert.Contains(e.Message, "alpha");
     }
 
     [TestMethod]
