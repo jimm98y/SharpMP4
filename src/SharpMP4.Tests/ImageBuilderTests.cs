@@ -148,7 +148,7 @@ public class ImageBuilderTests
         var extents = iprp.PropertyContainer.Children.OfType<ImageSpatialExtentsProperty>().ToArray();
         var ipma = iprp.Association.Single();
         int gridEntry = Array.IndexOf(ipma.ItemID, 7u);
-        var gridExtent = (ImageSpatialExtentsProperty)iprp.PropertyContainer.Children[ipma.PropertyIndex[gridEntry][0] - 1];
+        var gridExtent = ipma.PropertyIndex[gridEntry].Select(i => iprp.PropertyContainer.Children[i - 1]).OfType<ImageSpatialExtentsProperty>().Single();
         Assert.AreEqual((40u, 30u), (gridExtent.ImageWidth, gridExtent.ImageHeight));
 
         Assert.IsInstanceOfType<AV1Track>(reader.Track, "of the tiles' configuration");
@@ -210,6 +210,104 @@ public class ImageBuilderTests
     {
         using var builder = ImageBuilder.Create(new SingleStreamOutput(new MemoryStream()), ImageFormat.Avif);
         Assert.ThrowsExactly<NotSupportedException>(() => builder.ProcessAnnexBImageSample(Hex("000001" + Av1SequenceHeader)));
+    }
+
+    /// <summary>
+    /// The colour of the options is the image's 'colr', of the picture and of the grid alike; of none, and a stream that
+    /// says nothing of it - this sequence header's color description is all unspecified, of limited range - there is none.
+    /// </summary>
+    [TestMethod]
+    public void WritesTheColourOfTheOptionsOrOfTheStream()
+    {
+        var colour = new ColourInformationBox
+        {
+            ColourType = IsoStream.FromFourCC("nclx"),
+            ColourPrimaries = 12,
+            TransferCharacteristics = 13,
+            MatrixCoefficients = 6,
+            FullRangeFlag = true,
+        };
+        var (container, _) = Write(ImageFormat.Avif, new ImageBuilderOptions { GridColumns = 2, GridRows = 1, Colour = colour }, builder =>
+        {
+            builder.ProcessImageSample(Hex(Av1SequenceHeader));
+            builder.ProcessRawImage(Hex("3200"));
+            builder.ProcessRawImage(Hex("3200"));
+        });
+
+        var iprp = Meta(container).Children.OfType<ItemPropertiesBox>().Single();
+        var colr = iprp.PropertyContainer.Children.OfType<ColourInformationBox>().Single();
+        Assert.AreEqual("nclx", IsoStream.ToFourCC(colr.ColourType));
+        Assert.AreEqual(((ushort)12, (ushort)13, (ushort)6, true), (colr.ColourPrimaries, colr.TransferCharacteristics, colr.MatrixCoefficients, colr.FullRangeFlag));
+        ushort index = (ushort)(iprp.PropertyContainer.Children.IndexOf(colr) + 1);
+        var ipma = iprp.Association.Single();
+        Assert.IsTrue(ipma.PropertyIndex.All(properties => properties.Contains(index)), "of each tile and of the grid");
+
+        (container, _) = Write(ImageFormat.Avif, null, builder =>
+        {
+            builder.ProcessImageSample(Hex(Av1SequenceHeader));
+            builder.ProcessRawImage(Hex("3200"));
+        });
+        Assert.IsFalse(Boxes.FindAll<ColourInformationBox>(container).Any());
+    }
+
+    /// <summary>
+    /// The shape of the pixels and the transformations are of the image - of the picture, or of the grid, not its tiles -
+    /// after its descriptive properties, the transformations essential and in the order they are applied: crop, rotation,
+    /// mirroring (23008-12 6.5.1, 6.5.10).
+    /// </summary>
+    [TestMethod]
+    [DataRow(false)]
+    [DataRow(true)]
+    public void WritesTheTransformationsOfTheImageInTheirOrder(bool grid)
+    {
+        var options = new ImageBuilderOptions
+        {
+            // set in the reverse of their order: written in theirs, whatever the order they were set in
+            Mirror = new ImageMirror { Axis = true },
+            Rotation = new ImageRotation { Angle = 1 },
+            CleanAperture = new CleanApertureBox
+            {
+                CleanApertureWidthN = 12, CleanApertureWidthD = 1, CleanApertureHeightN = 10, CleanApertureHeightD = 1,
+                HorizOffN = 0, HorizOffD = 1, VertOffN = 0, VertOffD = 1,
+            },
+            PixelAspectRatio = new PixelAspectRatioBox { HSpacing = 4, VSpacing = 3 },
+        };
+        if (grid)
+        {
+            options.GridColumns = 2;
+            options.GridRows = 1;
+        }
+
+        var (container, _) = Write(ImageFormat.Avif, options, builder =>
+        {
+            builder.ProcessImageSample(Hex(Av1SequenceHeader));
+            for (int i = 0; i < (grid ? 2 : 1); i++)
+                builder.ProcessRawImage(Hex("3200"));
+        });
+
+        var meta = Meta(container);
+        var iprp = meta.Children.OfType<ItemPropertiesBox>().Single();
+        var ipma = iprp.Association.Single();
+        uint image = meta.PrimaryResource.ItemID;
+        int entry = Array.IndexOf(ipma.ItemID, image);
+        var ofImage = ipma.PropertyIndex[entry].Select(i => IsoStream.ToFourCC(iprp.PropertyContainer.Children[i - 1].FourCC)).ToArray();
+        CollectionAssert.AreEqual(new[] { "pasp", "clap", "irot", "imir" }, ofImage[^4..], "the descriptive before the transformative, those as they are applied");
+        CollectionAssert.AreEqual(new[] { false, true, true, true }, ipma.Essential[entry][^4..]);
+
+        if (grid)
+        {
+            for (int tile = 0; tile < ipma.ItemID.Length; tile++)
+            {
+                if (ipma.ItemID[tile] == image)
+                    continue;
+                var ofTile = ipma.PropertyIndex[tile].Select(i => IsoStream.ToFourCC(iprp.PropertyContainer.Children[i - 1].FourCC));
+                CollectionAssert.DoesNotContain(ofTile.ToArray(), "irot", "of the grid, not its tiles");
+            }
+        }
+
+        Assert.AreEqual((byte)1, iprp.PropertyContainer.Children.OfType<ImageRotation>().Single().Angle);
+        Assert.IsTrue(iprp.PropertyContainer.Children.OfType<ImageMirror>().Single().Axis);
+        Assert.AreEqual(12u, iprp.PropertyContainer.Children.OfType<CleanApertureBox>().Single().CleanApertureWidthN);
     }
 
     [TestMethod]

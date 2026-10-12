@@ -39,6 +39,27 @@ namespace SharpMP4.Builders
         /// <summary>The height of the image of a grid. <see cref="OutputWidth"/>.</summary>
         public uint? OutputHeight { get; set; }
 
+        /// <summary>
+        /// The colour of the image, its 'colr': of 'nclx', or of an ICC profile. Unless set, the colour description the
+        /// stream has - AV1's color_config, HEVC's VUI - as 'nclx'; none where it has none.
+        /// </summary>
+        public ColourInformationBox Colour { get; set; }
+
+        /// <summary>The shape of the image's pixels, its 'pasp': square unless set.</summary>
+        public PixelAspectRatioBox PixelAspectRatio { get; set; }
+
+        /// <summary>
+        /// The crop of the image, its 'clap', of the image the pictures - or the grid - make: none unless set. It is applied
+        /// first of the transformations, then <see cref="Rotation"/>, then <see cref="Mirror"/> (23008-12 6.5.10).
+        /// </summary>
+        public CleanApertureBox CleanAperture { get; set; }
+
+        /// <summary>The rotation of the image, its 'irot': its angle, in steps of 90 degrees counter-clockwise; none unless set.</summary>
+        public ImageRotation Rotation { get; set; }
+
+        /// <summary>The mirroring of the image, its 'imir': about its vertical axis, or its horizontal; none unless set.</summary>
+        public ImageMirror Mirror { get; set; }
+
         /// <summary>The logger; <see cref="DefaultMp4Logger"/> unless set.</summary>
         public IMp4Logger Logger { get; set; }
     }
@@ -312,18 +333,50 @@ namespace SharpMP4.Builders
 
             // the properties: the codec's configuration, which a decoder needs (essential), the size of the pictures and of
             // the grid, and the bits of their channels; each picture of the first three, the grid of the last two
-            var ipco = new ItemPropertyContainerBox { Children = new List<Box>() };
-            Add(ipco, config);
-            Add(ipco, new ImageSpatialExtentsProperty { ImageWidth = tileWidth, ImageHeight = tileHeight });
-            Add(ipco, PixelInformation(config));
+            // The properties, and the items each is of: the codec's configuration, which a decoder needs (essential), and the
+            // size of the pictures, of each picture; the bits of their channels and their colour where it is known, of the
+            // pictures and the grid alike; the grid's size, of the grid; then of the image - the picture, or the grid - the
+            // shape of its pixels, and its transformations, essential, as they are applied: crop, rotation, mirroring
+            // (23008-12 6.5.1, the descriptive properties before the transformative).
+            var properties = new List<(Box Property, bool Essential, bool OfPictures, bool OfGrid)>
+            {
+                (config, true, true, false),
+                (new ImageSpatialExtentsProperty { ImageWidth = tileWidth, ImageHeight = tileHeight }, false, true, false),
+                (PixelInformation(config), false, true, true),
+            };
+            var colour = Colour();
+            if (colour != null)
+                properties.Add((colour, false, true, true));
             if (IsGrid)
-                Add(ipco, new ImageSpatialExtentsProperty { ImageWidth = outputWidth, ImageHeight = outputHeight });
+                properties.Add((new ImageSpatialExtentsProperty { ImageWidth = outputWidth, ImageHeight = outputHeight }, false, false, true));
+
+            foreach (var (property, essential) in new (Box, bool)[]
+            {
+                (_options.PixelAspectRatio, false),
+                (_options.CleanAperture, true),
+                (_options.Rotation, true),
+                (_options.Mirror, true),
+            })
+            {
+                if (property != null)
+                    properties.Add((property, essential, !IsGrid, IsGrid));
+            }
+
+            var ipco = new ItemPropertyContainerBox { Children = new List<Box>() };
+            foreach (var property in properties)
+                Add(ipco, property.Property);
+
+            (bool Essential, ushort Index)[] PropertiesOf(bool grid) => properties
+                .Select((p, i) => (p, Index: (ushort)(i + 1)))
+                .Where(x => grid ? x.p.OfGrid : x.p.OfPictures)
+                .Select(x => (x.p.Essential, x.Index))
+                .ToArray();
 
             var associations = new List<(uint Item, (bool Essential, ushort Index)[] Properties)>();
             for (int i = 0; i < _images.Count; i++)
-                associations.Add(((uint)i + 1, new[] { (true, (ushort)1), (false, (ushort)2), (false, (ushort)3) }));
+                associations.Add(((uint)i + 1, PropertiesOf(grid: false)));
             if (IsGrid)
-                associations.Add((gridID, new[] { (false, (ushort)4), (false, (ushort)3) }));
+                associations.Add((gridID, PropertiesOf(grid: true)));
 
             var ipma = new ItemPropertyAssociationBox
             {
@@ -422,6 +475,51 @@ namespace SharpMP4.Builders
             BigEndian(outputWidth, size).CopyTo(data, 4);
             BigEndian(outputHeight, size).CopyTo(data, 4 + size);
             return data;
+        }
+
+        /// <summary>
+        /// The 'colr' of the options; else of the colour description the stream has, as 'nclx': AV1's color_config, of
+        /// its primaries, transfer and matrix where it describes them - unspecified, 2, where not - and its range; HEVC's
+        /// VUI, the same. None where the stream says neither, which a reader takes as limited range, of its defaults - a
+        /// picture of full range without one is shown wrong.
+        /// </summary>
+        private ColourInformationBox Colour()
+        {
+            if (_options.Colour != null)
+                return _options.Colour;
+
+            (uint Primaries, uint Transfer, uint Matrix, bool FullRange)? description = null;
+            if (Track is AV1Track av1 && av1.SequenceHeaderObu is SharpAV1.AV1Context sequence)
+            {
+                bool described = sequence._ColorDescriptionPresentFlag != 0;
+                if (described || sequence._ColorRange != 0)
+                    description = described
+                        ? ((uint)sequence._ColorPrimaries, (uint)sequence._TransferCharacteristics, (uint)sequence._MatrixCoefficients, sequence._ColorRange != 0)
+                        : (2u, 2u, 2u, true);
+            }
+            else if (Track is H265Track hevc && hevc.Sps.Values.FirstOrDefault() is SharpH265.SeqParameterSetRbsp sps
+                && sps.VuiParametersPresentFlag != 0 && sps.VuiParameters is SharpH265.VuiParameters vui)
+            {
+                bool described = vui.ColourDescriptionPresentFlag != 0;
+                if (described || vui.VideoFullRangeFlag != 0)
+                    description = described
+                        ? (vui.ColourPrimaries, vui.TransferCharacteristics, vui.MatrixCoeffs, vui.VideoFullRangeFlag != 0)
+                        : (2u, 2u, 2u, true);
+            }
+
+            // what says nothing a reader does not take of none - all unspecified, of limited range - is not written
+            if (description is not (uint primaries, uint transfer, uint matrix, bool fullRange)
+                || (primaries == 2 && transfer == 2 && matrix == 2 && !fullRange))
+                return null;
+
+            return new ColourInformationBox
+            {
+                ColourType = IsoStream.FromFourCC("nclx"),
+                ColourPrimaries = (ushort)primaries,
+                TransferCharacteristics = (ushort)transfer,
+                MatrixCoefficients = (ushort)matrix,
+                FullRangeFlag = fullRange,
+            };
         }
 
         /// <summary>The bits of each channel of the pictures, of their configuration: of a monochrome picture one, else three.</summary>
