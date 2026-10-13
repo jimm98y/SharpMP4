@@ -1175,6 +1175,7 @@ namespace SharpISOBMFF
                case "uuid 22cc04c7d6d94e079d904eb6ecbaf3a3":  return new UuidCameraIntrinsicMatrixBox();
                case "uuid 4363e9145b7d4aab97aebea69803b434":  return new UuidCameraExtrinsicMatrixBox();
                case "uuid 50524f4621d24fcebb88695cfac9c740":  return new PspProfExtensionBox();
+               case "uuid 524a52f437b347d09637933d05ac9b68":  return new UuidEntityToGroupBox();
                case "uuid 55534d5421d24fcebb88695cfac9c740":  return new PspUsmtExtensionBox();
                case "uuid 5ca708fb328e4205a861650eca0a9596":  return new MicrosoftWindowsVersionBox();
                case "uuid 6d1d9b0542d544e680e2141daff757b2":  return new TfxdBox();

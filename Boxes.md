@@ -1142,6 +1142,7 @@
 |uuid 22cc04c7d6d94e079d904eb6ecbaf3a3|UuidCameraIntrinsicMatrixBox|
 |uuid 4363e9145b7d4aab97aebea69803b434|UuidCameraExtrinsicMatrixBox|
 |uuid 50524f4621d24fcebb88695cfac9c740|PspProfExtensionBox|
+|uuid 524a52f437b347d09637933d05ac9b68|UuidEntityToGroupBox|
 |uuid 55534d5421d24fcebb88695cfac9c740|PspUsmtExtensionBox|
 |uuid 5ca708fb328e4205a861650eca0a9596|MicrosoftWindowsVersionBox|
 |uuid 6d1d9b0542d544e680e2141daff757b2|TfxdBox|
