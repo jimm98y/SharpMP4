@@ -1470,12 +1470,17 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class CameraExtrinsicMatrixBox() extends FullBox('cmex') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "// ISO/IEC 23008-12 camera extrinsic matrix: the camera's position, in micrometres, and its orientation, a unit quaternion of its x, y and z - of 2^-30 in 32 bits, of 2^-14 in 16 - each where its flag says it is there: 0x1, 0x2 and 0x4 the position, 0x8 the orientation, 0x10 of 32 bits, 0x20 the world coordinate system\r\naligned(8) class CameraExtrinsicMatrixBox() extends FullBox('cmex') {\r\n\t if( flags & 0x1 ) { \r\n signed int(32) pos_x;\r\n }\r\n if( flags & 0x2 ) { \r\n signed int(32) pos_y;\r\n }\r\n if( flags & 0x4 ) { \r\n signed int(32) pos_z;\r\n }\r\n if( flags & 0x8 ) { \r\n if( flags & 0x10 ) { \r\n signed int(32) quat_x;\r\n signed int(32) quat_y;\r\n signed int(32) quat_z;\r\n }\r\n else { \r\n signed int(16) quat_x_short;\r\n signed int(16) quat_y_short;\r\n signed int(16) quat_z_short;\r\n }\r\n }\r\n if( flags & 0x20 ) { \r\n unsigned int(32) world_coordinate_system_id;\r\n }\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class UuidCameraExtrinsicMatrixBox() extends FullBox('uuid 4363e9145b7d4aab97aebea69803b434') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "// Apple's camera extrinsic matrix, of the layout of 'cmex', as an iPhone's spatial photo has it of each eye\r\naligned(8) class UuidCameraExtrinsicMatrixBox() extends FullBox('uuid 4363e9145b7d4aab97aebea69803b434') {\r\n\t if( flags & 0x1 ) { \r\n signed int(32) pos_x;\r\n }\r\n if( flags & 0x2 ) { \r\n signed int(32) pos_y;\r\n }\r\n if( flags & 0x4 ) { \r\n signed int(32) pos_z;\r\n }\r\n if( flags & 0x8 ) { \r\n if( flags & 0x10 ) { \r\n signed int(32) quat_x;\r\n signed int(32) quat_y;\r\n signed int(32) quat_z;\r\n }\r\n else { \r\n signed int(16) quat_x_short;\r\n signed int(16) quat_y_short;\r\n signed int(16) quat_z_short;\r\n }\r\n }\r\n if( flags & 0x20 ) { \r\n unsigned int(32) world_coordinate_system_id;\r\n }\r\n } "
+    },
+    {
+      "containers": [ "grpl" ],
+      "type": "Box",
+      "syntax": "// An entity group of Apple's, of the layout of EntityToGroupBox, as an iPhone's spatial photo has it of its two eyes and its primary image; what it says of them is not known\r\naligned(8) class UuidEntityToGroupBox() extends FullBox('uuid 524a52f437b347d09637933d05ac9b68') {\r\n\t unsigned int(32) group_id;\r\n unsigned int(32) num_entities_in_group;\r\n for(i=0; i<num_entities_in_group; i++)\r\n unsigned int(32) entity_id;\r\n } "
     },
     {
       "containers": [ "*" ],

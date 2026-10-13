@@ -117,4 +117,44 @@ public class ImageReaderTests
         Assert.IsNull(reader.ReadSample(), "past the last item");
         Assert.IsNull(reader.ReadSample(), "past the last item");
     }
+
+    /// <summary>
+    /// The reader makes the track of the codec's configuration whichever property it is: of an image whose first property
+    /// is its size, as most AVIF have it, it made a pass-through track of the 'ispe' - the factory makes a track of any
+    /// box, and the reader took the first it was given.
+    /// </summary>
+    [TestMethod]
+    public void ReadsTheConfigurationWhereverItIsAmongTheProperties()
+    {
+        // an AVIF of AV1TrackTests' 16x16 sequence header, its 'av1C' last of the properties
+        var output = new MemoryStream();
+        using (var builder = SharpMP4.Builders.ImageBuilder.Create(new SharpMP4.Builders.SingleStreamOutput(output), SharpMP4.Builders.ImageFormat.Avif))
+        {
+            builder.ProcessImageSample(Convert.FromHexString("0a0c200000f8cffc42142040404a"));
+            builder.ProcessRawImage(Convert.FromHexString("3200"));
+            builder.FinalizeImage();
+        }
+
+        var container = new Container();
+        container.Read(new IsoStream(new StreamWrapper(new MemoryStream(output.ToArray()))));
+        var iprp = container.Children.OfType<MetaBox>().Single().Children.OfType<ItemPropertiesBox>().Single();
+        var children = iprp.PropertyContainer.Children;
+        var av1C = children.OfType<AV1CodecConfigurationBox>().Single();
+        int from = children.IndexOf(av1C) + 1;
+        children.Remove(av1C);
+        children.Add(av1C);
+        var ipma = iprp.Association.Single();
+        ipma.PropertyIndex = ipma.PropertyIndex.Select(properties => properties
+            .Select(p => p == from ? (ushort)children.Count : p > from ? (ushort)(p - 1) : p).ToArray()).ToArray();
+
+        var moved = new MemoryStream();
+        container.Write(new IsoStream(new StreamWrapper(moved)));
+        var reread = new Container();
+        reread.Read(new IsoStream(new StreamWrapper(new MemoryStream(moved.ToArray()))));
+        Assert.IsInstanceOfType<AV1CodecConfigurationBox>(reread.Children.OfType<MetaBox>().Single().Children.OfType<ItemPropertiesBox>().Single().PropertyContainer.Children.Last());
+
+        var reader = new ImageReader();
+        reader.Parse(reread);
+        Assert.IsInstanceOfType<AV1Track>(reader.Track);
+    }
 }
