@@ -19,6 +19,51 @@ namespace SharpMP4.Readers
     }
 
     /// <summary>
+    /// A grid of images (ISO/IEC 23008-12 6.6.2.3): tiles of one size, row by row, the image of the output size cropped from
+    /// the top left of them.
+    /// </summary>
+    public class ImageGrid
+    {
+        public int Rows { get; }
+        public int Columns { get; }
+        public uint OutputWidth { get; }
+        public uint OutputHeight { get; }
+
+        public ImageGrid(int rows, int columns, uint outputWidth, uint outputHeight)
+        {
+            Rows = rows;
+            Columns = columns;
+            OutputWidth = outputWidth;
+            OutputHeight = outputHeight;
+        }
+
+        /// <summary>
+        /// Of the item's bytes: its version, its flags - whose lowest bit makes the sizes 32 bits, not 16 - the rows and the
+        /// columns less one, then the output width and height.
+        /// </summary>
+        public static ImageGrid Parse(byte[] data)
+        {
+            if (data == null || data.Length < 8)
+                throw new InvalidDataException("A grid's description is shorter than its fields.");
+            if (data[0] != 0)
+                throw new NotSupportedException($"A grid of version {data[0]} is not supported.");
+
+            int size = (data[1] & 1) != 0 ? 4 : 2;
+            if (data.Length < 4 + 2 * size)
+                throw new InvalidDataException("A grid's description is shorter than its fields.");
+
+            uint Read(int at)
+            {
+                uint value = 0;
+                for (int i = 0; i < size; i++)
+                    value = (value << 8) | data[at + i];
+                return value;
+            }
+            return new ImageGrid(data[2] + 1, data[3] + 1, Read(4), Read(4 + size));
+        }
+    }
+
+    /// <summary>
     /// Experimental reader for heif/heic/avif images.
     /// </summary>
     public class ImageReader : IDisposable
@@ -32,6 +77,12 @@ namespace SharpMP4.Readers
         /// <summary>The 'idat' of the 'meta', where items of construction method 1 are; null where it has none.</summary>
         public ItemDataBox Idat { get; private set; }
         public ImageSpatialExtentsProperty Ispe { get; private set; }
+
+        /// <summary>The item the file shows: 'pitm's, or without one the first item there is.</summary>
+        public uint PrimaryItemID { get; private set; }
+
+        /// <summary>The groups of entities of the 'grpl': a stereo pair's ('ster'), alternatives ('altr'); none without one.</summary>
+        public IReadOnlyList<EntityToGroupBox> Groups { get; private set; } = Array.Empty<EntityToGroupBox>();
 
         /// <summary>The item read next, by its place in 'iloc'.</summary>
         public int ImageIndex { get; private set; }
@@ -47,6 +98,11 @@ namespace SharpMP4.Readers
 
         private static readonly uint Grid = IsoStream.FromFourCC("grid");
         private static readonly uint DerivedImage = IsoStream.FromFourCC("dimg");
+
+        private ItemPropertyContainerBox _ipco;
+        private ItemPropertyAssociationBox _ipma;
+        private ItemReferenceBox _iref;
+        private ItemInfoBox _iinf;
 
         public ImageReader(IMp4Logger logger)
         {
@@ -87,6 +143,13 @@ namespace SharpMP4.Readers
             // the primary item, as 'pitm' says; without one, the first item there is
             var primaryItem = meta.Children.OfType<PrimaryItemBox>().SingleOrDefault();
             uint primaryItemID = primaryItem?.ItemID ?? iinf.ItemInfos.FirstOrDefault()?.ItemID ?? iloc.ItemID?.FirstOrDefault() ?? 0;
+            this.PrimaryItemID = primaryItemID;
+
+            _ipco = ipco;
+            _ipma = ipma;
+            _iref = iref;
+            _iinf = iinf;
+            this.Groups = meta.Children.OfType<GroupsListBox>().SelectMany(x => x.Children.OfType<EntityToGroupBox>()).ToArray();
 
             var propertyBoxes = PropertiesOf(ipco, ipma, primaryItemID);
 
@@ -98,10 +161,32 @@ namespace SharpMP4.Readers
                     propertyBoxes = PropertiesOf(ipco, ipma, tileID.Value); // let's hope all tiles share the same config
             }
 
+            this.Track = CreateTrack(propertyBoxes)
+                ?? throw new NotSupportedException("No supported track found in image file.");
+
+            var ispe = propertyBoxes.OfType<ImageSpatialExtentsProperty>().FirstOrDefault();
+            this.Ispe = ispe;
+        }
+
+        /// <summary>
+        /// The track of the codec an item is coded in, of its configuration among its properties: what parses its bytes into
+        /// the units a decoder takes, and has its parameter sets. Null where it has no configuration a track is made of - a
+        /// grid, which is of other items. The caller's to dispose.
+        /// </summary>
+        public ITrack CreateTrack(uint itemID)
+        {
+            if (_ipco == null)
+                throw new InvalidOperationException("No 'meta' has been read: Parse a container that has one first.");
+            return CreateTrack(PropertiesOf(_ipco, _ipma, itemID));
+        }
+
+        private ITrack CreateTrack(Box[] propertyBoxes)
+        {
             // The track of the codec's configuration, whichever of the properties it is: tried first, as the factory makes a
             // track of any box - a pass-through one, of a box of no codec - and the first property is often the size or the
             // colour, as an AVIF's is. A pass-through track only where nothing else made a track.
             ITrack generic = null;
+            ITrack found = null;
             foreach (var box in propertyBoxes.OrderBy(x => CodecConfigurations.Contains(IsoStream.ToFourCC(x.FourCC)) ? 0 : 1))
             {
                 ITrack track;
@@ -125,22 +210,59 @@ namespace SharpMP4.Readers
                     continue;
                 }
 
-                this.Track = track;
+                found = track;
                 break;
             }
 
-            if (this.Track == null)
-                this.Track = generic;
+            if (found == null)
+                found = generic;
             else
                 generic?.Dispose();
 
-            if (this.Track == null)
-                throw new NotSupportedException("No supported track found in image file.");
-            else
-                this.Track.Logger = this.Logger;
+            if (found != null)
+                found.Logger = this.Logger;
+            return found;
+        }
 
-            var ispe = propertyBoxes.OfType<ImageSpatialExtentsProperty>().FirstOrDefault();
-            this.Ispe = ispe;
+        /// <summary>The type of an item, of its 'infe': 'hvc1', 'grid', 'Exif'; 0 where there is no such item.</summary>
+        public uint ItemTypeOf(uint itemID) => _iinf?.ItemInfos.FirstOrDefault(x => x.ItemID == itemID)?.ItemType ?? 0;
+
+        /// <summary>The properties 'ipma' associates an item with, in its order - that transformations are applied in.</summary>
+        public IReadOnlyList<Box> PropertiesOf(uint itemID)
+        {
+            if (_ipco == null)
+                throw new InvalidOperationException("No 'meta' has been read: Parse a container that has one first.");
+            int itemIndex = _ipma.ItemID == null ? -1 : Array.IndexOf(_ipma.ItemID, itemID);
+            if (itemIndex < 0)
+                return Array.Empty<Box>();
+
+            // in the order 'ipma' lists them, not that of the 'ipco'
+            return _ipma.PropertyIndex[itemIndex]
+                .Where(x => x > 0 && x <= _ipco.Children.Count)
+                .Select(x => _ipco.Children[x - 1])
+                .ToArray();
+        }
+
+        /// <summary>The items an item is derived from ('dimg'): a grid's tiles, in the order of the grid; none where it is not derived.</summary>
+        public IReadOnlyList<uint> DerivedFrom(uint itemID) => TilesOf(_iref, itemID).ToArray();
+
+        /// <summary>The bytes of an item, by its ID: see <see cref="ReadSample"/> for the items in the order of 'iloc'.</summary>
+        public byte[] ReadItem(uint itemID)
+        {
+            if (this.Meta == null)
+                throw new InvalidOperationException("No 'meta' has been read: Parse a container that has one first.");
+            int index = Iloc.ItemID == null ? -1 : Array.IndexOf(Iloc.ItemID, itemID);
+            if (index < 0)
+                throw new InvalidDataException($"Item {itemID} is not in the 'iloc'.");
+            return ReadItem(index);
+        }
+
+        /// <summary>The description of a grid item (ISO/IEC 23008-12 6.6.2.3): its rows and columns of tiles, and the size of its image.</summary>
+        public ImageGrid ReadGrid(uint itemID)
+        {
+            if (ItemTypeOf(itemID) != Grid)
+                throw new InvalidDataException($"Item {itemID} is not a grid.");
+            return ImageGrid.Parse(ReadItem(itemID));
         }
 
         /// <summary>The properties 'ipma' associates an item with, none where it has none.</summary>
