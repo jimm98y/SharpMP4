@@ -541,6 +541,7 @@ namespace BoxGenerator
                     break;
 
                 case "leb128": // 1 to 8 bytes, 7 bits each (AV1 4.10.5, IAMF 4.2)
+                case "varint": // the same, as JPEG XL's container calls it (ISO/IEC 18181-2)
                     info.FieldType = ParsedBoxType.Leb128;
                     info.ElementSizeInBits = 8;
                     info.IsSigned = false;

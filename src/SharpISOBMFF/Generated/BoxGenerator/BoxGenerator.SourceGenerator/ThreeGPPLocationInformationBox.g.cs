@@ -62,9 +62,9 @@ public partial class ThreeGPPLocationInformationBox : FullBox
 		boxSize += stream.ReadIso639(boxSize, readSize,  out this.language, "language"); 
 		boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.placeName, "placeName"); 
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.role, "role"); 
-		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.longitude, "longitude"); 
-		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.latitude, "latitude"); 
-		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.altitude, "altitude"); 
+		boxSize += stream.ReadFixedPoint1616(boxSize, readSize,  out this.longitude, "longitude"); 
+		boxSize += stream.ReadFixedPoint1616(boxSize, readSize,  out this.latitude, "latitude"); 
+		boxSize += stream.ReadFixedPoint1616(boxSize, readSize,  out this.altitude, "altitude"); 
 		boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.astronomicalBody, "astronomicalBody"); 
 		boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.additionalNotes, "additionalNotes"); 
 		return boxSize;
@@ -78,9 +78,9 @@ public partial class ThreeGPPLocationInformationBox : FullBox
 		boxSize += stream.WriteIso639( this.language, "language"); 
 		boxSize += stream.WriteStringZeroTerminated( this.placeName, "placeName"); 
 		boxSize += stream.WriteUInt8( this.role, "role"); 
-		boxSize += stream.WriteDouble32( this.longitude, "longitude"); 
-		boxSize += stream.WriteDouble32( this.latitude, "latitude"); 
-		boxSize += stream.WriteDouble32( this.altitude, "altitude"); 
+		boxSize += stream.WriteFixedPoint1616( this.longitude, "longitude"); 
+		boxSize += stream.WriteFixedPoint1616( this.latitude, "latitude"); 
+		boxSize += stream.WriteFixedPoint1616( this.altitude, "altitude"); 
 		boxSize += stream.WriteStringZeroTerminated( this.astronomicalBody, "astronomicalBody"); 
 		boxSize += stream.WriteStringZeroTerminated( this.additionalNotes, "additionalNotes"); 
 		return boxSize;

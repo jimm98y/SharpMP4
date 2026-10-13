@@ -451,7 +451,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class HintBox() extends Box('hint') {\r\n unsigned int(32) trackId;\r\n } "
+      "syntax": "aligned(8) class HintBox() extends Box('hint') {\r\n // a track reference (ISO/IEC 14496-12 8.3.3): the IDs of the tracks a hint track hints, one or more\r\n unsigned int(32) track_IDs[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -596,7 +596,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleChapterListBox() extends Box('chap') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleChapterListBox() extends Box('chap') {\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -616,12 +616,12 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleThumbnailReferenceBox() extends Box('thmb') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleThumbnailReferenceBox() extends Box('thmb') {\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AlternateFormatTrackBox() extends Box('fall') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AlternateFormatTrackBox() extends Box('fall') {\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -1460,12 +1460,12 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class UncompressedFrameConfigurationBox() extends FullBox('uncC') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "// ISO/IEC 23001-17 uncompressed frame configuration: of version 1 a profile alone, of version 0 the components, how they are sampled, interleaved, laid in blocks and aligned, and the tiles\r\naligned(8) class UncompressedFrameConfigurationBox() extends FullBox('uncC') {\r\n\t unsigned int(32) profile;\r\n if (version == 0) {\r\n unsigned int(32) component_count;\r\n for (i = 0; i < component_count; i++) {\r\n unsigned int(16) component_index;\r\n unsigned int(8) component_bit_depth_minus_one;\r\n unsigned int(8) component_format;\r\n unsigned int(8) component_align_size;\r\n }\r\n unsigned int(8) sampling_type;\r\n unsigned int(8) interleave_type;\r\n unsigned int(8) block_size;\r\n unsigned int(1) components_little_endian;\r\n unsigned int(1) block_pad_lsb;\r\n unsigned int(1) block_little_endian;\r\n unsigned int(1) block_reversed;\r\n unsigned int(1) pad_unknown;\r\n unsigned int(3) reserved;\r\n unsigned int(32) pixel_size;\r\n unsigned int(32) row_align_size;\r\n unsigned int(32) tile_align_size;\r\n unsigned int(32) num_tile_cols_minus_one;\r\n unsigned int(32) num_tile_rows_minus_one;\r\n }\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class GenericCompressedUnitsItemInfoBox() extends FullBox('icef') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "// ISO/IEC 23001-17 generic compressed units: of each unit compressed alone, where it is and its size - of fields sized by the codes it starts with, which CompressedUnitsInfo reads\r\naligned(8) class GenericCompressedUnitsItemInfoBox() extends FullBox('icef') {\r\n\t CompressedUnitsInfo units;\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -1485,17 +1485,17 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ComponentDefinitionBox() extends Box('cmpd') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "// ISO/IEC 23001-17 component definition: what each component is - of a type of 0x8000 or more, of a URI\r\naligned(8) class ComponentDefinitionBox() extends Box('cmpd') {\r\n\t unsigned int(32) component_count;\r\n for (i = 0; i < component_count; i++) {\r\n unsigned int(16) component_type;\r\n if (component_type >= 0x8000) {\r\n utf8string component_type_uri;\r\n }\r\n }\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ComponentPatternDefinitionBox() extends FullBox('cpat') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "// ISO/IEC 23001-17 component pattern, as of a Bayer filter: of each cell of the pattern, its component and gain\r\naligned(8) class ComponentPatternDefinitionBox() extends FullBox('cpat') {\r\n\t unsigned int(16) pattern_width;\r\n unsigned int(16) pattern_height;\r\n for (i = 0; i < pattern_width * pattern_height; i++) {\r\n unsigned int(32) component_index;\r\n float(32) component_gain;\r\n }\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class J2kComponentMappingBox() extends Box('cmap') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "// JPEG 2000 component mapping (ISO/IEC 15444-1 I.5.3.5): of each channel, its component, and whether it is mapped directly or through the palette's column\r\naligned(8) class J2kComponentMappingBox() extends Box('cmap') {\r\n\t J2kComponentMapping mappings[];\r\n } \r\n aligned(8) class J2kComponentMapping() {\r\n unsigned int(16) component;\r\n unsigned int(8) mapping_type;\r\n unsigned int(8) palette_column;\r\n } "
     },
     {
       "containers": [ "*" ],

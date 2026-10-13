@@ -7,7 +7,8 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class HintBox() extends Box('hint') {
- unsigned int(32) trackId;
+ // a track reference (ISO/IEC 14496-12 8.3.3): the IDs of the tracks a hint track hints, one or more
+ unsigned int(32) track_IDs[];
  } 
 */
 public partial class HintBox : Box
@@ -15,8 +16,8 @@ public partial class HintBox : Box
 	public const string TYPE = "hint";
 	public override string DisplayName { get { return "HintBox"; } }
 
-	protected uint trackId; 
-	public uint TrackId { get { return this.trackId; } set { this.trackId = value; } }
+	protected uint[] track_IDs; 
+	public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
 
 	public HintBox(): base(IsoStream.FromFourCC("hint"))
 	{
@@ -26,7 +27,8 @@ public partial class HintBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.trackId, "trackId"); 
+		/*  a track reference (ISO/IEC 14496-12 8.3.3): the IDs of the tracks a hint track hints, one or more */
+		boxSize += stream.ReadUInt32ArrayTillEnd(boxSize, readSize,  out this.track_IDs, "track_IDs"); 
 		return boxSize;
 	}
 
@@ -34,7 +36,8 @@ public partial class HintBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt32( this.trackId, "trackId"); 
+		/*  a track reference (ISO/IEC 14496-12 8.3.3): the IDs of the tracks a hint track hints, one or more */
+		boxSize += stream.WriteUInt32ArrayTillEnd( this.track_IDs, "track_IDs"); 
 		return boxSize;
 	}
 
@@ -42,7 +45,8 @@ public partial class HintBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += 32; // trackId
+		/*  a track reference (ISO/IEC 14496-12 8.3.3): the IDs of the tracks a hint track hints, one or more */
+		boxSize += ((ulong)track_IDs.Length * 32); // track_IDs
 		return boxSize;
 	}
 }

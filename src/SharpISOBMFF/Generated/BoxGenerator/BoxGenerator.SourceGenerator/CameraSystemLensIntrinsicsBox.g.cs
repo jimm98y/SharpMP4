@@ -72,7 +72,7 @@ public partial class CameraSystemLensIntrinsicsBox : FullBox
 
 		if ((flags  &  2) ==  2)
 		{
-			boxSize += stream.ReadDouble32(boxSize, readSize,  out this.projection_offset, "projection_offset"); 
+			boxSize += stream.ReadFloat32(boxSize, readSize,  out this.projection_offset, "projection_offset"); 
 		}
 		return boxSize;
 	}
@@ -95,7 +95,7 @@ public partial class CameraSystemLensIntrinsicsBox : FullBox
 
 		if ((flags  &  2) ==  2)
 		{
-			boxSize += stream.WriteDouble32( this.projection_offset, "projection_offset"); 
+			boxSize += stream.WriteFloat32( this.projection_offset, "projection_offset"); 
 		}
 		return boxSize;
 	}

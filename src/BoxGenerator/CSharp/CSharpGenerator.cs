@@ -16,6 +16,20 @@ namespace BoxGenerator.CSharp
 
         private ParserDocument parserDocument;
 
+        /// <summary>The class whose methods are being built.</summary>
+        private PseudoClass currentClass;
+
+        /// <summary>
+        /// The classes of a structure of Microsoft's, little-endian, whose integers of 16 and 32 bits are read and written
+        /// so: the WAVEFORMATEX of QuickTime's 'wfex'.
+        /// </summary>
+        private static readonly HashSet<string> LittleEndianClasses = new HashSet<string> { "MicrosoftWaveFormatExBox" };
+
+        /// <summary>The suffix of the stream's methods of a field of a little-endian class: 'LE', of a single integer of 16 or 32 bits.</summary>
+        private string ByteOrderSuffix(int elementSizeInBits, string arraySuffix) =>
+            currentClass != null && LittleEndianClasses.Contains(currentClass.BoxName) && string.IsNullOrEmpty(arraySuffix)
+                && (elementSizeInBits == 16 || elementSizeInBits == 32) ? "LE" : "";
+
         public CSharpGenerator(ParserDocument parserDocument)
         {
             this.parserDocument = parserDocument;
@@ -675,6 +689,9 @@ namespace SharpISOBMFF
             if (b.Extended != null && !string.IsNullOrEmpty(b.Extended.UserType) && b.Extended.BoxName != null && b.Extended.Parameters != null)
                 cls.Append($"\t\tthis.uuid = ConvertEx.FromHexString(\"{b.Extended.UserType}\");\r\n");
             cls.Append($"\t}}\r\n");
+
+            // the class whose methods are built, for what is of its own: the order of its bytes
+            currentClass = b;
 
             bool shouldOverride = b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) || b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier";
             cls.Append("\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong Read(IsoStream stream, ulong readSize)\r\n\t{\r\n\t\tulong boxSize = 0;");
@@ -1635,16 +1652,19 @@ namespace SharpISOBMFF
                     else if (info.ElementSizeInBits % 8 == 0)
                     {
                         if (info.IsSigned)
-                            csharpResult = $"stream.ReadInt{info.ElementSizeInBits}{arraySuffix}(boxSize, readSize, {arrayParam}";
+                            csharpResult = $"stream.ReadInt{info.ElementSizeInBits}{ByteOrderSuffix(info.ElementSizeInBits, arraySuffix)}{arraySuffix}(boxSize, readSize, {arrayParam}";
                         else
-                            csharpResult = $"stream.ReadUInt{info.ElementSizeInBits}{arraySuffix}(boxSize, readSize, {arrayParam}";
+                            csharpResult = $"stream.ReadUInt{info.ElementSizeInBits}{ByteOrderSuffix(info.ElementSizeInBits, arraySuffix)}{arraySuffix}(boxSize, readSize, {arrayParam}";
                     }
                 }
                 else
                 {
                     if (info.ElementSizeInBits == 32)
                     {
-                        csharpResult = "stream.ReadDouble32(boxSize, readSize, ";
+                        // 16.16 fixed point, of 'fixedpoint1616'; an IEEE 754 float, of 'float', 'double' and 'BEFloat32'
+                        csharpResult = info.Type == "fixedpoint1616"
+                            ? "stream.ReadFixedPoint1616(boxSize, readSize, "
+                            : "stream.ReadFloat32(boxSize, readSize, ";
                     }
                     else
                     {
@@ -1776,16 +1796,18 @@ namespace SharpISOBMFF
                     else if (info.ElementSizeInBits % 8 == 0)
                     {
                         if (info.IsSigned)
-                            csharpResult = $"stream.WriteInt{info.ElementSizeInBits}{arraySuffix}({arrayParam}";
+                            csharpResult = $"stream.WriteInt{info.ElementSizeInBits}{ByteOrderSuffix(info.ElementSizeInBits, arraySuffix)}{arraySuffix}({arrayParam}";
                         else
-                            csharpResult = $"stream.WriteUInt{info.ElementSizeInBits}{arraySuffix}({arrayParam}";
+                            csharpResult = $"stream.WriteUInt{info.ElementSizeInBits}{ByteOrderSuffix(info.ElementSizeInBits, arraySuffix)}{arraySuffix}({arrayParam}";
                     }
                 }
                 else
                 {
                     if (info.ElementSizeInBits == 32)
                     {
-                        csharpResult = "stream.WriteDouble32(";
+                        csharpResult = info.Type == "fixedpoint1616"
+                            ? "stream.WriteFixedPoint1616("
+                            : "stream.WriteFloat32(";
                     }
                     else
                     {

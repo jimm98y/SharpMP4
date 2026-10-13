@@ -7,7 +7,8 @@ namespace SharpISOBMFF
 {
 /*
 class SynchronizedTrackBox() extends Box ('sync'){
- bit(8) data[];
+ // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to
+ unsigned int(32) track_IDs[];
  }
 */
 public partial class SynchronizedTrackBox : Box
@@ -15,8 +16,8 @@ public partial class SynchronizedTrackBox : Box
 	public const string TYPE = "sync";
 	public override string DisplayName { get { return "SynchronizedTrackBox"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	protected uint[] track_IDs; 
+	public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
 
 	public SynchronizedTrackBox(): base(IsoStream.FromFourCC("sync"))
 	{
@@ -26,7 +27,8 @@ public partial class SynchronizedTrackBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		/*  a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to */
+		boxSize += stream.ReadUInt32ArrayTillEnd(boxSize, readSize,  out this.track_IDs, "track_IDs"); 
 		return boxSize;
 	}
 
@@ -34,7 +36,8 @@ public partial class SynchronizedTrackBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		/*  a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to */
+		boxSize += stream.WriteUInt32ArrayTillEnd( this.track_IDs, "track_IDs"); 
 		return boxSize;
 	}
 
@@ -42,7 +45,8 @@ public partial class SynchronizedTrackBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		/*  a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to */
+		boxSize += ((ulong)track_IDs.Length * 32); // track_IDs
 		return boxSize;
 	}
 }

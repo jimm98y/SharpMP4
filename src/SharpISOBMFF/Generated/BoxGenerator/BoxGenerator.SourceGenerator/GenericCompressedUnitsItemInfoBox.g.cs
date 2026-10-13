@@ -6,8 +6,9 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
+// ISO/IEC 23001-17 generic compressed units: of each unit compressed alone, where it is and its size - of fields sized by the codes it starts with, which CompressedUnitsInfo reads
 aligned(8) class GenericCompressedUnitsItemInfoBox() extends FullBox('icef') {
-	 bit(8) data[];
+	 CompressedUnitsInfo units;
  } 
 */
 public partial class GenericCompressedUnitsItemInfoBox : FullBox
@@ -15,8 +16,8 @@ public partial class GenericCompressedUnitsItemInfoBox : FullBox
 	public const string TYPE = "icef";
 	public override string DisplayName { get { return "GenericCompressedUnitsItemInfoBox"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	protected CompressedUnitsInfo units; 
+	public CompressedUnitsInfo Units { get { return this.units; } set { this.units = value; } }
 
 	public GenericCompressedUnitsItemInfoBox(): base(IsoStream.FromFourCC("icef"))
 	{
@@ -26,7 +27,7 @@ public partial class GenericCompressedUnitsItemInfoBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		boxSize += stream.ReadClass(boxSize, readSize, this, () => new CompressedUnitsInfo(),  out this.units, "units"); 
 		return boxSize;
 	}
 
@@ -34,7 +35,7 @@ public partial class GenericCompressedUnitsItemInfoBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		boxSize += stream.WriteClass( this.units, "units"); 
 		return boxSize;
 	}
 
@@ -42,7 +43,7 @@ public partial class GenericCompressedUnitsItemInfoBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		boxSize += IsoStream.CalculateClassSize(units); // units
 		return boxSize;
 	}
 }

@@ -541,7 +541,7 @@ namespace SharpISOBMFF
             while (count > 0)
             {
                 int bits = (int)count - 1;
-                ulong mask = 0x1u << bits;
+                ulong mask = 1UL << bits; // of 64 bits: a 32 bit 1 shifted by 32 or more is shifted by that less 32
                 WriteBitInternal((int)((value & mask) >> bits));
                 count--;
             }
@@ -2756,6 +2756,12 @@ namespace SharpISOBMFF
             return (int)size;
         }
 
+        /// <summary>A count of a varint: of more than an int holds, the most it holds, which no allocation takes.</summary>
+        public static int GetInt(Leb128 size)
+        {
+            return size.Value > int.MaxValue ? int.MaxValue : (int)size.Value;
+        }
+
         #endregion // Numbers
 
         #region Iso639
@@ -2810,6 +2816,68 @@ namespace SharpISOBMFF
             // TODO?
             return WriteFixedPoint1616(value, name);
         }
+
+        /// <summary>
+        /// A 32 bit IEEE 754 floating point number, big-endian - of 'float(32)', 'double(32)' and 'BEFloat32' - as a double,
+        /// which holds it exactly.
+        /// </summary>
+        public ulong ReadFloat32(ulong boxSize, ulong readSize, out double value, string name)
+        {
+            ulong size = ReadUInt32(boxSize, readSize, out uint bits, name);
+            value = BitConverter.ToSingle(BitConverter.GetBytes(bits), 0);
+            return size;
+        }
+
+        /// <summary>A 32 bit IEEE 754 floating point number, big-endian: the double as the float it holds.</summary>
+        public ulong WriteFloat32(double value, string name)
+        {
+            uint bits = BitConverter.ToUInt32(BitConverter.GetBytes((float)value), 0);
+            return WriteUInt32(bits, name);
+        }
+
+        // Little-endian integers, of the structures of Microsoft's a box may hold - the WAVEFORMATEX of 'wfex': the
+        // big-endian ones, of their bytes the other way round.
+
+        private static ushort Swap(ushort value) => (ushort)((value >> 8) | (value << 8));
+
+        private static uint Swap(uint value) =>
+            (value >> 24) | ((value >> 8) & 0x0000FF00) | ((value << 8) & 0x00FF0000) | (value << 24);
+
+        public ulong ReadUInt16LE(ulong boxSize, ulong readSize, out ushort value, string name)
+        {
+            ulong size = ReadUInt16(boxSize, readSize, out ushort bigEndian, name);
+            value = Swap(bigEndian);
+            return size;
+        }
+
+        public ulong ReadInt16LE(ulong boxSize, ulong readSize, out short value, string name)
+        {
+            ulong size = ReadUInt16LE(boxSize, readSize, out ushort bits, name);
+            value = unchecked((short)bits);
+            return size;
+        }
+
+        public ulong ReadUInt32LE(ulong boxSize, ulong readSize, out uint value, string name)
+        {
+            ulong size = ReadUInt32(boxSize, readSize, out uint bigEndian, name);
+            value = Swap(bigEndian);
+            return size;
+        }
+
+        public ulong ReadInt32LE(ulong boxSize, ulong readSize, out int value, string name)
+        {
+            ulong size = ReadUInt32LE(boxSize, readSize, out uint bits, name);
+            value = unchecked((int)bits);
+            return size;
+        }
+
+        public ulong WriteUInt16LE(ushort value, string name) => WriteUInt16(Swap(value), name);
+
+        public ulong WriteInt16LE(short value, string name) => WriteUInt16LE(unchecked((ushort)value), name);
+
+        public ulong WriteUInt32LE(uint value, string name) => WriteUInt32(Swap(value), name);
+
+        public ulong WriteInt32LE(int value, string name) => WriteUInt32LE(unchecked((uint)value), name);
 
         public ulong ReadPadding(ulong size, ulong availableSize, out StreamMarker padding)
         {
@@ -3205,6 +3273,21 @@ namespace SharpISOBMFF
         public static implicit operator ulong(Leb128 value) => value.Value;
 
         public static implicit operator Leb128(ulong value) => new Leb128(value);
+
+        // Of an int, as of a ulong. It also makes an int the better of GetInt's overloads of a smaller integer - of a byte,
+        // a conversion to an int and to a Leb128 by way of a ulong were neither better.
+        public static implicit operator Leb128(int value) =>
+            value < 0 ? throw new OverflowException($"A varint is not negative: {value}.") : new Leb128((ulong)value);
+
+        // an index of a loop to a count of a varint: of an int, which converts to ulong and long alike, a comparison of
+        // its own; a negative index is less than any count
+        public static bool operator <(int index, Leb128 count) => index < 0 || (ulong)index < count.Value;
+
+        public static bool operator >(int index, Leb128 count) => index >= 0 && (ulong)index > count.Value;
+
+        public static bool operator <=(int index, Leb128 count) => index < 0 || (ulong)index <= count.Value;
+
+        public static bool operator >=(int index, Leb128 count) => index >= 0 && (ulong)index >= count.Value;
 
         public override string ToString() => Value.ToString();
     }

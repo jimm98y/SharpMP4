@@ -7,7 +7,8 @@ namespace SharpISOBMFF
 {
 /*
 class ControllerTypeBox() extends Box ('ctyp'){
- bit(8) data[];
+ // the movie controller's type, a four character code (QuickTime 'ctyp')
+ unsigned int(32) controller_type;
  }
 */
 public partial class ControllerTypeBox : Box
@@ -15,8 +16,8 @@ public partial class ControllerTypeBox : Box
 	public const string TYPE = "ctyp";
 	public override string DisplayName { get { return "ControllerTypeBox"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	protected uint controller_type; 
+	public uint ControllerType { get { return this.controller_type; } set { this.controller_type = value; } }
 
 	public ControllerTypeBox(): base(IsoStream.FromFourCC("ctyp"))
 	{
@@ -26,7 +27,8 @@ public partial class ControllerTypeBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		/*  the movie controller's type, a four character code (QuickTime 'ctyp') */
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.controller_type, "controller_type"); 
 		return boxSize;
 	}
 
@@ -34,7 +36,8 @@ public partial class ControllerTypeBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		/*  the movie controller's type, a four character code (QuickTime 'ctyp') */
+		boxSize += stream.WriteUInt32( this.controller_type, "controller_type"); 
 		return boxSize;
 	}
 
@@ -42,7 +45,8 @@ public partial class ControllerTypeBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
+		/*  the movie controller's type, a four character code (QuickTime 'ctyp') */
+		boxSize += 32; // controller_type
 		return boxSize;
 	}
 }

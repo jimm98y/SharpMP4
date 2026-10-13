@@ -46,12 +46,12 @@ public partial class CameraSystemLensFrameAdjustmentBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.polynomialParametersX0, "polynomialParametersX0"); 
-		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.polynomialParametersX1, "polynomialParametersX1"); 
-		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.polynomialParametersX2, "polynomialParametersX2"); // parameters for X axis 
-		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.polynomialParametersY0, "polynomialParametersY0"); 
-		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.polynomialParametersY1, "polynomialParametersY1"); 
-		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.polynomialParametersY2, "polynomialParametersY2"); // parameters for Y axis 
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.polynomialParametersX0, "polynomialParametersX0"); 
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.polynomialParametersX1, "polynomialParametersX1"); 
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.polynomialParametersX2, "polynomialParametersX2"); // parameters for X axis 
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.polynomialParametersY0, "polynomialParametersY0"); 
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.polynomialParametersY1, "polynomialParametersY1"); 
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.polynomialParametersY2, "polynomialParametersY2"); // parameters for Y axis 
 		return boxSize;
 	}
 
@@ -59,12 +59,12 @@ public partial class CameraSystemLensFrameAdjustmentBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteDouble32( this.polynomialParametersX0, "polynomialParametersX0"); 
-		boxSize += stream.WriteDouble32( this.polynomialParametersX1, "polynomialParametersX1"); 
-		boxSize += stream.WriteDouble32( this.polynomialParametersX2, "polynomialParametersX2"); // parameters for X axis 
-		boxSize += stream.WriteDouble32( this.polynomialParametersY0, "polynomialParametersY0"); 
-		boxSize += stream.WriteDouble32( this.polynomialParametersY1, "polynomialParametersY1"); 
-		boxSize += stream.WriteDouble32( this.polynomialParametersY2, "polynomialParametersY2"); // parameters for Y axis 
+		boxSize += stream.WriteFloat32( this.polynomialParametersX0, "polynomialParametersX0"); 
+		boxSize += stream.WriteFloat32( this.polynomialParametersX1, "polynomialParametersX1"); 
+		boxSize += stream.WriteFloat32( this.polynomialParametersX2, "polynomialParametersX2"); // parameters for X axis 
+		boxSize += stream.WriteFloat32( this.polynomialParametersY0, "polynomialParametersY0"); 
+		boxSize += stream.WriteFloat32( this.polynomialParametersY1, "polynomialParametersY1"); 
+		boxSize += stream.WriteFloat32( this.polynomialParametersY2, "polynomialParametersY2"); // parameters for Y axis 
 		return boxSize;
 	}
 

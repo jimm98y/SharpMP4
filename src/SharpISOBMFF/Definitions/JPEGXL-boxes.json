@@ -36,7 +36,7 @@
       "fourcc": "jxli",
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "// The index of an animation's key frames\r\naligned(8) class JpegXLFrameIndexBox extends Box('jxli') {\r\n bit(8) data[];\r\n }"
+      "syntax": "// The index of an animation's key frames (ISO/IEC 18181-2 9.3): of the frames indexed, the ticks a second is of (TNUM/TDEN), and of each frame its offset in the codestream from the frame before, its duration in ticks and the frames it stands for, varints\r\naligned(8) class JpegXLFrameIndexBox extends Box('jxli') {\r\n varint frame_count; // NF\r\n unsigned int(32) tick_numerator; // TNUM\r\n unsigned int(32) tick_denominator; // TDEN\r\n for (i = 0; i < frame_count; i++) {\r\n varint offset; // OFFi\r\n varint duration; // Ti\r\n varint frames; // Fi\r\n }\r\n }"
     },
     {
       "fourcc": "Exif",

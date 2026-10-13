@@ -44,14 +44,14 @@ public partial class CameraSystemLensDistortionsBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.k1, "k1"); // radial parameter k1 
-		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.k2, "k2"); // radial parameter k2 
-		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.p1, "p1"); // tangential parameter p1 
-		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.p2, "p2"); // tangential parameter p2 
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.k1, "k1"); // radial parameter k1 
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.k2, "k2"); // radial parameter k2 
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.p1, "p1"); // tangential parameter p1 
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.p2, "p2"); // tangential parameter p2 
 
 		if ((flags  &  1) ==  1)
 		{
-			boxSize += stream.ReadDouble32(boxSize, readSize,  out this.calibration_limit_radial_angle, "calibration_limit_radial_angle"); 
+			boxSize += stream.ReadFloat32(boxSize, readSize,  out this.calibration_limit_radial_angle, "calibration_limit_radial_angle"); 
 		}
 		return boxSize;
 	}
@@ -60,14 +60,14 @@ public partial class CameraSystemLensDistortionsBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteDouble32( this.k1, "k1"); // radial parameter k1 
-		boxSize += stream.WriteDouble32( this.k2, "k2"); // radial parameter k2 
-		boxSize += stream.WriteDouble32( this.p1, "p1"); // tangential parameter p1 
-		boxSize += stream.WriteDouble32( this.p2, "p2"); // tangential parameter p2 
+		boxSize += stream.WriteFloat32( this.k1, "k1"); // radial parameter k1 
+		boxSize += stream.WriteFloat32( this.k2, "k2"); // radial parameter k2 
+		boxSize += stream.WriteFloat32( this.p1, "p1"); // tangential parameter p1 
+		boxSize += stream.WriteFloat32( this.p2, "p2"); // tangential parameter p2 
 
 		if ((flags  &  1) ==  1)
 		{
-			boxSize += stream.WriteDouble32( this.calibration_limit_radial_angle, "calibration_limit_radial_angle"); 
+			boxSize += stream.WriteFloat32( this.calibration_limit_radial_angle, "calibration_limit_radial_angle"); 
 		}
 		return boxSize;
 	}

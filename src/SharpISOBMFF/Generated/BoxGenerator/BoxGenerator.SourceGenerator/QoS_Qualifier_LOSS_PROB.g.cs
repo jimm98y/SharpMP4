@@ -27,7 +27,7 @@ public partial class QoS_Qualifier_LOSS_PROB : QoS_Qualifier
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.LOSS_PROB, "LOSS_PROB"); 
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.LOSS_PROB, "LOSS_PROB"); 
 		return boxSize;
 	}
 
@@ -35,7 +35,7 @@ public partial class QoS_Qualifier_LOSS_PROB : QoS_Qualifier
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteDouble32( this.LOSS_PROB, "LOSS_PROB"); 
+		boxSize += stream.WriteFloat32( this.LOSS_PROB, "LOSS_PROB"); 
 		return boxSize;
 	}
 

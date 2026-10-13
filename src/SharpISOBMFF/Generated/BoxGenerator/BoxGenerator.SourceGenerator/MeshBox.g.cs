@@ -113,7 +113,7 @@ public partial class MeshBox : Box
 		this.coordinate = stream.SafeAllocate<double>(boxSize, readSize, IsoStream.GetInt( coordinate_count), "coordinate");
 		for (int i = 0; i < coordinate_count; i++)
 		{
-			boxSize += stream.ReadDouble32(boxSize, readSize,  out this.coordinate[i], "coordinate"); 
+			boxSize += stream.ReadFloat32(boxSize, readSize,  out this.coordinate[i], "coordinate"); 
 		}
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.reserved0, "reserved0"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 31,  out this.vertex_count, "vertex_count"); 
@@ -167,7 +167,7 @@ public partial class MeshBox : Box
 
 		for (int i = 0; i < coordinate_count; i++)
 		{
-			boxSize += stream.WriteDouble32( this.coordinate[i], "coordinate"); 
+			boxSize += stream.WriteFloat32( this.coordinate[i], "coordinate"); 
 		}
 		boxSize += stream.WriteBit( this.reserved0, "reserved0"); 
 		boxSize += stream.WriteBits(31,  this.vertex_count, "vertex_count"); 

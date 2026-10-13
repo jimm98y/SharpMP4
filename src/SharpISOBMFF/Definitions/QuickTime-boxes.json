@@ -66,7 +66,7 @@
       "fourcc": "wfex",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class MicrosoftWaveFormatExBox() extends Box ('wfex'){\r\n bit(8) data[];\r\n }"
+      "syntax": "// Microsoft's WAVEFORMATEX (mmreg.h), as QuickTime's 'wfex' holds it of a codec of Windows': little-endian, which the generator reads it as; the size of what follows and it, where the structure has them\r\nclass MicrosoftWaveFormatExBox() extends Box ('wfex'){\r\n unsigned int(16) format_tag;\r\n unsigned int(16) channels;\r\n unsigned int(32) samples_per_sec;\r\n unsigned int(32) avg_bytes_per_sec;\r\n unsigned int(16) block_align;\r\n unsigned int(16) bits_per_sample;\r\n unsigned int(16) extra_size; // optional\r\n bit(8) extra[];\r\n }"
     },
     {
       "fourcc": "clip",
@@ -163,13 +163,13 @@
       "fourcc": "scpt",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class TranscriptBox() extends Box ('scpt'){\r\n bit(8) data[];\r\n }"
+      "syntax": "class TranscriptBox() extends Box ('scpt'){\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n }"
     },
     {
       "fourcc": "ssrc",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class NonPrimarySourceBox() extends Box ('ssrc'){\r\n bit(8) data[];\r\n }"
+      "syntax": "class NonPrimarySourceBox() extends Box ('ssrc'){\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n }"
     },
     {
       "fourcc": "nsav",
@@ -181,13 +181,13 @@
       "fourcc": "ctyp",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class ControllerTypeBox() extends Box ('ctyp'){\r\n bit(8) data[];\r\n }"
+      "syntax": "class ControllerTypeBox() extends Box ('ctyp'){\r\n // the movie controller's type, a four character code (QuickTime 'ctyp')\r\n unsigned int(32) controller_type;\r\n }"
     },
     {
       "fourcc": "imgt",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class ImageTrackReferenceBox() extends Box ('imgt'){\r\n bit(8) data[];\r\n }"
+      "syntax": "class ImageTrackReferenceBox() extends Box ('imgt'){\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n }"
     },
     {
       "fourcc": "NCDT",
@@ -462,7 +462,7 @@
       "fourcc": "auxl",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class AuxiliaryImageReferenceBox() extends Box ('auxl'){\r\n bit(8) data[];\r\n }"
+      "syntax": "class AuxiliaryImageReferenceBox() extends Box ('auxl'){\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n }"
     },
     {
       "fourcc": "htka",
@@ -553,25 +553,25 @@
       "fourcc": "clcp",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class ClosedCaptionTrackBox() extends Box ('clcp'){\r\n bit(8) data[];\r\n }"
+      "syntax": "class ClosedCaptionTrackBox() extends Box ('clcp'){\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n }"
     },
     {
       "fourcc": "folw",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class SubtitleTrackBox() extends Box ('folw'){\r\n bit(8) data[];\r\n }"
+      "syntax": "class SubtitleTrackBox() extends Box ('folw'){\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n }"
     },
     {
       "fourcc": "forc",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class ForcedSubtitleTrackBox() extends Box ('forc'){\r\n bit(8) data[];\r\n }"
+      "syntax": "class ForcedSubtitleTrackBox() extends Box ('forc'){\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n }"
     },
     {
       "fourcc": "sync",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class SynchronizedTrackBox() extends Box ('sync'){\r\n bit(8) data[];\r\n }"
+      "syntax": "class SynchronizedTrackBox() extends Box ('sync'){\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n }"
     },
     {
       "fourcc": "albr",

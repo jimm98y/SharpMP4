@@ -35,9 +35,9 @@ public partial class CameraSystemUnitQuaternionTransformBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.xyz0, "xyz0"); 
-		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.xyz1, "xyz1"); 
-		boxSize += stream.ReadDouble32(boxSize, readSize,  out this.xyz2, "xyz2"); 
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.xyz0, "xyz0"); 
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.xyz1, "xyz1"); 
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.xyz2, "xyz2"); 
 		return boxSize;
 	}
 
@@ -45,9 +45,9 @@ public partial class CameraSystemUnitQuaternionTransformBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteDouble32( this.xyz0, "xyz0"); 
-		boxSize += stream.WriteDouble32( this.xyz1, "xyz1"); 
-		boxSize += stream.WriteDouble32( this.xyz2, "xyz2"); 
+		boxSize += stream.WriteFloat32( this.xyz0, "xyz0"); 
+		boxSize += stream.WriteFloat32( this.xyz1, "xyz1"); 
+		boxSize += stream.WriteFloat32( this.xyz2, "xyz2"); 
 		return boxSize;
 	}
 
