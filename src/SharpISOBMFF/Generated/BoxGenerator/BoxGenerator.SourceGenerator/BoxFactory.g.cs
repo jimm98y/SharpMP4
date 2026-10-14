@@ -732,9 +732,12 @@ namespace SharpISOBMFF
                case "mfhd":  return new MovieFragmentHeaderBox();
                case "mfra":  return new MovieFragmentRandomAccessBox();
                case "mfro":  return new MovieFragmentRandomAccessOffsetBox();
+               case "mha1": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("mha1"));else return new CodecConfigurationBox(IsoStream.FromFourCC("mha1"));
+               case "mha2": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("mha2"));else return new CodecConfigurationBox(IsoStream.FromFourCC("mha2"));
                case "mhaC":  return new MhaCBox();
                case "mhaP":  return new MhaPBox();
                case "mhm1": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("mhm1"));else return new CodecConfigurationBox(IsoStream.FromFourCC("mhm1"));
+               case "mhm2": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("mhm2"));else return new CodecConfigurationBox(IsoStream.FromFourCC("mhm2"));
                case "mime":  return new MIMEBox();
                case "minf":  return new MediaInformationBox();
                case "mini":  return new MiniBox();

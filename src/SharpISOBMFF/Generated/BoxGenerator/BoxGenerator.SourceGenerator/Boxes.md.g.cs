@@ -701,9 +701,12 @@
 |mfhd|MovieFragmentHeaderBox|
 |mfra|MovieFragmentRandomAccessBox|
 |mfro|MovieFragmentRandomAccessOffsetBox|
+|mha1|AudioSampleEntry|
+|mha2|AudioSampleEntry|
 |mhaC|MhaCBox|
 |mhaP|MhaPBox|
 |mhm1|AudioSampleEntry|
+|mhm2|AudioSampleEntry|
 |mime|MIMEBox|
 |minf|MediaInformationBox|
 |mini|MiniBox|

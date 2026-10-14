@@ -7,9 +7,9 @@ namespace SharpMP4.Tracks
 {
     /// <summary>
     /// MP3 Track: MPEG-1 or MPEG-2 audio, each sample a frame, in an 'mp4a' sample entry whose 'esds' says the object
-    /// type - 0x6B of MPEG-1, 0x69 of MPEG-2 - and has no decoder specific info. Read also of QuickTime's '.mp3' entry,
-    /// which has no configuration; written as MP4 has it. Of Layer III, but of Layers I and II alike, which the same entry
-    /// carries.
+    /// type - 0x6B of MPEG-1, 0x69 of MPEG-2 - and has no decoder specific info. Read also of QuickTime's '.mp3', '.mp2'
+    /// and '.mp1' entries, which have no configuration; written as MP4 has it. Of Layer III, but of Layers I and II alike,
+    /// which the same 'mp4a' entry carries: <see cref="LayerOf"/> tells them apart, of a frame.
     /// </summary>
     /// <remarks>ISO/IEC 14496-1 7.2.6.6.2; ISO/IEC 11172-3 2.4.2.3; ISO/IEC 13818-3 2.4.2.3</remarks>
     public class Mp3Track : TrackBase
@@ -118,8 +118,22 @@ namespace SharpMP4.Tracks
             return false;
         }
 
-        /// <summary>QuickTime's codings of MP3: '.mp3', and 'ms\0U', of its WAVE format tag 0x55.</summary>
-        public static bool IsQuickTimeMp3(string coding) => coding == ".mp3" || coding == "ms\0U";
+        /// <summary>
+        /// QuickTime's codings of MPEG-1 and MPEG-2 audio: '.mp3', and 'ms\0U' of its WAVE format tag 0x55; of Layers II and
+        /// I, '.mp2' and '.mp1', and 'ms\0P' of the WAVE format tag of MPEG audio, 0x50.
+        /// </summary>
+        public static bool IsQuickTimeMp3(string coding) => coding is ".mp3" or "ms\0U" or ".mp2" or ".mp1" or "ms\0P";
+
+        /// <summary>
+        /// The layer of the MPEG audio frame whose header is at <paramref name="offset"/>: 1, 2 or 3 - Layer III is MP3 -
+        /// or 0 where there is no header there.
+        /// </summary>
+        public static int LayerOf(byte[] buffer, int offset)
+        {
+            if (!TryParseFrameHeader(buffer, offset, out _, out _, out _, out _))
+                return 0;
+            return 4 - ((buffer[offset + 1] >> 1) & 0x3);
+        }
 
         private static DecoderConfigDescriptor DecoderConfigOf(Box config)
         {

@@ -76,6 +76,8 @@ namespace SharpMP4.Tracks
                     return new ProResTrack(visualEntry, coding, timescale, sampleDuration) { TrackID = trackID };
                 if (H262Track.QuickTimeEntries.ContainsKey(coding))
                     return new H262Track(visualEntry, coding, timescale, sampleDuration) { TrackID = trackID };
+                if (MjpegTrack.IsMjpeg(coding))
+                    return new MjpegTrack(visualEntry, coding, timescale, sampleDuration) { TrackID = trackID };
             }
 
             switch (IsoStream.ToFourCC(sampleEntry.FourCC))
@@ -104,6 +106,11 @@ namespace SharpMP4.Tracks
                 case "esds" when sampleEntry is ESDBox esds && esds._ES?.Children?.OfType<DecoderConfigDescriptor>().FirstOrDefault() is DecoderConfigDescriptor config
                     && MPEG4Track.IsMPEG4Visual(config.ObjectTypeIndication):
                     return new MPEG4Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
+
+                // of an 'mp4v' entry of JPEG: Motion JPEG in MP4
+                case "esds" when sampleEntry is ESDBox esds && esds._ES?.Children?.OfType<DecoderConfigDescriptor>().FirstOrDefault() is DecoderConfigDescriptor config
+                    && config.ObjectTypeIndication == MjpegTrack.JPEG_OBJECT_TYPE_INDICATION && sampleEntry.GetParent() is VisualSampleEntry entry:
+                    return new MjpegTrack(entry, "mp4v", timescale, sampleDuration) { TrackID = trackID };
 
                 // of an 's263' or 'h263' entry (3GPP TS 26.244)
                 case "d263":
@@ -143,6 +150,10 @@ namespace SharpMP4.Tracks
                 case "esds" when Mp3Track.IsMp3(sampleEntry):
                 case "wave" when Mp3Track.IsMp3(sampleEntry):
                     return new Mp3Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
+
+                // of a 'samr' or 'sawb' entry (3GPP TS 26.244 6.5)
+                case "damr":
+                    return new AmrTrack(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
                 case "dac3":
                     return new AC3Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };

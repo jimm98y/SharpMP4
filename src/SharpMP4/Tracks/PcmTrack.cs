@@ -8,12 +8,26 @@ namespace SharpMP4.Tracks
     /// <summary>
     /// Uncompressed PCM track: QuickTime's - 'lpcm' of a version 2 sound description, of the format its fields say, and of
     /// version 0 or 1 'raw ', 'twos', 'sowt', 'in24', 'in32', 'fl32' and 'fl64', of their coding and the 'enda' of their
-    /// 'wave' - and ISO's 'ipcm' and 'fpcm' (ISO/IEC 23003-5), of their 'pcmC'. A sample is one frame, a sample of each
+    /// 'wave' - and ISO's 'ipcm' and 'fpcm' (ISO/IEC 23003-5), of their 'pcmC'. And G.711's 'alaw' and 'ulaw', PCM of 8 bit
+    /// samples companded (<see cref="Companding"/>), which a decoder expands to 13 or 14 bits. A sample is one frame, a sample of each
     /// channel, as QuickTime has it: <see cref="Readers.VideoReader.ReadSamples"/> reads a run of them at once, and the
     /// builders take a block of frames as a sample each. A track read from a file writes back the entry it was read with;
     /// one made of its format writes QuickTime's 'lpcm', as Apple's devices do.
     /// </summary>
     /// <remarks>https://developer.apple.com/documentation/quicktime-file-format/sound_sample_descriptions</remarks>
+    /// <summary>How a PCM track's samples are coded: linearly, or companded as G.711 has them (ITU-T G.711).</summary>
+    public enum PcmCompanding
+    {
+        /// <summary>Linear: each sample its value.</summary>
+        None,
+
+        /// <summary>G.711 A-law: 8 bits of a 13 bit sample, QuickTime's 'alaw'.</summary>
+        ALaw,
+
+        /// <summary>G.711 mu-law: 8 bits of a 14 bit sample, QuickTime's 'ulaw'.</summary>
+        MuLaw,
+    }
+
     public class PcmTrack : TrackBase
     {
         public override string HandlerName => HandlerNames.Sound;
@@ -21,7 +35,7 @@ namespace SharpMP4.Tracks
         public override string Language { get; set; } = "und";
 
         // the codings of PCM: QuickTime's, then ISO's
-        private static readonly HashSet<string> Codings = new HashSet<string> { "lpcm", "raw ", "twos", "sowt", "in24", "in32", "fl32", "fl64", "ipcm", "fpcm" };
+        private static readonly HashSet<string> Codings = new HashSet<string> { "lpcm", "raw ", "twos", "sowt", "in24", "in32", "fl32", "fl64", "alaw", "ulaw", "ipcm", "fpcm" };
 
         // the formatSpecificFlags of a version 2 sound description: CoreAudio's kAudioFormatFlag
         private const uint FlagIsFloat = 1, FlagIsBigEndian = 2, FlagIsSignedInteger = 4, FlagIsPacked = 8;
@@ -44,6 +58,12 @@ namespace SharpMP4.Tracks
         public bool IsSigned { get; }
 
         public bool IsLittleEndian { get; }
+
+        /// <summary>
+        /// Whether the samples are companded, as G.711 has them - 'alaw' and 'ulaw', of 8 bits - rather than linear: what is
+        /// to be expanded to play them.
+        /// </summary>
+        public PcmCompanding Companding { get; }
 
         /// <summary>The bytes of a frame, a sample of each channel: the bytes of a sample of the track.</summary>
         public int BytesPerFrame { get; }
@@ -123,6 +143,13 @@ namespace SharpMP4.Tracks
                         // offset binary, of 8 bits
                         BitsPerSample = 8;
                         IsSigned = false;
+                        break;
+                    case "alaw":
+                    case "ulaw":
+                        // G.711: a byte a sample, whatever the entry's sample size says - of a version 0 entry, the 16 bits it decodes to
+                        BitsPerSample = 8;
+                        IsSigned = true;
+                        Companding = Coding == "alaw" ? PcmCompanding.ALaw : PcmCompanding.MuLaw;
                         break;
                     case "twos":
                     case "sowt":
@@ -254,6 +281,7 @@ namespace SharpMP4.Tracks
             IsFloat = other.IsFloat;
             IsSigned = other.IsSigned;
             IsLittleEndian = other.IsLittleEndian;
+            Companding = other.Companding;
             BytesPerFrame = other.BytesPerFrame;
             _entry = other._entry?.Clone();
         }

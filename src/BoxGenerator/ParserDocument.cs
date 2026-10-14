@@ -174,6 +174,8 @@ namespace BoxGenerator
             "dvca","QDMC","QDM2","Qclp","\\x6D\\x73\\x00\\x55",".mp3",
             // met in FFmpeg's samples: GSM, MPEG-H, Vorbis and WMA
             "agsm","mhm1","msVo","wma ",
+            // MPEG-H 3D Audio's others (ISO/IEC 23008-3 20.5): of raw access units, and of the profile of more than one stream
+            "mha1","mha2","mhm2",
             // FLAC in ISOBMFF (Xiph, isoflac.txt 3.3.1), its 'dfLa' a box of it
             "fLaC",
             // met in Chromium's: AC-4 (ETSI TS 103 190-2, E.4), IAMF (AOMedia IAMF, 6.2), DTS-UHD (ETSI TS 103 491, B)
