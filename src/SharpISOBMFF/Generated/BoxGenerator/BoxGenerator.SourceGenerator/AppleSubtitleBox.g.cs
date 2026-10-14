@@ -14,6 +14,9 @@ public partial class AppleSubtitleBox : Box
 {
 	public const string TYPE = "©st3";
 	public override string DisplayName { get { return "AppleSubtitleBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleSubtitleBox(): base(IsoStream.FromFourCC("©st3"))
 	{

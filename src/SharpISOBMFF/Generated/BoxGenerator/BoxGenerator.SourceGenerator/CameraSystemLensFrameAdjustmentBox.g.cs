@@ -19,6 +19,9 @@ public partial class CameraSystemLensFrameAdjustmentBox : FullBox
 {
 	public const string TYPE = "lfad";
 	public override string DisplayName { get { return "CameraSystemLensFrameAdjustmentBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("lens"); }
+
 
 	protected double polynomialParametersX0; 
 	public double PolynomialParametersX0 { get { return this.polynomialParametersX0; } set { this.polynomialParametersX0 = value; } }

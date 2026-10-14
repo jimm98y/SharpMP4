@@ -15,6 +15,9 @@ public partial class HEVCSampleEntryhev1Dup : VisualSampleEntry
 {
 	public const string TYPE = "hev1";
 	public override string DisplayName { get { return "HEVCSampleEntryhev1Dup"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
 	public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 

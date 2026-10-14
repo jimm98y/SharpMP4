@@ -15,6 +15,9 @@ public partial class TargetOlsProperty : ItemFullProperty
 {
 	public const string TYPE = "tols";
 	public override string DisplayName { get { return "TargetOlsProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected ushort target_ols_idx; 
 	public ushort TargetOlsIdx { get { return this.target_ols_idx; } set { this.target_ols_idx = value; } }

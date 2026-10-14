@@ -25,6 +25,9 @@ public partial class SVCSubTrackLayerBox : FullBox
 {
 	public const string TYPE = "sstl";
 	public override string DisplayName { get { return "SVCSubTrackLayerBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("strd"); }
+
 
 	protected ushort item_count; 
 	public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }

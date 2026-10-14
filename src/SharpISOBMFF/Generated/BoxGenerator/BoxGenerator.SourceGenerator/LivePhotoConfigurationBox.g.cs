@@ -15,6 +15,9 @@ public partial class LivePhotoConfigurationBox : Box
 {
 	public const string TYPE = "cfgv";
 	public override string DisplayName { get { return "LivePhotoConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("setu"); }
+
 
 	protected byte[] binaryPropertyList; 
 	public byte[] BinaryPropertyList { get { return this.binaryPropertyList; } set { this.binaryPropertyList = value; } }

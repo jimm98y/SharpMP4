@@ -17,6 +17,9 @@ public partial class AppleImagePreviewBox : Box
 {
 	public const string TYPE = "pnot";
 	public override string DisplayName { get { return "AppleImagePreviewBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected uint modificationDate; 
 	public uint ModificationDate { get { return this.modificationDate; } set { this.modificationDate = value; } }

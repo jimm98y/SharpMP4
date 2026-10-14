@@ -14,6 +14,9 @@ public partial class AppleSoloistBox : Box
 {
 	public const string TYPE = "©sol";
 	public override string DisplayName { get { return "AppleSoloistBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleSoloistBox(): base(IsoStream.FromFourCC("©sol"))
 	{

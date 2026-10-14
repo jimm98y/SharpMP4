@@ -14,6 +14,9 @@ public partial class AVCParameterSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "avcp";
 	public override string DisplayName { get { return "AVCParameterSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public AVCConfigurationBox Config { get { return this.children.OfType<AVCConfigurationBox>().FirstOrDefault(); } }
 
 	public AVCParameterSampleEntry(): base(IsoStream.FromFourCC("avcp"))

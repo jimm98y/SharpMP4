@@ -15,6 +15,9 @@ public partial class DataEntryImdaBox : DataEntryBaseBox
 {
 	public const string TYPE = "imdt";
 	public override string DisplayName { get { return "DataEntryImdaBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("dref"); }
+
 
 	protected uint imda_ref_identifier; 
 	public uint ImdaRefIdentifier { get { return this.imda_ref_identifier; } set { this.imda_ref_identifier = value; } }

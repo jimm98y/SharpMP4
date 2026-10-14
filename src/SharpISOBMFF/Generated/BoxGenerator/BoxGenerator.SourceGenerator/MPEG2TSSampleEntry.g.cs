@@ -19,6 +19,9 @@ class MPEG2TSSampleEntry(name) extends HintSampleEntry(name) {
 public partial class MPEG2TSSampleEntry : HintSampleEntry
 {
 	public override string DisplayName { get { return "MPEG2TSSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected ushort hinttrackversion = 1; 
 	public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }

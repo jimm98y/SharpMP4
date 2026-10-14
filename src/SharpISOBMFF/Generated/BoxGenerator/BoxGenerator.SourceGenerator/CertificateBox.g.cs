@@ -14,6 +14,9 @@ public partial class CertificateBox : Box
 {
 	public const string TYPE = "cert";
 	public override string DisplayName { get { return "CertificateBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("schi"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

@@ -16,6 +16,9 @@ public partial class PittasoftStartTimeBox : Box
 {
 	public const string TYPE = "sttm";
 	public override string DisplayName { get { return "PittasoftStartTimeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("free"); }
+
 
 	protected ulong startTime; 
 	public ulong StartTime { get { return this.startTime; } set { this.startTime = value; } }

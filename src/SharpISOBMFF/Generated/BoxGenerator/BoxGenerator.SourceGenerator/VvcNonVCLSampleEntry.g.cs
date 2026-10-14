@@ -14,6 +14,9 @@ public partial class VvcNonVCLSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "vvcN";
 	public override string DisplayName { get { return "VvcNonVCLSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public VvcNALUConfigBox Config { get { return this.children.OfType<VvcNALUConfigBox>().FirstOrDefault(); } }
 
 	public VvcNonVCLSampleEntry(): base(IsoStream.FromFourCC("vvcN"))

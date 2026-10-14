@@ -13,6 +13,9 @@ public partial class SegmentTypeBox : GeneralTypeBox
 {
 	public const string TYPE = "styp";
 	public override string DisplayName { get { return "SegmentTypeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	public SegmentTypeBox(): base(IsoStream.FromFourCC("styp"))
 	{

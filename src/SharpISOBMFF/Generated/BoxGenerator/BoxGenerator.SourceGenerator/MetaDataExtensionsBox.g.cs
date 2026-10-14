@@ -16,6 +16,9 @@ public partial class MetaDataExtensionsBox : Box
 {
 	public const string TYPE = "exte";
 	public override string DisplayName { get { return "MetaDataExtensionsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
+
 
 	public MetaDataExtensionsBox(): base(IsoStream.FromFourCC("exte"))
 	{

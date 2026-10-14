@@ -14,6 +14,9 @@ public partial class OMAInfoURLBox : FullBox
 {
 	public const string TYPE = "infu";
 	public override string DisplayName { get { return "OMAInfoURLBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected BinaryUTF8String content; 
 	public BinaryUTF8String Content { get { return this.content; } set { this.content = value; } }

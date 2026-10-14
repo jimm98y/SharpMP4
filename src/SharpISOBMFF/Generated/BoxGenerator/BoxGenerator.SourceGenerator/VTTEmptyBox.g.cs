@@ -12,6 +12,10 @@ public partial class VTTEmptyBox : Box
 {
 	public const string TYPE = "vtte";
 	public override string DisplayName { get { return "VTTEmptyBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	// its definitions place it in no container: wherever it is, it is not misplaced
+	public override bool ValidatePlacement() { return IsPlacedIn(); }
+
 
 	public VTTEmptyBox(): base(IsoStream.FromFourCC("vtte"))
 	{

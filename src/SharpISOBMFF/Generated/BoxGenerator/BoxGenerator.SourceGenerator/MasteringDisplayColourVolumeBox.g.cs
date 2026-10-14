@@ -21,6 +21,9 @@ public partial class MasteringDisplayColourVolumeBox : Box
 {
 	public const string TYPE = "mdcv";
 	public override string DisplayName { get { return "MasteringDisplayColourVolumeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry", "ipco"); }
+
 
 	protected ushort[] display_primaries_x; 
 	public ushort[] DisplayPrimariesx { get { return this.display_primaries_x; } set { this.display_primaries_x = value; } }

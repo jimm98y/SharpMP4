@@ -37,6 +37,9 @@ public partial class TrackHeaderBox : FullBox
 {
 	public const string TYPE = "tkhd";
 	public override string DisplayName { get { return "TrackHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("trak"); }
+
 
 	protected ulong creation_time; 
 	public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }

@@ -26,6 +26,9 @@ public partial class DefaultHevcExtractorConstructorBox : FullBox
 {
 	public const string TYPE = "dhec";
 	public override string DisplayName { get { return "DefaultHevcExtractorConstructorBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("HEVCSampleEntry(hvc3,hev3)"); }
+
 
 	protected uint num_entries; 
 	public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }

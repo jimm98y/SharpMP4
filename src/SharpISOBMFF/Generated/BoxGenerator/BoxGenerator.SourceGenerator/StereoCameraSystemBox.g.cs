@@ -14,6 +14,9 @@ public partial class StereoCameraSystemBox : Box
 {
 	public const string TYPE = "cams";
 	public override string DisplayName { get { return "StereoCameraSystemBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("eyes"); }
+
 
 	public StereoCameraSystemBox(): base(IsoStream.FromFourCC("cams"))
 	{

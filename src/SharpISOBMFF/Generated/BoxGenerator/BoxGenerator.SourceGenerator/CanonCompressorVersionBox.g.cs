@@ -14,6 +14,9 @@ public partial class CanonCompressorVersionBox : Box
 {
 	public const string TYPE = "CNCV";
 	public override string DisplayName { get { return "CanonCompressorVersionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "uuid"); }
+
 
 	protected BinaryUTF8String compressorVersion; 
 	public BinaryUTF8String CompressorVersion { get { return this.compressorVersion; } set { this.compressorVersion = value; } }

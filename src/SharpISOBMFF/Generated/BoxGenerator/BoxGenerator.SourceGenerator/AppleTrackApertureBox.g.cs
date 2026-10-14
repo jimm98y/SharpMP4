@@ -14,6 +14,9 @@ public partial class AppleTrackApertureBox : Box
 {
 	public const string TYPE = "tapt";
 	public override string DisplayName { get { return "AppleTrackApertureBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("trak"); }
+
 
 	public AppleTrackApertureBox(): base(IsoStream.FromFourCC("tapt"))
 	{

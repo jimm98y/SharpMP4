@@ -14,6 +14,9 @@ public partial class AppleFlvrBox : Box
 {
 	public const string TYPE = "flvr";
 	public override string DisplayName { get { return "AppleFlvrBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleFlvrBox(): base(IsoStream.FromFourCC("flvr"))
 	{

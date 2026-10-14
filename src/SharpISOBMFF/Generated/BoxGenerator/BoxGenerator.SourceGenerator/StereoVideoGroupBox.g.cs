@@ -16,6 +16,9 @@ public partial class StereoVideoGroupBox : TrackGroupTypeBox
 {
 	public const string TYPE = "ster";
 	public override string DisplayName { get { return "StereoVideoGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("trgr"); }
+
 
 	protected bool left_view_flag; 
 	public bool LeftViewFlag { get { return this.left_view_flag; } set { this.left_view_flag = value; } }

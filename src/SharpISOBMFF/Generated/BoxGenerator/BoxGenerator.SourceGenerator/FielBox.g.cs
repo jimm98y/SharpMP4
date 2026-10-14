@@ -15,6 +15,9 @@ public partial class FielBox : Box
 {
 	public const string TYPE = "fiel";
 	public override string DisplayName { get { return "FielBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry"); }
+
 
 	protected byte total; 
 	public byte Total { get { return this.total; } set { this.total = value; } }

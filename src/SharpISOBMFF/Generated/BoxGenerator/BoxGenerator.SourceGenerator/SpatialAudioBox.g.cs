@@ -22,6 +22,9 @@ public partial class SpatialAudioBox : Box
 {
 	public const string TYPE = "SA3D";
 	public override string DisplayName { get { return "SpatialAudioBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry"); }
+
 
 	protected byte version; 
 	public byte Version { get { return this.version; } set { this.version = value; } }

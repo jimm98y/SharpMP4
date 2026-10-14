@@ -19,6 +19,9 @@ public partial class UserDescriptionProperty : ItemFullProperty
 {
 	public const string TYPE = "udes";
 	public override string DisplayName { get { return "UserDescriptionProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected BinaryUTF8String lang; 
 	public BinaryUTF8String Lang { get { return this.lang; } set { this.lang = value; } }

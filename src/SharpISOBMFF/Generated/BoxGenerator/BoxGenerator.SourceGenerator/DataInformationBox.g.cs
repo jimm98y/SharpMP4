@@ -13,6 +13,9 @@ public partial class DataInformationBox : Box
 {
 	public const string TYPE = "dinf";
 	public override string DisplayName { get { return "DataInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)", "minf"); }
+
 
 	public DataInformationBox(): base(IsoStream.FromFourCC("dinf"))
 	{

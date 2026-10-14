@@ -14,6 +14,9 @@ public partial class ITunesCountryCodeBox : Box
 {
 	public const string TYPE = "sfID";
 	public override string DisplayName { get { return "ITunesCountryCodeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public ITunesCountryCodeBox(): base(IsoStream.FromFourCC("sfID"))
 	{

@@ -14,6 +14,9 @@ public partial class MdtaBox : Box
 {
 	public const string TYPE = "mdta";
 	public override string DisplayName { get { return "MdtaBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("keys"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

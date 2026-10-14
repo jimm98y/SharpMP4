@@ -6,19 +6,22 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class SerialNumberBox() extends Box ('SNum') {
+class CameraSerialNumberBox() extends Box ('SNum') {
  bit(8) data[];
  }
 */
-public partial class SerialNumberBoxSNumDup : Box
+public partial class CameraSerialNumberBox : Box
 {
 	public const string TYPE = "SNum";
-	public override string DisplayName { get { return "SerialNumberBoxSNumDup"; } }
+	public override string DisplayName { get { return "CameraSerialNumberBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-	public SerialNumberBoxSNumDup(): base(IsoStream.FromFourCC("SNum"))
+	public CameraSerialNumberBox(): base(IsoStream.FromFourCC("SNum"))
 	{
 	}
 

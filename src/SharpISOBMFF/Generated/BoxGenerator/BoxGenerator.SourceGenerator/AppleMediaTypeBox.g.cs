@@ -14,6 +14,9 @@ public partial class AppleMediaTypeBox : Box
 {
 	public const string TYPE = "stik";
 	public override string DisplayName { get { return "AppleMediaTypeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleMediaTypeBox(): base(IsoStream.FromFourCC("stik"))
 	{

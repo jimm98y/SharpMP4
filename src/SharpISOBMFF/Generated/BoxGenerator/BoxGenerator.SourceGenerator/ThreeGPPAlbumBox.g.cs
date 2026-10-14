@@ -17,6 +17,9 @@ public partial class ThreeGPPAlbumBox : FullBox
 {
 	public const string TYPE = "albm";
 	public override string DisplayName { get { return "ThreeGPPAlbumBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected bool reserved = false; 
 	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }

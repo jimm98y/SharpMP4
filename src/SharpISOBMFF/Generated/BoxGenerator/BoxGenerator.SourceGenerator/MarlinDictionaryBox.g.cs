@@ -14,6 +14,9 @@ public partial class MarlinDictionaryBox : Box
 {
 	public const string TYPE = "mrld";
 	public override string DisplayName { get { return "MarlinDictionaryBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("SampleEntry(marl)"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

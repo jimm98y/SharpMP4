@@ -14,6 +14,9 @@ public partial class HintBytesSenttotlDup : Box
 {
 	public const string TYPE = "totl";
 	public override string DisplayName { get { return "HintBytesSenttotlDup"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("hinf"); }
+
 
 	protected uint bytessent; 
 	public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }

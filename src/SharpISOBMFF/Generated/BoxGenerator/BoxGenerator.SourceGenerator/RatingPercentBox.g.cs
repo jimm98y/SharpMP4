@@ -14,6 +14,9 @@ public partial class RatingPercentBox : Box
 {
 	public const string TYPE = "rate";
 	public override string DisplayName { get { return "RatingPercentBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public RatingPercentBox(): base(IsoStream.FromFourCC("rate"))
 	{

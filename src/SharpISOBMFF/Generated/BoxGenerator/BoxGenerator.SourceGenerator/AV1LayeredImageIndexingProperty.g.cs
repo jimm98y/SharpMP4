@@ -21,6 +21,9 @@ public partial class AV1LayeredImageIndexingProperty : ItemProperty
 {
 	public const string TYPE = "a1lx";
 	public override string DisplayName { get { return "AV1LayeredImageIndexingProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected byte reserved = 0; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }

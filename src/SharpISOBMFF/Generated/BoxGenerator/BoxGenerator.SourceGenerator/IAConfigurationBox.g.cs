@@ -17,6 +17,9 @@ public partial class IAConfigurationBox : Box
 {
 	public const string TYPE = "iacb";
 	public override string DisplayName { get { return "IAConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(iamf)"); }
+
 
 	protected byte configurationVersion = 1; 
 	public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }

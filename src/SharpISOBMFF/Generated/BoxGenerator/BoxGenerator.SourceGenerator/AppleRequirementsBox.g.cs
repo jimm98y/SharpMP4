@@ -14,6 +14,9 @@ public partial class AppleRequirementsBox : FullBox
 {
 	public const string TYPE = "©req";
 	public override string DisplayName { get { return "AppleRequirementsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	protected BinaryUTF8String requirement; 
 	public BinaryUTF8String Requirement { get { return this.requirement; } set { this.requirement = value; } }

@@ -15,6 +15,9 @@ public partial class ContentLightLevelBox : Box
 {
 	public const string TYPE = "clli";
 	public override string DisplayName { get { return "ContentLightLevelBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry", "ipco"); }
+
 
 	protected ushort max_content_light_level; 
 	public ushort MaxContentLightLevel { get { return this.max_content_light_level; } set { this.max_content_light_level = value; } }

@@ -14,6 +14,9 @@ public partial class TrackReferenceTypeBoxvplxDup : Box
 {
 	public const string TYPE = "vplx";
 	public override string DisplayName { get { return "TrackReferenceTypeBoxvplxDup"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("tref"); }
+
 
 	protected uint[] trackIds; 
 	public uint[] TrackIds { get { return this.trackIds; } set { this.trackIds = value; } }

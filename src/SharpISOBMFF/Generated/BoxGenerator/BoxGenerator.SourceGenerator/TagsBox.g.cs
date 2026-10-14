@@ -14,6 +14,9 @@ public partial class TagsBox : Box
 {
 	public const string TYPE = "TAGS";
 	public override string DisplayName { get { return "TagsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -27,6 +30,7 @@ public partial class TagsBox : Box
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
 		return boxSize;
 	}
 
@@ -35,6 +39,7 @@ public partial class TagsBox : Box
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
 		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		boxSize += stream.WriteBoxArrayTillEnd(this);
 		return boxSize;
 	}
 
@@ -43,6 +48,7 @@ public partial class TagsBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += ((ulong)data.Length * 8); // data
+		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
 }

@@ -22,6 +22,9 @@ public partial class MicrosoftWaveFormatExBox : Box
 {
 	public const string TYPE = "wfex";
 	public override string DisplayName { get { return "MicrosoftWaveFormatExBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(wma )"); }
+
 
 	protected ushort format_tag; 
 	public ushort FormatTag { get { return this.format_tag; } set { this.format_tag = value; } }

@@ -18,6 +18,9 @@ public partial class DegradationPriorityBox : FullBox
 {
 	public const string TYPE = "stdp";
 	public override string DisplayName { get { return "DegradationPriorityBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl"); }
+
 
 	protected ushort[] priority; 
 	public ushort[] Priority { get { return this.priority; } set { this.priority = value; } }

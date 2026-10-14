@@ -17,6 +17,9 @@ public partial class CanonCTBOBox : Box
 {
 	public const string TYPE = "CTBO";
 	public override string DisplayName { get { return "CanonCTBOBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("uuid"); }
+
 
 	protected uint entryCount; 
 	public uint EntryCount { get { return this.entryCount; } set { this.entryCount = value; } }

@@ -17,6 +17,9 @@ public partial class LoudnessBox : Box
 {
 	public const string TYPE = "ludt";
 	public override string DisplayName { get { return "LoudnessBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 	public IEnumerable<TrackLoudnessInfo> Loudness { get { return this.children.OfType<TrackLoudnessInfo>(); } }
 	public IEnumerable<AlbumLoudnessInfo> AlbumLoudness { get { return this.children.OfType<AlbumLoudnessInfo>(); } }
 

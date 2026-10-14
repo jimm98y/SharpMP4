@@ -14,6 +14,9 @@ public partial class ReceivedSsrcBox : Box
 {
 	public const string TYPE = "rssr";
 	public override string DisplayName { get { return "ReceivedSsrcBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ReceivedRtpHintSampleEntry(rrtp)"); }
+
 
 	protected uint SSRC; 
 	public uint _SSRC { get { return this.SSRC; } set { this.SSRC = value; } }

@@ -14,6 +14,9 @@ public partial class AppleModelBox : Box
 {
 	public const string TYPE = "©mdl";
 	public override string DisplayName { get { return "AppleModelBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	public AppleModelBox(): base(IsoStream.FromFourCC("©mdl"))
 	{

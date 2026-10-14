@@ -15,6 +15,9 @@ public partial class RtpMovieHintInformation : Box
 {
 	public const string TYPE = "rtp ";
 	public override string DisplayName { get { return "RtpMovieHintInformation"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("hnti", "stsd"); }
+
 
 	protected uint descriptionformat = IsoStream.FromFourCC("sdp "); 
 	public uint Descriptionformat { get { return this.descriptionformat; } set { this.descriptionformat = value; } }

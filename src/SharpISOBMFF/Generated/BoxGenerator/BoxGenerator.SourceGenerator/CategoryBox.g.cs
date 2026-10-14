@@ -14,6 +14,9 @@ public partial class CategoryBox : Box
 {
 	public const string TYPE = "catg";
 	public override string DisplayName { get { return "CategoryBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public CategoryBox(): base(IsoStream.FromFourCC("catg"))
 	{

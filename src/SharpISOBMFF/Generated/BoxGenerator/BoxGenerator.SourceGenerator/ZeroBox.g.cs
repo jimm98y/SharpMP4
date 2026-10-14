@@ -14,6 +14,9 @@ public partial class ZeroBox : Box
 {
 	public const string TYPE = "0000";
 	public override string DisplayName { get { return "ZeroBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
+
 
 	protected StreamMarker data; 
 	public StreamMarker Data { get { return this.data; } set { this.data = value; } }

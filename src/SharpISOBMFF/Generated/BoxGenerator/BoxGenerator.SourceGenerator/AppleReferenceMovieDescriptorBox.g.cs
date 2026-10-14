@@ -14,6 +14,9 @@ public partial class AppleReferenceMovieDescriptorBox : Box
 {
 	public const string TYPE = "rmda";
 	public override string DisplayName { get { return "AppleReferenceMovieDescriptorBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("rmra"); }
+
 
 	public AppleReferenceMovieDescriptorBox(): base(IsoStream.FromFourCC("rmda"))
 	{

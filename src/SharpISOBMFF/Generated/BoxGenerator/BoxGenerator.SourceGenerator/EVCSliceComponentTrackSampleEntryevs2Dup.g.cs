@@ -12,6 +12,9 @@ public partial class EVCSliceComponentTrackSampleEntryevs2Dup : VisualSampleEntr
 {
 	public const string TYPE = "evs2";
 	public override string DisplayName { get { return "EVCSliceComponentTrackSampleEntryevs2Dup"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public EVCSliceComponentTrackConfigurationBox Config { get { return this.children.OfType<EVCSliceComponentTrackConfigurationBox>().FirstOrDefault(); } }
 
 	public EVCSliceComponentTrackSampleEntryevs2Dup(): base(IsoStream.FromFourCC("evs2"))

@@ -17,6 +17,9 @@ public partial class AuxiliaryTypeProperty : ItemFullProperty
 {
 	public const string TYPE = "auxC";
 	public override string DisplayName { get { return "AuxiliaryTypeProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected BinaryUTF8String aux_type; 
 	public BinaryUTF8String AuxType { get { return this.aux_type; } set { this.aux_type = value; } }

@@ -13,6 +13,9 @@ class PlainTextSampleEntry(codingname) extends SampleEntry (codingname) {
 public partial class PlainTextSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "PlainTextSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? BoxPlacements.OfType(FourCC)); }
+
 
 	public PlainTextSampleEntry(uint codingname = 0): base(codingname)
 	{

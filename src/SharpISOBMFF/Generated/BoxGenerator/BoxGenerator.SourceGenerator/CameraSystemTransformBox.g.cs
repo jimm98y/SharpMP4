@@ -14,6 +14,9 @@ public partial class CameraSystemTransformBox : Box
 {
 	public const string TYPE = "cxfm";
 	public override string DisplayName { get { return "CameraSystemTransformBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("lnex"); }
+
 
 	public CameraSystemTransformBox(): base(IsoStream.FromFourCC("cxfm"))
 	{

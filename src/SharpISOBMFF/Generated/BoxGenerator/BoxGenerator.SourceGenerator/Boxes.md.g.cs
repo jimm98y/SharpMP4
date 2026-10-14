@@ -289,7 +289,7 @@
 |cmid|CameraIDBox|
 |cmID|CmIDBox|
 |cmin|CameraIntrinsicMatrixBox|
-|cmnm|ModelBox|
+|cmnm|CameraModelNameBox|
 |cmov|AppleCompressedMoovBox|
 |CMP1|CanonCMP1TagsBox|
 |cmpC|GenericCompressionConfigurationBox|
@@ -719,7 +719,7 @@
 |MMA1|MinoltaMMA1Box|
 |MNG |VisualSampleEntry|
 |moat|MoatBox|
-|modl|ModelBoxmodlDup|
+|modl|ModelBox|
 |moof|MovieFragmentBox|
 |moov|MovieBox|
 |mp1v|VisualSampleEntry|
@@ -982,7 +982,7 @@
 |snal|ItemListPreviewImageBox|
 |snim|DataEntrySeqNumImdaBox|
 |snro|SequenceOffset|
-|SNum|SerialNumberBoxSNumDup|
+|SNum|CameraSerialNumberBox|
 |snut|SnutTrackGroupTypeBox|
 |soaa|AlbumArtistSortBox|
 |soal|AlbumSortBox|
@@ -1086,7 +1086,7 @@
 |tmci|TimecodeMediaInfoMisspelledBox|
 |tmin|HintMinRelativeTime|
 |tmpo|AppleBeatsPerMinuteBox|
-|tnal|ThumbnailImageBoxtnalDup|
+|tnal|AppleThumbnailImageBox|
 |tnam|TrackNameBox|
 |tols|TargetOlsProperty|
 |totl|HintBytesSenttotlDup|

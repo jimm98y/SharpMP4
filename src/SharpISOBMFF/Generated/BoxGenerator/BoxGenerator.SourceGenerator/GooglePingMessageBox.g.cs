@@ -14,6 +14,9 @@ public partial class GooglePingMessageBox : Box
 {
 	public const string TYPE = "gspm";
 	public override string DisplayName { get { return "GooglePingMessageBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public GooglePingMessageBox(): base(IsoStream.FromFourCC("gspm"))
 	{

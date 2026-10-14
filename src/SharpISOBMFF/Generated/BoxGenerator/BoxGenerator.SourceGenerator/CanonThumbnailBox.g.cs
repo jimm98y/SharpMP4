@@ -21,6 +21,9 @@ public partial class CanonThumbnailBox : FullBox
 {
 	public const string TYPE = "THMB";
 	public override string DisplayName { get { return "CanonThumbnailBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("uuid"); }
+
 
 	protected ushort width; 
 	public ushort Width { get { return this.width; } set { this.width = value; } }

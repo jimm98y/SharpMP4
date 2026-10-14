@@ -23,6 +23,9 @@ public partial class DoViConfigurationBox : Box
 {
 	public const string TYPE = "dvcC";
 	public override string DisplayName { get { return "DoViConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(dvav,dva1,dvhe,dvh1,dav1,avc1,avc2,avc3,avc4,hev1,hvc1,av01,encv,resv)"); }
+
 
 	protected byte dv_version_major; 
 	public byte DvVersionMajor { get { return this.dv_version_major; } set { this.dv_version_major = value; } }

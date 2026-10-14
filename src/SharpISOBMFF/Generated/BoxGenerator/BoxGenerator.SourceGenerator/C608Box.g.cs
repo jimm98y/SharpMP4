@@ -15,6 +15,9 @@ public partial class C608Box : Box
 {
 	public const string TYPE = "c608";
 	public override string DisplayName { get { return "C608Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected byte[] reserved1; 
 	public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }

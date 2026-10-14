@@ -18,6 +18,9 @@ public partial class SubTrackInformationBox : FullBox
 {
 	public const string TYPE = "stri";
 	public override string DisplayName { get { return "SubTrackInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("strk"); }
+
 
 	protected short switch_group = 0; 
 	public short SwitchGroup { get { return this.switch_group; } set { this.switch_group = value; } }

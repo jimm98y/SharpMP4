@@ -14,6 +14,9 @@ public partial class AppleDataRateBox : Box
 {
 	public const string TYPE = "rmdr";
 	public override string DisplayName { get { return "AppleDataRateBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("rmda"); }
+
 
 	public AppleDataRateBox(): base(IsoStream.FromFourCC("rmdr"))
 	{

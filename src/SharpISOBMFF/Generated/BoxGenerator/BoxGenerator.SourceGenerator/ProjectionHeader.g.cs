@@ -17,6 +17,9 @@ public partial class ProjectionHeader : FullBox
 {
 	public const string TYPE = "prhd";
 	public override string DisplayName { get { return "ProjectionHeader"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("proj"); }
+
 
 	protected int pose_yaw_degrees; 
 	public int PoseYawDegrees { get { return this.pose_yaw_degrees; } set { this.pose_yaw_degrees = value; } }

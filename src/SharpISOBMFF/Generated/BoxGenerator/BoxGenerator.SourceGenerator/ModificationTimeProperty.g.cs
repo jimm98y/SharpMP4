@@ -16,6 +16,9 @@ public partial class ModificationTimeProperty : ItemFullProperty
 {
 	public const string TYPE = "mdft";
 	public override string DisplayName { get { return "ModificationTimeProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected ulong modification_time; 
 	public ulong ModificationTime { get { return this.modification_time; } set { this.modification_time = value; } }

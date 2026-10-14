@@ -12,6 +12,9 @@ aligned(8) class ItemProperty(property_type) extends Box(property_type){}
 public partial class ItemProperty : Box
 {
 	public override string DisplayName { get { return "ItemProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	public ItemProperty(uint property_type): base(property_type)
 	{

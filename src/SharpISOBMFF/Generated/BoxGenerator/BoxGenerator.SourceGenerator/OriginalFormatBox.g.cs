@@ -17,6 +17,9 @@ public partial class OriginalFormatBox : Box
 {
 	public const string TYPE = "frma";
 	public override string DisplayName { get { return "OriginalFormatBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("sinf", "rinf", "wave"); }
+
 
 	protected uint data_format; // = codingname
 	public uint DataFormat { get { return this.data_format; } set { this.data_format = value; } }

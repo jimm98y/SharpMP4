@@ -6,6 +6,8 @@ Simple lightweight mp4/fmp4/mov/m4v reader/writer. Supports H261/H262/H263/MPEG4
 ## Supported boxes
 The list of all supported boxes, entries and descriptors is [here](Boxes.md).
 
+Each box says whether it is where its definition places it: `box.ValidatePlacement()` checks its parent against the `containers` of its definition in `src/SharpISOBMFF/Definitions` - a parent box type, the top of the file, a parent class, and of an encrypted or restricted sample entry, the format its `frma` names. It is for information only: a box elsewhere is read and written all the same. A box whose definition gives no container is not reported.
+
 ## Read MP4
 To parse an existing mp4/mov/m4v file, first you have to get the stream:
 ```cs

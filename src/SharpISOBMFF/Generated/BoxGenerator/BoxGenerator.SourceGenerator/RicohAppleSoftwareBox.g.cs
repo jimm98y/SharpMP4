@@ -14,6 +14,9 @@ public partial class RicohAppleSoftwareBox : Box
 {
 	public const string TYPE = "@swr";
 	public override string DisplayName { get { return "RicohAppleSoftwareBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

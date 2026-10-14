@@ -19,6 +19,9 @@ public partial class MhaCBox : Box
 {
 	public const string TYPE = "mhaC";
 	public override string DisplayName { get { return "MhaCBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(mha1,mha2,mhm1,mhm2)", "wave"); }
+
 
 	protected byte configurationVersion = 1; 
 	public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }

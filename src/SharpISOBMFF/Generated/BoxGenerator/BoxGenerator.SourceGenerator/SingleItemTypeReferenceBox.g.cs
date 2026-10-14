@@ -20,6 +20,9 @@ aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(reference
 public partial class SingleItemTypeReferenceBox : Box
 {
 	public override string DisplayName { get { return "SingleItemTypeReferenceBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "iref" }); }
+
 
 	protected ushort from_item_ID; 
 	public ushort FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }

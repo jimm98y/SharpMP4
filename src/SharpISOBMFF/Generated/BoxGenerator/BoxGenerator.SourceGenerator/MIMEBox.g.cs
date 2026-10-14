@@ -15,6 +15,9 @@ public partial class MIMEBox : FullBox
 {
 	public const string TYPE = "mime";
 	public override string DisplayName { get { return "MIMEBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("SampleEntry"); }
+
 
 	protected BinaryUTF8String content_type; 
 	public BinaryUTF8String ContentType { get { return this.content_type; } set { this.content_type = value; } }

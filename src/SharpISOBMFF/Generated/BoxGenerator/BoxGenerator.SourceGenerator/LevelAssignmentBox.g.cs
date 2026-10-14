@@ -35,6 +35,9 @@ public partial class LevelAssignmentBox : FullBox
 {
 	public const string TYPE = "leva";
 	public override string DisplayName { get { return "LevelAssignmentBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mvex"); }
+
 
 	protected byte level_count; 
 	public byte LevelCount { get { return this.level_count; } set { this.level_count = value; } }

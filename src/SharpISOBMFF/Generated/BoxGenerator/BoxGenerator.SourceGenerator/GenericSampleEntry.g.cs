@@ -25,6 +25,9 @@ public partial class GenericSampleEntry : Box
 {
 	public const string TYPE = "encv";
 	public override string DisplayName { get { return "GenericSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	public GenericSampleEntry(): base(IsoStream.FromFourCC("encv"))
 	{

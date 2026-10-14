@@ -14,6 +14,9 @@ public partial class ItemDataBox : Box
 {
 	public const string TYPE = "idat";
 	public override string DisplayName { get { return "ItemDataBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
+
 
 	protected StreamMarker data; 
 	public StreamMarker Data { get { return this.data; } set { this.data = value; } }

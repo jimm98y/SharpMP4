@@ -14,6 +14,9 @@ public partial class GoogleStartTimeBox : Box
 {
 	public const string TYPE = "gsst";
 	public override string DisplayName { get { return "GoogleStartTimeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public GoogleStartTimeBox(): base(IsoStream.FromFourCC("gsst"))
 	{

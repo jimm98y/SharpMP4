@@ -14,6 +14,9 @@ public partial class TrackSortBox : Box
 {
 	public const string TYPE = "sonm";
 	public override string DisplayName { get { return "TrackSortBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public TrackSortBox(): base(IsoStream.FromFourCC("sonm"))
 	{

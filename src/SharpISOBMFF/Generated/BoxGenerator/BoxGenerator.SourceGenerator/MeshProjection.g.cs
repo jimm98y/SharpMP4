@@ -20,6 +20,9 @@ public partial class MeshProjection : ProjectionDataBox
 {
 	public const string TYPE = "mshp";
 	public override string DisplayName { get { return "MeshProjection"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("proj"); }
+
 
 	protected uint crc; 
 	public uint Crc { get { return this.crc; } set { this.crc = value; } }

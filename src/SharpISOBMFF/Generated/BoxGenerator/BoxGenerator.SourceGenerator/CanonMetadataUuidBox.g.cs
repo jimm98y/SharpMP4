@@ -16,6 +16,9 @@ public partial class CanonMetadataUuidBox : Box
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "CanonMetadataUuidBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	public CanonMetadataUuidBox(): base(IsoStream.FromFourCC("uuid"), ConvertEx.FromHexString("85c0b687820f11e08111f4ce462b6a48"))
 	{

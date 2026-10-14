@@ -14,6 +14,9 @@ public partial class J2kHBox : Box
 {
 	public const string TYPE = "j2kH";
 	public override string DisplayName { get { return "J2kHBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	public J2kHBox(): base(IsoStream.FromFourCC("j2kH"))
 	{

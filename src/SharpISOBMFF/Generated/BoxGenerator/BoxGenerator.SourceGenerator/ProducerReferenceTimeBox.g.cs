@@ -21,6 +21,9 @@ public partial class ProducerReferenceTimeBox : FullBox
 {
 	public const string TYPE = "prft";
 	public override string DisplayName { get { return "ProducerReferenceTimeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected uint reference_track_ID; 
 	public uint ReferenceTrackID { get { return this.reference_track_ID; } set { this.reference_track_ID = value; } }

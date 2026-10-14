@@ -14,6 +14,9 @@ public partial class AppleArtDirectorBox : Box
 {
 	public const string TYPE = "©ard";
 	public override string DisplayName { get { return "AppleArtDirectorBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleArtDirectorBox(): base(IsoStream.FromFourCC("©ard"))
 	{

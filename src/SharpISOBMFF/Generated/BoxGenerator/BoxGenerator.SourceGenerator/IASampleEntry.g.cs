@@ -15,6 +15,9 @@ public partial class IASampleEntry : AudioSampleEntry
 {
 	public const string TYPE = "iamf";
 	public override string DisplayName { get { return "IASampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public IAConfigurationBox IaConfigurationBox { get { return this.children.OfType<IAConfigurationBox>().FirstOrDefault(); } }
 
 	public IASampleEntry(): base(IsoStream.FromFourCC("iamf"))

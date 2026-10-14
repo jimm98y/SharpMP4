@@ -16,6 +16,9 @@ public partial class ItemAuxiliaryInformationBox : ItemFullProperty
 {
 	public const string TYPE = "iaux";
 	public override string DisplayName { get { return "ItemAuxiliaryInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected uint aux_info_type; 
 	public uint AuxInfoType { get { return this.aux_info_type; } set { this.aux_info_type = value; } }

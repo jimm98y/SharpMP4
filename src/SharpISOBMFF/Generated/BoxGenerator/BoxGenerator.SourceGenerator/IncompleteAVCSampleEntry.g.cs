@@ -15,6 +15,9 @@ public partial class IncompleteAVCSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "icpv";
 	public override string DisplayName { get { return "IncompleteAVCSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public CompleteTrackInfoBox _CompleteTrackInfoBox { get { return this.children.OfType<CompleteTrackInfoBox>().FirstOrDefault(); } }
 	public AVCConfigurationBox Config { get { return this.children.OfType<AVCConfigurationBox>().FirstOrDefault(); } }
 

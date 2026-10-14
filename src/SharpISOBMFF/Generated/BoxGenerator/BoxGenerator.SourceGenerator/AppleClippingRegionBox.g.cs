@@ -16,6 +16,9 @@ public partial class AppleClippingRegionBox : Box
 {
 	public const string TYPE = "crgn";
 	public override string DisplayName { get { return "AppleClippingRegionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("clip"); }
+
 
 	protected ushort regionSize; 
 	public ushort RegionSize { get { return this.regionSize; } set { this.regionSize = value; } }

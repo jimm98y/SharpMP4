@@ -14,6 +14,9 @@ public partial class ParentTitleBox : Box
 {
 	public const string TYPE = "@pti";
 	public override string DisplayName { get { return "ParentTitleBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public ParentTitleBox(): base(IsoStream.FromFourCC("@pti"))
 	{

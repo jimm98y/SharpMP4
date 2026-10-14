@@ -21,6 +21,9 @@ public partial class ComponentDefinitionBox : Box
 {
 	public const string TYPE = "cmpd";
 	public override string DisplayName { get { return "ComponentDefinitionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(uncv)", "ipco"); }
+
 
 	protected uint component_count; 
 	public uint ComponentCount { get { return this.component_count; } set { this.component_count = value; } }

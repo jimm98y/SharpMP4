@@ -14,6 +14,9 @@ aligned(8) class HapticSampleEntry(codingname)
 public partial class HapticSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "HapticSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "stsd" }); }
+
 
 	public HapticSampleEntry(uint codingname = 0): base(codingname)
 	{

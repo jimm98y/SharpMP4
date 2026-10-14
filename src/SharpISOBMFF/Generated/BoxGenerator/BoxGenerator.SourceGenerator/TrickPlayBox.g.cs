@@ -15,6 +15,9 @@ public partial class TrickPlayBox : FullBox
 {
 	public const string TYPE = "trik";
 	public override string DisplayName { get { return "TrickPlayBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("traf"); }
+
 
 	protected TrickPlayEntry[] entries; 
 	public TrickPlayEntry[] Entries { get { return this.entries; } set { this.entries = value; } }

@@ -15,6 +15,9 @@ public partial class IpirBox : Box
 {
 	public const string TYPE = "ipir";
 	public override string DisplayName { get { return "IpirBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("tref"); }
+
 
 	protected uint entry_count; 
 	public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }

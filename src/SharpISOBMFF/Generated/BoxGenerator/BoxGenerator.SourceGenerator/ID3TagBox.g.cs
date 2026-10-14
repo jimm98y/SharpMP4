@@ -16,6 +16,9 @@ public partial class ID3TagBox : FullBox
 {
 	public const string TYPE = "ID32";
 	public override string DisplayName { get { return "ID3TagBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("meta"); }
+
 
 	protected bool pad; 
 	public bool Pad { get { return this.pad; } set { this.pad = value; } }

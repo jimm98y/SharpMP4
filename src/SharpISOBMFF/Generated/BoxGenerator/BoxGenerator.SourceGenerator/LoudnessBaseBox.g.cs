@@ -28,6 +28,9 @@ for (i = 1 ; i <= measurement_count; i++){
 public partial class LoudnessBaseBox : FullBox
 {
 	public override string DisplayName { get { return "LoudnessBaseBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected byte reserved = 0; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }

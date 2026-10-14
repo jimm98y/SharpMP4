@@ -15,6 +15,9 @@ public partial class AuxiliaryTypeInfoBox : FullBox
 {
 	public const string TYPE = "auxi";
 	public override string DisplayName { get { return "AuxiliaryTypeInfoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("SampleEntry"); }
+
 
 	protected BinaryUTF8String aux_track_type; 
 	public BinaryUTF8String AuxTrackType { get { return this.aux_track_type; } set { this.aux_track_type = value; } }

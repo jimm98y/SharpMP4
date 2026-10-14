@@ -14,6 +14,9 @@ public partial class AppleWorkBox : Box
 {
 	public const string TYPE = "©wrk";
 	public override string DisplayName { get { return "AppleWorkBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleWorkBox(): base(IsoStream.FromFourCC("©wrk"))
 	{

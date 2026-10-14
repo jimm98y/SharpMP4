@@ -17,6 +17,9 @@ public partial class TaicBox : FullBox
 {
 	public const string TYPE = "taic";
 	public override string DisplayName { get { return "TaicBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("SampleEntry", "ipco"); }
+
 
 	protected ulong time_uncertainty; 
 	public ulong TimeUncertainty { get { return this.time_uncertainty; } set { this.time_uncertainty = value; } }

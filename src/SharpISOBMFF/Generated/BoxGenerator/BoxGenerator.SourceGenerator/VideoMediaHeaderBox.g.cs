@@ -16,6 +16,9 @@ public partial class VideoMediaHeaderBox : FullBox
 {
 	public const string TYPE = "vmhd";
 	public override string DisplayName { get { return "VideoMediaHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("minf"); }
+
 
 	protected ushort graphicsmode = 0;  //  copy, see below
 	public ushort Graphicsmode { get { return this.graphicsmode; } set { this.graphicsmode = value; } }

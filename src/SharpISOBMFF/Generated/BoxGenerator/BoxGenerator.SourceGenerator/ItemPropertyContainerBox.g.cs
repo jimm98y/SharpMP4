@@ -19,6 +19,9 @@ public partial class ItemPropertyContainerBox : Box
 {
 	public const string TYPE = "ipco";
 	public override string DisplayName { get { return "ItemPropertyContainerBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("iprp"); }
+
 
 	public ItemPropertyContainerBox(): base(IsoStream.FromFourCC("ipco"))
 	{

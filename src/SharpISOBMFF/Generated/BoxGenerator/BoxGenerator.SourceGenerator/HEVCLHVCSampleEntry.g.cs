@@ -13,6 +13,9 @@ class HEVCLHVCSampleEntry() extends HEVCSampleEntry() {
 public partial class HEVCLHVCSampleEntry : HEVCSampleEntry
 {
 	public override string DisplayName { get { return "HEVCLHVCSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "stsd" }); }
+
 	public LHEVCConfigurationBox Lhvcconfig { get { return this.children.OfType<LHEVCConfigurationBox>().FirstOrDefault(); } }
 
 	public HEVCLHVCSampleEntry(): base()

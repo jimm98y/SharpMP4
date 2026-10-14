@@ -15,6 +15,9 @@ public partial class A3DConfigurationBox : Box
 {
 	public const string TYPE = "a3dC";
 	public override string DisplayName { get { return "A3DConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AVCSampleEntry(avc1,avc3)", "MVCSampleEntry(mvc1,mvc2,mvc3,mvc4)", "MVCDSampleEntry(mvd1,mvd2,mvd3,mvd4)", "A3DSampleEntry(a3d1,a3d2,a3d3,a3d4)"); }
+
 
 	protected MVDDecoderConfigurationRecord MVDConfig; 
 	public MVDDecoderConfigurationRecord _MVDConfig { get { return this.MVDConfig; } set { this.MVDConfig = value; } }

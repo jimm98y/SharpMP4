@@ -12,6 +12,9 @@ public partial class AlbumLoudnessInfo : LoudnessBaseBox
 {
 	public const string TYPE = "alou";
 	public override string DisplayName { get { return "AlbumLoudnessInfo"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ludt"); }
+
 
 	public AlbumLoudnessInfo(): base(IsoStream.FromFourCC("alou"))
 	{

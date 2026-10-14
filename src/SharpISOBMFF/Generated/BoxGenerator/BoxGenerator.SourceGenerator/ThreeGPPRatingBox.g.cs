@@ -18,6 +18,9 @@ public partial class ThreeGPPRatingBox : FullBox
 {
 	public const string TYPE = "rtng";
 	public override string DisplayName { get { return "ThreeGPPRatingBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected uint rating_entity; 
 	public uint RatingEntity { get { return this.rating_entity; } set { this.rating_entity = value; } }

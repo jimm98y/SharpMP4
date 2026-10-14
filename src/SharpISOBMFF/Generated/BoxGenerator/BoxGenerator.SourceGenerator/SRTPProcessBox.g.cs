@@ -19,6 +19,9 @@ public partial class SRTPProcessBox : FullBox
 {
 	public const string TYPE = "srpp";
 	public override string DisplayName { get { return "SRTPProcessBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("srtp"); }
+
 
 	protected uint encryption_algorithm_rtp; 
 	public uint EncryptionAlgorithmRtp { get { return this.encryption_algorithm_rtp; } set { this.encryption_algorithm_rtp = value; } }

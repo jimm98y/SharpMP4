@@ -16,6 +16,9 @@ public partial class CubemapProjection : ProjectionDataBox
 {
 	public const string TYPE = "cbmp";
 	public override string DisplayName { get { return "CubemapProjection"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("proj"); }
+
 
 	protected uint layout; 
 	public uint Layout { get { return this.layout; } set { this.layout = value; } }

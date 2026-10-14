@@ -15,6 +15,9 @@ public partial class ParametricImmersiveMediaProjectionBox : FullBox
 {
 	public const string TYPE = "prim";
 	public override string DisplayName { get { return "ParametricImmersiveMediaProjectionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("proj"); }
+
 
 	public ParametricImmersiveMediaProjectionBox(): base(IsoStream.FromFourCC("prim"), 0, 0)
 	{

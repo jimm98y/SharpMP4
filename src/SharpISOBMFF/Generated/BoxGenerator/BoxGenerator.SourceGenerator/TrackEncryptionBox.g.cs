@@ -33,6 +33,9 @@ public partial class TrackEncryptionBox : FullBox
 {
 	public const string TYPE = "tenc";
 	public override string DisplayName { get { return "TrackEncryptionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("schi"); }
+
 
 	protected byte reserved = 0; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }

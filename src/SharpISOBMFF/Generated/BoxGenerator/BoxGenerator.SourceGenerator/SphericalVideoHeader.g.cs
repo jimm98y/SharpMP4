@@ -15,6 +15,9 @@ public partial class SphericalVideoHeader : FullBox
 {
 	public const string TYPE = "svhd";
 	public override string DisplayName { get { return "SphericalVideoHeader"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("sv3d"); }
+
 
 	protected BinaryUTF8String metadata_source; 
 	public BinaryUTF8String MetadataSource { get { return this.metadata_source; } set { this.metadata_source = value; } }

@@ -15,6 +15,9 @@ public partial class ItaiBox : FullBox
 {
 	public const string TYPE = "itai";
 	public override string DisplayName { get { return "ItaiBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected ulong tai_timestamp; 
 	public ulong TaiTimestamp { get { return this.tai_timestamp; } set { this.tai_timestamp = value; } }

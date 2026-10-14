@@ -13,6 +13,9 @@ public partial class HintMaxRelativeTime : Box
 {
 	public const string TYPE = "tmax";
 	public override string DisplayName { get { return "HintMaxRelativeTime"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("hinf"); }
+
 
 	protected int time; 
 	public int Time { get { return this.time; } set { this.time = value; } }

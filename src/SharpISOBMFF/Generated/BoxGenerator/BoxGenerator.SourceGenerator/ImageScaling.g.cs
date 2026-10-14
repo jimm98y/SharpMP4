@@ -18,6 +18,9 @@ public partial class ImageScaling : ItemFullProperty
 {
 	public const string TYPE = "iscl";
 	public override string DisplayName { get { return "ImageScaling"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected ushort target_width_numerator; 
 	public ushort TargetWidthNumerator { get { return this.target_width_numerator; } set { this.target_width_numerator = value; } }

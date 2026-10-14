@@ -14,6 +14,9 @@ public partial class DateTimeOriginal2Box : Box
 {
 	public const string TYPE = "IDIT";
 	public override string DisplayName { get { return "DateTimeOriginal2Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

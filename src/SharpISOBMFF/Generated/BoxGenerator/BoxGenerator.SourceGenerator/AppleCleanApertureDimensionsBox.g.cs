@@ -15,6 +15,9 @@ public partial class AppleCleanApertureDimensionsBox : FullBox
 {
 	public const string TYPE = "clef";
 	public override string DisplayName { get { return "AppleCleanApertureDimensionsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("tapt"); }
+
 
 	protected uint width; 
 	public uint Width { get { return this.width; } set { this.width = value; } }

@@ -15,6 +15,9 @@ public partial class VvcSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "vvc1";
 	public override string DisplayName { get { return "VvcSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public VvcConfigurationBox Config { get { return this.children.OfType<VvcConfigurationBox>().FirstOrDefault(); } }
 	public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 

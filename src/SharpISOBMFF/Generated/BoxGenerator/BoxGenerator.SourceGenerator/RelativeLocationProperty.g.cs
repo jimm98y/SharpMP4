@@ -17,6 +17,9 @@ public partial class RelativeLocationProperty : ItemFullProperty
 {
 	public const string TYPE = "rloc";
 	public override string DisplayName { get { return "RelativeLocationProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected uint horizontal_offset; 
 	public uint HorizontalOffset { get { return this.horizontal_offset; } set { this.horizontal_offset = value; } }

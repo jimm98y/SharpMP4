@@ -17,6 +17,9 @@ public partial class ImageSpatialExtentsProperty : ItemFullProperty
 {
 	public const string TYPE = "ispe";
 	public override string DisplayName { get { return "ImageSpatialExtentsProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected uint image_width; 
 	public uint ImageWidth { get { return this.image_width; } set { this.image_width = value; } }

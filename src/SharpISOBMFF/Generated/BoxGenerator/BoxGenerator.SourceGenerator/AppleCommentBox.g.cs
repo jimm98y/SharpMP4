@@ -14,6 +14,9 @@ public partial class AppleCommentBox : Box
 {
 	public const string TYPE = "©cmt";
 	public override string DisplayName { get { return "AppleCommentBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	public AppleCommentBox(): base(IsoStream.FromFourCC("©cmt"))
 	{

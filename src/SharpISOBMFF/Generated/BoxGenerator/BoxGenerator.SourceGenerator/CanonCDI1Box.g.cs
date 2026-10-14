@@ -16,6 +16,9 @@ public partial class CanonCDI1Box : FullBox
 {
 	public const string TYPE = "CDI1";
 	public override string DisplayName { get { return "CanonCDI1Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(CRAW)"); }
+
 
 	public CanonCDI1Box(): base(IsoStream.FromFourCC("CDI1"))
 	{

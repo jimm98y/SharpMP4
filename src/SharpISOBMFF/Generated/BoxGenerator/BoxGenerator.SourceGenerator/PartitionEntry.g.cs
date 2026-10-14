@@ -18,6 +18,9 @@ public partial class PartitionEntry : Box
 {
 	public const string TYPE = "paen";
 	public override string DisplayName { get { return "PartitionEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("fiin"); }
+
 	public FilePartitionBox BlocksAndSymbols { get { return this.children.OfType<FilePartitionBox>().FirstOrDefault(); } }
 	public FECReservoirBox FECSymbolLocations { get { return this.children.OfType<FECReservoirBox>().FirstOrDefault(); } }
 	public FileReservoirBox FileSymbolLocations { get { return this.children.OfType<FileReservoirBox>().FirstOrDefault(); } }

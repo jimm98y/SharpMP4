@@ -14,6 +14,9 @@ public partial class HEVCConfigurationBox : Box
 {
 	public const string TYPE = "hvcC";
 	public override string DisplayName { get { return "HEVCConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco", "HEVCSampleEntry(hvc1,hvc2,hev1,hev2,hvc3,hev3)", "HEVCLHVCSampleEntry(hvc1,hvc2,hev1,hev2,hvc3,hev3)", "RestrictedSampleEntry(resv)", "VisualSampleEntry(encv)", "VisualSampleEntry(dvh1,dvhe)"); }
+
 
 	protected HEVCDecoderConfigurationRecord HEVCConfig; 
 	public HEVCDecoderConfigurationRecord _HEVCConfig { get { return this.HEVCConfig; } set { this.HEVCConfig = value; } }

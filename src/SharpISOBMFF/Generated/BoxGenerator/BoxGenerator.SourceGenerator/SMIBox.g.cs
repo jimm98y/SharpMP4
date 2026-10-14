@@ -14,6 +14,9 @@ public partial class SMIBox : Box
 {
 	public const string TYPE = "SMI ";
 	public override string DisplayName { get { return "SMIBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(SVQ3)"); }
+
 
 	protected byte[] metadata; 
 	public byte[] Metadata { get { return this.metadata; } set { this.metadata = value; } }

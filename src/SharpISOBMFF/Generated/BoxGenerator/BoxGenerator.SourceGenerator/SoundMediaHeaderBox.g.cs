@@ -16,6 +16,9 @@ public partial class SoundMediaHeaderBox : FullBox
 {
 	public const string TYPE = "smhd";
 	public override string DisplayName { get { return "SoundMediaHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("minf"); }
+
 
 	protected short balance = 0; 
 	public short Balance { get { return this.balance; } set { this.balance = value; } }

@@ -15,6 +15,9 @@ public partial class CyBox : Box
 {
 	public const string TYPE = "_cy_";
 	public override string DisplayName { get { return "CyBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected int numerator; 
 	public int Numerator { get { return this.numerator; } set { this.numerator = value; } }

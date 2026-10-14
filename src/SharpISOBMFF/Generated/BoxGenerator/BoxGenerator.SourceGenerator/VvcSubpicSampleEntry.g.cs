@@ -14,6 +14,9 @@ public partial class VvcSubpicSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "vvs1";
 	public override string DisplayName { get { return "VvcSubpicSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public VvcNALUConfigBox Config { get { return this.children.OfType<VvcNALUConfigBox>().FirstOrDefault(); } }
 
 	public VvcSubpicSampleEntry(): base(IsoStream.FromFourCC("vvs1"))

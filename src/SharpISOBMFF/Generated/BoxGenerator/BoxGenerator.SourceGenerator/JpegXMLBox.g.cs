@@ -15,6 +15,9 @@ public partial class JpegXMLBox : Box
 {
 	public const string TYPE = "xml ";
 	public override string DisplayName { get { return "JpegXMLBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected BinaryUTF8String data; 
 	public BinaryUTF8String Data { get { return this.data; } set { this.data = value; } }

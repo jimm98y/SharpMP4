@@ -14,6 +14,9 @@ public partial class AppleStoreCatalogIDBox : Box
 {
 	public const string TYPE = "cnID";
 	public override string DisplayName { get { return "AppleStoreCatalogIDBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleStoreCatalogIDBox(): base(IsoStream.FromFourCC("cnID"))
 	{

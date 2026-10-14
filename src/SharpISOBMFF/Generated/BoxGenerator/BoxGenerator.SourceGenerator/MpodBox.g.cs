@@ -6,20 +6,21 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
+// ISO/IEC 14496-14 3.1.2: the track reference of an MPEG-4 Systems OD track to the tracks its object descriptors are of
 aligned(8) class MpodBox() extends Box('mpod') {
- unsigned int(32) unknown1; unsigned int(32) unknown2;
- } 
+ unsigned int(32) track_IDs[];
+ }
 */
 public partial class MpodBox : Box
 {
 	public const string TYPE = "mpod";
 	public override string DisplayName { get { return "MpodBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("tref"); }
 
-	protected uint unknown1; 
-	public uint Unknown1 { get { return this.unknown1; } set { this.unknown1 = value; } }
 
-	protected uint unknown2; 
-	public uint Unknown2 { get { return this.unknown2; } set { this.unknown2 = value; } }
+	protected uint[] track_IDs; 
+	public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
 
 	public MpodBox(): base(IsoStream.FromFourCC("mpod"))
 	{
@@ -29,8 +30,7 @@ public partial class MpodBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.unknown1, "unknown1"); 
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.unknown2, "unknown2"); 
+		boxSize += stream.ReadUInt32ArrayTillEnd(boxSize, readSize,  out this.track_IDs, "track_IDs"); 
 		return boxSize;
 	}
 
@@ -38,8 +38,7 @@ public partial class MpodBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt32( this.unknown1, "unknown1"); 
-		boxSize += stream.WriteUInt32( this.unknown2, "unknown2"); 
+		boxSize += stream.WriteUInt32ArrayTillEnd( this.track_IDs, "track_IDs"); 
 		return boxSize;
 	}
 
@@ -47,8 +46,7 @@ public partial class MpodBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += 32; // unknown1
-		boxSize += 32; // unknown2
+		boxSize += ((ulong)track_IDs.Length * 32); // track_IDs
 		return boxSize;
 	}
 }

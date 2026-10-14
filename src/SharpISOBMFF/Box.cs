@@ -57,6 +57,84 @@ namespace SharpISOBMFF
 
         public Box() {  }
 
+        /// <summary>
+        /// Whether the box is in a container its definitions place it in - of the "containers" of its definitions in
+        /// Definitions\*.json: a parent of a type they name, the top of the file, a parent of a class they name. For
+        /// information alone: nothing enforces it, a box elsewhere is read and written all the same. True of a box whose
+        /// definitions place it in no container - it is not known to be misplaced - and of one of no definition.
+        /// </summary>
+        public virtual bool ValidatePlacement() { return true; }
+
+        /// <summary>
+        /// Whether the box's parent is one of the containers given: of a box type of four characters, a parent of that
+        /// type; "file", the top of the file - a parent that is the file, or none; "*", any; a class's name, a parent of
+        /// that class or one derived from it; "Class(type,type)", a parent of one of those types. Of none given, or null,
+        /// true: the definitions say nothing of where it belongs.
+        /// </summary>
+        protected bool IsPlacedIn(params string[] containers)
+        {
+            if (containers == null || containers.Length == 0)
+                return true;
+
+            IMp4Serializable parent = GetParent();
+            string parentType = parent is Box box && box.FourCC != 0 ? IsoStream.ToFourCC(box.FourCC) : null;
+            // of a sample entry protected or restricted - 'encv', 'resv' - the format it was, which its boxes are of: an 'avcC'
+            // is of an 'encv' of an 'avc1', not of one of an 'hvc1'; of one that does not say, of 'encv' itself
+            string originalType = parent is Box entry ? OriginalFormatOf(entry) : null;
+            if (originalType != null)
+                parentType = originalType;
+            foreach (string container in containers)
+            {
+                if (container == "*")
+                    return true;
+                if (container == "file")
+                {
+                    if (parent == null || parent is Container)
+                        return true;
+                    continue;
+                }
+                if (container.Length == 4)
+                {
+                    if (parentType == container)
+                        return true;
+                    continue;
+                }
+                int open = container.IndexOf('(');
+                if (open > 0 && container.EndsWith(")"))
+                {
+                    string[] types = container.Substring(open + 1, container.Length - open - 2).Split(',');
+                    if (parentType != null && types.Contains(parentType))
+                        return true;
+                    continue;
+                }
+                for (var type = parent?.GetType(); type != null; type = type.BaseType)
+                {
+                    if (type.Name == container)
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Of a sample entry protected or restricted, the format it was, of the 'frma' of its 'sinf' or 'rinf' (ISO/IEC 14496-12
+        /// 8.12.2); null of another box.
+        /// </summary>
+        private static string OriginalFormatOf(Box entry)
+        {
+            foreach (var scheme in entry.Children ?? Enumerable.Empty<Box>())
+            {
+                if (scheme.FourCC != IsoStream.FromFourCC("sinf") && scheme.FourCC != IsoStream.FromFourCC("rinf"))
+                    continue;
+                foreach (var child in scheme.Children ?? Enumerable.Empty<Box>())
+                {
+                    if (child is OriginalFormatBox frma && frma.DataFormat != 0)
+                        return IsoStream.ToFourCC(frma.DataFormat);
+                }
+            }
+            return null;
+        }
+
         public Box(uint boxType) 
         {
             FourCC = boxType;    

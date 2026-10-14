@@ -14,6 +14,9 @@ public partial class IpcmBox : Box
 {
 	public const string TYPE = "ipcm";
 	public override string DisplayName { get { return "IpcmBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	public IpcmBox(): base(IsoStream.FromFourCC("ipcm"))
 	{

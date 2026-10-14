@@ -29,6 +29,9 @@ public partial class IntrinsicCameraParametersBox : FullBox
 {
 	public const string TYPE = "icam";
 	public override string DisplayName { get { return "IntrinsicCameraParametersBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("MVCDSampleEntry(mvd1,mvd2,mvd3,mvd4)", "A3DSampleEntry(a3d1,a3d2,a3d3,a3d4)"); }
+
 
 	protected byte reserved =0; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }

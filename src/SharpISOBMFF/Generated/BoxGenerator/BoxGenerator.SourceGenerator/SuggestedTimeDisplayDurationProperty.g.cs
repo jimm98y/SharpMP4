@@ -15,6 +15,9 @@ public partial class SuggestedTimeDisplayDurationProperty : ItemFullProperty
 {
 	public const string TYPE = "ssld";
 	public override string DisplayName { get { return "SuggestedTimeDisplayDurationProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected ushort duration; 
 	public ushort Duration { get { return this.duration; } set { this.duration = value; } }

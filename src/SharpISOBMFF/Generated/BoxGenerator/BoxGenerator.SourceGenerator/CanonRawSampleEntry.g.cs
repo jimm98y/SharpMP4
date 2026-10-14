@@ -30,6 +30,9 @@ public partial class CanonRawSampleEntry : SampleEntry
 {
 	public const string TYPE = "CRAW";
 	public override string DisplayName { get { return "CanonRawSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected ushort pre_defined; 
 	public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }

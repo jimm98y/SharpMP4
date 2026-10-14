@@ -63,6 +63,9 @@ public partial class ChannelLayout : FullBox
 {
 	public const string TYPE = "chnl";
 	public override string DisplayName { get { return "ChannelLayout"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry"); }
+
 
 	protected byte stream_structure; 
 	public byte StreamStructure { get { return this.stream_structure; } set { this.stream_structure = value; } }

@@ -32,6 +32,9 @@ public partial class TrackFragmentHeaderBox : FullBox
 {
 	public const string TYPE = "tfhd";
 	public override string DisplayName { get { return "TrackFragmentHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("traf"); }
+
 
 	protected uint track_ID;  //  all the following are optional fields
 	protected bool track_IDPresent;

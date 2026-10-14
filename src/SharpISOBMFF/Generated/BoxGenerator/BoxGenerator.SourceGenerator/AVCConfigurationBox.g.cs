@@ -14,6 +14,9 @@ public partial class AVCConfigurationBox : Box
 {
 	public const string TYPE = "avcC";
 	public override string DisplayName { get { return "AVCConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco", "RestrictedSampleEntry(resv)", "AVCSampleEntry(avc1,avc3)", "AVC2SampleEntry(avc2,avc4)", "VisualSampleEntry(encv)", "AVCParameterSampleEntry(avcp)", "IncompleteAVCSampleEntry(icpv)", "VisualSampleEntry(dva1,dvav)"); }
+
 
 	protected AVCDecoderConfigurationRecord AVCConfig; 
 	public AVCDecoderConfigurationRecord _AVCConfig { get { return this.AVCConfig; } set { this.AVCConfig = value; } }

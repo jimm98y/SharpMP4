@@ -27,6 +27,9 @@ public partial class TranscodingInfoBox : Box
 {
 	public const string TYPE = "tran";
 	public override string DisplayName { get { return "TranscodingInfoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("scif"); }
+
 
 	protected byte reserved = 0; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }

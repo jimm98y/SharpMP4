@@ -18,6 +18,9 @@ public partial class AC4SampleEntry : AudioSampleEntry
 {
 	public const string TYPE = "ac-4";
 	public override string DisplayName { get { return "AC4SampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public AC4SpecificBox _AC4SpecificBox { get { return this.children.OfType<AC4SpecificBox>().FirstOrDefault(); } }
 	public IEnumerable<AC4PresentationLabelBox> _AC4PresentationLabelBox { get { return this.children.OfType<AC4PresentationLabelBox>(); } }
 

@@ -25,6 +25,9 @@ public partial class MD5IntegrityBox : FullBox
 {
 	public const string TYPE = "md5i";
 	public override string DisplayName { get { return "MD5IntegrityBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
+
 
 	protected byte[] input_MD5; 
 	public byte[] InputMD5 { get { return this.input_MD5; } set { this.input_MD5 = value; } }

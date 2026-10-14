@@ -20,6 +20,9 @@ public partial class SVCPriorityLayerInfoBox : Box
 {
 	public const string TYPE = "qlif";
 	public override string DisplayName { get { return "SVCPriorityLayerInfoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("SVCMetaDataSampleEntry(svcM)"); }
+
 
 	protected byte pr_layer_num; 
 	public byte PrLayerNum { get { return this.pr_layer_num; } set { this.pr_layer_num = value; } }

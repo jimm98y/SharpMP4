@@ -34,6 +34,9 @@ public partial class AC4SpecificBox : Box
 {
 	public const string TYPE = "dac4";
 	public override string DisplayName { get { return "AC4SpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(ac-4,enca)"); }
+
 
 	protected byte ac4_dsi_version; 
 	public byte Ac4DsiVersion { get { return this.ac4_dsi_version; } set { this.ac4_dsi_version = value; } }

@@ -15,6 +15,9 @@ public partial class TrackHintInformation : Box
 {
 	public const string TYPE = "hnti";
 	public override string DisplayName { get { return "TrackHintInformation"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	public TrackHintInformation(): base(IsoStream.FromFourCC("hnti"))
 	{

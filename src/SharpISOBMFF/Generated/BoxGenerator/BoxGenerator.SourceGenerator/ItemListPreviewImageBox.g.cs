@@ -14,6 +14,9 @@ public partial class ItemListPreviewImageBox : Box
 {
 	public const string TYPE = "snal";
 	public override string DisplayName { get { return "ItemListPreviewImageBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public ItemListPreviewImageBox(): base(IsoStream.FromFourCC("snal"))
 	{

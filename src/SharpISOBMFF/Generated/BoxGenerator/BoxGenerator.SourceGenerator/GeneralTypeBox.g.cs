@@ -15,6 +15,9 @@ aligned(8) class GeneralTypeBox(code) extends Box(code) {
 public partial class GeneralTypeBox : Box
 {
 	public override string DisplayName { get { return "GeneralTypeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected uint major_brand; 
 	public uint MajorBrand { get { return this.major_brand; } set { this.major_brand = value; } }

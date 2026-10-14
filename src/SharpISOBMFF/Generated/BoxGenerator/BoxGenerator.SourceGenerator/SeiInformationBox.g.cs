@@ -21,6 +21,9 @@ public partial class SeiInformationBox : Box
 {
 	public const string TYPE = "seii";
 	public override string DisplayName { get { return "SeiInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("schi", "VisualSampleEntry"); }
+
 
 	protected ushort numRequiredSEIs; 
 	public ushort NumRequiredSEIs { get { return this.numRequiredSEIs; } set { this.numRequiredSEIs = value; } }

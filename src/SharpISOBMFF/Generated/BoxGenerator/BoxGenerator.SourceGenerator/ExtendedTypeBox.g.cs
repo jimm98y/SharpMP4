@@ -14,6 +14,9 @@ public partial class ExtendedTypeBox : Box
 {
 	public const string TYPE = "etyp";
 	public override string DisplayName { get { return "ExtendedTypeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file", "ipco", "otyp"); }
+
 	public IEnumerable<TypeCombinationBox> CompatibleCombinations { get { return this.children.OfType<TypeCombinationBox>(); } }
 
 	public ExtendedTypeBox(): base(IsoStream.FromFourCC("etyp"))

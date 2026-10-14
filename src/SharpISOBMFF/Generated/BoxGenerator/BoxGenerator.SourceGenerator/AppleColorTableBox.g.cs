@@ -18,6 +18,9 @@ public partial class AppleColorTableBox : Box
 {
 	public const string TYPE = "ctab";
 	public override string DisplayName { get { return "AppleColorTableBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("moov"); }
+
 
 	protected int color_table_seed; 
 	public int ColorTableSeed { get { return this.color_table_seed; } set { this.color_table_seed = value; } }

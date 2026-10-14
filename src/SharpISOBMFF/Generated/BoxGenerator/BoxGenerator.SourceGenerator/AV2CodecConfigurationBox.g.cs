@@ -20,6 +20,9 @@ public partial class AV2CodecConfigurationBox : Box
 {
 	public const string TYPE = "av2C";
 	public override string DisplayName { get { return "AV2CodecConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("av02"); }
+
 
 	protected byte reserved1 = 0; 
 	public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }

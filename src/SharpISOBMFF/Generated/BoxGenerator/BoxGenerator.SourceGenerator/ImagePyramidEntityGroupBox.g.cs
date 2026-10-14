@@ -22,6 +22,9 @@ public partial class ImagePyramidEntityGroupBox : EntityToGroupBox
 {
 	public const string TYPE = "pymd";
 	public override string DisplayName { get { return "ImagePyramidEntityGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("grpl"); }
+
 
 	protected ushort tile_size_x; 
 	public ushort TileSizex { get { return this.tile_size_x; } set { this.tile_size_x = value; } }

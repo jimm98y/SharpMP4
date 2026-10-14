@@ -14,6 +14,9 @@ public partial class AppleGroupingBox : Box
 {
 	public const string TYPE = "©grp";
 	public override string DisplayName { get { return "AppleGroupingBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	public AppleGroupingBox(): base(IsoStream.FromFourCC("©grp"))
 	{

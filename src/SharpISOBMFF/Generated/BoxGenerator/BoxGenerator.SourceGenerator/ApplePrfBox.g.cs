@@ -14,6 +14,9 @@ public partial class ApplePrfBox : Box
 {
 	public const string TYPE = "©prf";
 	public override string DisplayName { get { return "ApplePrfBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	public ApplePrfBox(): base(IsoStream.FromFourCC("©prf"))
 	{

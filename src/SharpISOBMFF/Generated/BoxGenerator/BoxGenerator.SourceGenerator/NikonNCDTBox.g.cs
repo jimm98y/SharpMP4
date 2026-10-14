@@ -14,6 +14,9 @@ public partial class NikonNCDTBox : Box
 {
 	public const string TYPE = "NCDT";
 	public override string DisplayName { get { return "NikonNCDTBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	public NikonNCDTBox(): base(IsoStream.FromFourCC("NCDT"))
 	{

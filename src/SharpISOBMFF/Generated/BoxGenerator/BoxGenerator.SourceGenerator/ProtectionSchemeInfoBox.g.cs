@@ -17,6 +17,9 @@ public partial class ProtectionSchemeInfoBox : Box
 {
 	public const string TYPE = "sinf";
 	public override string DisplayName { get { return "ProtectionSchemeInfoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipro", "SampleEntry"); }
+
 	public OriginalFormatBox OriginalFormat { get { return this.children.OfType<OriginalFormatBox>().FirstOrDefault(); } }
 	public SchemeTypeBox SchemeTypeBox { get { return this.children.OfType<SchemeTypeBox>().FirstOrDefault(); } }
 	public SchemeInformationBox Info { get { return this.children.OfType<SchemeInformationBox>().FirstOrDefault(); } }

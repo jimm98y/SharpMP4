@@ -14,6 +14,9 @@ public partial class URIBox : FullBox
 {
 	public const string TYPE = "uri ";
 	public override string DisplayName { get { return "URIBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("URIMetaSampleEntry(urim)"); }
+
 
 	protected BinaryUTF8String theURI; 
 	public BinaryUTF8String TheURI { get { return this.theURI; } set { this.theURI = value; } }

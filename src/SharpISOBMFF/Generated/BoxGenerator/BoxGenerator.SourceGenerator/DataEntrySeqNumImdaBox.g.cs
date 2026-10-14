@@ -14,6 +14,9 @@ public partial class DataEntrySeqNumImdaBox : DataEntryBaseBox
 {
 	public const string TYPE = "snim";
 	public override string DisplayName { get { return "DataEntrySeqNumImdaBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("dref"); }
+
 
 	public DataEntrySeqNumImdaBox(uint flags = 0): base(IsoStream.FromFourCC("snim"), flags)
 	{

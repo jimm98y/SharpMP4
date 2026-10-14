@@ -14,6 +14,9 @@ public partial class ShortTitleBox : Box
 {
 	public const string TYPE = "@sti";
 	public override string DisplayName { get { return "ShortTitleBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public ShortTitleBox(): base(IsoStream.FromFourCC("@sti"))
 	{

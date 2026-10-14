@@ -14,6 +14,9 @@ public partial class DiskNumberBox : Box
 {
 	public const string TYPE = "disk";
 	public override string DisplayName { get { return "DiskNumberBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public DiskNumberBox(): base(IsoStream.FromFourCC("disk"))
 	{

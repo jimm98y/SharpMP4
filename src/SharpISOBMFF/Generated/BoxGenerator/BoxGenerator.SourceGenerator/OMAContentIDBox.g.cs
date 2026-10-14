@@ -15,6 +15,9 @@ public partial class OMAContentIDBox : FullBox
 {
 	public const string TYPE = "ccid";
 	public override string DisplayName { get { return "OMAContentIDBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected ushort contentIDLength; 
 	public ushort ContentIDLength { get { return this.contentIDLength; } set { this.contentIDLength = value; } }

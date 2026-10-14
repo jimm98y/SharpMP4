@@ -16,6 +16,9 @@ public partial class FLACSpecificBox : FullBox
 {
 	public const string TYPE = "dfLa";
 	public override string DisplayName { get { return "FLACSpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(fLaC,enca)"); }
+
 
 	protected FLACMetadataBlock[] blocks; 
 	public FLACMetadataBlock[] Blocks { get { return this.blocks; } set { this.blocks = value; } }

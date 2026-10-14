@@ -15,6 +15,9 @@ public partial class AudibleCDETBox : Box
 {
 	public const string TYPE = "CDET";
 	public override string DisplayName { get { return "AudibleCDETBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AudibleCDETBox(): base(IsoStream.FromFourCC("CDET"))
 	{

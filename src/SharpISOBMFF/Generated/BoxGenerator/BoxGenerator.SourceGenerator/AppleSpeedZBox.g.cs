@@ -14,6 +14,9 @@ public partial class AppleSpeedZBox : Box
 {
 	public const string TYPE = "©zsp";
 	public override string DisplayName { get { return "AppleSpeedZBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	public AppleSpeedZBox(): base(IsoStream.FromFourCC("©zsp"))
 	{

@@ -15,6 +15,9 @@ public partial class BinaryXMLBox : FullBox
 {
 	public const string TYPE = "bxml";
 	public override string DisplayName { get { return "BinaryXMLBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
+
 
 	protected byte[] data;  //  to end of box
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

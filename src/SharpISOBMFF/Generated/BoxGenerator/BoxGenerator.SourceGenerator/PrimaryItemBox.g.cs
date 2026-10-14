@@ -19,6 +19,9 @@ public partial class PrimaryItemBox : FullBox
 {
 	public const string TYPE = "pitm";
 	public override string DisplayName { get { return "PrimaryItemBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
+
 
 	protected uint item_ID; 
 	public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }

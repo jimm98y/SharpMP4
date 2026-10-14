@@ -14,6 +14,9 @@ public partial class IPMPInfoBox : FullBox
 {
 	public const string TYPE = "imif";
 	public override string DisplayName { get { return "IPMPInfoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("sinf"); }
+
 
 	protected Descriptor[] descriptor; 
 	public Descriptor[] Descriptor { get { return this.descriptor; } set { this.descriptor = value; } }

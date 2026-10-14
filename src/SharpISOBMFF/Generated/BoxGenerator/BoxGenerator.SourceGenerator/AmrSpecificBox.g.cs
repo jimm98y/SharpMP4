@@ -19,6 +19,9 @@ public partial class AmrSpecificBox : Box
 {
 	public const string TYPE = "damr";
 	public override string DisplayName { get { return "AmrSpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(samr,sawb,enca)"); }
+
 
 	protected uint vendor; 
 	public uint Vendor { get { return this.vendor; } set { this.vendor = value; } }

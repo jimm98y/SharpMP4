@@ -14,6 +14,9 @@ public partial class AppleUrlBox : Box
 {
 	public const string TYPE = "©url";
 	public override string DisplayName { get { return "AppleUrlBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	public AppleUrlBox(): base(IsoStream.FromFourCC("©url"))
 	{

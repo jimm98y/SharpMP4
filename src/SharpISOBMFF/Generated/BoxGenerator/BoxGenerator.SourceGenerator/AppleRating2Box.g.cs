@@ -14,6 +14,9 @@ public partial class AppleRating2Box : Box
 {
 	public const string TYPE = "rati";
 	public override string DisplayName { get { return "AppleRating2Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleRating2Box(): base(IsoStream.FromFourCC("rati"))
 	{

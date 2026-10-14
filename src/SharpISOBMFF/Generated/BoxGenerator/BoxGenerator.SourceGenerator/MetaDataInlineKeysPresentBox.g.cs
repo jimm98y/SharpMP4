@@ -16,6 +16,9 @@ public partial class MetaDataInlineKeysPresentBox : Box
 {
 	public const string TYPE = "keyi";
 	public override string DisplayName { get { return "MetaDataInlineKeysPresentBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
+
 
 	protected byte inlineKeyValueBoxesPresent; 
 	public byte InlineKeyValueBoxesPresent { get { return this.inlineKeyValueBoxesPresent; } set { this.inlineKeyValueBoxesPresent = value; } }

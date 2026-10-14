@@ -16,6 +16,9 @@ public partial class PspMtdtBox : Box
 {
 	public const string TYPE = "MTDT";
 	public override string DisplayName { get { return "PspMtdtBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("uuid"); }
+
 
 	protected ushort entry_count; 
 	public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }

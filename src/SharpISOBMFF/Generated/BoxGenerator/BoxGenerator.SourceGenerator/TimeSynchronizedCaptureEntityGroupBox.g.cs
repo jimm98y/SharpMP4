@@ -15,6 +15,9 @@ public partial class TimeSynchronizedCaptureEntityGroupBox : EntityToGroupBox
 {
 	public const string TYPE = "tsyn";
 	public override string DisplayName { get { return "TimeSynchronizedCaptureEntityGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("grpl"); }
+
 
 	public TimeSynchronizedCaptureEntityGroupBox(): base(IsoStream.FromFourCC("tsyn"), 0, 0)
 	{

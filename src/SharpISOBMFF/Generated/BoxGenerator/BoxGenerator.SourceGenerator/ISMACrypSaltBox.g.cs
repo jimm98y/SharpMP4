@@ -15,6 +15,9 @@ public partial class ISMACrypSaltBox : Box
 {
 	public const string TYPE = "iSLT";
 	public override string DisplayName { get { return "ISMACrypSaltBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("schi"); }
+
 
 	protected ulong salt; 
 	public ulong Salt { get { return this.salt; } set { this.salt = value; } }

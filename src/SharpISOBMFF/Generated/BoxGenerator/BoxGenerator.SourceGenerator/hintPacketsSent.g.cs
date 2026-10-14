@@ -14,6 +14,9 @@ public partial class hintPacketsSent : Box
 {
 	public const string TYPE = "nump";
 	public override string DisplayName { get { return "hintPacketsSent"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("hinf"); }
+
 
 	protected ulong packetssent; 
 	public ulong Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }

@@ -13,6 +13,9 @@ public partial class HintStatisticsBox : Box
 {
 	public const string TYPE = "hinf";
 	public override string DisplayName { get { return "HintStatisticsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	public HintStatisticsBox(): base(IsoStream.FromFourCC("hinf"))
 	{

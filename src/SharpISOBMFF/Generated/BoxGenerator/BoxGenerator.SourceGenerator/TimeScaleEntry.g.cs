@@ -16,6 +16,9 @@ public partial class TimeScaleEntry : Box
 {
 	public const string TYPE = "tims";
 	public override string DisplayName { get { return "TimeScaleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("HintSampleEntry(rtp )", "FDHintSampleEntry(fdp )", "SrtpHintSampleEntry(srtp)", "ReceivedRtpHintSampleEntry(rrtp)"); }
+
 
 	protected uint timescale; 
 	public uint Timescale { get { return this.timescale; } set { this.timescale = value; } }

@@ -17,6 +17,9 @@ public partial class TextSubtitleSampleEntry : SubtitleSampleEntry
 {
 	public const string TYPE = "sbtt";
 	public override string DisplayName { get { return "TextSubtitleSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected BinaryUTF8String content_encoding;  //  optional 
 	protected bool content_encodingPresent;

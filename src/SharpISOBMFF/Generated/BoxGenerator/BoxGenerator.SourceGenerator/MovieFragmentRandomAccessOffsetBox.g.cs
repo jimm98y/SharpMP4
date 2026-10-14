@@ -15,6 +15,9 @@ public partial class MovieFragmentRandomAccessOffsetBox : FullBox
 {
 	public const string TYPE = "mfro";
 	public override string DisplayName { get { return "MovieFragmentRandomAccessOffsetBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mfra"); }
+
 
 	protected uint parent_size; 
 	public uint ParentSize { get { return this.parent_size; } set { this.parent_size = value; } }

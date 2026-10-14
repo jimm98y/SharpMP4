@@ -14,6 +14,9 @@ public partial class AppleTVEpisodeBox : Box
 {
 	public const string TYPE = "tves";
 	public override string DisplayName { get { return "AppleTVEpisodeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleTVEpisodeBox(): base(IsoStream.FromFourCC("tves"))
 	{

@@ -14,6 +14,9 @@ public partial class PurchaseInfoBox : Box
 {
 	public const string TYPE = "pinf";
 	public override string DisplayName { get { return "PurchaseInfoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(mp4a)"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

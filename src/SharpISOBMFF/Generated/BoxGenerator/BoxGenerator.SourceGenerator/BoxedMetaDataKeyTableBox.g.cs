@@ -14,6 +14,9 @@ public partial class BoxedMetaDataKeyTableBox : Box
 {
 	public const string TYPE = "keys";
 	public override string DisplayName { get { return "BoxedMetaDataKeyTableBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mebx", "meta"); }
+
 
 	public BoxedMetaDataKeyTableBox(): base(IsoStream.FromFourCC("keys"))
 	{

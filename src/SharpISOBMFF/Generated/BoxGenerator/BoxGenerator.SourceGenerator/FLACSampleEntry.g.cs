@@ -15,6 +15,9 @@ public partial class FLACSampleEntry : AudioSampleEntry
 {
 	public const string TYPE = "fLaC";
 	public override string DisplayName { get { return "FLACSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public FLACSpecificBox _FLACSpecificBox { get { return this.children.OfType<FLACSpecificBox>().FirstOrDefault(); } }
 
 	public FLACSampleEntry(): base(IsoStream.FromFourCC("fLaC"))

@@ -14,6 +14,9 @@ public partial class AppleCreatorBox : Box
 {
 	public const string TYPE = "©swf";
 	public override string DisplayName { get { return "AppleCreatorBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	public AppleCreatorBox(): base(IsoStream.FromFourCC("©swf"))
 	{

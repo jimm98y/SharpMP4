@@ -20,6 +20,9 @@ public partial class CameraIntrinsicMatrixBox : FullBox
 {
 	public const string TYPE = "cmin";
 	public override string DisplayName { get { return "CameraIntrinsicMatrixBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected int matrix_focal_length_x; 
 	public int MatrixFocalLengthx { get { return this.matrix_focal_length_x; } set { this.matrix_focal_length_x = value; } }

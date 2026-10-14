@@ -14,6 +14,9 @@ public partial class AppleTrackMatteBox : Box
 {
 	public const string TYPE = "matt";
 	public override string DisplayName { get { return "AppleTrackMatteBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("trak"); }
+
 
 	public AppleTrackMatteBox(): base(IsoStream.FromFourCC("matt"))
 	{

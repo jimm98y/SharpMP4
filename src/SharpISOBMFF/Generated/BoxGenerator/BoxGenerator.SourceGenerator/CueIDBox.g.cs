@@ -14,6 +14,10 @@ public partial class CueIDBox : Box
 {
 	public const string TYPE = "iden";
 	public override string DisplayName { get { return "CueIDBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	// its definitions place it in no container: wherever it is, it is not misplaced
+	public override bool ValidatePlacement() { return IsPlacedIn(); }
+
 
 	protected BinaryUTF8String cueID; 
 	public BinaryUTF8String CueID { get { return this.cueID; } set { this.cueID = value; } }

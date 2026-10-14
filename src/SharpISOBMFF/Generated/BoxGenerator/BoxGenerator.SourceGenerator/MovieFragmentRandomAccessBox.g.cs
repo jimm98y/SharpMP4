@@ -15,6 +15,9 @@ public partial class MovieFragmentRandomAccessBox : Box
 {
 	public const string TYPE = "mfra";
 	public override string DisplayName { get { return "MovieFragmentRandomAccessBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	public MovieFragmentRandomAccessBox(): base(IsoStream.FromFourCC("mfra"))
 	{

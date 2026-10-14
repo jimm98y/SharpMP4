@@ -22,6 +22,9 @@ public partial class JpegXLFrameIndexBox : Box
 {
 	public const string TYPE = "jxli";
 	public override string DisplayName { get { return "JpegXLFrameIndexBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected Leb128 frame_count;  //  NF
 	public Leb128 FrameCount { get { return this.frame_count; } set { this.frame_count = value; } }

@@ -28,6 +28,9 @@ public partial class MVDDepthResolutionBox : Box
 {
 	public const string TYPE = "3dpr";
 	public override string DisplayName { get { return "MVDDepthResolutionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mvdC", "a3dC"); }
+
 
 	protected ushort depth_width; 
 	public ushort DepthWidth { get { return this.depth_width; } set { this.depth_width = value; } }

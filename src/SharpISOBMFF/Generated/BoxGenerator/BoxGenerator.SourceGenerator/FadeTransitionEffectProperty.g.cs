@@ -15,6 +15,9 @@ public partial class FadeTransitionEffectProperty : ItemFullProperty
 {
 	public const string TYPE = "fade";
 	public override string DisplayName { get { return "FadeTransitionEffectProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected byte transition_direction; 
 	public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }

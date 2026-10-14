@@ -19,6 +19,9 @@ public partial class HintMediaHeaderBox : FullBox
 {
 	public const string TYPE = "hmhd";
 	public override string DisplayName { get { return "HintMediaHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("minf"); }
+
 
 	protected ushort maxPDUsize; 
 	public ushort MaxPDUsize { get { return this.maxPDUsize; } set { this.maxPDUsize = value; } }

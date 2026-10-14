@@ -18,6 +18,9 @@ public partial class CodingConstraintsBox : FullBox
 {
 	public const string TYPE = "ccst";
 	public override string DisplayName { get { return "CodingConstraintsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("SampleEntry"); }
+
 
 	protected bool all_ref_pics_intra; 
 	public bool AllRefPicsIntra { get { return this.all_ref_pics_intra; } set { this.all_ref_pics_intra = value; } }

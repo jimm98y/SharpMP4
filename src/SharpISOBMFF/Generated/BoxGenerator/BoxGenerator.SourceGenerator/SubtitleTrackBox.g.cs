@@ -15,6 +15,9 @@ public partial class SubtitleTrackBox : Box
 {
 	public const string TYPE = "folw";
 	public override string DisplayName { get { return "SubtitleTrackBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("tref"); }
+
 
 	protected uint[] track_IDs; 
 	public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }

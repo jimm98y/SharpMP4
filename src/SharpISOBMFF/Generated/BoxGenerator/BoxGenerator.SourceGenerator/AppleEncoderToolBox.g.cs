@@ -14,6 +14,9 @@ public partial class AppleEncoderToolBox : Box
 {
 	public const string TYPE = "©too";
 	public override string DisplayName { get { return "AppleEncoderToolBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	public AppleEncoderToolBox(): base(IsoStream.FromFourCC("©too"))
 	{

@@ -14,6 +14,9 @@ public partial class TomTomMetaDataBox : Box
 {
 	public const string TYPE = "TTMD";
 	public override string DisplayName { get { return "TomTomMetaDataBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	public TomTomMetaDataBox(): base(IsoStream.FromFourCC("TTMD"))
 	{

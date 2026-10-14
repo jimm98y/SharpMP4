@@ -14,6 +14,9 @@ public partial class SchemeInformationBox : Box
 {
 	public const string TYPE = "schi";
 	public override string DisplayName { get { return "SchemeInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("sinf", "rinf", "srpp"); }
+
 
 	public SchemeInformationBox(): base(IsoStream.FromFourCC("schi"))
 	{

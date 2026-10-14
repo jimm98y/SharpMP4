@@ -14,6 +14,9 @@ public partial class CanonCMP1TagsBox : Box
 {
 	public const string TYPE = "CMP1";
 	public override string DisplayName { get { return "CanonCMP1TagsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(CRAW)"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

@@ -16,6 +16,9 @@ public partial class It35Box : MetaDataSampleEntry
 {
 	public const string TYPE = "it35";
 	public override string DisplayName { get { return "It35Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected byte it35_identifier_length; 
 	public byte It35IdentifierLength { get { return this.it35_identifier_length; } set { this.it35_identifier_length = value; } }

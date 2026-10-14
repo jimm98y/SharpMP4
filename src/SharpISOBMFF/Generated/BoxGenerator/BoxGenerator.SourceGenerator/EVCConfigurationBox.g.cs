@@ -14,6 +14,9 @@ public partial class EVCConfigurationBox : Box
 {
 	public const string TYPE = "evcC";
 	public override string DisplayName { get { return "EVCConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("EVCSampleEntry(evc1)", "VisualSampleEntry(encv)", "RestrictedSampleEntry(resv)", "ipco"); }
+
 
 	protected EVCDecoderConfigurationRecord EVCConfig; 
 	public EVCDecoderConfigurationRecord _EVCConfig { get { return this.EVCConfig; } set { this.EVCConfig = value; } }

@@ -14,6 +14,9 @@ public partial class AppleNarratorBox : Box
 {
 	public const string TYPE = "©nrt";
 	public override string DisplayName { get { return "AppleNarratorBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleNarratorBox(): base(IsoStream.FromFourCC("©nrt"))
 	{

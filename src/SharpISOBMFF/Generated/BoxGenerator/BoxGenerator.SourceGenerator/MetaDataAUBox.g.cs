@@ -14,6 +14,9 @@ aligned(8) class MetaDataAUBox extends Box(local_key_id) {
 public partial class MetaDataAUBox : Box
 {
 	public override string DisplayName { get { return "MetaDataAUBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? BoxPlacements.OfType(FourCC)); }
+
 
 	public MetaDataAUBox(uint local_key_id): base(local_key_id)
 	{

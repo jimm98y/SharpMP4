@@ -14,6 +14,9 @@ public partial class RowbBox : Box
 {
 	public const string TYPE = "rowb";
 	public override string DisplayName { get { return "RowbBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(AVdh,SVQ3)"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

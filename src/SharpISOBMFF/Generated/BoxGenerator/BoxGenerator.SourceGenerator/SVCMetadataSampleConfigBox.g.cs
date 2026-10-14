@@ -23,6 +23,9 @@ public partial class SVCMetadataSampleConfigBox : FullBox
 {
 	public const string TYPE = "svmC";
 	public override string DisplayName { get { return "SVCMetadataSampleConfigBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("SVCMetaDataSampleEntry(svcM)"); }
+
 
 	protected byte sample_statement_type; 
 	public byte SampleStatementType { get { return this.sample_statement_type; } set { this.sample_statement_type = value; } }

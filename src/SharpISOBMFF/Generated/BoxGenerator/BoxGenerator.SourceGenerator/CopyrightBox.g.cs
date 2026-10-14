@@ -17,6 +17,9 @@ public partial class CopyrightBox : FullBox
 {
 	public const string TYPE = "cprt";
 	public override string DisplayName { get { return "CopyrightBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected bool pad = false; 
 	public bool Pad { get { return this.pad; } set { this.pad = value; } }

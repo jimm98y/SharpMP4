@@ -21,6 +21,9 @@ public partial class SubpicCommonGroupBox : EntityToGroupBox
 {
 	public const string TYPE = "acgl";
 	public override string DisplayName { get { return "SubpicCommonGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("grpl"); }
+
 
 	protected bool level_is_present_flag; 
 	public bool LevelIsPresentFlag { get { return this.level_is_present_flag; } set { this.level_is_present_flag = value; } }

@@ -17,6 +17,9 @@ public partial class LoadBox : Box
 {
 	public const string TYPE = "load";
 	public override string DisplayName { get { return "LoadBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("trak"); }
+
 
 	protected int preloadStartTime; 
 	public int PreloadStartTime { get { return this.preloadStartTime; } set { this.preloadStartTime = value; } }

@@ -15,6 +15,9 @@ public partial class ProjectionInformationBox : FullBox
 {
 	public const string TYPE = "prji";
 	public override string DisplayName { get { return "ProjectionInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("proj"); }
+
 
 	protected uint projection_kind;  //  a FourCC for the kind of projection 
 	public uint ProjectionKind { get { return this.projection_kind; } set { this.projection_kind = value; } }

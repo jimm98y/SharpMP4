@@ -14,6 +14,9 @@ public partial class AvcNalUnitStorageBox : Box
 {
 	public const string TYPE = "avcn";
 	public override string DisplayName { get { return "AvcNalUnitStorageBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("traf"); }
+
 
 	protected AVCDecoderConfigurationRecord AVCConfig; 
 	public AVCDecoderConfigurationRecord _AVCConfig { get { return this.AVCConfig; } set { this.AVCConfig = value; } }

@@ -18,6 +18,9 @@ public partial class EquirectangularProjection : ProjectionDataBox
 {
 	public const string TYPE = "equi";
 	public override string DisplayName { get { return "EquirectangularProjection"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("proj"); }
+
 
 	protected uint projection_bounds_top; 
 	public uint ProjectionBoundsTop { get { return this.projection_bounds_top; } set { this.projection_bounds_top = value; } }

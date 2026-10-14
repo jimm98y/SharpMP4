@@ -31,6 +31,9 @@ public partial class ItemEncryptionBox : ItemFullProperty
 {
 	public const string TYPE = "ienc";
 	public override string DisplayName { get { return "ItemEncryptionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected byte reserved = 0; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }

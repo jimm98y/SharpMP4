@@ -22,6 +22,9 @@ public partial class TimecodeMediaInfoMisspelledBox : FullBox
 {
 	public const string TYPE = "tmci";
 	public override string DisplayName { get { return "TimecodeMediaInfoMisspelledBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("tmcd"); }
+
 
 	protected short text_font; 
 	public short TextFont { get { return this.text_font; } set { this.text_font = value; } }

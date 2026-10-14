@@ -20,6 +20,9 @@ public partial class AC4PresentationLabelBox : FullBox
 {
 	public const string TYPE = "lac4";
 	public override string DisplayName { get { return "AC4PresentationLabelBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(ac-4,enca)"); }
+
 
 	protected ushort num_presentation_labels; 
 	public ushort NumPresentationLabels { get { return this.num_presentation_labels; } set { this.num_presentation_labels = value; } }

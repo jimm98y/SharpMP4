@@ -14,6 +14,9 @@ public partial class hintPacketsSentnpckDup : Box
 {
 	public const string TYPE = "npck";
 	public override string DisplayName { get { return "hintPacketsSentnpckDup"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("hinf"); }
+
 
 	protected uint packetssent; 
 	public uint Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }

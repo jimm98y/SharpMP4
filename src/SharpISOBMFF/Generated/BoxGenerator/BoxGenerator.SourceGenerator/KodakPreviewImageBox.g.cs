@@ -15,6 +15,9 @@ public partial class KodakPreviewImageBox : Box
 {
 	public const string TYPE = "scra";
 	public override string DisplayName { get { return "KodakPreviewImageBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("frea"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

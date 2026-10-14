@@ -15,6 +15,9 @@ public partial class JpegXLLevelBox : Box
 {
 	public const string TYPE = "jxll";
 	public override string DisplayName { get { return "JpegXLLevelBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected byte level; 
 	public byte Level { get { return this.level; } set { this.level = value; } }

@@ -14,6 +14,9 @@ public partial class AppleComposerBox : Box
 {
 	public const string TYPE = "©ope";
 	public override string DisplayName { get { return "AppleComposerBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleComposerBox(): base(IsoStream.FromFourCC("©ope"))
 	{

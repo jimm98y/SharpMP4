@@ -15,6 +15,9 @@ public partial class ScalabilityInformationSEIBox : Box
 {
 	public const string TYPE = "seib";
 	public override string DisplayName { get { return "ScalabilityInformationSEIBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AVCSVCSampleEntry(avc1,avc3)", "AVC2SVCSampleEntry(avc2,avc4)", "SVCSampleEntry(svc1,svc2)"); }
+
 
 	protected byte[] scalinfosei; 
 	public byte[] Scalinfosei { get { return this.scalinfosei; } set { this.scalinfosei = value; } }

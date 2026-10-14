@@ -14,6 +14,9 @@ public partial class HEVCTileConfigurationBox : Box
 {
 	public const string TYPE = "hvtC";
 	public override string DisplayName { get { return "HEVCTileConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("HEVCTileSampleEntry(hvt1)", "HEVCTileSSHInfoSampleEntry(hvt3)", "HEVCSliceSegmentDataSampleEntry(hvt2)"); }
+
 
 	protected HEVCTileTierLevelConfigurationRecord HEVCTileTierLevelConfig; 
 	public HEVCTileTierLevelConfigurationRecord _HEVCTileTierLevelConfig { get { return this.HEVCTileTierLevelConfig; } set { this.HEVCTileTierLevelConfig = value; } }

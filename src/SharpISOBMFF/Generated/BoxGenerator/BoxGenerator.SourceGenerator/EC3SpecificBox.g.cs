@@ -17,6 +17,9 @@ public partial class EC3SpecificBox : Box
 {
 	public const string TYPE = "dec3";
 	public override string DisplayName { get { return "EC3SpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(ec-3,enca)", "wave"); }
+
 
 	protected ushort dataRate; 
 	public ushort DataRate { get { return this.dataRate; } set { this.dataRate = value; } }

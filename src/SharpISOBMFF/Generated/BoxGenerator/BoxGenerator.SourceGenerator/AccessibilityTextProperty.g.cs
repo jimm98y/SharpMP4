@@ -17,6 +17,9 @@ public partial class AccessibilityTextProperty : ItemFullProperty
 {
 	public const string TYPE = "altt";
 	public override string DisplayName { get { return "AccessibilityTextProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected BinaryUTF8String alt_text; 
 	public BinaryUTF8String AltText { get { return this.alt_text; } set { this.alt_text = value; } }

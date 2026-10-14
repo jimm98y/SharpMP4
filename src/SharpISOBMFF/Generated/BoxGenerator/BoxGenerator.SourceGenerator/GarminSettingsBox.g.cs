@@ -14,6 +14,9 @@ public partial class GarminSettingsBox : Box
 {
 	public const string TYPE = "pmcc";
 	public override string DisplayName { get { return "GarminSettingsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

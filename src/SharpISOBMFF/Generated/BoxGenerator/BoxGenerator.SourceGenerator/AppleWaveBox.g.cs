@@ -14,6 +14,9 @@ public partial class AppleWaveBox : Box
 {
 	public const string TYPE = "wave";
 	public override string DisplayName { get { return "AppleWaveBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry"); }
+
 
 	public AppleWaveBox(): base(IsoStream.FromFourCC("wave"))
 	{

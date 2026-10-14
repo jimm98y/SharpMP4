@@ -20,6 +20,9 @@ public partial class TextSampleEntry : SampleEntry
 {
 	public const string TYPE = "enct";
 	public override string DisplayName { get { return "TextSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected uint displayFlags; 
 	public uint DisplayFlags { get { return this.displayFlags; } set { this.displayFlags = value; } }

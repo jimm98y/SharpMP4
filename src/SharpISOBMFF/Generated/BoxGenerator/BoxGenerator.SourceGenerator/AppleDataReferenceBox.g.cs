@@ -16,6 +16,9 @@ public partial class AppleDataReferenceBox : FullBox
 {
 	public const string TYPE = "rdrf";
 	public override string DisplayName { get { return "AppleDataReferenceBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("rmda"); }
+
 
 	protected uint dataReferenceType; 
 	public uint DataReferenceType { get { return this.dataReferenceType; } set { this.dataReferenceType = value; } }

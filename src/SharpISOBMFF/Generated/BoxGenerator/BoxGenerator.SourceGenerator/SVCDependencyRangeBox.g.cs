@@ -21,6 +21,9 @@ public partial class SVCDependencyRangeBox : Box
 {
 	public const string TYPE = "svdr";
 	public override string DisplayName { get { return "SVCDependencyRangeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("scif"); }
+
 
 	protected byte min_dependency_id; 
 	public byte MinDependencyId { get { return this.min_dependency_id; } set { this.min_dependency_id = value; } }

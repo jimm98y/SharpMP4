@@ -16,6 +16,9 @@ public partial class Ovc1VisualSampleEntryImpl : Box
 {
 	public const string TYPE = "ovc1";
 	public override string DisplayName { get { return "Ovc1VisualSampleEntryImpl"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected ulong reserved; 
 	public ulong Reserved { get { return this.reserved; } set { this.reserved = value; } }

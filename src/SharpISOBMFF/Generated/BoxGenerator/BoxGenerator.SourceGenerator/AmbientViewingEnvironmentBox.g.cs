@@ -16,6 +16,9 @@ public partial class AmbientViewingEnvironmentBox : Box
 {
 	public const string TYPE = "amve";
 	public override string DisplayName { get { return "AmbientViewingEnvironmentBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry", "ipco"); }
+
 
 	protected uint ambient_illuminance; 
 	public uint AmbientIlluminance { get { return this.ambient_illuminance; } set { this.ambient_illuminance = value; } }

@@ -14,6 +14,9 @@ public partial class AppleConductorBox : Box
 {
 	public const string TYPE = "©con";
 	public override string DisplayName { get { return "AppleConductorBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleConductorBox(): base(IsoStream.FromFourCC("©con"))
 	{

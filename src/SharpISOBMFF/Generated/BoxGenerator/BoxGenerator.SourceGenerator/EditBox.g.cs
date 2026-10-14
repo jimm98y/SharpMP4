@@ -13,6 +13,9 @@ public partial class EditBox : Box
 {
 	public const string TYPE = "edts";
 	public override string DisplayName { get { return "EditBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("trak"); }
+
 
 	public EditBox(): base(IsoStream.FromFourCC("edts"))
 	{

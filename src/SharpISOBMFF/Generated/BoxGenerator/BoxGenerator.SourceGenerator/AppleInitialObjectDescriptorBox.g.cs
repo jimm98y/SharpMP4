@@ -14,6 +14,9 @@ public partial class AppleInitialObjectDescriptorBox : FullBox
 {
 	public const string TYPE = "iods";
 	public override string DisplayName { get { return "AppleInitialObjectDescriptorBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("moov"); }
+
 
 	protected Descriptor[] descriptor; 
 	public Descriptor[] Descriptor { get { return this.descriptor; } set { this.descriptor = value; } }

@@ -15,6 +15,9 @@ public partial class AssetInformationBox : FullBox
 {
 	public const string TYPE = "ainf";
 	public override string DisplayName { get { return "AssetInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("moov"); }
+
 
 	protected byte[] profileVersion; 
 	public byte[] ProfileVersion { get { return this.profileVersion; } set { this.profileVersion = value; } }

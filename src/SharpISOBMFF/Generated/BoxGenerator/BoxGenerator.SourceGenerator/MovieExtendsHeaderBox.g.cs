@@ -18,6 +18,9 @@ public partial class MovieExtendsHeaderBox : FullBox
 {
 	public const string TYPE = "mehd";
 	public override string DisplayName { get { return "MovieExtendsHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mvex"); }
+
 
 	protected ulong fragment_duration; 
 	public ulong FragmentDuration { get { return this.fragment_duration; } set { this.fragment_duration = value; } }

@@ -16,6 +16,9 @@ public partial class FontTableBox : Box
 {
 	public const string TYPE = "ftab";
 	public override string DisplayName { get { return "FontTableBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("SampleEntry(tx3g,enct)"); }
+
 
 	protected ushort entryCount; 
 	public ushort EntryCount { get { return this.entryCount; } set { this.entryCount = value; } }

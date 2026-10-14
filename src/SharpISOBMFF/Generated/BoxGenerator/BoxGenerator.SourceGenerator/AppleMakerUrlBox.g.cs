@@ -14,6 +14,9 @@ public partial class AppleMakerUrlBox : Box
 {
 	public const string TYPE = "©mal";
 	public override string DisplayName { get { return "AppleMakerUrlBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	public AppleMakerUrlBox(): base(IsoStream.FromFourCC("©mal"))
 	{

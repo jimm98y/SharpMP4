@@ -14,6 +14,9 @@ public partial class AppleLongDescriptionBox : Box
 {
 	public const string TYPE = "ldes";
 	public override string DisplayName { get { return "AppleLongDescriptionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleLongDescriptionBox(): base(IsoStream.FromFourCC("ldes"))
 	{

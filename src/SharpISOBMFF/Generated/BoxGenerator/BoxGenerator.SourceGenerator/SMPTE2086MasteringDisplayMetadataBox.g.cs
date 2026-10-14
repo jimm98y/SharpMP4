@@ -23,6 +23,9 @@ public partial class SMPTE2086MasteringDisplayMetadataBox : FullBox
 {
 	public const string TYPE = "SmDm";
 	public override string DisplayName { get { return "SMPTE2086MasteringDisplayMetadataBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(vp08,vp09,vp10,encv,resv)"); }
+
 
 	protected ushort primaryRChromaticityX; 
 	public ushort PrimaryRChromaticityX { get { return this.primaryRChromaticityX; } set { this.primaryRChromaticityX = value; } }

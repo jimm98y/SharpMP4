@@ -15,6 +15,9 @@ public partial class CanonCMT2Box : Box
 {
 	public const string TYPE = "CMT2";
 	public override string DisplayName { get { return "CanonCMT2Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("uuid"); }
+
 
 	protected byte[] tiff; 
 	public byte[] Tiff { get { return this.tiff; } set { this.tiff = value; } }

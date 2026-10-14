@@ -13,6 +13,9 @@ public partial class UserDataBox : Box
 {
 	public const string TYPE = "udta";
 	public override string DisplayName { get { return "UserDataBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("moov", "trak", "moof", "traf"); }
+
 
 	public UserDataBox(): base(IsoStream.FromFourCC("udta"))
 	{

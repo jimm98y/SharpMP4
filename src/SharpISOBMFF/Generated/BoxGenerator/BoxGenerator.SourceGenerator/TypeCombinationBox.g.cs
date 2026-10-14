@@ -14,6 +14,9 @@ public partial class TypeCombinationBox : Box
 {
 	public const string TYPE = "tyco";
 	public override string DisplayName { get { return "TypeCombinationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("etyp"); }
+
 
 	protected uint[] compatible_brands;  //  to end of the box
 	public uint[] CompatibleBrands { get { return this.compatible_brands; } set { this.compatible_brands = value; } }

@@ -14,6 +14,9 @@ public partial class ThumbnailImage2Box : Box
 {
 	public const string TYPE = "thum";
 	public override string DisplayName { get { return "ThumbnailImage2Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file", "free"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

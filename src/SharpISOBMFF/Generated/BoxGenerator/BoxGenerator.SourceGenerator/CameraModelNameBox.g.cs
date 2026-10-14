@@ -6,19 +6,22 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class ModelBox() extends Box ('modl'){
+class CameraModelNameBox() extends Box ('cmnm'){
  bit(8) data[];
  }
 */
-public partial class ModelBoxmodlDup : Box
+public partial class CameraModelNameBox : Box
 {
-	public const string TYPE = "modl";
-	public override string DisplayName { get { return "ModelBoxmodlDup"; } }
+	public const string TYPE = "cmnm";
+	public override string DisplayName { get { return "CameraModelNameBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-	public ModelBoxmodlDup(): base(IsoStream.FromFourCC("modl"))
+	public CameraModelNameBox(): base(IsoStream.FromFourCC("cmnm"))
 	{
 	}
 

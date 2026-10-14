@@ -14,6 +14,9 @@ public partial class VideoExtendedUsageBox : Box
 {
 	public const string TYPE = "vexu";
 	public override string DisplayName { get { return "VideoExtendedUsageBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry"); }
+
 
 	public VideoExtendedUsageBox(): base(IsoStream.FromFourCC("vexu"))
 	{

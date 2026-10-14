@@ -14,6 +14,9 @@ public partial class AppleHintVersionBox : Box
 {
 	public const string TYPE = "hinv";
 	public override string DisplayName { get { return "AppleHintVersionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected BinaryUTF8String version; 
 	public BinaryUTF8String Version { get { return this.version; } set { this.version = value; } }

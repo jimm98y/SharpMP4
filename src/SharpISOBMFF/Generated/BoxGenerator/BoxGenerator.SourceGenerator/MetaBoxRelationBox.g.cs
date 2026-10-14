@@ -16,6 +16,9 @@ public partial class MetaBoxRelationBox : FullBox
 {
 	public const string TYPE = "mere";
 	public override string DisplayName { get { return "MetaBoxRelationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("meco"); }
+
 
 	protected uint firstMetaBoxHandlerType; 
 	public uint FirstMetaBoxHandlerType { get { return this.firstMetaBoxHandlerType; } set { this.firstMetaBoxHandlerType = value; } }

@@ -14,6 +14,9 @@ public partial class AppleBeatsPerMinuteBox : Box
 {
 	public const string TYPE = "tmpo";
 	public override string DisplayName { get { return "AppleBeatsPerMinuteBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleBeatsPerMinuteBox(): base(IsoStream.FromFourCC("tmpo"))
 	{

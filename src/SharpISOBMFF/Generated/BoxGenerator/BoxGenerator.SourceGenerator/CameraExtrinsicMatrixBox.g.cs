@@ -38,6 +38,9 @@ public partial class CameraExtrinsicMatrixBox : FullBox
 {
 	public const string TYPE = "cmex";
 	public override string DisplayName { get { return "CameraExtrinsicMatrixBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected int pos_x; 
 	public int Posx { get { return this.pos_x; } set { this.pos_x = value; } }

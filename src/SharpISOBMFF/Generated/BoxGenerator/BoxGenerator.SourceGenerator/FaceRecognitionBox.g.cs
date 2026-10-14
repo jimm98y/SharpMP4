@@ -15,6 +15,9 @@ public partial class FaceRecognitionBox : Box
 {
 	public const string TYPE = "crec";
 	public override string DisplayName { get { return "FaceRecognitionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
+
 
 	public FaceRecognitionBox(): base(IsoStream.FromFourCC("crec"))
 	{

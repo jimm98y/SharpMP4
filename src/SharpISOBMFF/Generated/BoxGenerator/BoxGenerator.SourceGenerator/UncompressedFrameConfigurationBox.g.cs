@@ -38,6 +38,9 @@ public partial class UncompressedFrameConfigurationBox : FullBox
 {
 	public const string TYPE = "uncC";
 	public override string DisplayName { get { return "UncompressedFrameConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(uncv)", "ipco"); }
+
 
 	protected uint profile; 
 	public uint Profile { get { return this.profile; } set { this.profile = value; } }

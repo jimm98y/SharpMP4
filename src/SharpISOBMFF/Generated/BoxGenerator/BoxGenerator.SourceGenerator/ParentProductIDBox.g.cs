@@ -14,6 +14,9 @@ public partial class ParentProductIDBox : Box
 {
 	public const string TYPE = "@ppi";
 	public override string DisplayName { get { return "ParentProductIDBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public ParentProductIDBox(): base(IsoStream.FromFourCC("@ppi"))
 	{

@@ -14,6 +14,9 @@ public partial class GoogleTrackDurationBox : Box
 {
 	public const string TYPE = "gstd";
 	public override string DisplayName { get { return "GoogleTrackDurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public GoogleTrackDurationBox(): base(IsoStream.FromFourCC("gstd"))
 	{

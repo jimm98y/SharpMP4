@@ -17,6 +17,9 @@ public partial class MultiviewGroupRelationBox : FullBox
 {
 	public const string TYPE = "swtc";
 	public override string DisplayName { get { return "MultiviewGroupRelationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mvci"); }
+
 
 	protected uint num_entries; 
 	public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }

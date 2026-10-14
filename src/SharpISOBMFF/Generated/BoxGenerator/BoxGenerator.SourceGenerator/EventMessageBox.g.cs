@@ -19,6 +19,9 @@ public partial class EventMessageBox : Box
 {
 	public const string TYPE = "emsg";
 	public override string DisplayName { get { return "EventMessageBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected BinaryUTF8String schemeIdUri; 
 	public BinaryUTF8String SchemeIdUri { get { return this.schemeIdUri; } set { this.schemeIdUri = value; } }

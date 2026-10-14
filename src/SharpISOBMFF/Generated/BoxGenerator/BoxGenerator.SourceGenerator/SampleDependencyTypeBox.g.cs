@@ -20,6 +20,9 @@ public partial class SampleDependencyTypeBox : FullBox
 {
 	public const string TYPE = "sdtp";
 	public override string DisplayName { get { return "SampleDependencyTypeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl", "traf"); }
+
 
 	protected byte[] is_leading; 
 	public byte[] IsLeading { get { return this.is_leading; } set { this.is_leading = value; } }

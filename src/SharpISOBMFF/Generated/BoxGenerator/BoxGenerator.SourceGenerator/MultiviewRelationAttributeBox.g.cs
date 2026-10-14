@@ -24,6 +24,9 @@ public partial class MultiviewRelationAttributeBox : FullBox
 {
 	public const string TYPE = "mvra";
 	public override string DisplayName { get { return "MultiviewRelationAttributeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mvcg", "swtc"); }
+
 
 	protected ushort reserved1 = 0; 
 	public ushort Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }

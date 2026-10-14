@@ -64,6 +64,9 @@ public partial class OperatingPointGroupBox : EntityToGroupBox
 {
 	public const string TYPE = "opeg";
 	public override string DisplayName { get { return "OperatingPointGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("grpl"); }
+
 
 	protected byte num_profile_tier_level_minus1; 
 	public byte NumProfileTierLevelMinus1 { get { return this.num_profile_tier_level_minus1; } set { this.num_profile_tier_level_minus1 = value; } }

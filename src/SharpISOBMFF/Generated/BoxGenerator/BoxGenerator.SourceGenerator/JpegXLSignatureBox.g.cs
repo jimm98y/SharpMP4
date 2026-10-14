@@ -15,6 +15,9 @@ public partial class JpegXLSignatureBox : Box
 {
 	public const string TYPE = "JXL ";
 	public override string DisplayName { get { return "JpegXLSignatureBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected uint signature; 
 	public uint Signature { get { return this.signature; } set { this.signature = value; } }

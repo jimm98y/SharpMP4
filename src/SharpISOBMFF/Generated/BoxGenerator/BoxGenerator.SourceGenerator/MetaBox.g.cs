@@ -24,6 +24,9 @@ public partial class MetaBox : FullBox
 {
 	public const string TYPE = "meta";
 	public override string DisplayName { get { return "MetaBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file", "moov", "trak", "moof", "traf", "udta", "meco"); }
+
 	public HandlerBox TheHandler { get { return this.children.OfType<HandlerBox>().FirstOrDefault(); } }
 	public PrimaryItemBox PrimaryResource { get { return this.children.OfType<PrimaryItemBox>().FirstOrDefault(); } }
 	public DataInformationBox FileLocations { get { return this.children.OfType<DataInformationBox>().FirstOrDefault(); } }

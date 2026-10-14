@@ -15,6 +15,9 @@ public partial class HintBytesSentQuickTime : Box
 {
 	public const string TYPE = "trpY";
 	public override string DisplayName { get { return "HintBytesSentQuickTime"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("hinf"); }
+
 
 	protected ulong bytessent; 
 	public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }

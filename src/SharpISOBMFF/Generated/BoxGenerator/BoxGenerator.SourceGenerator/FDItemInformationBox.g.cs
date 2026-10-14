@@ -18,6 +18,9 @@ public partial class FDItemInformationBox : FullBox
 {
 	public const string TYPE = "fiin";
 	public override string DisplayName { get { return "FDItemInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
+
 
 	protected ushort entry_count; 
 	public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }

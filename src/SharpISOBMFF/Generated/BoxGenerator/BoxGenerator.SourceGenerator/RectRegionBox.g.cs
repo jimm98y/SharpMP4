@@ -22,6 +22,9 @@ public partial class RectRegionBox : Box
 {
 	public const string TYPE = "rrgn";
 	public override string DisplayName { get { return "RectRegionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("scif"); }
+
 
 	protected ushort base_region_tierID; 
 	public ushort BaseRegionTierID { get { return this.base_region_tierID; } set { this.base_region_tierID = value; } }

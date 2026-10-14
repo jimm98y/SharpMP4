@@ -20,6 +20,9 @@ public partial class SampleSizeBox : FullBox
 {
 	public const string TYPE = "stsz";
 	public override string DisplayName { get { return "SampleSizeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl"); }
+
 
 	protected uint sample_size; 
 	public uint SampleSize { get { return this.sample_size; } set { this.sample_size = value; } }

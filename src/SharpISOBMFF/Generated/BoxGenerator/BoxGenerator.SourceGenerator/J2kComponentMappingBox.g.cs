@@ -16,6 +16,9 @@ public partial class J2kComponentMappingBox : Box
 {
 	public const string TYPE = "cmap";
 	public override string DisplayName { get { return "J2kComponentMappingBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("j2kH"); }
+
 
 	protected J2kComponentMapping[] mappings; 
 	public J2kComponentMapping[] Mappings { get { return this.mappings; } set { this.mappings = value; } }

@@ -18,6 +18,9 @@ public partial class ItemReferenceBox : FullBox
 {
 	public const string TYPE = "iref";
 	public override string DisplayName { get { return "ItemReferenceBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
+
 
 	protected SingleItemTypeReferenceBox[] references; 
 	public SingleItemTypeReferenceBox[] References { get { return this.references; } set { this.references = value; } }

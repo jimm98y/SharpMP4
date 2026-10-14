@@ -20,6 +20,9 @@ public partial class CameraSystemLensDistortionsBox : FullBox
 {
 	public const string TYPE = "ldst";
 	public override string DisplayName { get { return "CameraSystemLensDistortionsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("lens"); }
+
 
 	protected double k1;  //  radial parameter k1 
 	public double K1 { get { return this.k1; } set { this.k1 = value; } }

@@ -14,6 +14,9 @@ public partial class ITunesPurchaseAccountBox : Box
 {
 	public const string TYPE = "apID";
 	public override string DisplayName { get { return "ITunesPurchaseAccountBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public ITunesPurchaseAccountBox(): base(IsoStream.FromFourCC("apID"))
 	{

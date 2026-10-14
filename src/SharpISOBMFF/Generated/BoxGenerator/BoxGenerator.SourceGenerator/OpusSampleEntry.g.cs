@@ -14,6 +14,9 @@ public partial class OpusSampleEntry : AudioSampleEntry
 {
 	public const string TYPE = "Opus";
 	public override string DisplayName { get { return "OpusSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public OpusSpecificBox _OpusSpecificBox { get { return this.children.OfType<OpusSpecificBox>().FirstOrDefault(); } }
 
 	public OpusSampleEntry(): base(IsoStream.FromFourCC("Opus"))

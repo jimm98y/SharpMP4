@@ -15,6 +15,9 @@ public partial class CameraSystemLensReferenceDimensionsBox : FullBox
 {
 	public const string TYPE = "rdim";
 	public override string DisplayName { get { return "CameraSystemLensReferenceDimensionsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("lens"); }
+
 
 	protected uint reference_width; 
 	public uint ReferenceWidth { get { return this.reference_width; } set { this.reference_width = value; } }

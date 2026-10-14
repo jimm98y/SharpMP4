@@ -14,6 +14,9 @@ public partial class HalfEquirectangularProjectionBox : FullBox
 {
 	public const string TYPE = "hequ";
 	public override string DisplayName { get { return "HalfEquirectangularProjectionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("proj"); }
+
 
 	public HalfEquirectangularProjectionBox(): base(IsoStream.FromFourCC("hequ"), 0, 0)
 	{

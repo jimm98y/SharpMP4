@@ -16,6 +16,9 @@ public partial class BrotliCompressedBox : Box
 {
 	public const string TYPE = "brob";
 	public override string DisplayName { get { return "BrotliCompressedBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected uint box_type; 
 	public uint BoxType { get { return this.box_type; } set { this.box_type = value; } }

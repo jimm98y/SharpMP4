@@ -14,6 +14,9 @@ public partial class JPEGConfigurationBox : Box
 {
 	public const string TYPE = "jpgC";
 	public override string DisplayName { get { return "JPEGConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected byte[] JPEGprefix; 
 	public byte[] _JPEGprefix { get { return this.JPEGprefix; } set { this.JPEGprefix = value; } }

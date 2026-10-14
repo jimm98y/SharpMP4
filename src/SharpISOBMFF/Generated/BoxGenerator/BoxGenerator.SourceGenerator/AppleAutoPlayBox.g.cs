@@ -14,6 +14,9 @@ public partial class AppleAutoPlayBox : Box
 {
 	public const string TYPE = "play";
 	public override string DisplayName { get { return "AppleAutoPlayBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected byte autoplay; 
 	public byte Autoplay { get { return this.autoplay; } set { this.autoplay = value; } }

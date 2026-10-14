@@ -15,6 +15,9 @@ public partial class TimestampSynchrony : Box
 {
 	public const string TYPE = "tssy";
 	public override string DisplayName { get { return "TimestampSynchrony"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ReceivedRtpHintSampleEntry(rrtp)"); }
+
 
 	protected byte reserved; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }

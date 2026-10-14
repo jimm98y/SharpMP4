@@ -34,6 +34,9 @@ public partial class PixelInformationProperty : ItemFullProperty
 {
 	public const string TYPE = "pixi";
 	public override string DisplayName { get { return "PixelInformationProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected byte num_channels; 
 	public byte NumChannels { get { return this.num_channels; } set { this.num_channels = value; } }

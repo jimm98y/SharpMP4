@@ -17,6 +17,9 @@ public partial class PittasoftOriginalFileNameBox : Box
 {
 	public const string TYPE = "ptnm";
 	public override string DisplayName { get { return "PittasoftOriginalFileNameBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("free"); }
+
 
 	protected uint unknown; 
 	public uint Unknown { get { return this.unknown; } set { this.unknown = value; } }

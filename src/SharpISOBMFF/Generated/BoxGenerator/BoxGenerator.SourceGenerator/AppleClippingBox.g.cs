@@ -14,6 +14,9 @@ public partial class AppleClippingBox : Box
 {
 	public const string TYPE = "clip";
 	public override string DisplayName { get { return "AppleClippingBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("moov", "trak"); }
+
 
 	public AppleClippingBox(): base(IsoStream.FromFourCC("clip"))
 	{

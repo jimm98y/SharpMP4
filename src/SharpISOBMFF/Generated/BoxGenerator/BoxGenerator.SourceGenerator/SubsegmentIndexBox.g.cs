@@ -22,6 +22,9 @@ public partial class SubsegmentIndexBox : FullBox
 {
 	public const string TYPE = "ssix";
 	public override string DisplayName { get { return "SubsegmentIndexBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected uint subsegment_count; 
 	public uint SubsegmentCount { get { return this.subsegment_count; } set { this.subsegment_count = value; } }

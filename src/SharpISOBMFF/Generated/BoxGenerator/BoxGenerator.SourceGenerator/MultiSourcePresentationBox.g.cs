@@ -13,6 +13,9 @@ public partial class MultiSourcePresentationBox : TrackGroupTypeBox
 {
 	public const string TYPE = "msrc";
 	public override string DisplayName { get { return "MultiSourcePresentationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("trgr"); }
+
 
 	public MultiSourcePresentationBox(): base(IsoStream.FromFourCC("msrc"))
 	{

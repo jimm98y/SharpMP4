@@ -16,6 +16,9 @@ public partial class QCELPSpecificBox : Box
 {
 	public const string TYPE = "dqcp";
 	public override string DisplayName { get { return "QCELPSpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(sqcp,enca)"); }
+
 
 	protected uint vendor; 
 	public uint Vendor { get { return this.vendor; } set { this.vendor = value; } }

@@ -36,6 +36,9 @@ public partial class DTSUHDSpecificBox : Box
 {
 	public const string TYPE = "udts";
 	public override string DisplayName { get { return "DTSUHDSpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(dtsx,dtsy,enca)"); }
+
 
 	protected byte DecoderProfileCode; 
 	public byte _DecoderProfileCode { get { return this.DecoderProfileCode; } set { this.DecoderProfileCode = value; } }

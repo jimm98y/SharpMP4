@@ -26,6 +26,9 @@ public partial class TierInfoBox : Box
 {
 	public const string TYPE = "tiri";
 	public override string DisplayName { get { return "TierInfoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("scif", "mvif", "mvcg"); }
+
 
 	protected ushort tierID; 
 	public ushort TierID { get { return this.tierID; } set { this.tierID = value; } }

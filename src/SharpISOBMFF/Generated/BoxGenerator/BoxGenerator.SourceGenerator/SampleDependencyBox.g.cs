@@ -20,6 +20,9 @@ public partial class SampleDependencyBox : FullBox
 {
 	public const string TYPE = "sdep";
 	public override string DisplayName { get { return "SampleDependencyBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl"); }
+
 
 	protected ushort[] dependency_count; 
 	public ushort[] DependencyCount { get { return this.dependency_count; } set { this.dependency_count = value; } }

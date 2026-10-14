@@ -15,6 +15,9 @@ public partial class VTTCueBox : Box
 {
 	public const string TYPE = "vttc";
 	public override string DisplayName { get { return "VTTCueBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
+
 
 	public VTTCueBox(): base(IsoStream.FromFourCC("vttc"))
 	{

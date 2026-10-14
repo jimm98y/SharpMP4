@@ -15,6 +15,9 @@ public partial class AppleQualityBox : Box
 {
 	public const string TYPE = "rmqu";
 	public override string DisplayName { get { return "AppleQualityBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("rmda"); }
+
 
 	protected uint flags; 
 	public uint Flags { get { return this.flags; } set { this.flags = value; } }

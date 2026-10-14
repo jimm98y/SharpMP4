@@ -46,6 +46,8 @@ public static class BoxGenerator
         var parsedClasses = new Dictionary<string, PseudoClass>();
         List<PseudoClass> duplicates = new List<PseudoClass>();
         List<string> containers = new List<string>();
+        // of each box type, the containers its definitions place it in, of every entry that gives the type
+        var placements = new Dictionary<string, List<string>>();
 
         for(int i = 0; i < jsonFiles.Length; i++) 
         {
@@ -79,6 +81,8 @@ public static class BoxGenerator
 
                     if (string.IsNullOrEmpty(sample))
                     {
+                        // of a type whose class another entry gives: its containers, of its type
+                        AddPlacements(placements, fourCC, Array.Empty<PseudoClass>(), element.GetProperty("containers"));
                         continue;
                     }
 
@@ -115,6 +119,7 @@ public static class BoxGenerator
                             }
                         }
 
+                        AddPlacements(placements, fourCC, result, element.GetProperty("containers"));
                         Debug.WriteLine($"Succeeded parsing: {fourCC}");
 
                     }
@@ -131,7 +136,80 @@ public static class BoxGenerator
         LogConsole($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
 
 
-        return new ParserDocument(parsedClasses, containers);
+        return new ParserDocument(parsedClasses, containers, placements);
+    }
+
+    /// <summary>
+    /// The containers of an entry, of each box its syntax gives - of its class and its type, "Class|type", and of its type
+    /// alone - as <see cref="ParserDocument.Placements"/> has them: a box type of four characters; "file" of the top level;
+    /// "*" of anywhere; a class's name, of a parent of that class; and of a class of some types, "Class(type,type)", of a
+    /// parent of one of those types. A box's type is the one its syntax gives it, else - of a class given its type, as a
+    /// reference is - the entry's fourcc. Of an entry of a fourcc, of its box alone: the others its syntax gives, beside
+    /// it or in it, are where their own entries say.
+    /// </summary>
+    private static void AddPlacements(Dictionary<string, List<string>> placements, string fourCC, IEnumerable<PseudoClass> boxes, JsonElement containers)
+    {
+        var said = new List<string>();
+        foreach (JsonElement container in containers.EnumerateArray())
+        {
+            if (container.ValueKind == JsonValueKind.Object)
+            {
+                foreach (var cls in container.EnumerateObject())
+                {
+                    string[] classTypes = cls.Value.EnumerateArray().Select(x => x.GetString()).ToArray();
+                    said.Add(classTypes.Length > 0 ? $"{cls.Name}({string.Join(",", classTypes)})" : cls.Name);
+                }
+            }
+            else
+            {
+                string value = container.GetString();
+                if (value.StartsWith("{"))
+                {
+                    foreach (var cls in JsonConvert.DeserializeObject<Dictionary<string, string[]>>(value))
+                        said.Add(cls.Value.Length > 0 ? $"{cls.Key}({string.Join(",", cls.Value)})" : cls.Key);
+                }
+                else
+                {
+                    said.Add(value);
+                }
+            }
+        }
+
+        var keys = new HashSet<string>();
+        if (!boxes.Any() && !string.IsNullOrEmpty(fourCC) && fourCC.Length == 4)
+            keys.Add(fourCC);
+        bool ofFourCC = !string.IsNullOrEmpty(fourCC) && fourCC.Length == 4;
+        foreach (var box in boxes)
+        {
+            string type = box.Extended?.BoxType;
+            if (type == null || type.Length != 4)
+                type = ofFourCC ? fourCC : null;
+            if (box.Extended?.BoxName == null)
+                continue;
+            if (type == null)
+            {
+                // of a class given its type, of an entry of no fourcc and of no box of a type of its own - a codec's
+                // configuration of a type of its own - the class's containers, of any type; not of a class beside the
+                // entry's own box, as 'ilst''s keyed items are beside it
+                if (!boxes.Any(x => x.Extended?.BoxType?.Length == 4))
+                    keys.Add($"{box.BoxName}|*");
+                continue;
+            }
+            // the boxes an entry's syntax gives beside its own - 'tims' gives 'tsro' and 'snro' - are where theirs say
+            if (ofFourCC && type != fourCC)
+                continue;
+            keys.Add($"{box.BoxName}|{type}");
+            keys.Add(type);
+        }
+
+        foreach (string key in keys)
+        {
+            if (!placements.TryGetValue(key, out var list))
+                placements.Add(key, list = new List<string>());
+            foreach (string container in said)
+                if (!list.Contains(container))
+                    list.Add(container);
+        }
     }
 
     private static IEnumerable<PseudoClass> DeduplicateBoxes(IEnumerable<PseudoClass> result)

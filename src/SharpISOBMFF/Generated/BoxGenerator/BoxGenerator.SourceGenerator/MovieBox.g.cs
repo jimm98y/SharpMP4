@@ -13,6 +13,9 @@ public partial class MovieBox : Box
 {
 	public const string TYPE = "moov";
 	public override string DisplayName { get { return "MovieBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	public MovieBox(): base(IsoStream.FromFourCC("moov"))
 	{

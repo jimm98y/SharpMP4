@@ -17,6 +17,9 @@ public partial class PriorityRangeBox : Box
 {
 	public const string TYPE = "svpr";
 	public override string DisplayName { get { return "PriorityRangeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("scif", "mvif"); }
+
 
 	protected byte reserved1 = 0; 
 	public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }

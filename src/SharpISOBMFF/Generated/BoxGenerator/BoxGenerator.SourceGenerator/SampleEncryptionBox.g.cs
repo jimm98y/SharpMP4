@@ -16,6 +16,9 @@ public partial class SampleEncryptionBox : FullBox
 {
 	public const string TYPE = "senc";
 	public override string DisplayName { get { return "SampleEncryptionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("traf", "trak"); }
+
 
 	protected uint sample_count; 
 	public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }

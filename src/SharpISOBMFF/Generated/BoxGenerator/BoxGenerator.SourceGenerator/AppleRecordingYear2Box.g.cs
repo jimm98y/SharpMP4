@@ -14,6 +14,9 @@ public partial class AppleRecordingYear2Box : Box
 {
 	public const string TYPE = "©day";
 	public override string DisplayName { get { return "AppleRecordingYear2Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	public AppleRecordingYear2Box(): base(IsoStream.FromFourCC("©day"))
 	{

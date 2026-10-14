@@ -14,6 +14,9 @@ public partial class GenreBox : Box
 {
 	public const string TYPE = "gnre";
 	public override string DisplayName { get { return "GenreBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public GenreBox(): base(IsoStream.FromFourCC("gnre"))
 	{

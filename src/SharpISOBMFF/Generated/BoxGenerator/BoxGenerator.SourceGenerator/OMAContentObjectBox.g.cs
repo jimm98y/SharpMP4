@@ -15,6 +15,9 @@ public partial class OMAContentObjectBox : FullBox
 {
 	public const string TYPE = "odda";
 	public override string DisplayName { get { return "OMAContentObjectBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("odrm"); }
+
 
 	protected uint count; 
 	public uint Count { get { return this.count; } set { this.count = value; } }

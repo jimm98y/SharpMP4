@@ -486,6 +486,7 @@ namespace SharpISOBMFF
 }
 ");
             ret.Add("BoxFactory", factory.ToString());
+            ret.Add("BoxPlacements", namespaceHeader + BuildPlacements() + "\r\n}\r\n");
 
             foreach (var b in parserDocument.Classes.Values.ToArray())
             {
@@ -500,6 +501,113 @@ namespace SharpISOBMFF
             }
                         
             return ret;
+        }
+
+        /// <summary>
+        /// Of a box type, the containers its definitions place it in, as C# strings: none where they give none, or "*"
+        /// alone - of anywhere, or not said - or where another definition of the type says where.
+        /// </summary>
+        private string[] PlacementsOf(string key)
+        {
+            var places = Said(key);
+            // of a class and type that say no more than "*", what its type says, of another definition of it - the 'moov'
+            // of 14496-12, whose class 14496-12-boxes-added gives
+            int bar = key?.IndexOf('|') ?? -1;
+            if (bar > 0 && (places.Length == 0 || places.SequenceEqual(new[] { "*" })))
+            {
+                var ofType = Said(key.Substring(bar + 1));
+                if (ofType.Length > 0 && !ofType.SequenceEqual(new[] { "*" }))
+                    return ofType;
+            }
+            return places;
+        }
+
+        private string[] Said(string key)
+        {
+            if (key == null || !parserDocument.Placements.TryGetValue(key, out var places))
+                return Array.Empty<string>();
+            var said = places.Where(x => x != "*").ToArray();
+            return said.Length > 0 ? said : places.Contains("*") ? new[] { "*" } : Array.Empty<string>();
+        }
+
+        /// <summary>The types the box factory makes a class of: one, of most; of a class of its type given it, every one.</summary>
+        private List<string> TypesOf(PseudoClass b)
+        {
+            var types = parserDocument.Boxes.Where(x => x.Value.Contains(b)).Select(x => x.Key).ToList();
+            string own = b.Extended?.BoxType;
+            if (types.Count == 0 && own != null && own.Length == 4)
+                types.Add(own);
+            return types;
+        }
+
+        private static string Literal(IEnumerable<string> containers) => string.Join(", ", containers.Select(x => $"\"{x}\""));
+
+        /// <summary>
+        /// The box's ValidatePlacement: of a class of one type, the containers of that type; of a class of its type given it
+        /// - a sample entry, a reference - those of its type as it is, of <see cref="BuildPlacements"/>'s table, else those
+        /// of every type the class is made of.
+        /// </summary>
+        private string BuildValidatePlacement(PseudoClass b)
+        {
+            var types = TypesOf(b);
+            string own = b.Extended?.BoxType;
+            bool fixedType = types.Count <= 1 && own != null && own.Length == 4 && (types.Count == 0 || types[0] == own);
+            var sb = new StringBuilder("\r\n\t/// <summary>Whether the box is in a container its definitions place it in: see <see cref=\"Box.ValidatePlacement\"/>.</summary>\r\n");
+            if (fixedType)
+            {
+                // of its own class and type, else of its type, of the definitions that give it another class
+                var places = PlacementsOf($"{b.BoxName}|{own}");
+                if (places.Length == 0)
+                    places = Said(own);
+                if (places.Length == 0)
+                    sb.Append("\t// its definitions place it in no container: wherever it is, it is not misplaced\r\n");
+                sb.Append($"\tpublic override bool ValidatePlacement() {{ return IsPlacedIn({Literal(places)}); }}\r\n");
+            }
+            else
+            {
+                // of a type its definitions do not give it - a reference of another type - those of its every one
+                var all = parserDocument.Placements.Where(x => x.Key.StartsWith(b.BoxName + "|", StringComparison.Ordinal))
+                    .SelectMany(x => PlacementsOf(x.Key)).Distinct().ToArray();
+                // of a type its definitions give its class none of - a QuickTime 'tmcd' reference, a '©des' of 'udta' -
+                // its class's every one, not those of another class of the type: a 'tmcd' sample entry, an item of 'ilst'
+                string fallback = all.Length > 0 ? $"new[] {{ {Literal(all)} }}" : "BoxPlacements.OfType(FourCC)";
+                sb.Append($"\tpublic override bool ValidatePlacement() {{ return IsPlacedIn(BoxPlacements.Of(this) ?? {fallback}); }}\r\n");
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>The table of every box type's containers, for the boxes of a class whose type is given it.</summary>
+        private string BuildPlacements()
+        {
+            var sb = new StringBuilder();
+            sb.Append("\t/// <summary>\r\n");
+            sb.Append("\t/// Of each box - of its class and type, \"Class|type\", and of its type alone - the containers its definitions place it in:\r\n");
+            sb.Append("\t/// for <see cref=\"Box.ValidatePlacement\"/> of the boxes of a class of more than one type, a sample entry, a reference.\r\n");
+            sb.Append("\t/// </summary>\r\n");
+            sb.Append("\tpublic static class BoxPlacements\r\n\t{\r\n");
+            sb.Append("\t\tprivate static readonly Dictionary<string, string[]> containers = new Dictionary<string, string[]>()\r\n\t\t{\r\n");
+            foreach (var type in parserDocument.Placements.Keys.OrderBy(x => x, StringComparer.Ordinal))
+            {
+                var places = PlacementsOf(type);
+                if (places.Length > 0)
+                    sb.Append($"\t\t\t[\"{type}\"] = new[] {{ {Literal(places)} }},\r\n");
+            }
+            sb.Append("\t\t};\r\n\r\n");
+            sb.Append("\t\t/// <summary>\r\n");
+            sb.Append("\t\t/// The containers of a box, of its class and type, or of a class it derives from and its type: null where its\r\n");
+            sb.Append("\t\t/// definitions give none of them.\r\n");
+            sb.Append("\t\t/// </summary>\r\n");
+            sb.Append("\t\tpublic static string[] Of(Box box)\r\n\t\t{\r\n");
+            sb.Append("\t\t\tstring type = IsoStream.ToFourCC(box.FourCC);\r\n");
+            sb.Append("\t\t\tfor (var cls = box.GetType(); cls != null && cls != typeof(Box); cls = cls.BaseType)\r\n");
+            sb.Append("\t\t\t\tif (containers.TryGetValue(cls.Name + \"|\" + type, out var places))\r\n");
+            sb.Append("\t\t\t\t\treturn places;\r\n");
+            sb.Append("\t\t\treturn null;\r\n");
+            sb.Append("\t\t}\r\n\r\n");
+            sb.Append("\t\t/// <summary>The containers of a type, of every definition of it, whatever its class: null of one none places.</summary>\r\n");
+            sb.Append("\t\tpublic static string[] OfType(uint fourCC) => containers.TryGetValue(IsoStream.ToFourCC(fourCC), out var places) ? places : null;\r\n");
+            sb.Append("\t}\r\n");
+            return sb.ToString();
         }
 
         private string BuildCode(PseudoClass b, List<string> containers)
@@ -588,6 +696,8 @@ namespace SharpISOBMFF
 
             string ov = b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) || b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier" ? "override " : "virtual ";
             cls.Append($"\tpublic {ov}string DisplayName {{ get {{ return \"{b.BoxName}\"; }} }}");
+            if (b.ParsedBoxType == ParsedBoxType.Box)
+                cls.Append(BuildValidatePlacement(b));
 
             string ctorContent = b.CtorContent;
             var fields = b.FlattenedFields;

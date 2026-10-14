@@ -15,6 +15,9 @@ public partial class ProjectionBox : Box
 {
 	public const string TYPE = "proj";
 	public override string DisplayName { get { return "ProjectionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("sv3d", "vexu"); }
+
 
 	public ProjectionBox(): base(IsoStream.FromFourCC("proj"))
 	{

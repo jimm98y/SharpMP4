@@ -13,6 +13,9 @@ public partial class HintBytesSenttpayDup : Box
 {
 	public const string TYPE = "tpay";
 	public override string DisplayName { get { return "HintBytesSenttpayDup"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("hinf"); }
+
 
 	protected uint bytessent; 
 	public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }

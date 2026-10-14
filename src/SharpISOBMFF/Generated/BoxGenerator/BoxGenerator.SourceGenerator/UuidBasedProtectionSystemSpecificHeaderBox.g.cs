@@ -16,6 +16,9 @@ public partial class UuidBasedProtectionSystemSpecificHeaderBox : FullBox
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "UuidBasedProtectionSystemSpecificHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected byte[] systemID; 
 	public byte[] SystemID { get { return this.systemID; } set { this.systemID = value; } }

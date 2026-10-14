@@ -14,6 +14,9 @@ public partial class ComposerSortBox : Box
 {
 	public const string TYPE = "soco";
 	public override string DisplayName { get { return "ComposerSortBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public ComposerSortBox(): base(IsoStream.FromFourCC("soco"))
 	{

@@ -27,6 +27,9 @@ public partial class IroiInfoBox : Box
 {
 	public const string TYPE = "iroi";
 	public override string DisplayName { get { return "IroiInfoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("scif"); }
+
 
 	protected byte iroi_type; 
 	public byte IroiType { get { return this.iroi_type; } set { this.iroi_type = value; } }

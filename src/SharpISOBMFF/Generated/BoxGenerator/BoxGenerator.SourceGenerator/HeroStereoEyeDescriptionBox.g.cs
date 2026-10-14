@@ -15,6 +15,9 @@ public partial class HeroStereoEyeDescriptionBox : FullBox
 {
 	public const string TYPE = "hero";
 	public override string DisplayName { get { return "HeroStereoEyeDescriptionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("eyes"); }
+
 
 	protected byte hero_eye_indicator;  //  0 = none, 1 = left, 2 = right, >= 3 reserved 
 	public byte HeroEyeIndicator { get { return this.hero_eye_indicator; } set { this.hero_eye_indicator = value; } }

@@ -14,6 +14,9 @@ public partial class TerminatorBox : Box
 {
 	public const string TYPE = "\0\0\0\0";
 	public override string DisplayName { get { return "TerminatorBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "udta", "wave" }); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

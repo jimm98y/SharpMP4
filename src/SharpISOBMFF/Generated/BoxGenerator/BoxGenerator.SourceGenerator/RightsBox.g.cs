@@ -15,6 +15,9 @@ public partial class RightsBox : Box
 {
 	public const string TYPE = "righ";
 	public override string DisplayName { get { return "RightsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("schi"); }
+
 
 	protected RightsEntry[] entries; 
 	public RightsEntry[] Entries { get { return this.entries; } set { this.entries = value; } }

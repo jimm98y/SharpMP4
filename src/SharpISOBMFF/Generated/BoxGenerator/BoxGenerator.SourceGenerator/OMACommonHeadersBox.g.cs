@@ -22,6 +22,9 @@ public partial class OMACommonHeadersBox : FullBox
 {
 	public const string TYPE = "ohdr";
 	public override string DisplayName { get { return "OMACommonHeadersBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("odhe", "odkm"); }
+
 
 	protected byte encryptionMethod; 
 	public byte EncryptionMethod { get { return this.encryptionMethod; } set { this.encryptionMethod = value; } }

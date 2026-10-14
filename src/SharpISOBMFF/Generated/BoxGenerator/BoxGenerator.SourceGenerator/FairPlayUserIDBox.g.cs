@@ -14,6 +14,9 @@ public partial class FairPlayUserIDBox : Box
 {
 	public const string TYPE = "user";
 	public override string DisplayName { get { return "FairPlayUserIDBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("schi"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

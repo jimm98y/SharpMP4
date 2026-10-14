@@ -14,6 +14,9 @@ public partial class WebVTTSourceLabelBox : Box
 {
 	public const string TYPE = "vlab";
 	public override string DisplayName { get { return "WebVTTSourceLabelBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("PlainTextSampleEntry(wvtt)"); }
+
 
 	protected BinaryUTF8String source_label; 
 	public BinaryUTF8String SourceLabel { get { return this.source_label; } set { this.source_label = value; } }

@@ -33,6 +33,9 @@ class AudioSampleEntryV1(codingname) extends SampleEntry (codingname){
 public partial class AudioSampleEntryV1 : SampleEntry
 {
 	public override string DisplayName { get { return "AudioSampleEntryV1"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "stsd" }); }
+
 
 	protected ushort entry_version;  //  shall be 1, 
 	public ushort EntryVersion { get { return this.entry_version; } set { this.entry_version = value; } }

@@ -17,6 +17,9 @@ public partial class MLPSpecificBox : Box
 {
 	public const string TYPE = "dmlp";
 	public override string DisplayName { get { return "MLPSpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(mlpa,enca)"); }
+
 
 	protected uint formatInfo; 
 	public uint FormatInfo { get { return this.formatInfo; } set { this.formatInfo = value; } }

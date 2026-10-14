@@ -15,6 +15,9 @@ public partial class WindowsMediaXtraBox : Box
 {
 	public const string TYPE = "Xtra";
 	public override string DisplayName { get { return "WindowsMediaXtraBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected XtraTag[] tags; 
 	public XtraTag[] Tags { get { return this.tags; } set { this.tags = value; } }

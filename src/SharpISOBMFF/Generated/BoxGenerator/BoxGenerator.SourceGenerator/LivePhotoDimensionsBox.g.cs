@@ -16,6 +16,9 @@ public partial class LivePhotoDimensionsBox : Box
 {
 	public const string TYPE = "dims";
 	public override string DisplayName { get { return "LivePhotoDimensionsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("setu"); }
+
 
 	protected uint width; 
 	public uint Width { get { return this.width; } set { this.width = value; } }

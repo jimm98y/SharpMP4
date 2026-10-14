@@ -14,6 +14,9 @@ public partial class AppleDescriptionBoxdescDup : Box
 {
 	public const string TYPE = "desc";
 	public override string DisplayName { get { return "AppleDescriptionBoxdescDup"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleDescriptionBoxdescDup(): base(IsoStream.FromFourCC("desc"))
 	{

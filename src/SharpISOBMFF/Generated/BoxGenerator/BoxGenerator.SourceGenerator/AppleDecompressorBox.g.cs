@@ -14,6 +14,9 @@ public partial class AppleDecompressorBox : Box
 {
 	public const string TYPE = "dcom";
 	public override string DisplayName { get { return "AppleDecompressorBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("cmov"); }
+
 
 	protected uint decompressor; 
 	public uint Decompressor { get { return this.decompressor; } set { this.decompressor = value; } }

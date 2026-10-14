@@ -15,6 +15,9 @@ public partial class ControllerTypeBox : Box
 {
 	public const string TYPE = "ctyp";
 	public override string DisplayName { get { return "ControllerTypeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected uint controller_type; 
 	public uint ControllerType { get { return this.controller_type; } set { this.controller_type = value; } }

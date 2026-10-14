@@ -23,6 +23,9 @@ public partial class AlternativeStartupSequencePropertiesBox : FullBox
 {
 	public const string TYPE = "assp";
 	public override string DisplayName { get { return "AlternativeStartupSequencePropertiesBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("trep"); }
+
 
 	protected int min_initial_alt_startup_offset; 
 	public int MinInitialAltStartupOffset { get { return this.min_initial_alt_startup_offset; } set { this.min_initial_alt_startup_offset = value; } }

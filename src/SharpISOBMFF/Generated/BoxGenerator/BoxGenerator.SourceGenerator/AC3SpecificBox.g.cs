@@ -21,6 +21,9 @@ public partial class AC3SpecificBox : Box
 {
 	public const string TYPE = "dac3";
 	public override string DisplayName { get { return "AC3SpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(ac-3,enca)", "wave"); }
+
 
 	protected byte fscod; 
 	public byte Fscod { get { return this.fscod; } set { this.fscod = value; } }

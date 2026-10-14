@@ -20,6 +20,9 @@ public partial class ComponentPatternDefinitionBox : FullBox
 {
 	public const string TYPE = "cpat";
 	public override string DisplayName { get { return "ComponentPatternDefinitionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(uncv)", "ipco"); }
+
 
 	protected ushort pattern_width; 
 	public ushort PatternWidth { get { return this.pattern_width; } set { this.pattern_width = value; } }

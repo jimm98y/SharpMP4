@@ -16,6 +16,9 @@ public partial class TrackSelectionBox : FullBox
 {
 	public const string TYPE = "tsel";
 	public override string DisplayName { get { return "TrackSelectionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected int switch_group = 0; 
 	public int SwitchGroup { get { return this.switch_group; } set { this.switch_group = value; } }

@@ -15,6 +15,9 @@ public partial class IdentifiedMediaDataBox : Box
 {
 	public const string TYPE = "imda";
 	public override string DisplayName { get { return "IdentifiedMediaDataBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected uint imda_identifier; 
 	public uint ImdaIdentifier { get { return this.imda_identifier; } set { this.imda_identifier = value; } }

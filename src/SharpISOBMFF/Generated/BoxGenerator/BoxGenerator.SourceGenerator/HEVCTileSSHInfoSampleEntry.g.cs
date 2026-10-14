@@ -14,6 +14,9 @@ public partial class HEVCTileSSHInfoSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "hvt3";
 	public override string DisplayName { get { return "HEVCTileSSHInfoSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public HEVCTileConfigurationBox Config { get { return this.children.OfType<HEVCTileConfigurationBox>().FirstOrDefault(); } }
 
 	public HEVCTileSSHInfoSampleEntry(): base(IsoStream.FromFourCC("hvt3"))

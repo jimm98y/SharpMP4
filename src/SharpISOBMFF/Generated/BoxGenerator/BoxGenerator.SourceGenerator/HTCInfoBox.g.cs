@@ -14,6 +14,9 @@ public partial class HTCInfoBox : Box
 {
 	public const string TYPE = "_htc";
 	public override string DisplayName { get { return "HTCInfoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	public HTCInfoBox(): base(IsoStream.FromFourCC("_htc"))
 	{

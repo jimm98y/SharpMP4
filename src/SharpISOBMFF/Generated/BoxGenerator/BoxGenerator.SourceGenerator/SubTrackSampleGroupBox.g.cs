@@ -18,6 +18,9 @@ public partial class SubTrackSampleGroupBox : FullBox
 {
 	public const string TYPE = "stsg";
 	public override string DisplayName { get { return "SubTrackSampleGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("strd"); }
+
 
 	protected uint grouping_type; 
 	public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }

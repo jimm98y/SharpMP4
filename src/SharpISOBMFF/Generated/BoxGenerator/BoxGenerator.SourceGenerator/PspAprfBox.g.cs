@@ -22,6 +22,9 @@ public partial class PspAprfBox : Box
 {
 	public const string TYPE = "APRF";
 	public override string DisplayName { get { return "PspAprfBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("uuid"); }
+
 
 	protected uint unknown1; 
 	public uint Unknown1 { get { return this.unknown1; } set { this.unknown1 = value; } }

@@ -14,6 +14,9 @@ public partial class MpegSampleEntry : SampleEntry
 {
 	public const string TYPE = "mp4s";
 	public override string DisplayName { get { return "MpegSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public Box _ES { get { return this.children.OfType<Box>().FirstOrDefault(); } }
 
 	public MpegSampleEntry(): base(IsoStream.FromFourCC("mp4s"))

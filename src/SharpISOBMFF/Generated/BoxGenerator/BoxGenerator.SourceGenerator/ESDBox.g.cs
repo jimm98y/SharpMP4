@@ -15,6 +15,9 @@ public partial class ESDBox : FullBox
 {
 	public const string TYPE = "esds";
 	public override string DisplayName { get { return "ESDBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(mp4a,enca)", "VisualSampleEntry(mp4v,encv)", "MpegSampleEntry(mp4s,encs)", "wave", "AudioSampleEntry(m4ae)"); }
+
 
 	protected ES_Descriptor ES; 
 	public ES_Descriptor _ES { get { return this.ES; } set { this.ES = value; } }

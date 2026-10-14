@@ -14,6 +14,9 @@ public partial class TVEpisodeIDBox : Box
 {
 	public const string TYPE = "tven";
 	public override string DisplayName { get { return "TVEpisodeIDBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public TVEpisodeIDBox(): base(IsoStream.FromFourCC("tven"))
 	{

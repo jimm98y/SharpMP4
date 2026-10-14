@@ -16,6 +16,9 @@ public partial class TextMetaDataSampleEntry : MetaDataSampleEntry
 {
 	public const string TYPE = "mett";
 	public override string DisplayName { get { return "TextMetaDataSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected BinaryUTF8String content_encoding;  //  optional
 	protected bool content_encodingPresent;

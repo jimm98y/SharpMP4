@@ -14,6 +14,9 @@ public partial class ITunesUBox : Box
 {
 	public const string TYPE = "itnu";
 	public override string DisplayName { get { return "ITunesUBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public ITunesUBox(): base(IsoStream.FromFourCC("itnu"))
 	{

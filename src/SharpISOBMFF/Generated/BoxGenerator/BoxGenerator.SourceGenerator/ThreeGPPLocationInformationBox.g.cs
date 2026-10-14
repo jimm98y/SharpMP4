@@ -22,6 +22,9 @@ public partial class ThreeGPPLocationInformationBox : FullBox
 {
 	public const string TYPE = "loci";
 	public override string DisplayName { get { return "ThreeGPPLocationInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected bool reserved = false; 
 	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }

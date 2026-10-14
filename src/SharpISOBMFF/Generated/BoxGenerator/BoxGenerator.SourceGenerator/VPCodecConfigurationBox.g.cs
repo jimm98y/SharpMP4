@@ -30,6 +30,9 @@ public partial class VPCodecConfigurationBox : FullBox
 {
 	public const string TYPE = "vpcC";
 	public override string DisplayName { get { return "VPCodecConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(vp08,vp09,vp10,encv,resv)"); }
+
 
 	protected byte profile; 
 	public byte Profile { get { return this.profile; } set { this.profile = value; } }

@@ -14,6 +14,9 @@ public partial class AppleAuthorBox : Box
 {
 	public const string TYPE = "©aut";
 	public override string DisplayName { get { return "AppleAuthorBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleAuthorBox(): base(IsoStream.FromFourCC("©aut"))
 	{

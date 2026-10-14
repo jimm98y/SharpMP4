@@ -14,6 +14,9 @@ public partial class HorizontalFieldOfViewBox : Box
 {
 	public const string TYPE = "hfov";
 	public override string DisplayName { get { return "HorizontalFieldOfViewBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry"); }
+
 
 	protected uint field_of_view; 
 	public uint FieldOfView { get { return this.field_of_view; } set { this.field_of_view = value; } }

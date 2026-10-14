@@ -14,6 +14,9 @@ public partial class AppleTrackTypeBox : Box
 {
 	public const string TYPE = "kgtt";
 	public override string DisplayName { get { return "AppleTrackTypeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected MultiLanguageString[] value; 
 	public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }

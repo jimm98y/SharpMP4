@@ -16,6 +16,9 @@ public partial class BoxedMetaDataSampleEntry : MetaDataSampleEntry
 {
 	public const string TYPE = "mebx";
 	public override string DisplayName { get { return "BoxedMetaDataSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public MetaDataKeyTableBox _MetaDataKeyTableBox { get { return this.children.OfType<MetaDataKeyTableBox>().FirstOrDefault(); } }
 	public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
 

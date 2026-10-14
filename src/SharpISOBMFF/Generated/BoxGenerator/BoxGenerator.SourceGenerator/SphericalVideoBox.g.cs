@@ -15,6 +15,9 @@ public partial class SphericalVideoBox : Box
 {
 	public const string TYPE = "sv3d";
 	public override string DisplayName { get { return "SphericalVideoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry"); }
+
 
 	public SphericalVideoBox(): base(IsoStream.FromFourCC("sv3d"))
 	{

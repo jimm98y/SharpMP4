@@ -20,6 +20,9 @@ public partial class CompatibleSchemeTypeBox : FullBox
 {
 	public const string TYPE = "csch";
 	public override string DisplayName { get { return "CompatibleSchemeTypeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("rinf"); }
+
 
 	protected uint scheme_type;  //  4CC identifying the scheme
 	public uint SchemeType { get { return this.scheme_type; } set { this.scheme_type = value; } }

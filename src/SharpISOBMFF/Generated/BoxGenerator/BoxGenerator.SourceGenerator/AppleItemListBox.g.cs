@@ -15,6 +15,9 @@ public partial class AppleItemListBox : Box
 {
 	public const string TYPE = "ilst";
 	public override string DisplayName { get { return "AppleItemListBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("meta"); }
+
 
 	public AppleItemListBox(): base(IsoStream.FromFourCC("ilst"))
 	{

@@ -14,6 +14,9 @@ public partial class AppleICCProfileBox : Box
 {
 	public const string TYPE = "iicc";
 	public override string DisplayName { get { return "AppleICCProfileBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

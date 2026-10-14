@@ -14,6 +14,9 @@ public partial class HintMaxRate : Box
 {
 	public const string TYPE = "maxr";
 	public override string DisplayName { get { return "HintMaxRate"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("hinf"); }
+
 
 	protected uint period;  //  in milliseconds
 	public uint Period { get { return this.period; } set { this.period = value; } }

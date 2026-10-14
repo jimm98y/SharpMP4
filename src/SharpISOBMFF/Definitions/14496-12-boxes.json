@@ -625,7 +625,7 @@
     {
       "fourcc": "frma",
       "description": "original format box",
-      "containers": [ "sinf", "rinf" ],
+      "containers": [ "sinf", "rinf", "wave" ],
       "type": "Box",
       "syntax": "aligned(8) class OriginalFormatBox(codingname) extends Box ('frma') {\r\n\tunsigned int(32)\tdata_format = codingname;\r\n\t\t\t// format of decrypted, encoded data (in case of protection)\r\n\t\t\t// or un-transformed sample entry (in case of restriction\r\n\t\t\t// and complete track information)\r\n}"
     },
@@ -785,7 +785,7 @@
     {
       "fourcc": "meta",
       "description": "Metadata container",
-      "containers": [ "file", "moov", "trak", "moof", "traf", "udta" ],
+      "containers": [ "file", "moov", "trak", "moof", "traf", "udta", "meco" ],
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
@@ -962,14 +962,14 @@
     {
       "fourcc": "schi",
       "description": "scheme information box",
-      "containers": [ "sinf", "rinf" ],
+      "containers": [ "sinf", "rinf", "srpp" ],
       "type": "Box",
       "syntax": "aligned(8) class SchemeInformationBox extends Box('schi') {\r\n\tBox\tscheme_specific_data[];\r\n}"
     },
     {
       "fourcc": "schm",
       "description": "scheme type box",
-      "containers": [ "sinf", "rinf" ],
+      "containers": [ "sinf", "rinf", "srpp" ],
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [
@@ -1476,18 +1476,14 @@
     {
       "fourcc": "amve",
       "description": "",
-      "containers": [ "VisualSampleEntry" ],
+      "containers": [ "VisualSampleEntry", "ipco" ],
       "type": "Box",
       "syntax": "class AmbientViewingEnvironmentBox extends Box('amve'){\r\n\tunsigned int(32) ambient_illuminance; \r\n\tunsigned int(16) ambient_light_x;\r\n\tunsigned int(16) ambient_light_y;\r\n}"
     },
     {
       "fourcc": "keys",
       "description": "",
-      "containers": [
-        {
-          "BoxedMetaDataSampleEntry": [ "mebx" ]
-        }
-      ],
+      "containers": [ {"BoxedMetaDataSampleEntry": ["mebx"]}, "meta" ],
       "type": "Box",
       "syntax": "class MetaDataKeyTableBox extends FullBox('keys') { \r\n        unsigned int(32) entry_count;\r\n        MetaDataKeyBox[];\r\n    }"
     },

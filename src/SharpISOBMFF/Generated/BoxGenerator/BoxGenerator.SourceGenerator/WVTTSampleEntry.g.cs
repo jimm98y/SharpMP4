@@ -16,6 +16,9 @@ public partial class WVTTSampleEntry : PlainTextSampleEntry
 {
 	public const string TYPE = "wvtt";
 	public override string DisplayName { get { return "WVTTSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public WebVTTConfigurationBox Config { get { return this.children.OfType<WebVTTConfigurationBox>().FirstOrDefault(); } }
 	public WebVTTSourceLabelBox Label { get { return this.children.OfType<WebVTTSourceLabelBox>().FirstOrDefault(); } }
 	public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }

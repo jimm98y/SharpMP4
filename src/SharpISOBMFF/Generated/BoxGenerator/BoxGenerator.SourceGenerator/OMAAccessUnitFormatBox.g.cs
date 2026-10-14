@@ -17,6 +17,9 @@ public partial class OMAAccessUnitFormatBox : FullBox
 {
 	public const string TYPE = "odaf";
 	public override string DisplayName { get { return "OMAAccessUnitFormatBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("odkm"); }
+
 
 	protected byte reserved; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }

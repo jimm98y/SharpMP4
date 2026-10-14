@@ -13,6 +13,9 @@ public partial class MediaInformationBox : Box
 {
 	public const string TYPE = "minf";
 	public override string DisplayName { get { return "MediaInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mdia"); }
+
 
 	public MediaInformationBox(): base(IsoStream.FromFourCC("minf"))
 	{

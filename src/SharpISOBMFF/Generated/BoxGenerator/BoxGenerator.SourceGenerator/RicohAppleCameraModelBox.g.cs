@@ -14,6 +14,9 @@ public partial class RicohAppleCameraModelBox : Box
 {
 	public const string TYPE = "@mod";
 	public override string DisplayName { get { return "RicohAppleCameraModelBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	public RicohAppleCameraModelBox(): base(IsoStream.FromFourCC("@mod"))
 	{

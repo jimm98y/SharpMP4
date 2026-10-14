@@ -14,6 +14,9 @@ public partial class GoogleSourceDataBox : Box
 {
 	public const string TYPE = "gssd";
 	public override string DisplayName { get { return "GoogleSourceDataBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public GoogleSourceDataBox(): base(IsoStream.FromFourCC("gssd"))
 	{

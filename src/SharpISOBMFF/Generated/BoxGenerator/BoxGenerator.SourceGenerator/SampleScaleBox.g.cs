@@ -16,6 +16,9 @@ public partial class SampleScaleBox : FullBox
 {
 	public const string TYPE = "stsl";
 	public override string DisplayName { get { return "SampleScaleBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry"); }
+
 
 	protected byte reserved; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }

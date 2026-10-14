@@ -15,6 +15,9 @@ public partial class FaceItemBox : Box
 {
 	public const string TYPE = "cits";
 	public override string DisplayName { get { return "FaceItemBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("crec"); }
+
 
 	public FaceItemBox(): base(IsoStream.FromFourCC("cits"))
 	{

@@ -14,6 +14,9 @@ public partial class PspUsmtExtensionBox : Box
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "PspUsmtExtensionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	public PspUsmtExtensionBox(): base(IsoStream.FromFourCC("uuid"), ConvertEx.FromHexString("55534d5421d24fcebb88695cfac9c740"))
 	{

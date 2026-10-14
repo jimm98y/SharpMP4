@@ -28,6 +28,9 @@ public partial class Dvc1Box : Box
 {
 	public const string TYPE = "dvc1";
 	public override string DisplayName { get { return "Dvc1Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(vc-1)"); }
+
 
 	protected byte profile; 
 	public byte Profile { get { return this.profile; } set { this.profile = value; } }

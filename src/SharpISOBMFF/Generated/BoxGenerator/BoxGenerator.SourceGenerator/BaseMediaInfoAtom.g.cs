@@ -19,6 +19,9 @@ public partial class BaseMediaInfoAtom : FullBox
 {
 	public const string TYPE = "gmin";
 	public override string DisplayName { get { return "BaseMediaInfoAtom"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("gmhd"); }
+
 
 	protected ushort graphicsMode; 
 	public ushort GraphicsMode { get { return this.graphicsMode; } set { this.graphicsMode = value; } }

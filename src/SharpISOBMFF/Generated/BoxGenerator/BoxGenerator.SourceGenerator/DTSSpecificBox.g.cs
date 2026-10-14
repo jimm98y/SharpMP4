@@ -29,6 +29,9 @@ public partial class DTSSpecificBox : Box
 {
 	public const string TYPE = "ddts";
 	public override string DisplayName { get { return "DTSSpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(dtsc,dtsh,dtsl,dtse,enca)"); }
+
 
 	protected uint dtsSamplingFrequency; 
 	public uint DtsSamplingFrequency { get { return this.dtsSamplingFrequency; } set { this.dtsSamplingFrequency = value; } }

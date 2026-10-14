@@ -32,6 +32,9 @@ class VisualSampleEntry(codingname) extends SampleEntry (codingname){
 public partial class VisualSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "VisualSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "stsd" }); }
+
 
 	protected ushort pre_defined = 0; 
 	public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }

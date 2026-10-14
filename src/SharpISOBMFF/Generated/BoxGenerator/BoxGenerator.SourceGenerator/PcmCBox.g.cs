@@ -15,6 +15,9 @@ public partial class PcmCBox : FullBox
 {
 	public const string TYPE = "pcmC";
 	public override string DisplayName { get { return "PcmCBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(ipcm,fpcm)"); }
+
 
 	protected byte formatFlags; 
 	public byte FormatFlags { get { return this.formatFlags; } set { this.formatFlags = value; } }

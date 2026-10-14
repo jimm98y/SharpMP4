@@ -21,6 +21,9 @@ public partial class PiffSampleEncryptionBox : FullBox
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "PiffSampleEncryptionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected uint algorithmID; 
 	public uint AlgorithmID { get { return this.algorithmID; } set { this.algorithmID = value; } }

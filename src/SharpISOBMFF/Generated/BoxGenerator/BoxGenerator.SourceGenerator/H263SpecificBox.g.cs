@@ -17,6 +17,9 @@ public partial class H263SpecificBox : Box
 {
 	public const string TYPE = "d263";
 	public override string DisplayName { get { return "H263SpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(s263,encv)"); }
+
 
 	protected uint vendor; 
 	public uint Vendor { get { return this.vendor; } set { this.vendor = value; } }

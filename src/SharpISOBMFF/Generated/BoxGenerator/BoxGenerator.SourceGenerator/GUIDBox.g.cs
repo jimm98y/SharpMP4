@@ -14,6 +14,9 @@ public partial class GUIDBox : Box
 {
 	public const string TYPE = "GUID";
 	public override string DisplayName { get { return "GUIDBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public GUIDBox(): base(IsoStream.FromFourCC("GUID"))
 	{

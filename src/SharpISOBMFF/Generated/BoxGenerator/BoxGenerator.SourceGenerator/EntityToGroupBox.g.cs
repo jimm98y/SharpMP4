@@ -18,6 +18,9 @@ extends FullBox(grouping_type, version, flags) {
 public partial class EntityToGroupBox : FullBox
 {
 	public override string DisplayName { get { return "EntityToGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "grpl" }); }
+
 
 	protected uint group_id; 
 	public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }

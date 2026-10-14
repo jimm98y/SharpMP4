@@ -21,6 +21,9 @@ public partial class ProtectionSystemSpecificHeaderBox : FullBox
 {
 	public const string TYPE = "pssh";
 	public override string DisplayName { get { return "ProtectionSystemSpecificHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("moov", "moof", "meta"); }
+
 
 	protected byte[] systemId; 
 	public byte[] SystemId { get { return this.systemId; } set { this.systemId = value; } }

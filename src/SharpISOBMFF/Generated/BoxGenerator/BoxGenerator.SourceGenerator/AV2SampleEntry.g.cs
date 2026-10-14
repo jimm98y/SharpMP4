@@ -15,6 +15,9 @@ public partial class AV2SampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "av02";
 	public override string DisplayName { get { return "AV2SampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public AV2CodecConfigurationBox Config { get { return this.children.OfType<AV2CodecConfigurationBox>().FirstOrDefault(); } }
 
 	public AV2SampleEntry(): base(IsoStream.FromFourCC("av02"))

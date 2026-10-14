@@ -14,6 +14,9 @@ public partial class NikonCameraPreviewImage1Box : Box
 {
 	public const string TYPE = "NCM1";
 	public override string DisplayName { get { return "NikonCameraPreviewImage1Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("NCDT"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

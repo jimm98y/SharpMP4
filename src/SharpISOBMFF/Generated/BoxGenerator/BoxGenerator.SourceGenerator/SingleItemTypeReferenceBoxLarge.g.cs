@@ -17,6 +17,9 @@ aligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(refe
 public partial class SingleItemTypeReferenceBoxLarge : Box
 {
 	public override string DisplayName { get { return "SingleItemTypeReferenceBoxLarge"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "iref" }); }
+
 
 	protected uint from_item_ID; 
 	public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }

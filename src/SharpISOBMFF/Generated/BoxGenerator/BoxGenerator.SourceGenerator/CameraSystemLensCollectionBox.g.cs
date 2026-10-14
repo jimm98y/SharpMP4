@@ -14,6 +14,9 @@ public partial class CameraSystemLensCollectionBox : Box
 {
 	public const string TYPE = "lnsc";
 	public override string DisplayName { get { return "CameraSystemLensCollectionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("vexu"); }
+
 
 	public CameraSystemLensCollectionBox(): base(IsoStream.FromFourCC("lnsc"))
 	{

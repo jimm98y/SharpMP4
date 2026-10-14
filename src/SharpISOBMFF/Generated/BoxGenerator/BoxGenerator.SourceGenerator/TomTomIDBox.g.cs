@@ -14,6 +14,9 @@ public partial class TomTomIDBox : Box
 {
 	public const string TYPE = "TTID";
 	public override string DisplayName { get { return "TomTomIDBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("TTMD"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

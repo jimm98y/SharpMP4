@@ -20,6 +20,9 @@ public partial class StereoVideoBox : FullBox
 {
 	public const string TYPE = "stvi";
 	public override string DisplayName { get { return "StereoVideoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("schi"); }
+
 
 	protected uint reserved = 0; 
 	public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }

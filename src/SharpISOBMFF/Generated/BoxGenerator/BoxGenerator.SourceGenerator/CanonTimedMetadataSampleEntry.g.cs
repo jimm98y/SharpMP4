@@ -17,6 +17,9 @@ public partial class CanonTimedMetadataSampleEntry : SampleEntry
 {
 	public const string TYPE = "CTMD";
 	public override string DisplayName { get { return "CanonTimedMetadataSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected uint recordCount; 
 	public uint RecordCount { get { return this.recordCount; } set { this.recordCount = value; } }

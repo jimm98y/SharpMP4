@@ -47,6 +47,9 @@ public partial class ItemLocationBox : FullBox
 {
 	public const string TYPE = "iloc";
 	public override string DisplayName { get { return "ItemLocationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
+
 
 	protected byte offset_size; 
 	public byte OffsetSize { get { return this.offset_size; } set { this.offset_size = value; } }

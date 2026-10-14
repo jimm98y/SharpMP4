@@ -14,6 +14,9 @@ public partial class ITunesMetadataMeanBox : FullBox
 {
 	public const string TYPE = "mean";
 	public override string DisplayName { get { return "ITunesMetadataMeanBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("----"); }
+
 
 	protected BinaryUTF8String domain; 
 	public BinaryUTF8String Domain { get { return this.domain; } set { this.domain = value; } }

@@ -18,6 +18,9 @@ public partial class RequiredReferenceTypesProperty : ItemFullProperty
 {
 	public const string TYPE = "rref";
 	public override string DisplayName { get { return "RequiredReferenceTypesProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected byte reference_type_count; 
 	public byte ReferenceTypeCount { get { return this.reference_type_count; } set { this.reference_type_count = value; } }

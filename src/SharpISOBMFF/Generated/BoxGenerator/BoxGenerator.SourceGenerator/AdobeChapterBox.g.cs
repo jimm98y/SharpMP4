@@ -16,6 +16,9 @@ public partial class AdobeChapterBox : FullBox
 {
 	public const string TYPE = "chpl";
 	public override string DisplayName { get { return "AdobeChapterBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected uint unknown; 
 	public uint Unknown { get { return this.unknown; } set { this.unknown = value; } }

@@ -19,6 +19,9 @@ public partial class EntityToGroupBoxvvcbDup : FullBox
 {
 	public const string TYPE = "vvcb";
 	public override string DisplayName { get { return "EntityToGroupBoxvvcbDup"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("grpl"); }
+
 
 	protected uint group_id; 
 	public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }

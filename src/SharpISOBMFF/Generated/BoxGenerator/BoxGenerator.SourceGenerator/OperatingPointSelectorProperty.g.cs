@@ -15,6 +15,9 @@ public partial class OperatingPointSelectorProperty : ItemProperty
 {
 	public const string TYPE = "a1op";
 	public override string DisplayName { get { return "OperatingPointSelectorProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected byte op_index; 
 	public byte OpIndex { get { return this.op_index; } set { this.op_index = value; } }

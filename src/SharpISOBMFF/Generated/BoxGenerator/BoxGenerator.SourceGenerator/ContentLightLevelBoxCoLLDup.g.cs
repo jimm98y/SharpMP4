@@ -15,6 +15,9 @@ public partial class ContentLightLevelBoxCoLLDup : FullBox
 {
 	public const string TYPE = "CoLL";
 	public override string DisplayName { get { return "ContentLightLevelBoxCoLLDup"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(vp08,vp09,vp10,encv,resv)"); }
+
 
 	protected ushort maxCLL; 
 	public ushort MaxCLL { get { return this.maxCLL; } set { this.maxCLL = value; } }

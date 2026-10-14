@@ -14,6 +14,9 @@ public partial class FpcmBox : Box
 {
 	public const string TYPE = "fpcm";
 	public override string DisplayName { get { return "FpcmBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	public FpcmBox(): base(IsoStream.FromFourCC("fpcm"))
 	{

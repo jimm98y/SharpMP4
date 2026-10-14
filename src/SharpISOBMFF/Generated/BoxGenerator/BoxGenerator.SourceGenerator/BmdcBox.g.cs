@@ -14,6 +14,9 @@ public partial class BmdcBox : Box
 {
 	public const string TYPE = "bmdc";
 	public override string DisplayName { get { return "BmdcBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

@@ -14,6 +14,9 @@ public partial class XMPCustomBox : Box
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "XMPCustomBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected BinaryUTF8String data; 
 	public BinaryUTF8String Data { get { return this.data; } set { this.data = value; } }

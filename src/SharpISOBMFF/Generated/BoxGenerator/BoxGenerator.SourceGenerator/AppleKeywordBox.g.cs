@@ -14,6 +14,9 @@ public partial class AppleKeywordBox : Box
 {
 	public const string TYPE = "keyw";
 	public override string DisplayName { get { return "AppleKeywordBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleKeywordBox(): base(IsoStream.FromFourCC("keyw"))
 	{

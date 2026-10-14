@@ -13,6 +13,9 @@ public partial class MovieExtendsBox : Box
 {
 	public const string TYPE = "mvex";
 	public override string DisplayName { get { return "MovieExtendsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("moov"); }
+
 
 	public MovieExtendsBox(): base(IsoStream.FromFourCC("mvex"))
 	{

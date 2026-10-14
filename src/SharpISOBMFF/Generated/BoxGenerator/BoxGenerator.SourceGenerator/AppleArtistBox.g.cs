@@ -14,6 +14,9 @@ public partial class AppleArtistBox : Box
 {
 	public const string TYPE = "©ART";
 	public override string DisplayName { get { return "AppleArtistBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	public AppleArtistBox(): base(IsoStream.FromFourCC("©ART"))
 	{

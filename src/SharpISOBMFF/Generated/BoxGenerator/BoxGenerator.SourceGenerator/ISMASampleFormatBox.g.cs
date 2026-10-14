@@ -18,6 +18,9 @@ public partial class ISMASampleFormatBox : FullBox
 {
 	public const string TYPE = "iSFM";
 	public override string DisplayName { get { return "ISMASampleFormatBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("schi"); }
+
 
 	protected bool selective_encryption; 
 	public bool SelectiveEncryption { get { return this.selective_encryption; } set { this.selective_encryption = value; } }

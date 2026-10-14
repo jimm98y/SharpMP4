@@ -19,6 +19,9 @@ public partial class XMLSubtitleSampleEntry : SubtitleSampleEntry
 {
 	public const string TYPE = "stpp";
 	public override string DisplayName { get { return "XMLSubtitleSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected BinaryUTF8String ns; 
 	public BinaryUTF8String Ns { get { return this.ns; } set { this.ns = value; } }

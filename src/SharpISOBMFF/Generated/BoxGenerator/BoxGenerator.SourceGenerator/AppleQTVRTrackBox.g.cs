@@ -17,6 +17,9 @@ public partial class AppleQTVRTrackBox : Box
 {
 	public const string TYPE = "qtvr";
 	public override string DisplayName { get { return "AppleQTVRTrackBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected uint reserved1; 
 	public uint Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }

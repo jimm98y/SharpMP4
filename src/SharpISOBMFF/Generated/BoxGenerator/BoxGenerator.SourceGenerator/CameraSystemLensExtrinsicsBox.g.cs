@@ -14,6 +14,9 @@ public partial class CameraSystemLensExtrinsicsBox : Box
 {
 	public const string TYPE = "lnex";
 	public override string DisplayName { get { return "CameraSystemLensExtrinsicsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("lens"); }
+
 
 	public CameraSystemLensExtrinsicsBox(): base(IsoStream.FromFourCC("lnex"))
 	{

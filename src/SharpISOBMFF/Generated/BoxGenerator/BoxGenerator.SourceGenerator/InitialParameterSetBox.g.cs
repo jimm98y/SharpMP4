@@ -19,6 +19,9 @@ public partial class InitialParameterSetBox : Box
 {
 	public const string TYPE = "svip";
 	public override string DisplayName { get { return "InitialParameterSetBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("scif", "mvif"); }
+
 
 	protected byte sps_id_count; 
 	public byte SpsIdCount { get { return this.sps_id_count; } set { this.sps_id_count = value; } }

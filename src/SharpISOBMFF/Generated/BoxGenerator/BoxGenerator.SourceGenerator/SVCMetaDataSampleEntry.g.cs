@@ -17,6 +17,9 @@ public partial class SVCMetaDataSampleEntry : MetaDataSampleEntry
 {
 	public const string TYPE = "svcM";
 	public override string DisplayName { get { return "SVCMetaDataSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public SVCMetadataSampleConfigBox Config { get { return this.children.OfType<SVCMetadataSampleConfigBox>().FirstOrDefault(); } }
 	public SVCPriorityAssignmentBox Methods { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
 	public SVCPriorityLayerInfoBox Priorities { get { return this.children.OfType<SVCPriorityLayerInfoBox>().FirstOrDefault(); } }

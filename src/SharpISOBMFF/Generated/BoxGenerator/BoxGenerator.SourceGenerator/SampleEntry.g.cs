@@ -15,6 +15,9 @@ unsigned int(16) data_reference_index;
 public abstract partial class SampleEntry : Box
 {
 	public override string DisplayName { get { return "SampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected byte[] reservedSampleEntry = []; 
 	public byte[] ReservedSampleEntry { get { return this.reservedSampleEntry; } set { this.reservedSampleEntry = value; } }

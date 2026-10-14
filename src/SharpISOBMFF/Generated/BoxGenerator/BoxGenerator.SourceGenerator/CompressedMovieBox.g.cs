@@ -14,6 +14,10 @@ public partial class CompressedMovieBox : CompressedBox
 {
 	public const string TYPE = "!mov";
 	public override string DisplayName { get { return "CompressedMovieBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	// its definitions place it in no container: wherever it is, it is not misplaced
+	public override bool ValidatePlacement() { return IsPlacedIn(); }
+
 
 	public CompressedMovieBox(): base(IsoStream.FromFourCC("!mov"))
 	{

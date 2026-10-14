@@ -16,6 +16,9 @@ public partial class BaseLocationBox : FullBox
 {
 	public const string TYPE = "bloc";
 	public override string DisplayName { get { return "BaseLocationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected byte[] baseLocation; 
 	public byte[] BaseLocation { get { return this.baseLocation; } set { this.baseLocation = value; } }

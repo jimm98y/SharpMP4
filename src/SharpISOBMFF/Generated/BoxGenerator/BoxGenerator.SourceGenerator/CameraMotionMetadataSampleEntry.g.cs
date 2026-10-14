@@ -15,6 +15,9 @@ public partial class CameraMotionMetadataSampleEntry : SampleEntry
 {
 	public const string TYPE = "camm";
 	public override string DisplayName { get { return "CameraMotionMetadataSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	public CameraMotionMetadataSampleEntry(): base(IsoStream.FromFourCC("camm"))
 	{

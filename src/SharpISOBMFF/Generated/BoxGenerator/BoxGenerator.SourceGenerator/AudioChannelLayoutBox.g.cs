@@ -18,6 +18,9 @@ public partial class AudioChannelLayoutBox : FullBox
 {
 	public const string TYPE = "chan";
 	public override string DisplayName { get { return "AudioChannelLayoutBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry"); }
+
 
 	protected uint channelLayoutTag; 
 	public uint ChannelLayoutTag { get { return this.channelLayoutTag; } set { this.channelLayoutTag = value; } }

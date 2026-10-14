@@ -15,6 +15,9 @@ public partial class HintPayloadID : Box
 {
 	public const string TYPE = "payt";
 	public override string DisplayName { get { return "HintPayloadID"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("hinf"); }
+
 
 	protected uint payloadID;  //  payload ID used in RTP packets
 	public uint PayloadID { get { return this.payloadID; } set { this.payloadID = value; } }

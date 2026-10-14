@@ -14,6 +14,9 @@ public partial class MarlinHeaderBox : Box
 {
 	public const string TYPE = "mrlh";
 	public override string DisplayName { get { return "MarlinHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("SampleEntry(marl)"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

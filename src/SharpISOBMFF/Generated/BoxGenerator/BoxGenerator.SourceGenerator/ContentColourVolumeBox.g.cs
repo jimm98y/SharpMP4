@@ -32,6 +32,9 @@ public partial class ContentColourVolumeBox : Box
 {
 	public const string TYPE = "cclv";
 	public override string DisplayName { get { return "ContentColourVolumeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry", "ipco"); }
+
 
 	protected bool reserved1 = false;  //  ccv_cancel_flag
 	public bool Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }

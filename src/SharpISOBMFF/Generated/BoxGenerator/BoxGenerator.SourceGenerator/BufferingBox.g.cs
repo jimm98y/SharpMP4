@@ -21,6 +21,9 @@ public partial class BufferingBox : Box
 {
 	public const string TYPE = "buff";
 	public override string DisplayName { get { return "BufferingBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("scif", "mvif", "mvcg"); }
+
 
 	protected ushort operating_point_count; 
 	public ushort OperatingPointCount { get { return this.operating_point_count; } set { this.operating_point_count = value; } }

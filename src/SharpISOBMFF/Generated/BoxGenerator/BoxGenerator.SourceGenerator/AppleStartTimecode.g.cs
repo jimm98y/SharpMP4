@@ -14,6 +14,9 @@ public partial class AppleStartTimecode : Box
 {
 	public const string TYPE = "©TIM";
 	public override string DisplayName { get { return "AppleStartTimecode"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	protected MultiLanguageString[] value; 
 	public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }

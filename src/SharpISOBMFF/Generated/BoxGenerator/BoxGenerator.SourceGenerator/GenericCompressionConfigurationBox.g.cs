@@ -15,6 +15,9 @@ public partial class GenericCompressionConfigurationBox : FullBox
 {
 	public const string TYPE = "cmpC";
 	public override string DisplayName { get { return "GenericCompressionConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("schi", "ipco"); }
+
 
 	protected uint compression_type; 
 	public uint CompressionType { get { return this.compression_type; } set { this.compression_type = value; } }

@@ -15,6 +15,9 @@ public partial class AppleWindowLocationBox : Box
 {
 	public const string TYPE = "WLOC";
 	public override string DisplayName { get { return "AppleWindowLocationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected short locationX; 
 	public short LocationX { get { return this.locationX; } set { this.locationX = value; } }

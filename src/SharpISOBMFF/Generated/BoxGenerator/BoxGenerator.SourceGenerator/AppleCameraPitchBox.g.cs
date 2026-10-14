@@ -14,6 +14,9 @@ public partial class AppleCameraPitchBox : Box
 {
 	public const string TYPE = "©gpt";
 	public override string DisplayName { get { return "AppleCameraPitchBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	public AppleCameraPitchBox(): base(IsoStream.FromFourCC("©gpt"))
 	{

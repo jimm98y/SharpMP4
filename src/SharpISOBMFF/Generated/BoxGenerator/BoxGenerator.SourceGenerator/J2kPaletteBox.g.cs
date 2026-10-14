@@ -14,6 +14,9 @@ public partial class J2kPaletteBox : Box
 {
 	public const string TYPE = "pclr";
 	public override string DisplayName { get { return "J2kPaletteBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("j2kH"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

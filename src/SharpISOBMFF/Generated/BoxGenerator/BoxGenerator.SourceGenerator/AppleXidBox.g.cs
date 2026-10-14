@@ -14,6 +14,9 @@ public partial class AppleXidBox : Box
 {
 	public const string TYPE = "xid ";
 	public override string DisplayName { get { return "AppleXidBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleXidBox(): base(IsoStream.FromFourCC("xid "))
 	{

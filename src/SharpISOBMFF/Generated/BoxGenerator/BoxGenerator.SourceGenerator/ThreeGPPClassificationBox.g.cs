@@ -18,6 +18,9 @@ public partial class ThreeGPPClassificationBox : FullBox
 {
 	public const string TYPE = "clsf";
 	public override string DisplayName { get { return "ThreeGPPClassificationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected uint classificationEntity; 
 	public uint ClassificationEntity { get { return this.classificationEntity; } set { this.classificationEntity = value; } }

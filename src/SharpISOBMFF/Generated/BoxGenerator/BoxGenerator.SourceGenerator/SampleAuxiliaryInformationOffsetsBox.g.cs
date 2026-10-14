@@ -26,6 +26,9 @@ public partial class SampleAuxiliaryInformationOffsetsBox : FullBox
 {
 	public const string TYPE = "saio";
 	public override string DisplayName { get { return "SampleAuxiliaryInformationOffsetsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl", "traf"); }
+
 
 	protected uint aux_info_type; 
 	public uint AuxInfoType { get { return this.aux_info_type; } set { this.aux_info_type = value; } }

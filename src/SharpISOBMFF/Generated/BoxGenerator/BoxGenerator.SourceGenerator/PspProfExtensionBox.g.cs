@@ -16,6 +16,9 @@ public partial class PspProfExtensionBox : Box
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "PspProfExtensionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected uint unknown1; 
 	public uint Unknown1 { get { return this.unknown1; } set { this.unknown1 = value; } }

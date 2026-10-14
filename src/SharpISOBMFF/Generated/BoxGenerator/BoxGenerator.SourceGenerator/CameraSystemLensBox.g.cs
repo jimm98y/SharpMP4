@@ -14,6 +14,9 @@ public partial class CameraSystemLensBox : FullBox
 {
 	public const string TYPE = "lens";
 	public override string DisplayName { get { return "CameraSystemLensBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("lnsc"); }
+
 
 	public CameraSystemLensBox(): base(IsoStream.FromFourCC("lens"))
 	{

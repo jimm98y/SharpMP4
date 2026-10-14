@@ -15,6 +15,9 @@ public partial class StereoComfortBox : Box
 {
 	public const string TYPE = "cmfy";
 	public override string DisplayName { get { return "StereoComfortBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("eyes"); }
+
 
 	public StereoComfortBox(): base(IsoStream.FromFourCC("cmfy"))
 	{

@@ -14,6 +14,9 @@ public partial class MoatBox : Box
 {
 	public const string TYPE = "moat";
 	public override string DisplayName { get { return "MoatBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

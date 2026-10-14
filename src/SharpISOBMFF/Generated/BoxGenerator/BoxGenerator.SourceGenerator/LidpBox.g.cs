@@ -14,6 +14,9 @@ public partial class LidpBox : Box
 {
 	public const string TYPE = "lidp";
 	public override string DisplayName { get { return "LidpBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mebx"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

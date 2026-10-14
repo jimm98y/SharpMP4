@@ -14,6 +14,9 @@ public partial class AdditionalMetadataContainerBox : Box
 {
 	public const string TYPE = "meco";
 	public override string DisplayName { get { return "AdditionalMetadataContainerBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file", "moov", "trak"); }
+
 
 	public AdditionalMetadataContainerBox(): base(IsoStream.FromFourCC("meco"))
 	{

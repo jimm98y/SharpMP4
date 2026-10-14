@@ -15,6 +15,9 @@ public partial class HvcEBox : Box
 {
 	public const string TYPE = "hvcE";
 	public override string DisplayName { get { return "HvcEBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(dvhe,dvh1,hvc1,hev1,hvc2,hev2,encv,resv)"); }
+
 
 	protected HEVCDecoderConfigurationRecord HEVCConfig; 
 	public HEVCDecoderConfigurationRecord _HEVCConfig { get { return this.HEVCConfig; } set { this.HEVCConfig = value; } }

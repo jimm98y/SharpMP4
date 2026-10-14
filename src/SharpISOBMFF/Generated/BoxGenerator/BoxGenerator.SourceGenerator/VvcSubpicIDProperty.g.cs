@@ -15,6 +15,9 @@ public partial class VvcSubpicIDProperty : ItemFullProperty
 {
 	public const string TYPE = "spid";
 	public override string DisplayName { get { return "VvcSubpicIDProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected VvcSubpicIDEntry sid_info;  //  specified in ISO/IEC 14496-15
 	public VvcSubpicIDEntry SidInfo { get { return this.sid_info; } set { this.sid_info = value; } }

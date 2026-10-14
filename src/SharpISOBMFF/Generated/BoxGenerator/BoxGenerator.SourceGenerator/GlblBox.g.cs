@@ -14,6 +14,9 @@ public partial class GlblBox : Box
 {
 	public const string TYPE = "glbl";
 	public override string DisplayName { get { return "GlblBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry", "AudioSampleEntry"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

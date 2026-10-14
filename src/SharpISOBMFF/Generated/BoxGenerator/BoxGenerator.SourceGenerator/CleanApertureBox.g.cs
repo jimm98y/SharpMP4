@@ -27,6 +27,9 @@ public partial class CleanApertureBox : Box
 {
 	public const string TYPE = "clap";
 	public override string DisplayName { get { return "CleanApertureBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry", "ipco"); }
+
 
 	protected uint cleanApertureWidthN; 
 	public uint CleanApertureWidthN { get { return this.cleanApertureWidthN; } set { this.cleanApertureWidthN = value; } }

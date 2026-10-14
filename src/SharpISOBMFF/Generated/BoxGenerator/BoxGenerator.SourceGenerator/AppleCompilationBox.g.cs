@@ -14,6 +14,9 @@ public partial class AppleCompilationBox : Box
 {
 	public const string TYPE = "cpil";
 	public override string DisplayName { get { return "AppleCompilationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AppleCompilationBox(): base(IsoStream.FromFourCC("cpil"))
 	{

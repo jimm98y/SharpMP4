@@ -15,6 +15,9 @@ public partial class URIMetaSampleEntry : MetaDataSampleEntry
 {
 	public const string TYPE = "urim";
 	public override string DisplayName { get { return "URIMetaSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public URIBox TheLabel { get { return this.children.OfType<URIBox>().FirstOrDefault(); } }
 	public URIInitBox Init { get { return this.children.OfType<URIInitBox>().FirstOrDefault(); } }
 

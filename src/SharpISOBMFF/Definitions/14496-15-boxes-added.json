@@ -16,13 +16,13 @@
     },
     {
       "fourcc": "icam",
-      "containers": [ "*" ],
+      "containers": [ {"MVCDSampleEntry": ["mvd1", "mvd2", "mvd3", "mvd4"]}, {"A3DSampleEntry": ["a3d1", "a3d2", "a3d3", "a3d4"]} ],
       "type": "Box",
       "syntax": "class IntrinsicCameraParametersBox extends FullBox ('icam', version=0, flags) { \r\n unsigned int(6)  \r\n reserved=0;  \r\n unsigned int(10)  ref_view_id; \r\n unsigned int(32) prec_focal_length; \r\n unsigned int(32) prec_principal_point; \r\n unsigned int(32) prec_skew_factor; \r\n unsigned int(8) exponent_focal_length_x; \r\n signed   int(64) mantissa_focal_length_x; \r\n unsigned int(8) exponent_focal_length_y; \r\n signed   int(64) mantissa_focal_length_y;  \r\n unsigned int(8) exponent_principal_point_x; \r\n signed   int(64) mantissa_principal_point_x; \r\n unsigned int(8) exponent_principal_point_y; \r\n signed   int(64) mantissa_principal_point_y; \r\n unsigned int(8) exponent_skew_factor; \r\n signed   int(64) mantissa_skew_factor; \r\n} "
     },
     {
       "fourcc": "ecam",
-      "containers": [ "*" ],
+      "containers": [ {"MVCDSampleEntry": ["mvd1", "mvd2", "mvd3", "mvd4"]}, {"A3DSampleEntry": ["a3d1", "a3d2", "a3d3", "a3d4"]} ],
       "type": "Box",
       "syntax": "class ExtrinsicCameraParametersBox extends FullBox ('ecam', version=0, flags) { \r\n unsigned int(6)  reserved=0; \r\n unsigned int(10)  ref_view_id; \r\n unsigned int(8) prec_rotation_param; \r\n unsigned int(8) prec_translation_param; \r\n for (j=1; j<=3; j++) { /* row */   \r\n  for (k=1; k<=3; k++) { /* column */ \r\n   unsigned int(8) exponent_r[j][k]; \r\n   signed   int(64) mantissa_r [j][k]; \r\n  } \r\n  unsigned int(8) exponent_t[j]; \r\n  signed   int(64) mantissa_t[j]; \r\n } \r\n}"
     },

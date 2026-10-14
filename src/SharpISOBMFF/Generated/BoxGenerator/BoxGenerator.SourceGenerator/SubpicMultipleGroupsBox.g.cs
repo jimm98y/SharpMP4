@@ -27,6 +27,9 @@ public partial class SubpicMultipleGroupsBox : EntityToGroupBox
 {
 	public const string TYPE = "amgl";
 	public override string DisplayName { get { return "SubpicMultipleGroupsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("grpl"); }
+
 
 	protected bool level_is_present_flag; 
 	public bool LevelIsPresentFlag { get { return this.level_is_present_flag; } set { this.level_is_present_flag = value; } }

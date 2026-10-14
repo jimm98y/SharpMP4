@@ -16,6 +16,9 @@ public partial class ZoomTransitionEffectProperty : ItemFullProperty
 {
 	public const string TYPE = "zoom";
 	public override string DisplayName { get { return "ZoomTransitionEffectProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected bool transition_direction; 
 	public bool TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }

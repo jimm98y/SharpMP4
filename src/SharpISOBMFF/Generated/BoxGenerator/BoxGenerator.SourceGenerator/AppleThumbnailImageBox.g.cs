@@ -6,16 +6,19 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class ThumbnailImageBox() extends Box('tnal') {
+aligned(8) class AppleThumbnailImageBox() extends Box('tnal') {
  Box boxes[];
 }
 */
-public partial class ThumbnailImageBoxtnalDup : Box
+public partial class AppleThumbnailImageBox : Box
 {
 	public const string TYPE = "tnal";
-	public override string DisplayName { get { return "ThumbnailImageBoxtnalDup"; } }
+	public override string DisplayName { get { return "AppleThumbnailImageBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
 
-	public ThumbnailImageBoxtnalDup(): base(IsoStream.FromFourCC("tnal"))
+
+	public AppleThumbnailImageBox(): base(IsoStream.FromFourCC("tnal"))
 	{
 	}
 

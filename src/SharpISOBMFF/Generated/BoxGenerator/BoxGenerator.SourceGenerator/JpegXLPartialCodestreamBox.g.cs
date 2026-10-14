@@ -17,6 +17,9 @@ public partial class JpegXLPartialCodestreamBox : Box
 {
 	public const string TYPE = "jxlp";
 	public override string DisplayName { get { return "JpegXLPartialCodestreamBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected bool is_last; 
 	public bool IsLast { get { return this.is_last; } set { this.is_last = value; } }

@@ -14,6 +14,9 @@ public partial class PodcastBox : Box
 {
 	public const string TYPE = "pcst";
 	public override string DisplayName { get { return "PodcastBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public PodcastBox(): base(IsoStream.FromFourCC("pcst"))
 	{

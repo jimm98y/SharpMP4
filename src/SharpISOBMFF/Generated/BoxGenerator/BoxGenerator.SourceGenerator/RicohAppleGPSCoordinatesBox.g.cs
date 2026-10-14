@@ -14,6 +14,9 @@ public partial class RicohAppleGPSCoordinatesBox : Box
 {
 	public const string TYPE = "@xyz";
 	public override string DisplayName { get { return "RicohAppleGPSCoordinatesBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected MultiLanguageString[] value; 
 	public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }

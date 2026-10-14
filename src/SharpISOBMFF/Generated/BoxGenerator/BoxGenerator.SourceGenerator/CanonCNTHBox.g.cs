@@ -14,6 +14,9 @@ public partial class CanonCNTHBox : Box
 {
 	public const string TYPE = "CNTH";
 	public override string DisplayName { get { return "CanonCNTHBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "uuid"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

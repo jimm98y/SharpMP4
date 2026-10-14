@@ -34,6 +34,9 @@ public partial class SegmentIndexBox : FullBox
 {
 	public const string TYPE = "sidx";
 	public override string DisplayName { get { return "SegmentIndexBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected uint reference_ID; 
 	public uint ReferenceID { get { return this.reference_ID; } set { this.reference_ID = value; } }

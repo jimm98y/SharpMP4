@@ -48,6 +48,9 @@ public partial class SampleAuxiliaryInformationSizesBox : FullBox
 {
 	public const string TYPE = "saiz";
 	public override string DisplayName { get { return "SampleAuxiliaryInformationSizesBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl", "traf"); }
+
 
 	protected uint aux_info_type; 
 	public uint AuxInfoType { get { return this.aux_info_type; } set { this.aux_info_type = value; } }

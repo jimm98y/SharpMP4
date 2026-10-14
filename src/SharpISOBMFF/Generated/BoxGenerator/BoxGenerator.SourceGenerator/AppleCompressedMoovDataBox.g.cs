@@ -15,6 +15,9 @@ public partial class AppleCompressedMoovDataBox : Box
 {
 	public const string TYPE = "cmvd";
 	public override string DisplayName { get { return "AppleCompressedMoovDataBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("cmov"); }
+
 
 	protected uint uncompressedSize; 
 	public uint UncompressedSize { get { return this.uncompressedSize; } set { this.uncompressedSize = value; } }

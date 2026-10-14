@@ -14,6 +14,10 @@ public partial class CueTimeBox : Box
 {
 	public const string TYPE = "ctim";
 	public override string DisplayName { get { return "CueTimeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	// its definitions place it in no container: wherever it is, it is not misplaced
+	public override bool ValidatePlacement() { return IsPlacedIn(); }
+
 
 	protected BinaryUTF8String cueCurrentTime; 
 	public BinaryUTF8String CueCurrentTime { get { return this.cueCurrentTime; } set { this.cueCurrentTime = value; } }

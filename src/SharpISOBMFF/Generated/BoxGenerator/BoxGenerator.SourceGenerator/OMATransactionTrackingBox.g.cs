@@ -14,6 +14,9 @@ public partial class OMATransactionTrackingBox : FullBox
 {
 	public const string TYPE = "odtt";
 	public override string DisplayName { get { return "OMATransactionTrackingBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mdri"); }
+
 
 	protected byte[] transactionID; 
 	public byte[] TransactionID { get { return this.transactionID; } set { this.transactionID = value; } }

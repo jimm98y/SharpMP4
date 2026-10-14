@@ -14,6 +14,9 @@ public partial class AppleCopyright2Box : Box
 {
 	public const string TYPE = "©cpy";
 	public override string DisplayName { get { return "AppleCopyright2Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	public AppleCopyright2Box(): base(IsoStream.FromFourCC("©cpy"))
 	{

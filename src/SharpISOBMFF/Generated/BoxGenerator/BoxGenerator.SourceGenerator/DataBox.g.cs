@@ -16,6 +16,9 @@ public partial class DataBox : Box
 {
 	public const string TYPE = "data";
 	public override string DisplayName { get { return "DataBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
+
 
 	protected uint dataType; 
 	public uint DataType { get { return this.dataType; } set { this.dataType = value; } }

@@ -14,6 +14,9 @@ public partial class VideoContourMapBox : FullBox
 {
 	public const string TYPE = "ctrm";
 	public override string DisplayName { get { return "VideoContourMapBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ctrs"); }
+
 
 	protected byte[] data;  //  TODO requires switch/case 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

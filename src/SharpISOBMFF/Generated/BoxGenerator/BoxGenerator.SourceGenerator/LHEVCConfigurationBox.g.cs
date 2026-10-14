@@ -14,6 +14,9 @@ public partial class LHEVCConfigurationBox : Box
 {
 	public const string TYPE = "lhvC";
 	public override string DisplayName { get { return "LHEVCConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco", "RestrictedSampleEntry(resv)", "VisualSampleEntry(encv)", "LHEVCSampleEntry(lhv1,lhe1)", "HEVCSampleEntry(hvc1,hvc2,hev1,hev2,hvc3,hev3)", "HEVCLHVCSampleEntry(hvc1,hvc2,hev1,hev2,hvc3,hev3)"); }
+
 
 	protected LHEVCDecoderConfigurationRecord LHEVCConfig; 
 	public LHEVCDecoderConfigurationRecord _LHEVCConfig { get { return this.LHEVCConfig; } set { this.LHEVCConfig = value; } }

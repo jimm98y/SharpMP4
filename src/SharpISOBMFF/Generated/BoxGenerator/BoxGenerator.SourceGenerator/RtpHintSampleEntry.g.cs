@@ -16,6 +16,9 @@ public partial class RtpHintSampleEntry : HintSampleEntry
 {
 	public const string TYPE = "rtp ";
 	public override string DisplayName { get { return "RtpHintSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected ushort hinttrackversion = 1; 
 	public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }

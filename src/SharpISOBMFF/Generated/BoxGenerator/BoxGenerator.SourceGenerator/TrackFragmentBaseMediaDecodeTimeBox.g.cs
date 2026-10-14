@@ -19,6 +19,9 @@ public partial class TrackFragmentBaseMediaDecodeTimeBox : FullBox
 {
 	public const string TYPE = "tfdt";
 	public override string DisplayName { get { return "TrackFragmentBaseMediaDecodeTimeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("traf"); }
+
 
 	protected ulong baseMediaDecodeTime; 
 	public ulong BaseMediaDecodeTime { get { return this.baseMediaDecodeTime; } set { this.baseMediaDecodeTime = value; } }

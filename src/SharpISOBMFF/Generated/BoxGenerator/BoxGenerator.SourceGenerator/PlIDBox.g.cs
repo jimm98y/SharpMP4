@@ -14,6 +14,9 @@ public partial class PlIDBox : Box
 {
 	public const string TYPE = "plID";
 	public override string DisplayName { get { return "PlIDBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public PlIDBox(): base(IsoStream.FromFourCC("plID"))
 	{

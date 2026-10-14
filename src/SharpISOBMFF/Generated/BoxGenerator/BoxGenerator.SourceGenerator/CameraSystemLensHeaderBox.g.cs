@@ -17,6 +17,9 @@ public partial class CameraSystemLensHeaderBox : FullBox
 {
 	public const string TYPE = "lnhd";
 	public override string DisplayName { get { return "CameraSystemLensHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("lens"); }
+
 
 	protected uint lens_identifier;  //  an integer unique to the enclosing CameraSystemLensBox 
 	public uint LensIdentifier { get { return this.lens_identifier; } set { this.lens_identifier = value; } }

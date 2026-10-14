@@ -14,6 +14,9 @@ public partial class AppleEd9Box : Box
 {
 	public const string TYPE = "©ed9";
 	public override string DisplayName { get { return "AppleEd9Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	public AppleEd9Box(): base(IsoStream.FromFourCC("©ed9"))
 	{

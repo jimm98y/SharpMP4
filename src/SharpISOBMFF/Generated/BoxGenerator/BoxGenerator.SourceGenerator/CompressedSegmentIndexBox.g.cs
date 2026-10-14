@@ -15,6 +15,10 @@ public partial class CompressedSegmentIndexBox : CompressedBox
 {
 	public const string TYPE = "!six";
 	public override string DisplayName { get { return "CompressedSegmentIndexBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	// its definitions place it in no container: wherever it is, it is not misplaced
+	public override bool ValidatePlacement() { return IsPlacedIn(); }
+
 
 	public CompressedSegmentIndexBox(): base(IsoStream.FromFourCC("!six"))
 	{

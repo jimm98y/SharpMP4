@@ -14,6 +14,9 @@ public partial class HdvdBox : Box
 {
 	public const string TYPE = "hdvd";
 	public override string DisplayName { get { return "HdvdBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public HdvdBox(): base(IsoStream.FromFourCC("hdvd"))
 	{

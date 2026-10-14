@@ -15,6 +15,9 @@ public partial class CameraIDBox : Box
 {
 	public const string TYPE = "cmid";
 	public override string DisplayName { get { return "CameraIDBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected BinaryUTF8String value; 
 	public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }

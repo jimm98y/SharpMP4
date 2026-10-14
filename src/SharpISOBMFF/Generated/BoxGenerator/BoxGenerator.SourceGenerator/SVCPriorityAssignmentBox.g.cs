@@ -16,6 +16,9 @@ public partial class SVCPriorityAssignmentBox : Box
 {
 	public const string TYPE = "svcP";
 	public override string DisplayName { get { return "SVCPriorityAssignmentBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AVCSVCSampleEntry(avc1,avc3)", "AVC2SVCSampleEntry(avc2,avc4)", "SVCSampleEntry(svc1,svc2)", "SVCMetaDataSampleEntry(svcM)"); }
+
 
 	protected byte method_count; 
 	public byte MethodCount { get { return this.method_count; } set { this.method_count = value; } }

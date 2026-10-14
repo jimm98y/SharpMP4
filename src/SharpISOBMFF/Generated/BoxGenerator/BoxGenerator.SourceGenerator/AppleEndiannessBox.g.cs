@@ -15,6 +15,9 @@ public partial class AppleEndiannessBox : Box
 {
 	public const string TYPE = "enda";
 	public override string DisplayName { get { return "AppleEndiannessBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("wave"); }
+
 
 	protected ushort littleEndian; 
 	public ushort LittleEndian { get { return this.littleEndian; } set { this.littleEndian = value; } }

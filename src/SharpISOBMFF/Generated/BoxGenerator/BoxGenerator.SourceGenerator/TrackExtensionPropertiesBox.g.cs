@@ -15,6 +15,9 @@ public partial class TrackExtensionPropertiesBox : FullBox
 {
 	public const string TYPE = "trep";
 	public override string DisplayName { get { return "TrackExtensionPropertiesBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mvex"); }
+
 
 	protected uint track_ID;  //  Any number of boxes may follow
 	public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }

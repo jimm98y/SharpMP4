@@ -24,6 +24,9 @@ public partial class FDSessionGroupBox : Box
 {
 	public const string TYPE = "segr";
 	public override string DisplayName { get { return "FDSessionGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("fiin"); }
+
 
 	protected ushort num_session_groups; 
 	public ushort NumSessionGroups { get { return this.num_session_groups; } set { this.num_session_groups = value; } }

@@ -47,6 +47,9 @@ public partial class DownMixInstructions : FullBox
 {
 	public const string TYPE = "dmix";
 	public override string DisplayName { get { return "DownMixInstructions"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry"); }
+
 
 	protected bool reserved = false; 
 	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }

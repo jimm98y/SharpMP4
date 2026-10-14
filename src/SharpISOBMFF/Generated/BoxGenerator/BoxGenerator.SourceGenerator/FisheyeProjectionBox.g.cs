@@ -14,6 +14,9 @@ public partial class FisheyeProjectionBox : FullBox
 {
 	public const string TYPE = "fish";
 	public override string DisplayName { get { return "FisheyeProjectionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("proj"); }
+
 
 	public FisheyeProjectionBox(): base(IsoStream.FromFourCC("fish"), 0, 0)
 	{

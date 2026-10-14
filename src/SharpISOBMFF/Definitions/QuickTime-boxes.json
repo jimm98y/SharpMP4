@@ -4,19 +4,19 @@
   "entries": [
     {
       "fourcc": "cmvd",
-      "containers": [ "*" ],
+      "containers": [ "cmov" ],
       "type": "Box",
       "syntax": "class AppleCompressedMoovDataBox() extends Box ('cmvd'){\r\n unsigned int(32) uncompressedSize;\r\nbit(8) compressedData[];\r\n }"
     },
     {
       "fourcc": "dcom",
-      "containers": [ "*" ],
+      "containers": [ "cmov" ],
       "type": "Box",
       "syntax": "class AppleDecompressorBox() extends Box ('dcom'){\r\n unsigned int(32) decompressor;\r\n }"
     },
     {
       "fourcc": "cmov",
-      "containers": [ "*" ],
+      "containers": [ "moov" ],
       "type": "Box",
       "syntax": "class AppleCompressedMoovBox() extends Box ('cmov'){\r\n Box boxes[];\r\n }"
     },
@@ -28,109 +28,109 @@
     },
     {
       "fourcc": "pict",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class ApplePreviewPictureBox() extends Box ('pict'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "pnot",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class AppleImagePreviewBox() extends Box ('pnot'){\r\n unsigned int(32) modificationDate;\r\n signed int(16) version;\r\n signed int(32) atomType;\r\n signed int(16) atomIndex;\r\n }"
     },
     {
       "fourcc": "rmcd",
-      "containers": [ "*" ],
+      "containers": [ "rmda" ],
       "type": "Box",
       "syntax": "class AppleComponentDetectBox() extends Box ('rmcd'){\r\n unsigned int(32) flags;\r\n ComponentDescription description;\r\n unsigned int(32) minimumVersion;\r\n } class ComponentDescription() { \r\n unsigned int(32) componentType;\r\n unsigned int(32) componentSubType;\r\n unsigned int(32) componentManufacturer;\r\n unsigned int(32) componentFlags;\r\n unsigned int(32) componentFlagsMask;\r\n }"
     },
     {
       "fourcc": "rmcs",
-      "containers": [ "*" ],
+      "containers": [ "rmda" ],
       "type": "Box",
       "syntax": "class AppleCpuSpeedBox() extends Box ('rmcs'){\r\n unsigned int(32) flags;\r\n unsigned int(32) cpuSpeed;\r\n }"
     },
     {
       "fourcc": "rmqu",
-      "containers": [ "*" ],
+      "containers": [ "rmda" ],
       "type": "Box",
       "syntax": "class AppleQualityBox() extends Box ('rmqu'){\r\n unsigned int(32) flags;\r\n unsigned int(32) quality;\r\n }"
     },
     {
       "fourcc": "rmvc",
-      "containers": [ "*" ],
+      "containers": [ "rmda" ],
       "type": "Box",
       "syntax": "class AppleVersionCheckBox() extends Box ('rmvc'){\r\n unsigned int(32) flags;\r\n unsigned int(32) softwarePackage;\r\n unsigned int(32) version;\r\n unsigned int(32) mask;\r\n signed int(16) checkType;\r\n }"
     },
     {
       "fourcc": "wfex",
-      "containers": [ "*" ],
+      "containers": [ {"AudioSampleEntry": ["wma "]} ],
       "type": "Box",
       "syntax": "// Microsoft's WAVEFORMATEX (mmreg.h), as QuickTime's 'wfex' holds it of a codec of Windows': little-endian, which the generator reads it as; the size of what follows and it, where the structure has them\r\nclass MicrosoftWaveFormatExBox() extends Box ('wfex'){\r\n unsigned int(16) format_tag;\r\n unsigned int(16) channels;\r\n unsigned int(32) samples_per_sec;\r\n unsigned int(32) avg_bytes_per_sec;\r\n unsigned int(16) block_align;\r\n unsigned int(16) bits_per_sample;\r\n unsigned int(16) extra_size; // optional\r\n bit(8) extra[];\r\n }"
     },
     {
       "fourcc": "clip",
-      "containers": [ "*" ],
+      "containers": [ "moov", "trak" ],
       "type": "Box",
       "syntax": "class AppleClippingBox() extends Box ('clip'){\r\n Box boxes[];\r\n }"
     },
     {
       "fourcc": "crgn",
-      "containers": [ "*" ],
+      "containers": [ "clip" ],
       "type": "Box",
       "syntax": "class AppleClippingRegionBox() extends Box ('crgn'){\r\n unsigned int(16) regionSize;\r\n unsigned int(64) regionBoundaryBox;\r\n unsigned int(8) clippingRegionData[];\r\n }"
     },
     {
       "fourcc": "matt",
-      "containers": [ "*" ],
+      "containers": [ "trak" ],
       "type": "Box",
       "syntax": "class AppleTrackMatteBox() extends Box ('matt'){\r\n Box boxes[];\r\n }"
     },
     {
       "fourcc": "kmat",
-      "containers": [ "*" ],
+      "containers": [ "matt" ],
       "type": "Box",
       "syntax": "class AppleCompressedMatteBox() extends FullBox ('kmat'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "ctry",
-      "containers": [ "*" ],
+      "containers": [ "meta" ],
       "type": "Box",
       "syntax": "class AppleCountryListBox() extends Box ('ctry') {\r\n unsigned int(16) entry_count;\r\n CountryListEntry entries[];\r\n }\r\n class CountryListEntry() { \r\n unsigned int(16) country_count;\r\n unsigned int(16) country[ country_count ];\r\n }\r\n"
     },
     {
       "fourcc": "rsrc",
-      "containers": [ "*" ],
+      "containers": [ "dref" ],
       "type": "Box",
       "syntax": "class AppleDataReferenceResourceBox() extends Box ('rsrc'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "qtvr",
-      "containers": [ "*" ],
+      "containers": [ "stsd" ],
       "type": "Box",
       "syntax": "class AppleQTVRTrackBox() extends Box ('qtvr'){\r\n unsigned int(32) reserved1;\r\n unsigned int(16) reserved2;\r\n unsigned int(16) dataRefIndex;\r\n unsigned int(32) data;\r\n }"
     },
     {
       "fourcc": "ctab",
-      "containers": [ "*" ],
+      "containers": [ "moov" ],
       "type": "Box",
       "syntax": "class AppleColorTableBox() extends Box ('ctab'){\r\n signed int(32) color_table_seed;\r\n signed int(16) flags;\r\n signed int(16) color_table_size;\r\n AppleColor colors[];\r\n }\r\n class QuickTimeColorTable() {\r\n signed int(32) color_table_seed;\r\n signed int(16) flags;\r\n signed int(16) color_table_size;\r\n AppleColor colors[color_table_size + 1];\r\n }\r\n class AppleColor() {\r\nunsigned int(16) alpha;\r\n unsigned int(16) red;\r\n unsigned int(16) green;\r\n unsigned int(16) blue;\r\n }\r\n"
     },
     {
       "fourcc": "gps ",
-      "containers": [ "*" ],
+      "containers": [ "moov", "free" ],
       "type": "Box",
       "syntax": "class GpsBox() extends Box ('gps '){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "@PRM",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class AdobePremiereVersionBox() extends Box ('@PRM'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "@PRQ",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class AdobePremiereQuickTimeVersionBox() extends Box ('@PRQ'){\r\n bit(8) data[];\r\n }"
     },
@@ -149,25 +149,25 @@
     },
     {
       "fourcc": "MCPS",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class MediaCleanerProBox() extends Box ('MCPS'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "rmla",
-      "containers": [ "*" ],
+      "containers": [ "rmda" ],
       "type": "Box",
       "syntax": "class ReferenceMovieLanguageBox() extends Box ('rmla'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "scpt",
-      "containers": [ "*" ],
+      "containers": [ "tref" ],
       "type": "Box",
       "syntax": "class TranscriptBox() extends Box ('scpt'){\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n }"
     },
     {
       "fourcc": "ssrc",
-      "containers": [ "*" ],
+      "containers": [ "tref" ],
       "type": "Box",
       "syntax": "class NonPrimarySourceBox() extends Box ('ssrc'){\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n }"
     },
@@ -179,78 +179,79 @@
     },
     {
       "fourcc": "ctyp",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class ControllerTypeBox() extends Box ('ctyp'){\r\n // the movie controller's type, a four character code (QuickTime 'ctyp')\r\n unsigned int(32) controller_type;\r\n }"
     },
     {
       "fourcc": "imgt",
-      "containers": [ "*" ],
+      "containers": [ "tref" ],
       "type": "Box",
       "syntax": "class ImageTrackReferenceBox() extends Box ('imgt'){\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n }"
     },
     {
       "fourcc": "NCDT",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class NikonNCDTBox() extends Box ('NCDT'){\r\n Box boxes[];\r\n }"
     },
     {
       "fourcc": "NCTH",
-      "containers": [ "*" ],
+      "containers": [ "NCDT" ],
       "type": "Box",
       "syntax": "class NikonCameraThumbnailImageBox() extends Box ('NCTH'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "NCVW",
-      "containers": [ "*" ],
+      "containers": [ "NCDT" ],
       "type": "Box",
       "syntax": "class NikonCameraPreviewImageBox() extends Box ('NCVW'){\r\n bit(8) data[];\r\n }"
     },
     {
-      "fourcc": "NCVW",
-      "containers": [ "*" ],
+      "fourcc": "NCM1",
+      "containers": [ "NCDT" ],
       "type": "Box",
       "syntax": "class NikonCameraPreviewImage1Box() extends Box ('NCM1'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "NCM2",
-      "containers": [ "*" ],
+      "containers": [ "NCDT" ],
       "type": "Box",
       "syntax": "class NikonCameraPreviewImage2Box() extends Box ('NCM2'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "NCHD",
-      "containers": [ "*" ],
+      "containers": [ "NCDT" ],
       "type": "Box",
       "syntax": "class NikonMakerNoteVersionBox() extends Box ('NCHD'){\r\n bit(8) data[];\r\n }"
     },
     {
-      "containers": [ "*" ],
+      "fourcc": "NCTG",
+      "containers": [ "NCDT" ],
       "type": "Box",
       "syntax": "aligned(8) class NikonExifBox() extends Box('NCTG') {\r\n bit(8) data[];\r\n } "
     },
     {
       "fourcc": "NCDB",
-      "containers": [ "*" ],
+      "containers": [ "NCDT" ],
       "type": "Box",
       "syntax": "class NikonNCDBBox() extends Box ('NCDB'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "CNCV",
-      "containers": [ "*" ],
+      "containers": [ "udta", "uuid" ],
       "type": "Box",
       "syntax": "class CanonCompressorVersionBox() extends Box ('CNCV'){\r\n string compressorVersion;\r\n }"
     },
     {
       "fourcc": "FIRM",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class FirmwareBox() extends Box ('FIRM'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "CAME",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class CameraFirmwareBox() extends Box ('CAME'){\r\n bit(8) data[];\r\n }"
     },
@@ -262,962 +263,962 @@
     },
     {
       "fourcc": "GPS ",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class GPSDataList2Box() extends Box ('GPS '){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "IDIT",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class DateTimeOriginal2Box() extends Box ('IDIT'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "PICT",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class PreviewPICTBox() extends Box ('PICT'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "SEAL",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class SEALBox() extends Box ('SEAL'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "_htc",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "aligned(8) class HTCInfoBox() extends Box('_htc') {\r\n Box boxes[];\r\n}"
     },
     {
       "fourcc": "ardt",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class ARDroneFileBox() extends Box ('ardt'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "cust",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class CustomInfoBox() extends Box ('cust'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "gdat",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class GPSDataBox() extends Box ('gdat'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "gps0",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class GPSTrackBox() extends Box ('gps0'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "gsen",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class GSensorBox() extends Box ('gsen'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "inst",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class Insta360InfoBox() extends Box ('inst'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "mpvd",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class MotionPhotoVideoBox() extends Box ('mpvd'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "nbmt",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class NextbaseMetaBox() extends Box ('nbmt'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "prrt",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class ARDroneTelemetryBox() extends Box ('prrt'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "sefd",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class SamsungTrailerBox() extends Box ('sefd'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "thm ",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class ThumbnailImageBox() extends Box ('thm '){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "thum",
-      "containers": [ "*" ],
+      "containers": [ "file", "free" ],
       "type": "Box",
       "syntax": "class ThumbnailImage2Box() extends Box ('thum'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "udat",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class GPSLogBox() extends Box ('udat'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "url\\0",
-      "containers": [ "*" ],
+      "containers": [ "dref" ],
       "type": "Box",
       "syntax": "class Url0Box() extends Box ('url\\0') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "@PST",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
       "syntax": "aligned(8) class ParentShortTitleBox() extends Box('@PST') {\r\n Box boxes[];\r\n}"
     },
     {
       "fourcc": "@ppi",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
       "syntax": "aligned(8) class ParentProductIDBox() extends Box('@ppi') {\r\n Box boxes[];\r\n}"
     },
     {
       "fourcc": "@pti",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
       "syntax": "aligned(8) class ParentTitleBox() extends Box('@pti') {\r\n Box boxes[];\r\n}"
     },
     {
       "fourcc": "@sti",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
       "syntax": "aligned(8) class ShortTitleBox() extends Box('@sti') {\r\n Box boxes[];\r\n}"
     },
     {
       "fourcc": "GUID",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
       "syntax": "aligned(8) class GUIDBox() extends Box('GUID') {\r\n Box boxes[];\r\n}"
     },
     {
       "fourcc": "VERS",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
       "syntax": "aligned(8) class ProductVersionBox() extends Box('VERS') {\r\n Box boxes[];\r\n}"
     },
     {
       "fourcc": "grup",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
       "syntax": "aligned(8) class GroupingBox() extends Box('grup') {\r\n Box boxes[];\r\n}"
     },
     {
       "fourcc": "itnu",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
       "syntax": "aligned(8) class ITunesUBox() extends Box('itnu') {\r\n Box boxes[];\r\n}"
     },
     {
       "fourcc": "prID",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
       "syntax": "aligned(8) class ProductIDBox() extends Box('prID') {\r\n Box boxes[];\r\n}"
     },
     {
       "fourcc": "rate",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
       "syntax": "aligned(8) class RatingPercentBox() extends Box('rate') {\r\n Box boxes[];\r\n}"
     },
     {
       "fourcc": "rldt",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
       "syntax": "aligned(8) class ReleaseDateBox() extends Box('rldt') {\r\n Box boxes[];\r\n}"
     },
     {
       "fourcc": "shwm",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
       "syntax": "aligned(8) class ShowMovementBox() extends Box('shwm') {\r\n Box boxes[];\r\n}"
     },
     {
       "fourcc": "snal",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
       "syntax": "aligned(8) class ItemListPreviewImageBox() extends Box('snal') {\r\n Box boxes[];\r\n}"
     },
     {
       "fourcc": "tnal",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThumbnailImageBox() extends Box('tnal') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleThumbnailImageBox() extends Box('tnal') {\r\n Box boxes[];\r\n}"
     },
     {
       "fourcc": "auxl",
-      "containers": [ "*" ],
+      "containers": [ "tref" ],
       "type": "Box",
       "syntax": "class AuxiliaryImageReferenceBox() extends Box ('auxl'){\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n }"
     },
     {
       "fourcc": "htka",
-      "containers": [ "*" ],
+      "containers": [ "moov" ],
       "type": "Box",
       "syntax": "class HTCTrackBox() extends Box ('htka'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "tcmi",
-      "containers": [ "*" ],
+      "containers": [ "tmcd" ],
       "type": "Box",
       "syntax": "class TimecodeMediaInfoBox() extends FullBox ('tcmi'){\r\n signed int(16) text_font;\r\n signed int(16) text_face;\r\n signed int(16) text_size;\r\n signed int(16) reserved;\r\n unsigned int(48) text_color;\r\n unsigned int(48) background_color;\r\n unsigned int(8) font_name_length;\r\n unsigned int(8) font_name[font_name_length];\r\n }"
     },
     {
       "fourcc": "tmci",
-      "containers": [ "*" ],
+      "containers": [ "tmcd" ],
       "type": "Box",
       "syntax": "// 'tcmi' misspelled, as the writer of FFmpeg's sample mp4-with-mov-in24-ver.mp4 put it: its fields\r\nclass TimecodeMediaInfoMisspelledBox() extends FullBox ('tmci'){\r\n signed int(16) text_font;\r\n signed int(16) text_face;\r\n signed int(16) text_size;\r\n signed int(16) reserved;\r\n unsigned int(48) text_color;\r\n unsigned int(48) background_color;\r\n unsigned int(8) font_name_length;\r\n unsigned int(8) font_name[font_name_length];\r\n }"
     },
     {
       "fourcc": "pinf",
-      "containers": [ "*" ],
+      "containers": [ {"AudioSampleEntry": ["mp4a"]} ],
       "type": "Box",
       "syntax": "class PurchaseInfoBox() extends Box ('pinf'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "cert",
-      "containers": [ "*" ],
+      "containers": [ "schi" ],
       "type": "Box",
       "syntax": "class CertificateBox() extends Box ('cert'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "righ",
-      "containers": [ "*" ],
+      "containers": [ "schi" ],
       "type": "Box",
       "syntax": "aligned(8) class RightsBox() extends Box('righ') {\r\n RightsEntry entries[];\r\n}\r\naligned(8) class RightsEntry() {\r\n unsigned int(32) key; // veID, plat, aver, tran, song, tool, medi, mode\r\n unsigned int(32) value;\r\n}"
     },
     {
       "fourcc": "iicc",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "class AppleICCProfileBox() extends Box ('iicc'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "idsc",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
-      "syntax": "class AppleImageDescriptionBox() extends Box ('idsc'){\r\n Box boxes[];\r\n }"
+      "syntax": "// A QuickTime image file's (QTIF) image description, as QuickTime's ImageDescription record has it: its own size and compressor type, a visual sample description's fields, then its extensions' atoms\r\nclass AppleImageDescriptionBox() extends Box ('idsc'){\r\n unsigned int(32) descriptionSize;\r\n unsigned int(32) compressorType;\r\n unsigned int(8) reserved[6];\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(16) version;\r\n unsigned int(16) revisionLevel;\r\n unsigned int(32) vendor;\r\n unsigned int(32) temporalQuality;\r\n unsigned int(32) spatialQuality;\r\n unsigned int(16) width;\r\n unsigned int(16) height;\r\n unsigned int(32) horizontalResolution;\r\n unsigned int(32) verticalResolution;\r\n unsigned int(32) dataSize;\r\n unsigned int(16) frameCount;\r\n unsigned int(8) compressorName[32];\r\n unsigned int(16) depth;\r\n signed int(16) colorTableId;\r\n Box boxes[];\r\n}"
     },
 
     {
       "fourcc": "CMP1",
-      "containers": [ "*" ],
+      "containers": [ {"VisualSampleEntry": ["CRAW"]} ],
       "type": "Box",
       "syntax": "class CanonCMP1TagsBox() extends Box ('CMP1'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "JPEG",
-      "containers": [ "*" ],
+      "containers": [ {"VisualSampleEntry": ["CRAW"]} ],
       "type": "Box",
       "syntax": "class JPEGInfoBox() extends Box ('JPEG'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "gama",
-      "containers": [ "*" ],
+      "containers": [ "VisualSampleEntry" ],
       "type": "Box",
       "syntax": "class GammaBox() extends Box ('gama'){\r\n unsigned int(32) gamma;\r\n }"
     },
     {
       "fourcc": "mrld",
-      "containers": [ "*" ],
+      "containers": [ {"SampleEntry": ["marl"]} ],
       "type": "Box",
       "syntax": "class MarlinDictionaryBox() extends Box ('mrld'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "mrlh",
-      "containers": [ "*" ],
+      "containers": [ {"SampleEntry": ["marl"]} ],
       "type": "Box",
       "syntax": "class MarlinHeaderBox() extends Box ('mrlh'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "mrlv",
-      "containers": [ "*" ],
+      "containers": [ {"SampleEntry": ["marl"]} ],
       "type": "Box",
       "syntax": "class MarlinValuesBox() extends Box ('mrlv'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "clcp",
-      "containers": [ "*" ],
+      "containers": [ "tref" ],
       "type": "Box",
       "syntax": "class ClosedCaptionTrackBox() extends Box ('clcp'){\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n }"
     },
     {
       "fourcc": "folw",
-      "containers": [ "*" ],
+      "containers": [ "tref" ],
       "type": "Box",
       "syntax": "class SubtitleTrackBox() extends Box ('folw'){\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n }"
     },
     {
       "fourcc": "forc",
-      "containers": [ "*" ],
+      "containers": [ "tref" ],
       "type": "Box",
       "syntax": "class ForcedSubtitleTrackBox() extends Box ('forc'){\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n }"
     },
     {
       "fourcc": "sync",
-      "containers": [ "*" ],
+      "containers": [ "tref" ],
       "type": "Box",
       "syntax": "class SynchronizedTrackBox() extends Box ('sync'){\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n }"
     },
     {
       "fourcc": "albr",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class AlbumArtistBox() extends Box ('albr'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "angl",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class CameraAngleBox() extends Box('angl') {\r\n string value;\r\n}"
     },
     {
       "fourcc": "btec",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class GlamourSettingsBox() extends Box ('btec'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "cdis",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class ContentDistributorIDBox() extends Box ('cdis'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "clid",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class ClipIDBox() extends Box('clid') {\r\n string value;\r\n}"
     },
     {
       "fourcc": "cmnm",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "class ModelBox() extends Box ('cmnm'){\r\n bit(8) data[];\r\n }"
+      "syntax": "class CameraModelNameBox() extends Box ('cmnm'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "coll",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class CollectionNameBox() extends FullBox('coll', version = 0, 0) {\r\n bit(1) reserved = 0;\r\n unsigned int(5)[3] language;\r\n string value;\r\n}"
     },
     {
       "fourcc": "cver",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class CodeVersionBox() extends Box ('cver'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "date",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class DateTimeOriginalBox() extends Box ('date'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "finm",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class OriginalFileNameBox() extends Box ('finm'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "fsid",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class OriginalFilePathBox() extends Box ('fsid'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "htcb",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class HTCBinaryBox() extends Box ('htcb'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "infi",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class CameraInfoBox() extends Box ('infi'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "kgtt",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class AppleTrackTypeBox() extends Box ('kgtt'){\r\n MultiLanguageString value[];\r\n }"
     },
     {
       "fourcc": "manu",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class MakeBox() extends Box ('manu'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "mcvr",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class PreviewImageBox() extends Box ('mcvr'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "modl",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class ModelBox() extends Box ('modl'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "nail",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class ThumbnailTIFFBox() extends Box ('nail'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "pmcc",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class GarminSettingsBox() extends Box ('pmcc'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "pose",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class KodakPoseBox() extends Box ('pose'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "ptch",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class PitchBox() extends Box('ptch') {\r\n signed int(32) numerator;\r\n signed int(32) denominator;\r\n}"
     },
     {
       "fourcc": "rads",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class RadsBox() extends Box('rads') {\r\n signed int(32) numerator;\r\n signed int(32) denominator;\r\n}"
     },
     {
       "fourcc": "reel",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class ReelNameBox() extends Box('reel') {\r\n string value;\r\n}"
     },
     {
       "fourcc": "scen",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class SceneBox() extends Box('scen') {\r\n string value;\r\n}"
     },
     {
       "fourcc": "scrn",
-      "containers": [ "*" ],
+      "containers": [ "udta", "OLYM" ],
       "type": "Box",
       "syntax": "class OlympusPreviewBox() extends Box ('scrn'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "shot",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class ShotNameBox() extends Box('shot') {\r\n string value;\r\n}"
     },
     {
       "fourcc": "slno",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class SerialNumberBox() extends Box('slno') {\r\n string value;\r\n}"
     },
     {
       "fourcc": "time",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class TimeStampBox() extends Box ('time'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "tnam",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class TrackNameBox() extends Box ('tnam'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "vndr",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class VendorBox() extends Box ('vndr'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "vrot",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class AccelerometerDataBox() extends Box ('vrot'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "_cx_",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class CxBox() extends Box('_cx_') {\r\n signed int(32) numerator;\r\n signed int(32) denominator;\r\n}"
     },
     {
       "fourcc": "_cy_",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class CyBox() extends Box('_cy_') {\r\n signed int(32) numerator;\r\n signed int(32) denominator;\r\n}"
     },
     {
       "fourcc": "_yaw",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class YawBox() extends Box('_yaw') {\r\n signed int(32) numerator;\r\n signed int(32) denominator;\r\n}"
     },
     {
       "fourcc": "CNFV",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class CanonFirmwareVersionBox() extends Box('CNFV') {\r\n string value;\r\n}"
     },
     {
       "fourcc": "CNMN",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class CanonModelBox() extends Box ('CNMN'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "CNOP",
-      "containers": [ "*" ],
+      "containers": [ "udta", "uuid" ],
       "type": "Box",
       "syntax": "class CanonCNOPBox() extends Box ('CNOP'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "CNTH",
-      "containers": [ "*" ],
+      "containers": [ "udta", "uuid" ],
       "type": "Box",
       "syntax": "class CanonCNTHBox() extends Box ('CNTH'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "DcMD",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class KodakDcMDBox() extends Box ('DcMD'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "FFMV",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class FujiFilmFFMVBox() extends Box ('FFMV'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "GPMF",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class GoProGPMFBox() extends Box ('GPMF') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "GoPr",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class GoProTypeBox() extends Box ('GoPr') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "INFO",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class SamsungINFOBox() extends Box ('INFO') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "LEIC",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class LeicaLEICBox() extends Box ('LEIC') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "LENS",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class LensSerialNumberBox() extends Box ('LENS') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "Lvlm",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class LevelMeterBox() extends Box('Lvlm') {\r\n signed int(32) numerator;\r\n signed int(32) denominator;\r\n}"
     },
     {
       "fourcc": "MMA0",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class MinoltaMMA0Box() extends Box ('MMA0') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "MMA1",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class MinoltaMMA1Box() extends Box ('MMA1') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "MUID",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class MediaUIDBox() extends Box ('MUID') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "MVTG",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class FujiFilmMVTGBox() extends Box ('MVTG') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "PANA",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class PanasonicPANABox() extends Box ('PANA') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "PENT",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class PentaxPENTBox() extends Box ('PENT') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "PXMN",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class MakerNotePentaxBox() extends Box ('PXMN') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "PXTH",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class PentaxPreviewBox() extends Box ('PXTH') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "QVMI",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class CasioQVMIBox() extends Box ('QVMI') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "RDTA",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class RicohRDTABox() extends Box ('RDTA') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "RDTB",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class RicohRDTBBox() extends Box ('RDTB') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "RDTC",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class RicohRDTCBox() extends Box ('RDTC') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "RDTG",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class RicohRDTGBox() extends Box ('RDTG') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "RDTL",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class RicohRDTLBox() extends Box ('RDTL') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "RICO",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class RicohRICOBox() extends Box ('RICO') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "RMKN",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class RicohRMKNBox() extends Box ('RMKN') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "RTHU",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class RTHUPreviewImageBox() extends Box ('RTHU') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "SDLN",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class PlayModeBox() extends Box ('SDLN') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "SIGM",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class SigmaEXIFBox() extends Box ('SIGM') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "SNum",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "class SerialNumberBox() extends Box ('SNum') {\r\n bit(8) data[];\r\n }"
+      "syntax": "class CameraSerialNumberBox() extends Box ('SNum') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "TAGS",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class TagsBox() extends Box ('TAGS') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "TTMD",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class TomTomMetaDataBox() extends Box ('TTMD') {\r\n Box boxes[];\r\n }"
     },
     {
       "fourcc": "TTAD",
-      "containers": [ "*" ],
+      "containers": [ "TTMD" ],
       "type": "Box",
       "syntax": "class TomTomADBox() extends Box ('TTAD') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "TTHL",
-      "containers": [ "*" ],
+      "containers": [ "TTMD" ],
       "type": "Box",
       "syntax": "class TomTomHLBox() extends Box ('TTHL') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "TTID",
-      "containers": [ "*" ],
+      "containers": [ "TTMD" ],
       "type": "Box",
       "syntax": "class TomTomIDBox() extends Box ('TTID') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "TTVD",
-      "containers": [ "*" ],
+      "containers": [ "TTMD" ],
       "type": "Box",
       "syntax": "class TomTomVDBox() extends Box ('TTVD') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "TTVI",
-      "containers": [ "*" ],
+      "containers": [ "TTMD" ],
       "type": "Box",
       "syntax": "class TomTomVIBox() extends Box ('TTVI') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "XMP_",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class XMPBox() extends Box ('XMP_') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "OLYM",
-      "containers": [ "*" ],
+      "containers": [ "TAGS", "uuid" ],
       "type": "Box",
       "syntax": "class OlympusOLYMBox() extends Box ('OLYM') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "FOV\\0",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "class FieldOfViewBox() extends Box ('FOV\\0') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "\\0\\0\\0\\0",
-      "containers": [ "*" ],
+      "containers": [ "udta", "wave" ],
       "type": "Box",
       "syntax": "class TerminatorBox() extends Box ('\\0\\0\\0\\0') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "txas",
-      "containers": [ "*" ],
+      "containers": [ "trak" ],
       "type": "Box",
       "syntax": "class TrackExcludeFromAutoselectionBox() extends Box ('txas') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "mp4a",
-      "containers": [ "*" ],
+      "containers": [ "wave" ],
       "type": "Box",
       "syntax": "class Mp4aBox() extends Box ('mp4a') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "vexu",
-      "containers": [ "*" ],
+      "containers": [ "VisualSampleEntry" ],
       "type": "Box",
       "syntax": "class VideoExtendedUsageBox() extends Box ('vexu') {\r\n Box boxes[];\r\n }"
     },
     {
       "fourcc": "must",
-      "containers": [ "*" ],
+      "containers": [ "vexu", "eyes", "proj", "pack", "lnsc", "lens", "lnex", "cams", "cmfy", "cxfm" ],
       "type": "Box",
       "syntax": "class RequiredBoxTypesBox() extends FullBox ('must', 0, 0) {\r\n unsigned int(32) required_box_types[];\r\n }"
     },
     {
       "fourcc": "eyes",
-      "containers": [ "*" ],
+      "containers": [ "vexu" ],
       "type": "Box",
       "syntax": "class StereoViewBox() extends Box ('eyes') {\r\n Box boxes[];\r\n }"
     },
     {
       "fourcc": "stri",
-      "containers": [ "*" ],
+      "containers": [ "eyes" ],
       "type": "Box",
       "syntax": "aligned(8) class StereoViewInformationBox extends FullBox('stri', 0, 0) { \r\nunsigned int(4) reserved;   \r\n// reserved, set to 0 \r\nunsigned int(1) eye_views_reversed; \r\nunsigned int(1) has_additional_views; \r\nunsigned int(1) has_right_eye_view; // video contains a right-eye view \r\nunsigned int(1) has_left_eye_view; \r\n// video contains a left-eye view \r\n} "
     },
     {
       "fourcc": "hero",
-      "containers": [ "*" ],
+      "containers": [ "eyes" ],
       "type": "Box",
       "syntax": "aligned(8) class HeroStereoEyeDescriptionBox extends FullBox('hero', 0, 0) \r\n{ \r\nunsigned int(8) hero_eye_indicator; // 0 = none, 1 = left, 2 = right, >= 3 reserved \r\n} "
     },
     {
       "fourcc": "cams",
-      "containers": [ "*" ],
+      "containers": [ "eyes" ],
       "type": "Box",
       "syntax": "aligned(8) class StereoCameraSystemBox extends Box('cams') {\r\n Box boxes[];\r\n }"
     },
     {
       "fourcc": "blin",
-      "containers": [ "*" ],
+      "containers": [ "cams" ],
       "type": "Box",
       "syntax": "aligned(8) class StereoCameraSystemBaselineBox extends FullBox('blin') {\r\n  unsigned int(32) baseline_value;\r\n }\r\n"
     },
     {
       "fourcc": "cmfy",
-      "containers": [ "*" ],
+      "containers": [ "eyes" ],
       "type": "Box",
       "syntax": "aligned(8) class StereoComfortBox extends Box('cmfy') {\r\n Box boxes[];\r\n }\r\n"
     },
     {
       "fourcc": "dadj",
-      "containers": [ "*" ],
+      "containers": [ "cmfy" ],
       "type": "Box",
       "syntax": "aligned(8) class StereoComfortDisparityAdjustmentBox extends \r\nFullBox('dadj') { \r\nint(32) disparity_adjustment; \r\n} "
     },
     {
       "fourcc": "proj",
-      "containers": [ "*" ],
+      "containers": [ "sv3d", "vexu" ],
       "type": "Box",
       "syntax": "aligned(8) class ProjectionBox extends Box('proj') {\r\n Box boxes[];\r\n }"
     },
     {
       "fourcc": "prji",
-      "containers": [ "*" ],
+      "containers": [ "proj" ],
       "type": "Box",
       "syntax": "aligned(8) class ProjectionInformationBox extends FullBox('prji', 0, 0) { \r\nunsigned int(32) projection_kind; \r\n// a FourCC for the kind of projection \r\n}"
     },
     {
       "fourcc": "rect",
-      "containers": [ "*" ],
+      "containers": [ "proj" ],
       "type": "Box",
       "syntax": "aligned(8) class RectilinearProjectionBox extends FullBox('rect', 0, 0) { \r\n// fields reserved for future use \r\n}"
     },
     {
       "fourcc": "hequ",
-      "containers": [ "*" ],
+      "containers": [ "proj" ],
       "type": "Box",
       "syntax": "aligned(8) class HalfEquirectangularProjectionBox extends FullBox('hequ', 0, 0) { \r\n// fields reserved for future use \r\n}"
     },
     {
       "fourcc": "fish",
-      "containers": [ "*" ],
+      "containers": [ "proj" ],
       "type": "Box",
       "syntax": "aligned(8) class FisheyeProjectionBox extends FullBox('fish', 0, 0) { \r\n// fields reserved for future use \r\n}"
     },
     {
       "fourcc": "prim",
-      "containers": [ "*" ],
+      "containers": [ "proj" ],
       "type": "Box",
       "syntax": "aligned(8) class ParametricImmersiveMediaProjectionBox extends \r\nFullBox('prim', 0, 0) { \r\n// fields reserved for future use \r\n} "
     },
     {
       "fourcc": "pack",
-      "containers": [ "*" ],
+      "containers": [ "vexu" ],
       "type": "Box",
       "syntax": "aligned(8) class ViewPackingBox extends Box('pack') {\r\n Box boxes[];\r\n }"
     },
     {
       "fourcc": "pkin",
-      "containers": [ "*" ],
+      "containers": [ "pack" ],
       "type": "Box",
       "syntax": "aligned(8) class ViewPackingInformationBox extends FullBox('pkin', 0, 0) { \r\nunsigned int(32) view_packing_kind; // a FourCC for the kind of projection \r\n} "
     },
     {
       "fourcc": "lnsc",
-      "containers": [ "*" ],
+      "containers": [ "vexu" ],
       "type": "Box",
       "syntax": "aligned(8) class CameraSystemLensCollectionBox extends Box('lnsc') {\r\n Box boxes[];\r\n }"
     },
     {
       "fourcc": "lens",
-      "containers": [ "*" ],
+      "containers": [ "lnsc" ],
       "type": "Box",
       "syntax": "aligned(8) class CameraSystemLensBox extends FullBox('lens') {\r\n Box boxes[];\r\n }"
     },
     {
       "fourcc": "lnhd",
-      "containers": [ "*" ],
+      "containers": [ "lens" ],
       "type": "Box",
       "syntax": "aligned(8) class CameraSystemLensHeaderBox extends FullBox('lnhd', 0, 0) { \r\n unsigned int(32) lens_identifier; // an integer unique to the enclosing CameraSystemLensBox \r\n unsigned int(32) lens_algorithm_kind; // a FourCC for the kind of projection \r\n unsigned int(32) lens_domain; // a FourCC for the kind of lens (e.g., color) \r\n unsigned int(32) lens_role; // a FourCC indicating which lens this is (e.g., left or right for a stereo system) \r\n}"
     },
     {
       "fourcc": "rdim",
-      "containers": [ "*" ],
+      "containers": [ "lens" ],
       "type": "Box",
       "syntax": "aligned(8) class CameraSystemLensReferenceDimensionsBox extends FullBox('rdim', 0, 0) { \r\nunsigned int(32) reference_width; \r\nunsigned int(32) reference_height; \r\n}"
     },
     {
       "fourcc": "lnin",
-      "containers": [ "*" ],
+      "containers": [ "lens" ],
       "type": "Box",
       "syntax": "aligned(8) class CameraSystemLensIntrinsicsBox extends FullBox('lnin', version = 0, flags) { \r\nsigned int(16) denominator_shift_operand; \r\nsigned int(16) skew_denominator_shift_operand; \r\nsigned int(32) focal_length_x; \r\nsigned int(32) principal_point_x; \r\nsigned int(32) principal_point_y; \r\nif (flags & 1) { \r\nsigned int(32) focal_length_y; \r\nsigned int(32) skew_factor; \r\n} \r\nif (flags & 2) { \r\nBEFloat32 projection_offset; \r\n} \r\n}"
     },
     {
       "fourcc": "ldst",
-      "containers": [ "*" ],
+      "containers": [ "lens" ],
       "type": "Box",
       "syntax": "aligned(8) class CameraSystemLensDistortionsBox extends FullBox('ldst', version = 0, flags) { \r\nBEFloat32 k1; // radial parameter k1 \r\nBEFloat32 k2; // radial parameter k2 \r\nBEFloat32 p1; // tangential parameter p1 \r\nBEFloat32 p2; // tangential parameter p2 \r\nif (flags & 1) { \r\nBEFloat32 calibration_limit_radial_angle; \r\n} \r\n}"
     },
     {
       "fourcc": "lfad",
-      "containers": [ "*" ],
+      "containers": [ "lens" ],
       "type": "Box",
       "syntax": "aligned(8) class CameraSystemLensFrameAdjustmentBox extends FullBox('lfad', version = 0, 0) { \r\nBEFloat32 polynomialParametersX0;\r\n BEFloat32 polynomialParametersX1;\r\n BEFloat32 polynomialParametersX2; // parameters for X axis \r\nBEFloat32 polynomialParametersY0;\r\n BEFloat32 polynomialParametersY1;\r\n BEFloat32 polynomialParametersY2; // parameters for Y axis \r\n} "
     },
     {
       "fourcc": "lnex",
-      "containers": [ "*" ],
+      "containers": [ "lens" ],
       "type": "Box",
       "syntax": "aligned(8) class CameraSystemLensExtrinsicsBox extends Box('lnex') {\r\n Box boxes[];\r\n }"
     },
     {
       "fourcc": "corg",
-      "containers": [ "*" ],
+      "containers": [ "lnex" ],
       "type": "Box",
       "syntax": "aligned(8) class CameraSystemOriginSourceBox extends FullBox('corg', 0, 0) { \r\nunsigned int(32) source_of_origin; \r\n// e.g., 'blin'  \r\n} "
     },
     {
       "fourcc": "cxfm",
-      "containers": [ "*" ],
+      "containers": [ "lnex" ],
       "type": "Box",
       "syntax": "aligned(8) class CameraSystemTransformBox extends Box('cxfm') { \r\n Box boxes[];\r\n} "
     },
     {
       "fourcc": "uqua",
-      "containers": [ "*" ],
+      "containers": [ "cxfm" ],
       "type": "Box",
       "syntax": "aligned(8) class CameraSystemUnitQuaternionTransformBox extends \r\nFullBox('uqua', 0, 0) { \r\nBEFloat32 xyz0;\r\nBEFloat32 xyz1;\r\nBEFloat32 xyz2; \r\n} "
     },
     {
       "fourcc": "hfov",
-      "containers": [ "*" ],
+      "containers": [ "VisualSampleEntry" ],
       "type": "Box",
       "syntax": "aligned(8) class HorizontalFieldOfViewBox extends Box('hfov') { \r\nunsigned int(32) field_of_view; \r\n} "
     },
@@ -1229,7 +1230,7 @@
     },
     {
       "fourcc": "ctrm",
-      "containers": [ "*" ],
+      "containers": [ "ctrs" ],
       "type": "Box",
       "syntax": "aligned(8) class VideoContourMapBox extends FullBox('ctrm', 0, 0) { \r\n bit(8) data[]; // TODO requires switch/case \r\n} "
     },
@@ -1247,7 +1248,7 @@
     },
     {
       "fourcc": "sdpi",
-      "containers": [ "*" ],
+      "containers": [ "sdpd" ],
       "type": "Box",
       "syntax": "aligned(8) class AppleSdpiBox extends Box('sdpi') {\r\n unsigned int(32) data; //TODO \r\n}\r\n"
     },
@@ -1265,49 +1266,49 @@
     },
     {
       "fourcc": "CCTP",
-      "containers": [ "*" ],
+      "containers": [ "uuid" ],
       "type": "Box",
       "syntax": "// Canon.pm, CCTP: 12 bytes, then a CCDT for each image track\r\naligned(8) class CanonCCTPBox() extends Box('CCTP') {\r\n unsigned int(32) reserved;\r\n unsigned int(32) unknown;\r\n unsigned int(32) entryCount;\r\n Box boxes[];\r\n}\r\n"
     },
     {
       "fourcc": "CCDT",
-      "containers": [ "*" ],
+      "containers": [ "CCTP" ],
       "type": "Box",
       "syntax": "// Canon.pm, CCDT: the type of an image, and the track it is in\r\naligned(8) class CanonCCDTBox() extends Box('CCDT') {\r\n unsigned int(64) imageType;\r\n unsigned int(32) dualPixel;\r\n unsigned int(32) trackIndex;\r\n}\r\n"
     },
     {
       "fourcc": "CTBO",
-      "containers": [ "*" ],
+      "containers": [ "uuid" ],
       "type": "Box",
       "syntax": "// Canon.pm, CTBO: int32u entry count N, N x (int32u index, int64u offset, int64u size); index 1 XMP, 2 PRVW, 3 mdat\r\naligned(8) class CanonCTBOBox() extends Box('CTBO') {\r\n unsigned int(32) entryCount;\r\n CanonCTBOEntry entries[entryCount];\r\n}\r\naligned(8) class CanonCTBOEntry() {\r\n unsigned int(32) index;\r\n unsigned int(64) offset;\r\n unsigned int(64) size;\r\n}\r\n"
     },
     {
       "fourcc": "CMT1",
-      "containers": [ "*" ],
+      "containers": [ "uuid" ],
       "type": "Box",
       "syntax": "// Canon.pm, CMT1 to CMT4: TIFF structures - IFD0, the Exif IFD, the maker notes and the GPS IFD\r\naligned(8) class CanonCMT1Box() extends Box('CMT1') {\r\n bit(8) tiff[];\r\n}\r\n"
     },
     {
       "fourcc": "CMT2",
-      "containers": [ "*" ],
+      "containers": [ "uuid" ],
       "type": "Box",
       "syntax": "aligned(8) class CanonCMT2Box() extends Box('CMT2') {\r\n bit(8) tiff[];\r\n}\r\n"
     },
     {
       "fourcc": "CMT3",
-      "containers": [ "*" ],
+      "containers": [ "uuid" ],
       "type": "Box",
       "syntax": "aligned(8) class CanonCMT3Box() extends Box('CMT3') {\r\n bit(8) tiff[];\r\n}\r\n"
     },
     {
       "fourcc": "CMT4",
-      "containers": [ "*" ],
+      "containers": [ "uuid" ],
       "type": "Box",
       "syntax": "aligned(8) class CanonCMT4Box() extends Box('CMT4') {\r\n bit(8) tiff[];\r\n}\r\n"
     },
     {
       "fourcc": "THMB",
-      "containers": [ "*" ],
+      "containers": [ "uuid" ],
       "type": "Box",
       "syntax": "// Canon.pm, THMB: the thumbnail is after 16 bytes\r\naligned(8) class CanonThumbnailBox() extends FullBox('THMB') {\r\n unsigned int(16) width;\r\n unsigned int(16) height;\r\n unsigned int(32) thumbnailSize;\r\n unsigned int(16) unknown1;\r\n unsigned int(16) unknown2;\r\n bit(8) data[];\r\n}\r\n"
     },
@@ -1319,133 +1320,133 @@
     },
     {
       "fourcc": "PRVW",
-      "containers": [ "*" ],
+      "containers": [ "uuid" ],
       "type": "Box",
       "syntax": "// QuickTime.pm, PreviewImage: 0, 1, width, height, 1, the length of the preview, the preview\r\naligned(8) class CanonPreviewBox() extends Box('PRVW') {\r\n unsigned int(32) unknown1;\r\n unsigned int(16) unknown2;\r\n unsigned int(16) width;\r\n unsigned int(16) height;\r\n unsigned int(16) unknown3;\r\n unsigned int(32) previewSize;\r\n bit(8) data[];\r\n}\r\n"
     },
     {
       "fourcc": "CRAW",
-      "containers": [ "*" ],
+      "containers": [ "stsd" ],
       "type": "Box",
       "syntax": "// A CR3's image: a visual sample entry, then its type (3, 0 for JPEG; 1, 1 for raw) and its boxes (JPEG, CMP1, CDI1)\r\naligned(8) class CanonRawSampleEntry() extends SampleEntry('CRAW') {\r\n unsigned int(16) pre_defined;\r\n unsigned int(16) reserved;\r\n unsigned int(32) pre_defined0[3];\r\n unsigned int(16) width;\r\n unsigned int(16) height;\r\n unsigned int(32) horizresolution;\r\n unsigned int(32) vertresolution;\r\n unsigned int(32) reserved0;\r\n unsigned int(16) frame_count;\r\n unsigned int(8) compressorname[32];\r\n unsigned int(16) depth;\r\n signed int(16) pre_defined1;\r\n unsigned int(16) imageType;\r\n unsigned int(16) imageFlags;\r\n Box boxes[];\r\n}\r\n"
     },
     {
       "fourcc": "CDI1",
-      "containers": [ "*" ],
+      "containers": [ {"VisualSampleEntry": ["CRAW"]} ],
       "type": "Box",
       "syntax": "// A CR3's raw image (lclevy/canon_cr3, CDI1): a full box of boxes, its IAD1\r\naligned(8) class CanonCDI1Box() extends FullBox('CDI1') {\r\n Box boxes[];\r\n}\r\n"
     },
     {
       "fourcc": "IAD1",
-      "containers": [ "*" ],
+      "containers": [ "CDI1" ],
       "type": "Box",
       "syntax": "// A CR3's image area dimensions (lclevy/canon_cr3, IAD1, reverse engineered): the image's size, then rectangles to the end\r\naligned(8) class CanonIAD1Box() extends FullBox('IAD1') {\r\n unsigned int(16) image_width;\r\n unsigned int(16) image_height;\r\n unsigned int(16) unknown1; // 1\r\n unsigned int(16) image_kind; // 0 small, 2 big (sliced?)\r\n unsigned int(16) unknown2; // 1\r\n unsigned int(16) unknown3; // 0\r\n CanonImageArea areas[]; // small: the crop, the whole; big: the crop, left and top optical black, the active area\r\n}\r\n// a rectangle of IAD1: its left, top, right and bottom, as offsets from 0\r\naligned(8) class CanonImageArea() {\r\n unsigned int(16) left;\r\n unsigned int(16) top;\r\n unsigned int(16) right;\r\n unsigned int(16) bottom;\r\n}"
     },
     {
       "fourcc": "CTMD",
-      "containers": [ "*" ],
+      "containers": [ "stsd" ],
       "type": "Box",
       "syntax": "// Canon.pm, CTMD: a CR3's timed metadata; its entry lists the type and size of each record\r\naligned(8) class CanonTimedMetadataSampleEntry() extends SampleEntry('CTMD') {\r\n unsigned int(32) recordCount;\r\n CanonCTMDRecordType recordTypes[recordCount];\r\n}\r\naligned(8) class CanonCTMDRecordType() {\r\n unsigned int(32) recordType;\r\n unsigned int(32) recordSize;\r\n}\r\n"
     },
     {
       "fourcc": "AACR",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
       "syntax": "aligned(8) class AudibleAACRBox() extends Box('AACR') {\r\n Box boxes[];\r\n}\r\n"
     },
     {
       "fourcc": "CDEK",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
       "syntax": "aligned(8) class AudibleCDEKBox() extends Box('CDEK') {\r\n Box boxes[];\r\n}\r\n"
     },
     {
       "fourcc": "CDET",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
       "syntax": "aligned(8) class AudibleCDETBox() extends Box('CDET') {\r\n Box boxes[];\r\n}\r\n"
     },
     {
       "fourcc": "ownr",
-      "containers": [ "*" ],
+      "containers": [ "ilst" ],
       "type": "Box",
       "syntax": "aligned(8) class AppleOwnerBox() extends Box('ownr') {\r\n Box boxes[];\r\n}\r\n"
     },
     {
       "fourcc": "adzc",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class AdzcBox() extends Box('adzc') {\r\n MultiLanguageString value[];\r\n}\r\n"
     },
     {
       "fourcc": "adze",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class AdzeBox() extends Box('adze') {\r\n MultiLanguageString value[];\r\n}\r\n"
     },
     {
       "fourcc": "adzm",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class AdzmBox() extends Box('adzm') {\r\n MultiLanguageString value[];\r\n}\r\n"
     },
     {
       "fourcc": "cmid",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class CameraIDBox() extends Box('cmid') {\r\n string value;\r\n}\r\n"
     },
     {
       "fourcc": "info",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class FirmwareVersionInfoBox() extends Box('info') {\r\n string value;\r\n}\r\n"
     },
     {
       "fourcc": "lvlm",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class LevelMeter2Box() extends Box('lvlm') {\r\n signed int(32) numerator;\r\n signed int(32) denominator;\r\n}\r\n"
     },
     {
       "fourcc": "nbpl",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class NbplBox() extends Box('nbpl') {\r\n bit(8) data[];\r\n}\r\n"
     },
     {
       "fourcc": "©dji",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class DJIUserDataBox() extends Box('©dji') {\r\n bit(8) data[];\r\n}\r\n"
     },
     {
       "fourcc": "©res",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class DJIResBox() extends Box('©res') {\r\n bit(8) data[];\r\n}\r\n"
     },
     {
       "fourcc": "©uid",
-      "containers": [ "*" ],
+      "containers": [ "udta" ],
       "type": "Box",
       "syntax": "aligned(8) class DJIUidBox() extends Box('©uid') {\r\n bit(8) data[];\r\n}\r\n"
     },
     {
       "fourcc": "trpY",
-      "containers": [ "*" ],
+      "containers": [ "hinf" ],
       "type": "Box",
       "syntax": "aligned(8) class HintBytesSentQuickTime() extends Box('trpY') {\r\n unsigned int(64) bytessent;\r\n}\r\n"
     },
     {
       "fourcc": "tpaY",
-      "containers": [ "*" ],
+      "containers": [ "hinf" ],
       "type": "Box",
       "syntax": "aligned(8) class HintBytesSentNoRtpQuickTime() extends Box('tpaY') {\r\n unsigned int(32) bytessent;\r\n}\r\n"
     },
     {
       "fourcc": "slmt",
-      "containers": [ "*" ],
+      "containers": [ "_htc" ],
       "type": "Box",
       "syntax": "aligned(8) class HTCSlmtBox() extends Box('slmt') {\r\n unsigned int(32) value;\r\n}\r\n"
     },
@@ -1457,67 +1458,67 @@
     },
     {
       "fourcc": "cits",
-      "containers": [ "*" ],
+      "containers": [ "crec" ],
       "type": "Box",
       "syntax": "aligned(8) class FaceItemBox() extends Box('cits') {\r\n Box boxes[];\r\n}\r\n"
     },
     {
       "fourcc": "kfix",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "aligned(8) class KandaoKFIXBox() extends Box('kfix') {\r\n bit(8) data[];\r\n}\r\n"
     },
     {
       "fourcc": "kstb",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "aligned(8) class KandaoKSTBBox() extends Box('kstb') {\r\n bit(8) data[];\r\n}\r\n"
     },
     {
       "fourcc": "kvar",
-      "containers": [ "*" ],
+      "containers": [ "file" ],
       "type": "Box",
       "syntax": "aligned(8) class KandaoKVARBox() extends Box('kvar') {\r\n bit(8) data[];\r\n}\r\n"
     },
     {
       "fourcc": "ptrh",
-      "containers": [ "*" ],
+      "containers": [ "free" ],
       "type": "Box",
       "syntax": "aligned(8) class PittasoftBox() extends Box('ptrh') {\r\n Box boxes[];\r\n}\r\n"
     },
     {
       "fourcc": "ptnm",
-      "containers": [ "*" ],
+      "containers": [ "free" ],
       "type": "Box",
       "syntax": "// ExifTool: substr($val, 4, -1) - 4 bytes, then the name and its terminator\r\naligned(8) class PittasoftOriginalFileNameBox() extends Box('ptnm') {\r\n unsigned int(32) unknown;\r\n string name;\r\n}\r\n"
     },
     {
       "fourcc": "sttm",
-      "containers": [ "*" ],
+      "containers": [ "free" ],
       "type": "Box",
       "syntax": "// ms since 1970, local time (ExifTool)\r\naligned(8) class PittasoftStartTimeBox() extends Box('sttm') {\r\n unsigned int(64) startTime;\r\n}\r\n"
     },
     {
       "fourcc": "3gf ",
-      "containers": [ "*" ],
+      "containers": [ "free" ],
       "type": "Box",
       "syntax": "aligned(8) class PittasoftAccelerometerBox() extends Box('3gf ') {\r\n bit(8) data[];\r\n}\r\n"
     },
     {
       "fourcc": "cfgv",
-      "containers": [ "*" ],
+      "containers": [ "setu" ],
       "type": "Box",
       "syntax": "aligned(8) class LivePhotoConfigurationBox() extends Box('cfgv') {\r\n bit(8) binaryPropertyList[];\r\n}\r\n"
     },
     {
       "fourcc": "dims",
-      "containers": [ "*" ],
+      "containers": [ "setu" ],
       "type": "Box",
       "syntax": "aligned(8) class LivePhotoDimensionsBox() extends Box('dims') {\r\n unsigned int(32) width;\r\n unsigned int(32) height;\r\n}\r\n"
     },
     {
       "fourcc": "camm",
-      "containers": [ "*" ],
+      "containers": [ "stsd" ],
       "type": "Box",
       "syntax": "aligned(8) class CameraMotionMetadataSampleEntry() extends SampleEntry('camm') {\r\n Box boxes[];\r\n}\r\n"
     }

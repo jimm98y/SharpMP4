@@ -14,6 +14,9 @@ public partial class GooglePingUrlBox : Box
 {
 	public const string TYPE = "gspu";
 	public override string DisplayName { get { return "GooglePingUrlBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public GooglePingUrlBox(): base(IsoStream.FromFourCC("gspu"))
 	{

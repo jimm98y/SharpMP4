@@ -14,6 +14,9 @@ public partial class VideoContourCollectionBox : Box
 {
 	public const string TYPE = "ctrs";
 	public override string DisplayName { get { return "VideoContourCollectionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
+
 
 	public VideoContourCollectionBox(): base(IsoStream.FromFourCC("ctrs"))
 	{

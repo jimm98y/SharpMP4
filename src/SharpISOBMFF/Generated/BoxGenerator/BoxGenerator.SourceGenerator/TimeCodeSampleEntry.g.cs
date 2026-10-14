@@ -20,6 +20,9 @@ public partial class TimeCodeSampleEntry : SampleEntry
 {
 	public const string TYPE = "tmcd";
 	public override string DisplayName { get { return "TimeCodeSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd", "gmhd"); }
+
 
 	protected uint reserved; 
 	public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }

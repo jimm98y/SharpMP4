@@ -25,6 +25,9 @@ public partial class CameraSystemLensIntrinsicsBox : FullBox
 {
 	public const string TYPE = "lnin";
 	public override string DisplayName { get { return "CameraSystemLensIntrinsicsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("lens"); }
+
 
 	protected short denominator_shift_operand; 
 	public short DenominatorShiftOperand { get { return this.denominator_shift_operand; } set { this.denominator_shift_operand = value; } }

@@ -16,6 +16,9 @@ public partial class MVCViewPriorityAssignmentBox : Box
 {
 	public const string TYPE = "mvcP";
 	public override string DisplayName { get { return "MVCViewPriorityAssignmentBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AVCMVCSampleEntry(avc1,avc3)", "AVC2MVCSampleEntry(avc2,avc4)", "MVCSampleEntry(mvc1,mvc2,mvc3,mvc4)"); }
+
 
 	protected byte method_count; 
 	public byte MethodCount { get { return this.method_count; } set { this.method_count = value; } }

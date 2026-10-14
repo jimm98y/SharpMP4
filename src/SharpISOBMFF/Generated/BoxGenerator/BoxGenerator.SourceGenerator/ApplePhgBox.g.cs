@@ -14,6 +14,9 @@ public partial class ApplePhgBox : Box
 {
 	public const string TYPE = "©phg";
 	public override string DisplayName { get { return "ApplePhgBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	public ApplePhgBox(): base(IsoStream.FromFourCC("©phg"))
 	{

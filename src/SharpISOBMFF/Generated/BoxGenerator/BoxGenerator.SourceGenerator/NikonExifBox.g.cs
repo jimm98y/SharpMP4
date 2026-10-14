@@ -14,6 +14,9 @@ public partial class NikonExifBox : Box
 {
 	public const string TYPE = "NCTG";
 	public override string DisplayName { get { return "NikonExifBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("NCDT"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }

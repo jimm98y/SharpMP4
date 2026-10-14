@@ -19,6 +19,9 @@ public partial class SyncSampleBox : FullBox
 {
 	public const string TYPE = "stss";
 	public override string DisplayName { get { return "SyncSampleBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl"); }
+
 
 	protected uint entry_count; 
 	public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }

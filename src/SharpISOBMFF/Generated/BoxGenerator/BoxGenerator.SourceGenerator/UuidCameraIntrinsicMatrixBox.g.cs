@@ -20,6 +20,9 @@ public partial class UuidCameraIntrinsicMatrixBox : FullBox
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "UuidCameraIntrinsicMatrixBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected int matrix_focal_length_x; 
 	public int MatrixFocalLengthx { get { return this.matrix_focal_length_x; } set { this.matrix_focal_length_x = value; } }

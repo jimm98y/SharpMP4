@@ -23,6 +23,9 @@ public partial class CanonIAD1Box : FullBox
 {
 	public const string TYPE = "IAD1";
 	public override string DisplayName { get { return "CanonIAD1Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("CDI1"); }
+
 
 	protected ushort image_width; 
 	public ushort ImageWidth { get { return this.image_width; } set { this.image_width = value; } }

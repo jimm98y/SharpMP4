@@ -22,6 +22,9 @@ public partial class ADHRBox : Box
 {
 	public const string TYPE = "ADHR";
 	public override string DisplayName { get { return "ADHRBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(AVdh)"); }
+
 
 	protected uint version; 
 	public uint Version { get { return this.version; } set { this.version = value; } }

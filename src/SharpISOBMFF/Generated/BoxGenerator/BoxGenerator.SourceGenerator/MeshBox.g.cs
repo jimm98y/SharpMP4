@@ -41,6 +41,9 @@ public partial class MeshBox : Box
 {
 	public const string TYPE = "mesh";
 	public override string DisplayName { get { return "MeshBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mshp"); }
+
 
 	protected bool reserved = false; 
 	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }

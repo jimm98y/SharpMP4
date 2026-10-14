@@ -17,6 +17,9 @@ public partial class MetaDataKeyDeclarationBox : Box
 {
 	public const string TYPE = "keyd";
 	public override string DisplayName { get { return "MetaDataKeyDeclarationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
+
 
 	protected uint key_namespace; 
 	public uint KeyNamespace { get { return this.key_namespace; } set { this.key_namespace = value; } }

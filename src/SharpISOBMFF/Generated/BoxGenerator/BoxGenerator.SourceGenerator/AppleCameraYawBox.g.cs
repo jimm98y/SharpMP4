@@ -14,6 +14,9 @@ public partial class AppleCameraYawBox : Box
 {
 	public const string TYPE = "©gyw";
 	public override string DisplayName { get { return "AppleCameraYawBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	public AppleCameraYawBox(): base(IsoStream.FromFourCC("©gyw"))
 	{

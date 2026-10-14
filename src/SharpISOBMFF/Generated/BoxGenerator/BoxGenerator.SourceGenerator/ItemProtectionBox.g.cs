@@ -18,6 +18,9 @@ public partial class ItemProtectionBox : FullBox
 {
 	public const string TYPE = "ipro";
 	public override string DisplayName { get { return "ItemProtectionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
+
 
 	protected ushort protection_count; 
 	public ushort ProtectionCount { get { return this.protection_count; } set { this.protection_count = value; } }

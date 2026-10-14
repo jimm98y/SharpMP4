@@ -14,6 +14,9 @@ public partial class HintLargestPacket : Box
 {
 	public const string TYPE = "pmax";
 	public override string DisplayName { get { return "HintLargestPacket"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("hinf"); }
+
 
 	protected uint bytes; 
 	public uint Bytes { get { return this.bytes; } set { this.bytes = value; } }

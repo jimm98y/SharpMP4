@@ -31,6 +31,9 @@ public partial class ItemPropertyAssociationBox : FullBox
 {
 	public const string TYPE = "ipma";
 	public override string DisplayName { get { return "ItemPropertyAssociationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("iprp"); }
+
 
 	protected uint entry_count; 
 	public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }

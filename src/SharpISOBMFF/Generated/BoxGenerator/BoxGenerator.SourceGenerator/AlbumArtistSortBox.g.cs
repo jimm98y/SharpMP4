@@ -14,6 +14,9 @@ public partial class AlbumArtistSortBox : Box
 {
 	public const string TYPE = "soaa";
 	public override string DisplayName { get { return "AlbumArtistSortBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public AlbumArtistSortBox(): base(IsoStream.FromFourCC("soaa"))
 	{

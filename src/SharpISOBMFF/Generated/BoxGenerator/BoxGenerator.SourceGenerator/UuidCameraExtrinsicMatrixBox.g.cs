@@ -38,6 +38,9 @@ public partial class UuidCameraExtrinsicMatrixBox : FullBox
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "UuidCameraExtrinsicMatrixBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected int pos_x; 
 	public int Posx { get { return this.pos_x; } set { this.pos_x = value; } }

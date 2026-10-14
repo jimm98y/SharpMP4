@@ -14,6 +14,9 @@ public partial class VvcConfigurationBox : FullBox
 {
 	public const string TYPE = "vvcC";
 	public override string DisplayName { get { return "VvcConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VvcSampleEntry(vvc1,vvi1)", "VisualSampleEntry(encv)", "RestrictedSampleEntry(resv)", "ipco"); }
+
 
 	protected VvcDecoderConfigurationRecord VvcConfig; 
 	public VvcDecoderConfigurationRecord _VvcConfig { get { return this.VvcConfig; } set { this.VvcConfig = value; } }

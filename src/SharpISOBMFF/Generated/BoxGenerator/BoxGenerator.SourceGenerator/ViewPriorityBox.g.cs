@@ -15,6 +15,9 @@ public partial class ViewPriorityBox : Box
 {
 	public const string TYPE = "vipr";
 	public override string DisplayName { get { return "ViewPriorityBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("sgpd"); }
+
 
 	protected ViprEntry[] entries; 
 	public ViprEntry[] Entries { get { return this.entries; } set { this.entries = value; } }

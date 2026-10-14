@@ -19,6 +19,9 @@ public partial class GroupIdToNameBox : FullBox
 {
 	public const string TYPE = "gitn";
 	public override string DisplayName { get { return "GroupIdToNameBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("fiin"); }
+
 
 	protected ushort entry_count; 
 	public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }

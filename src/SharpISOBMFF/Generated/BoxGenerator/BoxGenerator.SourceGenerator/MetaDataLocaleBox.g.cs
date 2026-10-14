@@ -16,6 +16,9 @@ public partial class MetaDataLocaleBox : Box
 {
 	public const string TYPE = "loca";
 	public override string DisplayName { get { return "MetaDataLocaleBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
+
 
 	protected BinaryUTF8String locale_string; 
 	public BinaryUTF8String LocaleString { get { return this.locale_string; } set { this.locale_string = value; } }

@@ -32,6 +32,9 @@ public partial class ColourInformationBox : Box
 {
 	public const string TYPE = "colr";
 	public override string DisplayName { get { return "ColourInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry", "ipco"); }
+
 
 	protected uint colour_type; 
 	public uint ColourType { get { return this.colour_type; } set { this.colour_type = value; } }

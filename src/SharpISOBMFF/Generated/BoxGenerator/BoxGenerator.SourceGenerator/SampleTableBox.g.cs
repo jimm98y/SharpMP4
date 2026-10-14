@@ -13,6 +13,9 @@ public partial class SampleTableBox : Box
 {
 	public const string TYPE = "stbl";
 	public override string DisplayName { get { return "SampleTableBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("minf"); }
+
 
 	public SampleTableBox(): base(IsoStream.FromFourCC("stbl"))
 	{

@@ -14,6 +14,9 @@ public partial class GooglesHostHeaderBox : Box
 {
 	public const string TYPE = "gshh";
 	public override string DisplayName { get { return "GooglesHostHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ilst"); }
+
 
 	public GooglesHostHeaderBox(): base(IsoStream.FromFourCC("gshh"))
 	{

@@ -16,6 +16,9 @@ public partial class MetaDatatypeDefinitionBox : Box
 {
 	public const string TYPE = "dtyp";
 	public override string DisplayName { get { return "MetaDatatypeDefinitionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
+
 
 	protected uint datatype_namespace; 
 	public uint DatatypeNamespace { get { return this.datatype_namespace; } set { this.datatype_namespace = value; } }

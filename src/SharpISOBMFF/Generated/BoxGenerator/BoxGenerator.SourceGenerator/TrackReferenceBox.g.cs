@@ -14,6 +14,9 @@ public partial class TrackReferenceBox : Box
 {
 	public const string TYPE = "tref";
 	public override string DisplayName { get { return "TrackReferenceBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("trak"); }
+
 	public IEnumerable<TrackReferenceTypeBox> _TrackReferenceTypeBox { get { return this.children.OfType<TrackReferenceTypeBox>(); } }
 
 	public TrackReferenceBox(): base(IsoStream.FromFourCC("tref"))

@@ -14,6 +14,9 @@ public partial class ViewPackingBox : Box
 {
 	public const string TYPE = "pack";
 	public override string DisplayName { get { return "ViewPackingBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("vexu"); }
+
 
 	public ViewPackingBox(): base(IsoStream.FromFourCC("pack"))
 	{

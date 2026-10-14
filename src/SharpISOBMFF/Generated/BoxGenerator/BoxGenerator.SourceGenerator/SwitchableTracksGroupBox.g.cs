@@ -16,6 +16,9 @@ public partial class SwitchableTracksGroupBox : EntityToGroupBox
 {
 	public const string TYPE = "swtk";
 	public override string DisplayName { get { return "SwitchableTracksGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("grpl"); }
+
 
 	protected ushort[] track_switch_hierarchy_id; 
 	public ushort[] TrackSwitchHierarchyId { get { return this.track_switch_hierarchy_id; } set { this.track_switch_hierarchy_id = value; } }

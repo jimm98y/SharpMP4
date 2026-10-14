@@ -23,6 +23,9 @@ public partial class ARESBox : Box
 {
 	public const string TYPE = "ARES";
 	public override string DisplayName { get { return "ARESBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(AVdn,AVdh)"); }
+
 
 	protected uint tag; 
 	public uint Tag { get { return this.tag; } set { this.tag = value; } }

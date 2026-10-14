@@ -33,6 +33,9 @@ public partial class CompactSampleToGroupBox : FullBox
 {
 	public const string TYPE = "csgp";
 	public override string DisplayName { get { return "CompactSampleToGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl", "traf"); }
+
 
 	protected uint grouping_type; 
 	public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }

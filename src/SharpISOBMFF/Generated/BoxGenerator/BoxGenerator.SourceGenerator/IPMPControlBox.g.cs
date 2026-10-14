@@ -15,6 +15,9 @@ public partial class IPMPControlBox : FullBox
 {
 	public const string TYPE = "ipmc";
 	public override string DisplayName { get { return "IPMPControlBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("moov", "meta"); }
+
 
 	protected Descriptor toollist; 
 	public Descriptor Toollist { get { return this.toollist; } set { this.toollist = value; } }

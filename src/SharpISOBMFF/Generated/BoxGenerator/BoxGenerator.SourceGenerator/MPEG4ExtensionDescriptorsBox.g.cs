@@ -14,6 +14,9 @@ public partial class MPEG4ExtensionDescriptorsBox : Box
 {
 	public const string TYPE = "m4ds";
 	public override string DisplayName { get { return "MPEG4ExtensionDescriptorsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AVCSampleEntry(avc1,avc3)", "AVC2SampleEntry(avc2,avc4)", "SVCSampleEntry(svc1,svc2)", "MVCSampleEntry(mvc1,mvc2,mvc3,mvc4)", "MVCDSampleEntry(mvd1,mvd2,mvd3,mvd4)", "A3DSampleEntry(a3d1,a3d2,a3d3,a3d4)", "HEVCSampleEntry(hvc1,hev1,hvc2,hev2,hvc3,hev3)", "LHEVCSampleEntry(lhv1,lhe1)", "VvcSampleEntry(vvc1,vvi1)", "EVCSampleEntry(evc1)"); }
+
 
 	protected Descriptor[] Descr; 
 	public Descriptor[] _Descr { get { return this.Descr; } set { this.Descr = value; } }

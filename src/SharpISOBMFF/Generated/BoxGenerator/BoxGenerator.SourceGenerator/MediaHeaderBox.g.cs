@@ -27,6 +27,9 @@ public partial class MediaHeaderBox : FullBox
 {
 	public const string TYPE = "mdhd";
 	public override string DisplayName { get { return "MediaHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mdia"); }
+
 
 	protected ulong creation_time; 
 	public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }

@@ -15,6 +15,9 @@ public partial class MaskConfigurationProperty : ItemFullProperty
 {
 	public const string TYPE = "mskC";
 	public override string DisplayName { get { return "MaskConfigurationProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected byte bits_per_pixel; 
 	public byte BitsPerPixel { get { return this.bits_per_pixel; } set { this.bits_per_pixel = value; } }

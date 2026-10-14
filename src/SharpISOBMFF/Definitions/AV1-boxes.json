@@ -4,13 +4,13 @@
   "entries": [
     {
       "fourcc": "av01",
-      "containers": [ "*" ],
+      "containers": [ "stsd" ],
       "type": "Box",
       "syntax": "class AV1SampleEntry\r\nextends VisualSampleEntry('av01')\r\n{\r\n  AV1CodecConfigurationBox config;\r\n}\r\n"
     },
     {
       "fourcc": "av1C",
-      "containers": [ "*" ],
+      "containers": [ {"VisualSampleEntry": ["av01", "encv", "resv"]}, "ipco" ],
       "type": "Box",
       "syntax": "class AV1CodecConfigurationBox\r\nextends Box('av1C')\r\n{\r\n  AV1CodecConfigurationRecord av1Config;\r\n}\r\n"
     },
@@ -21,19 +21,19 @@
     },
     {
       "fourcc": "av1f",
-      "containers": [ "*" ],
+      "containers": [ "sgpd" ],
       "type": "Box",
       "syntax": "class AV1ForwardKeyFrameSampleGroupEntry\r\nextends VisualSampleGroupEntry('av1f')\r\n{\r\n  unsigned int(8) fwd_distance;\r\n}\r\n"
     },
     {
       "fourcc": "av1s",
-      "containers": [ "*" ],
+      "containers": [ "sgpd" ],
       "type": "Box",
       "syntax": "class AV1SwitchFrameSampleGroupEntry\r\nextends VisualSampleGroupEntry('av1s')\r\n{\r\n}\r\n"
     },
     {
       "fourcc": "av1M",
-      "containers": [ "*" ],
+      "containers": [ "sgpd" ],
       "type": "Box",
       "syntax": "class AV1MetadataSampleGroupEntry\r\nextends VisualSampleGroupEntry('av1M')\r\n{\r\n}\r\n"
     }

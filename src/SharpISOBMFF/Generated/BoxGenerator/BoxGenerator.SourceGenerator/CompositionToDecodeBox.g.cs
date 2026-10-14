@@ -26,6 +26,9 @@ public partial class CompositionToDecodeBox : FullBox
 {
 	public const string TYPE = "cslg";
 	public override string DisplayName { get { return "CompositionToDecodeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl", "trep"); }
+
 
 	protected long compositionToDTSShift; 
 	public long CompositionToDTSShift { get { return this.compositionToDTSShift; } set { this.compositionToDTSShift = value; } }

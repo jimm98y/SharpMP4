@@ -18,6 +18,9 @@ public partial class ApplePtvBox : Box
 {
 	public const string TYPE = "ptv ";
 	public override string DisplayName { get { return "ApplePtvBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected ushort displaySize; 
 	public ushort DisplaySize { get { return this.displaySize; } set { this.displaySize = value; } }

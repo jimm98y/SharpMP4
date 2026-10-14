@@ -14,6 +14,9 @@ public partial class HEVCTileSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "hvt1";
 	public override string DisplayName { get { return "HEVCTileSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public HEVCTileConfigurationBox Config { get { return this.children.OfType<HEVCTileConfigurationBox>().FirstOrDefault(); } }
 
 	public HEVCTileSampleEntry(): base(IsoStream.FromFourCC("hvt1"))

@@ -16,6 +16,9 @@ public partial class TimeOffset : Box
 {
 	public const string TYPE = "tsro";
 	public override string DisplayName { get { return "TimeOffset"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("HintSampleEntry(rtp )", "SrtpHintSampleEntry(srtp)", "ReceivedRtpHintSampleEntry(rrtp)"); }
+
 
 	protected int offset; 
 	public int Offset { get { return this.offset; } set { this.offset = value; } }

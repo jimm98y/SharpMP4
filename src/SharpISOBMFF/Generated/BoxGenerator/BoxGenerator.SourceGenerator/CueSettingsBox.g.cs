@@ -14,6 +14,10 @@ public partial class CueSettingsBox : Box
 {
 	public const string TYPE = "sttg";
 	public override string DisplayName { get { return "CueSettingsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	// its definitions place it in no container: wherever it is, it is not misplaced
+	public override bool ValidatePlacement() { return IsPlacedIn(); }
+
 
 	protected BinaryUTF8String settings; 
 	public BinaryUTF8String Settings { get { return this.settings; } set { this.settings = value; } }

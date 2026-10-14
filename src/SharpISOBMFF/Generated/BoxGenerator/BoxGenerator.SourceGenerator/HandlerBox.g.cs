@@ -17,6 +17,9 @@ public partial class HandlerBox : FullBox
 {
 	public const string TYPE = "hdlr";
 	public override string DisplayName { get { return "HandlerBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)", "mdia", "minf"); }
+
 
 	protected uint pre_defined = 0; 
 	public uint PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
