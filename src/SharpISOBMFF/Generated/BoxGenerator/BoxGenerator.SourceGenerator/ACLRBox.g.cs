@@ -70,6 +70,17 @@ public partial class ACLRBox : Box
 		boxSize += 32; // reserved
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("tag", 32, this.tag); 
+		boxSize += builder.Field("version", 32, this.version); 
+		boxSize += builder.Field("colorRange", 32, this.colorRange); 
+		boxSize += builder.Field("reserved", 32, this.reserved); 
+		return boxSize;
+	}
 }
 
 }

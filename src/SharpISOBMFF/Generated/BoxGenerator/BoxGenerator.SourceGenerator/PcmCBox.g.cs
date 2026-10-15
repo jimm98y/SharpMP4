@@ -55,6 +55,15 @@ public partial class PcmCBox : FullBox
 		boxSize += 8; // pcmSampleSize
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("formatFlags", 8, this.formatFlags); 
+		boxSize += builder.Field("pcmSampleSize", 8, this.pcmSampleSize); 
+		return boxSize;
+	}
 }
 
 }

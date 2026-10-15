@@ -57,6 +57,15 @@ public partial class AccessibilityTextProperty : ItemFullProperty
 		boxSize += IsoStream.CalculateStringSize(alt_lang); // alt_lang
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("alt_text", IsoStream.CalculateStringSize(alt_text), this.alt_text); 
+		boxSize += builder.Field("alt_lang", IsoStream.CalculateStringSize(alt_lang), this.alt_lang); 
+		return boxSize;
+	}
 }
 
 }

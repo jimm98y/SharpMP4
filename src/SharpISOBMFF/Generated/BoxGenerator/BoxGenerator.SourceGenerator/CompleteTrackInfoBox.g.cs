@@ -49,6 +49,15 @@ public partial class CompleteTrackInfoBox : Box
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("original_format", IsoStream.CalculateBoxSize(original_format), this.original_format); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

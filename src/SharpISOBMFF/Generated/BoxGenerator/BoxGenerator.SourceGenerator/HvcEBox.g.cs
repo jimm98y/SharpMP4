@@ -49,6 +49,14 @@ public partial class HvcEBox : Box
 		boxSize += IsoStream.CalculateClassSize(HEVCConfig); // HEVCConfig
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("HEVCConfig", IsoStream.CalculateClassSize(HEVCConfig), this.HEVCConfig); 
+		return boxSize;
+	}
 }
 
 }

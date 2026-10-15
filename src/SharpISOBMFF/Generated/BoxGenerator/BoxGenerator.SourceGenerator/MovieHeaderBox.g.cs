@@ -167,6 +167,37 @@ public partial class MovieHeaderBox : FullBox
 		boxSize += 32; // next_track_ID
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version==1)
+		{
+			boxSize += builder.Field("creation_time", 64, this.creation_time); 
+			boxSize += builder.Field("modification_time", 64, this.modification_time); 
+			boxSize += builder.Field("timescale", 32, this.timescale); 
+			boxSize += builder.Field("duration", 64, this.duration); 
+		}
+
+		else 
+		{
+			/*  version==0 */
+			boxSize += builder.Field("creation_time", 32, this.creation_time); 
+			boxSize += builder.Field("modification_time", 32, this.modification_time); 
+			boxSize += builder.Field("timescale", 32, this.timescale); 
+			boxSize += builder.Field("duration", 32, this.duration); 
+		}
+		boxSize += builder.Field("rate", 32, this.rate); // typically 1.0
+		boxSize += builder.Field("volume", 16, this.volume); // typically, full volume
+		boxSize += builder.Field("reserved", 16, this.reserved); 
+		boxSize += builder.Field("reserved0", 2 * 32, this.reserved0); 
+		boxSize += builder.Field("matrix", 9 * 32, this.matrix); // Unity matrix
+		boxSize += builder.Field("pre_defined", 6 * 32, this.pre_defined); 
+		boxSize += builder.Field("next_track_ID", 32, this.next_track_ID); 
+		return boxSize;
+	}
 }
 
 }

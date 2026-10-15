@@ -43,6 +43,14 @@ public abstract partial class OCI_Descriptor : BaseDescriptor
 		/*  empty. To be filled by classes extending this class. */
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		/*  empty. To be filled by classes extending this class. */
+		return boxSize;
+	}
 }
 
 }

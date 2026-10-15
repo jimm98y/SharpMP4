@@ -210,6 +210,51 @@ public partial class UuidCameraExtrinsicMatrixBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (( flags  &  0x1 ) ==  0x1 )
+		{
+			boxSize += builder.Field("pos_x", 32, this.pos_x); 
+		}
+
+		if (( flags  &  0x2 ) ==  0x2 )
+		{
+			boxSize += builder.Field("pos_y", 32, this.pos_y); 
+		}
+
+		if (( flags  &  0x4 ) ==  0x4 )
+		{
+			boxSize += builder.Field("pos_z", 32, this.pos_z); 
+		}
+
+		if (( flags  &  0x8 ) ==  0x8 )
+		{
+
+			if (( flags  &  0x10 ) ==  0x10 )
+			{
+				boxSize += builder.Field("quat_x", 32, this.quat_x); 
+				boxSize += builder.Field("quat_y", 32, this.quat_y); 
+				boxSize += builder.Field("quat_z", 32, this.quat_z); 
+			}
+
+			else 
+			{
+				boxSize += builder.Field("quat_x_short", 16, this.quat_x_short); 
+				boxSize += builder.Field("quat_y_short", 16, this.quat_y_short); 
+				boxSize += builder.Field("quat_z_short", 16, this.quat_z_short); 
+			}
+		}
+
+		if (( flags  &  0x20 ) ==  0x20 )
+		{
+			boxSize += builder.Field("world_coordinate_system_id", 32, this.world_coordinate_system_id); 
+		}
+		return boxSize;
+	}
 }
 
 }

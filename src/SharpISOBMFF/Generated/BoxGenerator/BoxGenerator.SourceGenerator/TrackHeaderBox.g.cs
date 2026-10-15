@@ -189,6 +189,40 @@ public partial class TrackHeaderBox : FullBox
 		boxSize += 32; // height
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version==1)
+		{
+			boxSize += builder.Field("creation_time", 64, this.creation_time); 
+			boxSize += builder.Field("modification_time", 64, this.modification_time); 
+			boxSize += builder.Field("track_ID", 32, this.track_ID); 
+			boxSize += builder.Field("reserved", 32, this.reserved); 
+			boxSize += builder.Field("duration", 64, this.duration); 
+		}
+
+		else 
+		{
+			/*  version==0 */
+			boxSize += builder.Field("creation_time", 32, this.creation_time); 
+			boxSize += builder.Field("modification_time", 32, this.modification_time); 
+			boxSize += builder.Field("track_ID", 32, this.track_ID); 
+			boxSize += builder.Field("reserved0", 32, this.reserved0); 
+			boxSize += builder.Field("duration", 32, this.duration); 
+		}
+		boxSize += builder.Field("reserved1", 2 * 32, this.reserved1); 
+		boxSize += builder.Field("layer", 16, this.layer); 
+		boxSize += builder.Field("alternate_group", 16, this.alternate_group); 
+		boxSize += builder.Field("volume", 16, this.volume); 
+		boxSize += builder.Field("reserved2", 16, this.reserved2); 
+		boxSize += builder.Field("matrix", 9 * 32, this.matrix); // unity matrix
+		boxSize += builder.Field("width", 32, this.width); 
+		boxSize += builder.Field("height", 32, this.height); 
+		return boxSize;
+	}
 }
 
 }

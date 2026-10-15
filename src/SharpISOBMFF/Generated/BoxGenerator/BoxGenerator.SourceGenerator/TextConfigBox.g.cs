@@ -48,6 +48,14 @@ public partial class TextConfigBox : FullBox
 		boxSize += IsoStream.CalculateStringSize(text_config); // text_config
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("text_config", IsoStream.CalculateStringSize(text_config), this.text_config); 
+		return boxSize;
+	}
 }
 
 }

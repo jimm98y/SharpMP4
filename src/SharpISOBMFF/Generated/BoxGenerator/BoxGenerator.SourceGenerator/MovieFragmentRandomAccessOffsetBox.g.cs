@@ -49,6 +49,14 @@ public partial class MovieFragmentRandomAccessOffsetBox : FullBox
 		boxSize += 32; // parent_size
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("parent_size", 32, this.parent_size); 
+		return boxSize;
+	}
 }
 
 }

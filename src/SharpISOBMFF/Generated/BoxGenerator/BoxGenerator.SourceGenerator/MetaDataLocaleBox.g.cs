@@ -50,6 +50,14 @@ public partial class MetaDataLocaleBox : Box
 		boxSize += IsoStream.CalculateStringSize(locale_string); // locale_string
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("locale_string", IsoStream.CalculateStringSize(locale_string), this.locale_string); 
+		return boxSize;
+	}
 }
 
 }

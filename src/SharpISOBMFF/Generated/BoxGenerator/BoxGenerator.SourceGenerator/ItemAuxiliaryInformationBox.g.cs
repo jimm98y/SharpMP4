@@ -56,6 +56,15 @@ public partial class ItemAuxiliaryInformationBox : ItemFullProperty
 		boxSize += 32; // aux_info_type_parameter
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("aux_info_type", 32, this.aux_info_type); 
+		boxSize += builder.Field("aux_info_type_parameter", 32, this.aux_info_type_parameter); 
+		return boxSize;
+	}
 }
 
 }

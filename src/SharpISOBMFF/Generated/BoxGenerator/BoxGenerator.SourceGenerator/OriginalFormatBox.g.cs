@@ -57,6 +57,16 @@ public partial class OriginalFormatBox : Box
 		/*  and complete track information) */
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("data_format", 32, this.data_format); // format of decrypted, encoded data (in case of protection)
+		/*  or un-transformed sample entry (in case of restriction */
+		/*  and complete track information) */
+		return boxSize;
+	}
 }
 
 }

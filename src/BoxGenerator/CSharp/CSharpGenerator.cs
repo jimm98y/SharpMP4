@@ -124,6 +124,8 @@ namespace BoxGenerator.CSharp
                     return "\r\n\t\tif (boxSize < readSize) boxSize += stream.ReadRemainingBits(readSize - boxSize, out this.remainder, \"remainder\");";
                 if (methodType == MethodType.Write)
                     return "\r\n\t\tboxSize += stream.WriteRemainingBits(this.remainder, \"remainder\");";
+                if (methodType == MethodType.Describe)
+                    return "\r\n\t\tif (this.remainder.Count > 0) boxSize += builder.Field(\"remainder\", this.remainder.Count, this.remainder);";
                 return "\r\n\t\tboxSize += this.remainder.Count;";
             }
             return "";
@@ -641,6 +643,7 @@ namespace SharpISOBMFF
                     }
 
                     cls.Append($" : {inType}\r\n{{\r\n\tpublic StreamMarker Padding {{ get; set; }}\r\n\tprotected IMp4Serializable parent = null;\r\n\tpublic IMp4Serializable GetParent() {{ return parent; }}\r\n\tpublic void SetParent(IMp4Serializable parent) {{ this.parent = parent; }}\r\n");
+                    cls.Append("\tpublic override string ToString() { return BoxStringBuilder.Format(this); }\r\n");
                 }
             }
 
@@ -909,6 +912,40 @@ namespace SharpISOBMFF
             }
 
             cls.Append(AddMethodEndCode(b, MethodType.Size));
+            cls.Append("\r\n\t\treturn boxSize;\r\n\t}\r\n");
+
+            // its fields as they are now, read or set, as CalculateSize counts them - of the fields its syntax has of the
+            // values it has - each of its position, size and value, for ToString
+            cls.Append("\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong ToString(BoxStringBuilder builder)\r\n\t{\r\n\t\tulong boxSize = 0;");
+
+            if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
+            {
+                string baseDescribe = "\r\n\t\tboxSize += base.ToString(builder);";
+                if (b.BoxName == "MetaBox")
+                {
+                    // of no version and flags, its header alone
+                    baseDescribe = "\r\n\t\tboxSize += IsQuickTime ? base.ToString(builder) : HeaderToString(builder);";
+                }
+                cls.Append(baseDescribe);
+            }
+
+            cls.Append(AddMissingMethodCode(b, MethodType.Describe));
+
+            foreach (var field in b.Fields)
+            {
+                cls.Append("\r\n" + BuildMethod(b, null, field, 2, MethodType.Describe));
+            }
+
+            if (b.IsContainer)
+            {
+                cls.Append("\r\n" + "\t\tboxSize += builder.Children(this);");
+            }
+            else if (hasDescriptors)
+            {
+                cls.Append("\r\n" + "\t\tboxSize += builder.Descriptors(this);");
+            }
+
+            cls.Append(AddMethodEndCode(b, MethodType.Describe));
             cls.Append("\r\n\t\treturn boxSize;\r\n\t}\r\n");
 
             // end of class
@@ -1181,6 +1218,7 @@ namespace SharpISOBMFF
             }
 
             string name = parserDocument.GetFieldName(field as PseudoField);
+            // described, a field is of the size it is written of: of CalculateSize's expression
             string m = methodType == MethodType.Read ? GetReadMethod(field as PseudoField) : methodType == MethodType.Write ? GetWriteMethod(field as PseudoField) : GetCalculateSizeMethod(field as PseudoField);
             string typedef = "";
             typedef = parserDocument.GetFieldTypeDef(field);
@@ -1214,7 +1252,7 @@ namespace SharpISOBMFF
                 }
             }
 
-            if (methodType == MethodType.Size)
+            if (methodType == MethodType.Size || methodType == MethodType.Describe)
             {
                 m = m.Replace("value", name);
             }
@@ -1225,7 +1263,7 @@ namespace SharpISOBMFF
                 parserDocument.GetNestedInLoopSuffix(field, typedef, out suffix);
                 typedef += suffix;
 
-                if (methodType != MethodType.Size)
+                if (methodType != MethodType.Size && methodType != MethodType.Describe)
                 {
                     m = parserDocument.FixNestedInLoopVariables(field, m, "(", ",");
                     m = parserDocument.FixNestedInLoopVariables(field, m, ")", ","); // when casting
@@ -1255,7 +1293,33 @@ namespace SharpISOBMFF
             if (parserDocument.GetLoopNestingLevel(field) > 0 && !string.IsNullOrEmpty(typedef) && m.StartsWith("IsoStream.CalculateClassSize("))
                 m = m.Replace($"CalculateClassSize({name})", $"CalculateClassSize({name}{typedef})");
 
+            // described: its name, of the element of a loop with its indices - "nalUnitLength[0][1]" - its size, its value
+            if (methodType == MethodType.Describe)
+                return $"{spacing}{boxSize}builder.Field({DescribedName(name, typedef)}, {m}, this.{name}{typedef}); {fieldComment}";
+
             return $"{spacing}{boxSize}{m}; // {name}";
+        }
+
+        /// <summary>
+        /// The name a field is described by: of an element of a loop, an interpolated string of its indices -
+        /// [j][i] to $"name[{j}][{i}]", [grid_pos_view_id[i]] to $"name[{grid_pos_view_id[i]}]".
+        /// </summary>
+        private static string DescribedName(string name, string typedef)
+        {
+            if (string.IsNullOrEmpty(typedef))
+                return $"\"{name}\"";
+            var sb = new StringBuilder("$\"" + name);
+            int depth = 0;
+            foreach (char c in typedef)
+            {
+                if (c == '[' && depth++ == 0)
+                    sb.Append("[{");
+                else if (c == ']' && --depth == 0)
+                    sb.Append("}]");
+                else if (depth > 0 && c != ' ')
+                    sb.Append(c);
+            }
+            return sb.Append('"').ToString();
         }
 
         private string BuildBlock(PseudoClass b, PseudoBlock parent, PseudoBlock block, int level, MethodType methodType)

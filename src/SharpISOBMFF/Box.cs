@@ -18,6 +18,12 @@ namespace SharpISOBMFF
         ulong Read(IsoStream stream, ulong readSize);
         ulong Write(IsoStream stream);
         ulong CalculateSize();
+
+        /// <summary>
+        /// Its fields as they are now - read, or set since - each of its position, size and value, to the builder: what
+        /// <see cref="object.ToString"/> is made of. Its size, as <see cref="CalculateSize"/> counts it.
+        /// </summary>
+        ulong ToString(BoxStringBuilder builder);
     }
 
     public abstract class Box : IMp4Serializable, IHasBoxChildren
@@ -165,6 +171,31 @@ namespace SharpISOBMFF
         {
             return (ulong)(32 + 32 + (IsCountingLargeSize ? 64 : 0)) /* + IsoStream.CalculateBoxArray(this) */ + (ulong)(padding != null ? 8 * padding.Length : 0) + 8 * (ulong)(uuid != null ? uuid.Length : 0);
         }
+
+        /// <summary>The box, its fields and its boxes, a line each, as <see cref="BoxStringBuilder"/> describes them.</summary>
+        public override string ToString() { return BoxStringBuilder.Format(this); }
+
+        public virtual ulong ToString(BoxStringBuilder builder)
+        {
+            return HeaderToString(builder);
+        }
+
+        /// <summary>
+        /// The header the box is written with: its size as it is now - of its fields and boxes as they are - its type, and
+        /// of a 'uuid' box, its user type.
+        /// </summary>
+        protected ulong HeaderToString(BoxStringBuilder builder)
+        {
+            ulong size = IsoStream.CalculateBoxSize(this) >> 3;
+            ulong boxSize = 0;
+            boxSize += builder.Field("size", 32, IsCountingLargeSize ? 1u : (uint)size);
+            boxSize += builder.Field("type", 32, FourCC);
+            if (IsCountingLargeSize)
+                boxSize += builder.Field("largesize", 64, size);
+            if (uuid != null)
+                boxSize += builder.Field("usertype", 8 * (ulong)uuid.Length, uuid);
+            return boxSize;
+        }
     }
 
     public class SafeBoxHeader : BoxHeader
@@ -282,6 +313,14 @@ namespace SharpISOBMFF
             boxSize += (ulong)data.Length << 3; // data
             return boxSize;
         }
+
+        public override ulong ToString(BoxStringBuilder builder)
+        {
+            ulong boxSize = 0;
+            boxSize += base.ToString(builder);
+            boxSize += builder.Field("data", (ulong)data.Length << 3, this.data);
+            return boxSize;
+        }
     }
 
     public class InvalidBox : UnknownBox
@@ -304,6 +343,13 @@ namespace SharpISOBMFF
 
         /// <summary>Why the box's syntax could not read it.</summary>
         public string Error { get; }
+
+        public override ulong ToString(BoxStringBuilder builder)
+        {
+            ulong boxSize = base.ToString(builder);
+            boxSize += builder.Field("error", 0, Error);
+            return boxSize;
+        }
     }
 
     public class UnknownEntry : SampleGroupDescriptionEntry
@@ -338,6 +384,14 @@ namespace SharpISOBMFF
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += (ulong)data.Length << 3; // data
+            return boxSize;
+        }
+
+        public override ulong ToString(BoxStringBuilder builder)
+        {
+            ulong boxSize = 0;
+            boxSize += base.ToString(builder);
+            boxSize += builder.Field("data", (ulong)data.Length << 3, this.data);
             return boxSize;
         }
     }
@@ -379,6 +433,13 @@ namespace SharpISOBMFF
             ulong boxSize = 0;
             boxSize += (ulong)data.Length << 3; // data
             return boxSize;
+        }
+
+        public override string ToString() { return BoxStringBuilder.Format(this); }
+
+        public virtual ulong ToString(BoxStringBuilder builder)
+        {
+            return builder.Field("data", (ulong)data.Length << 3, this.data);
         }
     }
 
@@ -472,6 +533,14 @@ namespace SharpISOBMFF
         {
             return 0;
         }
+
+        public override string ToString() { return BoxStringBuilder.Format(this); }
+
+        /// <summary>Of its fields, none: its tag and size, written before them, <see cref="BoxStringBuilder"/> describes.</summary>
+        public virtual ulong ToString(BoxStringBuilder builder)
+        {
+            return 0;
+        }
     }
 
     public class InvalidDescriptor : UnknownDescriptor
@@ -495,6 +564,13 @@ namespace SharpISOBMFF
 
         /// <summary>Why the descriptor's syntax could not read it.</summary>
         public string Error { get; }
+
+        public override ulong ToString(BoxStringBuilder builder)
+        {
+            ulong boxSize = base.ToString(builder);
+            boxSize += builder.Field("error", 0, Error);
+            return boxSize;
+        }
     }
 
     public class UnknownDescriptor : Descriptor
@@ -523,6 +599,13 @@ namespace SharpISOBMFF
         {
             ulong boxSize = base.CalculateSize();
             boxSize += (ulong)data.Length << 3;
+            return boxSize;
+        }
+
+        public override ulong ToString(BoxStringBuilder builder)
+        {
+            ulong boxSize = base.ToString(builder);
+            boxSize += builder.Field("data", (ulong)data.Length << 3, this.data);
             return boxSize;
         }
     }

@@ -65,6 +65,16 @@ public partial class PiffTrackEncryptionBox : FullBox
 		boxSize += 16 * 8; // kid
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("algorithmID", 24, this.algorithmID); 
+		boxSize += builder.Field("Per_Sample_IV_Size", 8, this.Per_Sample_IV_Size); 
+		boxSize += builder.Field("kid", 16 * 8, this.kid); 
+		return boxSize;
+	}
 }
 
 }

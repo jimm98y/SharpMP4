@@ -57,6 +57,15 @@ public partial class AuxiliaryTypeProperty : ItemFullProperty
 		boxSize += ((ulong)aux_subtype.Length * 8); // aux_subtype
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("aux_type", IsoStream.CalculateStringSize(aux_type), this.aux_type); 
+		boxSize += builder.Field("aux_subtype", ((ulong)aux_subtype.Length * 8), this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
+		return boxSize;
+	}
 }
 
 }

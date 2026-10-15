@@ -74,6 +74,21 @@ public partial class DegradationPriorityBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		int sample_count = priority.Length;
+
+		
+
+		for (int i=0; i < sample_count; i++)
+		{
+			boxSize += builder.Field($"priority[{i}]", 16, this.priority[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

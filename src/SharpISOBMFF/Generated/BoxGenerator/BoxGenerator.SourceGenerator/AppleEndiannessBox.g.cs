@@ -49,6 +49,14 @@ public partial class AppleEndiannessBox : Box
 		boxSize += 16; // littleEndian
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("littleEndian", 16, this.littleEndian); 
+		return boxSize;
+	}
 }
 
 }

@@ -90,6 +90,22 @@ public partial class VvcMixedNALUnitTypePicEntry : VisualSampleGroupEntry
 		boxSize += 6; // pps_id
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("num_mix_nalu_pic_idx", 16, this.num_mix_nalu_pic_idx); 
+
+		for (int i = 0; i < num_mix_nalu_pic_idx; i++)
+		{
+			boxSize += builder.Field($"mix_subp_track_idx1[{i}]", 16, this.mix_subp_track_idx1[i]); 
+			boxSize += builder.Field($"mix_subp_track_idx2[{i}]", 16, this.mix_subp_track_idx2[i]); 
+		}
+		boxSize += builder.Field("pps_mix_nalu_types_in_pic_bit_pos", 10, this.pps_mix_nalu_types_in_pic_bit_pos); 
+		boxSize += builder.Field("pps_id", 6, this.pps_id); 
+		return boxSize;
+	}
 }
 
 }

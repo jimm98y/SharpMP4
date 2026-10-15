@@ -69,6 +69,17 @@ public partial class MLPSpecificBox : Box
 		boxSize += 32; // reserved2
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("formatInfo", 32, this.formatInfo); 
+		boxSize += builder.Field("peakDataRate", 15, this.peakDataRate); 
+		boxSize += builder.Field("reserved", 1, this.reserved); 
+		boxSize += builder.Field("reserved2", 32, this.reserved2); 
+		return boxSize;
+	}
 }
 
 }

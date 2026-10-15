@@ -173,6 +173,38 @@ public partial class TrackFragmentRandomAccessBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("track_ID", 32, this.track_ID); 
+		boxSize += builder.Field("reserved", 26, this.reserved); 
+		boxSize += builder.Field("length_size_of_traf_num", 2, this.length_size_of_traf_num); 
+		boxSize += builder.Field("length_size_of_trun_num", 2, this.length_size_of_trun_num); 
+		boxSize += builder.Field("length_size_of_sample_num", 2, this.length_size_of_sample_num); 
+		boxSize += builder.Field("number_of_entry", 32, this.number_of_entry); 
+
+		for (int i=0; i < number_of_entry; i++)
+		{
+
+			if (version==1)
+			{
+				boxSize += builder.Field($"time[{i}]", 64, this.time[i]); 
+				boxSize += builder.Field($"moof_offset[{i}]", 64, this.moof_offset[i]); 
+			}
+
+			else 
+			{
+				boxSize += builder.Field($"time[{i}]", 32, this.time[i]); 
+				boxSize += builder.Field($"moof_offset[{i}]", 32, this.moof_offset[i]); 
+			}
+			boxSize += builder.Field($"traf_number[{i}]", (ulong)((length_size_of_traf_num+1) * 8 ), this.traf_number[i]); 
+			boxSize += builder.Field($"trun_number[{i}]", (ulong)((length_size_of_trun_num+1) * 8 ), this.trun_number[i]); 
+			boxSize += builder.Field($"sample_delta[{i}]", (ulong)((length_size_of_sample_num+1) * 8 ), this.sample_delta[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

@@ -48,6 +48,14 @@ public partial class ViewPackingInformationBox : FullBox
 		boxSize += 32; // view_packing_kind
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("view_packing_kind", 32, this.view_packing_kind); // a FourCC for the kind of projection 
+		return boxSize;
+	}
 }
 
 }

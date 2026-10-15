@@ -48,6 +48,14 @@ public partial class ExtendedLanguageBox : FullBox
 		boxSize += IsoStream.CalculateStringSize(extended_language); // extended_language
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("extended_language", IsoStream.CalculateStringSize(extended_language), this.extended_language); 
+		return boxSize;
+	}
 }
 
 }

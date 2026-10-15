@@ -49,6 +49,14 @@ public partial class ViewScalabilityInformationSEIBox : Box
 		boxSize += (ulong)(8*size-64 ); // mvcscalinfosei
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("mvcscalinfosei", (ulong)(8*size-64 ), this.mvcscalinfosei); 
+		return boxSize;
+	}
 }
 
 }

@@ -49,6 +49,15 @@ public partial class OpusSampleEntry : AudioSampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("OpusSpecificBox", IsoStream.CalculateBoxSize(OpusSpecificBox), this.OpusSpecificBox); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

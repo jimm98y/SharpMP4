@@ -45,6 +45,7 @@ public partial class UsacConfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "UsacConfig"; } }
 
 	protected byte usacSamplingFrequencyIndex; 
@@ -225,6 +226,52 @@ public partial class UsacConfig : IMp4Serializable
 		if (usacConfigExtensionPresent)
 		{
 			boxSize += IsoStream.CalculateClassSize(usacConfigExtension); // usacConfigExtension
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("usacSamplingFrequencyIndex", 5, this.usacSamplingFrequencyIndex); 
+
+		if (usacSamplingFrequencyIndex == 0x1f)
+		{
+			boxSize += builder.Field("usacSamplingFrequency", 24, this.usacSamplingFrequency); 
+		}
+		boxSize += builder.Field("coreSbrFrameLengthIndex", 3, this.coreSbrFrameLengthIndex); 
+		boxSize += builder.Field("channelConfigurationIndex", 5, this.channelConfigurationIndex); 
+
+		if (channelConfigurationIndex == 0)
+		{
+			boxSize += builder.Field("usacChannelConfig", IsoStream.CalculateClassSize(usacChannelConfig), this.usacChannelConfig); 
+		}
+		boxSize += builder.Field("numElementsMinusOne", IsoStream.CalculateClassSize(numElementsMinusOne), this.numElementsMinusOne); 
+
+		for (int i = 0; i < numElementsMinusOne + 1; i++)
+		{
+			boxSize += builder.Field($"usacElementType[{i}]", 2, this.usacElementType[i]); 
+
+			if (usacElementType[i] == 0)
+			{
+				boxSize += builder.Field($"usacSingleChannelElementConfig[{i}]", IsoStream.CalculateClassSize(usacSingleChannelElementConfig[i]), this.usacSingleChannelElementConfig[i]); 
+			}
+
+			if (usacElementType[i] == 1)
+			{
+				boxSize += builder.Field($"usacChannelPairElementConfig[{i}]", IsoStream.CalculateClassSize(usacChannelPairElementConfig[i]), this.usacChannelPairElementConfig[i]); 
+			}
+
+			if (usacElementType[i] == 3)
+			{
+				boxSize += builder.Field($"usacExtElementConfig[{i}]", IsoStream.CalculateClassSize(usacExtElementConfig[i]), this.usacExtElementConfig[i]); 
+			}
+		}
+		boxSize += builder.Field("usacConfigExtensionPresent", 1, this.usacConfigExtensionPresent); 
+
+		if (usacConfigExtensionPresent)
+		{
+			boxSize += builder.Field("usacConfigExtension", IsoStream.CalculateClassSize(usacConfigExtension), this.usacConfigExtension); 
 		}
 		return boxSize;
 	}

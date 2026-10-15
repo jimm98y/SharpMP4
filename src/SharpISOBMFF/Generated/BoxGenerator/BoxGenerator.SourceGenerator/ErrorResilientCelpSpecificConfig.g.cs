@@ -31,6 +31,7 @@ public partial class ErrorResilientCelpSpecificConfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "ErrorResilientCelpSpecificConfig"; } }
 
 	protected bool isBaseLayer; 
@@ -132,6 +133,33 @@ public partial class ErrorResilientCelpSpecificConfig : IMp4Serializable
 			else 
 			{
 				boxSize += 2; // CELPBRSid
+			}
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("isBaseLayer", 1, this.isBaseLayer); 
+
+		if (isBaseLayer)
+		{
+			boxSize += builder.Field("ER_SC_CelpHeader", IsoStream.CalculateClassSize(ER_SC_CelpHeader), this.ER_SC_CelpHeader); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("isBWSLayer", 1, this.isBWSLayer); 
+
+			if (isBWSLayer)
+			{
+				boxSize += builder.Field("CelpBWSenhHeader", IsoStream.CalculateClassSize(CelpBWSenhHeader), this.CelpBWSenhHeader); 
+			}
+
+			else 
+			{
+				boxSize += builder.Field("CELPBRSid", 2, this.CELPBRSid); 
 			}
 		}
 		return boxSize;

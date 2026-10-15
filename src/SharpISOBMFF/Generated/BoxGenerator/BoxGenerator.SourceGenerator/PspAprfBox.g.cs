@@ -104,6 +104,22 @@ public partial class PspAprfBox : Box
 		boxSize += 32; // channels
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("unknown1", 32, this.unknown1); 
+		boxSize += builder.Field("unknown2", 32, this.unknown2); 
+		boxSize += builder.Field("codec", 32, this.codec); 
+		boxSize += builder.Field("unknown3", 32, this.unknown3); 
+		boxSize += builder.Field("unknown4", 32, this.unknown4); 
+		boxSize += builder.Field("maxBitrate", 32, this.maxBitrate); 
+		boxSize += builder.Field("avgBitrate", 32, this.avgBitrate); 
+		boxSize += builder.Field("frameRate", 32, this.frameRate); 
+		boxSize += builder.Field("channels", 32, this.channels); 
+		return boxSize;
+	}
 }
 
 }

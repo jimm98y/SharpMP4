@@ -53,6 +53,15 @@ public partial class WhiteBalanceBracketingEntry : VisualSampleGroupEntry
 		boxSize += 8; // green_magenta
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("blue_amber", 16, this.blue_amber); 
+		boxSize += builder.Field("green_magenta", 8, this.green_magenta); 
+		return boxSize;
+	}
 }
 
 }

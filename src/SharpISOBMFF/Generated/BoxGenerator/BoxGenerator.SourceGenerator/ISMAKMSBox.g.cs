@@ -49,6 +49,14 @@ public partial class ISMAKMSBox : FullBox
 		boxSize += IsoStream.CalculateStringSize(kms_URI); // kms_URI
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("kms_URI", IsoStream.CalculateStringSize(kms_URI), this.kms_URI); 
+		return boxSize;
+	}
 }
 
 }

@@ -75,6 +75,20 @@ public partial class DecodeRetimingEntry : VisualSampleGroupEntry
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("tierCount", 8, this.tierCount); 
+
+		for (int i=0; i<tierCount; i++)
+		{
+			boxSize += builder.Field($"tierID[{i}]", 16, this.tierID[i]); 
+			boxSize += builder.Field($"delta[{i}]", 16, this.delta[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

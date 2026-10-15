@@ -109,6 +109,27 @@ public partial class SubpicCommonGroupBox : EntityToGroupBox
 		boxSize += 16; // num_active_tracks
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("level_is_present_flag", 1, this.level_is_present_flag); 
+		boxSize += builder.Field("level_is_static_flag", 1, this.level_is_static_flag); 
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+
+		if ( level_is_present_flag )
+		{
+			boxSize += builder.Field("level_idc", 8, this.level_idc); 
+		}
+
+		if ( level_is_static_flag == false )
+		{
+			boxSize += builder.Field("level_info_entity_idx", 32, this.level_info_entity_idx); 
+		}
+		boxSize += builder.Field("num_active_tracks", 16, this.num_active_tracks); 
+		return boxSize;
+	}
 }
 
 }

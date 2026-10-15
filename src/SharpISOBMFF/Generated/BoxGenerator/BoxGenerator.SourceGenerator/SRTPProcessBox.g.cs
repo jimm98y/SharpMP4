@@ -82,6 +82,20 @@ public partial class SRTPProcessBox : FullBox
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("encryption_algorithm_rtp", 32, this.encryption_algorithm_rtp); 
+		boxSize += builder.Field("encryption_algorithm_rtcp", 32, this.encryption_algorithm_rtcp); 
+		boxSize += builder.Field("integrity_algorithm_rtp", 32, this.integrity_algorithm_rtp); 
+		boxSize += builder.Field("integrity_algorithm_rtcp", 32, this.integrity_algorithm_rtcp); 
+		// boxSize += builder.Field("scheme_type_box", IsoStream.CalculateBoxSize(scheme_type_box), this.scheme_type_box); 
+		// boxSize += builder.Field("info", IsoStream.CalculateBoxSize(info), this.info); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

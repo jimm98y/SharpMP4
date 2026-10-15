@@ -151,6 +151,29 @@ public partial class MVDDepthResolutionBox : Box
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("depth_width", 16, this.depth_width); 
+		boxSize += builder.Field("depth_height", 16, this.depth_height); 
+		/*  The following 5 fields are collectively optional; they are either all present or all absent. When grid_pos_num_views is not present, the for loop is not present, equivalent to grid_pos_num_views equal to 0. These fields may be present or absent whenever the box is present (e.g., in MVCDConfigurationBox or A3DConfigurationBox).  */
+		if (this.depth_hor_mult_minus1Present) boxSize += builder.Field("depth_hor_mult_minus1", 16, this.depth_hor_mult_minus1); // optional
+		if (this.depth_ver_mult_minus1Present) boxSize += builder.Field("depth_ver_mult_minus1", 16, this.depth_ver_mult_minus1); // optional
+		if (this.depth_hor_rshPresent) boxSize += builder.Field("depth_hor_rsh", 4, this.depth_hor_rsh); // optional
+		if (this.depth_ver_rshPresent) boxSize += builder.Field("depth_ver_rsh", 4, this.depth_ver_rsh); // optional
+		if (this.grid_pos_num_viewsPresent) boxSize += builder.Field("grid_pos_num_views", 16, this.grid_pos_num_views); // optional
+
+		for (int i = 0; i < grid_pos_num_views; i++)
+		{
+			boxSize += builder.Field($"reserved[{i}]", 6, this.reserved[i]); 
+			boxSize += builder.Field($"grid_pos_view_id[{i}]", 10, this.grid_pos_view_id[i]); 
+			boxSize += builder.Field($"grid_pos_x[{grid_pos_view_id[i]}]", 16, this.grid_pos_x[grid_pos_view_id[i]]); 
+			boxSize += builder.Field($"grid_pos_y[{grid_pos_view_id[i]}]", 16, this.grid_pos_y[grid_pos_view_id[i]]); 
+		}
+		return boxSize;
+	}
 }
 
 }

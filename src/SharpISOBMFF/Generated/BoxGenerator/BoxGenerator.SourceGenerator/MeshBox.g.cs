@@ -244,6 +244,48 @@ public partial class MeshBox : Box
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 1, this.reserved); 
+		boxSize += builder.Field("coordinate_count", 31, this.coordinate_count); 
+
+		for (int i = 0; i < coordinate_count; i++)
+		{
+			boxSize += builder.Field($"coordinate[{i}]", 32, this.coordinate[i]); 
+		}
+		boxSize += builder.Field("reserved0", 1, this.reserved0); 
+		boxSize += builder.Field("vertex_count", 31, this.vertex_count); 
+
+		for (int i = 0; i < vertex_count; i++)
+		{
+			boxSize += builder.Field($"x_index_delta[{i}]", (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ), this.x_index_delta[i]); 
+			boxSize += builder.Field($"y_index_delta[{i}]", (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ), this.y_index_delta[i]); 
+			boxSize += builder.Field($"z_index_delta[{i}]", (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ), this.z_index_delta[i]); 
+			boxSize += builder.Field($"u_index_delta[{i}]", (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ), this.u_index_delta[i]); 
+			boxSize += builder.Field($"v_index_delta[{i}]", (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ), this.v_index_delta[i]); 
+		}
+		boxSize += builder.Field("mesh_padding", 1, this.mesh_padding); 
+		boxSize += builder.Field("reserved1", 1, this.reserved1); 
+		boxSize += builder.Field("vertex_list_count", 31, this.vertex_list_count); 
+
+		for (int i = 0; i < vertex_list_count; i++)
+		{
+			boxSize += builder.Field($"texture_id[{i}]", 8, this.texture_id[i]); 
+			boxSize += builder.Field($"index_type[{i}]", 8, this.index_type[i]); 
+			boxSize += builder.Field($"reserved2[{i}]", 1, this.reserved2[i]); 
+			boxSize += builder.Field($"index_count[{i}]", 31, this.index_count[i]); 
+
+			for (int j = 0; j < index_count[i]; j++)
+			{
+				boxSize += builder.Field($"index_as_delta[{i}][{j}]", (ulong)(Math.Ceiling(MathEx.Log2(vertex_count * 2)) ), this.index_as_delta[i][j]); 
+			}
+			boxSize += builder.Field($"mesh_padding2[{i}]", 1, this.mesh_padding2[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

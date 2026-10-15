@@ -74,6 +74,18 @@ public partial class SampleScaleBox : FullBox
 		boxSize += 16; // displayCenterY
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+		boxSize += builder.Field("constrained", 1, this.constrained); 
+		boxSize += builder.Field("scaleMethod", 8, this.scaleMethod); 
+		boxSize += builder.Field("displayCenterX", 16, this.displayCenterX); 
+		boxSize += builder.Field("displayCenterY", 16, this.displayCenterY); 
+		return boxSize;
+	}
 }
 
 }

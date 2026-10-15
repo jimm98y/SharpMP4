@@ -54,6 +54,15 @@ public partial class SnutTrackGroupTypeBox : FullBox
 		/*   for a particular track_group_type */
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("track_group_id", 32, this.track_group_id); // the remaining data may be specified 
+		/*   for a particular track_group_type */
+		return boxSize;
+	}
 }
 
 }

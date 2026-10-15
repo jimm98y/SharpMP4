@@ -48,6 +48,14 @@ public partial class HintLargestPacket : Box
 		boxSize += 32; // bytes
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("bytes", 32, this.bytes); 
+		return boxSize;
+	}
 }
 
 }

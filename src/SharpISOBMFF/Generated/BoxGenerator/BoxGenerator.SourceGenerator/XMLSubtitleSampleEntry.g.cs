@@ -76,6 +76,18 @@ public partial class XMLSubtitleSampleEntry : SubtitleSampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("ns", IsoStream.CalculateStringSize(ns), this.ns); 
+		if (this.schema_locationPresent) boxSize += builder.Field("schema_location", IsoStream.CalculateStringSize(schema_location), this.schema_location); // optional 
+		if (this.auxiliary_mime_typesPresent) boxSize += builder.Field("auxiliary_mime_types", IsoStream.CalculateStringSize(auxiliary_mime_types), this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
+		// boxSize += builder.Field("BitRateBox", IsoStream.CalculateBoxSize(BitRateBox), this.BitRateBox); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

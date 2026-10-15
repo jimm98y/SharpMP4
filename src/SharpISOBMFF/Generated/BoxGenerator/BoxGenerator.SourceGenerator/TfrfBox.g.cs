@@ -112,6 +112,30 @@ public partial class TfrfBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("fragmentCount", 8, this.fragmentCount); 
+
+		for (int i = 0; i < fragmentCount; i++)
+		{
+
+			if (version == 0x1)
+			{
+				boxSize += builder.Field($"fragmentAbsoluteTime[{i}]", 64, this.fragmentAbsoluteTime[i]); 
+				boxSize += builder.Field($"fragmentAbsoluteDuration[{i}]", 64, this.fragmentAbsoluteDuration[i]); 
+			}
+
+			else 
+			{
+				boxSize += builder.Field($"fragmentAbsoluteTime[{i}]", 32, this.fragmentAbsoluteTime[i]); 
+				boxSize += builder.Field($"fragmentAbsoluteDuration[{i}]", 32, this.fragmentAbsoluteDuration[i]); 
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

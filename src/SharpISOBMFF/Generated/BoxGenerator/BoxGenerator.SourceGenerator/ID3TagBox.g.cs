@@ -62,6 +62,16 @@ public partial class ID3TagBox : FullBox
 		boxSize += ((ulong)data.Length * 8); // data
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("pad", 1, this.pad); 
+		boxSize += builder.Field("language", 15, this.language); 
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
+		return boxSize;
+	}
 }
 
 }

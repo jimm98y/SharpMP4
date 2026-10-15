@@ -55,6 +55,16 @@ public partial class ItemPropertiesBox : Box
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("property_container", IsoStream.CalculateBoxSize(property_container), this.property_container); 
+		// boxSize += builder.Field("association", IsoStream.CalculateBoxSize(association), this.association); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

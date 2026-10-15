@@ -79,6 +79,20 @@ public partial class GroupIdToNameBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 16, this.entry_count); 
+
+		for (int i=0; i < entry_count; i++)
+		{
+			boxSize += builder.Field($"group_ID[{i}]", 32, this.group_ID[i]); 
+			boxSize += builder.Field($"group_name[{i}]", IsoStream.CalculateStringSize(group_name[i]), this.group_name[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

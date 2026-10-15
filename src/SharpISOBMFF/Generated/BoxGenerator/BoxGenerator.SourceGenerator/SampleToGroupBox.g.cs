@@ -109,6 +109,26 @@ public partial class SampleToGroupBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("grouping_type", 32, this.grouping_type); 
+
+		if (version == 1)
+		{
+			boxSize += builder.Field("grouping_type_parameter", 32, this.grouping_type_parameter); 
+		}
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+
+		for (int i=0; i < entry_count; i++)
+		{
+			boxSize += builder.Field($"sample_count[{i}]", 32, this.sample_count[i]); 
+			boxSize += builder.Field($"group_description_index[{i}]", 32, this.group_description_index[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

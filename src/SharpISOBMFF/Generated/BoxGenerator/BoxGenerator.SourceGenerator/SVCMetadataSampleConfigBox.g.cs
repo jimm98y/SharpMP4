@@ -107,6 +107,25 @@ public partial class SVCMetadataSampleConfigBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		
+		boxSize += builder.Field("sample_statement_type", 8, this.sample_statement_type); 
+		/*  normally group, or seq  */
+		boxSize += builder.Field("default_statement_type", 8, this.default_statement_type); 
+		boxSize += builder.Field("default_statement_length", 8, this.default_statement_length); 
+		boxSize += builder.Field("entry_count", 8, this.entry_count); 
+
+		for (int i=0; i<entry_count; i++)
+		{
+			boxSize += builder.Field($"statement_type[{i}]", 8, this.statement_type[i]); // from the user extension ranges
+			boxSize += builder.Field($"statement_namespace[{i}]", IsoStream.CalculateStringSize(statement_namespace[i]), this.statement_namespace[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

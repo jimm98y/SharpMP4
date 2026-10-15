@@ -50,6 +50,14 @@ public partial class MetaDataInlineKeysPresentBox : Box
 		boxSize += 8; // inlineKeyValueBoxesPresent
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("inlineKeyValueBoxesPresent", 8, this.inlineKeyValueBoxesPresent); 
+		return boxSize;
+	}
 }
 
 }

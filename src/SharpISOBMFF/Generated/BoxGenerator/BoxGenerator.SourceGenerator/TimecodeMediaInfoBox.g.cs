@@ -97,6 +97,21 @@ public partial class TimecodeMediaInfoBox : FullBox
 		boxSize += ((ulong)(font_name_length) * 8); // font_name
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("text_font", 16, this.text_font); 
+		boxSize += builder.Field("text_face", 16, this.text_face); 
+		boxSize += builder.Field("text_size", 16, this.text_size); 
+		boxSize += builder.Field("reserved", 16, this.reserved); 
+		boxSize += builder.Field("text_color", 48, this.text_color); 
+		boxSize += builder.Field("background_color", 48, this.background_color); 
+		boxSize += builder.Field("font_name_length", 8, this.font_name_length); 
+		boxSize += builder.Field("font_name", ((ulong)(font_name_length) * 8), this.font_name); 
+		return boxSize;
+	}
 }
 
 }

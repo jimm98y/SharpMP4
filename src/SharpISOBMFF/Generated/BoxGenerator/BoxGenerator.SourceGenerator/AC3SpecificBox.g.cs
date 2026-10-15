@@ -91,6 +91,20 @@ public partial class AC3SpecificBox : Box
 		boxSize += 5; // reserved
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("fscod", 2, this.fscod); 
+		boxSize += builder.Field("bsid", 5, this.bsid); 
+		boxSize += builder.Field("bsmod", 3, this.bsmod); 
+		boxSize += builder.Field("acmod", 3, this.acmod); 
+		boxSize += builder.Field("lfeon", 1, this.lfeon); 
+		boxSize += builder.Field("bit_rate_code", 5, this.bit_rate_code); 
+		boxSize += builder.Field("reserved", 5, this.reserved); 
+		return boxSize;
+	}
 }
 
 }

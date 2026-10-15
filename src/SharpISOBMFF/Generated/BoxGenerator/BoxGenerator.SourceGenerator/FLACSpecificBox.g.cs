@@ -50,6 +50,14 @@ public partial class FLACSpecificBox : FullBox
 		boxSize += IsoStream.CalculateClassSize(blocks); // blocks
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("blocks", IsoStream.CalculateClassSize(blocks), this.blocks); 
+		return boxSize;
+	}
 }
 
 }

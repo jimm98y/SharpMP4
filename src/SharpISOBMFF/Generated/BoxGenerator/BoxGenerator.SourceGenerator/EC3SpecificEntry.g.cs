@@ -30,6 +30,7 @@ public partial class EC3SpecificEntry : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "EC3SpecificEntry"; } }
 
 	protected byte fscod; 
@@ -128,6 +129,29 @@ public partial class EC3SpecificEntry : IMp4Serializable
 		else 
 		{
 			boxSize += 1; // reserved2
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("fscod", 2, this.fscod); 
+		boxSize += builder.Field("bsid", 5, this.bsid); 
+		boxSize += builder.Field("bsmod", 5, this.bsmod); 
+		boxSize += builder.Field("acmod", 3, this.acmod); 
+		boxSize += builder.Field("lfeon", 1, this.lfeon); 
+		boxSize += builder.Field("reserved", 3, this.reserved); 
+		boxSize += builder.Field("numDepSub", 4, this.numDepSub); 
+
+		if (numDepSub > 0)
+		{
+			boxSize += builder.Field("chanLoc", 9, this.chanLoc); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("reserved2", 1, this.reserved2); 
 		}
 		return boxSize;
 	}

@@ -62,6 +62,16 @@ public partial class BitRateBox : Box
 		boxSize += 32; // avgBitrate
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("bufferSizeDB", 32, this.bufferSizeDB); 
+		boxSize += builder.Field("maxBitrate", 32, this.maxBitrate); 
+		boxSize += builder.Field("avgBitrate", 32, this.avgBitrate); 
+		return boxSize;
+	}
 }
 
 }

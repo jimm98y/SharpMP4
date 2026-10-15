@@ -62,6 +62,16 @@ public partial class MetaBoxRelationBox : FullBox
 		boxSize += 8; // metaboxRelation
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("firstMetaBoxHandlerType", 32, this.firstMetaBoxHandlerType); 
+		boxSize += builder.Field("secondMetaBoxHandlerType", 32, this.secondMetaBoxHandlerType); 
+		boxSize += builder.Field("metaboxRelation", 8, this.metaboxRelation); 
+		return boxSize;
+	}
 }
 
 }

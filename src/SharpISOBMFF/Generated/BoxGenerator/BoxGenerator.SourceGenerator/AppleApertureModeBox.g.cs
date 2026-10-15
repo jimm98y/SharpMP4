@@ -48,6 +48,14 @@ public partial class AppleApertureModeBox : Box
 		boxSize += IsoStream.CalculateStringSize(mode); // mode
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("mode", IsoStream.CalculateStringSize(mode), this.mode); 
+		return boxSize;
+	}
 }
 
 }

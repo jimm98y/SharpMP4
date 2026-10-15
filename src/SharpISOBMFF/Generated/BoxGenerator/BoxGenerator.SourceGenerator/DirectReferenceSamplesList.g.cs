@@ -75,6 +75,20 @@ public partial class DirectReferenceSamplesList : VisualSampleGroupEntry
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sample_id", 32, this.sample_id); 
+		boxSize += builder.Field("num_direct_reference_samples", 8, this.num_direct_reference_samples); 
+
+		for (int i = 0; i < num_direct_reference_samples; i++)
+		{
+			boxSize += builder.Field($"direct_reference_sample_id[{i}]", 32, this.direct_reference_sample_id[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

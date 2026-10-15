@@ -99,6 +99,25 @@ public partial class SeiInformationBox : Box
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("numRequiredSEIs", 16, this.numRequiredSEIs); 
+
+		for (int i = 0; i < numRequiredSEIs; i++)
+		{
+			boxSize += builder.Field($"requiredSEI_ID[{i}]", 16, this.requiredSEI_ID[i]); 
+		}
+		boxSize += builder.Field("numNotRequiredSEIs", 16, this.numNotRequiredSEIs); 
+
+		for (int i = 0; i < numNotRequiredSEIs; i++)
+		{
+			boxSize += builder.Field($"notrequiredSEI_ID[{i}]", 16, this.notrequiredSEI_ID[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

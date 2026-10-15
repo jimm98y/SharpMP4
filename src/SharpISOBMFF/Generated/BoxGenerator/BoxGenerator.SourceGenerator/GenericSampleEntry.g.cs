@@ -92,6 +92,26 @@ public partial class GenericSampleEntry : Box
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		/*  ProtectionSchemeInfoBox { */
+		/*  OriginalFormatBox;	// data_format is 'resv' */
+		/*  SchemeTypeBox; */
+		/*  SchemeInformationBox; */
+		/*  } */
+		/*  tRestrictedSchemeInfoBox { */
+		/*  OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1' */
+		/*  SchemeTypeBox; */
+		/*  SchemeInformationBox; */
+		/*  } */
+		/*  Boxes specific to the untransformed sample entry type */
+		/*  For 'avc1', these would include AVCConfigurationBox */
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

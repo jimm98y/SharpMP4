@@ -46,6 +46,14 @@ public partial class ProfileLevelIndicationIndexDescriptor : BaseDescriptor
 		boxSize += 8; // profileLevelIndicationIndex
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("profileLevelIndicationIndex", 8, this.profileLevelIndicationIndex); 
+		return boxSize;
+	}
 }
 
 }

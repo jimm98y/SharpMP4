@@ -48,6 +48,14 @@ public partial class ReceivedSsrcBox : Box
 		boxSize += 32; // SSRC
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("SSRC", 32, this.SSRC); 
+		return boxSize;
+	}
 }
 
 }

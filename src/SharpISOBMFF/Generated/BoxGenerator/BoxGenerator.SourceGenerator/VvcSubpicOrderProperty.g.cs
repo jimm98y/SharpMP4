@@ -49,6 +49,14 @@ public partial class VvcSubpicOrderProperty : ItemFullProperty
 		boxSize += IsoStream.CalculateClassSize(sor_info); // sor_info
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sor_info", IsoStream.CalculateClassSize(sor_info), this.sor_info); // specified in ISO/IEC 14496-15
+		return boxSize;
+	}
 }
 
 }

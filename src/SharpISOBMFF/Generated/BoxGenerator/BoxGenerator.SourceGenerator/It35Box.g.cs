@@ -56,6 +56,15 @@ public partial class It35Box : MetaDataSampleEntry
 		boxSize += (ulong)(8*it35_identifier_length ); // it35_prefix
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("it35_identifier_length", 8, this.it35_identifier_length); 
+		boxSize += builder.Field("it35_prefix", (ulong)(8*it35_identifier_length ), this.it35_prefix); 
+		return boxSize;
+	}
 }
 
 }

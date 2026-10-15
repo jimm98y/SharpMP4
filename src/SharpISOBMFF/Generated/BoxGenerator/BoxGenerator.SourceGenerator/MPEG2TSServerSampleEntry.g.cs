@@ -40,6 +40,13 @@ public partial class MPEG2TSServerSampleEntry : MPEG2TSSampleEntry
 		boxSize += base.CalculateSize();
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		return boxSize;
+	}
 }
 
 }

@@ -20,6 +20,7 @@ public partial class StyleRecord : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "StyleRecord"; } }
 
 	protected ushort startChar; 
@@ -77,6 +78,18 @@ public partial class StyleRecord : IMp4Serializable
 		boxSize += 8; // faceStyleFlags
 		boxSize += 8; // fontSize
 		boxSize += 4 * 8; // textColor
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("startChar", 16, this.startChar); 
+		boxSize += builder.Field("endChar", 16, this.endChar); 
+		boxSize += builder.Field("fontId", 16, this.fontId); 
+		boxSize += builder.Field("faceStyleFlags", 8, this.faceStyleFlags); 
+		boxSize += builder.Field("fontSize", 8, this.fontSize); 
+		boxSize += builder.Field("textColor", 4 * 8, this.textColor); 
 		return boxSize;
 	}
 }

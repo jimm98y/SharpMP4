@@ -56,6 +56,15 @@ public partial class DataEntryUrnBox : DataEntryBaseBox
 		boxSize += IsoStream.CalculateStringSize(location); // location
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("name", IsoStream.CalculateStringSize(name), this.name); 
+		boxSize += builder.Field("location", IsoStream.CalculateStringSize(location), this.location); 
+		return boxSize;
+	}
 }
 
 }

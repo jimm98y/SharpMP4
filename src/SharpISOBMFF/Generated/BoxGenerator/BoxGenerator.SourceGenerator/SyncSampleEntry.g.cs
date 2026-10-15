@@ -53,6 +53,15 @@ public partial class SyncSampleEntry : VisualSampleGroupEntry
 		boxSize += 6; // NAL_unit_type
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 2, this.reserved); 
+		boxSize += builder.Field("NAL_unit_type", 6, this.NAL_unit_type); 
+		return boxSize;
+	}
 }
 
 }

@@ -123,6 +123,31 @@ public partial class CompositionToDecodeBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version==0)
+		{
+			boxSize += builder.Field("compositionToDTSShift", 32, this.compositionToDTSShift); 
+			boxSize += builder.Field("leastDecodeToDisplayDelta", 32, this.leastDecodeToDisplayDelta); 
+			boxSize += builder.Field("greatestDecodeToDisplayDelta", 32, this.greatestDecodeToDisplayDelta); 
+			boxSize += builder.Field("compositionStartTime", 32, this.compositionStartTime); 
+			boxSize += builder.Field("compositionEndTime", 32, this.compositionEndTime); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("compositionToDTSShift", 64, this.compositionToDTSShift); 
+			boxSize += builder.Field("leastDecodeToDisplayDelta", 64, this.leastDecodeToDisplayDelta); 
+			boxSize += builder.Field("greatestDecodeToDisplayDelta", 64, this.greatestDecodeToDisplayDelta); 
+			boxSize += builder.Field("compositionStartTime", 64, this.compositionStartTime); 
+			boxSize += builder.Field("compositionEndTime", 64, this.compositionEndTime); 
+		}
+		return boxSize;
+	}
 }
 
 }

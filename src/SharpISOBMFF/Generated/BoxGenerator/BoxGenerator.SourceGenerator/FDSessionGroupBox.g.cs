@@ -124,6 +124,30 @@ public partial class FDSessionGroupBox : Box
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("num_session_groups", 16, this.num_session_groups); 
+
+		for (int i=0; i < num_session_groups; i++)
+		{
+			boxSize += builder.Field($"entry_count[{i}]", 8, this.entry_count[i]); 
+
+			for (int j=0; j < entry_count[i]; j++)
+			{
+				boxSize += builder.Field($"group_ID[{i}][{j}]", 32, this.group_ID[i][j]); 
+			}
+			boxSize += builder.Field($"num_channels_in_session_group[{i}]", 16, this.num_channels_in_session_group[i]); 
+
+			for (int k=0; k < num_channels_in_session_group[i]; k++)
+			{
+				boxSize += builder.Field($"hint_track_ID[{i}][{k}]", 32, this.hint_track_ID[i][k]); 
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

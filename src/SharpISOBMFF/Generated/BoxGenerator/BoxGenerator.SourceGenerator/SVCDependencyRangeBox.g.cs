@@ -97,6 +97,21 @@ public partial class SVCDependencyRangeBox : Box
 		boxSize += 4; // max_quality_id
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("min_dependency_id", 3, this.min_dependency_id); 
+		boxSize += builder.Field("min_temporal_id", 3, this.min_temporal_id); 
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += builder.Field("min_quality_id", 4, this.min_quality_id); 
+		boxSize += builder.Field("max_dependency_id", 3, this.max_dependency_id); 
+		boxSize += builder.Field("max_temporal_id", 3, this.max_temporal_id); 
+		boxSize += builder.Field("reserved0", 6, this.reserved0); 
+		boxSize += builder.Field("max_quality_id", 4, this.max_quality_id); 
+		return boxSize;
+	}
 }
 
 }

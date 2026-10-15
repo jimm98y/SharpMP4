@@ -49,6 +49,14 @@ public partial class WindowsMediaXtraBox : Box
 		boxSize += IsoStream.CalculateClassSize(tags); // tags
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("tags", IsoStream.CalculateClassSize(tags), this.tags); 
+		return boxSize;
+	}
 }
 
 }

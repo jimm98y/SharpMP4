@@ -49,6 +49,14 @@ public partial class LayerSelectorProperty : ItemProperty
 		boxSize += 16; // layer_id
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("layer_id", 16, this.layer_id); 
+		return boxSize;
+	}
 }
 
 }

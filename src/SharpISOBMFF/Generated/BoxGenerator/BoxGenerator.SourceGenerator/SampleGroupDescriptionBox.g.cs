@@ -163,6 +163,41 @@ public partial class SampleGroupDescriptionBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("grouping_type", 32, this.grouping_type); 
+
+		if (version>=1)
+		{
+			boxSize += builder.Field("default_length", 32, this.default_length); 
+		}
+
+		if (version>=2)
+		{
+			boxSize += builder.Field("default_group_description_index", 32, this.default_group_description_index); 
+		}
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		
+
+		for (int i = 0 ; i < entry_count ; i++)
+		{
+
+			if (version>=1)
+			{
+
+				if (default_length==0)
+				{
+					boxSize += builder.Field($"description_length[{i}]", 32, this.description_length[i]); 
+				}
+			}
+			boxSize += builder.Field($"SampleGroupDescriptionEntry[{i}]", IsoStream.CalculateClassSize(SampleGroupDescriptionEntry[i]), this.SampleGroupDescriptionEntry[i]); // an instance of a class derived from SampleGroupDescriptionEntry
+			/*   that is appropriate and permitted for the media type */
+		}
+		return boxSize;
+	}
 }
 
 }

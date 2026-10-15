@@ -107,6 +107,27 @@ public partial class TrackRunBox : FullBox
 		boxSize += IsoStream.CalculateClassSize(TrunEntry); // TrunEntry
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sample_count", 32, this.sample_count); 
+
+		if ((flags  &  0x1) ==  0x1)
+		{
+			boxSize += builder.Field("data_offset", 32, this.data_offset); 
+		}
+
+		if ((flags  &  0x4) ==  0x4)
+		{
+			boxSize += builder.Field("first_sample_flags", 32, this.first_sample_flags); 
+		}
+		/*  all fields in the following array are optional */
+		/*  as indicated by bits set in the tr_flags */
+		boxSize += builder.Field("TrunEntry", IsoStream.CalculateClassSize(TrunEntry), this.TrunEntry); 
+		return boxSize;
+	}
 }
 
 }

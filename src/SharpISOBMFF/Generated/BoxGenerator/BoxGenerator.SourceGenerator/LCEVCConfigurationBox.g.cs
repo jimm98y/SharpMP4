@@ -49,6 +49,14 @@ public partial class LCEVCConfigurationBox : Box
 		boxSize += IsoStream.CalculateClassSize(LCEVCConfig); // LCEVCConfig
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("LCEVCConfig", IsoStream.CalculateClassSize(LCEVCConfig), this.LCEVCConfig); 
+		return boxSize;
+	}
 }
 
 }

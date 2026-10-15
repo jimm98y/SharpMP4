@@ -50,6 +50,15 @@ public partial class FLACSampleEntry : AudioSampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("FLACSpecificBox", IsoStream.CalculateBoxSize(FLACSpecificBox), this.FLACSpecificBox); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

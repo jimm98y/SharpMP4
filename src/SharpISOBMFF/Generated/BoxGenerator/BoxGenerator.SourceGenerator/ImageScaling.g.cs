@@ -70,6 +70,17 @@ public partial class ImageScaling : ItemFullProperty
 		boxSize += 16; // target_height_denominator
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("target_width_numerator", 16, this.target_width_numerator); 
+		boxSize += builder.Field("target_width_denominator", 16, this.target_width_denominator); 
+		boxSize += builder.Field("target_height_numerator", 16, this.target_height_numerator); 
+		boxSize += builder.Field("target_height_denominator", 16, this.target_height_denominator); 
+		return boxSize;
+	}
 }
 
 }

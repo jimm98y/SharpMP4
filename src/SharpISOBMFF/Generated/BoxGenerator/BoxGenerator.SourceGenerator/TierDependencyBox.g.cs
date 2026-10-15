@@ -69,6 +69,19 @@ public partial class TierDependencyBox : Box
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 16, this.entry_count); 
+
+		for (int i=0; i < entry_count; i++)
+		{
+			boxSize += builder.Field($"dependencyTierId[{i}]", 16, this.dependencyTierId[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

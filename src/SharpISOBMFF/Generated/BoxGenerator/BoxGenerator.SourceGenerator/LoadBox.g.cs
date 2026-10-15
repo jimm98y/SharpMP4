@@ -69,6 +69,17 @@ public partial class LoadBox : Box
 		boxSize += 32; // defaultHints
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("preloadStartTime", 32, this.preloadStartTime); 
+		boxSize += builder.Field("preloadDuration", 32, this.preloadDuration); 
+		boxSize += builder.Field("preloadFlags", 32, this.preloadFlags); 
+		boxSize += builder.Field("defaultHints", 32, this.defaultHints); 
+		return boxSize;
+	}
 }
 
 }

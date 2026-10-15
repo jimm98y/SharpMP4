@@ -62,6 +62,16 @@ public partial class AppleDataReferenceBox : FullBox
 		boxSize += ((ulong)(count) * 8); // dataReference
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("dataReferenceType", 32, this.dataReferenceType); 
+		boxSize += builder.Field("count", 32, this.count); 
+		boxSize += builder.Field("dataReference", ((ulong)(count) * 8), this.dataReference); 
+		return boxSize;
+	}
 }
 
 }

@@ -71,6 +71,19 @@ public partial class SubTrackTierBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("item_count", 16, this.item_count); 
+
+		for (int i = 0; i< item_count; i++)
+		{
+			boxSize += builder.Field($"tierID[{i}]", 16, this.tierID[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

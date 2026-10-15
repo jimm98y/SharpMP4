@@ -61,6 +61,17 @@ public partial class PartitionEntry : Box
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("blocks_and_symbols", IsoStream.CalculateBoxSize(blocks_and_symbols), this.blocks_and_symbols); 
+		// boxSize += builder.Field("FEC_symbol_locations", IsoStream.CalculateBoxSize(FEC_symbol_locations), this.FEC_symbol_locations); //optional
+		// boxSize += builder.Field("File_symbol_locations", IsoStream.CalculateBoxSize(File_symbol_locations), this.File_symbol_locations); //optional
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

@@ -48,6 +48,7 @@ public partial class HEVCDecoderConfigurationRecord : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "HEVCDecoderConfigurationRecord"; } }
 
 	protected byte configurationVersion = 1; 
@@ -273,6 +274,49 @@ public partial class HEVCDecoderConfigurationRecord : IMp4Serializable
 			{
 				boxSize += 16; // nalUnitLength
 				boxSize += (ulong)(8*nalUnitLength[j][i] ); // nalUnit
+			}
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("configurationVersion", 8, this.configurationVersion); 
+		boxSize += builder.Field("general_profile_space", 2, this.general_profile_space); 
+		boxSize += builder.Field("general_tier_flag", 1, this.general_tier_flag); 
+		boxSize += builder.Field("general_profile_idc", 5, this.general_profile_idc); 
+		boxSize += builder.Field("general_profile_compatibility_flags", 32, this.general_profile_compatibility_flags); 
+		boxSize += builder.Field("general_constraint_indicator_flags", 48, this.general_constraint_indicator_flags); 
+		boxSize += builder.Field("general_level_idc", 8, this.general_level_idc); 
+		boxSize += builder.Field("reserved", 4, this.reserved); 
+		boxSize += builder.Field("min_spatial_segmentation_idc", 12, this.min_spatial_segmentation_idc); 
+		boxSize += builder.Field("reserved0", 6, this.reserved0); 
+		boxSize += builder.Field("parallelismType", 2, this.parallelismType); 
+		boxSize += builder.Field("reserved1", 6, this.reserved1); 
+		boxSize += builder.Field("chromaFormat", 2, this.chromaFormat); 
+		boxSize += builder.Field("reserved2", 5, this.reserved2); 
+		boxSize += builder.Field("bitDepthLumaMinus8", 3, this.bitDepthLumaMinus8); 
+		boxSize += builder.Field("reserved3", 5, this.reserved3); 
+		boxSize += builder.Field("bitDepthChromaMinus8", 3, this.bitDepthChromaMinus8); 
+		boxSize += builder.Field("avgFrameRate", 16, this.avgFrameRate); 
+		boxSize += builder.Field("constantFrameRate", 2, this.constantFrameRate); 
+		boxSize += builder.Field("numTemporalLayers", 3, this.numTemporalLayers); 
+		boxSize += builder.Field("temporalIdNested", 1, this.temporalIdNested); 
+		boxSize += builder.Field("lengthSizeMinusOne", 2, this.lengthSizeMinusOne); 
+		boxSize += builder.Field("numOfArrays", 8, this.numOfArrays); 
+
+		for (int j=0; j < numOfArrays; j++)
+		{
+			boxSize += builder.Field($"array_completeness[{j}]", 1, this.array_completeness[j]); 
+			boxSize += builder.Field($"reserved4[{j}]", 1, this.reserved4[j]); 
+			boxSize += builder.Field($"NAL_unit_type[{j}]", 6, this.NAL_unit_type[j]); 
+			boxSize += builder.Field($"numNalus[{j}]", 16, this.numNalus[j]); 
+
+			for (int i=0; i< numNalus[j]; i++)
+			{
+				boxSize += builder.Field($"nalUnitLength[{j}][{i}]", 16, this.nalUnitLength[j][i]); 
+				boxSize += builder.Field($"nalUnit[{j}][{i}]", (ulong)(8*nalUnitLength[j][i] ), this.nalUnit[j][i]); 
 			}
 		}
 		return boxSize;

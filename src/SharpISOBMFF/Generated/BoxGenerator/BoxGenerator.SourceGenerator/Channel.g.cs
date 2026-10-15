@@ -18,6 +18,7 @@ public partial class Channel : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "Channel"; } }
 
 	protected ushort channel_index; 
@@ -57,6 +58,15 @@ public partial class Channel : IMp4Serializable
 		boxSize += 16; // channel_index
 		boxSize += 16; // channel_type
 		boxSize += 16; // channel_association
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("channel_index", 16, this.channel_index); 
+		boxSize += builder.Field("channel_type", 16, this.channel_type); 
+		boxSize += builder.Field("channel_association", 16, this.channel_association); 
 		return boxSize;
 	}
 }

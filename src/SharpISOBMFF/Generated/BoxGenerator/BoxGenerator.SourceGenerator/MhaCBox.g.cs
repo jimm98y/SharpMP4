@@ -77,6 +77,18 @@ public partial class MhaCBox : Box
 		boxSize += (ulong)(8*mpegh3daConfigLength ); // mpegh3daConfig
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("configurationVersion", 8, this.configurationVersion); 
+		boxSize += builder.Field("mpegh3daProfileLevelIndication", 8, this.mpegh3daProfileLevelIndication); 
+		boxSize += builder.Field("referenceChannelLayout", 8, this.referenceChannelLayout); 
+		boxSize += builder.Field("mpegh3daConfigLength", 16, this.mpegh3daConfigLength); 
+		boxSize += builder.Field("mpegh3daConfig", (ulong)(8*mpegh3daConfigLength ), this.mpegh3daConfig); 
+		return boxSize;
+	}
 }
 
 }

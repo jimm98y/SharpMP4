@@ -49,6 +49,14 @@ public partial class SphericalVideoHeader : FullBox
 		boxSize += IsoStream.CalculateStringSize(metadata_source); // metadata_source
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("metadata_source", IsoStream.CalculateStringSize(metadata_source), this.metadata_source); 
+		return boxSize;
+	}
 }
 
 }

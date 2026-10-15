@@ -67,6 +67,17 @@ public partial class LhvcExternalBaseLayerInfo : VisualSampleGroupEntry
 		boxSize += 8; // sample_offset
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 1, this.reserved); 
+		boxSize += builder.Field("bl_irap_pic_flag", 1, this.bl_irap_pic_flag); 
+		boxSize += builder.Field("bl_irap_nal_unit_type", 6, this.bl_irap_nal_unit_type); 
+		boxSize += builder.Field("sample_offset", 8, this.sample_offset); 
+		return boxSize;
+	}
 }
 
 }

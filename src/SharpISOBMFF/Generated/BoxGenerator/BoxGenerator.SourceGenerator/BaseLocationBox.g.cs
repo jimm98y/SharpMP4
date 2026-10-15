@@ -62,6 +62,16 @@ public partial class BaseLocationBox : FullBox
 		boxSize += 512 * 8; // reserved
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("baseLocation", 256 * 8, this.baseLocation); 
+		boxSize += builder.Field("purchaseLocation", 256 * 8, this.purchaseLocation); 
+		boxSize += builder.Field("reserved", 512 * 8, this.reserved); 
+		return boxSize;
+	}
 }
 
 }

@@ -173,6 +173,44 @@ public partial class ItemPropertyAssociationBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+
+		for (int i = 0; i < entry_count; i++)
+		{
+
+			if (version < 1)
+			{
+				boxSize += builder.Field($"item_ID[{i}]", 16, this.item_ID[i]); 
+			}
+
+			else 
+			{
+				boxSize += builder.Field($"item_ID[{i}]", 32, this.item_ID[i]); 
+			}
+			boxSize += builder.Field($"association_count[{i}]", 8, this.association_count[i]); 
+
+			for (int j=0; j<association_count[i]; j++)
+			{
+				boxSize += builder.Field($"essential[{i}][{j}]", 1, this.essential[i][j]); 
+
+				if ((flags  &  1) ==  1)
+				{
+					boxSize += builder.Field($"property_index[{i}][{j}]", 15, this.property_index[i][j]); 
+				}
+
+				else 
+				{
+					boxSize += builder.Field($"property_index[{i}][{j}]", 7, this.property_index[i][j]); 
+				}
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

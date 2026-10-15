@@ -59,6 +59,17 @@ public partial class AVC2SVCSampleEntry : AVC2SampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("svcconfig", IsoStream.CalculateBoxSize(svcconfig), this.svcconfig); // optional
+		// boxSize += builder.Field("scalability", IsoStream.CalculateBoxSize(scalability), this.scalability); // optional
+		// boxSize += builder.Field("method", IsoStream.CalculateBoxSize(method), this.method); // optional
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

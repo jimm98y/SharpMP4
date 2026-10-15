@@ -63,6 +63,16 @@ public partial class RelyBox : Box
 		boxSize += 1; // required
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += builder.Field("preferred", 1, this.preferred); 
+		boxSize += builder.Field("required", 1, this.required); 
+		return boxSize;
+	}
 }
 
 }

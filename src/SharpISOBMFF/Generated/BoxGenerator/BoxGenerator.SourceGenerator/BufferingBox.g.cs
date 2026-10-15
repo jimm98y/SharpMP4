@@ -102,6 +102,23 @@ public partial class BufferingBox : Box
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("operating_point_count", 16, this.operating_point_count); 
+
+		for (int i = 0; i < operating_point_count; i++)
+		{
+			boxSize += builder.Field($"byte_rate[{i}]", 32, this.byte_rate[i]); 
+			boxSize += builder.Field($"cpb_size[{i}]", 32, this.cpb_size[i]); 
+			boxSize += builder.Field($"dpb_size[{i}]", 32, this.dpb_size[i]); 
+			boxSize += builder.Field($"init_cpb_delay[{i}]", 32, this.init_cpb_delay[i]); 
+			boxSize += builder.Field($"init_dpb_delay[{i}]", 32, this.init_dpb_delay[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

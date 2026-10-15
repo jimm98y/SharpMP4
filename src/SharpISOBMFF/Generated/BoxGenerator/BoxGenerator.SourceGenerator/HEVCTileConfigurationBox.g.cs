@@ -48,6 +48,14 @@ public partial class HEVCTileConfigurationBox : Box
 		boxSize += IsoStream.CalculateClassSize(HEVCTileTierLevelConfig); // HEVCTileTierLevelConfig
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("HEVCTileTierLevelConfig", IsoStream.CalculateClassSize(HEVCTileTierLevelConfig), this.HEVCTileTierLevelConfig); 
+		return boxSize;
+	}
 }
 
 }

@@ -18,6 +18,7 @@ public partial class MetaDataAccessUnit : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "MetaDataAccessUnit"; } }
 
 	protected Box[] boxes; 
@@ -45,6 +46,13 @@ public partial class MetaDataAccessUnit : IMp4Serializable
 	{
 		ulong boxSize = 0;
 		boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
 		return boxSize;
 	}
 }

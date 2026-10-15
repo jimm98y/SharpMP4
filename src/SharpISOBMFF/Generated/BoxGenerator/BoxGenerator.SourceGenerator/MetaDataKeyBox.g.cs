@@ -69,6 +69,19 @@ public partial class MetaDataKeyBox : Box
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("MetaDataKeyDeclarationBox", IsoStream.CalculateBoxSize(MetaDataKeyDeclarationBox), this.MetaDataKeyDeclarationBox); 
+		// boxSize += builder.Field("MetaDataDatatypeBox", IsoStream.CalculateBoxSize(MetaDataDatatypeBox), this.MetaDataDatatypeBox); // optional
+		// boxSize += builder.Field("MetaDataLocaleBox", IsoStream.CalculateBoxSize(MetaDataLocaleBox), this.MetaDataLocaleBox); // optional
+		// boxSize += builder.Field("MetaDataSetupBox", IsoStream.CalculateBoxSize(MetaDataSetupBox), this.MetaDataSetupBox); // optional
+		// boxSize += builder.Field("MetaDataExtensionsBox", IsoStream.CalculateBoxSize(MetaDataExtensionsBox), this.MetaDataExtensionsBox); // optional
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

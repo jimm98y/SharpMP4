@@ -49,6 +49,14 @@ public partial class MVDScalabilityInformationSEIBox : Box
 		boxSize += (ulong)(8*size-64 ); // mvdscalinfosei
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("mvdscalinfosei", (ulong)(8*size-64 ), this.mvdscalinfosei); 
+		return boxSize;
+	}
 }
 
 }

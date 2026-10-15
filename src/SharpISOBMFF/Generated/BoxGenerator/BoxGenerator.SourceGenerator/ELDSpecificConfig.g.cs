@@ -53,6 +53,7 @@ public partial class ELDSpecificConfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "ELDSpecificConfig"; } }
 
 	protected bool frameLengthFlag; 
@@ -273,6 +274,63 @@ public partial class ELDSpecificConfig : IMp4Serializable
 
 			}
 			boxSize += 4; // eldExtType
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		int len = 0;
+
+		const byte ELDEXT_TERM = 0;
+
+		boxSize += builder.Field("frameLengthFlag", 1, this.frameLengthFlag); 
+		boxSize += builder.Field("aacSectionDataResilienceFlag", 1, this.aacSectionDataResilienceFlag); 
+		boxSize += builder.Field("aacScalefactorDataResilienceFlag", 1, this.aacScalefactorDataResilienceFlag); 
+		boxSize += builder.Field("aacSpectralDataResilienceFlag", 1, this.aacSpectralDataResilienceFlag); 
+		boxSize += builder.Field("ldSbrPresentFlag", 1, this.ldSbrPresentFlag); 
+
+		if (ldSbrPresentFlag)
+		{
+			boxSize += builder.Field("ldSbrSamplingRate", 1, this.ldSbrSamplingRate); 
+			boxSize += builder.Field("ldSbrCrcFlag", 1, this.ldSbrCrcFlag); 
+			boxSize += builder.Field("ld_sbr_header", IsoStream.CalculateClassSize(ld_sbr_header), this.ld_sbr_header); 
+		}
+		boxSize += builder.Field("eldExtType", 4, this.eldExtType); 
+
+		while (eldExtType != ELDEXT_TERM)
+		{
+			boxSize += builder.Field("eldExtLen", 4, this.eldExtLen); 
+			len = eldExtLen;
+
+			if (eldExtLen == 15)
+			{
+				boxSize += builder.Field("eldExtLenAdd", 8, this.eldExtLenAdd); 
+				len += eldExtLenAdd;
+			}
+
+			if (eldExtLenAdd == 255)
+			{
+				boxSize += builder.Field("eldExtLenAddAdd", 16, this.eldExtLenAddAdd); 
+				len += eldExtLenAddAdd;
+			}
+
+			switch (eldExtType)
+			{
+				/*  add future eld extension configs here  */
+				default:
+
+				boxSize += builder.Field("cntt", 32, this.cntt); 
+
+				for (int cnt = 0; cnt < len; cnt++)
+				{
+					boxSize += builder.Field($"other_byte[{cnt}]", 8, this.other_byte[cnt]); 
+				}
+				break;
+
+			}
+			boxSize += builder.Field("eldExtType", 4, this.eldExtType); 
 		}
 		return boxSize;
 	}

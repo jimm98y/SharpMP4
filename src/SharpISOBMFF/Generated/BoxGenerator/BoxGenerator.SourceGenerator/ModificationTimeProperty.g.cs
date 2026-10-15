@@ -50,6 +50,14 @@ public partial class ModificationTimeProperty : ItemFullProperty
 		boxSize += 64; // modification_time
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("modification_time", 64, this.modification_time); 
+		return boxSize;
+	}
 }
 
 }

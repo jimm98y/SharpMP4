@@ -61,6 +61,16 @@ public partial class GeneralTypeBox : Box
 		boxSize += ((ulong)compatible_brands.Length * 32); // compatible_brands
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("major_brand", 32, this.major_brand); 
+		boxSize += builder.Field("minor_version", 32, this.minor_version); 
+		boxSize += builder.Field("compatible_brands", ((ulong)compatible_brands.Length * 32), this.compatible_brands); // to end of the box
+		return boxSize;
+	}
 }
 
 }

@@ -48,6 +48,14 @@ public partial class MVCConfigurationBox : Box
 		boxSize += IsoStream.CalculateClassSize(MVCConfig); // MVCConfig
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("MVCConfig", IsoStream.CalculateClassSize(MVCConfig), this.MVCConfig); 
+		return boxSize;
+	}
 }
 
 }

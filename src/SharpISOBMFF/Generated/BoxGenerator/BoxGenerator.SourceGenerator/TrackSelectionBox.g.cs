@@ -56,6 +56,15 @@ public partial class TrackSelectionBox : FullBox
 		boxSize += ((ulong)attribute_list.Length * 32); // attribute_list
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("switch_group", 32, this.switch_group); 
+		boxSize += builder.Field("attribute_list", ((ulong)attribute_list.Length * 32), this.attribute_list); // to end of the box
+		return boxSize;
+	}
 }
 
 }

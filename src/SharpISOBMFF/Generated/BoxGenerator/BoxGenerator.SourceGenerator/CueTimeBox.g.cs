@@ -49,6 +49,14 @@ public partial class CueTimeBox : Box
 		boxSize += IsoStream.CalculateStringSize(cueCurrentTime); // cueCurrentTime
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("cueCurrentTime", IsoStream.CalculateStringSize(cueCurrentTime), this.cueCurrentTime); 
+		return boxSize;
+	}
 }
 
 }

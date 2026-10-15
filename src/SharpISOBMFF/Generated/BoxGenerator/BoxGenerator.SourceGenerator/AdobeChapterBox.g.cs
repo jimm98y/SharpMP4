@@ -62,6 +62,16 @@ public partial class AdobeChapterBox : FullBox
 		boxSize += IsoStream.CalculateClassSize(chapters); // chapters
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("unknown", 32, this.unknown); 
+		boxSize += builder.Field("count", 8, this.count); 
+		boxSize += builder.Field("chapters", IsoStream.CalculateClassSize(chapters), this.chapters); 
+		return boxSize;
+	}
 }
 
 }

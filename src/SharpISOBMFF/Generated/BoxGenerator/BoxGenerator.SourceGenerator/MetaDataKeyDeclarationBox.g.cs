@@ -57,6 +57,15 @@ public partial class MetaDataKeyDeclarationBox : Box
 		boxSize += ((ulong)key_value.Length * 8); // key_value
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("key_namespace", 32, this.key_namespace); 
+		boxSize += builder.Field("key_value", ((ulong)key_value.Length * 8), this.key_value); 
+		return boxSize;
+	}
 }
 
 }

@@ -63,6 +63,18 @@ public partial class SwitchableTracksGroupBox : EntityToGroupBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		for (int i = 0; i < num_entities_in_group; i++)
+		{
+			boxSize += builder.Field($"track_switch_hierarchy_id[{i}]", 16, this.track_switch_hierarchy_id[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

@@ -100,6 +100,23 @@ public partial class DecoderConfigDescriptor : BaseDescriptor
 		boxSize += IsoStream.CalculateDescriptors(this, objectTypeIndication);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("objectTypeIndication", 8, this.objectTypeIndication); 
+		boxSize += builder.Field("streamType", 6, this.streamType); 
+		boxSize += builder.Field("upStream", 1, this.upStream); 
+		boxSize += builder.Field("reserved", 1, this.reserved); 
+		boxSize += builder.Field("bufferSizeDB", 24, this.bufferSizeDB); 
+		boxSize += builder.Field("maxBitrate", 32, this.maxBitrate); 
+		boxSize += builder.Field("avgBitrate", 32, this.avgBitrate); 
+		// boxSize += builder.Field("decSpecificInfo", IsoStream.CalculateDescriptorSize(decSpecificInfo), this.decSpecificInfo); 
+		// boxSize += builder.Field("profileLevelIndicationIndexDescr", IsoStream.CalculateDescriptorSize(profileLevelIndicationIndexDescr), this.profileLevelIndicationIndexDescr); 
+		boxSize += builder.Descriptors(this);
+		return boxSize;
+	}
 }
 
 }

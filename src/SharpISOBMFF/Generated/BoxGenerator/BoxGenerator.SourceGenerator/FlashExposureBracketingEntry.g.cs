@@ -53,6 +53,15 @@ public partial class FlashExposureBracketingEntry : VisualSampleGroupEntry
 		boxSize += 8; // flash_exposure_denominator
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("flash_exposure_numerator", 8, this.flash_exposure_numerator); 
+		boxSize += builder.Field("flash_exposure_denominator", 8, this.flash_exposure_denominator); 
+		return boxSize;
+	}
 }
 
 }

@@ -49,6 +49,14 @@ public partial class MovieFragmentHeaderBox : FullBox
 		boxSize += 32; // sequence_number
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sequence_number", 32, this.sequence_number); 
+		return boxSize;
+	}
 }
 
 }

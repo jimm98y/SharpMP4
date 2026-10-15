@@ -49,6 +49,14 @@ public partial class CameraSystemOriginSourceBox : FullBox
 		boxSize += 32; // source_of_origin
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("source_of_origin", 32, this.source_of_origin); // e.g., 'blin'  
+		return boxSize;
+	}
 }
 
 }

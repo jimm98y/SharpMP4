@@ -49,6 +49,14 @@ public partial class MaskConfigurationProperty : ItemFullProperty
 		boxSize += 8; // bits_per_pixel
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("bits_per_pixel", 8, this.bits_per_pixel); 
+		return boxSize;
+	}
 }
 
 }

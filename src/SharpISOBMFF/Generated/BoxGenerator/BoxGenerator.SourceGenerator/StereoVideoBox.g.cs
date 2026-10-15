@@ -84,6 +84,20 @@ public partial class StereoVideoBox : FullBox
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 30, this.reserved); 
+		boxSize += builder.Field("single_view_allowed", 2, this.single_view_allowed); 
+		boxSize += builder.Field("stereo_scheme", 32, this.stereo_scheme); 
+		boxSize += builder.Field("length", 32, this.length); 
+		boxSize += builder.Field("stereo_indication_type", ((ulong)(length) * 8), this.stereo_indication_type); 
+		// boxSize += builder.Field("any_box", IsoStream.CalculateBoxSize(any_box), this.any_box); // optional
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

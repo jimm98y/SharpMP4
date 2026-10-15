@@ -20,6 +20,7 @@ public partial class ChannelMappingTable : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "ChannelMappingTable"; } }
 
 	protected byte StreamCount; 
@@ -63,6 +64,15 @@ public partial class ChannelMappingTable : IMp4Serializable
 		boxSize += 8; // StreamCount
 		boxSize += 8; // CoupledCount
 		boxSize += (ulong)(8 * OutputChannelCount ); // ChannelMapping
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("StreamCount", 8, this.StreamCount); 
+		boxSize += builder.Field("CoupledCount", 8, this.CoupledCount); 
+		boxSize += builder.Field("ChannelMapping", (ulong)(8 * OutputChannelCount ), this.ChannelMapping); 
 		return boxSize;
 	}
 }

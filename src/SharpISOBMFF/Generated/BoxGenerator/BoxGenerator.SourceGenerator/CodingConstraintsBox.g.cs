@@ -70,6 +70,17 @@ public partial class CodingConstraintsBox : FullBox
 		boxSize += 26; // reserved
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("all_ref_pics_intra", 1, this.all_ref_pics_intra); 
+		boxSize += builder.Field("intra_pred_used", 1, this.intra_pred_used); 
+		boxSize += builder.Field("max_ref_per_pic", 4, this.max_ref_per_pic); 
+		boxSize += builder.Field("reserved", 26, this.reserved); 
+		return boxSize;
+	}
 }
 
 }

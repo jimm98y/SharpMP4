@@ -94,6 +94,25 @@ public partial class AV1LayeredImageIndexingProperty : ItemProperty
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+		boxSize += builder.Field("large_size", 1, this.large_size); 
+
+		if (large_size)
+		{
+			boxSize += builder.Field("layer_size", 3 * 32, this.layer_size); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("layer_size", 3 * 16, this.layer_size); 
+		}
+		return boxSize;
+	}
 }
 
 }

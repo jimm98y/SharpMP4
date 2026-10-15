@@ -48,6 +48,15 @@ public partial class HapticSampleEntry : SampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("otherboxes", IsoStream.CalculateBoxSize(otherboxes), this.otherboxes); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

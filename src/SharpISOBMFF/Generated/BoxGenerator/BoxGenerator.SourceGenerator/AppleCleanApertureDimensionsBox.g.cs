@@ -55,6 +55,15 @@ public partial class AppleCleanApertureDimensionsBox : FullBox
 		boxSize += 32; // height
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("width", 32, this.width); 
+		boxSize += builder.Field("height", 32, this.height); 
+		return boxSize;
+	}
 }
 
 }

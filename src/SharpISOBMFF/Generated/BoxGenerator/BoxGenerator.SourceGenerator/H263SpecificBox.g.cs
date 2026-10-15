@@ -69,6 +69,17 @@ public partial class H263SpecificBox : Box
 		boxSize += 8; // profile
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("vendor", 32, this.vendor); 
+		boxSize += builder.Field("decoderVersion", 8, this.decoderVersion); 
+		boxSize += builder.Field("level", 8, this.level); 
+		boxSize += builder.Field("profile", 8, this.profile); 
+		return boxSize;
+	}
 }
 
 }

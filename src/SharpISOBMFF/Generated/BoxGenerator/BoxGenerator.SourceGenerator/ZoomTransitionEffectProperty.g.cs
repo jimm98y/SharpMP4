@@ -56,6 +56,15 @@ public partial class ZoomTransitionEffectProperty : ItemFullProperty
 		boxSize += 7; // transition_shape
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("transition_direction", 1, this.transition_direction); 
+		boxSize += builder.Field("transition_shape", 7, this.transition_shape); 
+		return boxSize;
+	}
 }
 
 }

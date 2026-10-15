@@ -55,6 +55,15 @@ public partial class VvcNALUConfigBox : FullBox
 		boxSize += 2; // LengthSizeMinusOne
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += builder.Field("LengthSizeMinusOne", 2, this.LengthSizeMinusOne); 
+		return boxSize;
+	}
 }
 
 }

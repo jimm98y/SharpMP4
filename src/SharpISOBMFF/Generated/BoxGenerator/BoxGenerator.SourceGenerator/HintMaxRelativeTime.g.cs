@@ -47,6 +47,14 @@ public partial class HintMaxRelativeTime : Box
 		boxSize += 32; // time
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("time", 32, this.time); 
+		return boxSize;
+	}
 }
 
 }

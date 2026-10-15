@@ -90,6 +90,21 @@ public partial class TimeCodeSampleEntry : SampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 32, this.reserved); 
+		boxSize += builder.Field("timecodeFlags", 32, this.timecodeFlags); 
+		boxSize += builder.Field("timeScale", 32, this.timeScale); 
+		boxSize += builder.Field("frameDuration", 32, this.frameDuration); 
+		boxSize += builder.Field("numberOfFrames", 8, this.numberOfFrames); 
+		boxSize += builder.Field("reserved2", 8, this.reserved2); 
+		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

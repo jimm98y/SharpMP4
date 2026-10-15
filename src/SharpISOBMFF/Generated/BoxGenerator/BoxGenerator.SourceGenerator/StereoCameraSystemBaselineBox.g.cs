@@ -49,6 +49,14 @@ public partial class StereoCameraSystemBaselineBox : FullBox
 		boxSize += 32; // baseline_value
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("baseline_value", 32, this.baseline_value); 
+		return boxSize;
+	}
 }
 
 }

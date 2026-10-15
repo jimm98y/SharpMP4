@@ -123,6 +123,25 @@ public partial class TierInfoBox : Box
 		boxSize += 16; // frameRate
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		/* Mandatory Box */
+		boxSize += builder.Field("tierID", 16, this.tierID); 
+		boxSize += builder.Field("profileIndication", 8, this.profileIndication); 
+		boxSize += builder.Field("profile_compatibility", 8, this.profile_compatibility); 
+		boxSize += builder.Field("levelIndication", 8, this.levelIndication); 
+		boxSize += builder.Field("reserved", 8, this.reserved); 
+		boxSize += builder.Field("visualWidth", 16, this.visualWidth); 
+		boxSize += builder.Field("visualHeight", 16, this.visualHeight); 
+		boxSize += builder.Field("discardable", 2, this.discardable); 
+		boxSize += builder.Field("constantFrameRate", 2, this.constantFrameRate); 
+		boxSize += builder.Field("reserved0", 4, this.reserved0); 
+		boxSize += builder.Field("frameRate", 16, this.frameRate); 
+		return boxSize;
+	}
 }
 
 }

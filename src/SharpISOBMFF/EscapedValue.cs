@@ -66,6 +66,16 @@ namespace SharpISOBMFF
             return (ulong)NBits1 + (Value2 != null ? (ulong)NBits2 : 0) + (Value3 != null ? (ulong)NBits3 : 0);
         }
 
+        public virtual ulong ToString(BoxStringBuilder builder)
+        {
+            ulong boxSize = builder.Field("value1", (ulong)NBits1, Value1);
+            if (Value2 != null)
+                boxSize += builder.Field("value2", (ulong)NBits2, Value2.Value);
+            if (Value3 != null)
+                boxSize += builder.Field("value3", (ulong)NBits3, Value3.Value);
+            return boxSize;
+        }
+
         public override string ToString() => Value.ToString();
     }
 }

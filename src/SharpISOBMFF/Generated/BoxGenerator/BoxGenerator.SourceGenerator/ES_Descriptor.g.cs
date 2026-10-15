@@ -189,6 +189,44 @@ public partial class ES_Descriptor : BaseDescriptor
 		boxSize += IsoStream.CalculateDescriptors(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("ES_ID", 16, this.ES_ID); 
+		boxSize += builder.Field("streamDependenceFlag", 1, this.streamDependenceFlag); 
+		boxSize += builder.Field("URL_Flag", 1, this.URL_Flag); 
+		boxSize += builder.Field("OCRstreamFlag", 1, this.OCRstreamFlag); 
+		boxSize += builder.Field("streamPriority", 5, this.streamPriority); 
+
+		if (streamDependenceFlag)
+		{
+			boxSize += builder.Field("dependsOn_ES_ID", 16, this.dependsOn_ES_ID); 
+		}
+
+		if (URL_Flag)
+		{
+			boxSize += builder.Field("URLlength", 8, this.URLlength); 
+			boxSize += builder.Field("URLstring", ((ulong)(URLlength) * 8), this.URLstring); 
+		}
+
+		if (OCRstreamFlag)
+		{
+			boxSize += builder.Field("OCR_ES_Id", 16, this.OCR_ES_Id); 
+		}
+		// boxSize += builder.Field("decConfigDescr", IsoStream.CalculateDescriptorSize(decConfigDescr), this.decConfigDescr); 
+		// boxSize += builder.Field("slConfigDescr", IsoStream.CalculateDescriptorSize(slConfigDescr), this.slConfigDescr); 
+		// boxSize += builder.Field("ipiPtr", IsoStream.CalculateDescriptorSize(ipiPtr), this.ipiPtr); 
+		// boxSize += builder.Field("ipIDS", IsoStream.CalculateDescriptorSize(ipIDS), this.ipIDS); 
+		// boxSize += builder.Field("ipmpDescrPtr", IsoStream.CalculateDescriptorSize(ipmpDescrPtr), this.ipmpDescrPtr); 
+		// boxSize += builder.Field("langDescr", IsoStream.CalculateDescriptorSize(langDescr), this.langDescr); 
+		// boxSize += builder.Field("qosDescr", IsoStream.CalculateDescriptorSize(qosDescr), this.qosDescr); 
+		// boxSize += builder.Field("regDescr", IsoStream.CalculateDescriptorSize(regDescr), this.regDescr); 
+		// boxSize += builder.Field("extDescr", IsoStream.CalculateDescriptorSize(extDescr), this.extDescr); 
+		boxSize += builder.Descriptors(this);
+		return boxSize;
+	}
 }
 
 }

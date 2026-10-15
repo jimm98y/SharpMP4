@@ -69,6 +69,17 @@ public partial class TaicBox : FullBox
 		boxSize += 8; // clock_type
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("time_uncertainty", 64, this.time_uncertainty); 
+		boxSize += builder.Field("clock_resolution", 32, this.clock_resolution); 
+		boxSize += builder.Field("clock_drift_rate", 32, this.clock_drift_rate); 
+		boxSize += builder.Field("clock_type", 8, this.clock_type); 
+		return boxSize;
+	}
 }
 
 }

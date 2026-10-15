@@ -89,6 +89,21 @@ public partial class MPEG2TSSampleEntry : HintSampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("hinttrackversion", 16, this.hinttrackversion); 
+		boxSize += builder.Field("highestcompatibleversion", 16, this.highestcompatibleversion); 
+		boxSize += builder.Field("precedingbyteslen", 8, this.precedingbyteslen); 
+		boxSize += builder.Field("trailingbyteslen", 8, this.trailingbyteslen); 
+		boxSize += builder.Field("precomputed_only_flag", 1, this.precomputed_only_flag); 
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+		// boxSize += builder.Field("additionaldata", IsoStream.CalculateBoxSize(additionaldata), this.additionaldata); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

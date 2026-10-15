@@ -49,6 +49,14 @@ public partial class OperatingPointsInformationProperty : ItemFullProperty
 		boxSize += IsoStream.CalculateClassSize(op_info); // op_info
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("op_info", IsoStream.CalculateClassSize(op_info), this.op_info); // specified in ISO/IEC 14496-15
+		return boxSize;
+	}
 }
 
 }

@@ -92,6 +92,22 @@ public partial class PiffSampleEncryptionBox : FullBox
 		boxSize += ((ulong)sample_data.Length * 8); // sample_data
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if ((flags  &  0x1) ==  0x1)
+		{
+			boxSize += builder.Field("algorithmID", 24, this.algorithmID); 
+			boxSize += builder.Field("Per_Sample_IV_Size", 8, this.Per_Sample_IV_Size); 
+			boxSize += builder.Field("kid", 16 * 8, this.kid); 
+		}
+		boxSize += builder.Field("sample_count", 32, this.sample_count); 
+		boxSize += builder.Field("sample_data", ((ulong)sample_data.Length * 8), this.sample_data); // each sample's IV and subsamples, the IV of the size above where the flags give one, else of the track's
+		return boxSize;
+	}
 }
 
 }

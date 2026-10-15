@@ -83,6 +83,21 @@ public partial class TimeToSampleBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		
+
+		for (int i=0; i < entry_count; i++)
+		{
+			boxSize += builder.Field($"sample_count[{i}]", 32, this.sample_count[i]); 
+			boxSize += builder.Field($"sample_delta[{i}]", 32, this.sample_delta[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

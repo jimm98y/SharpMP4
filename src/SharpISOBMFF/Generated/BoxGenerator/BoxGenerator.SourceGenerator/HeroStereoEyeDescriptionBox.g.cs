@@ -49,6 +49,14 @@ public partial class HeroStereoEyeDescriptionBox : FullBox
 		boxSize += 8; // hero_eye_indicator
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("hero_eye_indicator", 8, this.hero_eye_indicator); // 0 = none, 1 = left, 2 = right, >= 3 reserved 
+		return boxSize;
+	}
 }
 
 }

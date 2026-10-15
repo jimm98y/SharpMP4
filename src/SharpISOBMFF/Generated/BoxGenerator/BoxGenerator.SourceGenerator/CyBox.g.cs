@@ -55,6 +55,15 @@ public partial class CyBox : Box
 		boxSize += 32; // denominator
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("numerator", 32, this.numerator); 
+		boxSize += builder.Field("denominator", 32, this.denominator); 
+		return boxSize;
+	}
 }
 
 }

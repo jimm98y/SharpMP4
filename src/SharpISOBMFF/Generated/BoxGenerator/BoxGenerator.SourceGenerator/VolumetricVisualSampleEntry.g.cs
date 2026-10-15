@@ -52,6 +52,15 @@ public partial class VolumetricVisualSampleEntry : SampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("compressorname", 32 * 8, this.compressorname); // other boxes from derived specifications
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

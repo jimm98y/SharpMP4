@@ -56,6 +56,15 @@ public partial class SampleEncryptionBox : FullBox
 		boxSize += ((ulong)sample_data.Length * 8); // sample_data
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sample_count", 32, this.sample_count); 
+		boxSize += builder.Field("sample_data", ((ulong)sample_data.Length * 8), this.sample_data); // each sample's IV and subsamples (23001-7 7.2), whose IV size is the track's - its 'tenc', or the sample's 'seig' group - and not in the box: SharpMP4's SampleEncryptionReader reads them
+		return boxSize;
+	}
 }
 
 }

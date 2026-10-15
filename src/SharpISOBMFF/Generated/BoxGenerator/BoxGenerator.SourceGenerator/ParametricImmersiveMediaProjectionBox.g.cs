@@ -46,6 +46,14 @@ public partial class ParametricImmersiveMediaProjectionBox : FullBox
 		/*  fields reserved for future use  */
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		/*  fields reserved for future use  */
+		return boxSize;
+	}
 }
 
 }

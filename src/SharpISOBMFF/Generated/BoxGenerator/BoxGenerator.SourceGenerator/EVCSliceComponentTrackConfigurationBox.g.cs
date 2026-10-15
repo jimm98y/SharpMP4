@@ -48,6 +48,14 @@ public partial class EVCSliceComponentTrackConfigurationBox : Box
 		boxSize += IsoStream.CalculateClassSize(config); // config
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("config", IsoStream.CalculateClassSize(config), this.config); 
+		return boxSize;
+	}
 }
 
 }

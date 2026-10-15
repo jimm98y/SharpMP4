@@ -91,6 +91,22 @@ public partial class ProtectionSystemSpecificHeaderBox : FullBox
 		boxSize += ((ulong)(dataSize) * 8); // data
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("systemId", 16 * 8, this.systemId); 
+
+		if (version > 0)
+		{
+			boxSize += builder.Field("count", 32, this.count); 
+			boxSize += builder.Field("keyIDs", IsoStream.CalculateClassSize(keyIDs), this.keyIDs); 
+		}
+		boxSize += builder.Field("dataSize", 32, this.dataSize); 
+		boxSize += builder.Field("data", ((ulong)(dataSize) * 8), this.data); 
+		return boxSize;
+	}
 }
 
 }

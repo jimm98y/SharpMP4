@@ -49,6 +49,14 @@ public partial class MIMEBox : FullBox
 		boxSize += IsoStream.CalculateStringSize(content_type); // content_type
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("content_type", IsoStream.CalculateStringSize(content_type), this.content_type); 
+		return boxSize;
+	}
 }
 
 }

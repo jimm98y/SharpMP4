@@ -74,6 +74,20 @@ public partial class A3DSampleEntry : VisualSampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("a3dconfig", IsoStream.CalculateBoxSize(a3dconfig), this.a3dconfig); // mandatory
+		// boxSize += builder.Field("mvdscalinfosei", IsoStream.CalculateBoxSize(mvdscalinfosei), this.mvdscalinfosei); // optional
+		// boxSize += builder.Field("view_identifiers", IsoStream.CalculateBoxSize(view_identifiers), this.view_identifiers); // mandatory
+		// boxSize += builder.Field("descr", IsoStream.CalculateBoxSize(descr), this.descr); // optional
+		// boxSize += builder.Field("intrinsic_camera_params", IsoStream.CalculateBoxSize(intrinsic_camera_params), this.intrinsic_camera_params); // optional
+		// boxSize += builder.Field("extrinsic_camera_params", IsoStream.CalculateBoxSize(extrinsic_camera_params), this.extrinsic_camera_params); // optional
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

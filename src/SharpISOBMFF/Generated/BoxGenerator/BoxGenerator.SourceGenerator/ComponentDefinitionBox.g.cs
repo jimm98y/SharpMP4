@@ -93,6 +93,24 @@ public partial class ComponentDefinitionBox : Box
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("component_count", 32, this.component_count); 
+
+		for (int i = 0; i < component_count; i++)
+		{
+			boxSize += builder.Field($"component_type[{i}]", 16, this.component_type[i]); 
+
+			if (component_type[i] >= 0x8000)
+			{
+				boxSize += builder.Field($"component_type_uri[{i}]", IsoStream.CalculateStringSize(component_type_uri[i]), this.component_type_uri[i]); 
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

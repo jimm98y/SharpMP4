@@ -55,6 +55,16 @@ public partial class BoxedMetaDataSampleEntry : MetaDataSampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("MetaDataKeyTableBox", IsoStream.CalculateBoxSize(MetaDataKeyTableBox), this.MetaDataKeyTableBox); // mandatory
+		// boxSize += builder.Field("BitRateBox", IsoStream.CalculateBoxSize(BitRateBox), this.BitRateBox); // optional
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

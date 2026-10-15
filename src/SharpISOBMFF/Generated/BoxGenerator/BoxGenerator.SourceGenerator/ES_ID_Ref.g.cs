@@ -45,6 +45,14 @@ public partial class ES_ID_Ref : BaseDescriptor
 		boxSize += 16; // ref_index
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("ref_index", 16, this.ref_index); 
+		return boxSize;
+	}
 }
 
 }

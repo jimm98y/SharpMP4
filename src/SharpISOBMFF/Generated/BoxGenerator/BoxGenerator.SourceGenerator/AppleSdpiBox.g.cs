@@ -49,6 +49,14 @@ public partial class AppleSdpiBox : Box
 		boxSize += 32; // data
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("data", 32, this.data); //TODO 
+		return boxSize;
+	}
 }
 
 }

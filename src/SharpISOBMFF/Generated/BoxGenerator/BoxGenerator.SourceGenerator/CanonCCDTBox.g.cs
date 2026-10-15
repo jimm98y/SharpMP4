@@ -64,6 +64,16 @@ public partial class CanonCCDTBox : Box
 		boxSize += 32; // trackIndex
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("imageType", 64, this.imageType); 
+		boxSize += builder.Field("dualPixel", 32, this.dualPixel); 
+		boxSize += builder.Field("trackIndex", 32, this.trackIndex); 
+		return boxSize;
+	}
 }
 
 }

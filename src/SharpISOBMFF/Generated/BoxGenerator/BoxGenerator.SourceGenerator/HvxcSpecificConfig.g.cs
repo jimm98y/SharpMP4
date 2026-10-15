@@ -21,6 +21,7 @@ public partial class HvxcSpecificConfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "HvxcSpecificConfig"; } }
 
 	protected bool isBaseLayer; 
@@ -65,6 +66,18 @@ public partial class HvxcSpecificConfig : IMp4Serializable
 		if (isBaseLayer)
 		{
 			boxSize += IsoStream.CalculateClassSize(HVXCconfig); // HVXCconfig
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("isBaseLayer", 1, this.isBaseLayer); 
+
+		if (isBaseLayer)
+		{
+			boxSize += builder.Field("HVXCconfig", IsoStream.CalculateClassSize(HVXCconfig), this.HVXCconfig); 
 		}
 		return boxSize;
 	}

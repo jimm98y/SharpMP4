@@ -50,6 +50,14 @@ public partial class TimeScaleEntry : Box
 		boxSize += 32; // timescale
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("timescale", 32, this.timescale); 
+		return boxSize;
+	}
 }
 
 }

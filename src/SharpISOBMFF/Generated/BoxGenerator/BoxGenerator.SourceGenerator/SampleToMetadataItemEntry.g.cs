@@ -75,6 +75,20 @@ public partial class SampleToMetadataItemEntry : SampleGroupDescriptionEntry
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("meta_box_handler_type", 32, this.meta_box_handler_type); 
+		boxSize += builder.Field("num_items", 32, this.num_items); 
+
+		for (int i = 0; i < num_items; i++)
+		{
+			boxSize += builder.Field($"item_id[{i}]", 32, this.item_id[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

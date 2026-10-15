@@ -48,6 +48,14 @@ public partial class SMIBox : Box
 		boxSize += ((ulong)metadata.Length * 8); // metadata
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("metadata", ((ulong)metadata.Length * 8), this.metadata); 
+		return boxSize;
+	}
 }
 
 }

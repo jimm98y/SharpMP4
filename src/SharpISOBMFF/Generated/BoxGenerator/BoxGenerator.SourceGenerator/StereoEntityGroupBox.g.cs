@@ -43,6 +43,13 @@ public partial class StereoEntityGroupBox : EntityToGroupBox
 		boxSize += base.CalculateSize();
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		return boxSize;
+	}
 }
 
 }

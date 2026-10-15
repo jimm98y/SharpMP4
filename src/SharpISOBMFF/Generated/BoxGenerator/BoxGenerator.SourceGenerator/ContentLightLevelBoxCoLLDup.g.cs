@@ -55,6 +55,15 @@ public partial class ContentLightLevelBoxCoLLDup : FullBox
 		boxSize += 16; // maxFALL
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("maxCLL", 16, this.maxCLL); 
+		boxSize += builder.Field("maxFALL", 16, this.maxFALL); 
+		return boxSize;
+	}
 }
 
 }

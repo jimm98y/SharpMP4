@@ -63,6 +63,16 @@ public partial class ProjectionHeader : FullBox
 		boxSize += 32; // pose_roll_degrees
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("pose_yaw_degrees", 32, this.pose_yaw_degrees); 
+		boxSize += builder.Field("pose_pitch_degrees", 32, this.pose_pitch_degrees); 
+		boxSize += builder.Field("pose_roll_degrees", 32, this.pose_roll_degrees); 
+		return boxSize;
+	}
 }
 
 }

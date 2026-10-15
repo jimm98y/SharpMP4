@@ -50,6 +50,14 @@ public partial class J2kComponentMappingBox : Box
 		boxSize += IsoStream.CalculateClassSize(mappings); // mappings
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("mappings", IsoStream.CalculateClassSize(mappings), this.mappings); 
+		return boxSize;
+	}
 }
 
 }

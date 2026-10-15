@@ -19,6 +19,7 @@ public partial class CelpBWSenhHeader : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "CelpBWSenhHeader"; } }
 
 	protected byte BWS_configuration; 
@@ -46,6 +47,13 @@ public partial class CelpBWSenhHeader : IMp4Serializable
 	{
 		ulong boxSize = 0;
 		boxSize += 2; // BWS_configuration
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("BWS_configuration", 2, this.BWS_configuration); 
 		return boxSize;
 	}
 }

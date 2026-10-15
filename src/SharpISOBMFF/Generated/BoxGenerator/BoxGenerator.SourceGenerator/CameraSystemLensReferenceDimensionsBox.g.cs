@@ -55,6 +55,15 @@ public partial class CameraSystemLensReferenceDimensionsBox : FullBox
 		boxSize += 32; // reference_height
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reference_width", 32, this.reference_width); 
+		boxSize += builder.Field("reference_height", 32, this.reference_height); 
+		return boxSize;
+	}
 }
 
 }

@@ -54,6 +54,16 @@ public partial class URIMetaSampleEntry : MetaDataSampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("the_label", IsoStream.CalculateBoxSize(the_label), this.the_label); 
+		// boxSize += builder.Field("init", IsoStream.CalculateBoxSize(init), this.init); // optional
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

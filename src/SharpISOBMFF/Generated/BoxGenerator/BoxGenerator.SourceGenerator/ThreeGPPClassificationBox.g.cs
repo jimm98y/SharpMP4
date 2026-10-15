@@ -76,6 +76,18 @@ public partial class ThreeGPPClassificationBox : FullBox
 		boxSize += IsoStream.CalculateStringSize(value); // value
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("classificationEntity", 32, this.classificationEntity); 
+		boxSize += builder.Field("classificationTable", 16, this.classificationTable); 
+		boxSize += builder.Field("reserved", 1, this.reserved); 
+		boxSize += builder.Field("language", 15, this.language); 
+		boxSize += builder.Field("value", IsoStream.CalculateStringSize(value), this.value); 
+		return boxSize;
+	}
 }
 
 }

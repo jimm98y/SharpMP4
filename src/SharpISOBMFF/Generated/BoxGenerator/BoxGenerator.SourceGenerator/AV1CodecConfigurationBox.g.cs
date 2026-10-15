@@ -51,6 +51,14 @@ public partial class AV1CodecConfigurationBox : Box
 		boxSize += IsoStream.CalculateClassSize(av1Config); // av1Config
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("av1Config", IsoStream.CalculateClassSize(av1Config), this.av1Config); 
+		return boxSize;
+	}
 }
 
 }

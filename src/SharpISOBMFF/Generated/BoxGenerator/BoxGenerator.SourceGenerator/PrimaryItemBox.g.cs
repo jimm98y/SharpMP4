@@ -80,6 +80,23 @@ public partial class PrimaryItemBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version == 0)
+		{
+			boxSize += builder.Field("item_ID", 16, this.item_ID); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("item_ID", 32, this.item_ID); 
+		}
+		return boxSize;
+	}
 }
 
 }

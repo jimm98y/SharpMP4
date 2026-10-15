@@ -63,6 +63,16 @@ public partial class IAConfigurationBox : Box
 		boxSize += ((ulong)(configOBUs_size) * 8); // configOBUs
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("configurationVersion", 8, this.configurationVersion); 
+		boxSize += builder.Field("configOBUs_size", IsoStream.CalculateLeb128Size(configOBUs_size), this.configOBUs_size); 
+		boxSize += builder.Field("configOBUs", ((ulong)(configOBUs_size) * 8), this.configOBUs); 
+		return boxSize;
+	}
 }
 
 }

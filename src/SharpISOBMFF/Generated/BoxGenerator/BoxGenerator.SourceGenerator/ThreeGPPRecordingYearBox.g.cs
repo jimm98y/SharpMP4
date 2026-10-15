@@ -48,6 +48,14 @@ public partial class ThreeGPPRecordingYearBox : FullBox
 		boxSize += 16; // year
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("year", 16, this.year); 
+		return boxSize;
+	}
 }
 
 }

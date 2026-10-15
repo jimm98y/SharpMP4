@@ -49,6 +49,14 @@ public partial class AuxiliaryTypeInfoBox : FullBox
 		boxSize += IsoStream.CalculateStringSize(aux_track_type); // aux_track_type
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("aux_track_type", IsoStream.CalculateStringSize(aux_track_type), this.aux_track_type); 
+		return boxSize;
+	}
 }
 
 }

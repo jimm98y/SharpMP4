@@ -69,6 +69,7 @@ public partial class OperatingPointsRecord : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "OperatingPointsRecord"; } }
 
 	protected ushort scalability_mask; 
@@ -448,6 +449,84 @@ public partial class OperatingPointsRecord : IMp4Serializable
 				if ((scalability_mask >> j) % 2 == 1)
 				{
 					boxSize += 8; // dimension_identifier
+				}
+			}
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("scalability_mask", 16, this.scalability_mask); 
+		boxSize += builder.Field("reserved", 2, this.reserved); 
+		boxSize += builder.Field("num_profile_tier_level", 6, this.num_profile_tier_level); 
+
+		for (int i=0; i<num_profile_tier_level; i++)
+		{
+			boxSize += builder.Field($"general_profile_space[{i}]", 2, this.general_profile_space[i]); 
+			boxSize += builder.Field($"general_tier_flag[{i}]", 1, this.general_tier_flag[i]); 
+			boxSize += builder.Field($"general_profile_idc[{i}]", 5, this.general_profile_idc[i]); 
+			boxSize += builder.Field($"general_profile_compatibility_flags[{i}]", 32, this.general_profile_compatibility_flags[i]); 
+			boxSize += builder.Field($"general_constraint_indicator_flags[{i}]", 48, this.general_constraint_indicator_flags[i]); 
+			boxSize += builder.Field($"general_level_idc[{i}]", 8, this.general_level_idc[i]); 
+		}
+		boxSize += builder.Field("num_operating_points", 16, this.num_operating_points); 
+
+		for (int i=0; i<num_operating_points; i++)
+		{
+			boxSize += builder.Field($"output_layer_set_idx[{i}]", 16, this.output_layer_set_idx[i]); 
+			boxSize += builder.Field($"max_temporal_id[{i}]", 8, this.max_temporal_id[i]); 
+			boxSize += builder.Field($"layer_count[{i}]", 8, this.layer_count[i]); 
+
+			for (int j=0; j<layer_count[i]; j++)
+			{
+				boxSize += builder.Field($"ptl_idx[{i}][{j}]", 8, this.ptl_idx[i][j]); 
+				boxSize += builder.Field($"layer_id[{i}][{j}]", 6, this.layer_id[i][j]); 
+				boxSize += builder.Field($"is_outputlayer[{i}][{j}]", 1, this.is_outputlayer[i][j]); 
+				boxSize += builder.Field($"is_alternate_outputlayer[{i}][{j}]", 1, this.is_alternate_outputlayer[i][j]); 
+			}
+			boxSize += builder.Field($"minPicWidth[{i}]", 16, this.minPicWidth[i]); 
+			boxSize += builder.Field($"minPicHeight[{i}]", 16, this.minPicHeight[i]); 
+			boxSize += builder.Field($"maxPicWidth[{i}]", 16, this.maxPicWidth[i]); 
+			boxSize += builder.Field($"maxPicHeight[{i}]", 16, this.maxPicHeight[i]); 
+			boxSize += builder.Field($"maxChromaFormat[{i}]", 2, this.maxChromaFormat[i]); 
+			boxSize += builder.Field($"maxBitDepthMinus8[{i}]", 3, this.maxBitDepthMinus8[i]); 
+			boxSize += builder.Field($"reserved0[{i}]", 1, this.reserved0[i]); 
+			boxSize += builder.Field($"frame_rate_info_flag[{i}]", 1, this.frame_rate_info_flag[i]); 
+			boxSize += builder.Field($"bit_rate_info_flag[{i}]", 1, this.bit_rate_info_flag[i]); 
+
+			if (frame_rate_info_flag[i])
+			{
+				boxSize += builder.Field($"avgFrameRate[{i}]", 16, this.avgFrameRate[i]); 
+				boxSize += builder.Field($"reserved00[{i}]", 6, this.reserved00[i]); 
+				boxSize += builder.Field($"constantFrameRate[{i}]", 2, this.constantFrameRate[i]); 
+			}
+
+			if (bit_rate_info_flag[i])
+			{
+				boxSize += builder.Field($"maxBitRate[{i}]", 32, this.maxBitRate[i]); 
+				boxSize += builder.Field($"avgBitRate[{i}]", 32, this.avgBitRate[i]); 
+			}
+		}
+		boxSize += builder.Field("max_layer_count", 8, this.max_layer_count); 
+
+		for (int i=0; i<max_layer_count; i++)
+		{
+			boxSize += builder.Field($"dependent_layerID[{i}]", 8, this.dependent_layerID[i]); 
+			boxSize += builder.Field($"num_layers_dependent_on[{i}]", 8, this.num_layers_dependent_on[i]); 
+
+			for (int j=0; j<num_layers_dependent_on[i]; j++)
+			{
+				boxSize += builder.Field($"dependent_on_layerID[{i}][{j}]", 8, this.dependent_on_layerID[i][j]); 
+			}
+
+			for (int j=0; j<16; j++)
+			{
+
+				if ((scalability_mask >> j) % 2 == 1)
+				{
+					boxSize += builder.Field($"dimension_identifier[{i}][{j}]", 8, this.dimension_identifier[i][j]); 
 				}
 			}
 		}

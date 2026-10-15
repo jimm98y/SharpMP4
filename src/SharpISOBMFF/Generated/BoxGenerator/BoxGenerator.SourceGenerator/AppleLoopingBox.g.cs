@@ -48,6 +48,14 @@ public partial class AppleLoopingBox : Box
 		boxSize += 32; // data
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("data", 32, this.data); // 0 normal, 1 palindromic
+		return boxSize;
+	}
 }
 
 }

@@ -48,6 +48,15 @@ public partial class SchemeInformationBox : Box
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("scheme_specific_data", IsoStream.CalculateBoxSize(scheme_specific_data), this.scheme_specific_data); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

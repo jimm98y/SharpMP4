@@ -49,6 +49,15 @@ public partial class TrackReferenceBox : Box
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("TrackReferenceTypeBox", IsoStream.CalculateBoxSize(TrackReferenceTypeBox), this.TrackReferenceTypeBox); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

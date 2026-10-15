@@ -49,6 +49,14 @@ public partial class OperatingPointSelectorProperty : ItemProperty
 		boxSize += 8; // op_index
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("op_index", 8, this.op_index); 
+		return boxSize;
+	}
 }
 
 }

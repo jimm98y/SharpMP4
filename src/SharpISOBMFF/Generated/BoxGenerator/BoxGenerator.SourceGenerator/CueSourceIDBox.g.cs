@@ -49,6 +49,14 @@ public partial class CueSourceIDBox : Box
 		boxSize += 32; // sourceID
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sourceID", 32, this.sourceID); 
+		return boxSize;
+	}
 }
 
 }

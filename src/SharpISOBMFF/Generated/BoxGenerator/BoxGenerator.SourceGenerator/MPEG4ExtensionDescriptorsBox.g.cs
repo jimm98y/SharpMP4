@@ -48,6 +48,14 @@ public partial class MPEG4ExtensionDescriptorsBox : Box
 		boxSize += IsoStream.CalculateDescriptorSize(Descr); // Descr
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("Descr", IsoStream.CalculateDescriptorSize(Descr), this.Descr); 
+		return boxSize;
+	}
 }
 
 }

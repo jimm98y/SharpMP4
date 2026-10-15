@@ -82,6 +82,23 @@ public partial class ItemReferenceBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version==0)
+		{
+			boxSize += builder.Field("references", IsoStream.CalculateBoxSize(references), this.references); 
+		}
+
+		else if (version==1)
+		{
+			boxSize += builder.Field("references0", IsoStream.CalculateBoxSize(references0), this.references0); 
+		}
+		return boxSize;
+	}
 }
 
 }

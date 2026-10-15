@@ -49,6 +49,14 @@ public partial class SuggestedTimeDisplayDurationProperty : ItemFullProperty
 		boxSize += 16; // duration
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("duration", 16, this.duration); 
+		return boxSize;
+	}
 }
 
 }

@@ -93,6 +93,25 @@ public partial class SampleDependencyBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		int sample_count = 0; // TODO: taken from the stsz sample_count
+
+
+		for (int i=0; i < sample_count; i++)
+		{
+			boxSize += builder.Field($"dependency_count[{i}]", 16, this.dependency_count[i]); 
+
+			for (int k=0; k < dependency_count[i]; k++)
+			{
+				boxSize += builder.Field($"relative_sample_number[{i}][{k}]", 16, this.relative_sample_number[i][k]); 
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

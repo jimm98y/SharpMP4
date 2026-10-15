@@ -69,6 +69,17 @@ public partial class PriorityRangeBox : Box
 		boxSize += 6; // max_priorityId
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved1", 2, this.reserved1); 
+		boxSize += builder.Field("min_priorityId", 6, this.min_priorityId); 
+		boxSize += builder.Field("reserved2", 2, this.reserved2); 
+		boxSize += builder.Field("max_priorityId", 6, this.max_priorityId); 
+		return boxSize;
+	}
 }
 
 }

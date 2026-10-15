@@ -63,6 +63,16 @@ public partial class CopyrightBox : FullBox
 		boxSize += IsoStream.CalculateStringSize(notice); // notice
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("pad", 1, this.pad); 
+		boxSize += builder.Field("language", 15, this.language); // ISO-639-2/T language code
+		boxSize += builder.Field("notice", IsoStream.CalculateStringSize(notice), this.notice); 
+		return boxSize;
+	}
 }
 
 }

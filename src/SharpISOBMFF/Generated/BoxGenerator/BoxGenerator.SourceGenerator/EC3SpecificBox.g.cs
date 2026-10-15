@@ -63,6 +63,16 @@ public partial class EC3SpecificBox : Box
 		boxSize += IsoStream.CalculateClassSize(entries); // entries
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("dataRate", 13, this.dataRate); 
+		boxSize += builder.Field("numIndSub", 3, this.numIndSub); 
+		boxSize += builder.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
+		return boxSize;
+	}
 }
 
 }

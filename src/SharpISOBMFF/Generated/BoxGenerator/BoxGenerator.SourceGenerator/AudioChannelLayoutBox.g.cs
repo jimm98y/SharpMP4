@@ -70,6 +70,17 @@ public partial class AudioChannelLayoutBox : FullBox
 		boxSize += IsoStream.CalculateClassSize(channelDescriptions); // channelDescriptions
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("channelLayoutTag", 32, this.channelLayoutTag); 
+		boxSize += builder.Field("channelBitmap", 32, this.channelBitmap); 
+		boxSize += builder.Field("numberChannelDescriptions", 32, this.numberChannelDescriptions); 
+		boxSize += builder.Field("channelDescriptions", IsoStream.CalculateClassSize(channelDescriptions), this.channelDescriptions); 
+		return boxSize;
+	}
 }
 
 }

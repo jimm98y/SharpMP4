@@ -59,6 +59,17 @@ public partial class WVTTSampleEntry : PlainTextSampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("config", IsoStream.CalculateBoxSize(config), this.config); 
+		// boxSize += builder.Field("label", IsoStream.CalculateBoxSize(label), this.label); // recommended
+		// boxSize += builder.Field("BitRateBox", IsoStream.CalculateBoxSize(BitRateBox), this.BitRateBox); // optional
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

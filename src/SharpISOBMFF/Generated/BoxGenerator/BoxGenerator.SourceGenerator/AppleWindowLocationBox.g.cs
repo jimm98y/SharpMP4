@@ -55,6 +55,15 @@ public partial class AppleWindowLocationBox : Box
 		boxSize += 16; // locationY
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("locationX", 16, this.locationX); 
+		boxSize += builder.Field("locationY", 16, this.locationY); 
+		return boxSize;
+	}
 }
 
 }

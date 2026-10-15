@@ -55,6 +55,15 @@ public abstract partial class SampleEntry : Box
 		boxSize += 16; // data_reference_index
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reservedSampleEntry", 6 * 8, this.reservedSampleEntry); 
+		boxSize += builder.Field("data_reference_index", 16, this.data_reference_index); 
+		return boxSize;
+	}
 }
 
 }

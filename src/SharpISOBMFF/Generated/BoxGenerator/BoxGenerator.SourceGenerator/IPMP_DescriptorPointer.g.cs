@@ -45,6 +45,14 @@ public partial class IPMP_DescriptorPointer : BaseDescriptor
 		boxSize += 8; // IPMP_DescriptorID
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("IPMP_DescriptorID", 8, this.IPMP_DescriptorID); 
+		return boxSize;
+	}
 }
 
 }

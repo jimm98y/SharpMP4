@@ -63,6 +63,16 @@ public partial class JpegXLPartialCodestreamBox : Box
 		boxSize += ((ulong)data.Length * 8); // data
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("is_last", 1, this.is_last); 
+		boxSize += builder.Field("index", 31, this.index); 
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
+		return boxSize;
+	}
 }
 
 }

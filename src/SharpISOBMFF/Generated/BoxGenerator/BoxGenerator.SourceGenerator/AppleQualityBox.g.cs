@@ -55,6 +55,15 @@ public partial class AppleQualityBox : Box
 		boxSize += 32; // quality
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("flags", 32, this.flags); 
+		boxSize += builder.Field("quality", 32, this.quality); 
+		return boxSize;
+	}
 }
 
 }

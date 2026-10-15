@@ -49,6 +49,14 @@ public partial class GenericCompressedUnitsItemInfoBox : FullBox
 		boxSize += IsoStream.CalculateClassSize(units); // units
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("units", IsoStream.CalculateClassSize(units), this.units); 
+		return boxSize;
+	}
 }
 
 }

@@ -121,6 +121,28 @@ public partial class MultiviewRelationAttributeBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved1", 16, this.reserved1); 
+		boxSize += builder.Field("num_common_attributes", 16, this.num_common_attributes); 
+
+		for (int i=0; i<num_common_attributes; i++)
+		{
+			boxSize += builder.Field($"common_attribute[{i}]", 32, this.common_attribute[i]); 
+			boxSize += builder.Field($"common_value[{i}]", 32, this.common_value[i]); 
+		}
+		boxSize += builder.Field("reserved2", 16, this.reserved2); 
+		boxSize += builder.Field("num_differentiating_attributes", 16, this.num_differentiating_attributes); 
+
+		for (int i=0; i<num_differentiating_attributes; i++)
+		{
+			boxSize += builder.Field($"differentiating_attribute[{i}]", 32, this.differentiating_attribute[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

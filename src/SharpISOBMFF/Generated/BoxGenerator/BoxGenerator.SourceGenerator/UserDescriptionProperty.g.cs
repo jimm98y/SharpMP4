@@ -71,6 +71,17 @@ public partial class UserDescriptionProperty : ItemFullProperty
 		boxSize += IsoStream.CalculateStringSize(tags); // tags
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("lang", IsoStream.CalculateStringSize(lang), this.lang); 
+		boxSize += builder.Field("name", IsoStream.CalculateStringSize(name), this.name); 
+		boxSize += builder.Field("description", IsoStream.CalculateStringSize(description), this.description); 
+		boxSize += builder.Field("tags", IsoStream.CalculateStringSize(tags), this.tags); 
+		return boxSize;
+	}
 }
 
 }

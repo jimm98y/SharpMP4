@@ -49,6 +49,14 @@ public partial class StereoComfortDisparityAdjustmentBox : FullBox
 		boxSize += 32; // disparity_adjustment
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("disparity_adjustment", 32, this.disparity_adjustment); 
+		return boxSize;
+	}
 }
 
 }

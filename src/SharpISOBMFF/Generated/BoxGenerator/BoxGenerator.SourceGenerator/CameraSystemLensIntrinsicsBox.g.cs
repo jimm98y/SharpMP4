@@ -125,6 +125,29 @@ public partial class CameraSystemLensIntrinsicsBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("denominator_shift_operand", 16, this.denominator_shift_operand); 
+		boxSize += builder.Field("skew_denominator_shift_operand", 16, this.skew_denominator_shift_operand); 
+		boxSize += builder.Field("focal_length_x", 32, this.focal_length_x); 
+		boxSize += builder.Field("principal_point_x", 32, this.principal_point_x); 
+		boxSize += builder.Field("principal_point_y", 32, this.principal_point_y); 
+
+		if ((flags  &  1) ==  1)
+		{
+			boxSize += builder.Field("focal_length_y", 32, this.focal_length_y); 
+			boxSize += builder.Field("skew_factor", 32, this.skew_factor); 
+		}
+
+		if ((flags  &  2) ==  2)
+		{
+			boxSize += builder.Field("projection_offset", 32, this.projection_offset); 
+		}
+		return boxSize;
+	}
 }
 
 }

@@ -41,6 +41,13 @@ public abstract partial class SubtitleSampleGroupEntry : SampleGroupDescriptionE
 		boxSize += base.CalculateSize();
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		return boxSize;
+	}
 }
 
 }

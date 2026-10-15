@@ -20,6 +20,7 @@ public partial class AppleColor : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "AppleColor"; } }
 
 	protected ushort alpha; 
@@ -65,6 +66,16 @@ public partial class AppleColor : IMp4Serializable
 		boxSize += 16; // red
 		boxSize += 16; // green
 		boxSize += 16; // blue
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("alpha", 16, this.alpha); 
+		boxSize += builder.Field("red", 16, this.red); 
+		boxSize += builder.Field("green", 16, this.green); 
+		boxSize += builder.Field("blue", 16, this.blue); 
 		return boxSize;
 	}
 }

@@ -86,6 +86,21 @@ public partial class ComponentPatternDefinitionBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("pattern_width", 16, this.pattern_width); 
+		boxSize += builder.Field("pattern_height", 16, this.pattern_height); 
+
+		for (int i = 0; i < pattern_width * pattern_height; i++)
+		{
+			boxSize += builder.Field($"component_index[{i}]", 32, this.component_index[i]); 
+			boxSize += builder.Field($"component_gain[{i}]", 32, this.component_gain[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

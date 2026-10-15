@@ -90,6 +90,22 @@ public partial class CameraSystemLensDistortionsBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("k1", 32, this.k1); // radial parameter k1 
+		boxSize += builder.Field("k2", 32, this.k2); // radial parameter k2 
+		boxSize += builder.Field("p1", 32, this.p1); // tangential parameter p1 
+		boxSize += builder.Field("p2", 32, this.p2); // tangential parameter p2 
+
+		if ((flags  &  1) ==  1)
+		{
+			boxSize += builder.Field("calibration_limit_radial_angle", 32, this.calibration_limit_radial_angle); 
+		}
+		return boxSize;
+	}
 }
 
 }

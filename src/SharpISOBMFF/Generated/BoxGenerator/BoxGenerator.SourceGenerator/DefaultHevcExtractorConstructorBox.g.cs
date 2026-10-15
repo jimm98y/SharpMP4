@@ -153,6 +153,41 @@ public partial class DefaultHevcExtractorConstructorBox : FullBox
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("num_entries", 32, this.num_entries); 
+
+		for (int i=0; i< num_entries; i++)
+		{
+			boxSize += builder.Field($"constructor_type[{i}]", 8, this.constructor_type[i]); 
+			boxSize += builder.Field($"constructor_flags[{i}]", 8, this.constructor_flags[i]); 
+
+			if ( constructor_type[i] == 0 )
+			{
+				// boxSize += builder.Field($"SampleConstructor[{i}]", IsoStream.CalculateBoxSize(SampleConstructor), this.SampleConstructor[i]); 
+			}
+
+			else if ( constructor_type[i] == 2 )
+			{
+				// boxSize += builder.Field($"InlineConstructor[{i}]", IsoStream.CalculateBoxSize(InlineConstructor), this.InlineConstructor[i]); 
+			}
+
+			else if ( constructor_type[i] == 3 )
+			{
+				// boxSize += builder.Field($"SampleConstructorFromTrackGroup[{i}]", IsoStream.CalculateBoxSize(SampleConstructorFromTrackGroup), this.SampleConstructorFromTrackGroup[i]); 
+			}
+
+			else if ( constructor_type[i] == 6 )
+			{
+				// boxSize += builder.Field($"NALUStartInlineConstructor[{i}]", IsoStream.CalculateBoxSize(NALUStartInlineConstructor), this.NALUStartInlineConstructor[i]); 
+			}
+		}
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

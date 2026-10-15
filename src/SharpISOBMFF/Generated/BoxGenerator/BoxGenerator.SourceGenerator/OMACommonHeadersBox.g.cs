@@ -104,6 +104,22 @@ public partial class OMACommonHeadersBox : FullBox
 		boxSize += ((ulong)(textualHeadersLength) * 8); // textualHeaders
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("encryptionMethod", 8, this.encryptionMethod); 
+		boxSize += builder.Field("paddingScheme", 8, this.paddingScheme); 
+		boxSize += builder.Field("plaintextLength", 64, this.plaintextLength); 
+		boxSize += builder.Field("contentIDLength", 16, this.contentIDLength); 
+		boxSize += builder.Field("rightsIssuerLength", 16, this.rightsIssuerLength); 
+		boxSize += builder.Field("textualHeadersLength", 16, this.textualHeadersLength); 
+		boxSize += builder.Field("contentID", ((ulong)(contentIDLength) * 8), this.contentID); 
+		boxSize += builder.Field("rightsIssuerURL", ((ulong)(rightsIssuerLength) * 8), this.rightsIssuerURL); 
+		boxSize += builder.Field("textualHeaders", ((ulong)(textualHeadersLength) * 8), this.textualHeaders); 
+		return boxSize;
+	}
 }
 
 }

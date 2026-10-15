@@ -59,6 +59,17 @@ public partial class RestrictedSchemeInfoBox : Box
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("original_format", IsoStream.CalculateBoxSize(original_format), this.original_format); 
+		// boxSize += builder.Field("scheme_type_box", IsoStream.CalculateBoxSize(scheme_type_box), this.scheme_type_box); 
+		// boxSize += builder.Field("info", IsoStream.CalculateBoxSize(info), this.info); // optional
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

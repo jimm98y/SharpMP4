@@ -73,6 +73,18 @@ public partial class SimpleTextSampleEntry : PlainTextSampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		if (this.content_encodingPresent) boxSize += builder.Field("content_encoding", IsoStream.CalculateStringSize(content_encoding), this.content_encoding); // optional 
+		boxSize += builder.Field("mime_format", IsoStream.CalculateStringSize(mime_format), this.mime_format); 
+		// boxSize += builder.Field("BitRateBox", IsoStream.CalculateBoxSize(BitRateBox), this.BitRateBox); // optional 
+		// boxSize += builder.Field("TextConfigBox", IsoStream.CalculateBoxSize(TextConfigBox), this.TextConfigBox); // optional 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

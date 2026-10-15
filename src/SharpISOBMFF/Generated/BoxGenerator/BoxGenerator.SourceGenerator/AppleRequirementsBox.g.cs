@@ -48,6 +48,14 @@ public partial class AppleRequirementsBox : FullBox
 		boxSize += IsoStream.CalculateStringSize(requirement); // requirement
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("requirement", IsoStream.CalculateStringSize(requirement), this.requirement); 
+		return boxSize;
+	}
 }
 
 }

@@ -55,6 +55,15 @@ public partial class IpirBox : Box
 		boxSize += ((ulong)( entry_count ) * 32); // trackIDs
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		boxSize += builder.Field("trackIDs", ((ulong)( entry_count ) * 32), this.trackIDs); 
+		return boxSize;
+	}
 }
 
 }

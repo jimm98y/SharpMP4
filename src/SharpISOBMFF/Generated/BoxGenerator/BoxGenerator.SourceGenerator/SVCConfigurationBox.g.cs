@@ -48,6 +48,14 @@ public partial class SVCConfigurationBox : Box
 		boxSize += IsoStream.CalculateClassSize(SVCConfig); // SVCConfig
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("SVCConfig", IsoStream.CalculateClassSize(SVCConfig), this.SVCConfig); 
+		return boxSize;
+	}
 }
 
 }

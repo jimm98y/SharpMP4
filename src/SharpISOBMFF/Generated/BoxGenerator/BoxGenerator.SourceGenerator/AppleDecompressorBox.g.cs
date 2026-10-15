@@ -48,6 +48,14 @@ public partial class AppleDecompressorBox : Box
 		boxSize += 32; // decompressor
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("decompressor", 32, this.decompressor); 
+		return boxSize;
+	}
 }
 
 }

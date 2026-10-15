@@ -56,6 +56,15 @@ public partial class VideoMediaHeaderBox : FullBox
 		boxSize += 3 * 16; // opcolor
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("graphicsmode", 16, this.graphicsmode); // copy, see below
+		boxSize += builder.Field("opcolor", 3 * 16, this.opcolor); 
+		return boxSize;
+	}
 }
 
 }

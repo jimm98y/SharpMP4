@@ -111,6 +111,7 @@ public partial class AC4PresentationV1Dsi : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "AC4PresentationV1Dsi"; } }
 
 	protected byte presentation_config_v1; 
@@ -690,6 +691,151 @@ public partial class AC4PresentationV1Dsi : IMp4Serializable
 			}
 		}
 		boxSize += ((ulong)(pres_bytes - (long)boxSize / 8) * 8); // skip_area
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("presentation_config_v1", 5, this.presentation_config_v1); 
+
+		if (presentation_config_v1 != 0x06)
+		{
+			boxSize += builder.Field("md_compat", 3, this.md_compat); 
+			boxSize += builder.Field("b_presentation_id", 1, this.b_presentation_id); 
+
+			if (b_presentation_id)
+			{
+				boxSize += builder.Field("presentation_id", 5, this.presentation_id); 
+			}
+			boxSize += builder.Field("dsi_frame_rate_multiply_info", 2, this.dsi_frame_rate_multiply_info); 
+			boxSize += builder.Field("dsi_frame_rate_fraction_info", 2, this.dsi_frame_rate_fraction_info); 
+			boxSize += builder.Field("presentation_emdf_version", 5, this.presentation_emdf_version); 
+			boxSize += builder.Field("presentation_key_id", 10, this.presentation_key_id); 
+			boxSize += builder.Field("b_presentation_channel_coded", 1, this.b_presentation_channel_coded); 
+
+			if (b_presentation_channel_coded)
+			{
+				boxSize += builder.Field("dsi_presentation_ch_mode", 5, this.dsi_presentation_ch_mode); 
+
+				if (dsi_presentation_ch_mode >= 11 && dsi_presentation_ch_mode <= 14)
+				{
+					boxSize += builder.Field("pres_b_4_back_channels_present", 1, this.pres_b_4_back_channels_present); 
+					boxSize += builder.Field("pres_top_channel_pairs", 2, this.pres_top_channel_pairs); 
+				}
+				boxSize += builder.Field("reserved_zero", 6, this.reserved_zero); 
+				boxSize += builder.Field("presentation_v1_channel_groups", 18, this.presentation_v1_channel_groups); 
+			}
+			boxSize += builder.Field("b_presentation_core_differs", 1, this.b_presentation_core_differs); 
+
+			if (b_presentation_core_differs)
+			{
+				boxSize += builder.Field("b_presentation_core_channel_coded", 1, this.b_presentation_core_channel_coded); 
+
+				if (b_presentation_core_channel_coded)
+				{
+					boxSize += builder.Field("dsi_presentation_channel_mode_core", 2, this.dsi_presentation_channel_mode_core); 
+				}
+			}
+			boxSize += builder.Field("b_presentation_filter", 1, this.b_presentation_filter); 
+
+			if (b_presentation_filter)
+			{
+				boxSize += builder.Field("b_enable_presentation", 1, this.b_enable_presentation); 
+				boxSize += builder.Field("n_filter_bytes", 8, this.n_filter_bytes); 
+				boxSize += builder.Field("filter_data", ((ulong)(n_filter_bytes) * 8), this.filter_data); 
+			}
+
+			if (presentation_config_v1 == 0x1f)
+			{
+				boxSize += builder.Field("substream_group", IsoStream.CalculateClassSize(substream_group), this.substream_group); 
+			}
+
+			else 
+			{
+				boxSize += builder.Field("b_multi_pid", 1, this.b_multi_pid); 
+
+				if (presentation_config_v1 <= 2)
+				{
+
+					for (int i = 0; i < 2; i++)
+					{
+						boxSize += builder.Field($"substream_groups[{i}]", IsoStream.CalculateClassSize(substream_groups[i]), this.substream_groups[i]); 
+					}
+				}
+
+				if (presentation_config_v1 == 3 || presentation_config_v1 == 4)
+				{
+
+					for (int i = 0; i < 3; i++)
+					{
+						boxSize += builder.Field($"substream_groups[{i}]", IsoStream.CalculateClassSize(substream_groups[i]), this.substream_groups[i]); 
+					}
+				}
+
+				if (presentation_config_v1 == 5)
+				{
+					boxSize += builder.Field("n_substream_groups_minus2", 3, this.n_substream_groups_minus2); 
+
+					for (int i = 0; i < n_substream_groups_minus2 + 2; i++)
+					{
+						boxSize += builder.Field($"substream_groups[{i}]", IsoStream.CalculateClassSize(substream_groups[i]), this.substream_groups[i]); 
+					}
+				}
+
+				if (presentation_config_v1 > 5)
+				{
+					boxSize += builder.Field("n_skip_bytes", 7, this.n_skip_bytes); 
+					boxSize += builder.Field("skip_data", ((ulong)(n_skip_bytes) * 8), this.skip_data); 
+				}
+			}
+			boxSize += builder.Field("b_pre_virtualized", 1, this.b_pre_virtualized); 
+			boxSize += builder.Field("b_add_emdf_substreams", 1, this.b_add_emdf_substreams); 
+		}
+
+		if (presentation_config_v1 == 0x06 || b_add_emdf_substreams)
+		{
+			boxSize += builder.Field("n_add_emdf_substreams", 7, this.n_add_emdf_substreams); 
+
+			for (int j = 0; j < n_add_emdf_substreams; j++)
+			{
+				boxSize += builder.Field($"substream_emdf_version[{j}]", 5, this.substream_emdf_version[j]); 
+				boxSize += builder.Field($"substream_key_id[{j}]", 10, this.substream_key_id[j]); 
+			}
+		}
+		boxSize += builder.Field("b_presentation_bitrate_info", 1, this.b_presentation_bitrate_info); 
+
+		if (b_presentation_bitrate_info)
+		{
+			boxSize += builder.Field("ac4_bitrate_dsi", IsoStream.CalculateClassSize(ac4_bitrate_dsi), this.ac4_bitrate_dsi); 
+		}
+		boxSize += builder.Field("b_alternative", 1, this.b_alternative); 
+
+		if (b_alternative)
+		{
+			boxSize += builder.Field("byte_alignment", IsoStream.CalculateByteAlignmentSize(boxSize, byte_alignment), this.byte_alignment); 
+			boxSize += builder.Field("alternative_info", IsoStream.CalculateClassSize(alternative_info), this.alternative_info); 
+		}
+		boxSize += builder.Field("byte_alignment", IsoStream.CalculateByteAlignmentSize(boxSize, byte_alignment), this.byte_alignment); 
+
+		if ((long)boxSize <= (pres_bytes - 1) * 8)
+		{
+			boxSize += builder.Field("de_indicator", 1, this.de_indicator); 
+			boxSize += builder.Field("immersive_audio_indicator", 1, this.immersive_audio_indicator); 
+			boxSize += builder.Field("reserved", 4, this.reserved); 
+			boxSize += builder.Field("b_extended_presentation_id", 1, this.b_extended_presentation_id); 
+
+			if (b_extended_presentation_id)
+			{
+				boxSize += builder.Field("extended_presentation_id", 9, this.extended_presentation_id); 
+			}
+
+			else 
+			{
+				boxSize += builder.Field("reserved1", 1, this.reserved1); 
+			}
+		}
+		boxSize += builder.Field("skip_area", ((ulong)(pres_bytes - (long)boxSize / 8) * 8), this.skip_area); 
 		return boxSize;
 	}
 }

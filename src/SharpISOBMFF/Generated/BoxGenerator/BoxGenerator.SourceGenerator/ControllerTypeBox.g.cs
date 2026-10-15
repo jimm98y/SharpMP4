@@ -52,6 +52,15 @@ public partial class ControllerTypeBox : Box
 		boxSize += 32; // controller_type
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		/*  the movie controller's type, a four character code (QuickTime 'ctyp') */
+		boxSize += builder.Field("controller_type", 32, this.controller_type); 
+		return boxSize;
+	}
 }
 
 }

@@ -77,6 +77,18 @@ public partial class HintMediaHeaderBox : FullBox
 		boxSize += 32; // reserved
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("maxPDUsize", 16, this.maxPDUsize); 
+		boxSize += builder.Field("avgPDUsize", 16, this.avgPDUsize); 
+		boxSize += builder.Field("maxbitrate", 32, this.maxbitrate); 
+		boxSize += builder.Field("avgbitrate", 32, this.avgbitrate); 
+		boxSize += builder.Field("reserved", 32, this.reserved); 
+		return boxSize;
+	}
 }
 
 }

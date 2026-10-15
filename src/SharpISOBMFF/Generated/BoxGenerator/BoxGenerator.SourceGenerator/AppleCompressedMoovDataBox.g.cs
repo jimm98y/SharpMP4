@@ -55,6 +55,15 @@ public partial class AppleCompressedMoovDataBox : Box
 		boxSize += ((ulong)compressedData.Length * 8); // compressedData
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("uncompressedSize", 32, this.uncompressedSize); 
+		boxSize += builder.Field("compressedData", ((ulong)compressedData.Length * 8), this.compressedData); 
+		return boxSize;
+	}
 }
 
 }

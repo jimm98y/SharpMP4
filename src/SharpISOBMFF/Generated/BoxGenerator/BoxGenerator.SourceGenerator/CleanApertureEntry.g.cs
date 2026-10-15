@@ -100,6 +100,21 @@ public partial class CleanApertureEntry : VisualSampleGroupEntry
 		boxSize += 32; // vertOffD
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("cleanApertureWidthN", 32, this.cleanApertureWidthN); 
+		boxSize += builder.Field("cleanApertureWidthD", 32, this.cleanApertureWidthD); 
+		boxSize += builder.Field("cleanApertureHeightN", 32, this.cleanApertureHeightN); 
+		boxSize += builder.Field("cleanApertureHeightD", 32, this.cleanApertureHeightD); 
+		boxSize += builder.Field("horizOffN", 32, this.horizOffN); 
+		boxSize += builder.Field("horizOffD", 32, this.horizOffD); 
+		boxSize += builder.Field("vertOffN", 32, this.vertOffN); 
+		boxSize += builder.Field("vertOffD", 32, this.vertOffD); 
+		return boxSize;
+	}
 }
 
 }

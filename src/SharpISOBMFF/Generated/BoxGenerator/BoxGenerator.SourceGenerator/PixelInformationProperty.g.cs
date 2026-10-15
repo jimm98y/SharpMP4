@@ -191,6 +191,43 @@ public partial class PixelInformationProperty : ItemFullProperty
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("num_channels", 8, this.num_channels); 
+
+		for (int i=0; i<num_channels; i++)
+		{
+			boxSize += builder.Field($"bits_per_channel[{i}]", 8, this.bits_per_channel[i]); 
+		}
+
+		if ((flags  &  1) ==  1)
+		{
+
+			for (int i=0; i<num_channels; i++)
+			{
+				boxSize += builder.Field($"channel_idc[{i}]", 3, this.channel_idc[i]); 
+				boxSize += builder.Field($"reserved[{i}]", 1, this.reserved[i]); 
+				boxSize += builder.Field($"component_format[{i}]", 2, this.component_format[i]); 
+				boxSize += builder.Field($"subsampling_flag[{i}]", 1, this.subsampling_flag[i]); 
+				boxSize += builder.Field($"channel_label_flag[{i}]", 1, this.channel_label_flag[i]); 
+
+				if (subsampling_flag[i])
+				{
+					boxSize += builder.Field($"subsampling_type[{i}]", 4, this.subsampling_type[i]); 
+					boxSize += builder.Field($"subsampling_location[{i}]", 4, this.subsampling_location[i]); 
+				}
+
+				if (channel_label_flag[i])
+				{
+					boxSize += builder.Field($"channel_label[{i}]", IsoStream.CalculateStringSize(channel_label[i]), this.channel_label[i]); 
+				}
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

@@ -49,6 +49,14 @@ public partial class URIInitBox : FullBox
 		boxSize += ((ulong)uri_initialization_data.Length * 8); // uri_initialization_data
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("uri_initialization_data", ((ulong)uri_initialization_data.Length * 8), this.uri_initialization_data); 
+		return boxSize;
+	}
 }
 
 }

@@ -58,6 +58,15 @@ public FullBox(uint boxtype, byte[] uuid) : base(boxtype, uuid) { }
 		boxSize += 24; // flags
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("version", 8, this.version); 
+		boxSize += builder.Field("flags", 24, this.flags); 
+		return boxSize;
+	}
 }
 
 }

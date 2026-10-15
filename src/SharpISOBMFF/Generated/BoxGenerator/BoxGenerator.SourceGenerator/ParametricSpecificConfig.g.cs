@@ -25,6 +25,7 @@ public partial class ParametricSpecificConfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "ParametricSpecificConfig"; } }
 
 	protected bool isBaseLayer; 
@@ -87,6 +88,23 @@ public partial class ParametricSpecificConfig : IMp4Serializable
 		else 
 		{
 			boxSize += IsoStream.CalculateClassSize(HILNenexConfig); // HILNenexConfig
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("isBaseLayer", 1, this.isBaseLayer); 
+
+		if (isBaseLayer)
+		{
+			boxSize += builder.Field("PARAconfig", IsoStream.CalculateClassSize(PARAconfig), this.PARAconfig); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("HILNenexConfig", IsoStream.CalculateClassSize(HILNenexConfig), this.HILNenexConfig); 
 		}
 		return boxSize;
 	}

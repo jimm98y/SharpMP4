@@ -113,6 +113,29 @@ public partial class AlternativeStartupSequencePropertiesBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version == 0)
+		{
+			boxSize += builder.Field("min_initial_alt_startup_offset", 32, this.min_initial_alt_startup_offset); 
+		}
+
+		else if (version == 1)
+		{
+			boxSize += builder.Field("num_entries", 32, this.num_entries); 
+
+			for (int j=0; j < num_entries; j++)
+			{
+				boxSize += builder.Field($"grouping_type_parameter[{j}]", 32, this.grouping_type_parameter[j]); 
+				boxSize += builder.Field($"min_initial_alt_startup_offset0[{j}]", 32, this.min_initial_alt_startup_offset0[j]); 
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

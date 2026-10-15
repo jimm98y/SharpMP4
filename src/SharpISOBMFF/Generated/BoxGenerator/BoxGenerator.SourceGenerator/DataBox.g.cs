@@ -62,6 +62,16 @@ public partial class DataBox : Box
 		boxSize += ((ulong)data.Length * 8); // data
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("dataType", 32, this.dataType); 
+		boxSize += builder.Field("dataLang", 32, this.dataLang); 
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
+		return boxSize;
+	}
 }
 
 }

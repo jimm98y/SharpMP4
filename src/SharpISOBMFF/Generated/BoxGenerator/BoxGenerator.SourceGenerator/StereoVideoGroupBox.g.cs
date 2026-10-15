@@ -56,6 +56,15 @@ public partial class StereoVideoGroupBox : TrackGroupTypeBox
 		boxSize += 31; // reserved
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("left_view_flag", 1, this.left_view_flag); 
+		boxSize += builder.Field("reserved", 31, this.reserved); 
+		return boxSize;
+	}
 }
 
 }

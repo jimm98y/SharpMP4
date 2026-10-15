@@ -98,6 +98,23 @@ public partial class PaddingBitsBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sample_count", 32, this.sample_count); 
+		
+
+		for (int i=0; i < (int)Math.Floor((double)(sample_count + 1)/2); i++)
+		{
+			boxSize += builder.Field($"reserved[{i}]", 1, this.reserved[i]); 
+			boxSize += builder.Field($"pad1[{i}]", 3, this.pad1[i]); 
+			boxSize += builder.Field($"reserved0[{i}]", 1, this.reserved0[i]); 
+			boxSize += builder.Field($"pad2[{i}]", 3, this.pad2[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

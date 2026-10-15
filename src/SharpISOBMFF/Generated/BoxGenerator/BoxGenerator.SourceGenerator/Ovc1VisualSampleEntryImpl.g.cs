@@ -62,6 +62,16 @@ public partial class Ovc1VisualSampleEntryImpl : Box
 		boxSize += ((ulong)vc1Content.Length * 8); // vc1Content
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 48, this.reserved); 
+		boxSize += builder.Field("dataReferenceIndex", 16, this.dataReferenceIndex); 
+		boxSize += builder.Field("vc1Content", ((ulong)vc1Content.Length * 8), this.vc1Content); 
+		return boxSize;
+	}
 }
 
 }

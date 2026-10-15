@@ -48,6 +48,14 @@ public partial class AvcNalUnitStorageBox : Box
 		boxSize += IsoStream.CalculateClassSize(AVCConfig); // AVCConfig
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("AVCConfig", IsoStream.CalculateClassSize(AVCConfig), this.AVCConfig); 
+		return boxSize;
+	}
 }
 
 }

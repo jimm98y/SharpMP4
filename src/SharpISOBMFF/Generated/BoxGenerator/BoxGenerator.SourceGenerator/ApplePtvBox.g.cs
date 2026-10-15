@@ -76,6 +76,18 @@ public partial class ApplePtvBox : Box
 		boxSize += 8; // playOnOpen
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("displaySize", 16, this.displaySize); 
+		boxSize += builder.Field("reserved1", 16, this.reserved1); 
+		boxSize += builder.Field("reserved2", 16, this.reserved2); 
+		boxSize += builder.Field("slideShow", 8, this.slideShow); 
+		boxSize += builder.Field("playOnOpen", 8, this.playOnOpen); 
+		return boxSize;
+	}
 }
 
 }

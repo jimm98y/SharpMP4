@@ -60,6 +60,16 @@ public partial class SAPEntry : SampleGroupDescriptionEntry
 		boxSize += 4; // SAP_type
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("dependent_flag", 1, this.dependent_flag); 
+		boxSize += builder.Field("reserved", 3, this.reserved); 
+		boxSize += builder.Field("SAP_type", 4, this.SAP_type); 
+		return boxSize;
+	}
 }
 
 }

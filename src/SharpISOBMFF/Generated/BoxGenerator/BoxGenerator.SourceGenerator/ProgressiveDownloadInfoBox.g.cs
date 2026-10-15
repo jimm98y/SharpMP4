@@ -54,6 +54,15 @@ public partial class ProgressiveDownloadInfoBox : FullBox
 		boxSize += IsoStream.CalculateClassSize(items); // items
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		/*  to end of box */
+		boxSize += builder.Field("items", IsoStream.CalculateClassSize(items), this.items); 
+		return boxSize;
+	}
 }
 
 }

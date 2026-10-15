@@ -65,6 +65,18 @@ public partial class ItemProtectionBox : FullBox
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("protection_count", 16, this.protection_count); 
+
+		// for (int i=0; i<protection_count; i++)
+			// boxSize += builder.Field($"protection_information[{i}]", IsoStream.CalculateBoxSize(protection_information[i]), this.protection_information[i]); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

@@ -50,6 +50,15 @@ public partial class CanonCDI1Box : FullBox
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

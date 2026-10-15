@@ -70,6 +70,17 @@ public partial class EquirectangularProjection : ProjectionDataBox
 		boxSize += 32; // projection_bounds_right
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("projection_bounds_top", 32, this.projection_bounds_top); 
+		boxSize += builder.Field("projection_bounds_bottom", 32, this.projection_bounds_bottom); 
+		boxSize += builder.Field("projection_bounds_left", 32, this.projection_bounds_left); 
+		boxSize += builder.Field("projection_bounds_right", 32, this.projection_bounds_right); 
+		return boxSize;
+	}
 }
 
 }

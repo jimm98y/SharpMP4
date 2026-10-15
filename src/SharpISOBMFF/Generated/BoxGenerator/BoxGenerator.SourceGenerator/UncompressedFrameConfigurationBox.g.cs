@@ -214,6 +214,41 @@ public partial class UncompressedFrameConfigurationBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("profile", 32, this.profile); 
+
+		if (version == 0)
+		{
+			boxSize += builder.Field("component_count", 32, this.component_count); 
+
+			for (int i = 0; i < component_count; i++)
+			{
+				boxSize += builder.Field($"component_index[{i}]", 16, this.component_index[i]); 
+				boxSize += builder.Field($"component_bit_depth_minus_one[{i}]", 8, this.component_bit_depth_minus_one[i]); 
+				boxSize += builder.Field($"component_format[{i}]", 8, this.component_format[i]); 
+				boxSize += builder.Field($"component_align_size[{i}]", 8, this.component_align_size[i]); 
+			}
+			boxSize += builder.Field("sampling_type", 8, this.sampling_type); 
+			boxSize += builder.Field("interleave_type", 8, this.interleave_type); 
+			boxSize += builder.Field("block_size", 8, this.block_size); 
+			boxSize += builder.Field("components_little_endian", 1, this.components_little_endian); 
+			boxSize += builder.Field("block_pad_lsb", 1, this.block_pad_lsb); 
+			boxSize += builder.Field("block_little_endian", 1, this.block_little_endian); 
+			boxSize += builder.Field("block_reversed", 1, this.block_reversed); 
+			boxSize += builder.Field("pad_unknown", 1, this.pad_unknown); 
+			boxSize += builder.Field("reserved", 3, this.reserved); 
+			boxSize += builder.Field("pixel_size", 32, this.pixel_size); 
+			boxSize += builder.Field("row_align_size", 32, this.row_align_size); 
+			boxSize += builder.Field("tile_align_size", 32, this.tile_align_size); 
+			boxSize += builder.Field("num_tile_cols_minus_one", 32, this.num_tile_cols_minus_one); 
+			boxSize += builder.Field("num_tile_rows_minus_one", 32, this.num_tile_rows_minus_one); 
+		}
+		return boxSize;
+	}
 }
 
 }

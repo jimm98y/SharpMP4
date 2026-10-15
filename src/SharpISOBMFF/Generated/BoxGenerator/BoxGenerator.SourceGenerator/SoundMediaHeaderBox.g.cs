@@ -56,6 +56,15 @@ public partial class SoundMediaHeaderBox : FullBox
 		boxSize += 16; // reserved
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("balance", 16, this.balance); 
+		boxSize += builder.Field("reserved", 16, this.reserved); 
+		return boxSize;
+	}
 }
 
 }

@@ -67,6 +67,18 @@ public partial class FDItemInformationBox : FullBox
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 16, this.entry_count); 
+		// boxSize += builder.Field("partition_entries", IsoStream.CalculateBoxSize(partition_entries), this.partition_entries); 
+		// boxSize += builder.Field("session_info", IsoStream.CalculateBoxSize(session_info), this.session_info); //optional
+		// boxSize += builder.Field("group_id_to_name", IsoStream.CalculateBoxSize(group_id_to_name), this.group_id_to_name); //optional
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

@@ -46,6 +46,14 @@ public partial class AUDSampleEntry : VisualSampleGroupEntry
 		boxSize += 24; // audNalUnit
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("audNalUnit", 24, this.audNalUnit); 
+		return boxSize;
+	}
 }
 
 }

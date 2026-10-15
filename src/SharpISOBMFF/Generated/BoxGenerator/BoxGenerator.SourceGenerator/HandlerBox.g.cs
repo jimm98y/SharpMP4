@@ -69,6 +69,17 @@ public partial class HandlerBox : FullBox
 		boxSize += IsoStream.CalculateStringSize(name); // name
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("pre_defined", 32, this.pre_defined); 
+		boxSize += builder.Field("handler_type", 32, this.handler_type); 
+		boxSize += builder.Field("reserved", 3 * 32, this.reserved); 
+		boxSize += builder.Field("name", IsoStream.CalculateStringSize(name), this.name); // utf8string in ISOBMFF, counted in QuickTime: all that is left, as bytes
+		return boxSize;
+	}
 }
 
 }

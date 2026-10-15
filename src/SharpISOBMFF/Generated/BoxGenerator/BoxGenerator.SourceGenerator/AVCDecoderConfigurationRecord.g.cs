@@ -47,6 +47,7 @@ public partial class AVCDecoderConfigurationRecord : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "AVCDecoderConfigurationRecord"; } }
 
 	protected byte configurationVersion = 1; 
@@ -259,6 +260,52 @@ public bool HasExtensions { get; set; } = false;
 			{
 				boxSize += 16; // sequenceParameterSetExtLength
 				boxSize += (ulong)(8*sequenceParameterSetExtLength[i] ); // sequenceParameterSetExtNALUnit
+			}
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("configurationVersion", 8, this.configurationVersion); 
+		boxSize += builder.Field("AVCProfileIndication", 8, this.AVCProfileIndication); 
+		boxSize += builder.Field("profile_compatibility", 8, this.profile_compatibility); 
+		boxSize += builder.Field("AVCLevelIndication", 8, this.AVCLevelIndication); 
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += builder.Field("lengthSizeMinusOne", 2, this.lengthSizeMinusOne); 
+		boxSize += builder.Field("reserved0", 3, this.reserved0); 
+		boxSize += builder.Field("numOfSequenceParameterSets", 5, this.numOfSequenceParameterSets); 
+
+		for (int i=0; i< numOfSequenceParameterSets;  i++)
+		{
+			boxSize += builder.Field($"sequenceParameterSetLength[{i}]", 16, this.sequenceParameterSetLength[i]); 
+			boxSize += builder.Field($"sequenceParameterSetNALUnit[{i}]", (ulong)(8*sequenceParameterSetLength[i] ), this.sequenceParameterSetNALUnit[i]); 
+		}
+		boxSize += builder.Field("numOfPictureParameterSets", 8, this.numOfPictureParameterSets); 
+
+		for (int i=0; i< numOfPictureParameterSets;  i++)
+		{
+			boxSize += builder.Field($"pictureParameterSetLength[{i}]", 16, this.pictureParameterSetLength[i]); 
+			boxSize += builder.Field($"pictureParameterSetNALUnit[{i}]", (ulong)(8*pictureParameterSetLength[i] ), this.pictureParameterSetNALUnit[i]); 
+		}
+
+		if (!HasExtensions) return boxSize;
+		if ( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  || 
+    AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144  ||  AVCProfileIndication  ==  244 )
+		{
+			boxSize += builder.Field("reserved1", 6, this.reserved1); 
+			boxSize += builder.Field("chroma_format", 2, this.chroma_format); 
+			boxSize += builder.Field("reserved00", 5, this.reserved00); 
+			boxSize += builder.Field("bit_depth_luma_minus8", 3, this.bit_depth_luma_minus8); 
+			boxSize += builder.Field("reserved10", 5, this.reserved10); 
+			boxSize += builder.Field("bit_depth_chroma_minus8", 3, this.bit_depth_chroma_minus8); 
+			boxSize += builder.Field("numOfSequenceParameterSetExt", 8, this.numOfSequenceParameterSetExt); 
+
+			for (int i=0; i< numOfSequenceParameterSetExt; i++)
+			{
+				boxSize += builder.Field($"sequenceParameterSetExtLength[{i}]", 16, this.sequenceParameterSetExtLength[i]); 
+				boxSize += builder.Field($"sequenceParameterSetExtNALUnit[{i}]", (ulong)(8*sequenceParameterSetExtLength[i] ), this.sequenceParameterSetExtNALUnit[i]); 
 			}
 		}
 		return boxSize;

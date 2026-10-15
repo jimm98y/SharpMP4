@@ -76,6 +76,18 @@ public partial class ThreeGPPRatingBox : FullBox
 		boxSize += IsoStream.CalculateStringSize(rating_info); // rating_info
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("rating_entity", 32, this.rating_entity); 
+		boxSize += builder.Field("rating_criteria", 32, this.rating_criteria); 
+		boxSize += builder.Field("pad", 1, this.pad); 
+		boxSize += builder.Field("language", 15, this.language); 
+		boxSize += builder.Field("rating_info", IsoStream.CalculateStringSize(rating_info), this.rating_info); 
+		return boxSize;
+	}
 }
 
 }

@@ -62,6 +62,16 @@ public partial class AppleComponentDetectBox : Box
 		boxSize += 32; // minimumVersion
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("flags", 32, this.flags); 
+		boxSize += builder.Field("description", IsoStream.CalculateClassSize(description), this.description); 
+		boxSize += builder.Field("minimumVersion", 32, this.minimumVersion); 
+		return boxSize;
+	}
 }
 
 }

@@ -206,6 +206,47 @@ public partial class RectangularRegionGroupEntry : VisualSampleGroupEntry
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("groupID", 16, this.groupID); 
+		boxSize += builder.Field("rect_region_flag", 1, this.rect_region_flag); 
+
+		if (!rect_region_flag)
+		{
+			boxSize += builder.Field("reserved", 7, this.reserved); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("independent_idc", 2, this.independent_idc); 
+			boxSize += builder.Field("full_picture", 1, this.full_picture); 
+			boxSize += builder.Field("filtering_disabled", 1, this.filtering_disabled); 
+			boxSize += builder.Field("has_dependency_list", 1, this.has_dependency_list); 
+			boxSize += builder.Field("reserved0", 2, this.reserved0); 
+
+			if (!full_picture)
+			{
+				boxSize += builder.Field("horizontal_offset", 16, this.horizontal_offset); 
+				boxSize += builder.Field("vertical_offset", 16, this.vertical_offset); 
+			}
+			boxSize += builder.Field("region_width", 16, this.region_width); 
+			boxSize += builder.Field("region_height", 16, this.region_height); 
+
+			if (has_dependency_list)
+			{
+				boxSize += builder.Field("dependency_rect_region_count", 16, this.dependency_rect_region_count); 
+
+				for (int i=0; i< dependency_rect_region_count; i++)
+				{
+					boxSize += builder.Field($"dependencyRectRegionGroupID[{i}]", 16, this.dependencyRectRegionGroupID[i]); 
+				}
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

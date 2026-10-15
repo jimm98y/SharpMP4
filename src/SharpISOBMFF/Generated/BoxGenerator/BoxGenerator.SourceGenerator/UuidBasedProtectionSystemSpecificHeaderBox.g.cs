@@ -62,6 +62,16 @@ public partial class UuidBasedProtectionSystemSpecificHeaderBox : FullBox
 		boxSize += ((ulong)(count) * 8); // data
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("systemID", 16 * 8, this.systemID); 
+		boxSize += builder.Field("count", 32, this.count); 
+		boxSize += builder.Field("data", ((ulong)(count) * 8), this.data); 
+		return boxSize;
+	}
 }
 
 }

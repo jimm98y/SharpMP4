@@ -62,6 +62,17 @@ public partial class PspProfExtensionBox : Box
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("unknown1", 32, this.unknown1); 
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

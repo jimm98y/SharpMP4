@@ -67,6 +67,7 @@ public partial class ErrorProtectionSpecificConfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "ErrorProtectionSpecificConfig"; } }
 
 	protected byte number_of_predefined_set; 
@@ -427,6 +428,94 @@ public partial class ErrorProtectionSpecificConfig : IMp4Serializable
 		{
 			boxSize += 5; // header_rate
 			boxSize += 5; // header_crclen
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("number_of_predefined_set", 8, this.number_of_predefined_set); 
+		boxSize += builder.Field("interleave_type", 2, this.interleave_type); 
+		boxSize += builder.Field("bit_stuffing", 3, this.bit_stuffing); 
+		boxSize += builder.Field("number_of_concatenated_frame", 3, this.number_of_concatenated_frame); 
+
+		for (int i = 0; i < number_of_predefined_set; i++)
+		{
+			boxSize += builder.Field($"number_of_class[{i}]", 6, this.number_of_class[i]); 
+
+			for (int j = 0; j < number_of_class[i]; j++)
+			{
+				boxSize += builder.Field($"length_escape[{i}][{j}]", 1, this.length_escape[i][j]); 
+				boxSize += builder.Field($"rate_escape[{i}][{j}]", 1, this.rate_escape[i][j]); 
+				boxSize += builder.Field($"crclen_escape[{i}][{j}]", 1, this.crclen_escape[i][j]); 
+
+				if (number_of_concatenated_frame != 1)
+				{
+					boxSize += builder.Field($"concatenate_flag[{i}][{j}]", 1, this.concatenate_flag[i][j]); 
+				}
+				boxSize += builder.Field($"fec_type[{i}][{j}]", 2, this.fec_type[i][j]); 
+
+				if (fec_type[i][j] == 0)
+				{
+					boxSize += builder.Field($"termination_switch[{i}][{j}]", 1, this.termination_switch[i][j]); 
+				}
+
+				if (interleave_type == 2)
+				{
+					boxSize += builder.Field($"interleave_switch[{i}][{j}]", 2, this.interleave_switch[i][j]); 
+				}
+				boxSize += builder.Field($"class_optional[{i}][{j}]", 1, this.class_optional[i][j]); 
+
+				if (length_escape[i][j] == true)
+				{
+					/*  ESC  */
+					boxSize += builder.Field($"number_of_bits_for_length[{i}][{j}]", 4, this.number_of_bits_for_length[i][j]); 
+				}
+
+				else 
+				{
+					boxSize += builder.Field($"class_length[{i}][{j}]", 16, this.class_length[i][j]); 
+				}
+
+				if (rate_escape[i][j] != true)
+				{
+					/*  not ESC  */
+
+					if (fec_type[i][j] != 0)
+					{
+						boxSize += builder.Field($"class_rate[{i}][{j}]", 7, this.class_rate[i][j]); 
+					}
+
+					else 
+					{
+						boxSize += builder.Field($"class_rate[{i}][{j}]", 5, this.class_rate[i][j]); 
+					}
+				}
+
+				if (crclen_escape[i][j] != true)
+				{
+					/*  not ESC  */
+					boxSize += builder.Field($"class_crclen[{i}][{j}]", 5, this.class_crclen[i][j]); 
+				}
+			}
+			boxSize += builder.Field($"class_reordered_output[{i}]", 1, this.class_reordered_output[i]); 
+
+			if (class_reordered_output[i] == true)
+			{
+
+				for (int j = 0; j < number_of_class[i]; j++)
+				{
+					boxSize += builder.Field($"class_output_order[{i}][{j}]", 6, this.class_output_order[i][j]); 
+				}
+			}
+		}
+		boxSize += builder.Field("header_protection", 1, this.header_protection); 
+
+		if (header_protection == true)
+		{
+			boxSize += builder.Field("header_rate", 5, this.header_rate); 
+			boxSize += builder.Field("header_crclen", 5, this.header_crclen); 
 		}
 		return boxSize;
 	}

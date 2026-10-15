@@ -117,6 +117,30 @@ public partial class SampleAuxiliaryInformationOffsetsBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if ((flags  &  1) ==  1)
+		{
+			boxSize += builder.Field("aux_info_type", 32, this.aux_info_type); 
+			boxSize += builder.Field("aux_info_type_parameter", 32, this.aux_info_type_parameter); 
+		}
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+
+		if ( version == 0 )
+		{
+			boxSize += builder.Field("offset", ((ulong)( entry_count ) * 32), this.offset); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("offset", ((ulong)( entry_count ) * 64), this.offset); 
+		}
+		return boxSize;
+	}
 }
 
 }

@@ -126,6 +126,31 @@ public partial class MD5IntegrityBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("input_MD5", 16 * 8, this.input_MD5); 
+		boxSize += builder.Field("input_4cc", 32, this.input_4cc); 
+
+		if (input_4cc == IsoStream.FromFourCC("sgpd"))
+		{
+			boxSize += builder.Field("grouping_type", 32, this.grouping_type); 
+
+			if ((flags & 1) == 1)
+			{
+				boxSize += builder.Field("grouping_type_parameter", 32, this.grouping_type_parameter); 
+			}
+			boxSize += builder.Field("num_entries", 32, this.num_entries); 
+
+			for (int i=0; i<num_entries; i++)
+			{
+				boxSize += builder.Field($"group_description_index[{i}]", 32, this.group_description_index[i]); 
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

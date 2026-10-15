@@ -89,6 +89,20 @@ public partial class EventMessageBox : Box
 		boxSize += ((ulong)messageData.Length * 8); // messageData
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("schemeIdUri", IsoStream.CalculateStringSize(schemeIdUri), this.schemeIdUri); 
+		boxSize += builder.Field("value", IsoStream.CalculateStringSize(value), this.value); 
+		boxSize += builder.Field("timescale", 32, this.timescale); 
+		boxSize += builder.Field("presentationTimeDelta", 32, this.presentationTimeDelta); 
+		boxSize += builder.Field("eventDuration", 32, this.eventDuration); 
+		boxSize += builder.Field("id", 32, this.id); 
+		boxSize += builder.Field("messageData", ((ulong)messageData.Length * 8), this.messageData); 
+		return boxSize;
+	}
 }
 
 }

@@ -55,6 +55,15 @@ public partial class IdentifiedMediaDataBox : Box
 		boxSize += ((ulong)data.Length * 8); // data
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("imda_identifier", 32, this.imda_identifier); 
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); // until the end of the box
+		return boxSize;
+	}
 }
 
 }

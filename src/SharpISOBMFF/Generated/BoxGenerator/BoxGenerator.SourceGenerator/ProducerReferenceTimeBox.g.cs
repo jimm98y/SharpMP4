@@ -94,6 +94,25 @@ public partial class ProducerReferenceTimeBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reference_track_ID", 32, this.reference_track_ID); 
+		boxSize += builder.Field("ntp_timestamp", 64, this.ntp_timestamp); 
+
+		if (version==0)
+		{
+			boxSize += builder.Field("media_time", 32, this.media_time); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("media_time", 64, this.media_time); 
+		}
+		return boxSize;
+	}
 }
 
 }

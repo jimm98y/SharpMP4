@@ -181,6 +181,33 @@ public partial class TextMediaBox : Box
 		boxSize += IsoStream.CalculateStringSize(name); // name
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved1", 6 * 8, this.reserved1); 
+		boxSize += builder.Field("dataReferenceIndex", 16, this.dataReferenceIndex); 
+		boxSize += builder.Field("displayFlags", 32, this.displayFlags); 
+		boxSize += builder.Field("textJustification", 32, this.textJustification); 
+		boxSize += builder.Field("bgColorRed", 16, this.bgColorRed); 
+		boxSize += builder.Field("bgColorGreen", 16, this.bgColorGreen); 
+		boxSize += builder.Field("bgColorBlue", 16, this.bgColorBlue); 
+		boxSize += builder.Field("defTextBoxTop", 16, this.defTextBoxTop); 
+		boxSize += builder.Field("defTextBoxLeft", 16, this.defTextBoxLeft); 
+		boxSize += builder.Field("defTextBoxBotton", 16, this.defTextBoxBotton); 
+		boxSize += builder.Field("defTextBoxRight", 16, this.defTextBoxRight); 
+		boxSize += builder.Field("reserved2", 64, this.reserved2); 
+		boxSize += builder.Field("fontNumber", 16, this.fontNumber); 
+		boxSize += builder.Field("fontFace", 16, this.fontFace); 
+		boxSize += builder.Field("reserved3", 8, this.reserved3); 
+		boxSize += builder.Field("reserved4", 16, this.reserved4); 
+		boxSize += builder.Field("foreColorRed", 16, this.foreColorRed); 
+		boxSize += builder.Field("foreColorGreen", 16, this.foreColorGreen); 
+		boxSize += builder.Field("foreColorBlue", 16, this.foreColorBlue); 
+		boxSize += builder.Field("name", IsoStream.CalculateStringSize(name), this.name); 
+		return boxSize;
+	}
 }
 
 }

@@ -786,7 +786,9 @@ namespace BoxGenerator
     {
         Read,
         Write,
-        Size
+        Size,
+        // ToString(BoxStringBuilder): each field as it is now, of the size it is written of
+        Describe
     }
 
     public class FieldTypeInfo

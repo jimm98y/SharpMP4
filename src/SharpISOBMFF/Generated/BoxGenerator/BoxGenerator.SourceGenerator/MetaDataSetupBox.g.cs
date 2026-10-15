@@ -56,6 +56,16 @@ public partial class MetaDataSetupBox : Box
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		/*  'init' instead? */
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); // as the key's namespace has it
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

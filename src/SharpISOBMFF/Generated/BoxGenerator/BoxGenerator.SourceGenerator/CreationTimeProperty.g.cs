@@ -50,6 +50,14 @@ public partial class CreationTimeProperty : ItemFullProperty
 		boxSize += 64; // creation_time
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("creation_time", 64, this.creation_time); 
+		return boxSize;
+	}
 }
 
 }

@@ -57,6 +57,15 @@ public partial class CanonCTBOBox : Box
 		boxSize += IsoStream.CalculateClassSize(entries); // entries
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entryCount", 32, this.entryCount); 
+		boxSize += builder.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
+		return boxSize;
+	}
 }
 
 }

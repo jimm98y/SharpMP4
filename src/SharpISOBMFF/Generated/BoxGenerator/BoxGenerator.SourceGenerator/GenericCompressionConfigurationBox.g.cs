@@ -55,6 +55,15 @@ public partial class GenericCompressionConfigurationBox : FullBox
 		boxSize += 8; // unit_type
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("compression_type", 32, this.compression_type); 
+		boxSize += builder.Field("unit_type", 8, this.unit_type); 
+		return boxSize;
+	}
 }
 
 }

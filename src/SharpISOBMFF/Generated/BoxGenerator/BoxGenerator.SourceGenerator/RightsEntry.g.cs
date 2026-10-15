@@ -17,6 +17,7 @@ public partial class RightsEntry : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "RightsEntry"; } }
 
 	protected uint key;  //  veID, plat, aver, tran, song, tool, medi, mode
@@ -50,6 +51,14 @@ public partial class RightsEntry : IMp4Serializable
 		ulong boxSize = 0;
 		boxSize += 32; // key
 		boxSize += 32; // value
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("key", 32, this.key); // veID, plat, aver, tran, song, tool, medi, mode
+		boxSize += builder.Field("value", 32, this.value); 
 		return boxSize;
 	}
 }

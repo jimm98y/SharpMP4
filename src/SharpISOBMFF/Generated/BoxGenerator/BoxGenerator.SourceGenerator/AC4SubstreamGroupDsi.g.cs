@@ -55,6 +55,7 @@ public partial class AC4SubstreamGroupDsi : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "AC4SubstreamGroupDsi"; } }
 
 	protected bool b_substreams_present; 
@@ -315,6 +316,66 @@ public partial class AC4SubstreamGroupDsi : IMp4Serializable
 			{
 				boxSize += 6; // n_language_tag_bytes
 				boxSize += ((ulong)(n_language_tag_bytes) * 8); // language_tag_bytes
+			}
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("b_substreams_present", 1, this.b_substreams_present); 
+		boxSize += builder.Field("b_hsf_ext", 1, this.b_hsf_ext); 
+		boxSize += builder.Field("b_channel_coded", 1, this.b_channel_coded); 
+		boxSize += builder.Field("n_substreams", 8, this.n_substreams); 
+
+		for (int i = 0; i < n_substreams; i++)
+		{
+			boxSize += builder.Field($"dsi_sf_multiplier[{i}]", 2, this.dsi_sf_multiplier[i]); 
+			boxSize += builder.Field($"b_substream_bitrate_indicator[{i}]", 1, this.b_substream_bitrate_indicator[i]); 
+
+			if (b_substream_bitrate_indicator[i])
+			{
+				boxSize += builder.Field($"substream_bitrate_indicator[{i}]", 5, this.substream_bitrate_indicator[i]); 
+			}
+
+			if (b_channel_coded)
+			{
+				boxSize += builder.Field($"reserved_zero[{i}]", 6, this.reserved_zero[i]); 
+				boxSize += builder.Field($"dsi_substream_channel_groups[{i}]", 18, this.dsi_substream_channel_groups[i]); 
+			}
+
+			else 
+			{
+				boxSize += builder.Field($"b_ajoc[{i}]", 1, this.b_ajoc[i]); 
+
+				if (b_ajoc[i])
+				{
+					boxSize += builder.Field($"b_static_dmx[{i}]", 1, this.b_static_dmx[i]); 
+
+					if (!b_static_dmx[i])
+					{
+						boxSize += builder.Field($"n_dmx_objects_minus1[{i}]", 4, this.n_dmx_objects_minus1[i]); 
+					}
+					boxSize += builder.Field($"n_umx_objects_minus1[{i}]", 6, this.n_umx_objects_minus1[i]); 
+				}
+				boxSize += builder.Field($"b_substream_contains_bed_objects[{i}]", 1, this.b_substream_contains_bed_objects[i]); 
+				boxSize += builder.Field($"b_substream_contains_dynamic_objects[{i}]", 1, this.b_substream_contains_dynamic_objects[i]); 
+				boxSize += builder.Field($"b_substream_contains_ISF_objects[{i}]", 1, this.b_substream_contains_ISF_objects[i]); 
+				boxSize += builder.Field($"reserved[{i}]", 1, this.reserved[i]); 
+			}
+		}
+		boxSize += builder.Field("b_content_type", 1, this.b_content_type); 
+
+		if (b_content_type)
+		{
+			boxSize += builder.Field("content_classifier", 3, this.content_classifier); 
+			boxSize += builder.Field("b_language_indicator", 1, this.b_language_indicator); 
+
+			if (b_language_indicator)
+			{
+				boxSize += builder.Field("n_language_tag_bytes", 6, this.n_language_tag_bytes); 
+				boxSize += builder.Field("language_tag_bytes", ((ulong)(n_language_tag_bytes) * 8), this.language_tag_bytes); 
 			}
 		}
 		return boxSize;

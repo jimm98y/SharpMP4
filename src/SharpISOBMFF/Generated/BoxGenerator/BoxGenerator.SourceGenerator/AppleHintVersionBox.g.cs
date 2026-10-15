@@ -48,6 +48,14 @@ public partial class AppleHintVersionBox : Box
 		boxSize += IsoStream.CalculateStringSize(version); // version
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("version", IsoStream.CalculateStringSize(version), this.version); 
+		return boxSize;
+	}
 }
 
 }

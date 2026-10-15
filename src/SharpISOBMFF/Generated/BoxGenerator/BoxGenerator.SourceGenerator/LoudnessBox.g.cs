@@ -59,6 +59,17 @@ public partial class LoudnessBox : Box
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		/*  not more than one TrackLoudnessInfo box with version>=1 is allowed */
+		// boxSize += builder.Field("loudness", IsoStream.CalculateBoxSize(loudness), this.loudness); // not more than one AlbumLoudnessInfo box with version>=1 is allowed
+		// boxSize += builder.Field("albumLoudness", IsoStream.CalculateBoxSize(albumLoudness), this.albumLoudness); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

@@ -50,6 +50,14 @@ public partial class PittasoftStartTimeBox : Box
 		boxSize += 64; // startTime
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("startTime", 64, this.startTime); 
+		return boxSize;
+	}
 }
 
 }

@@ -101,6 +101,23 @@ public partial class JpegXLFrameIndexBox : Box
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("frame_count", IsoStream.CalculateLeb128Size(frame_count), this.frame_count); // NF
+		boxSize += builder.Field("tick_numerator", 32, this.tick_numerator); // TNUM
+		boxSize += builder.Field("tick_denominator", 32, this.tick_denominator); // TDEN
+
+		for (int i = 0; i < frame_count; i++)
+		{
+			boxSize += builder.Field($"offset[{i}]", IsoStream.CalculateLeb128Size(offset[i]), this.offset[i]); // OFFi
+			boxSize += builder.Field($"duration[{i}]", IsoStream.CalculateLeb128Size(duration[i]), this.duration[i]); // Ti
+			boxSize += builder.Field($"frames[{i}]", IsoStream.CalculateLeb128Size(frames[i]), this.frames[i]); // Fi
+		}
+		return boxSize;
+	}
 }
 
 }

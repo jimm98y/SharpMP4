@@ -25,6 +25,7 @@ public partial class UsacConfigExtension : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "UsacConfigExtension"; } }
 
 	protected EscapedValue numConfigExtensionsMinusOne; 
@@ -84,6 +85,20 @@ public partial class UsacConfigExtension : IMp4Serializable
 			boxSize += IsoStream.CalculateClassSize(usacConfigExtType[i]); // usacConfigExtType
 			boxSize += IsoStream.CalculateClassSize(usacConfigExtLength[i]); // usacConfigExtLength
 			boxSize += IsoStream.CalculateClassSize(usacConfigExtensionData[i]); // usacConfigExtensionData
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("numConfigExtensionsMinusOne", IsoStream.CalculateClassSize(numConfigExtensionsMinusOne), this.numConfigExtensionsMinusOne); 
+
+		for (int i = 0; i < numConfigExtensionsMinusOne + 1; i++)
+		{
+			boxSize += builder.Field($"usacConfigExtType[{i}]", IsoStream.CalculateClassSize(usacConfigExtType[i]), this.usacConfigExtType[i]); 
+			boxSize += builder.Field($"usacConfigExtLength[{i}]", IsoStream.CalculateClassSize(usacConfigExtLength[i]), this.usacConfigExtLength[i]); 
+			boxSize += builder.Field($"usacConfigExtensionData[{i}]", IsoStream.CalculateClassSize(usacConfigExtensionData[i]), this.usacConfigExtensionData[i]); 
 		}
 		return boxSize;
 	}

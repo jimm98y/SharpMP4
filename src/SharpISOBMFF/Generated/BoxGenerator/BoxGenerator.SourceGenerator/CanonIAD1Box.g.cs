@@ -93,6 +93,20 @@ public partial class CanonIAD1Box : FullBox
 		boxSize += IsoStream.CalculateClassSize(areas); // areas
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("image_width", 16, this.image_width); 
+		boxSize += builder.Field("image_height", 16, this.image_height); 
+		boxSize += builder.Field("unknown1", 16, this.unknown1); // 1
+		boxSize += builder.Field("image_kind", 16, this.image_kind); // 0 small, 2 big (sliced?)
+		boxSize += builder.Field("unknown2", 16, this.unknown2); // 1
+		boxSize += builder.Field("unknown3", 16, this.unknown3); // 0
+		boxSize += builder.Field("areas", IsoStream.CalculateClassSize(areas), this.areas); // small: the crop, the whole; big: the crop, left and top optical black, the active area
+		return boxSize;
+	}
 }
 
 }

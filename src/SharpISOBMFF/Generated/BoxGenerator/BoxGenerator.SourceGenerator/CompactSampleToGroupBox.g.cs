@@ -167,6 +167,41 @@ public partial class CompactSampleToGroupBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		bool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);
+		uint count_size_code = 4u << (int)((flags >> 2) & 0x3);
+		uint pattern_size_code = 4u << (int)((flags >> 4) & 0x3);
+		uint index_size_code = 4u << (int)(flags & 0x3);
+
+		boxSize += builder.Field("grouping_type", 32, this.grouping_type); 
+
+		if (grouping_type_parameter_present == true)
+		{
+			boxSize += builder.Field("grouping_type_parameter", 32, this.grouping_type_parameter); 
+		}
+		boxSize += builder.Field("pattern_count", 32, this.pattern_count); 
+		
+
+		for (int i=0; i < pattern_count; i++)
+		{
+			boxSize += builder.Field($"pattern_length[{i}]", (ulong)(pattern_size_code ), this.pattern_length[i]); 
+			boxSize += builder.Field($"sample_count[{i}]", (ulong)(count_size_code ), this.sample_count[i]); 
+		}
+
+		for (int j=0; j < pattern_count; j++)
+		{
+
+			for (int k=0; k < IsoStream.GetInt(pattern_length[j]); k++)
+			{
+				boxSize += builder.Field($"sample_group_description_index[{j}][{k}]", (ulong)(index_size_code ), this.sample_group_description_index[j][k]); // whose msb might indicate fragment_local or global
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

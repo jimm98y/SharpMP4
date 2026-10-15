@@ -56,6 +56,16 @@ public partial class MVCDConfigurationBox : Box
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("MVDConfig", IsoStream.CalculateClassSize(MVDConfig), this.MVDConfig); 
+		// boxSize += builder.Field("mvdDepthRes", IsoStream.CalculateBoxSize(mvdDepthRes), this.mvdDepthRes); //Optional
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

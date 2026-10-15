@@ -47,6 +47,15 @@ public partial class FontSampleEntry : SampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		/* other boxes from derived specifications */
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

@@ -88,6 +88,25 @@ public partial class ItemInfoBox : FullBox
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version == 0)
+		{
+			boxSize += builder.Field("entry_count", 16, this.entry_count); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		}
+		// boxSize += builder.Field("item_infos", IsoStream.CalculateBoxSize(item_infos), this.item_infos); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

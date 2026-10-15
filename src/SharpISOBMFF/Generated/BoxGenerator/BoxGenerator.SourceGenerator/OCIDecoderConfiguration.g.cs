@@ -45,6 +45,14 @@ public partial class OCIDecoderConfiguration : DecoderSpecificInfo
 		boxSize += 8; // versionLabel
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("versionLabel", 8, this.versionLabel); 
+		return boxSize;
+	}
 }
 
 }

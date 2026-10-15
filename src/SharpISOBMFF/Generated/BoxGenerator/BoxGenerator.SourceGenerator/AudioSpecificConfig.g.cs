@@ -976,6 +976,239 @@ public partial class AudioSpecificConfig : BaseDescriptor
 		boxSize += this.remainder.Count;
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		GetAudioObjectType coreAudioObjectType = audioObjectType;
+		if (signalledAudioObjectType != null) audioObjectType = signalledAudioObjectType;
+
+		boxSize += builder.Field("audioObjectType", IsoStream.CalculateClassSize(audioObjectType), this.audioObjectType); 
+		boxSize += builder.Field("samplingFrequencyIndex", 4, this.samplingFrequencyIndex); 
+
+		if (samplingFrequencyIndex == 0xf )
+		{
+			boxSize += builder.Field("samplingFrequency", 24, this.samplingFrequency); 
+		}
+		boxSize += builder.Field("channelConfiguration", 4, this.channelConfiguration); 
+		// sbrPresentFlag = -1: as read
+		// psPresentFlag = -1: as read
+
+		if (audioObjectType.AudioObjectType == 5 || audioObjectType.AudioObjectType == 29)
+		{
+			// extensionAudioObjectType = 5: as read
+			audioObjectType = coreAudioObjectType; // the core type, written second
+			// sbrPresentFlag = 1: as read
+
+			if (audioObjectType.AudioObjectType == 29)
+			{
+				// psPresentFlag = 1: as read
+			}
+			boxSize += builder.Field("extensionSamplingFrequencyIndex", 4, this.extensionSamplingFrequencyIndex); 
+
+			if (extensionSamplingFrequencyIndex == 0xf)
+			{
+				boxSize += builder.Field("extensionSamplingFrequency", 24, this.extensionSamplingFrequency); 
+			}
+			boxSize += builder.Field("audioObjectType", IsoStream.CalculateClassSize(audioObjectType), this.audioObjectType); 
+
+			if (audioObjectType.AudioObjectType == 22)
+			{
+				boxSize += builder.Field("extensionChannelConfiguration", 4, this.extensionChannelConfiguration); 
+			}
+		}
+
+		else 
+		{
+			// extensionAudioObjectType = 0: as read
+		}
+
+		switch (audioObjectType.AudioObjectType)
+		{
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 6:
+			case 7:
+			case 17:
+			case 19:
+			case 20:
+			case 21:
+			case 22:
+			case 23:
+			boxSize += builder.Field("GASpecificConfig", IsoStream.CalculateClassSize(GASpecificConfig), this.GASpecificConfig); 
+			break;
+
+			case 8:
+			boxSize += builder.Field("CelpSpecificConfig", IsoStream.CalculateClassSize(CelpSpecificConfig), this.CelpSpecificConfig); 
+			break;
+
+			case 9:
+			boxSize += builder.Field("HvxcSpecificConfig", IsoStream.CalculateClassSize(HvxcSpecificConfig), this.HvxcSpecificConfig); 
+			break;
+
+			case 12:
+			boxSize += builder.Field("TTSSpecificConfig", IsoStream.CalculateClassSize(TTSSpecificConfig), this.TTSSpecificConfig); 
+			break;
+
+			case 13:
+			case 14:
+			case 15:
+			case 16:
+			boxSize += builder.Field("StructuredAudioSpecificConfig", IsoStream.CalculateClassSize(StructuredAudioSpecificConfig), this.StructuredAudioSpecificConfig); 
+			break;
+
+			case 24:
+			boxSize += builder.Field("ErrorResilientCelpSpecificConfig", IsoStream.CalculateClassSize(ErrorResilientCelpSpecificConfig), this.ErrorResilientCelpSpecificConfig); 
+			break;
+
+			case 25:
+			boxSize += builder.Field("ErrorResilientHvxcSpecificConfig", IsoStream.CalculateClassSize(ErrorResilientHvxcSpecificConfig), this.ErrorResilientHvxcSpecificConfig); 
+			break;
+
+			case 26:
+			case 27:
+			boxSize += builder.Field("ParametricSpecificConfig", IsoStream.CalculateClassSize(ParametricSpecificConfig), this.ParametricSpecificConfig); 
+			break;
+
+			case 28:
+			boxSize += builder.Field("SSCSpecificConfig", IsoStream.CalculateClassSize(SSCSpecificConfig), this.SSCSpecificConfig); 
+			break;
+
+			case 30:
+			boxSize += builder.Field("sacPayloadEmbedding", 1, this.sacPayloadEmbedding); 
+			boxSize += builder.Field("SpatialSpecificConfig", IsoStream.CalculateClassSize(SpatialSpecificConfig), this.SpatialSpecificConfig); 
+			break;
+
+			case 32:
+			case 33:
+			case 34:
+			boxSize += builder.Field("MPEG_1_2_SpecificConfig", IsoStream.CalculateClassSize(MPEG_1_2_SpecificConfig), this.MPEG_1_2_SpecificConfig); 
+			break;
+
+			case 35:
+			boxSize += builder.Field("DSTSpecificConfig", IsoStream.CalculateClassSize(DSTSpecificConfig), this.DSTSpecificConfig); 
+			break;
+
+			case 36:
+			boxSize += builder.Field("fillBits", 5, this.fillBits); 
+			boxSize += builder.Field("ALSSpecificConfig", IsoStream.CalculateClassSize(ALSSpecificConfig), this.ALSSpecificConfig); 
+			break;
+
+			case 37:
+			case 38:
+			boxSize += builder.Field("SLSSpecificConfig", IsoStream.CalculateClassSize(SLSSpecificConfig), this.SLSSpecificConfig); 
+			break;
+
+			case 39:
+			boxSize += builder.Field("ELDSpecificConfig", IsoStream.CalculateClassSize(ELDSpecificConfig), this.ELDSpecificConfig); 
+			break;
+
+			case 40:
+			case 41:
+			boxSize += builder.Field("SymbolicMusicSpecificConfig", IsoStream.CalculateClassSize(SymbolicMusicSpecificConfig), this.SymbolicMusicSpecificConfig); 
+			break;
+
+			case 42:
+			/*  USAC (ISO/IEC 23003-3), which this edition (2009) does not list */
+			boxSize += builder.Field("UsacConfig", IsoStream.CalculateClassSize(UsacConfig), this.UsacConfig); 
+			break;
+
+			default:
+
+			/*  reserved  */
+			break;
+
+		}
+
+		switch (audioObjectType.AudioObjectType)
+		{
+			case 17:
+			case 19:
+			case 20:
+			case 21:
+			case 22:
+			case 23:
+			case 24:
+			case 25:
+			case 26:
+			case 27:
+			case 39:
+			boxSize += builder.Field("epConfig", 2, this.epConfig); 
+
+			if (epConfig == 2 || epConfig == 3)
+			{
+				boxSize += builder.Field("ErrorProtectionSpecificConfig", IsoStream.CalculateClassSize(ErrorProtectionSpecificConfig), this.ErrorProtectionSpecificConfig); 
+			}
+
+			if (epConfig == 3)
+			{
+				boxSize += builder.Field("directMapping", 1, this.directMapping); 
+
+				if (!directMapping)
+				{
+					/*  tbd  */
+				}
+			}
+			break;
+
+		}
+
+		if (signalledAudioObjectType == null && IsoStream.BitsToDecode(boxSize, SizeOfInstance << 3) >= 16)
+		{
+			boxSize += builder.Field("syncExtensionType", 11, this.syncExtensionType); 
+
+			if (syncExtensionType == 0x2b7)
+			{
+				boxSize += builder.Field("extensionAudioObjectType", IsoStream.CalculateClassSize(extensionAudioObjectType), this.extensionAudioObjectType); 
+
+				if (extensionAudioObjectType.AudioObjectType == 5)
+				{
+					boxSize += builder.Field("sbrPresentFlag", 1, this.sbrPresentFlag); 
+
+					if (sbrPresentFlag == true)
+					{
+						boxSize += builder.Field("extensionSamplingFrequencyIndex", 4, this.extensionSamplingFrequencyIndex); 
+
+						if (extensionSamplingFrequencyIndex == 0xf)
+						{
+							boxSize += builder.Field("extensionSamplingFrequency", 24, this.extensionSamplingFrequency); 
+						}
+
+						if (IsoStream.BitsToDecode(boxSize, SizeOfInstance << 3) >= 12)
+						{
+							boxSize += builder.Field("syncExtensionType2", 11, this.syncExtensionType2); // syncExtensionType, read again: a field of its own, so both are written
+
+							if (syncExtensionType2 == 0x548)
+							{
+								boxSize += builder.Field("psPresentFlag", 1, this.psPresentFlag); 
+							}
+						}
+					}
+				}
+
+				if (extensionAudioObjectType.AudioObjectType == 22)
+				{
+					boxSize += builder.Field("sbrPresentFlag", 1, this.sbrPresentFlag); 
+
+					if (sbrPresentFlag == true)
+					{
+						boxSize += builder.Field("extensionSamplingFrequencyIndex", 4, this.extensionSamplingFrequencyIndex); 
+
+						if (extensionSamplingFrequencyIndex == 0xf)
+						{
+							boxSize += builder.Field("extensionSamplingFrequency", 24, this.extensionSamplingFrequency); 
+						}
+					}
+					boxSize += builder.Field("extensionChannelConfiguration", 4, this.extensionChannelConfiguration); 
+				}
+			}
+		}
+		if (this.remainder.Count > 0) boxSize += builder.Field("remainder", this.remainder.Count, this.remainder);
+		return boxSize;
+	}
 }
 
 }

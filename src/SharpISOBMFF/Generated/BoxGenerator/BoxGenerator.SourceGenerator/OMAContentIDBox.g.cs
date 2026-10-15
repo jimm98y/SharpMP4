@@ -55,6 +55,15 @@ public partial class OMAContentIDBox : FullBox
 		boxSize += ((ulong)(contentIDLength) * 8); // contentID
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("contentIDLength", 16, this.contentIDLength); 
+		boxSize += builder.Field("contentID", ((ulong)(contentIDLength) * 8), this.contentID); 
+		return boxSize;
+	}
 }
 
 }

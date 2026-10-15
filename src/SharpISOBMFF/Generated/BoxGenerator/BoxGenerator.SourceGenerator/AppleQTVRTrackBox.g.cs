@@ -69,6 +69,17 @@ public partial class AppleQTVRTrackBox : Box
 		boxSize += 32; // data
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved1", 32, this.reserved1); 
+		boxSize += builder.Field("reserved2", 16, this.reserved2); 
+		boxSize += builder.Field("dataRefIndex", 16, this.dataRefIndex); 
+		boxSize += builder.Field("data", 32, this.data); 
+		return boxSize;
+	}
 }
 
 }

@@ -55,6 +55,15 @@ public partial class TimestampSynchrony : Box
 		boxSize += 2; // timestamp_sync
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += builder.Field("timestamp_sync", 2, this.timestamp_sync); 
+		return boxSize;
+	}
 }
 
 }

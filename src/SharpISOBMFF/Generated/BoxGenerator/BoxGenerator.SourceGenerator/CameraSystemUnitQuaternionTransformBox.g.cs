@@ -63,6 +63,16 @@ public partial class CameraSystemUnitQuaternionTransformBox : FullBox
 		boxSize += 32; // xyz2
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("xyz0", 32, this.xyz0); 
+		boxSize += builder.Field("xyz1", 32, this.xyz1); 
+		boxSize += builder.Field("xyz2", 32, this.xyz2); 
+		return boxSize;
+	}
 }
 
 }

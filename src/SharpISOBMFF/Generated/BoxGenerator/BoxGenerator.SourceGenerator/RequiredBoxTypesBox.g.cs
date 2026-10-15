@@ -48,6 +48,14 @@ public partial class RequiredBoxTypesBox : FullBox
 		boxSize += ((ulong)required_box_types.Length * 32); // required_box_types
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("required_box_types", ((ulong)required_box_types.Length * 32), this.required_box_types); 
+		return boxSize;
+	}
 }
 
 }

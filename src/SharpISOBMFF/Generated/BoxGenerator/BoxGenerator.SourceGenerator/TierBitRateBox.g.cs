@@ -84,6 +84,19 @@ public partial class TierBitRateBox : Box
 		boxSize += 32; // tierAvgBitRate
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("baseBitRate", 32, this.baseBitRate); 
+		boxSize += builder.Field("maxBitRate", 32, this.maxBitRate); 
+		boxSize += builder.Field("avgBitRate", 32, this.avgBitRate); 
+		boxSize += builder.Field("tierBaseBitRate", 32, this.tierBaseBitRate); 
+		boxSize += builder.Field("tierMaxBitRate", 32, this.tierMaxBitRate); 
+		boxSize += builder.Field("tierAvgBitRate", 32, this.tierAvgBitRate); 
+		return boxSize;
+	}
 }
 
 }

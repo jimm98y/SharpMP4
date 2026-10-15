@@ -292,6 +292,70 @@ public partial class DownMixInstructions : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		int baseChannelCount = 0; // TODO: get somewhere
+
+		if (version >= 1)
+		{
+			boxSize += builder.Field("reserved", 1, this.reserved); 
+			boxSize += builder.Field("downmix_instructions_count", 7, this.downmix_instructions_count); 
+		}
+
+		else 
+		{
+			downmix_instructions_count = 1;
+		}
+
+		for (int a=0; a<downmix_instructions_count; a++)
+		{
+			boxSize += builder.Field($"targetLayout[{a}]", 8, this.targetLayout[a]); 
+			boxSize += builder.Field($"reserved0[{a}]", 1, this.reserved0[a]); 
+			boxSize += builder.Field($"targetChannelCount[{a}]", 7, this.targetChannelCount[a]); 
+			boxSize += builder.Field($"in_stream[{a}]", 1, this.in_stream[a]); 
+			boxSize += builder.Field($"downmix_ID[{a}]", 7, this.downmix_ID[a]); 
+
+			if (in_stream[a]== false)
+			{
+				/*  downmix coefficients are out of stream and supplied here */
+				
+
+				if (version >= 1)
+				{
+					boxSize += builder.Field($"bs_downmix_offset[{a}]", 4, this.bs_downmix_offset[a]); 
+					int size = 4;
+
+					for (int i=0; i < targetChannelCount[a]; i++)
+					{
+
+						for (int j=0; j < baseChannelCount; j++)
+						{
+							boxSize += builder.Field($"bs_downmix_coefficient_v1[{a}][{i}][{j}]", 5, this.bs_downmix_coefficient_v1[a][i][j]); 
+							size += 5;
+						}
+					}
+					boxSize += builder.Field($"reserved00[{a}]", (ulong)((Math.Ceiling(size / 8d) - size) * 8 ), this.reserved00[a]); // byte align
+				}
+
+				else 
+				{
+
+					for (int i=0; i < targetChannelCount[a]; i++)
+					{
+
+						for (int j=0; j < baseChannelCount; j++)
+						{
+							boxSize += builder.Field($"bs_downmix_coefficient[{a}][{i}][{j}]", 4, this.bs_downmix_coefficient[a][i][j]); 
+						}
+					}
+				}
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

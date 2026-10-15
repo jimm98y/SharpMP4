@@ -56,6 +56,16 @@ public partial class MetaDataKeyTableBox : FullBox
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		// boxSize += builder.Field("MetaDataKeyBox", IsoStream.CalculateBoxSize(MetaDataKeyBox), this.MetaDataKeyBox); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

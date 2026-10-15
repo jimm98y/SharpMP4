@@ -48,6 +48,14 @@ public partial class OMACoverURLBox : FullBox
 		boxSize += IsoStream.CalculateStringSize(content); // content
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("content", IsoStream.CalculateStringSize(content), this.content); 
+		return boxSize;
+	}
 }
 
 }

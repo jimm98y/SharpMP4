@@ -48,6 +48,14 @@ public partial class EVCConfigurationBox : Box
 		boxSize += IsoStream.CalculateClassSize(EVCConfig); // EVCConfig
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("EVCConfig", IsoStream.CalculateClassSize(EVCConfig), this.EVCConfig); 
+		return boxSize;
+	}
 }
 
 }

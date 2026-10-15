@@ -19,6 +19,7 @@ public partial class ViprEntry : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "ViprEntry"; } }
 
 	protected byte reserved = 0; 
@@ -58,6 +59,15 @@ public partial class ViprEntry : IMp4Serializable
 		boxSize += 6; // reserved
 		boxSize += 10; // view_id
 		boxSize += 32; // content_priority_id
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += builder.Field("view_id", 10, this.view_id); 
+		boxSize += builder.Field("content_priority_id", 32, this.content_priority_id); 
 		return boxSize;
 	}
 }

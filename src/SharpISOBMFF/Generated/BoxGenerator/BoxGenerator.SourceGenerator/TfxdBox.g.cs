@@ -89,6 +89,25 @@ public partial class TfxdBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version == 0x1)
+		{
+			boxSize += builder.Field("fragmentAbsoluteTime", 64, this.fragmentAbsoluteTime); 
+			boxSize += builder.Field("fragmentAbsoluteDuration", 64, this.fragmentAbsoluteDuration); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("fragmentAbsoluteTime", 32, this.fragmentAbsoluteTime); 
+			boxSize += builder.Field("fragmentAbsoluteDuration", 32, this.fragmentAbsoluteDuration); 
+		}
+		return boxSize;
+	}
 }
 
 }

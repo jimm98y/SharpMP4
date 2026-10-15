@@ -38,6 +38,7 @@ public partial class AV1CodecConfigurationRecord : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "AV1CodecConfigurationRecord"; } }
 
 	protected bool marker = true; 
@@ -179,6 +180,36 @@ public partial class AV1CodecConfigurationRecord : IMp4Serializable
 			boxSize += 4; // reserved0
 		}
 		boxSize += ((ulong)configOBUs.Length * 8); // configOBUs
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("marker", 1, this.marker); 
+		boxSize += builder.Field("version", 7, this.version); 
+		boxSize += builder.Field("seq_profile", 3, this.seq_profile); 
+		boxSize += builder.Field("seq_level_idx_0", 5, this.seq_level_idx_0); 
+		boxSize += builder.Field("seq_tier_0", 1, this.seq_tier_0); 
+		boxSize += builder.Field("high_bitdepth", 1, this.high_bitdepth); 
+		boxSize += builder.Field("twelve_bit", 1, this.twelve_bit); 
+		boxSize += builder.Field("monochrome", 1, this.monochrome); 
+		boxSize += builder.Field("chroma_subsampling_x", 1, this.chroma_subsampling_x); 
+		boxSize += builder.Field("chroma_subsampling_y", 1, this.chroma_subsampling_y); 
+		boxSize += builder.Field("chroma_sample_position", 2, this.chroma_sample_position); 
+		boxSize += builder.Field("reserved", 3, this.reserved); 
+		boxSize += builder.Field("initial_presentation_delay_present", 1, this.initial_presentation_delay_present); 
+
+		if (initial_presentation_delay_present)
+		{
+			boxSize += builder.Field("initial_presentation_delay_minus_one", 4, this.initial_presentation_delay_minus_one); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("reserved0", 4, this.reserved0); 
+		}
+		boxSize += builder.Field("configOBUs", ((ulong)configOBUs.Length * 8), this.configOBUs); 
 		return boxSize;
 	}
 }

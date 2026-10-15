@@ -48,6 +48,14 @@ public partial class CanonCompressorVersionBox : Box
 		boxSize += IsoStream.CalculateStringSize(compressorVersion); // compressorVersion
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("compressorVersion", IsoStream.CalculateStringSize(compressorVersion), this.compressorVersion); 
+		return boxSize;
+	}
 }
 
 }

@@ -100,6 +100,21 @@ public partial class MicrosoftWaveFormatExBox : Box
 		boxSize += ((ulong)extra.Length * 8); // extra
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("format_tag", 16, this.format_tag); 
+		boxSize += builder.Field("channels", 16, this.channels); 
+		boxSize += builder.Field("samples_per_sec", 32, this.samples_per_sec); 
+		boxSize += builder.Field("avg_bytes_per_sec", 32, this.avg_bytes_per_sec); 
+		boxSize += builder.Field("block_align", 16, this.block_align); 
+		boxSize += builder.Field("bits_per_sample", 16, this.bits_per_sample); 
+		if (this.extra_sizePresent) boxSize += builder.Field("extra_size", 16, this.extra_size); // optional
+		boxSize += builder.Field("extra", ((ulong)extra.Length * 8), this.extra); 
+		return boxSize;
+	}
 }
 
 }

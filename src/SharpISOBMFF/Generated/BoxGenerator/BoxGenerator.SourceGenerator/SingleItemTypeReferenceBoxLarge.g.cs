@@ -76,6 +76,20 @@ public partial class SingleItemTypeReferenceBoxLarge : Box
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("from_item_ID", 32, this.from_item_ID); 
+		boxSize += builder.Field("reference_count", 16, this.reference_count); 
+
+		for (int j=0; j<reference_count; j++)
+		{
+			boxSize += builder.Field($"to_item_ID[{j}]", 32, this.to_item_ID[j]); 
+		}
+		return boxSize;
+	}
 }
 
 }

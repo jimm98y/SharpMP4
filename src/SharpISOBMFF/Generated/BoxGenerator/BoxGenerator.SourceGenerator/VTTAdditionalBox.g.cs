@@ -49,6 +49,14 @@ public partial class VTTAdditionalBox : Box
 		boxSize += IsoStream.CalculateStringSize(cueAdditionalText); // cueAdditionalText
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("cueAdditionalText", IsoStream.CalculateStringSize(cueAdditionalText), this.cueAdditionalText); 
+		return boxSize;
+	}
 }
 
 }

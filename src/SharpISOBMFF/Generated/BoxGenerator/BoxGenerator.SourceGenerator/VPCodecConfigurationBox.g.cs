@@ -163,6 +163,36 @@ public partial class VPCodecConfigurationBox : FullBox
 		boxSize += ((ulong)(codecInitializationDataSize) * 8); // codecInitializationData
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("profile", 8, this.profile); 
+		boxSize += builder.Field("level", 8, this.level); 
+
+		if (version == 0)
+		{
+			boxSize += builder.Field("bitDepth", 4, this.bitDepth); 
+			boxSize += builder.Field("colorSpace", 4, this.colorSpace); 
+			boxSize += builder.Field("chromaSubsampling", 4, this.chromaSubsampling); 
+			boxSize += builder.Field("transferFunction", 3, this.transferFunction); 
+			boxSize += builder.Field("videoFullRangeFlag", 1, this.videoFullRangeFlag); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("bitDepth", 4, this.bitDepth); 
+			boxSize += builder.Field("chromaSubsampling", 3, this.chromaSubsampling); 
+			boxSize += builder.Field("videoFullRangeFlag", 1, this.videoFullRangeFlag); 
+			boxSize += builder.Field("colourPrimaries", 8, this.colourPrimaries); 
+			boxSize += builder.Field("transferCharacteristics", 8, this.transferCharacteristics); 
+			boxSize += builder.Field("matrixCoefficients", 8, this.matrixCoefficients); 
+		}
+		boxSize += builder.Field("codecInitializationDataSize", 16, this.codecInitializationDataSize); 
+		boxSize += builder.Field("codecInitializationData", ((ulong)(codecInitializationDataSize) * 8), this.codecInitializationData); 
+		return boxSize;
+	}
 }
 
 }

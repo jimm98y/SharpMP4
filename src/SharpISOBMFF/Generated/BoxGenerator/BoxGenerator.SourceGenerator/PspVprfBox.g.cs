@@ -125,6 +125,25 @@ public partial class PspVprfBox : Box
 		boxSize += 32; // unknown5
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("unknown1", 32, this.unknown1); 
+		boxSize += builder.Field("unknown2", 32, this.unknown2); 
+		boxSize += builder.Field("codec", 32, this.codec); 
+		boxSize += builder.Field("unknown3", 32, this.unknown3); 
+		boxSize += builder.Field("unknown4", 32, this.unknown4); 
+		boxSize += builder.Field("maxBitrate", 32, this.maxBitrate); 
+		boxSize += builder.Field("avgBitrate", 32, this.avgBitrate); 
+		boxSize += builder.Field("frameRate1", 32, this.frameRate1); 
+		boxSize += builder.Field("frameRate2", 32, this.frameRate2); 
+		boxSize += builder.Field("width", 16, this.width); 
+		boxSize += builder.Field("height", 16, this.height); 
+		boxSize += builder.Field("unknown5", 32, this.unknown5); 
+		return boxSize;
+	}
 }
 
 }

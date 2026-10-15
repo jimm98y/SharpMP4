@@ -91,6 +91,24 @@ public partial class SampleSizeBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sample_size", 32, this.sample_size); 
+		boxSize += builder.Field("sample_count", 32, this.sample_count); 
+
+		if (sample_size==0)
+		{
+
+			for (int i=0; i < sample_count; i++)
+			{
+				boxSize += builder.Field($"entry_size[{i}]", 32, this.entry_size[i]); 
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

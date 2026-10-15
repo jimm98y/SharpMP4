@@ -69,6 +69,17 @@ public partial class AppleImagePreviewBox : Box
 		boxSize += 16; // atomIndex
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("modificationDate", 32, this.modificationDate); 
+		boxSize += builder.Field("version", 16, this.version); 
+		boxSize += builder.Field("atomType", 32, this.atomType); 
+		boxSize += builder.Field("atomIndex", 16, this.atomIndex); 
+		return boxSize;
+	}
 }
 
 }

@@ -90,6 +90,22 @@ public partial class UuidCameraIntrinsicMatrixBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("matrix_focal_length_x", 32, this.matrix_focal_length_x); 
+		boxSize += builder.Field("matrix_principal_point_x", 32, this.matrix_principal_point_x); 
+		boxSize += builder.Field("matrix_principal_point_y", 32, this.matrix_principal_point_y); 
+
+		if (( flags  &  0x1 ) ==  0x1 )
+		{
+			boxSize += builder.Field("matrix_focal_length_y", 32, this.matrix_focal_length_y); 
+			boxSize += builder.Field("matrix_skew", 32, this.matrix_skew); 
+		}
+		return boxSize;
+	}
 }
 
 }

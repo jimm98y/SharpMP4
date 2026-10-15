@@ -48,6 +48,14 @@ public partial class SamplingRateBox : FullBox
 		boxSize += 32; // sampling_rate
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sampling_rate", 32, this.sampling_rate); 
+		return boxSize;
+	}
 }
 
 }

@@ -35,6 +35,7 @@ public partial class TrunEntry : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "TrunEntry"; } }
 
 	protected uint sample_duration; 
@@ -163,6 +164,41 @@ public partial class TrunEntry : IMp4Serializable
 			else 
 			{
 				boxSize += 32; // sample_composition_time_offset0
+			}
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+
+		if ((flags  &  0x100) ==  0x100)
+		{
+			boxSize += builder.Field("sample_duration", 32, this.sample_duration); 
+		}
+
+		if ((flags  &  0x200) ==  0x200)
+		{
+			boxSize += builder.Field("sample_size", 32, this.sample_size); 
+		}
+
+		if ((flags  &  0x400) ==  0x400)
+		{
+			boxSize += builder.Field("sample_flags", 32, this.sample_flags); 
+		}
+
+		if ((flags  &  0x800) ==  0x800)
+		{
+
+			if (version == 0)
+			{
+				boxSize += builder.Field("sample_composition_time_offset", 32, this.sample_composition_time_offset); 
+			}
+
+			else 
+			{
+				boxSize += builder.Field("sample_composition_time_offset0", 32, this.sample_composition_time_offset0); 
 			}
 		}
 		return boxSize;

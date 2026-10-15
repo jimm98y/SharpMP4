@@ -49,6 +49,14 @@ public partial class ISMACrypSaltBox : Box
 		boxSize += 64; // salt
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("salt", 64, this.salt); 
+		return boxSize;
+	}
 }
 
 }

@@ -20,6 +20,7 @@ public partial class ComponentDescription : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "ComponentDescription"; } }
 
 	protected uint componentType; 
@@ -71,6 +72,17 @@ public partial class ComponentDescription : IMp4Serializable
 		boxSize += 32; // componentManufacturer
 		boxSize += 32; // componentFlags
 		boxSize += 32; // componentFlagsMask
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("componentType", 32, this.componentType); 
+		boxSize += builder.Field("componentSubType", 32, this.componentSubType); 
+		boxSize += builder.Field("componentManufacturer", 32, this.componentManufacturer); 
+		boxSize += builder.Field("componentFlags", 32, this.componentFlags); 
+		boxSize += builder.Field("componentFlagsMask", 32, this.componentFlagsMask); 
 		return boxSize;
 	}
 }

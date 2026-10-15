@@ -50,6 +50,14 @@ public partial class CanonCMT1Box : Box
 		boxSize += ((ulong)tiff.Length * 8); // tiff
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("tiff", ((ulong)tiff.Length * 8), this.tiff); 
+		return boxSize;
+	}
 }
 
 }

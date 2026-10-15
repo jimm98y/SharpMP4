@@ -52,6 +52,15 @@ public partial class TrackExtensionPropertiesBox : FullBox
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("track_ID", 32, this.track_ID); // Any number of boxes may follow
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

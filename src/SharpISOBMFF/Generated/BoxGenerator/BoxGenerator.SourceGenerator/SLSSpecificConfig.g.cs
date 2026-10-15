@@ -28,6 +28,7 @@ public partial class SLSSpecificConfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "SLSSpecificConfig"; } }
 
 	protected byte pcmWordLength; 
@@ -108,6 +109,22 @@ public partial class SLSSpecificConfig : IMp4Serializable
 		if (channelConfiguration == 0)
 		{
 			boxSize += IsoStream.CalculateClassSize(program_config_element); // program_config_element
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("pcmWordLength", 3, this.pcmWordLength); 
+		boxSize += builder.Field("aac_core_present", 1, this.aac_core_present); 
+		boxSize += builder.Field("lle_main_stream", 1, this.lle_main_stream); 
+		boxSize += builder.Field("reserved_bit", 1, this.reserved_bit); 
+		boxSize += builder.Field("frameLength", 3, this.frameLength); 
+
+		if (channelConfiguration == 0)
+		{
+			boxSize += builder.Field("program_config_element", IsoStream.CalculateClassSize(program_config_element), this.program_config_element); 
 		}
 		return boxSize;
 	}

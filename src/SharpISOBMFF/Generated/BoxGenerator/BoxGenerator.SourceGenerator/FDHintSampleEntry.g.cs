@@ -72,6 +72,18 @@ public partial class FDHintSampleEntry : HintSampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("hinttrackversion", 16, this.hinttrackversion); 
+		boxSize += builder.Field("highestcompatibleversion", 16, this.highestcompatibleversion); 
+		boxSize += builder.Field("partition_entry_ID", 16, this.partition_entry_ID); 
+		boxSize += builder.Field("FEC_overhead", 16, this.FEC_overhead); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

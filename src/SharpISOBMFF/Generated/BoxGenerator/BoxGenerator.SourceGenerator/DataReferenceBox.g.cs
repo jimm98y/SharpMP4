@@ -65,6 +65,18 @@ public partial class DataReferenceBox : FullBox
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+
+		// for (int i=0; i < entry_count; i++)
+			// boxSize += builder.Field($"data_entry[{i}]", IsoStream.CalculateBoxSize(data_entry[i]), this.data_entry[i]); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

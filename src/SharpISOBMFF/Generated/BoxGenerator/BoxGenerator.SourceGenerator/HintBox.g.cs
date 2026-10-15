@@ -52,6 +52,15 @@ public partial class HintBox : Box
 		boxSize += ((ulong)track_IDs.Length * 32); // track_IDs
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		/*  a track reference (ISO/IEC 14496-12 8.3.3): the IDs of the tracks a hint track hints, one or more */
+		boxSize += builder.Field("track_IDs", ((ulong)track_IDs.Length * 32), this.track_IDs); 
+		return boxSize;
+	}
 }
 
 }

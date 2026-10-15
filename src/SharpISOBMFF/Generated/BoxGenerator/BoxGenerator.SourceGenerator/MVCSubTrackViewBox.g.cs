@@ -87,6 +87,21 @@ public partial class MVCSubTrackViewBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("item_count", 16, this.item_count); 
+
+		for (int i = 0; i< item_count; i++)
+		{
+			boxSize += builder.Field($"view_id[{i}]", 10, this.view_id[i]); 
+			boxSize += builder.Field($"temporal_id[{i}]", 4, this.temporal_id[i]); 
+			boxSize += builder.Field($"reserved[{i}]", 2, this.reserved[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

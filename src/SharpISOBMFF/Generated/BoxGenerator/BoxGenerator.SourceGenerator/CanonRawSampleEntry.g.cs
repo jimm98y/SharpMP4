@@ -148,6 +148,29 @@ public partial class CanonRawSampleEntry : SampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("pre_defined", 16, this.pre_defined); 
+		boxSize += builder.Field("reserved", 16, this.reserved); 
+		boxSize += builder.Field("pre_defined0", 3 * 32, this.pre_defined0); 
+		boxSize += builder.Field("width", 16, this.width); 
+		boxSize += builder.Field("height", 16, this.height); 
+		boxSize += builder.Field("horizresolution", 32, this.horizresolution); 
+		boxSize += builder.Field("vertresolution", 32, this.vertresolution); 
+		boxSize += builder.Field("reserved0", 32, this.reserved0); 
+		boxSize += builder.Field("frame_count", 16, this.frame_count); 
+		boxSize += builder.Field("compressorname", 32 * 8, this.compressorname); 
+		boxSize += builder.Field("depth", 16, this.depth); 
+		boxSize += builder.Field("pre_defined1", 16, this.pre_defined1); 
+		boxSize += builder.Field("imageType", 16, this.imageType); 
+		boxSize += builder.Field("imageFlags", 16, this.imageFlags); 
+		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

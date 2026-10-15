@@ -55,6 +55,15 @@ public partial class ItaiBox : FullBox
 		boxSize += 8; // status_bits
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("tai_timestamp", 64, this.tai_timestamp); 
+		boxSize += builder.Field("status_bits", 8, this.status_bits); 
+		return boxSize;
+	}
 }
 
 }

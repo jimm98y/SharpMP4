@@ -84,6 +84,19 @@ public partial class HrefBox : Box
 		boxSize += ((ulong)(altLength) * 8); // altstring
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("startcharoffset", 16, this.startcharoffset); 
+		boxSize += builder.Field("endcharoffset", 16, this.endcharoffset); 
+		boxSize += builder.Field("urlLength", 8, this.urlLength); 
+		boxSize += builder.Field("url", ((ulong)(urlLength) * 8), this.url); 
+		boxSize += builder.Field("altLength", 8, this.altLength); 
+		boxSize += builder.Field("altstring", ((ulong)(altLength) * 8), this.altstring); 
+		return boxSize;
+	}
 }
 
 }

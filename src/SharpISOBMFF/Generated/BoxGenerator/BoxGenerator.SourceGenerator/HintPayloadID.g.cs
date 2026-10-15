@@ -61,6 +61,16 @@ public partial class HintPayloadID : Box
 		boxSize += ((ulong)(count) * 8); // rtpmap_string
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("payloadID", 32, this.payloadID); // payload ID used in RTP packets
+		boxSize += builder.Field("count", 8, this.count); 
+		boxSize += builder.Field("rtpmap_string", ((ulong)(count) * 8), this.rtpmap_string); 
+		return boxSize;
+	}
 }
 
 }

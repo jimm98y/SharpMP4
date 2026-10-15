@@ -49,6 +49,14 @@ public partial class MultiviewSceneInfoBox : Box
 		boxSize += 8; // max_disparity
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("max_disparity", 8, this.max_disparity); 
+		return boxSize;
+	}
 }
 
 }

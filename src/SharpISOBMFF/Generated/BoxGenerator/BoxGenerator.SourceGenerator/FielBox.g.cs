@@ -55,6 +55,15 @@ public partial class FielBox : Box
 		boxSize += 8; // order
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("total", 8, this.total); 
+		boxSize += builder.Field("order", 8, this.order); 
+		return boxSize;
+	}
 }
 
 }

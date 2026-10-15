@@ -71,6 +71,18 @@ public partial class CanonCCTPBox : Box
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 32, this.reserved); 
+		boxSize += builder.Field("unknown", 32, this.unknown); 
+		boxSize += builder.Field("entryCount", 32, this.entryCount); 
+		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

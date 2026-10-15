@@ -50,6 +50,14 @@ public partial class TimeOffset : Box
 		boxSize += 32; // offset
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("offset", 32, this.offset); 
+		return boxSize;
+	}
 }
 
 }

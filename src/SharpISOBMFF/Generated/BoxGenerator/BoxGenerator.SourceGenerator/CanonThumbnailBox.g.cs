@@ -85,6 +85,19 @@ public partial class CanonThumbnailBox : FullBox
 		boxSize += ((ulong)data.Length * 8); // data
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("width", 16, this.width); 
+		boxSize += builder.Field("height", 16, this.height); 
+		boxSize += builder.Field("thumbnailSize", 32, this.thumbnailSize); 
+		boxSize += builder.Field("unknown1", 16, this.unknown1); 
+		boxSize += builder.Field("unknown2", 16, this.unknown2); 
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
+		return boxSize;
+	}
 }
 
 }

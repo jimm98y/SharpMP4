@@ -111,6 +111,23 @@ public partial class SMPTE2086MasteringDisplayMetadataBox : FullBox
 		boxSize += 32; // luminanceMin
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("primaryRChromaticityX", 16, this.primaryRChromaticityX); 
+		boxSize += builder.Field("primaryRChromaticityY", 16, this.primaryRChromaticityY); 
+		boxSize += builder.Field("primaryGChromaticityX", 16, this.primaryGChromaticityX); 
+		boxSize += builder.Field("primaryGChromaticityY", 16, this.primaryGChromaticityY); 
+		boxSize += builder.Field("primaryBChromaticityX", 16, this.primaryBChromaticityX); 
+		boxSize += builder.Field("primaryBChromaticityY", 16, this.primaryBChromaticityY); 
+		boxSize += builder.Field("whitePointChromaticityX", 16, this.whitePointChromaticityX); 
+		boxSize += builder.Field("whitePointChromaticityY", 16, this.whitePointChromaticityY); 
+		boxSize += builder.Field("luminanceMax", 32, this.luminanceMax); 
+		boxSize += builder.Field("luminanceMin", 32, this.luminanceMin); 
+		return boxSize;
+	}
 }
 
 }

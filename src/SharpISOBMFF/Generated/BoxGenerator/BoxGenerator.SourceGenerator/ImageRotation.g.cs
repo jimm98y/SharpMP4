@@ -56,6 +56,15 @@ public partial class ImageRotation : ItemProperty
 		boxSize += 2; // angle
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += builder.Field("angle", 2, this.angle); 
+		return boxSize;
+	}
 }
 
 }

@@ -72,6 +72,19 @@ public partial class MeshProjection : ProjectionDataBox
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("crc", 32, this.crc); 
+		boxSize += builder.Field("encoding_four_cc", 32, this.encoding_four_cc); // All bytes below this point are compressed according to
+		/*  the algorithm specified by the encoding_four_cc field. */
+		/*  MeshBox() meshes[]; // At least 1 mesh box must be present. */
+		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); // further boxes as needed
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

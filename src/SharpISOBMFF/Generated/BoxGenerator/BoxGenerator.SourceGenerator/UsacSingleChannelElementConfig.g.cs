@@ -23,6 +23,7 @@ public partial class UsacSingleChannelElementConfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "UsacSingleChannelElementConfig"; } }
 
 	protected bool tw_mdct; 
@@ -77,6 +78,19 @@ public partial class UsacSingleChannelElementConfig : IMp4Serializable
 		if (coreSbrFrameLengthIndex >= 2 && coreSbrFrameLengthIndex <= 4)
 		{
 			boxSize += IsoStream.CalculateClassSize(sbrConfig); // sbrConfig
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("tw_mdct", 1, this.tw_mdct); 
+		boxSize += builder.Field("noiseFilling", 1, this.noiseFilling); 
+
+		if (coreSbrFrameLengthIndex >= 2 && coreSbrFrameLengthIndex <= 4)
+		{
+			boxSize += builder.Field("sbrConfig", IsoStream.CalculateClassSize(sbrConfig), this.sbrConfig); 
 		}
 		return boxSize;
 	}

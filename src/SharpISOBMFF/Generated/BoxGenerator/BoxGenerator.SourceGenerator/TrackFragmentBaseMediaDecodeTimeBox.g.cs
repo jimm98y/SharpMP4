@@ -83,6 +83,24 @@ public partial class TrackFragmentBaseMediaDecodeTimeBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version==1)
+		{
+			boxSize += builder.Field("baseMediaDecodeTime", 64, this.baseMediaDecodeTime); 
+		}
+
+		else 
+		{
+			/*  version==0 */
+			boxSize += builder.Field("baseMediaDecodeTime", 32, this.baseMediaDecodeTime); 
+		}
+		return boxSize;
+	}
 }
 
 }

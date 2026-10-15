@@ -95,6 +95,22 @@ public partial class ImagePyramidEntityGroupBox : EntityToGroupBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("tile_size_x", 16, this.tile_size_x); 
+		boxSize += builder.Field("tile_size_y", 16, this.tile_size_y); 
+
+		for (int i = 0; i < num_entities_in_group; i++)
+		{
+			boxSize += builder.Field($"layer_binning[{i}]", 16, this.layer_binning[i]); 
+			boxSize += builder.Field($"tiles_in_layer_row_minus1[{i}]", 16, this.tiles_in_layer_row_minus1[i]); 
+			boxSize += builder.Field($"tiles_in_layer_column_minus1[{i}]", 16, this.tiles_in_layer_column_minus1[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

@@ -71,6 +71,17 @@ public partial class ThreeGPPAlbumBox : FullBox
 		if (this.trackNumberPresent) boxSize += 8; // trackNumber
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 1, this.reserved); 
+		boxSize += builder.Field("language", 15, this.language); 
+		boxSize += builder.Field("value", IsoStream.CalculateStringSize(value), this.value); 
+		if (this.trackNumberPresent) boxSize += builder.Field("trackNumber", 8, this.trackNumber); // optional
+		return boxSize;
+	}
 }
 
 }

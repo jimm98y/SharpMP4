@@ -76,6 +76,18 @@ public partial class AppleVersionCheckBox : Box
 		boxSize += 16; // checkType
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("flags", 32, this.flags); 
+		boxSize += builder.Field("softwarePackage", 32, this.softwarePackage); 
+		boxSize += builder.Field("version", 32, this.version); 
+		boxSize += builder.Field("mask", 32, this.mask); 
+		boxSize += builder.Field("checkType", 16, this.checkType); 
+		return boxSize;
+	}
 }
 
 }

@@ -69,6 +69,17 @@ public partial class CameraSystemLensHeaderBox : FullBox
 		boxSize += 32; // lens_role
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("lens_identifier", 32, this.lens_identifier); // an integer unique to the enclosing CameraSystemLensBox 
+		boxSize += builder.Field("lens_algorithm_kind", 32, this.lens_algorithm_kind); // a FourCC for the kind of projection 
+		boxSize += builder.Field("lens_domain", 32, this.lens_domain); // a FourCC for the kind of lens (e.g., color) 
+		boxSize += builder.Field("lens_role", 32, this.lens_role); // a FourCC indicating which lens this is (e.g., left or right for a stereo system) 
+		return boxSize;
+	}
 }
 
 }

@@ -49,6 +49,14 @@ public partial class WipeTransitionEffectProperty : ItemFullProperty
 		boxSize += 8; // transition_direction
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("transition_direction", 8, this.transition_direction); 
+		return boxSize;
+	}
 }
 
 }

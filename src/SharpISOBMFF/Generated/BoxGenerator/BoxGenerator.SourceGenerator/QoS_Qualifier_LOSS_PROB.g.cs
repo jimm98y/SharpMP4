@@ -46,6 +46,14 @@ public partial class QoS_Qualifier_LOSS_PROB : QoS_Qualifier
 		boxSize += 32; // LOSS_PROB
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("LOSS_PROB", 32, this.LOSS_PROB); 
+		return boxSize;
+	}
 }
 
 }

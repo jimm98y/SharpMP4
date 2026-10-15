@@ -24,6 +24,7 @@ public partial class GetAudioObjectType : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "GetAudioObjectType"; } }
 
 	protected byte audioObjectType; 
@@ -76,6 +77,22 @@ public partial class GetAudioObjectType : IMp4Serializable
 		if (audioObjectType == 31)
 		{
 			boxSize += 6; // audioObjectTypeExt
+			audioObjectType = (byte)(32 + audioObjectTypeExt);
+		}
+		// return audioObjectType;
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		if (audioObjectType >= 32) { audioObjectTypeExt = (byte)(audioObjectType - 32); audioObjectType = 31; }
+
+		boxSize += builder.Field("audioObjectType", 5, this.audioObjectType); 
+
+		if (audioObjectType == 31)
+		{
+			boxSize += builder.Field("audioObjectTypeExt", 6, this.audioObjectTypeExt); 
 			audioObjectType = (byte)(32 + audioObjectTypeExt);
 		}
 		// return audioObjectType;

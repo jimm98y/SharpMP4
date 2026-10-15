@@ -50,6 +50,15 @@ public partial class MetaDataExtensionsBox : Box
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("extensions", IsoStream.CalculateBoxSize(extensions), this.extensions); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

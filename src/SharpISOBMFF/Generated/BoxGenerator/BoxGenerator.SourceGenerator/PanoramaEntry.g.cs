@@ -47,6 +47,14 @@ public partial class PanoramaEntry : VisualSampleGroupEntry
 		boxSize += 16; // frame_number
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("frame_number", 16, this.frame_number); 
+		return boxSize;
+	}
 }
 
 }

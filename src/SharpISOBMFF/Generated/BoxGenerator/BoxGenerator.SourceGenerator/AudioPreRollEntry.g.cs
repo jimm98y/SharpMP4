@@ -46,6 +46,14 @@ public partial class AudioPreRollEntry : AudioSampleGroupEntry
 		boxSize += 16; // roll_distance
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("roll_distance", 16, this.roll_distance); 
+		return boxSize;
+	}
 }
 
 }

@@ -71,6 +71,19 @@ public partial class RequiredReferenceTypesProperty : ItemFullProperty
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reference_type_count", 8, this.reference_type_count); 
+
+		for (int i=0; i< reference_type_count; i++)
+		{
+			boxSize += builder.Field($"reference_type[{i}]", 32, this.reference_type[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

@@ -58,6 +58,16 @@ public partial class RtpMovieHintInformation : Box
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("descriptionformat", 32, this.descriptionformat); 
+		boxSize += builder.Field("sdptext", ((ulong)sdptext.Length * 8), this.sdptext); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

@@ -83,6 +83,19 @@ public partial class CameraSystemLensFrameAdjustmentBox : FullBox
 		boxSize += 32; // polynomialParametersY2
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("polynomialParametersX0", 32, this.polynomialParametersX0); 
+		boxSize += builder.Field("polynomialParametersX1", 32, this.polynomialParametersX1); 
+		boxSize += builder.Field("polynomialParametersX2", 32, this.polynomialParametersX2); // parameters for X axis 
+		boxSize += builder.Field("polynomialParametersY0", 32, this.polynomialParametersY0); 
+		boxSize += builder.Field("polynomialParametersY1", 32, this.polynomialParametersY1); 
+		boxSize += builder.Field("polynomialParametersY2", 32, this.polynomialParametersY2); // parameters for Y axis 
+		return boxSize;
+	}
 }
 
 }

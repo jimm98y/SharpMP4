@@ -70,6 +70,17 @@ public partial class AppleColorTableBox : Box
 		boxSize += IsoStream.CalculateClassSize(colors); // colors
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("color_table_seed", 32, this.color_table_seed); 
+		boxSize += builder.Field("flags", 16, this.flags); 
+		boxSize += builder.Field("color_table_size", 16, this.color_table_size); 
+		boxSize += builder.Field("colors", IsoStream.CalculateClassSize(colors), this.colors); 
+		return boxSize;
+	}
 }
 
 }

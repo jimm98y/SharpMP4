@@ -47,6 +47,14 @@ public partial class HintBytesSenttpylDup : Box
 		boxSize += 64; // bytessent
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("bytessent", 64, this.bytessent); 
+		return boxSize;
+	}
 }
 
 }

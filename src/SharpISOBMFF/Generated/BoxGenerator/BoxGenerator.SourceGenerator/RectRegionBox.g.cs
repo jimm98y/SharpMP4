@@ -104,6 +104,24 @@ public partial class RectRegionBox : Box
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("base_region_tierID", 16, this.base_region_tierID); 
+		boxSize += builder.Field("dynamic_rect", 1, this.dynamic_rect); 
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+
+		if (dynamic_rect == false)
+		{
+			boxSize += builder.Field("horizontal_offset", 16, this.horizontal_offset); 
+			boxSize += builder.Field("vertical_offset", 16, this.vertical_offset); 
+			boxSize += builder.Field("region_width", 16, this.region_width); 
+			boxSize += builder.Field("region_height", 16, this.region_height); 
+		}
+		return boxSize;
+	}
 }
 
 }

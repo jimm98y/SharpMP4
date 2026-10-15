@@ -49,6 +49,14 @@ public partial class Stereoscopic3D : FullBox
 		boxSize += 8; // stereo_mode
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("stereo_mode", 8, this.stereo_mode); 
+		return boxSize;
+	}
 }
 
 }

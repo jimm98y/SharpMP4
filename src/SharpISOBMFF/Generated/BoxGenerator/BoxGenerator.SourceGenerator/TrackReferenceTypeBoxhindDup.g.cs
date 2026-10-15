@@ -48,6 +48,14 @@ public partial class TrackReferenceTypeBoxhindDup : Box
 		boxSize += ((ulong)trackIds.Length * 32); // trackIds
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("trackIds", ((ulong)trackIds.Length * 32), this.trackIds); 
+		return boxSize;
+	}
 }
 
 }

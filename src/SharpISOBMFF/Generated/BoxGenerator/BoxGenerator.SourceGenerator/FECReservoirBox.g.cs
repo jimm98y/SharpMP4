@@ -141,6 +141,38 @@ public partial class FECReservoirBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version == 0)
+		{
+			boxSize += builder.Field("entry_count", 16, this.entry_count); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		}
+
+		for (int i=0; i < entry_count; i++)
+		{
+
+			if (version == 0)
+			{
+				boxSize += builder.Field($"item_ID[{i}]", 16, this.item_ID[i]); 
+			}
+
+			else 
+			{
+				boxSize += builder.Field($"item_ID[{i}]", 32, this.item_ID[i]); 
+			}
+			boxSize += builder.Field($"symbol_count[{i}]", 32, this.symbol_count[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

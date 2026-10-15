@@ -52,6 +52,15 @@ public partial class RegistrationDescriptor : BaseDescriptor
 		boxSize += ((ulong)(sizeOfInstance-4) * 8); // additionalIdentificationInfo
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("formatIdentifier", 32, this.formatIdentifier); 
+		boxSize += builder.Field("additionalIdentificationInfo", ((ulong)(sizeOfInstance-4) * 8), this.additionalIdentificationInfo); 
+		return boxSize;
+	}
 }
 
 }

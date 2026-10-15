@@ -51,6 +51,16 @@ public partial class VvcSampleEntryvvi1Dup : VisualSampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("config", IsoStream.CalculateBoxSize(config), this.config); 
+		// boxSize += builder.Field("descr", IsoStream.CalculateBoxSize(descr), this.descr); // optional
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

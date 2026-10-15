@@ -131,6 +131,32 @@ public partial class RateShareEntry : SampleGroupDescriptionEntry
 		boxSize += 8; // discard_priority
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("operation_point_count", 16, this.operation_point_count); 
+
+		if (operation_point_count == 1)
+		{
+			boxSize += builder.Field("target_rate_share", 16, this.target_rate_share); 
+		}
+
+		else 
+		{
+
+			for (int i=0; i < operation_point_count; i++)
+			{
+				boxSize += builder.Field($"available_bitrate[{i}]", 32, this.available_bitrate[i]); 
+				boxSize += builder.Field($"target_rate_share0[{i}]", 16, this.target_rate_share0[i]); 
+			}
+		}
+		boxSize += builder.Field("maximum_bitrate", 32, this.maximum_bitrate); 
+		boxSize += builder.Field("minimum_bitrate", 32, this.minimum_bitrate); 
+		boxSize += builder.Field("discard_priority", 8, this.discard_priority); 
+		return boxSize;
+	}
 }
 
 }

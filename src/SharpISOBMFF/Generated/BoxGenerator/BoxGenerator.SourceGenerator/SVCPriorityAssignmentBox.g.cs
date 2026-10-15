@@ -56,6 +56,15 @@ public partial class SVCPriorityAssignmentBox : Box
 		boxSize += IsoStream.CalculateStringSize(PriorityAssignmentURI); // PriorityAssignmentURI
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("method_count", 8, this.method_count); 
+		boxSize += builder.Field("PriorityAssignmentURI", IsoStream.CalculateStringSize(PriorityAssignmentURI), this.PriorityAssignmentURI); 
+		return boxSize;
+	}
 }
 
 }

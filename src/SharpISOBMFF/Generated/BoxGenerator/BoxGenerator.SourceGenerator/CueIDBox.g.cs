@@ -49,6 +49,14 @@ public partial class CueIDBox : Box
 		boxSize += IsoStream.CalculateStringSize(cueID); // cueID
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("cueID", IsoStream.CalculateStringSize(cueID), this.cueID); 
+		return boxSize;
+	}
 }
 
 }

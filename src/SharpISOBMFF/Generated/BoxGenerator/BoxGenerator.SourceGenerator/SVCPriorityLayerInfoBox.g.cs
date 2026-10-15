@@ -94,6 +94,22 @@ public partial class SVCPriorityLayerInfoBox : Box
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("pr_layer_num", 8, this.pr_layer_num); 
+
+		for (int j=0; j< pr_layer_num; j++)
+		{
+			boxSize += builder.Field($"pr_layer[{j}]", 8, this.pr_layer[j]); 
+			boxSize += builder.Field($"profile_level_idc[{j}]", 24, this.profile_level_idc[j]); 
+			boxSize += builder.Field($"max_bitrate[{j}]", 32, this.max_bitrate[j]); 
+			boxSize += builder.Field($"avg_bitrate[{j}]", 32, this.avg_bitrate[j]); 
+		}
+		return boxSize;
+	}
 }
 
 }

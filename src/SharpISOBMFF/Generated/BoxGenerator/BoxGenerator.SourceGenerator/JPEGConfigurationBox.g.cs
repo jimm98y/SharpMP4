@@ -48,6 +48,14 @@ public partial class JPEGConfigurationBox : Box
 		boxSize += ((ulong)JPEGprefix.Length * 8); // JPEGprefix
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("JPEGprefix", ((ulong)JPEGprefix.Length * 8), this.JPEGprefix); 
+		return boxSize;
+	}
 }
 
 }

@@ -49,6 +49,14 @@ public partial class CuePayloadBox : Box
 		boxSize += IsoStream.CalculateStringSize(cueText); // cueText
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("cueText", IsoStream.CalculateStringSize(cueText), this.cueText); 
+		return boxSize;
+	}
 }
 
 }

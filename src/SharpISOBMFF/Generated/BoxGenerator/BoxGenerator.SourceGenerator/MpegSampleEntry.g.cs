@@ -49,6 +49,15 @@ public partial class MpegSampleEntry : SampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("ES", IsoStream.CalculateBoxSize(ES), this.ES); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

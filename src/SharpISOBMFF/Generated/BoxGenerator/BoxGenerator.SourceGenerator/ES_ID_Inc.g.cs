@@ -46,6 +46,14 @@ public partial class ES_ID_Inc : BaseDescriptor
 		boxSize += 32; // Track_ID
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("Track_ID", 32, this.Track_ID); 
+		return boxSize;
+	}
 }
 
 }

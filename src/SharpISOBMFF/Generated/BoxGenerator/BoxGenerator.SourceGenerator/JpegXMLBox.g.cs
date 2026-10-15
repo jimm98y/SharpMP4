@@ -49,6 +49,14 @@ public partial class JpegXMLBox : Box
 		boxSize += IsoStream.CalculateStringSize(data); // data
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("data", IsoStream.CalculateStringSize(data), this.data); 
+		return boxSize;
+	}
 }
 
 }

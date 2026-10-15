@@ -61,6 +61,16 @@ public partial class IPMPControlBox : FullBox
 		// boxSize += IsoStream.CalculateDescriptorSize(descriptor); // descriptor
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("toollist", IsoStream.CalculateDescriptorSize(toollist), this.toollist); 
+		boxSize += builder.Field("count", 8, this.count); 
+		// boxSize += builder.Field("descriptor", IsoStream.CalculateDescriptorSize(descriptor), this.descriptor); 
+		return boxSize;
+	}
 }
 
 }

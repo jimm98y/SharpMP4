@@ -34,6 +34,7 @@ public partial class MVDDecoderConfigurationRecord : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "MVDDecoderConfigurationRecord"; } }
 
 	protected byte configurationVersion = 1; 
@@ -172,6 +173,35 @@ public partial class MVDDecoderConfigurationRecord : IMp4Serializable
 		{
 			boxSize += 16; // pictureParameterSetLength
 			boxSize += (ulong)(8*pictureParameterSetLength[i] ); // pictureParameterSetNALUnit
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("configurationVersion", 8, this.configurationVersion); 
+		boxSize += builder.Field("AVCProfileIndication", 8, this.AVCProfileIndication); 
+		boxSize += builder.Field("profile_compatibility", 8, this.profile_compatibility); 
+		boxSize += builder.Field("AVCLevelIndication", 8, this.AVCLevelIndication); 
+		boxSize += builder.Field("complete_representation", 1, this.complete_representation); 
+		boxSize += builder.Field("explicit_au_track", 1, this.explicit_au_track); 
+		boxSize += builder.Field("reserved", 4, this.reserved); 
+		boxSize += builder.Field("lengthSizeMinusOne", 2, this.lengthSizeMinusOne); 
+		boxSize += builder.Field("reserved0", 1, this.reserved0); 
+		boxSize += builder.Field("numOfSequenceParameterSets", 7, this.numOfSequenceParameterSets); 
+
+		for (int i=0; i< numOfSequenceParameterSets; i++)
+		{
+			boxSize += builder.Field($"sequenceParameterSetLength[{i}]", 16, this.sequenceParameterSetLength[i]); 
+			boxSize += builder.Field($"sequenceParameterSetNALUnit[{i}]", (ulong)(8*sequenceParameterSetLength[i] ), this.sequenceParameterSetNALUnit[i]); 
+		}
+		boxSize += builder.Field("numOfPictureParameterSets", 8, this.numOfPictureParameterSets); 
+
+		for (int i=0; i< numOfPictureParameterSets; i++)
+		{
+			boxSize += builder.Field($"pictureParameterSetLength[{i}]", 16, this.pictureParameterSetLength[i]); 
+			boxSize += builder.Field($"pictureParameterSetNALUnit[{i}]", (ulong)(8*pictureParameterSetLength[i] ), this.pictureParameterSetNALUnit[i]); 
 		}
 		return boxSize;
 	}

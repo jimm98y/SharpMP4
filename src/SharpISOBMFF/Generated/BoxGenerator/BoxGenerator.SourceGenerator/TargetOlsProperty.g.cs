@@ -49,6 +49,14 @@ public partial class TargetOlsProperty : ItemFullProperty
 		boxSize += 16; // target_ols_idx
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("target_ols_idx", 16, this.target_ols_idx); 
+		return boxSize;
+	}
 }
 
 }

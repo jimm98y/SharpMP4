@@ -62,6 +62,16 @@ public partial class MicrosoftWindowsVersionBox : Box
 		boxSize += ((ulong)(count) * 8); // version
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("unknown1", 16, this.unknown1); 
+		boxSize += builder.Field("count", 16, this.count); 
+		boxSize += builder.Field("version", ((ulong)(count) * 8), this.version); 
+		return boxSize;
+	}
 }
 
 }

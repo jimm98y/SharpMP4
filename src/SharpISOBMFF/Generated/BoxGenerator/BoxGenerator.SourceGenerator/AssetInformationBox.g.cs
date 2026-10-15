@@ -55,6 +55,15 @@ public partial class AssetInformationBox : FullBox
 		boxSize += IsoStream.CalculateStringSize(apid); // apid
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("profileVersion", 4 * 8, this.profileVersion); 
+		boxSize += builder.Field("apid", IsoStream.CalculateStringSize(apid), this.apid); 
+		return boxSize;
+	}
 }
 
 }

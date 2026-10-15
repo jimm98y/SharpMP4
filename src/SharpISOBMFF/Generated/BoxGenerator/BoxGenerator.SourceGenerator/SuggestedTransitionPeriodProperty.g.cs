@@ -49,6 +49,14 @@ public partial class SuggestedTransitionPeriodProperty : ItemFullProperty
 		boxSize += 8; // transition_period
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("transition_period", 8, this.transition_period); 
+		return boxSize;
+	}
 }
 
 }

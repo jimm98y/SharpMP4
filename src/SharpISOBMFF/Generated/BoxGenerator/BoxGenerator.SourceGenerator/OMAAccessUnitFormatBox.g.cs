@@ -69,6 +69,17 @@ public partial class OMAAccessUnitFormatBox : FullBox
 		boxSize += 8; // initialVectorLength
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+		boxSize += builder.Field("selectiveEncrypted", 1, this.selectiveEncrypted); 
+		boxSize += builder.Field("keyIndicatorLength", 8, this.keyIndicatorLength); 
+		boxSize += builder.Field("initialVectorLength", 8, this.initialVectorLength); 
+		return boxSize;
+	}
 }
 
 }

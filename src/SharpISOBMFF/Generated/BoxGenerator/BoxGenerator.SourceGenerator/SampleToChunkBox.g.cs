@@ -87,6 +87,21 @@ public partial class SampleToChunkBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+
+		for (int i=0; i < entry_count; i++)
+		{
+			boxSize += builder.Field($"first_chunk[{i}]", 32, this.first_chunk[i]); 
+			boxSize += builder.Field($"samples_per_chunk[{i}]", 32, this.samples_per_chunk[i]); 
+			boxSize += builder.Field($"sample_description_index[{i}]", 32, this.sample_description_index[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

@@ -18,6 +18,7 @@ public partial class AlternativeStartupEntryItem : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "AlternativeStartupEntryItem"; } }
 
 	protected ushort num_output_samples; 
@@ -51,6 +52,14 @@ public partial class AlternativeStartupEntryItem : IMp4Serializable
 		ulong boxSize = 0;
 		boxSize += 16; // num_output_samples
 		boxSize += 16; // num_total_samples
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("num_output_samples", 16, this.num_output_samples); 
+		boxSize += builder.Field("num_total_samples", 16, this.num_total_samples); 
 		return boxSize;
 	}
 }

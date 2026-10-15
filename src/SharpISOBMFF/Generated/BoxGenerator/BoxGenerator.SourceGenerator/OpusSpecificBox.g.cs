@@ -104,6 +104,24 @@ public partial class OpusSpecificBox : Box
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("Version", 8, this.Version); 
+		boxSize += builder.Field("OutputChannelCount", 8, this.OutputChannelCount); 
+		boxSize += builder.Field("PreSkip", 16, this.PreSkip); 
+		boxSize += builder.Field("InputSampleRate", 32, this.InputSampleRate); 
+		boxSize += builder.Field("OutputGain", 16, this.OutputGain); 
+		boxSize += builder.Field("ChannelMappingFamily", 8, this.ChannelMappingFamily); 
+
+		if (ChannelMappingFamily != 0)
+		{
+			boxSize += builder.Field("ChannelMappingTable", IsoStream.CalculateClassSize(ChannelMappingTable), this.ChannelMappingTable); 
+		}
+		return boxSize;
+	}
 }
 
 }

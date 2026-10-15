@@ -79,6 +79,20 @@ public partial class AV2CodecConfigurationBox : Box
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved1", 8, this.reserved1); 
+		boxSize += builder.Field("config_obus_count_minus1", 8, this.config_obus_count_minus1); 
+
+		for (int i = 0; i < config_obus_count_minus1 + 1; ++i)
+		{
+			boxSize += builder.Field($"config_obu[{i}]", ((ulong)config_obu[i].Length * 8), this.config_obu[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

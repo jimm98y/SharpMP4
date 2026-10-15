@@ -56,6 +56,15 @@ public partial class MetaDatatypeDefinitionBox : Box
 		boxSize += ((ulong)datatype_array.Length * 8); // datatype_array
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("datatype_namespace", 32, this.datatype_namespace); 
+		boxSize += builder.Field("datatype_array", ((ulong)datatype_array.Length * 8), this.datatype_array); 
+		return boxSize;
+	}
 }
 
 }

@@ -48,6 +48,15 @@ public partial class HEVCLHVCSampleEntry : HEVCSampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("lhvcconfig", IsoStream.CalculateBoxSize(lhvcconfig), this.lhvcconfig); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

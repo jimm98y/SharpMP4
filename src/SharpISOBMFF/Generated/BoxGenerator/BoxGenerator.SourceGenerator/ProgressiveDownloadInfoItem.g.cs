@@ -18,6 +18,7 @@ public partial class ProgressiveDownloadInfoItem : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "ProgressiveDownloadInfoItem"; } }
 
 	protected uint rate; 
@@ -51,6 +52,14 @@ public partial class ProgressiveDownloadInfoItem : IMp4Serializable
 		ulong boxSize = 0;
 		boxSize += 32; // rate
 		boxSize += 32; // initial_delay
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("rate", 32, this.rate); 
+		boxSize += builder.Field("initial_delay", 32, this.initial_delay); 
 		return boxSize;
 	}
 }

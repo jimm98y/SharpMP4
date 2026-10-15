@@ -49,6 +49,14 @@ public partial class HTCSlmtBox : Box
 		boxSize += 32; // value
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("value", 32, this.value); 
+		return boxSize;
+	}
 }
 
 }

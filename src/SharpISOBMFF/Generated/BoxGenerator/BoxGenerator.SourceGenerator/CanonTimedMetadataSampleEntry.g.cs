@@ -57,6 +57,15 @@ public partial class CanonTimedMetadataSampleEntry : SampleEntry
 		boxSize += IsoStream.CalculateClassSize(recordTypes); // recordTypes
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("recordCount", 32, this.recordCount); 
+		boxSize += builder.Field("recordTypes", IsoStream.CalculateClassSize(recordTypes), this.recordTypes); 
+		return boxSize;
+	}
 }
 
 }

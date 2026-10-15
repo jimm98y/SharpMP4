@@ -49,6 +49,14 @@ public partial class DataEntryImdaBox : DataEntryBaseBox
 		boxSize += 32; // imda_ref_identifier
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("imda_ref_identifier", 32, this.imda_ref_identifier); 
+		return boxSize;
+	}
 }
 
 }

@@ -194,6 +194,45 @@ public partial class ContentColourVolumeBox : Box
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved1", 1, this.reserved1); // ccv_cancel_flag
+		boxSize += builder.Field("reserved2", 1, this.reserved2); // ccv_persistence_flag
+		boxSize += builder.Field("ccv_primaries_present_flag", 1, this.ccv_primaries_present_flag); 
+		boxSize += builder.Field("ccv_min_luminance_value_present_flag", 1, this.ccv_min_luminance_value_present_flag); 
+		boxSize += builder.Field("ccv_max_luminance_value_present_flag", 1, this.ccv_max_luminance_value_present_flag); 
+		boxSize += builder.Field("ccv_avg_luminance_value_present_flag", 1, this.ccv_avg_luminance_value_present_flag); 
+		boxSize += builder.Field("ccv_reserved_zero_2bits", 2, this.ccv_reserved_zero_2bits); 
+
+		if ( ccv_primaries_present_flag )
+		{
+
+			for (int  c = 0; c < 3; c++ )
+			{
+				boxSize += builder.Field($"ccv_primaries_x[{c}]", 32, this.ccv_primaries_x[ c ]); 
+				boxSize += builder.Field($"ccv_primaries_y[{c}]", 32, this.ccv_primaries_y[ c ]); 
+			}
+		}
+
+		if ( ccv_min_luminance_value_present_flag )
+		{
+			boxSize += builder.Field("ccv_min_luminance_value", 32, this.ccv_min_luminance_value); 
+		}
+
+		if ( ccv_max_luminance_value_present_flag )
+		{
+			boxSize += builder.Field("ccv_max_luminance_value", 32, this.ccv_max_luminance_value); 
+		}
+
+		if ( ccv_avg_luminance_value_present_flag )
+		{
+			boxSize += builder.Field("ccv_avg_luminance_value", 32, this.ccv_avg_luminance_value); 
+		}
+		return boxSize;
+	}
 }
 
 }

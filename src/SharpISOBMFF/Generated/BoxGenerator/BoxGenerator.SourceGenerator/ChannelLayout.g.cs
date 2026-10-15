@@ -383,6 +383,96 @@ public partial class ChannelLayout : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version==0)
+		{
+			boxSize += builder.Field("stream_structure", 8, this.stream_structure); 
+
+			if ((stream_structure  &  1) ==  1)
+			{
+				boxSize += builder.Field("definedLayout", 8, this.definedLayout); 
+
+				if (definedLayout==0)
+				{
+
+					for (int i = 0 ; i < layout_channel_count ; i++)
+					{
+						/*   layout_channel_count comes from the sample entry */
+						boxSize += builder.Field($"speaker_position[{i}]", 8, this.speaker_position[i]); 
+
+						if (speaker_position[i] == 126)
+						{
+							/*  explicit position */
+							boxSize += builder.Field($"azimuth[{i}]", 16, this.azimuth[i]); 
+							boxSize += builder.Field($"elevation[{i}]", 8, this.elevation[i]); 
+						}
+					}
+				}
+
+				else 
+				{
+					boxSize += builder.Field("omittedChannelsMap", 64, this.omittedChannelsMap); // a ‘1’ bit indicates ‘not in this track’
+				}
+			}
+
+			if ((stream_structure  &  2) ==  2)
+			{
+				boxSize += builder.Field("object_count", 8, this.object_count); 
+			}
+		}
+
+		else 
+		{
+			boxSize += builder.Field("stream_structure", 4, this.stream_structure); 
+			boxSize += builder.Field("format_ordering", 4, this.format_ordering); 
+			boxSize += builder.Field("baseChannelCount", 8, this.baseChannelCount); 
+
+			if ((stream_structure  &  1) ==  1)
+			{
+				boxSize += builder.Field("definedLayout", 8, this.definedLayout); 
+
+				if (definedLayout==0)
+				{
+					boxSize += builder.Field("layout_channel_count", 8, this.layout_channel_count); 
+
+					for (int i = 0 ; i < layout_channel_count ; i++)
+					{
+						boxSize += builder.Field($"speaker_position[{i}]", 8, this.speaker_position[i]); 
+
+						if (speaker_position[i] == 126)
+						{
+							/*  explicit position */
+							boxSize += builder.Field($"azimuth[{i}]", 16, this.azimuth[i]); 
+							boxSize += builder.Field($"elevation[{i}]", 8, this.elevation[i]); 
+						}
+					}
+				}
+
+				else 
+				{
+					boxSize += builder.Field("reserved", 4, this.reserved); 
+					boxSize += builder.Field("channel_order_definition", 3, this.channel_order_definition); 
+					boxSize += builder.Field("omitted_channels_present", 1, this.omitted_channels_present); 
+
+					if (omitted_channels_present == true)
+					{
+						boxSize += builder.Field("omittedChannelsMap", 64, this.omittedChannelsMap); // a ‘1’ bit indicates ‘not in this track’
+					}
+				}
+			}
+
+			if ((stream_structure  &  2) ==  2)
+			{
+				/*  object_count is derived from baseChannelCount */
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

@@ -195,6 +195,48 @@ public partial class LevelAssignmentBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("level_count", 8, this.level_count); 
+
+		for (int j=0; j < level_count; j++)
+		{
+			boxSize += builder.Field($"track_ID[{j}]", 32, this.track_ID[j]); 
+			boxSize += builder.Field($"padding_flag[{j}]", 1, this.padding_flag[j]); 
+			boxSize += builder.Field($"assignment_type[{j}]", 7, this.assignment_type[j]); 
+
+			if (assignment_type[j] == 0)
+			{
+				boxSize += builder.Field($"grouping_type[{j}]", 32, this.grouping_type[j]); 
+			}
+
+			else if (assignment_type[j] == 1)
+			{
+				boxSize += builder.Field($"grouping_type[{j}]", 32, this.grouping_type[j]); 
+				boxSize += builder.Field($"grouping_type_parameter[{j}]", 32, this.grouping_type_parameter[j]); 
+			}
+
+			else if (assignment_type[j] == 2)
+			{
+			}
+			/*  no further syntax elements needed */
+
+			else if (assignment_type[j] == 3)
+			{
+			}
+			/*  no further syntax elements needed */
+
+			else if (assignment_type[j] == 4)
+			{
+				boxSize += builder.Field($"sub_track_ID[{j}]", 32, this.sub_track_ID[j]); 
+			}
+			/*  other assignment_type values are reserved */
+		}
+		return boxSize;
+	}
 }
 
 }

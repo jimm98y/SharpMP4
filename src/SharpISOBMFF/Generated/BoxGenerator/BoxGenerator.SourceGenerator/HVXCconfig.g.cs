@@ -24,6 +24,7 @@ public partial class HVXCconfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "HVXCconfig"; } }
 
 	protected bool HVXCvarMode; 
@@ -73,6 +74,20 @@ public partial class HVXCconfig : IMp4Serializable
 		boxSize += 1; // HVXCvarMode
 		boxSize += 2; // HVXCrateMode
 		boxSize += 1; // extensionFlag
+
+		if (extensionFlag)
+		{
+			/*  to be defined in MPEG-4 Version 2 */
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("HVXCvarMode", 1, this.HVXCvarMode); 
+		boxSize += builder.Field("HVXCrateMode", 2, this.HVXCrateMode); 
+		boxSize += builder.Field("extensionFlag", 1, this.extensionFlag); 
 
 		if (extensionFlag)
 		{

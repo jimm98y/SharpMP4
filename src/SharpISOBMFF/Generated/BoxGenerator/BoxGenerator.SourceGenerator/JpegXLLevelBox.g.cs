@@ -49,6 +49,14 @@ public partial class JpegXLLevelBox : Box
 		boxSize += 8; // level
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("level", 8, this.level); 
+		return boxSize;
+	}
 }
 
 }

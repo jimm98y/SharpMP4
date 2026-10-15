@@ -55,6 +55,15 @@ public partial class KindBox : FullBox
 		boxSize += IsoStream.CalculateStringSize(value); // value
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("schemeURI", IsoStream.CalculateStringSize(schemeURI), this.schemeURI); 
+		boxSize += builder.Field("value", IsoStream.CalculateStringSize(value), this.value); 
+		return boxSize;
+	}
 }
 
 }

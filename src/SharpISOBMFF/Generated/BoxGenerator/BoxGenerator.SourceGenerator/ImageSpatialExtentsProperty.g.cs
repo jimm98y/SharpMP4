@@ -57,6 +57,15 @@ public partial class ImageSpatialExtentsProperty : ItemFullProperty
 		boxSize += 32; // image_height
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("image_width", 32, this.image_width); 
+		boxSize += builder.Field("image_height", 32, this.image_height); 
+		return boxSize;
+	}
 }
 
 }

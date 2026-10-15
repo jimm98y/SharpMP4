@@ -137,6 +137,31 @@ public partial class ExtrinsicCameraParametersBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += builder.Field("ref_view_id", 10, this.ref_view_id); 
+		boxSize += builder.Field("prec_rotation_param", 8, this.prec_rotation_param); 
+		boxSize += builder.Field("prec_translation_param", 8, this.prec_translation_param); 
+
+		for (int j=0; j<3; j++)
+		{
+			/*  row  */
+
+			for (int k=0; k<3; k++)
+			{
+				/*  column  */
+				boxSize += builder.Field($"exponent_r[{j}][{k}]", 8, this.exponent_r[j][k]); 
+				boxSize += builder.Field($"mantissa_r[{j}][{k}]", 64, this.mantissa_r[j][k]); 
+			}
+			boxSize += builder.Field($"exponent_t[{j}]", 8, this.exponent_t[j]); 
+			boxSize += builder.Field($"mantissa_t[{j}]", 64, this.mantissa_t[j]); 
+		}
+		return boxSize;
+	}
 }
 
 }

@@ -71,6 +71,19 @@ public partial class MhaPBox : Box
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("numCompatibleSets", 8, this.numCompatibleSets); 
+
+		for (int i=0; i < numCompatibleSets; i++)
+		{
+			boxSize += builder.Field($"CompatibleSetIndication[{i}]", 8, this.CompatibleSetIndication[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

@@ -47,6 +47,14 @@ public partial class CompressedMovieFragmentBox : CompressedBox
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

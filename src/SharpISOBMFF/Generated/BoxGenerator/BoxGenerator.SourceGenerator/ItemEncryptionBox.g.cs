@@ -168,6 +168,39 @@ public partial class ItemEncryptionBox : ItemFullProperty
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 8, this.reserved); 
+
+		if (version==0)
+		{
+			boxSize += builder.Field("reserved0", 8, this.reserved0); 
+		}
+
+		else 
+		{
+			/*  version is 1 or greater */
+			boxSize += builder.Field("crypt_byte_block", 4, this.crypt_byte_block); 
+			boxSize += builder.Field("skip_byte_block", 4, this.skip_byte_block); 
+		}
+		boxSize += builder.Field("num_keys", 8, this.num_keys); 
+
+		for (int i=0; i< num_keys; i++)
+		{
+			boxSize += builder.Field($"Per_Sample_IV_Size[{i}]", 8, this.Per_Sample_IV_Size[i]); 
+			boxSize += builder.Field($"KID[{i}]", 16 * 8, this.KID[i]); 
+
+			if (Per_Sample_IV_Size[i] == 0)
+			{
+				boxSize += builder.Field($"constant_IV_size[{i}]", 8, this.constant_IV_size[i]); 
+				boxSize += builder.Field($"constant_IV[{i}]", ((ulong)(IsoStream.GetInt(constant_IV_size[i])) * 8), this.constant_IV[i]); 
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

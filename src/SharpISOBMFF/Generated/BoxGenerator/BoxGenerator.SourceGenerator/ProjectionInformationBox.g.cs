@@ -49,6 +49,14 @@ public partial class ProjectionInformationBox : FullBox
 		boxSize += 32; // projection_kind
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("projection_kind", 32, this.projection_kind); // a FourCC for the kind of projection 
+		return boxSize;
+	}
 }
 
 }

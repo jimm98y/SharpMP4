@@ -62,6 +62,16 @@ public partial class AppleClippingRegionBox : Box
 		boxSize += ((ulong)clippingRegionData.Length * 8); // clippingRegionData
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("regionSize", 16, this.regionSize); 
+		boxSize += builder.Field("regionBoundaryBox", 64, this.regionBoundaryBox); 
+		boxSize += builder.Field("clippingRegionData", ((ulong)clippingRegionData.Length * 8), this.clippingRegionData); 
+		return boxSize;
+	}
 }
 
 }

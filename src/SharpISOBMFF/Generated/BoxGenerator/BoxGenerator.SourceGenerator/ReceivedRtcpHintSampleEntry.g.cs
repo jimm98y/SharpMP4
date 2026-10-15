@@ -62,6 +62,16 @@ public partial class ReceivedRtcpHintSampleEntry : HintSampleEntry
 		boxSize += 32; // maxpacketsize
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("hinttrackversion", 16, this.hinttrackversion); 
+		boxSize += builder.Field("highestcompatibleversion", 16, this.highestcompatibleversion); 
+		boxSize += builder.Field("maxpacketsize", 32, this.maxpacketsize); 
+		return boxSize;
+	}
 }
 
 }

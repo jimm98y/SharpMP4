@@ -49,6 +49,14 @@ public partial class TrickPlayBox : FullBox
 		boxSize += IsoStream.CalculateClassSize(entries); // entries
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
+		return boxSize;
+	}
 }
 
 }

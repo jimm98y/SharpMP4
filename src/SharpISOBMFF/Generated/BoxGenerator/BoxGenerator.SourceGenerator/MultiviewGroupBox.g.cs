@@ -227,6 +227,51 @@ public partial class MultiviewGroupBox : FullBox
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("multiview_group_id", 32, this.multiview_group_id); 
+		boxSize += builder.Field("num_entries", 16, this.num_entries); 
+		boxSize += builder.Field("reserved", 8, this.reserved); 
+
+		for (int i=0; i<num_entries; i++)
+		{
+			boxSize += builder.Field($"entry_type[{i}]", 8, this.entry_type[i]); 
+
+			if (entry_type[i] == 0)
+			{
+				boxSize += builder.Field($"track_id[{i}]", 32, this.track_id[i]); 
+			}
+
+			else if (entry_type[i] == 1)
+			{
+				boxSize += builder.Field($"track_id[{i}]", 32, this.track_id[i]); 
+				boxSize += builder.Field($"tier_id[{i}]", 16, this.tier_id[i]); 
+			}
+
+			else if (entry_type[i] == 2)
+			{
+				boxSize += builder.Field($"reserved1[{i}]", 6, this.reserved1[i]); 
+				boxSize += builder.Field($"output_view_id[{i}]", 10, this.output_view_id[i]); 
+			}
+
+			else if (entry_type[i] == 3)
+			{
+				boxSize += builder.Field($"reserved2[{i}]", 6, this.reserved2[i]); 
+				boxSize += builder.Field($"start_view_id[{i}]", 10, this.start_view_id[i]); 
+				boxSize += builder.Field($"view_count[{i}]", 16, this.view_count[i]); 
+			}
+		}
+		// boxSize += builder.Field("subset_stream_info", IsoStream.CalculateBoxSize(subset_stream_info), this.subset_stream_info); // optional
+		// boxSize += builder.Field("relation_attributes", IsoStream.CalculateBoxSize(relation_attributes), this.relation_attributes); // optional
+		// boxSize += builder.Field("subset_stream_bit_rate", IsoStream.CalculateBoxSize(subset_stream_bit_rate), this.subset_stream_bit_rate); // optional
+		// boxSize += builder.Field("subset_stream_buffering", IsoStream.CalculateBoxSize(subset_stream_buffering), this.subset_stream_buffering); // optional
+		// boxSize += builder.Field("multiview_scene_info", IsoStream.CalculateBoxSize(multiview_scene_info), this.multiview_scene_info); // optional
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

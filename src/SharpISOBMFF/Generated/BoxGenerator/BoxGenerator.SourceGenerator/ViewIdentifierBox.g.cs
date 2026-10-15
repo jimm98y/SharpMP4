@@ -205,6 +205,38 @@ public partial class ViewIdentifierBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved6", 2, this.reserved6); 
+		boxSize += builder.Field("min_temporal_id", 3, this.min_temporal_id); 
+		boxSize += builder.Field("max_temporal_id", 3, this.max_temporal_id); 
+		boxSize += builder.Field("num_views", 16, this.num_views); 
+
+		for (int i=0; i<num_views; i++)
+		{
+			boxSize += builder.Field($"reserved1[{i}]", 6, this.reserved1[i]); 
+			boxSize += builder.Field($"view_id[{i}]", 10, this.view_id[i]); 
+			boxSize += builder.Field($"reserved2[{i}]", 6, this.reserved2[i]); 
+			boxSize += builder.Field($"view_order_index[{i}]", 10, this.view_order_index[i]); 
+			boxSize += builder.Field($"texture_in_stream[{i}]", 1, this.texture_in_stream[i]); 
+			boxSize += builder.Field($"texture_in_track[{i}]", 1, this.texture_in_track[i]); 
+			boxSize += builder.Field($"depth_in_stream[{i}]", 1, this.depth_in_stream[i]); 
+			boxSize += builder.Field($"depth_in_track[{i}]", 1, this.depth_in_track[i]); 
+			boxSize += builder.Field($"base_view_type[{i}]", 2, this.base_view_type[i]); 
+			boxSize += builder.Field($"num_ref_views[{i}]", 10, this.num_ref_views[i]); 
+
+			for (int j = 0; j < num_ref_views[i]; j++)
+			{
+				boxSize += builder.Field($"reserved5[{i}][{j}]", 4, this.reserved5[i][j]); 
+				boxSize += builder.Field($"dependent_component_idc[{i}][{j}]", 2, this.dependent_component_idc[i][j]); 
+				boxSize += builder.Field($"ref_view_id[{i}][{j}]", 10, this.ref_view_id[i][j]); 
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

@@ -103,6 +103,25 @@ public partial class SubsegmentIndexBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("subsegment_count", 32, this.subsegment_count); 
+
+		for (int  i=0; i < subsegment_count; i++)
+		{
+			boxSize += builder.Field($"range_count[{i}]", 32, this.range_count[i]); 
+
+			for (int  j=0; j < range_count[i]; j++)
+			{
+				boxSize += builder.Field($"level[{i}][{j}]", 8, this.level[i][j]); 
+				boxSize += builder.Field($"range_size[{i}][{j}]", 24, this.range_size[i][j]); 
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

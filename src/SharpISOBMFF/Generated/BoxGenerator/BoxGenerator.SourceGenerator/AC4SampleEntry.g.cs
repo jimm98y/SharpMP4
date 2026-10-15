@@ -60,6 +60,17 @@ public partial class AC4SampleEntry : AudioSampleEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("AC4SpecificBox", IsoStream.CalculateBoxSize(AC4SpecificBox), this.AC4SpecificBox); // we permit any number of AC4PresentationLabel boxes:
+		// boxSize += builder.Field("AC4PresentationLabelBox", IsoStream.CalculateBoxSize(AC4PresentationLabelBox), this.AC4PresentationLabelBox); 
+		// boxSize += builder.Field("Box", IsoStream.CalculateBoxSize(Box), this.Box); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

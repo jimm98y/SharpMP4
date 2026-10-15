@@ -1789,7 +1789,7 @@ namespace SharpISOBMFF
             return sizeBytesCount << 3;
         }
 
-        private static uint CalculatePackedNumberLength(ulong sizeInBytes, ulong sizeOfSize)
+        internal static uint CalculatePackedNumberLength(ulong sizeInBytes, ulong sizeOfSize)
         {
             int size = (int)sizeInBytes;
             int i = 0;

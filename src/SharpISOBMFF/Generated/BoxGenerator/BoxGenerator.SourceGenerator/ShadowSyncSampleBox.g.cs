@@ -83,6 +83,21 @@ public partial class ShadowSyncSampleBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		
+
+		for (int i=0; i < entry_count; i++)
+		{
+			boxSize += builder.Field($"shadowed_sample_number[{i}]", 32, this.shadowed_sample_number[i]); 
+			boxSize += builder.Field($"sync_sample_number[{i}]", 32, this.sync_sample_number[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

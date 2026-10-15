@@ -81,6 +81,21 @@ public partial class CompatibleSchemeTypeBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		/*  identical syntax to SchemeTypeBox */
+		boxSize += builder.Field("scheme_type", 32, this.scheme_type); // 4CC identifying the scheme
+		boxSize += builder.Field("scheme_version", 32, this.scheme_version); // scheme version 
+
+		if ((flags  &  0x000001) ==  0x000001)
+		{
+			boxSize += builder.Field("scheme_uri", IsoStream.CalculateStringSize(scheme_uri), this.scheme_uri); // browser uri
+		}
+		return boxSize;
+	}
 }
 
 }

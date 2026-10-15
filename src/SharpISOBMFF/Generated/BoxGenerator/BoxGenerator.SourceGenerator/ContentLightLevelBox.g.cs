@@ -55,6 +55,15 @@ public partial class ContentLightLevelBox : Box
 		boxSize += 16; // max_pic_average_light_level
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("max_content_light_level", 16, this.max_content_light_level); 
+		boxSize += builder.Field("max_pic_average_light_level", 16, this.max_pic_average_light_level); 
+		return boxSize;
+	}
 }
 
 }

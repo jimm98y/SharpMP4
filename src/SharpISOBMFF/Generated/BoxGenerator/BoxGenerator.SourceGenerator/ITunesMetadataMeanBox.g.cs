@@ -48,6 +48,14 @@ public partial class ITunesMetadataMeanBox : FullBox
 		boxSize += IsoStream.CalculateStringSize(domain); // domain
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("domain", IsoStream.CalculateStringSize(domain), this.domain); 
+		return boxSize;
+	}
 }
 
 }

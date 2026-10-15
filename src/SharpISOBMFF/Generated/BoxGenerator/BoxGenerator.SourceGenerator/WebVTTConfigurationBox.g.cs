@@ -48,6 +48,14 @@ public partial class WebVTTConfigurationBox : Box
 		boxSize += IsoStream.CalculateStringSize(config); // config
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("config", IsoStream.CalculateStringSize(config), this.config); 
+		return boxSize;
+	}
 }
 
 }

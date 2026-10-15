@@ -48,6 +48,14 @@ public partial class AppleGPSCoordinatesBox : Box
 		boxSize += IsoStream.CalculateStringSizeLangPrefixed(value); // value
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("value", IsoStream.CalculateStringSizeLangPrefixed(value), this.value); 
+		return boxSize;
+	}
 }
 
 }

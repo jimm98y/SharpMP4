@@ -49,6 +49,14 @@ public partial class CueSettingsBox : Box
 		boxSize += IsoStream.CalculateStringSize(settings); // settings
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("settings", IsoStream.CalculateStringSize(settings), this.settings); 
+		return boxSize;
+	}
 }
 
 }

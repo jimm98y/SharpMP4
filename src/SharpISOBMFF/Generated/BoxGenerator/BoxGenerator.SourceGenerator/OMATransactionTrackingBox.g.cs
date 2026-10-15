@@ -48,6 +48,14 @@ public partial class OMATransactionTrackingBox : FullBox
 		boxSize += 16 * 8; // transactionID
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("transactionID", 16 * 8, this.transactionID); 
+		return boxSize;
+	}
 }
 
 }

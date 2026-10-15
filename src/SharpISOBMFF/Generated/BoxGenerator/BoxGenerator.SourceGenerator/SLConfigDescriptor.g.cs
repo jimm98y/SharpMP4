@@ -255,6 +255,50 @@ public partial class SLConfigDescriptor : BaseDescriptor
 		boxSize += ((ulong)ocr.Length * 8); // ocr
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("predefined", 8, this.predefined); 
+
+		if (predefined==0)
+		{
+			boxSize += builder.Field("useAccessUnitStartFlag", 1, this.useAccessUnitStartFlag); 
+			boxSize += builder.Field("useAccessUnitEndFlag", 1, this.useAccessUnitEndFlag); 
+			boxSize += builder.Field("useRandomAccessPointFlag", 1, this.useRandomAccessPointFlag); 
+			boxSize += builder.Field("hasRandomAccessUnitsOnlyFlag", 1, this.hasRandomAccessUnitsOnlyFlag); 
+			boxSize += builder.Field("usePaddingFlag", 1, this.usePaddingFlag); 
+			boxSize += builder.Field("useTimeStampsFlag", 1, this.useTimeStampsFlag); 
+			boxSize += builder.Field("useIdleFlag", 1, this.useIdleFlag); 
+			boxSize += builder.Field("durationFlag", 1, this.durationFlag); 
+			boxSize += builder.Field("timeStampResolution", 32, this.timeStampResolution); 
+			boxSize += builder.Field("OCRResolution", 32, this.OCRResolution); 
+			boxSize += builder.Field("timeStampLength", 8, this.timeStampLength); // must be <= 64
+			boxSize += builder.Field("OCRLength", 8, this.OCRLength); // must be <= 64
+			boxSize += builder.Field("AU_Length", 8, this.AU_Length); // must be <= 32
+			boxSize += builder.Field("instantBitrateLength", 8, this.instantBitrateLength); 
+			boxSize += builder.Field("degradationPriorityLength", 4, this.degradationPriorityLength); 
+			boxSize += builder.Field("AU_seqNumLength", 5, this.AU_seqNumLength); // must be <= 16
+			boxSize += builder.Field("packetSeqNumLength", 5, this.packetSeqNumLength); // must be <= 16
+			boxSize += builder.Field("reserved", 2, this.reserved); 
+		}
+
+		if (durationFlag)
+		{
+			boxSize += builder.Field("timeScale", 32, this.timeScale); 
+			boxSize += builder.Field("accessUnitDuration", 16, this.accessUnitDuration); 
+			boxSize += builder.Field("compositionUnitDuration", 16, this.compositionUnitDuration); 
+		}
+
+		if (!useTimeStampsFlag)
+		{
+			boxSize += builder.Field("startDecodingTimeStamp", (ulong)(timeStampLength ), this.startDecodingTimeStamp); 
+			boxSize += builder.Field("startCompositionTimeStamp", (ulong)(timeStampLength ), this.startCompositionTimeStamp); 
+		}
+		boxSize += builder.Field("ocr", ((ulong)ocr.Length * 8), this.ocr); // OCR stream flag, reserved, OCR_ES_id 
+		return boxSize;
+	}
 }
 
 }

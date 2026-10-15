@@ -48,6 +48,14 @@ public partial class WebVTTSourceLabelBox : Box
 		boxSize += IsoStream.CalculateStringSize(source_label); // source_label
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("source_label", IsoStream.CalculateStringSize(source_label), this.source_label); 
+		return boxSize;
+	}
 }
 
 }

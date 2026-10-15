@@ -153,6 +153,34 @@ public partial class IOD_Descriptor : BaseDescriptor
 		boxSize += IsoStream.CalculateDescriptors(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("ObjectDescriptorID", 10, this.ObjectDescriptorID); 
+		boxSize += builder.Field("URL_Flag", 1, this.URL_Flag); 
+		boxSize += builder.Field("includeInlineProfileLevelFlag", 1, this.includeInlineProfileLevelFlag); 
+		boxSize += builder.Field("reserved", 4, this.reserved); 
+
+		if (URL_Flag)
+		{
+			boxSize += builder.Field("URLlength", 8, this.URLlength); 
+			boxSize += builder.Field("URLstring", ((ulong)(URLlength) * 8), this.URLstring); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("ODProfileLevelIndication", 8, this.ODProfileLevelIndication); 
+			boxSize += builder.Field("sceneProfileLevelIndication", 8, this.sceneProfileLevelIndication); 
+			boxSize += builder.Field("audioProfileLevelIndication", 8, this.audioProfileLevelIndication); 
+			boxSize += builder.Field("visualProfileLevelIndication", 8, this.visualProfileLevelIndication); 
+			boxSize += builder.Field("graphicsProfileLevelIndication", 8, this.graphicsProfileLevelIndication); 
+		}
+		// boxSize += builder.Field("esIdInc", IsoStream.CalculateDescriptorSize(esIdInc), this.esIdInc); 
+		boxSize += builder.Descriptors(this);
+		return boxSize;
+	}
 }
 
 }

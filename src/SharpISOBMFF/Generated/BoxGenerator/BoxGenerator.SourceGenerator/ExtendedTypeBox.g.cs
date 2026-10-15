@@ -49,6 +49,15 @@ public partial class ExtendedTypeBox : Box
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("compatible_combinations", IsoStream.CalculateBoxSize(compatible_combinations), this.compatible_combinations); // to end of the box
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

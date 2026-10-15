@@ -147,6 +147,30 @@ public partial class LoudnessBaseBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 3, this.reserved); 
+		boxSize += builder.Field("downmix_ID", 7, this.downmix_ID); // matching downmix 
+		boxSize += builder.Field("DRC_set_ID", 6, this.DRC_set_ID); // to match a DRC box 
+		boxSize += builder.Field("bs_sample_peak_level", 12, this.bs_sample_peak_level); 
+		boxSize += builder.Field("bs_true_peak_level", 12, this.bs_true_peak_level); 
+		boxSize += builder.Field("measurement_system_for_TP", 4, this.measurement_system_for_TP); 
+		boxSize += builder.Field("reliability_for_TP", 4, this.reliability_for_TP); 
+		boxSize += builder.Field("measurement_count", 8, this.measurement_count); 
+		
+
+		for (int i = 0 ; i < measurement_count; i++)
+		{
+			boxSize += builder.Field($"method_definition[{i}]", 8, this.method_definition[i]); 
+			boxSize += builder.Field($"method_value[{i}]", 8, this.method_value[i]); 
+			boxSize += builder.Field($"measurement_system[{i}]", 4, this.measurement_system[i]); 
+			boxSize += builder.Field($"reliability[{i}]", 4, this.reliability[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

@@ -77,6 +77,20 @@ public partial class SubTrackSampleGroupBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("grouping_type", 32, this.grouping_type); 
+		boxSize += builder.Field("item_count", 16, this.item_count); 
+
+		for (int i = 0; i< item_count; i++)
+		{
+			boxSize += builder.Field($"group_description_index[{i}]", 32, this.group_description_index[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

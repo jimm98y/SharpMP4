@@ -83,6 +83,19 @@ public partial class BaseMediaInfoAtom : FullBox
 		boxSize += 16; // reserved
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("graphicsMode", 16, this.graphicsMode); 
+		boxSize += builder.Field("opColorR", 16, this.opColorR); 
+		boxSize += builder.Field("opColorG", 16, this.opColorG); 
+		boxSize += builder.Field("opColorB", 16, this.opColorB); 
+		boxSize += builder.Field("balance", 16, this.balance); 
+		boxSize += builder.Field("reserved", 16, this.reserved); 
+		return boxSize;
+	}
 }
 
 }

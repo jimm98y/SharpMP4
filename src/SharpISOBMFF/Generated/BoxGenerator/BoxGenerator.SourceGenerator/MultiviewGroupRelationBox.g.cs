@@ -77,6 +77,21 @@ public partial class MultiviewGroupRelationBox : FullBox
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("num_entries", 32, this.num_entries); 
+
+		for (int i=0; i<num_entries; i++)
+		{
+			boxSize += builder.Field($"multiview_group_id[{i}]", 32, this.multiview_group_id[i]); 
+		}
+		// boxSize += builder.Field("relation_attributes", IsoStream.CalculateBoxSize(relation_attributes), this.relation_attributes); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

@@ -97,6 +97,25 @@ public partial class InitialParameterSetBox : Box
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sps_id_count", 8, this.sps_id_count); 
+
+		for (int i=0; i< sps_id_count; i++)
+		{
+			boxSize += builder.Field($"SPS_index[{i}]", 8, this.SPS_index[i]); 
+		}
+		boxSize += builder.Field("pps_id_count", 8, this.pps_id_count); 
+
+		for (int i=0; i< pps_id_count; i++)
+		{
+			boxSize += builder.Field($"PPS_index[{i}]", 8, this.PPS_index[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

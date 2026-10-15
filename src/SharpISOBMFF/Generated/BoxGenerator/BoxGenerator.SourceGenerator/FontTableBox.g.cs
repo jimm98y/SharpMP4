@@ -56,6 +56,15 @@ public partial class FontTableBox : Box
 		boxSize += IsoStream.CalculateClassSize(fontEntries); // fontEntries
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entryCount", 16, this.entryCount); 
+		boxSize += builder.Field("fontEntries", IsoStream.CalculateClassSize(fontEntries), this.fontEntries); 
+		return boxSize;
+	}
 }
 
 }

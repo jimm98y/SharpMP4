@@ -61,6 +61,16 @@ public partial class C608Box : Box
 		boxSize += 16; // dataReferenceIndex
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved1", 4 * 8, this.reserved1); 
+		boxSize += builder.Field("reserved2", 16, this.reserved2); 
+		boxSize += builder.Field("dataReferenceIndex", 16, this.dataReferenceIndex); 
+		return boxSize;
+	}
 }
 
 }

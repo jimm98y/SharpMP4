@@ -8,6 +8,18 @@ The list of all supported boxes, entries and descriptors is [here](Boxes.md).
 
 Each box says whether it is where its definition places it: `box.ValidatePlacement()` checks its parent against the `containers` of its definition in `src/SharpISOBMFF/Definitions` - a parent box type, the top of the file, a parent class, and of an encrypted or restricted sample entry, the format its `frma` names. It is for information only: a box elsewhere is read and written all the same. A box whose definition gives no container is not reported.
 
+`ToString()` of a box, a class, a descriptor or a whole `Container` describes its fields as they are now - read, or changed since - a line each, as FFmpeg's `trace_headers` traces a bitstream: the field's position in bits, its name, its bits and its value, the fields and boxes in a box indented a level deeper, and the fields of a loop with their indices. A run of bytes kept in the file (`StreamMarker`), such as the data of `mdat`, is shown as `...`.
+```
+            'stts' TimeToSampleBox
+0             size                       00000000000000000000000000100000 = 32
+32            type                       01110011011101000111010001110011 = 1937011827 ('stts')
+64            version                                            00000000 = 0
+72            flags                              000000000000000000000000 = 0
+96            entry_count                00000000000000000000000000000001 = 1
+128           sample_count[0]            00000000000000000000000000000011 = 3
+160           sample_delta[0]            00000000000000000000010000000000 = 1024
+```
+
 ## Read MP4
 To parse an existing mp4/mov/m4v file, first you have to get the stream:
 ```cs

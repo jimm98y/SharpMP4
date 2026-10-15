@@ -49,6 +49,14 @@ public partial class JpegXLSignatureBox : Box
 		boxSize += 32; // signature
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("signature", 32, this.signature); 
+		return boxSize;
+	}
 }
 
 }

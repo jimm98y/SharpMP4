@@ -55,6 +55,15 @@ public partial class J2kChannelDefinitionBox : Box
 		boxSize += IsoStream.CalculateClassSize(channels); // channels
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("channel_count", 16, this.channel_count); 
+		boxSize += builder.Field("channels", IsoStream.CalculateClassSize(channels), this.channels); 
+		return boxSize;
+	}
 }
 
 }

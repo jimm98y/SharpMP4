@@ -48,6 +48,14 @@ public partial class AppleInitialObjectDescriptorBox : FullBox
 		boxSize += IsoStream.CalculateDescriptorSize(descriptor); // descriptor
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("descriptor", IsoStream.CalculateDescriptorSize(descriptor), this.descriptor); 
+		return boxSize;
+	}
 }
 
 }

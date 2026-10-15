@@ -56,6 +56,15 @@ public partial class CubemapProjection : ProjectionDataBox
 		boxSize += 32; // projection_padding
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("layout", 32, this.layout); 
+		boxSize += builder.Field("projection_padding", 32, this.projection_padding); 
+		return boxSize;
+	}
 }
 
 }

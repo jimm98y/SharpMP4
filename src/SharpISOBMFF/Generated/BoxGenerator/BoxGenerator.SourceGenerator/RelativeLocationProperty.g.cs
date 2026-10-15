@@ -57,6 +57,15 @@ public partial class RelativeLocationProperty : ItemFullProperty
 		boxSize += 32; // vertical_offset
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("horizontal_offset", 32, this.horizontal_offset); 
+		boxSize += builder.Field("vertical_offset", 32, this.vertical_offset); 
+		return boxSize;
+	}
 }
 
 }

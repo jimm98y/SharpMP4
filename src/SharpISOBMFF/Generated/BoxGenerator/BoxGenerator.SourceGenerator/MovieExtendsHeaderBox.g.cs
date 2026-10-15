@@ -82,6 +82,24 @@ public partial class MovieExtendsHeaderBox : FullBox
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version==1)
+		{
+			boxSize += builder.Field("fragment_duration", 64, this.fragment_duration); 
+		}
+
+		else 
+		{
+			/*  version==0 */
+			boxSize += builder.Field("fragment_duration", 32, this.fragment_duration); 
+		}
+		return boxSize;
+	}
 }
 
 }

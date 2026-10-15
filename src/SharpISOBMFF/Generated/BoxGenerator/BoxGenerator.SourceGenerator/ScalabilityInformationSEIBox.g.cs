@@ -49,6 +49,14 @@ public partial class ScalabilityInformationSEIBox : Box
 		boxSize += (ulong)(8*size-64 ); // scalinfosei
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("scalinfosei", (ulong)(8*size-64 ), this.scalinfosei); 
+		return boxSize;
+	}
 }
 
 }

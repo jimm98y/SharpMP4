@@ -175,6 +175,33 @@ public partial class AppleImageDescriptionBox : Box
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("descriptionSize", 32, this.descriptionSize); 
+		boxSize += builder.Field("compressorType", 32, this.compressorType); 
+		boxSize += builder.Field("reserved", 6 * 8, this.reserved); 
+		boxSize += builder.Field("dataReferenceIndex", 16, this.dataReferenceIndex); 
+		boxSize += builder.Field("version", 16, this.version); 
+		boxSize += builder.Field("revisionLevel", 16, this.revisionLevel); 
+		boxSize += builder.Field("vendor", 32, this.vendor); 
+		boxSize += builder.Field("temporalQuality", 32, this.temporalQuality); 
+		boxSize += builder.Field("spatialQuality", 32, this.spatialQuality); 
+		boxSize += builder.Field("width", 16, this.width); 
+		boxSize += builder.Field("height", 16, this.height); 
+		boxSize += builder.Field("horizontalResolution", 32, this.horizontalResolution); 
+		boxSize += builder.Field("verticalResolution", 32, this.verticalResolution); 
+		boxSize += builder.Field("dataSize", 32, this.dataSize); 
+		boxSize += builder.Field("frameCount", 16, this.frameCount); 
+		boxSize += builder.Field("compressorName", 32 * 8, this.compressorName); 
+		boxSize += builder.Field("depth", 16, this.depth); 
+		boxSize += builder.Field("colorTableId", 16, this.colorTableId); 
+		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }
