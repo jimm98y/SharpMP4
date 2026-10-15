@@ -13,6 +13,9 @@ aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends
 public partial class TrackReferenceTypeBox : Box
 {
 	public override string DisplayName { get { return "TrackReferenceTypeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "tref", "iref" }); }
+
 
 	protected uint[] track_IDs; 
 	public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
@@ -42,6 +45,14 @@ public partial class TrackReferenceTypeBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += ((ulong)track_IDs.Length * 32); // track_IDs
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("track_IDs", ((ulong)track_IDs.Length * 32), this.track_IDs); 
 		return boxSize;
 	}
 }

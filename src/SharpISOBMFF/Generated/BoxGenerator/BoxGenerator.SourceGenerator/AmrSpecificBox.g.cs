@@ -19,6 +19,9 @@ public partial class AmrSpecificBox : Box
 {
 	public const string TYPE = "damr";
 	public override string DisplayName { get { return "AmrSpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(samr,sawb,enca)"); }
+
 
 	protected uint vendor; 
 	public uint Vendor { get { return this.vendor; } set { this.vendor = value; } }
@@ -72,6 +75,18 @@ public partial class AmrSpecificBox : Box
 		boxSize += 16; // mode_set
 		boxSize += 8; // mode_change_period
 		boxSize += 8; // frames_per_sample
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("vendor", 32, this.vendor); 
+		boxSize += builder.Field("decoder_version", 8, this.decoder_version); 
+		boxSize += builder.Field("mode_set", 16, this.mode_set); 
+		boxSize += builder.Field("mode_change_period", 8, this.mode_change_period); 
+		boxSize += builder.Field("frames_per_sample", 8, this.frames_per_sample); 
 		return boxSize;
 	}
 }

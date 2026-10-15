@@ -17,6 +17,9 @@ public partial class MultiviewGroupRelationBox : FullBox
 {
 	public const string TYPE = "swtc";
 	public override string DisplayName { get { return "MultiviewGroupRelationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mvci"); }
+
 
 	protected uint num_entries; 
 	public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }
@@ -72,6 +75,21 @@ public partial class MultiviewGroupRelationBox : FullBox
 		}
 		// boxSize += IsoStream.CalculateBoxSize(relation_attributes); // relation_attributes
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("num_entries", 32, this.num_entries); 
+
+		for (int i=0; i<num_entries; i++)
+		{
+			boxSize += builder.Field($"multiview_group_id[{i}]", 32, this.multiview_group_id[i]); 
+		}
+		// boxSize += builder.Field("relation_attributes", IsoStream.CalculateBoxSize(relation_attributes), this.relation_attributes); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

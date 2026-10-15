@@ -16,6 +16,9 @@ public partial class PittasoftStartTimeBox : Box
 {
 	public const string TYPE = "sttm";
 	public override string DisplayName { get { return "PittasoftStartTimeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("free"); }
+
 
 	protected ulong startTime; 
 	public ulong StartTime { get { return this.startTime; } set { this.startTime = value; } }
@@ -45,6 +48,14 @@ public partial class PittasoftStartTimeBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 64; // startTime
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("startTime", 64, this.startTime); 
 		return boxSize;
 	}
 }

@@ -14,6 +14,9 @@ public partial class VcmMSampleEntry : SampleEntry
 {
 	public const string TYPE = "vcmM";
 	public override string DisplayName { get { return "VcmMSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	public VcmMSampleEntry(): base(IsoStream.FromFourCC("vcmM"))
 	{
@@ -43,6 +46,15 @@ public partial class VcmMSampleEntry : SampleEntry
 		boxSize += base.CalculateSize();
 		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

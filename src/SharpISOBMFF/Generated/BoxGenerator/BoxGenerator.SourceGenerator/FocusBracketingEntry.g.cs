@@ -53,6 +53,15 @@ public partial class FocusBracketingEntry : VisualSampleGroupEntry
 		boxSize += 16; // focus_distance_denominator
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("focus_distance_numerator", 16, this.focus_distance_numerator); 
+		boxSize += builder.Field("focus_distance_denominator", 16, this.focus_distance_denominator); 
+		return boxSize;
+	}
 }
 
 }

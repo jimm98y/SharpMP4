@@ -14,6 +14,9 @@ public partial class TextConfigBox : FullBox
 {
 	public const string TYPE = "txtC";
 	public override string DisplayName { get { return "TextConfigBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("TextMetaDataSampleEntry(mett)", "SimpleTextSampleEntry(stxt)", "TextSubtitleSampleEntry(sbtt)"); }
+
 
 	protected BinaryUTF8String text_config; 
 	public BinaryUTF8String TextConfig { get { return this.text_config; } set { this.text_config = value; } }
@@ -43,6 +46,14 @@ public partial class TextConfigBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(text_config); // text_config
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("text_config", IsoStream.CalculateStringSize(text_config), this.text_config); 
 		return boxSize;
 	}
 }

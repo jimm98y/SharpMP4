@@ -15,6 +15,9 @@ public partial class C608Box : Box
 {
 	public const string TYPE = "c608";
 	public override string DisplayName { get { return "C608Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected byte[] reserved1; 
 	public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
@@ -56,6 +59,16 @@ public partial class C608Box : Box
 		boxSize += 4 * 8; // reserved1
 		boxSize += 16; // reserved2
 		boxSize += 16; // dataReferenceIndex
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved1", 4 * 8, this.reserved1); 
+		boxSize += builder.Field("reserved2", 16, this.reserved2); 
+		boxSize += builder.Field("dataReferenceIndex", 16, this.dataReferenceIndex); 
 		return boxSize;
 	}
 }

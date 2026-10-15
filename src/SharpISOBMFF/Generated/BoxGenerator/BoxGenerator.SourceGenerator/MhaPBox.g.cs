@@ -18,6 +18,9 @@ public partial class MhaPBox : Box
 {
 	public const string TYPE = "mhaP";
 	public override string DisplayName { get { return "MhaPBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(mha1,mha2,mhm1,mhm2)", "wave"); }
+
 
 	protected byte numCompatibleSets; 
 	public byte NumCompatibleSets { get { return this.numCompatibleSets; } set { this.numCompatibleSets = value; } }
@@ -65,6 +68,19 @@ public partial class MhaPBox : Box
 		for (int i=0; i < numCompatibleSets; i++)
 		{
 			boxSize += 8; // CompatibleSetIndication
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("numCompatibleSets", 8, this.numCompatibleSets); 
+
+		for (int i=0; i < numCompatibleSets; i++)
+		{
+			boxSize += builder.Field($"CompatibleSetIndication[{i}]", 8, this.CompatibleSetIndication[i]); 
 		}
 		return boxSize;
 	}

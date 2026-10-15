@@ -47,6 +47,9 @@ public partial class ItemLocationBox : FullBox
 {
 	public const string TYPE = "iloc";
 	public override string DisplayName { get { return "ItemLocationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
+
 
 	protected byte offset_size; 
 	public byte OffsetSize { get { return this.offset_size; } set { this.offset_size = value; } }
@@ -296,6 +299,70 @@ public partial class ItemLocationBox : FullBox
 				}
 				boxSize += (ulong)(offset_size*8 ); // extent_offset
 				boxSize += (ulong)(length_size*8 ); // extent_length
+			}
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("offset_size", 4, this.offset_size); 
+		boxSize += builder.Field("length_size", 4, this.length_size); 
+		boxSize += builder.Field("base_offset_size", 4, this.base_offset_size); 
+
+		if ((version == 1) || (version == 2))
+		{
+			boxSize += builder.Field("index_size", 4, this.index_size); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("reserved", 4, this.reserved); 
+		}
+
+		if (version < 2)
+		{
+			boxSize += builder.Field("item_count", 16, this.item_count); 
+		}
+
+		else if (version == 2)
+		{
+			boxSize += builder.Field("item_count", 32, this.item_count); 
+		}
+
+		for (int i=0; i<item_count; i++)
+		{
+
+			if (version < 2)
+			{
+				boxSize += builder.Field($"item_ID[{i}]", 16, this.item_ID[i]); 
+			}
+
+			else if (version == 2)
+			{
+				boxSize += builder.Field($"item_ID[{i}]", 32, this.item_ID[i]); 
+			}
+
+			if ((version == 1) || (version == 2))
+			{
+				boxSize += builder.Field($"reserved0[{i}]", 12, this.reserved0[i]); 
+				boxSize += builder.Field($"construction_method[{i}]", 4, this.construction_method[i]); 
+			}
+			boxSize += builder.Field($"data_reference_index[{i}]", 16, this.data_reference_index[i]); 
+			boxSize += builder.Field($"base_offset[{i}]", (ulong)(base_offset_size*8 ), this.base_offset[i]); 
+			boxSize += builder.Field($"extent_count[{i}]", 16, this.extent_count[i]); 
+
+			for (int j=0; j<extent_count[i]; j++)
+			{
+
+				if (((version == 1) || (version == 2)) && (index_size > 0))
+				{
+					boxSize += builder.Field($"item_reference_index[{i}][{j}]", (ulong)(index_size*8 ), this.item_reference_index[i][j]); 
+				}
+				boxSize += builder.Field($"extent_offset[{i}][{j}]", (ulong)(offset_size*8 ), this.extent_offset[i][j]); 
+				boxSize += builder.Field($"extent_length[{i}][{j}]", (ulong)(length_size*8 ), this.extent_length[i][j]); 
 			}
 		}
 		return boxSize;

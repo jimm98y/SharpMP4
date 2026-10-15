@@ -17,6 +17,7 @@ public partial class ItemInfoExtension : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "ItemInfoExtension"; } }
 
 	public ItemInfoExtension(uint extension_type): base()
@@ -36,6 +37,12 @@ public partial class ItemInfoExtension : IMp4Serializable
 	}
 
 	public virtual ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
 	{
 		ulong boxSize = 0;
 		return boxSize;

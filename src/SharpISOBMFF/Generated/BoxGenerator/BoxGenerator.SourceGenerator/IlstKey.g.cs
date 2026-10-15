@@ -12,6 +12,9 @@ aligned(8) class IlstKey(unsigned int(32) format) extends Box(format) {
 public partial class IlstKey : Box
 {
 	public override string DisplayName { get { return "IlstKey"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? BoxPlacements.OfType(FourCC)); }
+
 
 	public IlstKey(uint format): base(format)
 	{
@@ -41,6 +44,15 @@ public partial class IlstKey : Box
 		boxSize += base.CalculateSize();
 		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

@@ -23,6 +23,9 @@ public partial class ARESBox : Box
 {
 	public const string TYPE = "ARES";
 	public override string DisplayName { get { return "ARESBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(AVdn,AVdh)"); }
+
 
 	protected uint tag; 
 	public uint Tag { get { return this.tag; } set { this.tag = value; } }
@@ -100,6 +103,22 @@ public partial class ARESBox : Box
 		boxSize += 32; // numBlackLines
 		boxSize += 32; // videoFormat
 		boxSize += ((ulong)reserved.Length * 8); // reserved
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("tag", 32, this.tag); 
+		boxSize += builder.Field("version", 32, this.version); 
+		boxSize += builder.Field("compressionId", 32, this.compressionId); 
+		boxSize += builder.Field("fieldWidth", 32, this.fieldWidth); 
+		boxSize += builder.Field("fieldHeight", 32, this.fieldHeight); 
+		boxSize += builder.Field("numFields", 32, this.numFields); 
+		boxSize += builder.Field("numBlackLines", 32, this.numBlackLines); 
+		boxSize += builder.Field("videoFormat", 32, this.videoFormat); 
+		boxSize += builder.Field("reserved", ((ulong)reserved.Length * 8), this.reserved); 
 		return boxSize;
 	}
 }

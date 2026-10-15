@@ -14,6 +14,9 @@ public partial class AppleNoSaveBox : Box
 {
 	public const string TYPE = "nsav";
 	public override string DisplayName { get { return "AppleNoSaveBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -43,6 +46,14 @@ public partial class AppleNoSaveBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

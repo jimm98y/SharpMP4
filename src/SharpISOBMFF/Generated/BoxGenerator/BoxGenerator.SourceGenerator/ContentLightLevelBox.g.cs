@@ -15,6 +15,9 @@ public partial class ContentLightLevelBox : Box
 {
 	public const string TYPE = "clli";
 	public override string DisplayName { get { return "ContentLightLevelBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry", "ipco"); }
+
 
 	protected ushort max_content_light_level; 
 	public ushort MaxContentLightLevel { get { return this.max_content_light_level; } set { this.max_content_light_level = value; } }
@@ -50,6 +53,15 @@ public partial class ContentLightLevelBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 16; // max_content_light_level
 		boxSize += 16; // max_pic_average_light_level
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("max_content_light_level", 16, this.max_content_light_level); 
+		boxSize += builder.Field("max_pic_average_light_level", 16, this.max_pic_average_light_level); 
 		return boxSize;
 	}
 }

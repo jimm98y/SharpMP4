@@ -94,6 +94,23 @@ public partial class FDItemInfoExtension : ItemInfoExtension
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("content_location", IsoStream.CalculateStringSize(content_location), this.content_location); 
+		boxSize += builder.Field("content_MD5", IsoStream.CalculateStringSize(content_MD5), this.content_MD5); 
+		boxSize += builder.Field("content_length", 64, this.content_length); 
+		boxSize += builder.Field("transfer_length", 64, this.transfer_length); 
+		boxSize += builder.Field("entry_count", 8, this.entry_count); 
+
+		for (int i=0; i < entry_count; i++)
+		{
+			boxSize += builder.Field($"group_id[{i}]", 32, this.group_id[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

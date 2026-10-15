@@ -12,6 +12,9 @@ public partial class TrackLoudnessInfo : LoudnessBaseBox
 {
 	public const string TYPE = "tlou";
 	public override string DisplayName { get { return "TrackLoudnessInfo"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ludt"); }
+
 
 	public TrackLoudnessInfo(): base(IsoStream.FromFourCC("tlou"))
 	{
@@ -35,6 +38,13 @@ public partial class TrackLoudnessInfo : LoudnessBaseBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
 		return boxSize;
 	}
 }

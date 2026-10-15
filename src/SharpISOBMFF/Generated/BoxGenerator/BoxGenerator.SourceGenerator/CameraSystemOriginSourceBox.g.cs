@@ -15,6 +15,9 @@ public partial class CameraSystemOriginSourceBox : FullBox
 {
 	public const string TYPE = "corg";
 	public override string DisplayName { get { return "CameraSystemOriginSourceBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("lnex"); }
+
 
 	protected uint source_of_origin;  //  e.g., 'blin'  
 	public uint SourceOfOrigin { get { return this.source_of_origin; } set { this.source_of_origin = value; } }
@@ -44,6 +47,14 @@ public partial class CameraSystemOriginSourceBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // source_of_origin
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("source_of_origin", 32, this.source_of_origin); // e.g., 'blin'  
 		return boxSize;
 	}
 }

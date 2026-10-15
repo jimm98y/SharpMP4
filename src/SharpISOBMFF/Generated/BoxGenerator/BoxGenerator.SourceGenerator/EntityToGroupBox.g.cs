@@ -18,6 +18,9 @@ extends FullBox(grouping_type, version, flags) {
 public partial class EntityToGroupBox : FullBox
 {
 	public override string DisplayName { get { return "EntityToGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "grpl" }); }
+
 
 	protected uint group_id; 
 	public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
@@ -71,6 +74,20 @@ public partial class EntityToGroupBox : FullBox
 		for (int i=0; i<num_entities_in_group; i++)
 		{
 			boxSize += 32; // entity_id
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("group_id", 32, this.group_id); 
+		boxSize += builder.Field("num_entities_in_group", 32, this.num_entities_in_group); 
+
+		for (int i=0; i<num_entities_in_group; i++)
+		{
+			boxSize += builder.Field($"entity_id[{i}]", 32, this.entity_id[i]); // the remaining data may be specified for a particular grouping_type
 		}
 		return boxSize;
 	}

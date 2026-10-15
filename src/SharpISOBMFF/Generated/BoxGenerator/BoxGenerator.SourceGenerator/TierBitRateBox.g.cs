@@ -20,6 +20,9 @@ public partial class TierBitRateBox : Box
 {
 	public const string TYPE = "tibr";
 	public override string DisplayName { get { return "TierBitRateBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("scif", "mvif", "mvcg"); }
+
 
 	protected uint baseBitRate; 
 	public uint BaseBitRate { get { return this.baseBitRate; } set { this.baseBitRate = value; } }
@@ -79,6 +82,19 @@ public partial class TierBitRateBox : Box
 		boxSize += 32; // tierBaseBitRate
 		boxSize += 32; // tierMaxBitRate
 		boxSize += 32; // tierAvgBitRate
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("baseBitRate", 32, this.baseBitRate); 
+		boxSize += builder.Field("maxBitRate", 32, this.maxBitRate); 
+		boxSize += builder.Field("avgBitRate", 32, this.avgBitRate); 
+		boxSize += builder.Field("tierBaseBitRate", 32, this.tierBaseBitRate); 
+		boxSize += builder.Field("tierMaxBitRate", 32, this.tierMaxBitRate); 
+		boxSize += builder.Field("tierAvgBitRate", 32, this.tierAvgBitRate); 
 		return boxSize;
 	}
 }

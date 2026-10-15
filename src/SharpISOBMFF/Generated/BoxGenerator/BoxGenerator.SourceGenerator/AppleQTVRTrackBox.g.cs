@@ -17,6 +17,9 @@ public partial class AppleQTVRTrackBox : Box
 {
 	public const string TYPE = "qtvr";
 	public override string DisplayName { get { return "AppleQTVRTrackBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected uint reserved1; 
 	public uint Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
@@ -64,6 +67,17 @@ public partial class AppleQTVRTrackBox : Box
 		boxSize += 16; // reserved2
 		boxSize += 16; // dataRefIndex
 		boxSize += 32; // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved1", 32, this.reserved1); 
+		boxSize += builder.Field("reserved2", 16, this.reserved2); 
+		boxSize += builder.Field("dataRefIndex", 16, this.dataRefIndex); 
+		boxSize += builder.Field("data", 32, this.data); 
 		return boxSize;
 	}
 }

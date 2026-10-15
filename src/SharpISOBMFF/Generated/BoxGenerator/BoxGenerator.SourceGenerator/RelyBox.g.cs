@@ -17,6 +17,9 @@ public partial class RelyBox : Box
 {
 	public const string TYPE = "rely";
 	public override string DisplayName { get { return "RelyBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("SampleEntry(rtp ,srtp)"); }
+
 
 	protected byte reserved = 0; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -58,6 +61,16 @@ public partial class RelyBox : Box
 		boxSize += 6; // reserved
 		boxSize += 1; // preferred
 		boxSize += 1; // required
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += builder.Field("preferred", 1, this.preferred); 
+		boxSize += builder.Field("required", 1, this.required); 
 		return boxSize;
 	}
 }

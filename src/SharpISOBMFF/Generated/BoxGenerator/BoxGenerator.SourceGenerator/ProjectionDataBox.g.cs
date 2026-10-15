@@ -13,6 +13,9 @@ aligned(8) class ProjectionDataBox(unsigned int(32) proj_type, unsigned int(8) v
 public partial class ProjectionDataBox : FullBox
 {
 	public override string DisplayName { get { return "ProjectionDataBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	public ProjectionDataBox(uint proj_type, byte version = 0, uint flags = 0): base(proj_type, version, flags)
 	{
@@ -36,6 +39,13 @@ public partial class ProjectionDataBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
 		return boxSize;
 	}
 }

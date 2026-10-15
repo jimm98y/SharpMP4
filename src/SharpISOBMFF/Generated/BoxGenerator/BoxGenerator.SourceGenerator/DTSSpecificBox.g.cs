@@ -29,6 +29,9 @@ public partial class DTSSpecificBox : Box
 {
 	public const string TYPE = "ddts";
 	public override string DisplayName { get { return "DTSSpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(dtsc,dtsh,dtsl,dtse,enca)"); }
+
 
 	protected uint dtsSamplingFrequency; 
 	public uint DtsSamplingFrequency { get { return this.dtsSamplingFrequency; } set { this.dtsSamplingFrequency = value; } }
@@ -148,6 +151,29 @@ public partial class DTSSpecificBox : Box
 		boxSize += 1; // lbrDurationMod
 		boxSize += 1; // reservedBoxPresent
 		boxSize += 5; // reserved
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("dtsSamplingFrequency", 32, this.dtsSamplingFrequency); 
+		boxSize += builder.Field("maxBitRate", 32, this.maxBitRate); 
+		boxSize += builder.Field("avgBitRate", 32, this.avgBitRate); 
+		boxSize += builder.Field("pcmSampleDepth", 8, this.pcmSampleDepth); 
+		boxSize += builder.Field("frameDuration", 2, this.frameDuration); 
+		boxSize += builder.Field("streamConstruction", 5, this.streamConstruction); 
+		boxSize += builder.Field("coreLFEPresent", 1, this.coreLFEPresent); 
+		boxSize += builder.Field("coreLayout", 6, this.coreLayout); 
+		boxSize += builder.Field("coreSize", 14, this.coreSize); 
+		boxSize += builder.Field("stereoDownmix", 1, this.stereoDownmix); 
+		boxSize += builder.Field("representationType", 3, this.representationType); 
+		boxSize += builder.Field("channelLayout", 16, this.channelLayout); 
+		boxSize += builder.Field("multiAssetFlag", 1, this.multiAssetFlag); 
+		boxSize += builder.Field("lbrDurationMod", 1, this.lbrDurationMod); 
+		boxSize += builder.Field("reservedBoxPresent", 1, this.reservedBoxPresent); 
+		boxSize += builder.Field("reserved", 5, this.reserved); 
 		return boxSize;
 	}
 }

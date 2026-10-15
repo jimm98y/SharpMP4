@@ -18,6 +18,9 @@ public partial class PiffTrackEncryptionBox : FullBox
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "PiffTrackEncryptionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected uint algorithmID; 
 	public uint AlgorithmID { get { return this.algorithmID; } set { this.algorithmID = value; } }
@@ -60,6 +63,16 @@ public partial class PiffTrackEncryptionBox : FullBox
 		boxSize += 24; // algorithmID
 		boxSize += 8; // Per_Sample_IV_Size
 		boxSize += 16 * 8; // kid
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("algorithmID", 24, this.algorithmID); 
+		boxSize += builder.Field("Per_Sample_IV_Size", 8, this.Per_Sample_IV_Size); 
+		boxSize += builder.Field("kid", 16 * 8, this.kid); 
 		return boxSize;
 	}
 }

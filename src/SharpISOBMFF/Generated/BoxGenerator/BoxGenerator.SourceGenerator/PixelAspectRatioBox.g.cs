@@ -15,6 +15,9 @@ public partial class PixelAspectRatioBox : Box
 {
 	public const string TYPE = "pasp";
 	public override string DisplayName { get { return "PixelAspectRatioBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry", "ipco"); }
+
 
 	protected uint hSpacing; 
 	public uint HSpacing { get { return this.hSpacing; } set { this.hSpacing = value; } }
@@ -50,6 +53,15 @@ public partial class PixelAspectRatioBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 32; // hSpacing
 		boxSize += 32; // vSpacing
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("hSpacing", 32, this.hSpacing); 
+		boxSize += builder.Field("vSpacing", 32, this.vSpacing); 
 		return boxSize;
 	}
 }

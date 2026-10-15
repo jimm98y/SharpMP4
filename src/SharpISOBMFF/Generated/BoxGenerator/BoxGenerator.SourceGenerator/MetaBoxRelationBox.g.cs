@@ -16,6 +16,9 @@ public partial class MetaBoxRelationBox : FullBox
 {
 	public const string TYPE = "mere";
 	public override string DisplayName { get { return "MetaBoxRelationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("meco"); }
+
 
 	protected uint firstMetaBoxHandlerType; 
 	public uint FirstMetaBoxHandlerType { get { return this.firstMetaBoxHandlerType; } set { this.firstMetaBoxHandlerType = value; } }
@@ -57,6 +60,16 @@ public partial class MetaBoxRelationBox : FullBox
 		boxSize += 32; // firstMetaBoxHandlerType
 		boxSize += 32; // secondMetaBoxHandlerType
 		boxSize += 8; // metaboxRelation
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("firstMetaBoxHandlerType", 32, this.firstMetaBoxHandlerType); 
+		boxSize += builder.Field("secondMetaBoxHandlerType", 32, this.secondMetaBoxHandlerType); 
+		boxSize += builder.Field("metaboxRelation", 8, this.metaboxRelation); 
 		return boxSize;
 	}
 }

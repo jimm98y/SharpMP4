@@ -45,6 +45,14 @@ public partial class QoS_Qualifier_MAX_AU_RATE : QoS_Qualifier
 		boxSize += 32; // MAX_AU_RATE
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("MAX_AU_RATE", 32, this.MAX_AU_RATE); 
+		return boxSize;
+	}
 }
 
 }

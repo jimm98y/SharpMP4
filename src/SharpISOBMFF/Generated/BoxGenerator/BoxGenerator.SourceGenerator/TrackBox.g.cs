@@ -13,6 +13,9 @@ public partial class TrackBox : Box
 {
 	public const string TYPE = "trak";
 	public override string DisplayName { get { return "TrackBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("moov"); }
+
 
 	public TrackBox(): base(IsoStream.FromFourCC("trak"))
 	{
@@ -39,6 +42,14 @@ public partial class TrackBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

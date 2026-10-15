@@ -15,6 +15,9 @@ public partial class URIMetaSampleEntry : MetaDataSampleEntry
 {
 	public const string TYPE = "urim";
 	public override string DisplayName { get { return "URIMetaSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public URIBox TheLabel { get { return this.children.OfType<URIBox>().FirstOrDefault(); } }
 	public URIInitBox Init { get { return this.children.OfType<URIInitBox>().FirstOrDefault(); } }
 
@@ -49,6 +52,16 @@ public partial class URIMetaSampleEntry : MetaDataSampleEntry
 		// boxSize += IsoStream.CalculateBoxSize(the_label); // the_label
 		// boxSize += IsoStream.CalculateBoxSize(init); // init
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("the_label", IsoStream.CalculateBoxSize(the_label), this.the_label); 
+		// boxSize += builder.Field("init", IsoStream.CalculateBoxSize(init), this.init); // optional
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

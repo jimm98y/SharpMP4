@@ -17,6 +17,9 @@ public partial class RelativeLocationProperty : ItemFullProperty
 {
 	public const string TYPE = "rloc";
 	public override string DisplayName { get { return "RelativeLocationProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected uint horizontal_offset; 
 	public uint HorizontalOffset { get { return this.horizontal_offset; } set { this.horizontal_offset = value; } }
@@ -52,6 +55,15 @@ public partial class RelativeLocationProperty : ItemFullProperty
 		boxSize += base.CalculateSize();
 		boxSize += 32; // horizontal_offset
 		boxSize += 32; // vertical_offset
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("horizontal_offset", 32, this.horizontal_offset); 
+		boxSize += builder.Field("vertical_offset", 32, this.vertical_offset); 
 		return boxSize;
 	}
 }

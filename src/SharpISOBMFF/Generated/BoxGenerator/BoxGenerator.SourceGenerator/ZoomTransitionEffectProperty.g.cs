@@ -16,6 +16,9 @@ public partial class ZoomTransitionEffectProperty : ItemFullProperty
 {
 	public const string TYPE = "zoom";
 	public override string DisplayName { get { return "ZoomTransitionEffectProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected bool transition_direction; 
 	public bool TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
@@ -51,6 +54,15 @@ public partial class ZoomTransitionEffectProperty : ItemFullProperty
 		boxSize += base.CalculateSize();
 		boxSize += 1; // transition_direction
 		boxSize += 7; // transition_shape
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("transition_direction", 1, this.transition_direction); 
+		boxSize += builder.Field("transition_shape", 7, this.transition_shape); 
 		return boxSize;
 	}
 }

@@ -22,6 +22,9 @@ public partial class ThreeGPPLocationInformationBox : FullBox
 {
 	public const string TYPE = "loci";
 	public override string DisplayName { get { return "ThreeGPPLocationInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected bool reserved = false; 
 	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -99,6 +102,22 @@ public partial class ThreeGPPLocationInformationBox : FullBox
 		boxSize += 32; // altitude
 		boxSize += IsoStream.CalculateStringSize(astronomicalBody); // astronomicalBody
 		boxSize += IsoStream.CalculateStringSize(additionalNotes); // additionalNotes
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 1, this.reserved); 
+		boxSize += builder.Field("language", 15, this.language); 
+		boxSize += builder.Field("placeName", IsoStream.CalculateStringSize(placeName), this.placeName); 
+		boxSize += builder.Field("role", 8, this.role); 
+		boxSize += builder.Field("longitude", 32, this.longitude); 
+		boxSize += builder.Field("latitude", 32, this.latitude); 
+		boxSize += builder.Field("altitude", 32, this.altitude); 
+		boxSize += builder.Field("astronomicalBody", IsoStream.CalculateStringSize(astronomicalBody), this.astronomicalBody); 
+		boxSize += builder.Field("additionalNotes", IsoStream.CalculateStringSize(additionalNotes), this.additionalNotes); 
 		return boxSize;
 	}
 }

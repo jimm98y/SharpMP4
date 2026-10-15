@@ -16,6 +16,9 @@ public partial class BoxedMetaDataSampleEntry : MetaDataSampleEntry
 {
 	public const string TYPE = "mebx";
 	public override string DisplayName { get { return "BoxedMetaDataSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public MetaDataKeyTableBox _MetaDataKeyTableBox { get { return this.children.OfType<MetaDataKeyTableBox>().FirstOrDefault(); } }
 	public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
 
@@ -50,6 +53,16 @@ public partial class BoxedMetaDataSampleEntry : MetaDataSampleEntry
 		// boxSize += IsoStream.CalculateBoxSize(MetaDataKeyTableBox); // MetaDataKeyTableBox
 		// boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("MetaDataKeyTableBox", IsoStream.CalculateBoxSize(MetaDataKeyTableBox), this.MetaDataKeyTableBox); // mandatory
+		// boxSize += builder.Field("BitRateBox", IsoStream.CalculateBoxSize(BitRateBox), this.BitRateBox); // optional
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

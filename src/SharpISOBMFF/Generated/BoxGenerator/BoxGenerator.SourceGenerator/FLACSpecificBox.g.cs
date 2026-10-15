@@ -16,6 +16,9 @@ public partial class FLACSpecificBox : FullBox
 {
 	public const string TYPE = "dfLa";
 	public override string DisplayName { get { return "FLACSpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(fLaC,enca)"); }
+
 
 	protected FLACMetadataBlock[] blocks; 
 	public FLACMetadataBlock[] Blocks { get { return this.blocks; } set { this.blocks = value; } }
@@ -45,6 +48,14 @@ public partial class FLACSpecificBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateClassSize(blocks); // blocks
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("blocks", IsoStream.CalculateClassSize(blocks), this.blocks); 
 		return boxSize;
 	}
 }

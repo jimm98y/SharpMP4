@@ -18,6 +18,9 @@ public partial class AudioChannelLayoutBox : FullBox
 {
 	public const string TYPE = "chan";
 	public override string DisplayName { get { return "AudioChannelLayoutBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry"); }
+
 
 	protected uint channelLayoutTag; 
 	public uint ChannelLayoutTag { get { return this.channelLayoutTag; } set { this.channelLayoutTag = value; } }
@@ -65,6 +68,17 @@ public partial class AudioChannelLayoutBox : FullBox
 		boxSize += 32; // channelBitmap
 		boxSize += 32; // numberChannelDescriptions
 		boxSize += IsoStream.CalculateClassSize(channelDescriptions); // channelDescriptions
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("channelLayoutTag", 32, this.channelLayoutTag); 
+		boxSize += builder.Field("channelBitmap", 32, this.channelBitmap); 
+		boxSize += builder.Field("numberChannelDescriptions", 32, this.numberChannelDescriptions); 
+		boxSize += builder.Field("channelDescriptions", IsoStream.CalculateClassSize(channelDescriptions), this.channelDescriptions); 
 		return boxSize;
 	}
 }

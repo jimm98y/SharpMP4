@@ -35,6 +35,9 @@ public partial class SubSampleInformationBox : FullBox
 {
 	public const string TYPE = "subs";
 	public override string DisplayName { get { return "SubSampleInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl", "traf", "ipco"); }
+
 
 	protected uint entry_count; 
 	public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -173,6 +176,42 @@ public partial class SubSampleInformationBox : FullBox
 					boxSize += 8; // subsample_priority
 					boxSize += 8; // discardable
 					boxSize += 32; // codec_specific_parameters
+				}
+			}
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		
+
+		for (int i=0; i < entry_count; i++)
+		{
+			boxSize += builder.Field($"sample_delta[{i}]", 32, this.sample_delta[i]); 
+			boxSize += builder.Field($"subsample_count[{i}]", 16, this.subsample_count[i]); 
+
+			if (subsample_count[i] > 0)
+			{
+
+				for (int j=0; j < subsample_count[i]; j++)
+				{
+
+					if (version == 1)
+					{
+						boxSize += builder.Field($"subsample_size[{i}][{j}]", 32, this.subsample_size[i][j]); 
+					}
+
+					else 
+					{
+						boxSize += builder.Field($"subsample_size[{i}][{j}]", 16, this.subsample_size[i][j]); 
+					}
+					boxSize += builder.Field($"subsample_priority[{i}][{j}]", 8, this.subsample_priority[i][j]); 
+					boxSize += builder.Field($"discardable[{i}][{j}]", 8, this.discardable[i][j]); 
+					boxSize += builder.Field($"codec_specific_parameters[{i}][{j}]", 32, this.codec_specific_parameters[i][j]); 
 				}
 			}
 		}

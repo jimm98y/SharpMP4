@@ -73,6 +73,20 @@ public partial class VvcSubpicLayoutMapEntry : VisualSampleGroupEntry
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("groupID_info_4cc", 32, this.groupID_info_4cc); 
+		boxSize += builder.Field("entry_count_minus1", 16, this.entry_count_minus1); 
+
+		for (int i=0; i <= entry_count_minus1; i++)
+		{
+			boxSize += builder.Field($"groupID[{i}]", 16, this.groupID[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

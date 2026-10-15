@@ -23,6 +23,9 @@ public partial class SVCMetadataSampleConfigBox : FullBox
 {
 	public const string TYPE = "svmC";
 	public override string DisplayName { get { return "SVCMetadataSampleConfigBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("SVCMetaDataSampleEntry(svcM)"); }
+
 
 	protected byte sample_statement_type; 
 	public byte SampleStatementType { get { return this.sample_statement_type; } set { this.sample_statement_type = value; } }
@@ -101,6 +104,25 @@ public partial class SVCMetadataSampleConfigBox : FullBox
 		{
 			boxSize += 8; // statement_type
 			boxSize += IsoStream.CalculateStringSize(statement_namespace[i]); // statement_namespace
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		
+		boxSize += builder.Field("sample_statement_type", 8, this.sample_statement_type); 
+		/*  normally group, or seq  */
+		boxSize += builder.Field("default_statement_type", 8, this.default_statement_type); 
+		boxSize += builder.Field("default_statement_length", 8, this.default_statement_length); 
+		boxSize += builder.Field("entry_count", 8, this.entry_count); 
+
+		for (int i=0; i<entry_count; i++)
+		{
+			boxSize += builder.Field($"statement_type[{i}]", 8, this.statement_type[i]); // from the user extension ranges
+			boxSize += builder.Field($"statement_namespace[{i}]", IsoStream.CalculateStringSize(statement_namespace[i]), this.statement_namespace[i]); 
 		}
 		return boxSize;
 	}

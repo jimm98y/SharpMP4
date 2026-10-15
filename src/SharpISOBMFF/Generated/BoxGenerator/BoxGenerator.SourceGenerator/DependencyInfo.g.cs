@@ -20,6 +20,7 @@ public partial class DependencyInfo : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "DependencyInfo"; } }
 
 	protected byte subSeqDirectionFlag; 
@@ -59,6 +60,15 @@ public partial class DependencyInfo : IMp4Serializable
 		boxSize += 8; // subSeqDirectionFlag
 		boxSize += 8; // layerNumber
 		boxSize += 16; // subSequenceIdentifier
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("subSeqDirectionFlag", 8, this.subSeqDirectionFlag); 
+		boxSize += builder.Field("layerNumber", 8, this.layerNumber); 
+		boxSize += builder.Field("subSequenceIdentifier", 16, this.subSequenceIdentifier); 
 		return boxSize;
 	}
 }

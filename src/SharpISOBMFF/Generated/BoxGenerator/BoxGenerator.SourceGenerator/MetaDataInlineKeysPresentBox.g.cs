@@ -16,6 +16,9 @@ public partial class MetaDataInlineKeysPresentBox : Box
 {
 	public const string TYPE = "keyi";
 	public override string DisplayName { get { return "MetaDataInlineKeysPresentBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
+
 
 	protected byte inlineKeyValueBoxesPresent; 
 	public byte InlineKeyValueBoxesPresent { get { return this.inlineKeyValueBoxesPresent; } set { this.inlineKeyValueBoxesPresent = value; } }
@@ -45,6 +48,14 @@ public partial class MetaDataInlineKeysPresentBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 8; // inlineKeyValueBoxesPresent
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("inlineKeyValueBoxesPresent", 8, this.inlineKeyValueBoxesPresent); 
 		return boxSize;
 	}
 }

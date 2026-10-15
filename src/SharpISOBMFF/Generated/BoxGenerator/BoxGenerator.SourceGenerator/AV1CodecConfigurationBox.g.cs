@@ -17,6 +17,9 @@ public partial class AV1CodecConfigurationBox : Box
 {
 	public const string TYPE = "av1C";
 	public override string DisplayName { get { return "AV1CodecConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(av01,encv,resv)", "ipco"); }
+
 
 	protected AV1CodecConfigurationRecord av1Config; 
 	public AV1CodecConfigurationRecord Av1Config { get { return this.av1Config; } set { this.av1Config = value; } }
@@ -46,6 +49,14 @@ public partial class AV1CodecConfigurationBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateClassSize(av1Config); // av1Config
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("av1Config", IsoStream.CalculateClassSize(av1Config), this.av1Config); 
 		return boxSize;
 	}
 }

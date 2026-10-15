@@ -16,6 +16,9 @@ public partial class ReceivedRtcpHintSampleEntry : HintSampleEntry
 {
 	public const string TYPE = "rtcp";
 	public override string DisplayName { get { return "ReceivedRtcpHintSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected ushort hinttrackversion = 1; 
 	public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -57,6 +60,16 @@ public partial class ReceivedRtcpHintSampleEntry : HintSampleEntry
 		boxSize += 16; // hinttrackversion
 		boxSize += 16; // highestcompatibleversion
 		boxSize += 32; // maxpacketsize
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("hinttrackversion", 16, this.hinttrackversion); 
+		boxSize += builder.Field("highestcompatibleversion", 16, this.highestcompatibleversion); 
+		boxSize += builder.Field("maxpacketsize", 32, this.maxpacketsize); 
 		return boxSize;
 	}
 }

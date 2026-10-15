@@ -13,6 +13,9 @@ class FontSampleEntry(codingname) extends SampleEntry (codingname){
 public partial class FontSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "FontSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "stsd" }); }
+
 
 	public FontSampleEntry(uint codingname = 0): base(codingname)
 	{
@@ -42,6 +45,15 @@ public partial class FontSampleEntry : SampleEntry
 		boxSize += base.CalculateSize();
 		/* other boxes from derived specifications */
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		/* other boxes from derived specifications */
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

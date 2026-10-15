@@ -16,6 +16,9 @@ public partial class SoundMediaHeaderBox : FullBox
 {
 	public const string TYPE = "smhd";
 	public override string DisplayName { get { return "SoundMediaHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("minf"); }
+
 
 	protected short balance = 0; 
 	public short Balance { get { return this.balance; } set { this.balance = value; } }
@@ -51,6 +54,15 @@ public partial class SoundMediaHeaderBox : FullBox
 		boxSize += base.CalculateSize();
 		boxSize += 16; // balance
 		boxSize += 16; // reserved
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("balance", 16, this.balance); 
+		boxSize += builder.Field("reserved", 16, this.reserved); 
 		return boxSize;
 	}
 }

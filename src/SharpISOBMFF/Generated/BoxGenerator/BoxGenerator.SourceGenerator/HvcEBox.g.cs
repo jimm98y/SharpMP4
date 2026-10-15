@@ -15,6 +15,9 @@ public partial class HvcEBox : Box
 {
 	public const string TYPE = "hvcE";
 	public override string DisplayName { get { return "HvcEBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(dvhe,dvh1,hvc1,hev1,hvc2,hev2,encv,resv)"); }
+
 
 	protected HEVCDecoderConfigurationRecord HEVCConfig; 
 	public HEVCDecoderConfigurationRecord _HEVCConfig { get { return this.HEVCConfig; } set { this.HEVCConfig = value; } }
@@ -44,6 +47,14 @@ public partial class HvcEBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateClassSize(HEVCConfig); // HEVCConfig
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("HEVCConfig", IsoStream.CalculateClassSize(HEVCConfig), this.HEVCConfig); 
 		return boxSize;
 	}
 }

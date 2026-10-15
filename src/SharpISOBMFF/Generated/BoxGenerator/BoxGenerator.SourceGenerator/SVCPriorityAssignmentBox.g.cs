@@ -16,6 +16,9 @@ public partial class SVCPriorityAssignmentBox : Box
 {
 	public const string TYPE = "svcP";
 	public override string DisplayName { get { return "SVCPriorityAssignmentBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AVCSVCSampleEntry(avc1,avc3)", "AVC2SVCSampleEntry(avc2,avc4)", "SVCSampleEntry(svc1,svc2)", "SVCMetaDataSampleEntry(svcM)"); }
+
 
 	protected byte method_count; 
 	public byte MethodCount { get { return this.method_count; } set { this.method_count = value; } }
@@ -51,6 +54,15 @@ public partial class SVCPriorityAssignmentBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 8; // method_count
 		boxSize += IsoStream.CalculateStringSize(PriorityAssignmentURI); // PriorityAssignmentURI
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("method_count", 8, this.method_count); 
+		boxSize += builder.Field("PriorityAssignmentURI", IsoStream.CalculateStringSize(PriorityAssignmentURI), this.PriorityAssignmentURI); 
 		return boxSize;
 	}
 }

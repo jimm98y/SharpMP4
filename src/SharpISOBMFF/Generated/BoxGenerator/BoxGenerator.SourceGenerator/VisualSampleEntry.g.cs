@@ -32,6 +32,9 @@ class VisualSampleEntry(codingname) extends SampleEntry (codingname){
 public partial class VisualSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "VisualSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "stsd" }); }
+
 
 	protected ushort pre_defined = 0; 
 	public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
@@ -162,6 +165,35 @@ public partial class VisualSampleEntry : SampleEntry
 		// boxSize += IsoStream.CalculateBoxSize(clap); // clap
 		// boxSize += IsoStream.CalculateBoxSize(pasp); // pasp
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("pre_defined", 16, this.pre_defined); 
+		boxSize += builder.Field("reserved", 16, this.reserved); 
+		boxSize += builder.Field("pre_defined0", 3 * 32, this.pre_defined0); 
+		boxSize += builder.Field("width", 16, this.width); 
+		boxSize += builder.Field("height", 16, this.height); 
+		boxSize += builder.Field("horizresolution", 32, this.horizresolution); // 72 dpi
+		boxSize += builder.Field("vertresolution", 32, this.vertresolution); // 72 dpi
+		boxSize += builder.Field("reserved0", 32, this.reserved0); 
+		boxSize += builder.Field("frame_count", 16, this.frame_count); 
+		boxSize += builder.Field("compressorname", 32 * 8, this.compressorname); 
+		boxSize += builder.Field("depth", 16, this.depth); 
+		boxSize += builder.Field("color_table_id", 16, this.color_table_id); // pre_defined in ISOBMFF; QuickTime's color table ID
+		/*  QuickTime: an ID of 0 puts the color table of a depth of 8 bits or less right here */
+
+		if (color_table_id == 0 && depth <= 8)
+		{
+			boxSize += builder.Field("colorTable", IsoStream.CalculateClassSize(colorTable), this.colorTable); 
+		}
+		/*  other boxes from derived specifications */
+		// boxSize += builder.Field("clap", IsoStream.CalculateBoxSize(clap), this.clap); // optional
+		// boxSize += builder.Field("pasp", IsoStream.CalculateBoxSize(pasp), this.pasp); // optional
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

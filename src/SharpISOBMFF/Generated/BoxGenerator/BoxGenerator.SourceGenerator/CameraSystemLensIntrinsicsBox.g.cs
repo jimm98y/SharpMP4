@@ -25,6 +25,9 @@ public partial class CameraSystemLensIntrinsicsBox : FullBox
 {
 	public const string TYPE = "lnin";
 	public override string DisplayName { get { return "CameraSystemLensIntrinsicsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("lens"); }
+
 
 	protected short denominator_shift_operand; 
 	public short DenominatorShiftOperand { get { return this.denominator_shift_operand; } set { this.denominator_shift_operand = value; } }
@@ -119,6 +122,29 @@ public partial class CameraSystemLensIntrinsicsBox : FullBox
 		if ((flags  &  2) ==  2)
 		{
 			boxSize += 32; // projection_offset
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("denominator_shift_operand", 16, this.denominator_shift_operand); 
+		boxSize += builder.Field("skew_denominator_shift_operand", 16, this.skew_denominator_shift_operand); 
+		boxSize += builder.Field("focal_length_x", 32, this.focal_length_x); 
+		boxSize += builder.Field("principal_point_x", 32, this.principal_point_x); 
+		boxSize += builder.Field("principal_point_y", 32, this.principal_point_y); 
+
+		if ((flags  &  1) ==  1)
+		{
+			boxSize += builder.Field("focal_length_y", 32, this.focal_length_y); 
+			boxSize += builder.Field("skew_factor", 32, this.skew_factor); 
+		}
+
+		if ((flags  &  2) ==  2)
+		{
+			boxSize += builder.Field("projection_offset", 32, this.projection_offset); 
 		}
 		return boxSize;
 	}

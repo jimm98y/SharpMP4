@@ -15,6 +15,9 @@ public partial class KodakDurationBox : Box
 {
 	public const string TYPE = "tima";
 	public override string DisplayName { get { return "KodakDurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("frea"); }
+
 
 	protected uint duration; 
 	public uint Duration { get { return this.duration; } set { this.duration = value; } }
@@ -44,6 +47,14 @@ public partial class KodakDurationBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // duration
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("duration", 32, this.duration); 
 		return boxSize;
 	}
 }

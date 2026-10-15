@@ -15,6 +15,9 @@ bit(24) flags = f;
 public partial class FullBox : Box
 {
 	public override string DisplayName { get { return "FullBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected byte version; // = v
 	public byte Version { get { return this.version; } set { this.version = value; } }
@@ -53,6 +56,15 @@ public FullBox(uint boxtype, byte[] uuid) : base(boxtype, uuid) { }
 		boxSize += base.CalculateSize();
 		boxSize += 8; // version
 		boxSize += 24; // flags
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("version", 8, this.version); 
+		boxSize += builder.Field("flags", 24, this.flags); 
 		return boxSize;
 	}
 }

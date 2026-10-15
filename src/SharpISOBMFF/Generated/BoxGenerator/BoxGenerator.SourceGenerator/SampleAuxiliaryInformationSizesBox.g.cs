@@ -48,6 +48,9 @@ public partial class SampleAuxiliaryInformationSizesBox : FullBox
 {
 	public const string TYPE = "saiz";
 	public override string DisplayName { get { return "SampleAuxiliaryInformationSizesBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl", "traf"); }
+
 
 	protected uint aux_info_type; 
 	public uint AuxInfoType { get { return this.aux_info_type; } set { this.aux_info_type = value; } }
@@ -237,6 +240,64 @@ public partial class SampleAuxiliaryInformationSizesBox : FullBox
 			if (default_sample_info_size == 0)
 			{
 				boxSize += ((ulong)( sample_count ) * 32); // sample_info_size
+			}
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version == 0)
+		{
+
+			if ((flags  &  1) ==  1)
+			{
+				boxSize += builder.Field("aux_info_type", 32, this.aux_info_type); 
+				boxSize += builder.Field("aux_info_type_parameter", 32, this.aux_info_type_parameter); 
+			}
+			boxSize += builder.Field("default_sample_info_size", 8, this.default_sample_info_size); 
+			boxSize += builder.Field("sample_count", 32, this.sample_count); 
+
+			if (default_sample_info_size == 0)
+			{
+				boxSize += builder.Field("sample_info_size", ((ulong)( sample_count ) * 8), this.sample_info_size); 
+			}
+		}
+
+		else if (version == 1)
+		{
+
+			if ((flags  &  1) ==  1)
+			{
+				boxSize += builder.Field("aux_info_type", 32, this.aux_info_type); 
+				boxSize += builder.Field("aux_info_type_parameter", 32, this.aux_info_type_parameter); 
+			}
+			boxSize += builder.Field("default_sample_info_size", 16, this.default_sample_info_size); 
+			boxSize += builder.Field("sample_count", 32, this.sample_count); 
+
+			if (default_sample_info_size == 0)
+			{
+				boxSize += builder.Field("sample_info_size", ((ulong)( sample_count ) * 16), this.sample_info_size); 
+			}
+		}
+
+		else if (version == 2)
+		{
+
+			if ((flags  &  1) ==  1)
+			{
+				boxSize += builder.Field("aux_info_type", 32, this.aux_info_type); 
+				boxSize += builder.Field("aux_info_type_parameter", 32, this.aux_info_type_parameter); 
+			}
+			boxSize += builder.Field("default_sample_info_size", 32, this.default_sample_info_size); 
+			boxSize += builder.Field("sample_count", 32, this.sample_count); 
+
+			if (default_sample_info_size == 0)
+			{
+				boxSize += builder.Field("sample_info_size", ((ulong)( sample_count ) * 32), this.sample_info_size); 
 			}
 		}
 		return boxSize;

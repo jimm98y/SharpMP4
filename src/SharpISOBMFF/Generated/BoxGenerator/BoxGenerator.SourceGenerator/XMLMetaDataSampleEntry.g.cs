@@ -16,6 +16,9 @@ public partial class XMLMetaDataSampleEntry : MetaDataSampleEntry
 {
 	public const string TYPE = "metx";
 	public override string DisplayName { get { return "XMLMetaDataSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected BinaryUTF8String content_encoding;  //  optional
 	protected bool content_encodingPresent;
@@ -61,6 +64,16 @@ public partial class XMLMetaDataSampleEntry : MetaDataSampleEntry
 		if (this.content_encodingPresent) boxSize += IsoStream.CalculateStringSize(content_encoding); // content_encoding
 		boxSize += IsoStream.CalculateStringSize(ns); // ns
 		if (this.schema_locationPresent) boxSize += IsoStream.CalculateStringSize(schema_location); // schema_location
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		if (this.content_encodingPresent) boxSize += builder.Field("content_encoding", IsoStream.CalculateStringSize(content_encoding), this.content_encoding); // optional
+		boxSize += builder.Field("ns", IsoStream.CalculateStringSize(ns), this.ns); 
+		if (this.schema_locationPresent) boxSize += builder.Field("schema_location", IsoStream.CalculateStringSize(schema_location), this.schema_location); // optional
 		return boxSize;
 	}
 }

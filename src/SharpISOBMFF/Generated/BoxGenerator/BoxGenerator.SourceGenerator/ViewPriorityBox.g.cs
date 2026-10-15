@@ -15,6 +15,9 @@ public partial class ViewPriorityBox : Box
 {
 	public const string TYPE = "vipr";
 	public override string DisplayName { get { return "ViewPriorityBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("sgpd"); }
+
 
 	protected ViprEntry[] entries; 
 	public ViprEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
@@ -44,6 +47,14 @@ public partial class ViewPriorityBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateClassSize(entries); // entries
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
 		return boxSize;
 	}
 }

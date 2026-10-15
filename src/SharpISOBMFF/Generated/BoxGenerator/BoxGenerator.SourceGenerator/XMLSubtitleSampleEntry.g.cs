@@ -19,6 +19,9 @@ public partial class XMLSubtitleSampleEntry : SubtitleSampleEntry
 {
 	public const string TYPE = "stpp";
 	public override string DisplayName { get { return "XMLSubtitleSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected BinaryUTF8String ns; 
 	public BinaryUTF8String Ns { get { return this.ns; } set { this.ns = value; } }
@@ -71,6 +74,18 @@ public partial class XMLSubtitleSampleEntry : SubtitleSampleEntry
 		if (this.auxiliary_mime_typesPresent) boxSize += IsoStream.CalculateStringSize(auxiliary_mime_types); // auxiliary_mime_types
 		// boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("ns", IsoStream.CalculateStringSize(ns), this.ns); 
+		if (this.schema_locationPresent) boxSize += builder.Field("schema_location", IsoStream.CalculateStringSize(schema_location), this.schema_location); // optional 
+		if (this.auxiliary_mime_typesPresent) boxSize += builder.Field("auxiliary_mime_types", IsoStream.CalculateStringSize(auxiliary_mime_types), this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
+		// boxSize += builder.Field("BitRateBox", IsoStream.CalculateBoxSize(BitRateBox), this.BitRateBox); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

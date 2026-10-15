@@ -17,6 +17,9 @@ public partial class OMAAccessUnitFormatBox : FullBox
 {
 	public const string TYPE = "odaf";
 	public override string DisplayName { get { return "OMAAccessUnitFormatBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("odkm"); }
+
 
 	protected byte reserved; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -64,6 +67,17 @@ public partial class OMAAccessUnitFormatBox : FullBox
 		boxSize += 1; // selectiveEncrypted
 		boxSize += 8; // keyIndicatorLength
 		boxSize += 8; // initialVectorLength
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+		boxSize += builder.Field("selectiveEncrypted", 1, this.selectiveEncrypted); 
+		boxSize += builder.Field("keyIndicatorLength", 8, this.keyIndicatorLength); 
+		boxSize += builder.Field("initialVectorLength", 8, this.initialVectorLength); 
 		return boxSize;
 	}
 }

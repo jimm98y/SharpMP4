@@ -43,6 +43,7 @@ public partial class UsacChannelPairElementConfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "UsacChannelPairElementConfig"; } }
 
 	protected bool tw_mdct; 
@@ -216,6 +217,47 @@ public partial class UsacChannelPairElementConfig : IMp4Serializable
 			if (bsTempShapeConfig == 2)
 			{
 				boxSize += 1; // bsEnvQuantMode
+			}
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("tw_mdct", 1, this.tw_mdct); 
+		boxSize += builder.Field("noiseFilling", 1, this.noiseFilling); 
+
+		if (coreSbrFrameLengthIndex >= 2 && coreSbrFrameLengthIndex <= 4)
+		{
+			boxSize += builder.Field("sbrConfig", IsoStream.CalculateClassSize(sbrConfig), this.sbrConfig); 
+			boxSize += builder.Field("stereoConfigIndex", 2, this.stereoConfigIndex); 
+		}
+
+		if (stereoConfigIndex > 0)
+		{
+			boxSize += builder.Field("bsFreqRes", 3, this.bsFreqRes); 
+			boxSize += builder.Field("bsFixedGainDMX", 3, this.bsFixedGainDMX); 
+			boxSize += builder.Field("bsTempShapeConfig", 2, this.bsTempShapeConfig); 
+			boxSize += builder.Field("bsDecorrConfig", 2, this.bsDecorrConfig); 
+			boxSize += builder.Field("bsHighRateMode", 1, this.bsHighRateMode); 
+			boxSize += builder.Field("bsPhaseCoding", 1, this.bsPhaseCoding); 
+			boxSize += builder.Field("bsOttBandsPhasePresent", 1, this.bsOttBandsPhasePresent); 
+
+			if (bsOttBandsPhasePresent)
+			{
+				boxSize += builder.Field("bsOttBandsPhase", 5, this.bsOttBandsPhase); 
+			}
+
+			if (stereoConfigIndex > 1)
+			{
+				boxSize += builder.Field("bsResidualBands", 5, this.bsResidualBands); 
+				boxSize += builder.Field("bsPseudoLr", 1, this.bsPseudoLr); 
+			}
+
+			if (bsTempShapeConfig == 2)
+			{
+				boxSize += builder.Field("bsEnvQuantMode", 1, this.bsEnvQuantMode); 
 			}
 		}
 		return boxSize;

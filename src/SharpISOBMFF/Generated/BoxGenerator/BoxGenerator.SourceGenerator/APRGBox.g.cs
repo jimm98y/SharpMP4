@@ -18,6 +18,9 @@ public partial class APRGBox : Box
 {
 	public const string TYPE = "APRG";
 	public override string DisplayName { get { return "APRGBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(AVdn,AVdh)"); }
+
 
 	protected uint tag; 
 	public uint Tag { get { return this.tag; } set { this.tag = value; } }
@@ -65,6 +68,17 @@ public partial class APRGBox : Box
 		boxSize += 32; // version
 		boxSize += 32; // interlace
 		boxSize += 32; // reserved
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("tag", 32, this.tag); 
+		boxSize += builder.Field("version", 32, this.version); 
+		boxSize += builder.Field("interlace", 32, this.interlace); 
+		boxSize += builder.Field("reserved", 32, this.reserved); 
 		return boxSize;
 	}
 }

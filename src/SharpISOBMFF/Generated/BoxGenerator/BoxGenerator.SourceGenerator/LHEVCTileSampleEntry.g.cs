@@ -13,6 +13,9 @@ public partial class LHEVCTileSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "lht1";
 	public override string DisplayName { get { return "LHEVCTileSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	public LHEVCTileSampleEntry(): base(IsoStream.FromFourCC("lht1"))
 	{
@@ -36,6 +39,13 @@ public partial class LHEVCTileSampleEntry : VisualSampleEntry
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
 		return boxSize;
 	}
 }

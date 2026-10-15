@@ -18,6 +18,9 @@ public partial class ItemReferenceBox : FullBox
 {
 	public const string TYPE = "iref";
 	public override string DisplayName { get { return "ItemReferenceBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
+
 
 	protected SingleItemTypeReferenceBox[] references; 
 	public SingleItemTypeReferenceBox[] References { get { return this.references; } set { this.references = value; } }
@@ -76,6 +79,23 @@ public partial class ItemReferenceBox : FullBox
 		else if (version==1)
 		{
 			boxSize += IsoStream.CalculateBoxSize(references0); // references0
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version==0)
+		{
+			boxSize += builder.Field("references", IsoStream.CalculateBoxSize(references), this.references); 
+		}
+
+		else if (version==1)
+		{
+			boxSize += builder.Field("references0", IsoStream.CalculateBoxSize(references0), this.references0); 
 		}
 		return boxSize;
 	}

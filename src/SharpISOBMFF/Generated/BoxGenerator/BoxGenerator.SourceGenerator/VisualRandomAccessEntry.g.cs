@@ -53,6 +53,15 @@ public partial class VisualRandomAccessEntry : VisualSampleGroupEntry
 		boxSize += 7; // num_leading_samples
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("num_leading_samples_known", 1, this.num_leading_samples_known); 
+		boxSize += builder.Field("num_leading_samples", 7, this.num_leading_samples); 
+		return boxSize;
+	}
 }
 
 }

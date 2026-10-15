@@ -20,6 +20,9 @@ public partial class StereoViewInformationBox : FullBox
 {
 	public const string TYPE = "stri";
 	public override string DisplayName { get { return "StereoViewInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("eyes"); }
+
 
 	protected byte reserved;  //  reserved, set to 0 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -73,6 +76,18 @@ public partial class StereoViewInformationBox : FullBox
 		boxSize += 1; // has_additional_views
 		boxSize += 1; // has_right_eye_view
 		boxSize += 1; // has_left_eye_view
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 4, this.reserved); // reserved, set to 0 
+		boxSize += builder.Field("eye_views_reversed", 1, this.eye_views_reversed); 
+		boxSize += builder.Field("has_additional_views", 1, this.has_additional_views); 
+		boxSize += builder.Field("has_right_eye_view", 1, this.has_right_eye_view); // video contains a right-eye view 
+		boxSize += builder.Field("has_left_eye_view", 1, this.has_left_eye_view); // video contains a left-eye view 
 		return boxSize;
 	}
 }

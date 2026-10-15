@@ -16,6 +16,9 @@ public partial class Ovc1VisualSampleEntryImpl : Box
 {
 	public const string TYPE = "ovc1";
 	public override string DisplayName { get { return "Ovc1VisualSampleEntryImpl"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected ulong reserved; 
 	public ulong Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -57,6 +60,16 @@ public partial class Ovc1VisualSampleEntryImpl : Box
 		boxSize += 48; // reserved
 		boxSize += 16; // dataReferenceIndex
 		boxSize += ((ulong)vc1Content.Length * 8); // vc1Content
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 48, this.reserved); 
+		boxSize += builder.Field("dataReferenceIndex", 16, this.dataReferenceIndex); 
+		boxSize += builder.Field("vc1Content", ((ulong)vc1Content.Length * 8), this.vc1Content); 
 		return boxSize;
 	}
 }

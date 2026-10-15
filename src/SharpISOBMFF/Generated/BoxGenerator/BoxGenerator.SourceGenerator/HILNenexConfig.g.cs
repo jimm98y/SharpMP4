@@ -22,6 +22,7 @@ public partial class HILNenexConfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "HILNenexConfig"; } }
 
 	protected bool HILNenhaLayer; 
@@ -66,6 +67,18 @@ public partial class HILNenexConfig : IMp4Serializable
 		if (HILNenhaLayer)
 		{
 			boxSize += 2; // HILNenhaQuantMode
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("HILNenhaLayer", 1, this.HILNenhaLayer); 
+
+		if (HILNenhaLayer)
+		{
+			boxSize += builder.Field("HILNenhaQuantMode", 2, this.HILNenhaQuantMode); 
 		}
 		return boxSize;
 	}

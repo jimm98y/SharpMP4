@@ -21,6 +21,9 @@ public partial class ComponentDefinitionBox : Box
 {
 	public const string TYPE = "cmpd";
 	public override string DisplayName { get { return "ComponentDefinitionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(uncv)", "ipco"); }
+
 
 	protected uint component_count; 
 	public uint ComponentCount { get { return this.component_count; } set { this.component_count = value; } }
@@ -86,6 +89,24 @@ public partial class ComponentDefinitionBox : Box
 			if (component_type[i] >= 0x8000)
 			{
 				boxSize += IsoStream.CalculateStringSize(component_type_uri[i]); // component_type_uri
+			}
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("component_count", 32, this.component_count); 
+
+		for (int i = 0; i < component_count; i++)
+		{
+			boxSize += builder.Field($"component_type[{i}]", 16, this.component_type[i]); 
+
+			if (component_type[i] >= 0x8000)
+			{
+				boxSize += builder.Field($"component_type_uri[{i}]", IsoStream.CalculateStringSize(component_type_uri[i]), this.component_type_uri[i]); 
 			}
 		}
 		return boxSize;

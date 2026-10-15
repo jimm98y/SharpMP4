@@ -20,6 +20,9 @@ public partial class SampleDependencyBox : FullBox
 {
 	public const string TYPE = "sdep";
 	public override string DisplayName { get { return "SampleDependencyBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl"); }
+
 
 	protected ushort[] dependency_count; 
 	public ushort[] DependencyCount { get { return this.dependency_count; } set { this.dependency_count = value; } }
@@ -86,6 +89,25 @@ public partial class SampleDependencyBox : FullBox
 			for (int k=0; k < dependency_count[i]; k++)
 			{
 				boxSize += 16; // relative_sample_number
+			}
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		int sample_count = 0; // TODO: taken from the stsz sample_count
+
+
+		for (int i=0; i < sample_count; i++)
+		{
+			boxSize += builder.Field($"dependency_count[{i}]", 16, this.dependency_count[i]); 
+
+			for (int k=0; k < dependency_count[i]; k++)
+			{
+				boxSize += builder.Field($"relative_sample_number[{i}][{k}]", 16, this.relative_sample_number[i][k]); 
 			}
 		}
 		return boxSize;

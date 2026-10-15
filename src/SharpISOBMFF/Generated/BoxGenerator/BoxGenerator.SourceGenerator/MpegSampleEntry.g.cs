@@ -14,6 +14,9 @@ public partial class MpegSampleEntry : SampleEntry
 {
 	public const string TYPE = "mp4s";
 	public override string DisplayName { get { return "MpegSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public Box _ES { get { return this.children.OfType<Box>().FirstOrDefault(); } }
 
 	public MpegSampleEntry(): base(IsoStream.FromFourCC("mp4s"))
@@ -44,6 +47,15 @@ public partial class MpegSampleEntry : SampleEntry
 		boxSize += base.CalculateSize();
 		// boxSize += IsoStream.CalculateBoxSize(ES); // ES
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("ES", IsoStream.CalculateBoxSize(ES), this.ES); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

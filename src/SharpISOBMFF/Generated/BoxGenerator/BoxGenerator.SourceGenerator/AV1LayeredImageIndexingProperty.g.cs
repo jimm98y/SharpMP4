@@ -21,6 +21,9 @@ public partial class AV1LayeredImageIndexingProperty : ItemProperty
 {
 	public const string TYPE = "a1lx";
 	public override string DisplayName { get { return "AV1LayeredImageIndexingProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected byte reserved = 0; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -88,6 +91,25 @@ public partial class AV1LayeredImageIndexingProperty : ItemProperty
 		else 
 		{
 			boxSize += 3 * 16; // layer_size
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+		boxSize += builder.Field("large_size", 1, this.large_size); 
+
+		if (large_size)
+		{
+			boxSize += builder.Field("layer_size", 3 * 32, this.layer_size); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("layer_size", 3 * 16, this.layer_size); 
 		}
 		return boxSize;
 	}

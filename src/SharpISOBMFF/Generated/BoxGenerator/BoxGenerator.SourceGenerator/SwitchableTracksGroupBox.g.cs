@@ -16,6 +16,9 @@ public partial class SwitchableTracksGroupBox : EntityToGroupBox
 {
 	public const string TYPE = "swtk";
 	public override string DisplayName { get { return "SwitchableTracksGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("grpl"); }
+
 
 	protected ushort[] track_switch_hierarchy_id; 
 	public ushort[] TrackSwitchHierarchyId { get { return this.track_switch_hierarchy_id; } set { this.track_switch_hierarchy_id = value; } }
@@ -57,6 +60,18 @@ public partial class SwitchableTracksGroupBox : EntityToGroupBox
 		for (int i = 0; i < num_entities_in_group; i++)
 		{
 			boxSize += 16; // track_switch_hierarchy_id
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		for (int i = 0; i < num_entities_in_group; i++)
+		{
+			boxSize += builder.Field($"track_switch_hierarchy_id[{i}]", 16, this.track_switch_hierarchy_id[i]); 
 		}
 		return boxSize;
 	}

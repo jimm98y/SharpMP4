@@ -15,6 +15,9 @@ public partial class DataEntryImdaBox : DataEntryBaseBox
 {
 	public const string TYPE = "imdt";
 	public override string DisplayName { get { return "DataEntryImdaBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("dref"); }
+
 
 	protected uint imda_ref_identifier; 
 	public uint ImdaRefIdentifier { get { return this.imda_ref_identifier; } set { this.imda_ref_identifier = value; } }
@@ -44,6 +47,14 @@ public partial class DataEntryImdaBox : DataEntryBaseBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // imda_ref_identifier
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("imda_ref_identifier", 32, this.imda_ref_identifier); 
 		return boxSize;
 	}
 }

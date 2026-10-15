@@ -15,6 +15,9 @@ public partial class GenericCompressedUnitsItemInfoBox : FullBox
 {
 	public const string TYPE = "icef";
 	public override string DisplayName { get { return "GenericCompressedUnitsItemInfoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected CompressedUnitsInfo units; 
 	public CompressedUnitsInfo Units { get { return this.units; } set { this.units = value; } }
@@ -44,6 +47,14 @@ public partial class GenericCompressedUnitsItemInfoBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateClassSize(units); // units
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("units", IsoStream.CalculateClassSize(units), this.units); 
 		return boxSize;
 	}
 }

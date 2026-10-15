@@ -15,6 +15,9 @@ public partial class MultiviewSceneInfoBox : Box
 {
 	public const string TYPE = "vwdi";
 	public override string DisplayName { get { return "MultiviewSceneInfoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mvcg"); }
+
 
 	protected byte max_disparity; 
 	public byte MaxDisparity { get { return this.max_disparity; } set { this.max_disparity = value; } }
@@ -44,6 +47,14 @@ public partial class MultiviewSceneInfoBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 8; // max_disparity
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("max_disparity", 8, this.max_disparity); 
 		return boxSize;
 	}
 }

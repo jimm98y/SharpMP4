@@ -22,6 +22,9 @@ public partial class ADHRBox : Box
 {
 	public const string TYPE = "ADHR";
 	public override string DisplayName { get { return "ADHRBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(AVdh)"); }
+
 
 	protected uint version; 
 	public uint Version { get { return this.version; } set { this.version = value; } }
@@ -93,6 +96,21 @@ public partial class ADHRBox : Box
 		boxSize += 16; // colorVolume
 		boxSize += 16; // alphaPresent
 		boxSize += 16; // preMultipliedAlpha
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("version", 32, this.version); 
+		boxSize += builder.Field("compressionId", 32, this.compressionId); 
+		boxSize += builder.Field("subSamplingControl", 32, this.subSamplingControl); 
+		boxSize += builder.Field("sampleBitDepth", 32, this.sampleBitDepth); 
+		boxSize += builder.Field("colorFormat", 16, this.colorFormat); 
+		boxSize += builder.Field("colorVolume", 16, this.colorVolume); 
+		boxSize += builder.Field("alphaPresent", 16, this.alphaPresent); 
+		boxSize += builder.Field("preMultipliedAlpha", 16, this.preMultipliedAlpha); 
 		return boxSize;
 	}
 }

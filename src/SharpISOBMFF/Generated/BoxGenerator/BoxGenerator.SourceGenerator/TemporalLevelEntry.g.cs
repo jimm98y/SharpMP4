@@ -53,6 +53,15 @@ public partial class TemporalLevelEntry : VisualSampleGroupEntry
 		boxSize += 7; // reserved
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("level_independently_decodable", 1, this.level_independently_decodable); 
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+		return boxSize;
+	}
 }
 
 }

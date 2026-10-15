@@ -15,6 +15,9 @@ public partial class FielBox : Box
 {
 	public const string TYPE = "fiel";
 	public override string DisplayName { get { return "FielBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry"); }
+
 
 	protected byte total; 
 	public byte Total { get { return this.total; } set { this.total = value; } }
@@ -50,6 +53,15 @@ public partial class FielBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 8; // total
 		boxSize += 8; // order
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("total", 8, this.total); 
+		boxSize += builder.Field("order", 8, this.order); 
 		return boxSize;
 	}
 }

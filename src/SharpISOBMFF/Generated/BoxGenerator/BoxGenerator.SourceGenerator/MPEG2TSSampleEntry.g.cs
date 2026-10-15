@@ -19,6 +19,9 @@ class MPEG2TSSampleEntry(name) extends HintSampleEntry(name) {
 public partial class MPEG2TSSampleEntry : HintSampleEntry
 {
 	public override string DisplayName { get { return "MPEG2TSSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected ushort hinttrackversion = 1; 
 	public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -84,6 +87,21 @@ public partial class MPEG2TSSampleEntry : HintSampleEntry
 		boxSize += 7; // reserved
 		// boxSize += IsoStream.CalculateBoxSize(additionaldata); // additionaldata
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("hinttrackversion", 16, this.hinttrackversion); 
+		boxSize += builder.Field("highestcompatibleversion", 16, this.highestcompatibleversion); 
+		boxSize += builder.Field("precedingbyteslen", 8, this.precedingbyteslen); 
+		boxSize += builder.Field("trailingbyteslen", 8, this.trailingbyteslen); 
+		boxSize += builder.Field("precomputed_only_flag", 1, this.precomputed_only_flag); 
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+		// boxSize += builder.Field("additionaldata", IsoStream.CalculateBoxSize(additionaldata), this.additionaldata); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

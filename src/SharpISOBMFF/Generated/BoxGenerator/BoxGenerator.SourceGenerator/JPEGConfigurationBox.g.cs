@@ -14,6 +14,9 @@ public partial class JPEGConfigurationBox : Box
 {
 	public const string TYPE = "jpgC";
 	public override string DisplayName { get { return "JPEGConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected byte[] JPEGprefix; 
 	public byte[] _JPEGprefix { get { return this.JPEGprefix; } set { this.JPEGprefix = value; } }
@@ -43,6 +46,14 @@ public partial class JPEGConfigurationBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += ((ulong)JPEGprefix.Length * 8); // JPEGprefix
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("JPEGprefix", ((ulong)JPEGprefix.Length * 8), this.JPEGprefix); 
 		return boxSize;
 	}
 }

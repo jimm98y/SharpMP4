@@ -18,6 +18,9 @@ public partial class ThreeGPPRatingBox : FullBox
 {
 	public const string TYPE = "rtng";
 	public override string DisplayName { get { return "ThreeGPPRatingBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected uint rating_entity; 
 	public uint RatingEntity { get { return this.rating_entity; } set { this.rating_entity = value; } }
@@ -71,6 +74,18 @@ public partial class ThreeGPPRatingBox : FullBox
 		boxSize += 1; // pad
 		boxSize += 15; // language
 		boxSize += IsoStream.CalculateStringSize(rating_info); // rating_info
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("rating_entity", 32, this.rating_entity); 
+		boxSize += builder.Field("rating_criteria", 32, this.rating_criteria); 
+		boxSize += builder.Field("pad", 1, this.pad); 
+		boxSize += builder.Field("language", 15, this.language); 
+		boxSize += builder.Field("rating_info", IsoStream.CalculateStringSize(rating_info), this.rating_info); 
 		return boxSize;
 	}
 }

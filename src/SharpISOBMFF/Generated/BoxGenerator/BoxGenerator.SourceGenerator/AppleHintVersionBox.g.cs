@@ -14,6 +14,9 @@ public partial class AppleHintVersionBox : Box
 {
 	public const string TYPE = "hinv";
 	public override string DisplayName { get { return "AppleHintVersionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected BinaryUTF8String version; 
 	public BinaryUTF8String Version { get { return this.version; } set { this.version = value; } }
@@ -43,6 +46,14 @@ public partial class AppleHintVersionBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(version); // version
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("version", IsoStream.CalculateStringSize(version), this.version); 
 		return boxSize;
 	}
 }

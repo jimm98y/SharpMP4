@@ -34,6 +34,9 @@ public partial class AC4SpecificBox : Box
 {
 	public const string TYPE = "dac4";
 	public override string DisplayName { get { return "AC4SpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(ac-4,enca)"); }
+
 
 	protected byte ac4_dsi_version; 
 	public byte Ac4DsiVersion { get { return this.ac4_dsi_version; } set { this.ac4_dsi_version = value; } }
@@ -165,6 +168,37 @@ public partial class AC4SpecificBox : Box
 		boxSize += IsoStream.CalculateClassSize(ac4_bitrate_dsi); // ac4_bitrate_dsi
 		boxSize += IsoStream.CalculateByteAlignmentSize(boxSize, byte_alignment); // byte_alignment
 		boxSize += IsoStream.CalculateClassSize(presentations); // presentations
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("ac4_dsi_version", 3, this.ac4_dsi_version); 
+		boxSize += builder.Field("bitstream_version", 7, this.bitstream_version); 
+		boxSize += builder.Field("fs_index", 1, this.fs_index); 
+		boxSize += builder.Field("frame_rate_index", 4, this.frame_rate_index); 
+		boxSize += builder.Field("n_presentations", 9, this.n_presentations); 
+
+		if (bitstream_version > 1)
+		{
+			boxSize += builder.Field("b_program_id", 1, this.b_program_id); 
+
+			if (b_program_id)
+			{
+				boxSize += builder.Field("short_program_id", 16, this.short_program_id); 
+				boxSize += builder.Field("b_uuid", 1, this.b_uuid); 
+
+				if (b_uuid)
+				{
+					boxSize += builder.Field("program_uuid", 16 * 8, this.program_uuid); 
+				}
+			}
+		}
+		boxSize += builder.Field("ac4_bitrate_dsi", IsoStream.CalculateClassSize(ac4_bitrate_dsi), this.ac4_bitrate_dsi); 
+		boxSize += builder.Field("byte_alignment", IsoStream.CalculateByteAlignmentSize(boxSize, byte_alignment), this.byte_alignment); // byte_align, 0..7: to a byte from the start of ac4_dsi_v1
+		boxSize += builder.Field("presentations", IsoStream.CalculateClassSize(presentations), this.presentations); 
 		return boxSize;
 	}
 }

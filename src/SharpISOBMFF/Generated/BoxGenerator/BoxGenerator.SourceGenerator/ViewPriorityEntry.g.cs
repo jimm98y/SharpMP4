@@ -47,6 +47,15 @@ public partial class ViewPriorityEntry : VisualSampleGroupEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("ViewPriorityBox", IsoStream.CalculateBoxSize(ViewPriorityBox), this.ViewPriorityBox); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

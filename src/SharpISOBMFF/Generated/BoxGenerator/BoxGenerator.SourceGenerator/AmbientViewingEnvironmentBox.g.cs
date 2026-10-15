@@ -16,6 +16,9 @@ public partial class AmbientViewingEnvironmentBox : Box
 {
 	public const string TYPE = "amve";
 	public override string DisplayName { get { return "AmbientViewingEnvironmentBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry", "ipco"); }
+
 
 	protected uint ambient_illuminance; 
 	public uint AmbientIlluminance { get { return this.ambient_illuminance; } set { this.ambient_illuminance = value; } }
@@ -57,6 +60,16 @@ public partial class AmbientViewingEnvironmentBox : Box
 		boxSize += 32; // ambient_illuminance
 		boxSize += 16; // ambient_light_x
 		boxSize += 16; // ambient_light_y
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("ambient_illuminance", 32, this.ambient_illuminance); 
+		boxSize += builder.Field("ambient_light_x", 16, this.ambient_light_x); 
+		boxSize += builder.Field("ambient_light_y", 16, this.ambient_light_y); 
 		return boxSize;
 	}
 }

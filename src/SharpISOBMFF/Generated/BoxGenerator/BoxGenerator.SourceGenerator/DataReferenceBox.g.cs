@@ -18,6 +18,9 @@ public partial class DataReferenceBox : FullBox
 {
 	public const string TYPE = "dref";
 	public override string DisplayName { get { return "DataReferenceBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("dinf"); }
+
 
 	protected uint entry_count; 
 	public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -60,6 +63,18 @@ public partial class DataReferenceBox : FullBox
 		// for (int i=0; i < entry_count; i++)
 			// boxSize += IsoStream.CalculateBoxSize(data_entry[i]); // data_entry
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+
+		// for (int i=0; i < entry_count; i++)
+			// boxSize += builder.Field($"data_entry[{i}]", IsoStream.CalculateBoxSize(data_entry[i]), this.data_entry[i]); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

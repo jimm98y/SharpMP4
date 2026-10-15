@@ -15,6 +15,9 @@ public partial class OMAContentIDBox : FullBox
 {
 	public const string TYPE = "ccid";
 	public override string DisplayName { get { return "OMAContentIDBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected ushort contentIDLength; 
 	public ushort ContentIDLength { get { return this.contentIDLength; } set { this.contentIDLength = value; } }
@@ -50,6 +53,15 @@ public partial class OMAContentIDBox : FullBox
 		boxSize += base.CalculateSize();
 		boxSize += 16; // contentIDLength
 		boxSize += ((ulong)(contentIDLength) * 8); // contentID
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("contentIDLength", 16, this.contentIDLength); 
+		boxSize += builder.Field("contentID", ((ulong)(contentIDLength) * 8), this.contentID); 
 		return boxSize;
 	}
 }

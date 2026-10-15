@@ -33,6 +33,9 @@ class AudioSampleEntryV1(codingname) extends SampleEntry (codingname){
 public partial class AudioSampleEntryV1 : SampleEntry
 {
 	public override string DisplayName { get { return "AudioSampleEntryV1"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "stsd" }); }
+
 
 	protected ushort entry_version;  //  shall be 1, 
 	public ushort EntryVersion { get { return this.entry_version; } set { this.entry_version = value; } }
@@ -145,6 +148,32 @@ public partial class AudioSampleEntryV1 : SampleEntry
 		// boxSize += IsoStream.CalculateBoxSize(UniDrcConfigExtension); // UniDrcConfigExtension
 		// boxSize += IsoStream.CalculateBoxSize(ChannelLayout); // ChannelLayout
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_version", 16, this.entry_version); // shall be 1, 
+		/*  and shall be in an stsd with version ==1 */
+		boxSize += builder.Field("reserved", 3 * 16, this.reserved); 
+		boxSize += builder.Field("channelcount", 16, this.channelcount); // shall be correct
+		boxSize += builder.Field("samplesize", 16, this.samplesize); 
+		boxSize += builder.Field("pre_defined", 16, this.pre_defined); 
+		boxSize += builder.Field("reserved0", 16, this.reserved0); 
+		if (this.sampleratePresent) boxSize += builder.Field("samplerate", 32, this.samplerate); // optional boxes follow
+		// boxSize += builder.Field("SamplingRateBox", IsoStream.CalculateBoxSize(SamplingRateBox), this.SamplingRateBox); 
+		// boxSize += builder.Field("Box", IsoStream.CalculateBoxSize(Box), this.Box); // further boxes as needed
+		// boxSize += builder.Field("ChannelLayout", IsoStream.CalculateBoxSize(ChannelLayout), this.ChannelLayout); 
+		// boxSize += builder.Field("DownMixInstructions", IsoStream.CalculateBoxSize(DownMixInstructions), this.DownMixInstructions); 
+		// boxSize += builder.Field("DRCCoefficientsBasic", IsoStream.CalculateBoxSize(DRCCoefficientsBasic), this.DRCCoefficientsBasic); 
+		// boxSize += builder.Field("DRCInstructionsBasic", IsoStream.CalculateBoxSize(DRCInstructionsBasic), this.DRCInstructionsBasic); 
+		// boxSize += builder.Field("DRCCoefficientsUniDRC", IsoStream.CalculateBoxSize(DRCCoefficientsUniDRC), this.DRCCoefficientsUniDRC); 
+		// boxSize += builder.Field("DRCInstructionsUniDRC", IsoStream.CalculateBoxSize(DRCInstructionsUniDRC), this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+		// boxSize += builder.Field("UniDrcConfigExtension", IsoStream.CalculateBoxSize(UniDrcConfigExtension), this.UniDrcConfigExtension); // optional boxes follow
+		// boxSize += builder.Field("ChannelLayout", IsoStream.CalculateBoxSize(ChannelLayout), this.ChannelLayout); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

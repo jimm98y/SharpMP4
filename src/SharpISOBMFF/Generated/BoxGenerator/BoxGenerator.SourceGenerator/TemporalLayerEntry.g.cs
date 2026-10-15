@@ -116,6 +116,24 @@ public partial class TemporalLayerEntry : VisualSampleGroupEntry
 		boxSize += 16; // tlAvgFrameRate
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("temporalLayerId", 8, this.temporalLayerId); 
+		boxSize += builder.Field("tlprofile_space", 2, this.tlprofile_space); 
+		boxSize += builder.Field("tltier_flag", 1, this.tltier_flag); 
+		boxSize += builder.Field("tlprofile_idc", 5, this.tlprofile_idc); 
+		boxSize += builder.Field("tlprofile_compatibility_flags", 32, this.tlprofile_compatibility_flags); 
+		boxSize += builder.Field("tlconstraint_indicator_flags", 48, this.tlconstraint_indicator_flags); 
+		boxSize += builder.Field("tllevel_idc", 8, this.tllevel_idc); 
+		boxSize += builder.Field("tlMaxBitRate", 16, this.tlMaxBitRate); 
+		boxSize += builder.Field("tlAvgBitRate", 16, this.tlAvgBitRate); 
+		boxSize += builder.Field("tlConstantFrameRate", 8, this.tlConstantFrameRate); 
+		boxSize += builder.Field("tlAvgFrameRate", 16, this.tlAvgFrameRate); 
+		return boxSize;
+	}
 }
 
 }

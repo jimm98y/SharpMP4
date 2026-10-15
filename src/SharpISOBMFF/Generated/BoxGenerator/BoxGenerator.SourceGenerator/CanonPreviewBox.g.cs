@@ -22,6 +22,9 @@ public partial class CanonPreviewBox : Box
 {
 	public const string TYPE = "PRVW";
 	public override string DisplayName { get { return "CanonPreviewBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("uuid"); }
+
 
 	protected uint unknown1; 
 	public uint Unknown1 { get { return this.unknown1; } set { this.unknown1 = value; } }
@@ -87,6 +90,20 @@ public partial class CanonPreviewBox : Box
 		boxSize += 16; // unknown3
 		boxSize += 32; // previewSize
 		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("unknown1", 32, this.unknown1); 
+		boxSize += builder.Field("unknown2", 16, this.unknown2); 
+		boxSize += builder.Field("width", 16, this.width); 
+		boxSize += builder.Field("height", 16, this.height); 
+		boxSize += builder.Field("unknown3", 16, this.unknown3); 
+		boxSize += builder.Field("previewSize", 32, this.previewSize); 
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

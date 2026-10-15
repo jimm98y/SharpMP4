@@ -14,6 +14,9 @@ public partial class AppleRequirementsBox : FullBox
 {
 	public const string TYPE = "©req";
 	public override string DisplayName { get { return "AppleRequirementsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
+
 
 	protected BinaryUTF8String requirement; 
 	public BinaryUTF8String Requirement { get { return this.requirement; } set { this.requirement = value; } }
@@ -43,6 +46,14 @@ public partial class AppleRequirementsBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(requirement); // requirement
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("requirement", IsoStream.CalculateStringSize(requirement), this.requirement); 
 		return boxSize;
 	}
 }

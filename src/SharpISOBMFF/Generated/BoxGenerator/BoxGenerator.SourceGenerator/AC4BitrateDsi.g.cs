@@ -20,6 +20,7 @@ public partial class AC4BitrateDsi : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "AC4BitrateDsi"; } }
 
 	protected byte bit_rate_mode; 
@@ -59,6 +60,15 @@ public partial class AC4BitrateDsi : IMp4Serializable
 		boxSize += 2; // bit_rate_mode
 		boxSize += 32; // bit_rate
 		boxSize += 32; // bit_rate_precision
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("bit_rate_mode", 2, this.bit_rate_mode); 
+		boxSize += builder.Field("bit_rate", 32, this.bit_rate); 
+		boxSize += builder.Field("bit_rate_precision", 32, this.bit_rate_precision); 
 		return boxSize;
 	}
 }

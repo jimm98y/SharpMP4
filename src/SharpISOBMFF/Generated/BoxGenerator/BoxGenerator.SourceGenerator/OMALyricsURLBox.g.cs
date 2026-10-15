@@ -14,6 +14,9 @@ public partial class OMALyricsURLBox : FullBox
 {
 	public const string TYPE = "lrcu";
 	public override string DisplayName { get { return "OMALyricsURLBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected BinaryUTF8String content; 
 	public BinaryUTF8String Content { get { return this.content; } set { this.content = value; } }
@@ -43,6 +46,14 @@ public partial class OMALyricsURLBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(content); // content
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("content", IsoStream.CalculateStringSize(content), this.content); 
 		return boxSize;
 	}
 }

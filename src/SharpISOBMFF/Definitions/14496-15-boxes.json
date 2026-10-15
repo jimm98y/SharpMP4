@@ -266,52 +266,14 @@
     {
       "fourcc": "avcC",
       "description": "AVC Configuration",
-      "containers": [
-        "ipco",
-        {
-          "RestrictedSampleEntry": ["resv"]
-        },
-        {
-          "AVCSampleEntry": ["avc1", "avc3"]
-        },
-        {
-          "AVC2SampleEntry": ["avc2", "avc4"]
-        },
-        {
-          "VisualSampleEntry": ["encv"]
-        },
-        {
-          "AVCParameterSampleEntry": ["avcp"]
-        }
-      ],
+      "containers": [ "ipco", {"RestrictedSampleEntry": ["resv"]}, {"AVCSampleEntry": ["avc1", "avc3"]}, {"AVC2SampleEntry": ["avc2", "avc4"]}, {"VisualSampleEntry": ["encv"]}, {"AVCParameterSampleEntry": ["avcp"]}, {"IncompleteAVCSampleEntry": ["icpv"]}, {"VisualSampleEntry": ["dva1", "dvav"]} ],
       "type": "Box",
       "syntax": "class AVCConfigurationBox extends Box('avcC') {\r\n\tAVCDecoderConfigurationRecord() AVCConfig;\r\n}"
     },
     {
       "fourcc": "hvcC",
       "description": "HEVC Configuration",
-      "containers": [
-        "ipco",
-        {
-          "HEVCSampleEntry": ["hvc1", "hvc2", "hev1", "hev2", "hvc3", "hev3"]
-        },
-        {
-          "HEVCLHVCSampleEntry": [
-            "hvc1",
-            "hvc2",
-            "hev1",
-            "hev2",
-            "hvc3",
-            "hev3"
-          ]
-        },
-        {
-          "RestrictedSampleEntry": ["resv"]
-        },
-        {
-          "VisualSampleEntry": ["encv"]
-        }
-      ],
+      "containers": [ "ipco", {"HEVCSampleEntry": ["hvc1", "hvc2", "hev1", "hev2", "hvc3", "hev3"]}, {"HEVCLHVCSampleEntry": ["hvc1", "hvc2", "hev1", "hev2", "hvc3", "hev3"]}, {"RestrictedSampleEntry": ["resv"]}, {"VisualSampleEntry": ["encv"]}, {"VisualSampleEntry": ["dvh1", "dvhe"]} ],
       "type": "Box",
       "syntax": "class HEVCConfigurationBox extends Box('hvcC') {\r\n\tHEVCDecoderConfigurationRecord() HEVCConfig;\r\n}"
     },
@@ -369,7 +331,7 @@
           "A3DSampleEntry": ["a3d1", "a3d2", "a3d3", "a3d4"]
         },
         {
-          "HEVCSampleEntry": ["hvc1", "hev1"]
+          "HEVCSampleEntry": ["hvc1", "hev1", "hvc2", "hev2", "hvc3", "hev3"]
         },
         {
           "LHEVCSampleEntry": ["lhv1", "lhe1"]
@@ -515,11 +477,7 @@
     {
       "fourcc": "evcC",
       "description": "EVC configuration",
-      "containers": [
-        {
-          "EVCSampleEntry": ["evc1"]
-        }
-      ],
+      "containers": [ {"EVCSampleEntry": ["evc1"]}, {"VisualSampleEntry": ["encv"]}, {"RestrictedSampleEntry": ["resv"]}, "ipco" ],
       "type": "Box",
       "syntax": "class EVCConfigurationBox extends Box('evcC') {\r\n\tEVCDecoderConfigurationRecord() EVCConfig;\r\n}"
     },
@@ -539,11 +497,7 @@
       "description": "VVC video configuration",
       "versions": [0],
       "flags": [],
-      "containers": [
-        {
-          "VvcSampleEntry": ["vvc1", "vvi1"]
-        }
-      ],
+      "containers": [ {"VvcSampleEntry": ["vvc1", "vvi1"]}, {"VisualSampleEntry": ["encv"]}, {"RestrictedSampleEntry": ["resv"]}, "ipco" ],
       "type": "FullBox",
       "syntax": "class VvcConfigurationBox extends FullBox('vvcC',version=0,flags) {\r\n\tVvcDecoderConfigurationRecord() VvcConfig;\r\n}"
     },

@@ -73,6 +73,7 @@ public partial class ALSSpecificConfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "ALSSpecificConfig"; } }
 
 	protected uint als_id; 
@@ -425,6 +426,85 @@ public partial class ALSSpecificConfig : IMp4Serializable
 		{
 			boxSize += 32; // aux_size
 			boxSize += ((ulong)(aux_size) * 8); // aux_data
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("als_id", 32, this.als_id); 
+		boxSize += builder.Field("samp_freq", 32, this.samp_freq); 
+		boxSize += builder.Field("samples", 32, this.samples); 
+		boxSize += builder.Field("channels", 16, this.channels); 
+		boxSize += builder.Field("file_type", 3, this.file_type); 
+		boxSize += builder.Field("resolution", 3, this.resolution); 
+		boxSize += builder.Field("floating", 1, this.floating); 
+		boxSize += builder.Field("msb_first", 1, this.msb_first); 
+		boxSize += builder.Field("frame_length", 16, this.frame_length); 
+		boxSize += builder.Field("random_access", 8, this.random_access); 
+		boxSize += builder.Field("ra_flag", 2, this.ra_flag); 
+		boxSize += builder.Field("adapt_order", 1, this.adapt_order); 
+		boxSize += builder.Field("coef_table", 2, this.coef_table); 
+		boxSize += builder.Field("long_term_prediction", 1, this.long_term_prediction); 
+		boxSize += builder.Field("max_order", 10, this.max_order); 
+		boxSize += builder.Field("block_switching", 2, this.block_switching); 
+		boxSize += builder.Field("bgmc_mode", 1, this.bgmc_mode); 
+		boxSize += builder.Field("sb_part", 1, this.sb_part); 
+		boxSize += builder.Field("joint_stereo", 1, this.joint_stereo); 
+		boxSize += builder.Field("mc_coding", 1, this.mc_coding); 
+		boxSize += builder.Field("chan_config", 1, this.chan_config); 
+		boxSize += builder.Field("chan_sort", 1, this.chan_sort); 
+		boxSize += builder.Field("crc_enabled", 1, this.crc_enabled); 
+		boxSize += builder.Field("RLSLMS", 1, this.RLSLMS); 
+		boxSize += builder.Field("reserved", 5, this.reserved); 
+		boxSize += builder.Field("aux_data_enabled", 1, this.aux_data_enabled); 
+
+		if (chan_config)
+		{
+			boxSize += builder.Field("chan_config_info", 16, this.chan_config_info); 
+		}
+
+		if (chan_sort)
+		{
+
+			for (int c = 0; c <= channels; c++)
+			{
+				boxSize += builder.Field($"chan_pos[{c}]", (ulong)(ChBits(channels) ), this.chan_pos[c]); // ChBits = ceil[log2(channels+1)] = 1..16
+			}
+		}
+		boxSize += builder.Field("byte_alignment", IsoStream.CalculateByteAlignmentSize(boxSize, byte_alignment), this.byte_alignment); // byte_align, 0..7 bits: relative to the start of ALSSpecificConfig
+		boxSize += builder.Field("header_size", 32, this.header_size); 
+		boxSize += builder.Field("trailer_size", 32, this.trailer_size); 
+
+		if (header_size != 0xFFFFFFFF)
+		{
+			boxSize += builder.Field("orig_header", ((ulong)(header_size) * 8), this.orig_header); 
+		}
+
+		if (trailer_size != 0xFFFFFFFF)
+		{
+			boxSize += builder.Field("orig_trailer", ((ulong)(trailer_size) * 8), this.orig_trailer); 
+		}
+
+		if (crc_enabled)
+		{
+			boxSize += builder.Field("crc", 32, this.crc); 
+		}
+
+		if ((ra_flag == 2) && (random_access > 0))
+		{
+
+			for (int f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++)
+			{
+				boxSize += builder.Field($"ra_unit_size[{f}]", 32, this.ra_unit_size[f]); 
+			}
+		}
+
+		if (aux_data_enabled)
+		{
+			boxSize += builder.Field("aux_size", 32, this.aux_size); 
+			boxSize += builder.Field("aux_data", ((ulong)(aux_size) * 8), this.aux_data); 
 		}
 		return boxSize;
 	}

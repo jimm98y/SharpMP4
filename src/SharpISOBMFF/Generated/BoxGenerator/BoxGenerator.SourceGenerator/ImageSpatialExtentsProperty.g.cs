@@ -17,6 +17,9 @@ public partial class ImageSpatialExtentsProperty : ItemFullProperty
 {
 	public const string TYPE = "ispe";
 	public override string DisplayName { get { return "ImageSpatialExtentsProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected uint image_width; 
 	public uint ImageWidth { get { return this.image_width; } set { this.image_width = value; } }
@@ -52,6 +55,15 @@ public partial class ImageSpatialExtentsProperty : ItemFullProperty
 		boxSize += base.CalculateSize();
 		boxSize += 32; // image_width
 		boxSize += 32; // image_height
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("image_width", 32, this.image_width); 
+		boxSize += builder.Field("image_height", 32, this.image_height); 
 		return boxSize;
 	}
 }

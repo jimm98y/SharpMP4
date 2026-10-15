@@ -16,6 +16,9 @@ public partial class ImageRotation : ItemProperty
 {
 	public const string TYPE = "irot";
 	public override string DisplayName { get { return "ImageRotation"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected byte reserved = 0; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -51,6 +54,15 @@ public partial class ImageRotation : ItemProperty
 		boxSize += base.CalculateSize();
 		boxSize += 6; // reserved
 		boxSize += 2; // angle
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += builder.Field("angle", 2, this.angle); 
 		return boxSize;
 	}
 }

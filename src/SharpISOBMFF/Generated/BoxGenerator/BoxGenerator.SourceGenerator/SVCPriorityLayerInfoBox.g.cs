@@ -20,6 +20,9 @@ public partial class SVCPriorityLayerInfoBox : Box
 {
 	public const string TYPE = "qlif";
 	public override string DisplayName { get { return "SVCPriorityLayerInfoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("SVCMetaDataSampleEntry(svcM)"); }
+
 
 	protected byte pr_layer_num; 
 	public byte PrLayerNum { get { return this.pr_layer_num; } set { this.pr_layer_num = value; } }
@@ -88,6 +91,22 @@ public partial class SVCPriorityLayerInfoBox : Box
 			boxSize += 24; // profile_level_idc
 			boxSize += 32; // max_bitrate
 			boxSize += 32; // avg_bitrate
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("pr_layer_num", 8, this.pr_layer_num); 
+
+		for (int j=0; j< pr_layer_num; j++)
+		{
+			boxSize += builder.Field($"pr_layer[{j}]", 8, this.pr_layer[j]); 
+			boxSize += builder.Field($"profile_level_idc[{j}]", 24, this.profile_level_idc[j]); 
+			boxSize += builder.Field($"max_bitrate[{j}]", 32, this.max_bitrate[j]); 
+			boxSize += builder.Field($"avg_bitrate[{j}]", 32, this.avg_bitrate[j]); 
 		}
 		return boxSize;
 	}

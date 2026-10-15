@@ -17,6 +17,9 @@ public partial class AuxiliaryTypeProperty : ItemFullProperty
 {
 	public const string TYPE = "auxC";
 	public override string DisplayName { get { return "AuxiliaryTypeProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected BinaryUTF8String aux_type; 
 	public BinaryUTF8String AuxType { get { return this.aux_type; } set { this.aux_type = value; } }
@@ -52,6 +55,15 @@ public partial class AuxiliaryTypeProperty : ItemFullProperty
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(aux_type); // aux_type
 		boxSize += ((ulong)aux_subtype.Length * 8); // aux_subtype
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("aux_type", IsoStream.CalculateStringSize(aux_type), this.aux_type); 
+		boxSize += builder.Field("aux_subtype", ((ulong)aux_subtype.Length * 8), this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
 		return boxSize;
 	}
 }

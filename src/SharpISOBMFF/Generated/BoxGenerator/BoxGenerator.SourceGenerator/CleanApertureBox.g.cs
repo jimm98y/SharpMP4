@@ -27,6 +27,9 @@ public partial class CleanApertureBox : Box
 {
 	public const string TYPE = "clap";
 	public override string DisplayName { get { return "CleanApertureBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry", "ipco"); }
+
 
 	protected uint cleanApertureWidthN; 
 	public uint CleanApertureWidthN { get { return this.cleanApertureWidthN; } set { this.cleanApertureWidthN = value; } }
@@ -98,6 +101,21 @@ public partial class CleanApertureBox : Box
 		boxSize += 32; // horizOffD
 		boxSize += 32; // vertOffN
 		boxSize += 32; // vertOffD
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("cleanApertureWidthN", 32, this.cleanApertureWidthN); 
+		boxSize += builder.Field("cleanApertureWidthD", 32, this.cleanApertureWidthD); 
+		boxSize += builder.Field("cleanApertureHeightN", 32, this.cleanApertureHeightN); 
+		boxSize += builder.Field("cleanApertureHeightD", 32, this.cleanApertureHeightD); 
+		boxSize += builder.Field("horizOffN", 32, this.horizOffN); 
+		boxSize += builder.Field("horizOffD", 32, this.horizOffD); 
+		boxSize += builder.Field("vertOffN", 32, this.vertOffN); 
+		boxSize += builder.Field("vertOffD", 32, this.vertOffD); 
 		return boxSize;
 	}
 }

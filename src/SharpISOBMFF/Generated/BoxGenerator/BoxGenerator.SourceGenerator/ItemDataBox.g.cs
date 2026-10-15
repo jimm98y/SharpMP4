@@ -14,6 +14,9 @@ public partial class ItemDataBox : Box
 {
 	public const string TYPE = "idat";
 	public override string DisplayName { get { return "ItemDataBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
+
 
 	protected StreamMarker data; 
 	public StreamMarker Data { get { return this.data; } set { this.data = value; } }
@@ -43,6 +46,14 @@ public partial class ItemDataBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

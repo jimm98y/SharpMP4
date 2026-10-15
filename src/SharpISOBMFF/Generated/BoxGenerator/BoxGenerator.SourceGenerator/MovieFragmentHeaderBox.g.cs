@@ -15,6 +15,9 @@ public partial class MovieFragmentHeaderBox : FullBox
 {
 	public const string TYPE = "mfhd";
 	public override string DisplayName { get { return "MovieFragmentHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("moof"); }
+
 
 	protected uint sequence_number; 
 	public uint SequenceNumber { get { return this.sequence_number; } set { this.sequence_number = value; } }
@@ -44,6 +47,14 @@ public partial class MovieFragmentHeaderBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // sequence_number
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sequence_number", 32, this.sequence_number); 
 		return boxSize;
 	}
 }

@@ -53,6 +53,15 @@ public partial class AutoExposureBracketingEntry : VisualSampleGroupEntry
 		boxSize += 8; // exposure_numerator
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("exposure_step", 8, this.exposure_step); 
+		boxSize += builder.Field("exposure_numerator", 8, this.exposure_numerator); 
+		return boxSize;
+	}
 }
 
 }

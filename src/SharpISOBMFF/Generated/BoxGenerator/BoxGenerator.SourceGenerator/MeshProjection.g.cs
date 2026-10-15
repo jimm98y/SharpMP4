@@ -20,6 +20,9 @@ public partial class MeshProjection : ProjectionDataBox
 {
 	public const string TYPE = "mshp";
 	public override string DisplayName { get { return "MeshProjection"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("proj"); }
+
 
 	protected uint crc; 
 	public uint Crc { get { return this.crc; } set { this.crc = value; } }
@@ -67,6 +70,19 @@ public partial class MeshProjection : ProjectionDataBox
 		/*  MeshBox() meshes[]; // At least 1 mesh box must be present. */
 		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("crc", 32, this.crc); 
+		boxSize += builder.Field("encoding_four_cc", 32, this.encoding_four_cc); // All bytes below this point are compressed according to
+		/*  the algorithm specified by the encoding_four_cc field. */
+		/*  MeshBox() meshes[]; // At least 1 mesh box must be present. */
+		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); // further boxes as needed
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

@@ -25,6 +25,9 @@ public partial class EditListBox : FullBox
 {
 	public const string TYPE = "elst";
 	public override string DisplayName { get { return "EditListBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("edts"); }
+
 
 	protected uint entry_count; 
 	public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -126,6 +129,33 @@ public partial class EditListBox : FullBox
 			}
 			boxSize += 16; // media_rate_integer
 			boxSize += 16; // media_rate_fraction
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+
+		for (int i=0; i < entry_count; i++)
+		{
+
+			if (version==1)
+			{
+				boxSize += builder.Field($"edit_duration[{i}]", 64, this.edit_duration[i]); 
+				boxSize += builder.Field($"media_time[{i}]", 64, this.media_time[i]); 
+			}
+
+			else 
+			{
+				/*  version==0 */
+				boxSize += builder.Field($"edit_duration[{i}]", 32, this.edit_duration[i]); 
+				boxSize += builder.Field($"media_time[{i}]", 32, this.media_time[i]); 
+			}
+			boxSize += builder.Field($"media_rate_integer[{i}]", 16, this.media_rate_integer[i]); 
+			boxSize += builder.Field($"media_rate_fraction[{i}]", 16, this.media_rate_fraction[i]); 
 		}
 		return boxSize;
 	}

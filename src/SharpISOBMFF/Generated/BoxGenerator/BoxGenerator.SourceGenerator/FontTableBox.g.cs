@@ -16,6 +16,9 @@ public partial class FontTableBox : Box
 {
 	public const string TYPE = "ftab";
 	public override string DisplayName { get { return "FontTableBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("SampleEntry(tx3g,enct)"); }
+
 
 	protected ushort entryCount; 
 	public ushort EntryCount { get { return this.entryCount; } set { this.entryCount = value; } }
@@ -51,6 +54,15 @@ public partial class FontTableBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 16; // entryCount
 		boxSize += IsoStream.CalculateClassSize(fontEntries); // fontEntries
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entryCount", 16, this.entryCount); 
+		boxSize += builder.Field("fontEntries", IsoStream.CalculateClassSize(fontEntries), this.fontEntries); 
 		return boxSize;
 	}
 }

@@ -18,6 +18,9 @@ public partial class AppleVersionCheckBox : Box
 {
 	public const string TYPE = "rmvc";
 	public override string DisplayName { get { return "AppleVersionCheckBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("rmda"); }
+
 
 	protected uint flags; 
 	public uint Flags { get { return this.flags; } set { this.flags = value; } }
@@ -71,6 +74,18 @@ public partial class AppleVersionCheckBox : Box
 		boxSize += 32; // version
 		boxSize += 32; // mask
 		boxSize += 16; // checkType
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("flags", 32, this.flags); 
+		boxSize += builder.Field("softwarePackage", 32, this.softwarePackage); 
+		boxSize += builder.Field("version", 32, this.version); 
+		boxSize += builder.Field("mask", 32, this.mask); 
+		boxSize += builder.Field("checkType", 16, this.checkType); 
 		return boxSize;
 	}
 }

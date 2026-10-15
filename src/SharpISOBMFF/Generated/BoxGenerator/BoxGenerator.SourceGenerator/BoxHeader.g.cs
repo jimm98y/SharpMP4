@@ -27,6 +27,7 @@ public partial class BoxHeader : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "BoxHeader"; } }
 
 	protected uint size; 
@@ -112,6 +113,29 @@ public partial class BoxHeader : IMp4Serializable
 		if (type==IsoStream.FromFourCC("uuid"))
 		{
 			boxSize += 16 * 8; // usertype
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("size", 32, this.size); 
+		boxSize += builder.Field("type", 32, this.type); 
+
+		if (size==1)
+		{
+			boxSize += builder.Field("largesize", 64, this.largesize); 
+		}
+
+		else if (size==0)
+		{
+			/*  box extends to end of file */
+		}
+
+		if (type==IsoStream.FromFourCC("uuid"))
+		{
+			boxSize += builder.Field("usertype", 16 * 8, this.usertype); 
 		}
 		return boxSize;
 	}

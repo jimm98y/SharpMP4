@@ -52,6 +52,15 @@ public partial class PixelAspectRatioEntry : VisualSampleGroupEntry
 		boxSize += 32; // vSpacing
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("hSpacing", 32, this.hSpacing); 
+		boxSize += builder.Field("vSpacing", 32, this.vSpacing); 
+		return boxSize;
+	}
 }
 
 }

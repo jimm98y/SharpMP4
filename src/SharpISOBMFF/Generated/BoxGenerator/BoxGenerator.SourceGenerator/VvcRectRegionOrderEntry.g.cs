@@ -160,6 +160,38 @@ public partial class VvcRectRegionOrderEntry : VisualSampleGroupEntry
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("subpic_id_info_flag", 1, this.subpic_id_info_flag); 
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+		boxSize += builder.Field("num_alternate_region_set", 16, this.num_alternate_region_set); 
+
+		for (int i = 0; i < num_alternate_region_set; i++)
+		{
+			boxSize += builder.Field($"num_regions_in_set[{i}]", 16, this.num_regions_in_set[i]); 
+			boxSize += builder.Field($"alternate_region_set_id[{i}]", 16, this.alternate_region_set_id[i]); 
+
+			for (int j = 0; j < num_regions_in_set[i]; j++)
+			{
+				boxSize += builder.Field($"groupID[{i}][{j}]", 16, this.groupID[i][j]); 
+			}
+		}
+		boxSize += builder.Field("num_regions_minus1", 16, this.num_regions_minus1); 
+
+		for (int i = 0; i < num_regions_minus1; i++)
+		{
+			boxSize += builder.Field($"region_id[{i}]", 16, this.region_id[i]); 
+		}
+
+		if (subpic_id_info_flag)
+		{
+			boxSize += builder.Field("subpic_id_rewriting_info", IsoStream.CalculateClassSize(subpic_id_rewriting_info), this.subpic_id_rewriting_info); 
+		}
+		return boxSize;
+	}
 }
 
 }

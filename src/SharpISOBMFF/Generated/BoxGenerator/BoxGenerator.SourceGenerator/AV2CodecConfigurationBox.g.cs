@@ -20,6 +20,9 @@ public partial class AV2CodecConfigurationBox : Box
 {
 	public const string TYPE = "av2C";
 	public override string DisplayName { get { return "AV2CodecConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("av02"); }
+
 
 	protected byte reserved1 = 0; 
 	public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
@@ -73,6 +76,20 @@ public partial class AV2CodecConfigurationBox : Box
 		for (int i = 0; i < config_obus_count_minus1 + 1; ++i)
 		{
 			boxSize += ((ulong)config_obu[i].Length * 8); // config_obu
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved1", 8, this.reserved1); 
+		boxSize += builder.Field("config_obus_count_minus1", 8, this.config_obus_count_minus1); 
+
+		for (int i = 0; i < config_obus_count_minus1 + 1; ++i)
+		{
+			boxSize += builder.Field($"config_obu[{i}]", ((ulong)config_obu[i].Length * 8), this.config_obu[i]); 
 		}
 		return boxSize;
 	}

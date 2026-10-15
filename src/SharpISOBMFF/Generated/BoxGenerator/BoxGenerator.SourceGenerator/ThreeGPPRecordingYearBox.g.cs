@@ -14,6 +14,9 @@ public partial class ThreeGPPRecordingYearBox : FullBox
 {
 	public const string TYPE = "yrrc";
 	public override string DisplayName { get { return "ThreeGPPRecordingYearBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected ushort year; 
 	public ushort Year { get { return this.year; } set { this.year = value; } }
@@ -43,6 +46,14 @@ public partial class ThreeGPPRecordingYearBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 16; // year
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("year", 16, this.year); 
 		return boxSize;
 	}
 }

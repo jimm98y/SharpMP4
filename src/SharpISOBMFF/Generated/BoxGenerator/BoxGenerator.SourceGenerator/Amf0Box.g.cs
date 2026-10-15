@@ -6,20 +6,21 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
+// of no layout known: its bytes
 aligned(8) class Amf0Box() extends Box('amf0') {
- unsigned int(32) unknown1; unsigned int(32) unknown2;
- } 
+ bit(8) data[];
+ }
 */
 public partial class Amf0Box : Box
 {
 	public const string TYPE = "amf0";
 	public override string DisplayName { get { return "Amf0Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
 
-	protected uint unknown1; 
-	public uint Unknown1 { get { return this.unknown1; } set { this.unknown1 = value; } }
 
-	protected uint unknown2; 
-	public uint Unknown2 { get { return this.unknown2; } set { this.unknown2 = value; } }
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public Amf0Box(): base(IsoStream.FromFourCC("amf0"))
 	{
@@ -29,8 +30,7 @@ public partial class Amf0Box : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.unknown1, "unknown1"); 
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.unknown2, "unknown2"); 
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
 		return boxSize;
 	}
 
@@ -38,8 +38,7 @@ public partial class Amf0Box : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt32( this.unknown1, "unknown1"); 
-		boxSize += stream.WriteUInt32( this.unknown2, "unknown2"); 
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
 		return boxSize;
 	}
 
@@ -47,8 +46,15 @@ public partial class Amf0Box : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += 32; // unknown1
-		boxSize += 32; // unknown2
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

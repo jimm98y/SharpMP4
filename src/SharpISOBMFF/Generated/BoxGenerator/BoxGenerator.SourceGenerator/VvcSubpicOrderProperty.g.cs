@@ -15,6 +15,9 @@ public partial class VvcSubpicOrderProperty : ItemFullProperty
 {
 	public const string TYPE = "spor";
 	public override string DisplayName { get { return "VvcSubpicOrderProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected VvcSubpicOrderEntry sor_info;  //  specified in ISO/IEC 14496-15
 	public VvcSubpicOrderEntry SorInfo { get { return this.sor_info; } set { this.sor_info = value; } }
@@ -44,6 +47,14 @@ public partial class VvcSubpicOrderProperty : ItemFullProperty
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateClassSize(sor_info); // sor_info
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sor_info", IsoStream.CalculateClassSize(sor_info), this.sor_info); // specified in ISO/IEC 14496-15
 		return boxSize;
 	}
 }

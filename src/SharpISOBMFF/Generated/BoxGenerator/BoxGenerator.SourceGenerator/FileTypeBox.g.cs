@@ -18,6 +18,9 @@ public partial class FileTypeBox : Box
 {
 	public const string TYPE = "ftyp";
 	public override string DisplayName { get { return "FileTypeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected uint major_brand; 
 	public uint MajorBrand { get { return this.major_brand; } set { this.major_brand = value; } }
@@ -59,6 +62,16 @@ public partial class FileTypeBox : Box
 		boxSize += 32; // major_brand
 		boxSize += 32; // minor_version
 		boxSize += ((ulong)compatible_brands.Length * 32); // compatible_brands
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("major_brand", 32, this.major_brand); 
+		boxSize += builder.Field("minor_version", 32, this.minor_version); 
+		boxSize += builder.Field("compatible_brands", ((ulong)compatible_brands.Length * 32), this.compatible_brands); // to end of the box
 		return boxSize;
 	}
 }

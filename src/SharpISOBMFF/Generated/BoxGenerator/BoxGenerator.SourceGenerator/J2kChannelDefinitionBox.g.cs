@@ -15,6 +15,9 @@ public partial class J2kChannelDefinitionBox : Box
 {
 	public const string TYPE = "cdef";
 	public override string DisplayName { get { return "J2kChannelDefinitionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("j2kH"); }
+
 
 	protected ushort channel_count; 
 	public ushort ChannelCount { get { return this.channel_count; } set { this.channel_count = value; } }
@@ -50,6 +53,15 @@ public partial class J2kChannelDefinitionBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 16; // channel_count
 		boxSize += IsoStream.CalculateClassSize(channels); // channels
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("channel_count", 16, this.channel_count); 
+		boxSize += builder.Field("channels", IsoStream.CalculateClassSize(channels), this.channels); 
 		return boxSize;
 	}
 }

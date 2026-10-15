@@ -18,6 +18,9 @@ public partial class CanonCCDTBox : Box
 {
 	public const string TYPE = "CCDT";
 	public override string DisplayName { get { return "CanonCCDTBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("CCTP"); }
+
 
 	protected ulong imageType; 
 	public ulong ImageType { get { return this.imageType; } set { this.imageType = value; } }
@@ -59,6 +62,16 @@ public partial class CanonCCDTBox : Box
 		boxSize += 64; // imageType
 		boxSize += 32; // dualPixel
 		boxSize += 32; // trackIndex
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("imageType", 64, this.imageType); 
+		boxSize += builder.Field("dualPixel", 32, this.dualPixel); 
+		boxSize += builder.Field("trackIndex", 32, this.trackIndex); 
 		return boxSize;
 	}
 }

@@ -15,6 +15,9 @@ public partial class IASampleEntry : AudioSampleEntry
 {
 	public const string TYPE = "iamf";
 	public override string DisplayName { get { return "IASampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public IAConfigurationBox IaConfigurationBox { get { return this.children.OfType<IAConfigurationBox>().FirstOrDefault(); } }
 
 	public IASampleEntry(): base(IsoStream.FromFourCC("iamf"))
@@ -45,6 +48,15 @@ public partial class IASampleEntry : AudioSampleEntry
 		boxSize += base.CalculateSize();
 		// boxSize += IsoStream.CalculateBoxSize(ia_configuration_box); // ia_configuration_box
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("ia_configuration_box", IsoStream.CalculateBoxSize(ia_configuration_box), this.ia_configuration_box); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

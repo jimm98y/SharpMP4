@@ -18,6 +18,9 @@ public partial class AC4SampleEntry : AudioSampleEntry
 {
 	public const string TYPE = "ac-4";
 	public override string DisplayName { get { return "AC4SampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public AC4SpecificBox _AC4SpecificBox { get { return this.children.OfType<AC4SpecificBox>().FirstOrDefault(); } }
 	public IEnumerable<AC4PresentationLabelBox> _AC4PresentationLabelBox { get { return this.children.OfType<AC4PresentationLabelBox>(); } }
 
@@ -55,6 +58,17 @@ public partial class AC4SampleEntry : AudioSampleEntry
 		// boxSize += IsoStream.CalculateBoxSize(AC4PresentationLabelBox); // AC4PresentationLabelBox
 		// boxSize += IsoStream.CalculateBoxSize(Box); // Box
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("AC4SpecificBox", IsoStream.CalculateBoxSize(AC4SpecificBox), this.AC4SpecificBox); // we permit any number of AC4PresentationLabel boxes:
+		// boxSize += builder.Field("AC4PresentationLabelBox", IsoStream.CalculateBoxSize(AC4PresentationLabelBox), this.AC4PresentationLabelBox); 
+		// boxSize += builder.Field("Box", IsoStream.CalculateBoxSize(Box), this.Box); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

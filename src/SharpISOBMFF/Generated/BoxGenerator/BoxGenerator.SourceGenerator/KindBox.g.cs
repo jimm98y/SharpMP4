@@ -15,6 +15,9 @@ public partial class KindBox : FullBox
 {
 	public const string TYPE = "kind";
 	public override string DisplayName { get { return "KindBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected BinaryUTF8String schemeURI; 
 	public BinaryUTF8String SchemeURI { get { return this.schemeURI; } set { this.schemeURI = value; } }
@@ -50,6 +53,15 @@ public partial class KindBox : FullBox
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(schemeURI); // schemeURI
 		boxSize += IsoStream.CalculateStringSize(value); // value
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("schemeURI", IsoStream.CalculateStringSize(schemeURI), this.schemeURI); 
+		boxSize += builder.Field("value", IsoStream.CalculateStringSize(value), this.value); 
 		return boxSize;
 	}
 }

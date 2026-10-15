@@ -29,6 +29,7 @@ public partial class AC4PresentationDsi : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "AC4PresentationDsi"; } }
 
 	protected byte presentation_version; 
@@ -115,6 +116,29 @@ public partial class AC4PresentationDsi : IMp4Serializable
 		else 
 		{
 			boxSize += ((ulong)(pres_bytes + add_pres_bytes) * 8); // presentation_data
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("presentation_version", 8, this.presentation_version); 
+		boxSize += builder.Field("pres_bytes", 8, this.pres_bytes); 
+
+		if (pres_bytes == 255)
+		{
+			boxSize += builder.Field("add_pres_bytes", 16, this.add_pres_bytes); 
+		}
+
+		if (presentation_version == 1)
+		{
+			boxSize += builder.Field("presentation_v1", IsoStream.CalculateClassSize(presentation_v1), this.presentation_v1); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("presentation_data", ((ulong)(pres_bytes + add_pres_bytes) * 8), this.presentation_data); 
 		}
 		return boxSize;
 	}

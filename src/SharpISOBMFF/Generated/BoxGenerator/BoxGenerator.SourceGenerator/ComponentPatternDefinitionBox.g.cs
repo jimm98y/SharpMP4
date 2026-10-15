@@ -20,6 +20,9 @@ public partial class ComponentPatternDefinitionBox : FullBox
 {
 	public const string TYPE = "cpat";
 	public override string DisplayName { get { return "ComponentPatternDefinitionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(uncv)", "ipco"); }
+
 
 	protected ushort pattern_width; 
 	public ushort PatternWidth { get { return this.pattern_width; } set { this.pattern_width = value; } }
@@ -80,6 +83,21 @@ public partial class ComponentPatternDefinitionBox : FullBox
 		{
 			boxSize += 32; // component_index
 			boxSize += 32; // component_gain
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("pattern_width", 16, this.pattern_width); 
+		boxSize += builder.Field("pattern_height", 16, this.pattern_height); 
+
+		for (int i = 0; i < pattern_width * pattern_height; i++)
+		{
+			boxSize += builder.Field($"component_index[{i}]", 32, this.component_index[i]); 
+			boxSize += builder.Field($"component_gain[{i}]", 32, this.component_gain[i]); 
 		}
 		return boxSize;
 	}

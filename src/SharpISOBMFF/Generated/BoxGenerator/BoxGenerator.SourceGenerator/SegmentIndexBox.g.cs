@@ -34,6 +34,9 @@ public partial class SegmentIndexBox : FullBox
 {
 	public const string TYPE = "sidx";
 	public override string DisplayName { get { return "SegmentIndexBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected uint reference_ID; 
 	public uint ReferenceID { get { return this.reference_ID; } set { this.reference_ID = value; } }
@@ -176,6 +179,39 @@ public partial class SegmentIndexBox : FullBox
 			boxSize += 1; // starts_with_SAP
 			boxSize += 3; // SAP_type
 			boxSize += 28; // SAP_delta_time
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reference_ID", 32, this.reference_ID); 
+		boxSize += builder.Field("timescale", 32, this.timescale); 
+
+		if (version==0)
+		{
+			boxSize += builder.Field("earliest_presentation_time", 32, this.earliest_presentation_time); 
+			boxSize += builder.Field("first_offset", 32, this.first_offset); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("earliest_presentation_time", 64, this.earliest_presentation_time); 
+			boxSize += builder.Field("first_offset", 64, this.first_offset); 
+		}
+		boxSize += builder.Field("reserved", 16, this.reserved); 
+		boxSize += builder.Field("reference_count", 16, this.reference_count); 
+
+		for (int i=0; i < reference_count; i++)
+		{
+			boxSize += builder.Field($"reference_type[{i}]", 1, this.reference_type[i]); 
+			boxSize += builder.Field($"referenced_size[{i}]", 31, this.referenced_size[i]); 
+			boxSize += builder.Field($"subsegment_duration[{i}]", 32, this.subsegment_duration[i]); 
+			boxSize += builder.Field($"starts_with_SAP[{i}]", 1, this.starts_with_SAP[i]); 
+			boxSize += builder.Field($"SAP_type[{i}]", 3, this.SAP_type[i]); 
+			boxSize += builder.Field($"SAP_delta_time[{i}]", 28, this.SAP_delta_time[i]); 
 		}
 		return boxSize;
 	}

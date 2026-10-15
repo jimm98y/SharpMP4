@@ -16,6 +16,9 @@ public partial class LivePhotoDimensionsBox : Box
 {
 	public const string TYPE = "dims";
 	public override string DisplayName { get { return "LivePhotoDimensionsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("setu"); }
+
 
 	protected uint width; 
 	public uint Width { get { return this.width; } set { this.width = value; } }
@@ -51,6 +54,15 @@ public partial class LivePhotoDimensionsBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 32; // width
 		boxSize += 32; // height
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("width", 32, this.width); 
+		boxSize += builder.Field("height", 32, this.height); 
 		return boxSize;
 	}
 }

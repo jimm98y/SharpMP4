@@ -15,6 +15,9 @@ public partial class StereoComfortDisparityAdjustmentBox : FullBox
 {
 	public const string TYPE = "dadj";
 	public override string DisplayName { get { return "StereoComfortDisparityAdjustmentBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("cmfy"); }
+
 
 	protected int disparity_adjustment; 
 	public int DisparityAdjustment { get { return this.disparity_adjustment; } set { this.disparity_adjustment = value; } }
@@ -44,6 +47,14 @@ public partial class StereoComfortDisparityAdjustmentBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // disparity_adjustment
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("disparity_adjustment", 32, this.disparity_adjustment); 
 		return boxSize;
 	}
 }

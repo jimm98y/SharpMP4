@@ -14,6 +14,9 @@ public partial class GammaBox : Box
 {
 	public const string TYPE = "gama";
 	public override string DisplayName { get { return "GammaBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry"); }
+
 
 	protected uint gamma; 
 	public uint Gamma { get { return this.gamma; } set { this.gamma = value; } }
@@ -43,6 +46,14 @@ public partial class GammaBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // gamma
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("gamma", 32, this.gamma); 
 		return boxSize;
 	}
 }

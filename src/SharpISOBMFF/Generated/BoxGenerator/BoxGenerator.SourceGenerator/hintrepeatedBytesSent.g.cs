@@ -13,6 +13,9 @@ public partial class hintrepeatedBytesSent : Box
 {
 	public const string TYPE = "drep";
 	public override string DisplayName { get { return "hintrepeatedBytesSent"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("hinf"); }
+
 
 	protected ulong bytessent; 
 	public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
@@ -42,6 +45,14 @@ public partial class hintrepeatedBytesSent : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 64; // bytessent
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("bytessent", 64, this.bytessent); 
 		return boxSize;
 	}
 }

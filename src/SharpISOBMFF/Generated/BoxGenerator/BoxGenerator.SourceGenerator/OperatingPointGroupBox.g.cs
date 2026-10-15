@@ -64,6 +64,9 @@ public partial class OperatingPointGroupBox : EntityToGroupBox
 {
 	public const string TYPE = "opeg";
 	public override string DisplayName { get { return "OperatingPointGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("grpl"); }
+
 
 	protected byte num_profile_tier_level_minus1; 
 	public byte NumProfileTierLevelMinus1 { get { return this.num_profile_tier_level_minus1; } set { this.num_profile_tier_level_minus1 = value; } }
@@ -434,6 +437,86 @@ public partial class OperatingPointGroupBox : EntityToGroupBox
 			for (int j=0; j<entity_count[i]; j++)
 			{
 				boxSize += 8; // entity_idx
+			}
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("num_profile_tier_level_minus1", 8, this.num_profile_tier_level_minus1); 
+
+		for (int i=0; i<=num_profile_tier_level_minus1; i++)
+		{
+			boxSize += builder.Field($"opeg_ptl[{i}]", IsoStream.CalculateClassSize(opeg_ptl[i]), this.opeg_ptl[i]); 
+		}
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += builder.Field("incomplete_operating_points_flag", 1, this.incomplete_operating_points_flag); 
+		boxSize += builder.Field("num_olss", 9, this.num_olss); 
+
+		for (int i=0; i<num_olss; i++)
+		{
+			boxSize += builder.Field($"ptl_idx[{i}]", 8, this.ptl_idx[i]); 
+			boxSize += builder.Field($"ols_idx[{i}]", 9, this.ols_idx[i]); 
+			boxSize += builder.Field($"layer_count[{i}]", 6, this.layer_count[i]); 
+			boxSize += builder.Field($"reserved0[{i}]", 1, this.reserved0[i]); 
+			boxSize += builder.Field($"layer_info_present_flag[{i}]", 1, this.layer_info_present_flag[i]); 
+
+			if (layer_info_present_flag[i])
+			{
+
+				for (int j=0; j<layer_count[i]; j++)
+				{
+					boxSize += builder.Field($"layer_id[{i}][{j}]", 6, this.layer_id[i][j]); 
+					boxSize += builder.Field($"is_output_layer[{i}][{j}]", 1, this.is_output_layer[i][j]); 
+					boxSize += builder.Field($"reserved00[{i}][{j}]", 1, this.reserved00[i][j]); 
+				}
+			}
+		}
+		boxSize += builder.Field("reserved1", 4, this.reserved1); 
+		boxSize += builder.Field("num_operating_points", 12, this.num_operating_points); 
+
+		for (int i=0; i<num_operating_points; i++)
+		{
+			boxSize += builder.Field($"ols_loop_entry_idx[{i}]", 9, this.ols_loop_entry_idx[i]); 
+			boxSize += builder.Field($"max_temporal_id[{i}]", 3, this.max_temporal_id[i]); 
+			boxSize += builder.Field($"frame_rate_info_flag[{i}]", 1, this.frame_rate_info_flag[i]); 
+			boxSize += builder.Field($"bit_rate_info_flag[{i}]", 1, this.bit_rate_info_flag[i]); 
+
+			if (incomplete_operating_points_flag)
+			{
+				boxSize += builder.Field($"op_availability_idc[{i}]", 2, this.op_availability_idc[i]); 
+			}
+
+			else 
+			{
+				boxSize += builder.Field($"reserved2[{i}]", 2, this.reserved2[i]); 
+			}
+			boxSize += builder.Field($"reserved01[{i}]", 3, this.reserved01[i]); 
+			boxSize += builder.Field($"chroma_format_idc[{i}]", 2, this.chroma_format_idc[i]); 
+			boxSize += builder.Field($"bit_depth_minus8[{i}]", 3, this.bit_depth_minus8[i]); 
+			boxSize += builder.Field($"max_picture_width[{i}]", 16, this.max_picture_width[i]); 
+			boxSize += builder.Field($"max_picture_height[{i}]", 16, this.max_picture_height[i]); 
+
+			if (frame_rate_info_flag[i])
+			{
+				boxSize += builder.Field($"avg_frame_rate[{i}]", 16, this.avg_frame_rate[i]); 
+				boxSize += builder.Field($"reserved10[{i}]", 6, this.reserved10[i]); 
+				boxSize += builder.Field($"constant_frame_rate[{i}]", 2, this.constant_frame_rate[i]); 
+			}
+
+			if (bit_rate_info_flag[i])
+			{
+				boxSize += builder.Field($"max_bit_rate[{i}]", 32, this.max_bit_rate[i]); 
+				boxSize += builder.Field($"avg_bit_rate[{i}]", 32, this.avg_bit_rate[i]); 
+			}
+			boxSize += builder.Field($"entity_count[{i}]", 8, this.entity_count[i]); 
+
+			for (int j=0; j<entity_count[i]; j++)
+			{
+				boxSize += builder.Field($"entity_idx[{i}][{j}]", 8, this.entity_idx[i][j]); 
 			}
 		}
 		return boxSize;

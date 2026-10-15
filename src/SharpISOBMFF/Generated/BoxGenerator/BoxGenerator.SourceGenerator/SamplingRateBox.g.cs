@@ -14,6 +14,9 @@ public partial class SamplingRateBox : FullBox
 {
 	public const string TYPE = "srat";
 	public override string DisplayName { get { return "SamplingRateBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry"); }
+
 
 	protected uint sampling_rate; 
 	public uint SamplingRate { get { return this.sampling_rate; } set { this.sampling_rate = value; } }
@@ -43,6 +46,14 @@ public partial class SamplingRateBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // sampling_rate
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sampling_rate", 32, this.sampling_rate); 
 		return boxSize;
 	}
 }

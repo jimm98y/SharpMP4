@@ -14,6 +14,9 @@ public partial class SequenceOffset : Box
 {
 	public const string TYPE = "snro";
 	public override string DisplayName { get { return "SequenceOffset"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("HintSampleEntry(rtp )", "SrtpHintSampleEntry(srtp)"); }
+
 
 	protected int offset; 
 	public int Offset { get { return this.offset; } set { this.offset = value; } }
@@ -43,6 +46,14 @@ public partial class SequenceOffset : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // offset
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("offset", 32, this.offset); 
 		return boxSize;
 	}
 }

@@ -20,6 +20,9 @@ public partial class CompactSampleSizeBox : FullBox
 {
 	public const string TYPE = "stz2";
 	public override string DisplayName { get { return "CompactSampleSizeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl"); }
+
 
 	protected uint reserved = 0; 
 	public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -79,6 +82,21 @@ public partial class CompactSampleSizeBox : FullBox
 		for (int i=0; i < sample_count; i++)
 		{
 			boxSize += (ulong)(field_size ); // entry_size
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 24, this.reserved); 
+		boxSize += builder.Field("field_size", 8, this.field_size); 
+		boxSize += builder.Field("sample_count", 32, this.sample_count); 
+
+		for (int i=0; i < sample_count; i++)
+		{
+			boxSize += builder.Field($"entry_size[{i}]", (ulong)(field_size ), this.entry_size[i]); 
 		}
 		return boxSize;
 	}

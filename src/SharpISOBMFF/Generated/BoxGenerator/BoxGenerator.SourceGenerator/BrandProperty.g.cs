@@ -13,6 +13,9 @@ public partial class BrandProperty : GeneralTypeBox
 {
 	public const string TYPE = "brnd";
 	public override string DisplayName { get { return "BrandProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	public BrandProperty(): base(IsoStream.FromFourCC("brnd"))
 	{
@@ -36,6 +39,13 @@ public partial class BrandProperty : GeneralTypeBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
 		return boxSize;
 	}
 }

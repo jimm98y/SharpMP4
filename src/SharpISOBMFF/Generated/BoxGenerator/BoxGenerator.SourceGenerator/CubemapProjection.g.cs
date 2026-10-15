@@ -16,6 +16,9 @@ public partial class CubemapProjection : ProjectionDataBox
 {
 	public const string TYPE = "cbmp";
 	public override string DisplayName { get { return "CubemapProjection"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("proj"); }
+
 
 	protected uint layout; 
 	public uint Layout { get { return this.layout; } set { this.layout = value; } }
@@ -51,6 +54,15 @@ public partial class CubemapProjection : ProjectionDataBox
 		boxSize += base.CalculateSize();
 		boxSize += 32; // layout
 		boxSize += 32; // projection_padding
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("layout", 32, this.layout); 
+		boxSize += builder.Field("projection_padding", 32, this.projection_padding); 
 		return boxSize;
 	}
 }

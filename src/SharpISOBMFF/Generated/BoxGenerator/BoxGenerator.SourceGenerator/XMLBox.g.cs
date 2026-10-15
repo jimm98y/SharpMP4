@@ -15,6 +15,9 @@ public partial class XMLBox : FullBox
 {
 	public const string TYPE = "xml ";
 	public override string DisplayName { get { return "XMLBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
+
 
 	protected BinaryUTF8String xml; 
 	public BinaryUTF8String Xml { get { return this.xml; } set { this.xml = value; } }
@@ -44,6 +47,14 @@ public partial class XMLBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(xml); // xml
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("xml", IsoStream.CalculateStringSize(xml), this.xml); 
 		return boxSize;
 	}
 }

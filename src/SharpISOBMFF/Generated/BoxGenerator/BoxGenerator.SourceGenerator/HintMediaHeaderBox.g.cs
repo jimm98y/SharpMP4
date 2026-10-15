@@ -19,6 +19,9 @@ public partial class HintMediaHeaderBox : FullBox
 {
 	public const string TYPE = "hmhd";
 	public override string DisplayName { get { return "HintMediaHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("minf"); }
+
 
 	protected ushort maxPDUsize; 
 	public ushort MaxPDUsize { get { return this.maxPDUsize; } set { this.maxPDUsize = value; } }
@@ -72,6 +75,18 @@ public partial class HintMediaHeaderBox : FullBox
 		boxSize += 32; // maxbitrate
 		boxSize += 32; // avgbitrate
 		boxSize += 32; // reserved
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("maxPDUsize", 16, this.maxPDUsize); 
+		boxSize += builder.Field("avgPDUsize", 16, this.avgPDUsize); 
+		boxSize += builder.Field("maxbitrate", 32, this.maxbitrate); 
+		boxSize += builder.Field("avgbitrate", 32, this.avgbitrate); 
+		boxSize += builder.Field("reserved", 32, this.reserved); 
 		return boxSize;
 	}
 }

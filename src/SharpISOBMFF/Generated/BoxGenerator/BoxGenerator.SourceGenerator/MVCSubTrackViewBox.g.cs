@@ -20,6 +20,9 @@ public partial class MVCSubTrackViewBox : FullBox
 {
 	public const string TYPE = "mstv";
 	public override string DisplayName { get { return "MVCSubTrackViewBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("strd"); }
+
 
 	protected ushort item_count; 
 	public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -81,6 +84,21 @@ public partial class MVCSubTrackViewBox : FullBox
 			boxSize += 10; // view_id
 			boxSize += 4; // temporal_id
 			boxSize += 2; // reserved
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("item_count", 16, this.item_count); 
+
+		for (int i = 0; i< item_count; i++)
+		{
+			boxSize += builder.Field($"view_id[{i}]", 10, this.view_id[i]); 
+			boxSize += builder.Field($"temporal_id[{i}]", 4, this.temporal_id[i]); 
+			boxSize += builder.Field($"reserved[{i}]", 2, this.reserved[i]); 
 		}
 		return boxSize;
 	}

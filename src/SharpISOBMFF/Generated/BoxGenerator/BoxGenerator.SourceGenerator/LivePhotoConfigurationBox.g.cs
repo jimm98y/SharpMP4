@@ -15,6 +15,9 @@ public partial class LivePhotoConfigurationBox : Box
 {
 	public const string TYPE = "cfgv";
 	public override string DisplayName { get { return "LivePhotoConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("setu"); }
+
 
 	protected byte[] binaryPropertyList; 
 	public byte[] BinaryPropertyList { get { return this.binaryPropertyList; } set { this.binaryPropertyList = value; } }
@@ -44,6 +47,14 @@ public partial class LivePhotoConfigurationBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += ((ulong)binaryPropertyList.Length * 8); // binaryPropertyList
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("binaryPropertyList", ((ulong)binaryPropertyList.Length * 8), this.binaryPropertyList); 
 		return boxSize;
 	}
 }

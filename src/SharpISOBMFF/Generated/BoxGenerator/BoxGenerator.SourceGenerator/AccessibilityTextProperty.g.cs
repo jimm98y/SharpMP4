@@ -17,6 +17,9 @@ public partial class AccessibilityTextProperty : ItemFullProperty
 {
 	public const string TYPE = "altt";
 	public override string DisplayName { get { return "AccessibilityTextProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected BinaryUTF8String alt_text; 
 	public BinaryUTF8String AltText { get { return this.alt_text; } set { this.alt_text = value; } }
@@ -52,6 +55,15 @@ public partial class AccessibilityTextProperty : ItemFullProperty
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(alt_text); // alt_text
 		boxSize += IsoStream.CalculateStringSize(alt_lang); // alt_lang
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("alt_text", IsoStream.CalculateStringSize(alt_text), this.alt_text); 
+		boxSize += builder.Field("alt_lang", IsoStream.CalculateStringSize(alt_lang), this.alt_lang); 
 		return boxSize;
 	}
 }

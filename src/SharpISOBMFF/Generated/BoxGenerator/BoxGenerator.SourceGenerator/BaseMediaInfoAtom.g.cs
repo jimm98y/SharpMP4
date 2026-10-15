@@ -19,6 +19,9 @@ public partial class BaseMediaInfoAtom : FullBox
 {
 	public const string TYPE = "gmin";
 	public override string DisplayName { get { return "BaseMediaInfoAtom"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("gmhd"); }
+
 
 	protected ushort graphicsMode; 
 	public ushort GraphicsMode { get { return this.graphicsMode; } set { this.graphicsMode = value; } }
@@ -78,6 +81,19 @@ public partial class BaseMediaInfoAtom : FullBox
 		boxSize += 16; // opColorB
 		boxSize += 16; // balance
 		boxSize += 16; // reserved
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("graphicsMode", 16, this.graphicsMode); 
+		boxSize += builder.Field("opColorR", 16, this.opColorR); 
+		boxSize += builder.Field("opColorG", 16, this.opColorG); 
+		boxSize += builder.Field("opColorB", 16, this.opColorB); 
+		boxSize += builder.Field("balance", 16, this.balance); 
+		boxSize += builder.Field("reserved", 16, this.reserved); 
 		return boxSize;
 	}
 }

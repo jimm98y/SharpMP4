@@ -18,6 +18,9 @@ public partial class TrackExtendsBox : FullBox
 {
 	public const string TYPE = "trex";
 	public override string DisplayName { get { return "TrackExtendsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mvex"); }
+
 
 	protected uint track_ID; 
 	public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -71,6 +74,18 @@ public partial class TrackExtendsBox : FullBox
 		boxSize += 32; // default_sample_duration
 		boxSize += 32; // default_sample_size
 		boxSize += 32; // default_sample_flags
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("track_ID", 32, this.track_ID); 
+		boxSize += builder.Field("default_sample_description_index", 32, this.default_sample_description_index); 
+		boxSize += builder.Field("default_sample_duration", 32, this.default_sample_duration); 
+		boxSize += builder.Field("default_sample_size", 32, this.default_sample_size); 
+		boxSize += builder.Field("default_sample_flags", 32, this.default_sample_flags); 
 		return boxSize;
 	}
 }

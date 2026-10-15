@@ -18,6 +18,7 @@ public partial class CountryListEntry : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "CountryListEntry"; } }
 
 	protected ushort country_count; 
@@ -51,6 +52,14 @@ public partial class CountryListEntry : IMp4Serializable
 		ulong boxSize = 0;
 		boxSize += 16; // country_count
 		boxSize += ((ulong)( country_count ) * 16); // country
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("country_count", 16, this.country_count); 
+		boxSize += builder.Field("country", ((ulong)( country_count ) * 16), this.country); 
 		return boxSize;
 	}
 }

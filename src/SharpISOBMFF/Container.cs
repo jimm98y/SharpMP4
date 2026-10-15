@@ -126,5 +126,25 @@ namespace SharpISOBMFF
 
             return size;
         }
+
+        /// <summary>The file's boxes, a line each of their fields, as <see cref="BoxStringBuilder"/> describes them.</summary>
+        public override string ToString() { return BoxStringBuilder.Format(this); }
+
+        public ulong ToString(BoxStringBuilder builder)
+        {
+            ulong size = 0;
+            foreach (var box in Children)
+            {
+                size += builder.Append(box);
+            }
+
+            // what is after the last box, of a stream that cannot seek: its bytes (of one that can, its Padding)
+            if (this.Padding == null && this.PaddingBytes != null)
+            {
+                size += builder.Field("padding", (ulong)this.PaddingBytes.Length << 3, this.PaddingBytes);
+            }
+
+            return size;
+        }
     }
 }

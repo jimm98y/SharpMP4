@@ -53,6 +53,15 @@ public partial class ParameterSetNALUEntry : VisualSampleGroupEntry
 		boxSize += (ulong)(8* ps_nalu_length ); // ps_nal_unit
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("ps_nalu_length", 16, this.ps_nalu_length); 
+		boxSize += builder.Field("ps_nal_unit", (ulong)(8* ps_nalu_length ), this.ps_nal_unit); 
+		return boxSize;
+	}
 }
 
 }

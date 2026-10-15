@@ -14,6 +14,9 @@ public partial class RicohRMKNBox : Box
 {
 	public const string TYPE = "RMKN";
 	public override string DisplayName { get { return "RicohRMKNBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -43,6 +46,14 @@ public partial class RicohRMKNBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

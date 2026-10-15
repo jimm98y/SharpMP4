@@ -15,6 +15,9 @@ public partial class OperatingPointsInformationProperty : ItemFullProperty
 {
 	public const string TYPE = "oinf";
 	public override string DisplayName { get { return "OperatingPointsInformationProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected OperatingPointsRecord op_info;  //  specified in ISO/IEC 14496-15
 	public OperatingPointsRecord OpInfo { get { return this.op_info; } set { this.op_info = value; } }
@@ -44,6 +47,14 @@ public partial class OperatingPointsInformationProperty : ItemFullProperty
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateClassSize(op_info); // op_info
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("op_info", IsoStream.CalculateClassSize(op_info), this.op_info); // specified in ISO/IEC 14496-15
 		return boxSize;
 	}
 }

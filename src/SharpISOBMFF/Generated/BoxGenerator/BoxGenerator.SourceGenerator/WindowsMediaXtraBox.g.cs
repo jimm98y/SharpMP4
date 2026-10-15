@@ -15,6 +15,9 @@ public partial class WindowsMediaXtraBox : Box
 {
 	public const string TYPE = "Xtra";
 	public override string DisplayName { get { return "WindowsMediaXtraBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected XtraTag[] tags; 
 	public XtraTag[] Tags { get { return this.tags; } set { this.tags = value; } }
@@ -44,6 +47,14 @@ public partial class WindowsMediaXtraBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateClassSize(tags); // tags
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("tags", IsoStream.CalculateClassSize(tags), this.tags); 
 		return boxSize;
 	}
 }

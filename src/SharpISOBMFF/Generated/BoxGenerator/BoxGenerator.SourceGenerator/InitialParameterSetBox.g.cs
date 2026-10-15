@@ -19,6 +19,9 @@ public partial class InitialParameterSetBox : Box
 {
 	public const string TYPE = "svip";
 	public override string DisplayName { get { return "InitialParameterSetBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("scif", "mvif"); }
+
 
 	protected byte sps_id_count; 
 	public byte SpsIdCount { get { return this.sps_id_count; } set { this.sps_id_count = value; } }
@@ -91,6 +94,25 @@ public partial class InitialParameterSetBox : Box
 		for (int i=0; i< pps_id_count; i++)
 		{
 			boxSize += 8; // PPS_index
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sps_id_count", 8, this.sps_id_count); 
+
+		for (int i=0; i< sps_id_count; i++)
+		{
+			boxSize += builder.Field($"SPS_index[{i}]", 8, this.SPS_index[i]); 
+		}
+		boxSize += builder.Field("pps_id_count", 8, this.pps_id_count); 
+
+		for (int i=0; i< pps_id_count; i++)
+		{
+			boxSize += builder.Field($"PPS_index[{i}]", 8, this.PPS_index[i]); 
 		}
 		return boxSize;
 	}

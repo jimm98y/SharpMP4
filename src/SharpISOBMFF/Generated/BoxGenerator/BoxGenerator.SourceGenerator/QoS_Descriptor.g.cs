@@ -67,6 +67,20 @@ public partial class QoS_Descriptor : BaseDescriptor
 		boxSize += IsoStream.CalculateDescriptors(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("predefined", 8, this.predefined); 
+
+		if (predefined==0)
+		{
+			// boxSize += builder.Field("qualifiers", IsoStream.CalculateDescriptorSize(qualifiers), this.qualifiers); 
+		}
+		boxSize += builder.Descriptors(this);
+		return boxSize;
+	}
 }
 
 }

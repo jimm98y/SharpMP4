@@ -28,6 +28,9 @@ public partial class CompositionOffsetBox : FullBox
 {
 	public const string TYPE = "ctts";
 	public override string DisplayName { get { return "CompositionOffsetBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl"); }
+
 
 	protected uint entry_count; 
 	public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -131,6 +134,35 @@ public partial class CompositionOffsetBox : FullBox
 			{
 				boxSize += 32; // sample_count
 				boxSize += 32; // sample_offset0
+			}
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		
+
+		if (version==0)
+		{
+
+			for (int i=0; i < entry_count; i++)
+			{
+				boxSize += builder.Field($"sample_count[{i}]", 32, this.sample_count[i]); 
+				boxSize += builder.Field($"sample_offset[{i}]", 32, this.sample_offset[i]); 
+			}
+		}
+
+		else if (version == 1)
+		{
+
+			for (int i=0; i < entry_count; i++)
+			{
+				boxSize += builder.Field($"sample_count[{i}]", 32, this.sample_count[i]); 
+				boxSize += builder.Field($"sample_offset0[{i}]", 32, this.sample_offset0[i]); 
 			}
 		}
 		return boxSize;

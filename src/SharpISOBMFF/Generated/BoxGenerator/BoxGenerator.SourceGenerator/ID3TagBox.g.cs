@@ -16,6 +16,9 @@ public partial class ID3TagBox : FullBox
 {
 	public const string TYPE = "ID32";
 	public override string DisplayName { get { return "ID3TagBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("meta"); }
+
 
 	protected bool pad; 
 	public bool Pad { get { return this.pad; } set { this.pad = value; } }
@@ -57,6 +60,16 @@ public partial class ID3TagBox : FullBox
 		boxSize += 1; // pad
 		boxSize += 15; // language
 		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("pad", 1, this.pad); 
+		boxSize += builder.Field("language", 15, this.language); 
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

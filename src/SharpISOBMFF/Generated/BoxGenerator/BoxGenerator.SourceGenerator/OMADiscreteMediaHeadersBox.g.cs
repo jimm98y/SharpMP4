@@ -16,6 +16,9 @@ public partial class OMADiscreteMediaHeadersBox : FullBox
 {
 	public const string TYPE = "odhe";
 	public override string DisplayName { get { return "OMADiscreteMediaHeadersBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("odrm"); }
+
 
 	protected byte contentTypeLength; 
 	public byte ContentTypeLength { get { return this.contentTypeLength; } set { this.contentTypeLength = value; } }
@@ -57,6 +60,17 @@ public partial class OMADiscreteMediaHeadersBox : FullBox
 		boxSize += ((ulong)(contentTypeLength) * 8); // contentType
 		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("contentTypeLength", 8, this.contentTypeLength); 
+		boxSize += builder.Field("contentType", ((ulong)(contentTypeLength) * 8), this.contentType); 
+		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

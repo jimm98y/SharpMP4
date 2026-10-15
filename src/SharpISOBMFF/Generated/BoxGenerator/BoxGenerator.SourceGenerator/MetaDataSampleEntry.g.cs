@@ -12,6 +12,9 @@ class MetaDataSampleEntry(codingname) extends SampleEntry (codingname) {
 public partial class MetaDataSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "MetaDataSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "stsd" }); }
+
 
 	public MetaDataSampleEntry(uint codingname = 0): base(codingname)
 	{
@@ -35,6 +38,13 @@ public partial class MetaDataSampleEntry : SampleEntry
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
 		return boxSize;
 	}
 }

@@ -49,6 +49,9 @@ class AudioSampleEntry(codingname) extends SampleEntry (codingname) {
 public partial class AudioSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "AudioSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "stsd" }); }
+
 
 	protected ushort soundversion = 0; 
 	public ushort Soundversion { get { return this.soundversion; } set { this.soundversion = value; } }
@@ -228,6 +231,49 @@ public partial class AudioSampleEntry : SampleEntry
 		// boxSize += IsoStream.CalculateBoxSize(SamplingRateBox); // SamplingRateBox
 		// boxSize += IsoStream.CalculateBoxSize(Box); // Box
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("soundversion", 16, this.soundversion); 
+		boxSize += builder.Field("reserved1", 16, this.reserved1); 
+		boxSize += builder.Field("reserved2", 32, this.reserved2); 
+		boxSize += builder.Field("channelcount", 16, this.channelcount); 
+		boxSize += builder.Field("samplesize", 16, this.samplesize); 
+		boxSize += builder.Field("pre_defined", 16, this.pre_defined); 
+		boxSize += builder.Field("reserved", 16, this.reserved); 
+		boxSize += builder.Field("samplerate", 32, this.samplerate); 
+
+		if (FourCC != IsoStream.FromFourCC("mlpa"))
+		{
+			// samplerate = samplerate >> 16;
+		}
+
+		if (soundversion == 1 || soundversion == 2)
+		{
+			boxSize += builder.Field("samplesPerPacket", 32, this.samplesPerPacket); 
+			boxSize += builder.Field("bytesPerPacket", 32, this.bytesPerPacket); 
+			boxSize += builder.Field("bytesPerFrame", 32, this.bytesPerFrame); 
+			boxSize += builder.Field("bytesPerSample", 32, this.bytesPerSample); 
+		}
+
+		if (soundversion == 2)
+		{
+			boxSize += builder.Field("soundVersion2Data", 20 * 8, this.soundVersion2Data); 
+		}
+		// boxSize += builder.Field("ChannelLayout", IsoStream.CalculateBoxSize(ChannelLayout), this.ChannelLayout); // we permit any number of DownMix or DRC boxes: 
+		// boxSize += builder.Field("DownMixInstructions", IsoStream.CalculateBoxSize(DownMixInstructions), this.DownMixInstructions); 
+		// boxSize += builder.Field("DRCCoefficientsBasic", IsoStream.CalculateBoxSize(DRCCoefficientsBasic), this.DRCCoefficientsBasic); 
+		// boxSize += builder.Field("DRCInstructionsBasic", IsoStream.CalculateBoxSize(DRCInstructionsBasic), this.DRCInstructionsBasic); 
+		// boxSize += builder.Field("DRCCoefficientsUniDRC", IsoStream.CalculateBoxSize(DRCCoefficientsUniDRC), this.DRCCoefficientsUniDRC); 
+		// boxSize += builder.Field("DRCInstructionsUniDRC", IsoStream.CalculateBoxSize(DRCInstructionsUniDRC), this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+		// boxSize += builder.Field("UniDrcConfigExtension", IsoStream.CalculateBoxSize(UniDrcConfigExtension), this.UniDrcConfigExtension); // optional boxes follow
+		// boxSize += builder.Field("SamplingRateBox", IsoStream.CalculateBoxSize(SamplingRateBox), this.SamplingRateBox); 
+		// boxSize += builder.Field("Box", IsoStream.CalculateBoxSize(Box), this.Box); // further boxes as needed
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

@@ -17,6 +17,9 @@ public partial class JpegXLPartialCodestreamBox : Box
 {
 	public const string TYPE = "jxlp";
 	public override string DisplayName { get { return "JpegXLPartialCodestreamBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected bool is_last; 
 	public bool IsLast { get { return this.is_last; } set { this.is_last = value; } }
@@ -58,6 +61,16 @@ public partial class JpegXLPartialCodestreamBox : Box
 		boxSize += 1; // is_last
 		boxSize += 31; // index
 		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("is_last", 1, this.is_last); 
+		boxSize += builder.Field("index", 31, this.index); 
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

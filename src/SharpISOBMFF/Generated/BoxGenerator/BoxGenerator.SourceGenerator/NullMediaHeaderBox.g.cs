@@ -14,6 +14,9 @@ public partial class NullMediaHeaderBox : FullBox
 {
 	public const string TYPE = "nmhd";
 	public override string DisplayName { get { return "NullMediaHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("minf"); }
+
 
 	public NullMediaHeaderBox(uint flags = 0): base(IsoStream.FromFourCC("nmhd"), 0, flags)
 	{
@@ -37,6 +40,13 @@ public partial class NullMediaHeaderBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
 		return boxSize;
 	}
 }

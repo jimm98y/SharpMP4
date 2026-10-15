@@ -23,6 +23,9 @@ public partial class SMPTE2086MasteringDisplayMetadataBox : FullBox
 {
 	public const string TYPE = "SmDm";
 	public override string DisplayName { get { return "SMPTE2086MasteringDisplayMetadataBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(vp08,vp09,vp10,encv,resv)"); }
+
 
 	protected ushort primaryRChromaticityX; 
 	public ushort PrimaryRChromaticityX { get { return this.primaryRChromaticityX; } set { this.primaryRChromaticityX = value; } }
@@ -106,6 +109,23 @@ public partial class SMPTE2086MasteringDisplayMetadataBox : FullBox
 		boxSize += 16; // whitePointChromaticityY
 		boxSize += 32; // luminanceMax
 		boxSize += 32; // luminanceMin
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("primaryRChromaticityX", 16, this.primaryRChromaticityX); 
+		boxSize += builder.Field("primaryRChromaticityY", 16, this.primaryRChromaticityY); 
+		boxSize += builder.Field("primaryGChromaticityX", 16, this.primaryGChromaticityX); 
+		boxSize += builder.Field("primaryGChromaticityY", 16, this.primaryGChromaticityY); 
+		boxSize += builder.Field("primaryBChromaticityX", 16, this.primaryBChromaticityX); 
+		boxSize += builder.Field("primaryBChromaticityY", 16, this.primaryBChromaticityY); 
+		boxSize += builder.Field("whitePointChromaticityX", 16, this.whitePointChromaticityX); 
+		boxSize += builder.Field("whitePointChromaticityY", 16, this.whitePointChromaticityY); 
+		boxSize += builder.Field("luminanceMax", 32, this.luminanceMax); 
+		boxSize += builder.Field("luminanceMin", 32, this.luminanceMin); 
 		return boxSize;
 	}
 }

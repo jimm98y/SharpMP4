@@ -14,6 +14,9 @@ public partial class ExtendedTypeBox : Box
 {
 	public const string TYPE = "etyp";
 	public override string DisplayName { get { return "ExtendedTypeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file", "ipco", "otyp"); }
+
 	public IEnumerable<TypeCombinationBox> CompatibleCombinations { get { return this.children.OfType<TypeCombinationBox>(); } }
 
 	public ExtendedTypeBox(): base(IsoStream.FromFourCC("etyp"))
@@ -44,6 +47,15 @@ public partial class ExtendedTypeBox : Box
 		boxSize += base.CalculateSize();
 		// boxSize += IsoStream.CalculateBoxSize(compatible_combinations); // compatible_combinations
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("compatible_combinations", IsoStream.CalculateBoxSize(compatible_combinations), this.compatible_combinations); // to end of the box
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

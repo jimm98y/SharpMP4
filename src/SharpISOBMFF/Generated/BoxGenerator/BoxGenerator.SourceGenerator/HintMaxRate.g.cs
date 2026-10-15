@@ -14,6 +14,9 @@ public partial class HintMaxRate : Box
 {
 	public const string TYPE = "maxr";
 	public override string DisplayName { get { return "HintMaxRate"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("hinf"); }
+
 
 	protected uint period;  //  in milliseconds
 	public uint Period { get { return this.period; } set { this.period = value; } }
@@ -52,6 +55,16 @@ public partial class HintMaxRate : Box
 		/*  maximum data rate */
 		boxSize += 32; // period
 		boxSize += 32; // bytes
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		/*  maximum data rate */
+		boxSize += builder.Field("period", 32, this.period); // in milliseconds
+		boxSize += builder.Field("bytes", 32, this.bytes); 
 		return boxSize;
 	}
 }

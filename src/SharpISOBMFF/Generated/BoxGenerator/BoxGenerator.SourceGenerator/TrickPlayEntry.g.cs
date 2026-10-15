@@ -16,6 +16,7 @@ public partial class TrickPlayEntry : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "TrickPlayEntry"; } }
 
 	protected byte picType; 
@@ -49,6 +50,14 @@ public partial class TrickPlayEntry : IMp4Serializable
 		ulong boxSize = 0;
 		boxSize += 2; // picType
 		boxSize += 6; // dependencyLevel
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("picType", 2, this.picType); 
+		boxSize += builder.Field("dependencyLevel", 6, this.dependencyLevel); 
 		return boxSize;
 	}
 }

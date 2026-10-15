@@ -15,6 +15,9 @@ public partial class AppleSdpiBox : Box
 {
 	public const string TYPE = "sdpi";
 	public override string DisplayName { get { return "AppleSdpiBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("sdpd"); }
+
 
 	protected uint data;  // TODO 
 	public uint Data { get { return this.data; } set { this.data = value; } }
@@ -44,6 +47,14 @@ public partial class AppleSdpiBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("data", 32, this.data); //TODO 
 		return boxSize;
 	}
 }

@@ -16,6 +16,9 @@ public partial class MicrosoftWindowsVersionBox : Box
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "MicrosoftWindowsVersionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected ushort unknown1; 
 	public ushort Unknown1 { get { return this.unknown1; } set { this.unknown1 = value; } }
@@ -57,6 +60,16 @@ public partial class MicrosoftWindowsVersionBox : Box
 		boxSize += 16; // unknown1
 		boxSize += 16; // count
 		boxSize += ((ulong)(count) * 8); // version
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("unknown1", 16, this.unknown1); 
+		boxSize += builder.Field("count", 16, this.count); 
+		boxSize += builder.Field("version", ((ulong)(count) * 8), this.version); 
 		return boxSize;
 	}
 }

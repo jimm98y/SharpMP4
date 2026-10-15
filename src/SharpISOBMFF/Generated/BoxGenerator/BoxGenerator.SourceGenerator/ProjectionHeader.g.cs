@@ -17,6 +17,9 @@ public partial class ProjectionHeader : FullBox
 {
 	public const string TYPE = "prhd";
 	public override string DisplayName { get { return "ProjectionHeader"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("proj"); }
+
 
 	protected int pose_yaw_degrees; 
 	public int PoseYawDegrees { get { return this.pose_yaw_degrees; } set { this.pose_yaw_degrees = value; } }
@@ -58,6 +61,16 @@ public partial class ProjectionHeader : FullBox
 		boxSize += 32; // pose_yaw_degrees
 		boxSize += 32; // pose_pitch_degrees
 		boxSize += 32; // pose_roll_degrees
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("pose_yaw_degrees", 32, this.pose_yaw_degrees); 
+		boxSize += builder.Field("pose_pitch_degrees", 32, this.pose_pitch_degrees); 
+		boxSize += builder.Field("pose_roll_degrees", 32, this.pose_roll_degrees); 
 		return boxSize;
 	}
 }

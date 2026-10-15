@@ -14,6 +14,9 @@ extends FullBox(entry_type, version = 0, flags) {
 public partial class DataEntryBaseBox : FullBox
 {
 	public override string DisplayName { get { return "DataEntryBaseBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	public DataEntryBaseBox(uint entry_type, uint flags): base(entry_type, 0, flags)
 	{
@@ -37,6 +40,13 @@ public partial class DataEntryBaseBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
 		return boxSize;
 	}
 }

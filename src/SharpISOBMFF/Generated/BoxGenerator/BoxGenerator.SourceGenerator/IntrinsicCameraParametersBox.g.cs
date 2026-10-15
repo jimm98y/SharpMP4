@@ -29,6 +29,9 @@ public partial class IntrinsicCameraParametersBox : FullBox
 {
 	public const string TYPE = "icam";
 	public override string DisplayName { get { return "IntrinsicCameraParametersBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("MVCDSampleEntry(mvd1,mvd2,mvd3,mvd4)", "A3DSampleEntry(a3d1,a3d2,a3d3,a3d4)"); }
+
 
 	protected byte reserved =0; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -142,6 +145,28 @@ public partial class IntrinsicCameraParametersBox : FullBox
 		boxSize += 64; // mantissa_principal_point_y
 		boxSize += 8; // exponent_skew_factor
 		boxSize += 64; // mantissa_skew_factor
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += builder.Field("ref_view_id", 10, this.ref_view_id); 
+		boxSize += builder.Field("prec_focal_length", 32, this.prec_focal_length); 
+		boxSize += builder.Field("prec_principal_point", 32, this.prec_principal_point); 
+		boxSize += builder.Field("prec_skew_factor", 32, this.prec_skew_factor); 
+		boxSize += builder.Field("exponent_focal_length_x", 8, this.exponent_focal_length_x); 
+		boxSize += builder.Field("mantissa_focal_length_x", 64, this.mantissa_focal_length_x); 
+		boxSize += builder.Field("exponent_focal_length_y", 8, this.exponent_focal_length_y); 
+		boxSize += builder.Field("mantissa_focal_length_y", 64, this.mantissa_focal_length_y); 
+		boxSize += builder.Field("exponent_principal_point_x", 8, this.exponent_principal_point_x); 
+		boxSize += builder.Field("mantissa_principal_point_x", 64, this.mantissa_principal_point_x); 
+		boxSize += builder.Field("exponent_principal_point_y", 8, this.exponent_principal_point_y); 
+		boxSize += builder.Field("mantissa_principal_point_y", 64, this.mantissa_principal_point_y); 
+		boxSize += builder.Field("exponent_skew_factor", 8, this.exponent_skew_factor); 
+		boxSize += builder.Field("mantissa_skew_factor", 64, this.mantissa_skew_factor); 
 		return boxSize;
 	}
 }

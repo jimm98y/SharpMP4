@@ -61,7 +61,7 @@
     {
       "fourcc": "cdsc",
       "description": "this track describes the referenced track",
-      "containers": [ "tref" ],
+      "containers": [ "tref", "iref" ],
       "type": "TrackReferenceTypeBox",
       "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },

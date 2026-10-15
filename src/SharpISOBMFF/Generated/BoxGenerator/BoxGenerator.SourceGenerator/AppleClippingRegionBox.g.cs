@@ -16,6 +16,9 @@ public partial class AppleClippingRegionBox : Box
 {
 	public const string TYPE = "crgn";
 	public override string DisplayName { get { return "AppleClippingRegionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("clip"); }
+
 
 	protected ushort regionSize; 
 	public ushort RegionSize { get { return this.regionSize; } set { this.regionSize = value; } }
@@ -57,6 +60,16 @@ public partial class AppleClippingRegionBox : Box
 		boxSize += 16; // regionSize
 		boxSize += 64; // regionBoundaryBox
 		boxSize += ((ulong)clippingRegionData.Length * 8); // clippingRegionData
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("regionSize", 16, this.regionSize); 
+		boxSize += builder.Field("regionBoundaryBox", 64, this.regionBoundaryBox); 
+		boxSize += builder.Field("clippingRegionData", ((ulong)clippingRegionData.Length * 8), this.clippingRegionData); 
 		return boxSize;
 	}
 }

@@ -28,6 +28,9 @@ public partial class Dvc1Box : Box
 {
 	public const string TYPE = "dvc1";
 	public override string DisplayName { get { return "Dvc1Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(vc-1)"); }
+
 
 	protected byte profile; 
 	public byte Profile { get { return this.profile; } set { this.profile = value; } }
@@ -135,6 +138,27 @@ public partial class Dvc1Box : Box
 		boxSize += 1; // reserved1
 		boxSize += 32; // framerate
 		boxSize += ((ulong)sequenceHeader.Length * 8); // sequenceHeader
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("profile", 4, this.profile); 
+		boxSize += builder.Field("level", 3, this.level); 
+		boxSize += builder.Field("reserved", 1, this.reserved); 
+		boxSize += builder.Field("level2", 3, this.level2); 
+		boxSize += builder.Field("cbr", 1, this.cbr); 
+		boxSize += builder.Field("reserved0", 6, this.reserved0); 
+		boxSize += builder.Field("no_interlace", 1, this.no_interlace); 
+		boxSize += builder.Field("no_multiple_seq", 1, this.no_multiple_seq); 
+		boxSize += builder.Field("no_multiple_entry", 1, this.no_multiple_entry); 
+		boxSize += builder.Field("no_slice_code", 1, this.no_slice_code); 
+		boxSize += builder.Field("no_bframe", 1, this.no_bframe); 
+		boxSize += builder.Field("reserved1", 1, this.reserved1); 
+		boxSize += builder.Field("framerate", 32, this.framerate); 
+		boxSize += builder.Field("sequenceHeader", ((ulong)sequenceHeader.Length * 8), this.sequenceHeader); 
 		return boxSize;
 	}
 }

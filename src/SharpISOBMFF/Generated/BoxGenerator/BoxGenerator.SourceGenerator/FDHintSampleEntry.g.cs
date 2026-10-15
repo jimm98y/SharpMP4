@@ -17,6 +17,9 @@ public partial class FDHintSampleEntry : HintSampleEntry
 {
 	public const string TYPE = "fdp ";
 	public override string DisplayName { get { return "FDHintSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected ushort hinttrackversion = 1; 
 	public ushort Hinttrackversion { get { return this.hinttrackversion; } set { this.hinttrackversion = value; } }
@@ -67,6 +70,18 @@ public partial class FDHintSampleEntry : HintSampleEntry
 		boxSize += 16; // partition_entry_ID
 		boxSize += 16; // FEC_overhead
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("hinttrackversion", 16, this.hinttrackversion); 
+		boxSize += builder.Field("highestcompatibleversion", 16, this.highestcompatibleversion); 
+		boxSize += builder.Field("partition_entry_ID", 16, this.partition_entry_ID); 
+		boxSize += builder.Field("FEC_overhead", 16, this.FEC_overhead); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

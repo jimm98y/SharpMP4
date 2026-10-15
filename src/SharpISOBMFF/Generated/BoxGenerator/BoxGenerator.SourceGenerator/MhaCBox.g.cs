@@ -19,6 +19,9 @@ public partial class MhaCBox : Box
 {
 	public const string TYPE = "mhaC";
 	public override string DisplayName { get { return "MhaCBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(mha1,mha2,mhm1,mhm2)", "wave"); }
+
 
 	protected byte configurationVersion = 1; 
 	public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
@@ -72,6 +75,18 @@ public partial class MhaCBox : Box
 		boxSize += 8; // referenceChannelLayout
 		boxSize += 16; // mpegh3daConfigLength
 		boxSize += (ulong)(8*mpegh3daConfigLength ); // mpegh3daConfig
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("configurationVersion", 8, this.configurationVersion); 
+		boxSize += builder.Field("mpegh3daProfileLevelIndication", 8, this.mpegh3daProfileLevelIndication); 
+		boxSize += builder.Field("referenceChannelLayout", 8, this.referenceChannelLayout); 
+		boxSize += builder.Field("mpegh3daConfigLength", 16, this.mpegh3daConfigLength); 
+		boxSize += builder.Field("mpegh3daConfig", (ulong)(8*mpegh3daConfigLength ), this.mpegh3daConfig); 
 		return boxSize;
 	}
 }

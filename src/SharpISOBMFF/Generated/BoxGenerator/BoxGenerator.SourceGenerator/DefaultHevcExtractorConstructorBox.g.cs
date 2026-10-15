@@ -26,6 +26,9 @@ public partial class DefaultHevcExtractorConstructorBox : FullBox
 {
 	public const string TYPE = "dhec";
 	public override string DisplayName { get { return "DefaultHevcExtractorConstructorBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("HEVCSampleEntry(hvc3,hev3)"); }
+
 
 	protected uint num_entries; 
 	public uint NumEntries { get { return this.num_entries; } set { this.num_entries = value; } }
@@ -148,6 +151,41 @@ public partial class DefaultHevcExtractorConstructorBox : FullBox
 			}
 		}
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("num_entries", 32, this.num_entries); 
+
+		for (int i=0; i< num_entries; i++)
+		{
+			boxSize += builder.Field($"constructor_type[{i}]", 8, this.constructor_type[i]); 
+			boxSize += builder.Field($"constructor_flags[{i}]", 8, this.constructor_flags[i]); 
+
+			if ( constructor_type[i] == 0 )
+			{
+				// boxSize += builder.Field($"SampleConstructor[{i}]", IsoStream.CalculateBoxSize(SampleConstructor), this.SampleConstructor[i]); 
+			}
+
+			else if ( constructor_type[i] == 2 )
+			{
+				// boxSize += builder.Field($"InlineConstructor[{i}]", IsoStream.CalculateBoxSize(InlineConstructor), this.InlineConstructor[i]); 
+			}
+
+			else if ( constructor_type[i] == 3 )
+			{
+				// boxSize += builder.Field($"SampleConstructorFromTrackGroup[{i}]", IsoStream.CalculateBoxSize(SampleConstructorFromTrackGroup), this.SampleConstructorFromTrackGroup[i]); 
+			}
+
+			else if ( constructor_type[i] == 6 )
+			{
+				// boxSize += builder.Field($"NALUStartInlineConstructor[{i}]", IsoStream.CalculateBoxSize(NALUStartInlineConstructor), this.NALUStartInlineConstructor[i]); 
+			}
+		}
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

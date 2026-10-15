@@ -14,6 +14,9 @@ public partial class HintMinRelativeTime : Box
 {
 	public const string TYPE = "tmin";
 	public override string DisplayName { get { return "HintMinRelativeTime"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("hinf"); }
+
 
 	protected int time; 
 	public int Time { get { return this.time; } set { this.time = value; } }
@@ -43,6 +46,14 @@ public partial class HintMinRelativeTime : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // time
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("time", 32, this.time); 
 		return boxSize;
 	}
 }

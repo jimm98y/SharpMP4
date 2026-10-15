@@ -15,6 +15,9 @@ public partial class ItaiBox : FullBox
 {
 	public const string TYPE = "itai";
 	public override string DisplayName { get { return "ItaiBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected ulong tai_timestamp; 
 	public ulong TaiTimestamp { get { return this.tai_timestamp; } set { this.tai_timestamp = value; } }
@@ -50,6 +53,15 @@ public partial class ItaiBox : FullBox
 		boxSize += base.CalculateSize();
 		boxSize += 64; // tai_timestamp
 		boxSize += 8; // status_bits
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("tai_timestamp", 64, this.tai_timestamp); 
+		boxSize += builder.Field("status_bits", 8, this.status_bits); 
 		return boxSize;
 	}
 }

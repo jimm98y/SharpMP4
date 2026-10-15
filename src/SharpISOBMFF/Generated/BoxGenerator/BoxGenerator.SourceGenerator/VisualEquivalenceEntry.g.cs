@@ -53,6 +53,15 @@ public partial class VisualEquivalenceEntry : VisualSampleGroupEntry
 		boxSize += 16; // timescale_multiplier
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("time_offset", 16, this.time_offset); 
+		boxSize += builder.Field("timescale_multiplier", 16, this.timescale_multiplier); 
+		return boxSize;
+	}
 }
 
 }

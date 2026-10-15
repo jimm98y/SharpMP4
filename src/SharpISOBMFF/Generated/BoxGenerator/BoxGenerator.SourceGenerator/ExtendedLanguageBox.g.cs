@@ -14,6 +14,9 @@ public partial class ExtendedLanguageBox : FullBox
 {
 	public const string TYPE = "elng";
 	public override string DisplayName { get { return "ExtendedLanguageBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mdia"); }
+
 
 	protected BinaryUTF8String extended_language; 
 	public BinaryUTF8String ExtendedLanguage { get { return this.extended_language; } set { this.extended_language = value; } }
@@ -43,6 +46,14 @@ public partial class ExtendedLanguageBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(extended_language); // extended_language
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("extended_language", IsoStream.CalculateStringSize(extended_language), this.extended_language); 
 		return boxSize;
 	}
 }

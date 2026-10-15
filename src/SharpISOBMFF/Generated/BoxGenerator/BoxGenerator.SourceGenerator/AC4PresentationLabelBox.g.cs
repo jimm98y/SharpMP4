@@ -20,6 +20,9 @@ public partial class AC4PresentationLabelBox : FullBox
 {
 	public const string TYPE = "lac4";
 	public override string DisplayName { get { return "AC4PresentationLabelBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(ac-4,enca)"); }
+
 
 	protected ushort num_presentation_labels; 
 	public ushort NumPresentationLabels { get { return this.num_presentation_labels; } set { this.num_presentation_labels = value; } }
@@ -80,6 +83,21 @@ public partial class AC4PresentationLabelBox : FullBox
 		{
 			boxSize += 16; // presentation_id
 			boxSize += IsoStream.CalculateStringSize(presentation_label[i]); // presentation_label
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("num_presentation_labels", 16, this.num_presentation_labels); 
+		boxSize += builder.Field("language_tag", IsoStream.CalculateStringSize(language_tag), this.language_tag); 
+
+		for (int i=0; i < num_presentation_labels; i++)
+		{
+			boxSize += builder.Field($"presentation_id[{i}]", 16, this.presentation_id[i]); 
+			boxSize += builder.Field($"presentation_label[{i}]", IsoStream.CalculateStringSize(presentation_label[i]), this.presentation_label[i]); 
 		}
 		return boxSize;
 	}

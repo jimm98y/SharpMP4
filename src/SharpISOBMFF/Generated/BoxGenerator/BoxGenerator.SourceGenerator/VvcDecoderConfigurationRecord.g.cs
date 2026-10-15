@@ -43,6 +43,7 @@ public partial class VvcDecoderConfigurationRecord : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "VvcDecoderConfigurationRecord"; } }
 
 	protected byte reserved = 0b11111; 
@@ -246,6 +247,51 @@ public partial class VvcDecoderConfigurationRecord : IMp4Serializable
 				{
 					boxSize += 16; // nal_unit_length
 					boxSize += (ulong)(8*nal_unit_length[j][i] ); // nal_unit
+				}
+			}
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		const int OPI_NUT = 12;
+		const int DCI_NUT = 13;
+
+		boxSize += builder.Field("reserved", 5, this.reserved); 
+		boxSize += builder.Field("LengthSizeMinusOne", 2, this.LengthSizeMinusOne); 
+		boxSize += builder.Field("ptl_present_flag", 1, this.ptl_present_flag); 
+
+		if (ptl_present_flag)
+		{
+			boxSize += builder.Field("ols_idx", 9, this.ols_idx); 
+			boxSize += builder.Field("num_sublayers", 3, this.num_sublayers); 
+			boxSize += builder.Field("constant_frame_rate", 2, this.constant_frame_rate); 
+			boxSize += builder.Field("chroma_format_idc", 2, this.chroma_format_idc); 
+			boxSize += builder.Field("bit_depth_minus8", 3, this.bit_depth_minus8); 
+			boxSize += builder.Field("reserved0", 5, this.reserved0); 
+			boxSize += builder.Field("native_ptl", IsoStream.CalculateClassSize(native_ptl), this.native_ptl); 
+			boxSize += builder.Field("max_picture_width", 16, this.max_picture_width); 
+			boxSize += builder.Field("max_picture_height", 16, this.max_picture_height); 
+			boxSize += builder.Field("avg_frame_rate", 16, this.avg_frame_rate); 
+		}
+		boxSize += builder.Field("num_of_arrays", 8, this.num_of_arrays); 
+
+		for (int j=0; j < num_of_arrays; j++)
+		{
+			boxSize += builder.Field($"array_completeness[{j}]", 1, this.array_completeness[j]); 
+			boxSize += builder.Field($"reserved1[{j}]", 2, this.reserved1[j]); 
+			boxSize += builder.Field($"NAL_unit_type[{j}]", 5, this.NAL_unit_type[j]); 
+
+			if (NAL_unit_type[j] != DCI_NUT  &&  NAL_unit_type[j] != OPI_NUT)
+			{
+				boxSize += builder.Field($"num_nalus[{j}]", 16, this.num_nalus[j]); 
+
+				for (int i=0; i< num_nalus[j]; i++)
+				{
+					boxSize += builder.Field($"nal_unit_length[{j}][{i}]", 16, this.nal_unit_length[j][i]); 
+					boxSize += builder.Field($"nal_unit[{j}][{i}]", (ulong)(8*nal_unit_length[j][i] ), this.nal_unit[j][i]); 
 				}
 			}
 		}

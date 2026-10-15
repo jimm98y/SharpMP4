@@ -17,6 +17,9 @@ public partial class MetaDataKeyDeclarationBox : Box
 {
 	public const string TYPE = "keyd";
 	public override string DisplayName { get { return "MetaDataKeyDeclarationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
+
 
 	protected uint key_namespace; 
 	public uint KeyNamespace { get { return this.key_namespace; } set { this.key_namespace = value; } }
@@ -52,6 +55,15 @@ public partial class MetaDataKeyDeclarationBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 32; // key_namespace
 		boxSize += ((ulong)key_value.Length * 8); // key_value
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("key_namespace", 32, this.key_namespace); 
+		boxSize += builder.Field("key_value", ((ulong)key_value.Length * 8), this.key_value); 
 		return boxSize;
 	}
 }

@@ -15,6 +15,9 @@ public partial class TrackExtensionPropertiesBox : FullBox
 {
 	public const string TYPE = "trep";
 	public override string DisplayName { get { return "TrackExtensionPropertiesBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mvex"); }
+
 
 	protected uint track_ID;  //  Any number of boxes may follow
 	public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -47,6 +50,15 @@ public partial class TrackExtensionPropertiesBox : FullBox
 		boxSize += base.CalculateSize();
 		boxSize += 32; // track_ID
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("track_ID", 32, this.track_ID); // Any number of boxes may follow
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

@@ -66,6 +66,17 @@ public partial class JPEG_DecoderConfig : DecoderSpecificInfo
 		boxSize += 8; // numComponents
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("headerLength", 16, this.headerLength); 
+		boxSize += builder.Field("Xdensity", 16, this.Xdensity); 
+		boxSize += builder.Field("Ydensity", 16, this.Ydensity); 
+		boxSize += builder.Field("numComponents", 8, this.numComponents); 
+		return boxSize;
+	}
 }
 
 }

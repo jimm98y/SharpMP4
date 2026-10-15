@@ -14,6 +14,9 @@ public partial class ITunesMetadataNameBox : FullBox
 {
 	public const string TYPE = "name";
 	public override string DisplayName { get { return "ITunesMetadataNameBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("----", "udta", "tmcd", "schi"); }
+
 
 	protected BinaryUTF8String name; 
 	public BinaryUTF8String Name { get { return this.name; } set { this.name = value; } }
@@ -43,6 +46,14 @@ public partial class ITunesMetadataNameBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(name); // name
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("name", IsoStream.CalculateStringSize(name), this.name); 
 		return boxSize;
 	}
 }

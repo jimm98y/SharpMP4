@@ -18,6 +18,9 @@ public partial class MVCSubTrackMultiviewGroupBox : FullBox
 {
 	public const string TYPE = "stmg";
 	public override string DisplayName { get { return "MVCSubTrackMultiviewGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("strd"); }
+
 
 	protected ushort item_count; 
 	public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -65,6 +68,19 @@ public partial class MVCSubTrackMultiviewGroupBox : FullBox
 		for (int i = 0; i< item_count; i++)
 		{
 			boxSize += 32; // MultiviewGroupId
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("item_count", 16, this.item_count); 
+
+		for (int i = 0; i< item_count; i++)
+		{
+			boxSize += builder.Field($"MultiviewGroupId[{i}]", 32, this.MultiviewGroupId[i]); 
 		}
 		return boxSize;
 	}

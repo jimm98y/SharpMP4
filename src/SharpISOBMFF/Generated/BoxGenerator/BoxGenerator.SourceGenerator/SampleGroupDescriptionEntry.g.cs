@@ -19,6 +19,7 @@ public abstract partial class SampleGroupDescriptionEntry : IHasBoxChildren
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "SampleGroupDescriptionEntry"; } }
 
 	protected List<Box> children= new List<Box>(); 
@@ -41,6 +42,12 @@ public abstract partial class SampleGroupDescriptionEntry : IHasBoxChildren
 	}
 
 	public virtual ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
 	{
 		ulong boxSize = 0;
 		return boxSize;

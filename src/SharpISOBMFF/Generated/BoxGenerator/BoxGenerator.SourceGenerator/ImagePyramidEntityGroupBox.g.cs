@@ -22,6 +22,9 @@ public partial class ImagePyramidEntityGroupBox : EntityToGroupBox
 {
 	public const string TYPE = "pymd";
 	public override string DisplayName { get { return "ImagePyramidEntityGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("grpl"); }
+
 
 	protected ushort tile_size_x; 
 	public ushort TileSizex { get { return this.tile_size_x; } set { this.tile_size_x = value; } }
@@ -89,6 +92,22 @@ public partial class ImagePyramidEntityGroupBox : EntityToGroupBox
 			boxSize += 16; // layer_binning
 			boxSize += 16; // tiles_in_layer_row_minus1
 			boxSize += 16; // tiles_in_layer_column_minus1
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("tile_size_x", 16, this.tile_size_x); 
+		boxSize += builder.Field("tile_size_y", 16, this.tile_size_y); 
+
+		for (int i = 0; i < num_entities_in_group; i++)
+		{
+			boxSize += builder.Field($"layer_binning[{i}]", 16, this.layer_binning[i]); 
+			boxSize += builder.Field($"tiles_in_layer_row_minus1[{i}]", 16, this.tiles_in_layer_row_minus1[i]); 
+			boxSize += builder.Field($"tiles_in_layer_column_minus1[{i}]", 16, this.tiles_in_layer_column_minus1[i]); 
 		}
 		return boxSize;
 	}

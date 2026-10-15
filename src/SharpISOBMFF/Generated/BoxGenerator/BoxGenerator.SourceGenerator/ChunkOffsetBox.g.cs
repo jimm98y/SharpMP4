@@ -18,6 +18,9 @@ public partial class ChunkOffsetBox : FullBox
 {
 	public const string TYPE = "stco";
 	public override string DisplayName { get { return "ChunkOffsetBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl"); }
+
 
 	protected uint entry_count; 
 	public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -65,6 +68,19 @@ public partial class ChunkOffsetBox : FullBox
 		for (int i=0; i < entry_count; i++)
 		{
 			boxSize += 32; // chunk_offset
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+
+		for (int i=0; i < entry_count; i++)
+		{
+			boxSize += builder.Field($"chunk_offset[{i}]", 32, this.chunk_offset[i]); 
 		}
 		return boxSize;
 	}

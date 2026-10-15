@@ -19,6 +19,9 @@ public partial class GroupIdToNameBox : FullBox
 {
 	public const string TYPE = "gitn";
 	public override string DisplayName { get { return "GroupIdToNameBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("fiin"); }
+
 
 	protected ushort entry_count; 
 	public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -73,6 +76,20 @@ public partial class GroupIdToNameBox : FullBox
 		{
 			boxSize += 32; // group_ID
 			boxSize += IsoStream.CalculateStringSize(group_name[i]); // group_name
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 16, this.entry_count); 
+
+		for (int i=0; i < entry_count; i++)
+		{
+			boxSize += builder.Field($"group_ID[{i}]", 32, this.group_ID[i]); 
+			boxSize += builder.Field($"group_name[{i}]", IsoStream.CalculateStringSize(group_name[i]), this.group_name[i]); 
 		}
 		return boxSize;
 	}

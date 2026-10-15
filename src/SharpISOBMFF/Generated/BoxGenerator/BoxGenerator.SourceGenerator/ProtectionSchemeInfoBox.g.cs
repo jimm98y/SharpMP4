@@ -17,6 +17,9 @@ public partial class ProtectionSchemeInfoBox : Box
 {
 	public const string TYPE = "sinf";
 	public override string DisplayName { get { return "ProtectionSchemeInfoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipro", "SampleEntry"); }
+
 	public OriginalFormatBox OriginalFormat { get { return this.children.OfType<OriginalFormatBox>().FirstOrDefault(); } }
 	public SchemeTypeBox SchemeTypeBox { get { return this.children.OfType<SchemeTypeBox>().FirstOrDefault(); } }
 	public SchemeInformationBox Info { get { return this.children.OfType<SchemeInformationBox>().FirstOrDefault(); } }
@@ -55,6 +58,17 @@ public partial class ProtectionSchemeInfoBox : Box
 		// boxSize += IsoStream.CalculateBoxSize(scheme_type_box); // scheme_type_box
 		// boxSize += IsoStream.CalculateBoxSize(info); // info
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("original_format", IsoStream.CalculateBoxSize(original_format), this.original_format); 
+		// boxSize += builder.Field("scheme_type_box", IsoStream.CalculateBoxSize(scheme_type_box), this.scheme_type_box); // optional
+		// boxSize += builder.Field("info", IsoStream.CalculateBoxSize(info), this.info); // optional
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

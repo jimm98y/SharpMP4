@@ -14,6 +14,9 @@ public partial class RectilinearProjectionBox : FullBox
 {
 	public const string TYPE = "rect";
 	public override string DisplayName { get { return "RectilinearProjectionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("proj"); }
+
 
 	public RectilinearProjectionBox(): base(IsoStream.FromFourCC("rect"), 0, 0)
 	{
@@ -39,6 +42,14 @@ public partial class RectilinearProjectionBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
+		/*  fields reserved for future use  */
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
 		/*  fields reserved for future use  */
 		return boxSize;
 	}

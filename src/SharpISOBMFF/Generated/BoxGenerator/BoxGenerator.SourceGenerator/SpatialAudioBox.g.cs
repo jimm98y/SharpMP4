@@ -22,6 +22,9 @@ public partial class SpatialAudioBox : Box
 {
 	public const string TYPE = "SA3D";
 	public override string DisplayName { get { return "SpatialAudioBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry"); }
+
 
 	protected byte version; 
 	public byte Version { get { return this.version; } set { this.version = value; } }
@@ -99,6 +102,24 @@ public partial class SpatialAudioBox : Box
 		for (int i = 0; i < num_channels; i++)
 		{
 			boxSize += 32; // channel_map
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("version", 8, this.version); 
+		boxSize += builder.Field("ambisonic_type", 8, this.ambisonic_type); 
+		boxSize += builder.Field("ambisonic_order", 32, this.ambisonic_order); 
+		boxSize += builder.Field("ambisonic_channel_ordering", 8, this.ambisonic_channel_ordering); 
+		boxSize += builder.Field("ambisonic_normalization", 8, this.ambisonic_normalization); 
+		boxSize += builder.Field("num_channels", 32, this.num_channels); 
+
+		for (int i = 0; i < num_channels; i++)
+		{
+			boxSize += builder.Field($"channel_map[{i}]", 32, this.channel_map[i]); 
 		}
 		return boxSize;
 	}

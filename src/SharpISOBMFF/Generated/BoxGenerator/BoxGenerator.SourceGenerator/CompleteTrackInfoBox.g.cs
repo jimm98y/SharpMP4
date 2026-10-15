@@ -14,6 +14,9 @@ public partial class CompleteTrackInfoBox : Box
 {
 	public const string TYPE = "cinf";
 	public override string DisplayName { get { return "CompleteTrackInfoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("IncompleteAVCSampleEntry(icpv)"); }
+
 	public OriginalFormatBox OriginalFormat { get { return this.children.OfType<OriginalFormatBox>().FirstOrDefault(); } }
 
 	public CompleteTrackInfoBox(uint fmt = 0): base(IsoStream.FromFourCC("cinf"))
@@ -44,6 +47,15 @@ public partial class CompleteTrackInfoBox : Box
 		boxSize += base.CalculateSize();
 		// boxSize += IsoStream.CalculateBoxSize(original_format); // original_format
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("original_format", IsoStream.CalculateBoxSize(original_format), this.original_format); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

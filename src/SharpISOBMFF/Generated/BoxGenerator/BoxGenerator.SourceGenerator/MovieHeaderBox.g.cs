@@ -33,6 +33,9 @@ public partial class MovieHeaderBox : FullBox
 {
 	public const string TYPE = "mvhd";
 	public override string DisplayName { get { return "MovieHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("moov"); }
+
 
 	protected ulong creation_time; 
 	public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -162,6 +165,37 @@ public partial class MovieHeaderBox : FullBox
 		boxSize += 9 * 32; // matrix
 		boxSize += 6 * 32; // pre_defined
 		boxSize += 32; // next_track_ID
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version==1)
+		{
+			boxSize += builder.Field("creation_time", 64, this.creation_time); 
+			boxSize += builder.Field("modification_time", 64, this.modification_time); 
+			boxSize += builder.Field("timescale", 32, this.timescale); 
+			boxSize += builder.Field("duration", 64, this.duration); 
+		}
+
+		else 
+		{
+			/*  version==0 */
+			boxSize += builder.Field("creation_time", 32, this.creation_time); 
+			boxSize += builder.Field("modification_time", 32, this.modification_time); 
+			boxSize += builder.Field("timescale", 32, this.timescale); 
+			boxSize += builder.Field("duration", 32, this.duration); 
+		}
+		boxSize += builder.Field("rate", 32, this.rate); // typically 1.0
+		boxSize += builder.Field("volume", 16, this.volume); // typically, full volume
+		boxSize += builder.Field("reserved", 16, this.reserved); 
+		boxSize += builder.Field("reserved0", 2 * 32, this.reserved0); 
+		boxSize += builder.Field("matrix", 9 * 32, this.matrix); // Unity matrix
+		boxSize += builder.Field("pre_defined", 6 * 32, this.pre_defined); 
+		boxSize += builder.Field("next_track_ID", 32, this.next_track_ID); 
 		return boxSize;
 	}
 }

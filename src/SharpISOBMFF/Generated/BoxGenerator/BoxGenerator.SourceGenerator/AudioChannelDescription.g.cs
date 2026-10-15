@@ -18,6 +18,7 @@ public partial class AudioChannelDescription : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "AudioChannelDescription"; } }
 
 	protected uint channelLabel; 
@@ -57,6 +58,15 @@ public partial class AudioChannelDescription : IMp4Serializable
 		boxSize += 32; // channelLabel
 		boxSize += 32; // channelFlags
 		boxSize += 3 * 32; // coordinates
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("channelLabel", 32, this.channelLabel); 
+		boxSize += builder.Field("channelFlags", 32, this.channelFlags); 
+		boxSize += builder.Field("coordinates", 3 * 32, this.coordinates); 
 		return boxSize;
 	}
 }

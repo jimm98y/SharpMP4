@@ -15,6 +15,9 @@ public partial class AppleCpuSpeedBox : Box
 {
 	public const string TYPE = "rmcs";
 	public override string DisplayName { get { return "AppleCpuSpeedBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("rmda"); }
+
 
 	protected uint flags; 
 	public uint Flags { get { return this.flags; } set { this.flags = value; } }
@@ -50,6 +53,15 @@ public partial class AppleCpuSpeedBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 32; // flags
 		boxSize += 32; // cpuSpeed
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("flags", 32, this.flags); 
+		boxSize += builder.Field("cpuSpeed", 32, this.cpuSpeed); 
 		return boxSize;
 	}
 }

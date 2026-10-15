@@ -27,6 +27,9 @@ public partial class FECReservoirBox : FullBox
 {
 	public const string TYPE = "fecr";
 	public override string DisplayName { get { return "FECReservoirBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("paen"); }
+
 
 	protected uint entry_count; 
 	public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -135,6 +138,38 @@ public partial class FECReservoirBox : FullBox
 				boxSize += 32; // item_ID
 			}
 			boxSize += 32; // symbol_count
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version == 0)
+		{
+			boxSize += builder.Field("entry_count", 16, this.entry_count); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		}
+
+		for (int i=0; i < entry_count; i++)
+		{
+
+			if (version == 0)
+			{
+				boxSize += builder.Field($"item_ID[{i}]", 16, this.item_ID[i]); 
+			}
+
+			else 
+			{
+				boxSize += builder.Field($"item_ID[{i}]", 32, this.item_ID[i]); 
+			}
+			boxSize += builder.Field($"symbol_count[{i}]", 32, this.symbol_count[i]); 
 		}
 		return boxSize;
 	}

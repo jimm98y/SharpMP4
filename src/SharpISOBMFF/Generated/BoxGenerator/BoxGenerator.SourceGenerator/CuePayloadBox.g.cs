@@ -14,6 +14,10 @@ public partial class CuePayloadBox : Box
 {
 	public const string TYPE = "payl";
 	public override string DisplayName { get { return "CuePayloadBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	// its definitions place it in no container: wherever it is, it is not misplaced
+	public override bool ValidatePlacement() { return IsPlacedIn(); }
+
 
 	protected BinaryUTF8String cueText; 
 	public BinaryUTF8String CueText { get { return this.cueText; } set { this.cueText = value; } }
@@ -43,6 +47,14 @@ public partial class CuePayloadBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(cueText); // cueText
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("cueText", IsoStream.CalculateStringSize(cueText), this.cueText); 
 		return boxSize;
 	}
 }

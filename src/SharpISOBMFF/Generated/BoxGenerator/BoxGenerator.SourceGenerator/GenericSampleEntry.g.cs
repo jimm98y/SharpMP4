@@ -25,6 +25,9 @@ public partial class GenericSampleEntry : Box
 {
 	public const string TYPE = "encv";
 	public override string DisplayName { get { return "GenericSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	public GenericSampleEntry(): base(IsoStream.FromFourCC("encv"))
 	{
@@ -87,6 +90,26 @@ public partial class GenericSampleEntry : Box
 		/*  Boxes specific to the untransformed sample entry type */
 		/*  For 'avc1', these would include AVCConfigurationBox */
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		/*  ProtectionSchemeInfoBox { */
+		/*  OriginalFormatBox;	// data_format is 'resv' */
+		/*  SchemeTypeBox; */
+		/*  SchemeInformationBox; */
+		/*  } */
+		/*  tRestrictedSchemeInfoBox { */
+		/*  OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1' */
+		/*  SchemeTypeBox; */
+		/*  SchemeInformationBox; */
+		/*  } */
+		/*  Boxes specific to the untransformed sample entry type */
+		/*  For 'avc1', these would include AVCConfigurationBox */
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

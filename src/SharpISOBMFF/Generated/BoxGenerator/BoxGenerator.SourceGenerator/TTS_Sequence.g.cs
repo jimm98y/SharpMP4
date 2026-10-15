@@ -27,6 +27,7 @@ public partial class TTS_Sequence : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "TTS_Sequence"; } }
 
 	protected byte TTS_Sequence_ID; 
@@ -102,6 +103,21 @@ public partial class TTS_Sequence : IMp4Serializable
 		boxSize += 1; // Video_Enable
 		boxSize += 1; // Lip_Shape_Enable
 		boxSize += 1; // Trick_Mode_Enable
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("TTS_Sequence_ID", 5, this.TTS_Sequence_ID); 
+		boxSize += builder.Field("Language_Code", 18, this.Language_Code); 
+		boxSize += builder.Field("Gender_Enable", 1, this.Gender_Enable); 
+		boxSize += builder.Field("Age_Enable", 1, this.Age_Enable); 
+		boxSize += builder.Field("Speech_Rate_Enable", 1, this.Speech_Rate_Enable); 
+		boxSize += builder.Field("Prosody_Enable", 1, this.Prosody_Enable); 
+		boxSize += builder.Field("Video_Enable", 1, this.Video_Enable); 
+		boxSize += builder.Field("Lip_Shape_Enable", 1, this.Lip_Shape_Enable); 
+		boxSize += builder.Field("Trick_Mode_Enable", 1, this.Trick_Mode_Enable); 
 		return boxSize;
 	}
 }

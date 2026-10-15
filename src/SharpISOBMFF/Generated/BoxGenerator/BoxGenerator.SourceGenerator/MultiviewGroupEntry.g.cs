@@ -149,6 +149,34 @@ public partial class MultiviewGroupEntry : VisualSampleGroupEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("groupID", 8, this.groupID); 
+		boxSize += builder.Field("primary_groupID", 8, this.primary_groupID); 
+		boxSize += builder.Field("reserved", 4, this.reserved); 
+		boxSize += builder.Field("is_tl_switching_point", 1, this.is_tl_switching_point); 
+		boxSize += builder.Field("reserved0", 3, this.reserved0); 
+		boxSize += builder.Field("tl_switching_distance", 8, this.tl_switching_distance); 
+
+		if (groupID == primary_groupID)
+		{
+			// boxSize += builder.Field("ViewIdentifierBox", IsoStream.CalculateBoxSize(ViewIdentifierBox), this.ViewIdentifierBox); // Mandatory
+			// boxSize += builder.Field("TierInfoBox", IsoStream.CalculateBoxSize(TierInfoBox), this.TierInfoBox); // Mandatory
+			// boxSize += builder.Field("TierDependencyBox", IsoStream.CalculateBoxSize(TierDependencyBox), this.TierDependencyBox); // Mandatory
+			// boxSize += builder.Field("PriorityRangeBox", IsoStream.CalculateBoxSize(PriorityRangeBox), this.PriorityRangeBox); // Mandatory
+			/* Optional Boxes or fields may follow when defined later */
+			// boxSize += builder.Field("TierBitRateBox", IsoStream.CalculateBoxSize(TierBitRateBox), this.TierBitRateBox); // optional
+			// boxSize += builder.Field("BufferingBox", IsoStream.CalculateBoxSize(BufferingBox), this.BufferingBox); // optional
+			// boxSize += builder.Field("InitialParameterSetBox", IsoStream.CalculateBoxSize(InitialParameterSetBox), this.InitialParameterSetBox); // optional
+			// boxSize += builder.Field("ProtectionSchemeInfoBox", IsoStream.CalculateBoxSize(ProtectionSchemeInfoBox), this.ProtectionSchemeInfoBox); // optional
+			// boxSize += builder.Field("ViewPriorityBox", IsoStream.CalculateBoxSize(ViewPriorityBox), this.ViewPriorityBox); // optional
+		}
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

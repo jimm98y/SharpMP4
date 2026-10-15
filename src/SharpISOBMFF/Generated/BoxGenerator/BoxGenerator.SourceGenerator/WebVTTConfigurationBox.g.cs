@@ -14,6 +14,9 @@ public partial class WebVTTConfigurationBox : Box
 {
 	public const string TYPE = "vttC";
 	public override string DisplayName { get { return "WebVTTConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("PlainTextSampleEntry(wvtt)"); }
+
 
 	protected BinaryUTF8String config; 
 	public BinaryUTF8String Config { get { return this.config; } set { this.config = value; } }
@@ -43,6 +46,14 @@ public partial class WebVTTConfigurationBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(config); // config
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("config", IsoStream.CalculateStringSize(config), this.config); 
 		return boxSize;
 	}
 }

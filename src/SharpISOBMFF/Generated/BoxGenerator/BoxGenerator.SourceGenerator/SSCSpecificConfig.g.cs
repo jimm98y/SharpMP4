@@ -27,6 +27,7 @@ public partial class SSCSpecificConfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "SSCSpecificConfig"; } }
 
 	protected byte decoder_level; 
@@ -104,6 +105,25 @@ public partial class SSCSpecificConfig : IMp4Serializable
 			if ((channelConfiguration == 2) && (mode_ext == 1))
 			{
 				boxSize += 2; // reserved
+			}
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("decoder_level", 2, this.decoder_level); 
+		boxSize += builder.Field("update_rate", 4, this.update_rate); 
+		boxSize += builder.Field("synthesis_method", 2, this.synthesis_method); 
+
+		if (channelConfiguration != 1)
+		{
+			boxSize += builder.Field("mode_ext", 2, this.mode_ext); 
+
+			if ((channelConfiguration == 2) && (mode_ext == 1))
+			{
+				boxSize += builder.Field("reserved", 2, this.reserved); 
 			}
 		}
 		return boxSize;

@@ -19,6 +19,9 @@ public partial class TfxdBox : FullBox
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "TfxdBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected ulong fragmentAbsoluteTime; 
 	public ulong FragmentAbsoluteTime { get { return this.fragmentAbsoluteTime; } set { this.fragmentAbsoluteTime = value; } }
@@ -83,6 +86,25 @@ public partial class TfxdBox : FullBox
 		{
 			boxSize += 32; // fragmentAbsoluteTime
 			boxSize += 32; // fragmentAbsoluteDuration
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version == 0x1)
+		{
+			boxSize += builder.Field("fragmentAbsoluteTime", 64, this.fragmentAbsoluteTime); 
+			boxSize += builder.Field("fragmentAbsoluteDuration", 64, this.fragmentAbsoluteDuration); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("fragmentAbsoluteTime", 32, this.fragmentAbsoluteTime); 
+			boxSize += builder.Field("fragmentAbsoluteDuration", 32, this.fragmentAbsoluteDuration); 
 		}
 		return boxSize;
 	}

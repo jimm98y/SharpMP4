@@ -25,6 +25,9 @@ public partial class TrackRunBox : FullBox
 {
 	public const string TYPE = "trun";
 	public override string DisplayName { get { return "TrackRunBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("traf"); }
+
 
 	protected uint sample_count; 
 	public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
@@ -102,6 +105,27 @@ public partial class TrackRunBox : FullBox
 		/*  all fields in the following array are optional */
 		/*  as indicated by bits set in the tr_flags */
 		boxSize += IsoStream.CalculateClassSize(TrunEntry); // TrunEntry
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sample_count", 32, this.sample_count); 
+
+		if ((flags  &  0x1) ==  0x1)
+		{
+			boxSize += builder.Field("data_offset", 32, this.data_offset); 
+		}
+
+		if ((flags  &  0x4) ==  0x4)
+		{
+			boxSize += builder.Field("first_sample_flags", 32, this.first_sample_flags); 
+		}
+		/*  all fields in the following array are optional */
+		/*  as indicated by bits set in the tr_flags */
+		boxSize += builder.Field("TrunEntry", IsoStream.CalculateClassSize(TrunEntry), this.TrunEntry); 
 		return boxSize;
 	}
 }

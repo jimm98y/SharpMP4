@@ -26,6 +26,9 @@ public partial class SampleAuxiliaryInformationOffsetsBox : FullBox
 {
 	public const string TYPE = "saio";
 	public override string DisplayName { get { return "SampleAuxiliaryInformationOffsetsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl", "traf"); }
+
 
 	protected uint aux_info_type; 
 	public uint AuxInfoType { get { return this.aux_info_type; } set { this.aux_info_type = value; } }
@@ -111,6 +114,30 @@ public partial class SampleAuxiliaryInformationOffsetsBox : FullBox
 		else 
 		{
 			boxSize += ((ulong)( entry_count ) * 64); // offset
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if ((flags  &  1) ==  1)
+		{
+			boxSize += builder.Field("aux_info_type", 32, this.aux_info_type); 
+			boxSize += builder.Field("aux_info_type_parameter", 32, this.aux_info_type_parameter); 
+		}
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+
+		if ( version == 0 )
+		{
+			boxSize += builder.Field("offset", ((ulong)( entry_count ) * 32), this.offset); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("offset", ((ulong)( entry_count ) * 64), this.offset); 
 		}
 		return boxSize;
 	}

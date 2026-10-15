@@ -94,6 +94,25 @@ public partial class IPMP_Descriptor : BaseDescriptor
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("IPMP_DescriptorID", 8, this.IPMP_DescriptorID); 
+		boxSize += builder.Field("IPMPS_Type", 16, this.IPMPS_Type); 
+
+		if (IPMPS_Type == 0)
+		{
+			boxSize += builder.Field("URLString", ((ulong)(sizeOfInstance-3) * 8), this.URLString); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("IPMP_data", ((ulong)(sizeOfInstance-3) * 8), this.IPMP_data); 
+		}
+		return boxSize;
+	}
 }
 
 }

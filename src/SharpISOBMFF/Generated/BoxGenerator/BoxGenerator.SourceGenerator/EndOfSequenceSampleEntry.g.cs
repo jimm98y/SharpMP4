@@ -67,6 +67,19 @@ public partial class EndOfSequenceSampleEntry : VisualSampleGroupEntry
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("num_eos_nal_unit_minus1", 8, this.num_eos_nal_unit_minus1); 
+
+		for (int i=0; i <= num_eos_nal_unit_minus1; i++)
+		{
+			boxSize += builder.Field($"eosNalUnit[{i}]", 16, this.eosNalUnit[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

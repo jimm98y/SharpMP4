@@ -16,6 +16,9 @@ public partial class SampleScaleBox : FullBox
 {
 	public const string TYPE = "stsl";
 	public override string DisplayName { get { return "SampleScaleBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry"); }
+
 
 	protected byte reserved; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -69,6 +72,18 @@ public partial class SampleScaleBox : FullBox
 		boxSize += 8; // scaleMethod
 		boxSize += 16; // displayCenterX
 		boxSize += 16; // displayCenterY
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+		boxSize += builder.Field("constrained", 1, this.constrained); 
+		boxSize += builder.Field("scaleMethod", 8, this.scaleMethod); 
+		boxSize += builder.Field("displayCenterX", 16, this.displayCenterX); 
+		boxSize += builder.Field("displayCenterY", 16, this.displayCenterY); 
 		return boxSize;
 	}
 }

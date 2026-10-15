@@ -32,6 +32,9 @@ public partial class TrackFragmentRandomAccessBox : FullBox
 {
 	public const string TYPE = "tfra";
 	public override string DisplayName { get { return "TrackFragmentRandomAccessBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mfra"); }
+
 
 	protected uint track_ID; 
 	public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
@@ -167,6 +170,38 @@ public partial class TrackFragmentRandomAccessBox : FullBox
 			boxSize += (ulong)((length_size_of_traf_num+1) * 8 ); // traf_number
 			boxSize += (ulong)((length_size_of_trun_num+1) * 8 ); // trun_number
 			boxSize += (ulong)((length_size_of_sample_num+1) * 8 ); // sample_delta
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("track_ID", 32, this.track_ID); 
+		boxSize += builder.Field("reserved", 26, this.reserved); 
+		boxSize += builder.Field("length_size_of_traf_num", 2, this.length_size_of_traf_num); 
+		boxSize += builder.Field("length_size_of_trun_num", 2, this.length_size_of_trun_num); 
+		boxSize += builder.Field("length_size_of_sample_num", 2, this.length_size_of_sample_num); 
+		boxSize += builder.Field("number_of_entry", 32, this.number_of_entry); 
+
+		for (int i=0; i < number_of_entry; i++)
+		{
+
+			if (version==1)
+			{
+				boxSize += builder.Field($"time[{i}]", 64, this.time[i]); 
+				boxSize += builder.Field($"moof_offset[{i}]", 64, this.moof_offset[i]); 
+			}
+
+			else 
+			{
+				boxSize += builder.Field($"time[{i}]", 32, this.time[i]); 
+				boxSize += builder.Field($"moof_offset[{i}]", 32, this.moof_offset[i]); 
+			}
+			boxSize += builder.Field($"traf_number[{i}]", (ulong)((length_size_of_traf_num+1) * 8 ), this.traf_number[i]); 
+			boxSize += builder.Field($"trun_number[{i}]", (ulong)((length_size_of_trun_num+1) * 8 ), this.trun_number[i]); 
+			boxSize += builder.Field($"sample_delta[{i}]", (ulong)((length_size_of_sample_num+1) * 8 ), this.sample_delta[i]); 
 		}
 		return boxSize;
 	}

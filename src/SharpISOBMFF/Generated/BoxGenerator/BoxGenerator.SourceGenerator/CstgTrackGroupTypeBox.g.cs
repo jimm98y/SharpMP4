@@ -17,6 +17,9 @@ public partial class CstgTrackGroupTypeBox : FullBox
 {
 	public const string TYPE = "cstg";
 	public override string DisplayName { get { return "CstgTrackGroupTypeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("trgr"); }
+
 
 	protected uint track_group_id;  //  the remaining data may be specified 
 	public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
@@ -48,6 +51,15 @@ public partial class CstgTrackGroupTypeBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // track_group_id
+		/*   for a particular track_group_type */
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("track_group_id", 32, this.track_group_id); // the remaining data may be specified 
 		/*   for a particular track_group_type */
 		return boxSize;
 	}

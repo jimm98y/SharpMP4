@@ -17,6 +17,9 @@ public partial class SVCMetaDataSampleEntry : MetaDataSampleEntry
 {
 	public const string TYPE = "svcM";
 	public override string DisplayName { get { return "SVCMetaDataSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public SVCMetadataSampleConfigBox Config { get { return this.children.OfType<SVCMetadataSampleConfigBox>().FirstOrDefault(); } }
 	public SVCPriorityAssignmentBox Methods { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
 	public SVCPriorityLayerInfoBox Priorities { get { return this.children.OfType<SVCPriorityLayerInfoBox>().FirstOrDefault(); } }
@@ -55,6 +58,17 @@ public partial class SVCMetaDataSampleEntry : MetaDataSampleEntry
 		// boxSize += IsoStream.CalculateBoxSize(methods); // methods
 		// boxSize += IsoStream.CalculateBoxSize(priorities); // priorities
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("config", IsoStream.CalculateBoxSize(config), this.config); 
+		// boxSize += builder.Field("methods", IsoStream.CalculateBoxSize(methods), this.methods); // optional
+		// boxSize += builder.Field("priorities", IsoStream.CalculateBoxSize(priorities), this.priorities); // optional
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

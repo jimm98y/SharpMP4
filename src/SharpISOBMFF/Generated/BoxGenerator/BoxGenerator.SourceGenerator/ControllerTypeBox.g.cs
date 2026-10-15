@@ -15,6 +15,9 @@ public partial class ControllerTypeBox : Box
 {
 	public const string TYPE = "ctyp";
 	public override string DisplayName { get { return "ControllerTypeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected uint controller_type; 
 	public uint ControllerType { get { return this.controller_type; } set { this.controller_type = value; } }
@@ -47,6 +50,15 @@ public partial class ControllerTypeBox : Box
 		boxSize += base.CalculateSize();
 		/*  the movie controller's type, a four character code (QuickTime 'ctyp') */
 		boxSize += 32; // controller_type
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		/*  the movie controller's type, a four character code (QuickTime 'ctyp') */
+		boxSize += builder.Field("controller_type", 32, this.controller_type); 
 		return boxSize;
 	}
 }

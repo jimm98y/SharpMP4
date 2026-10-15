@@ -15,6 +15,9 @@ public partial class StereoCameraSystemBaselineBox : FullBox
 {
 	public const string TYPE = "blin";
 	public override string DisplayName { get { return "StereoCameraSystemBaselineBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("cams"); }
+
 
 	protected uint baseline_value; 
 	public uint BaselineValue { get { return this.baseline_value; } set { this.baseline_value = value; } }
@@ -44,6 +47,14 @@ public partial class StereoCameraSystemBaselineBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // baseline_value
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("baseline_value", 32, this.baseline_value); 
 		return boxSize;
 	}
 }

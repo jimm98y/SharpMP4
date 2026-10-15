@@ -17,6 +17,9 @@ public partial class EC3SpecificBox : Box
 {
 	public const string TYPE = "dec3";
 	public override string DisplayName { get { return "EC3SpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(ec-3,enca)", "wave"); }
+
 
 	protected ushort dataRate; 
 	public ushort DataRate { get { return this.dataRate; } set { this.dataRate = value; } }
@@ -58,6 +61,16 @@ public partial class EC3SpecificBox : Box
 		boxSize += 13; // dataRate
 		boxSize += 3; // numIndSub
 		boxSize += IsoStream.CalculateClassSize(entries); // entries
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("dataRate", 13, this.dataRate); 
+		boxSize += builder.Field("numIndSub", 3, this.numIndSub); 
+		boxSize += builder.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
 		return boxSize;
 	}
 }

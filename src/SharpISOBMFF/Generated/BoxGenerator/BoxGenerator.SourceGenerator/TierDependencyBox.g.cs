@@ -16,6 +16,9 @@ public partial class TierDependencyBox : Box
 {
 	public const string TYPE = "ldep";
 	public override string DisplayName { get { return "TierDependencyBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("scif", "mvif"); }
+
 
 	protected ushort entry_count; 
 	public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -63,6 +66,19 @@ public partial class TierDependencyBox : Box
 		for (int i=0; i < entry_count; i++)
 		{
 			boxSize += 16; // dependencyTierId
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 16, this.entry_count); 
+
+		for (int i=0; i < entry_count; i++)
+		{
+			boxSize += builder.Field($"dependencyTierId[{i}]", 16, this.dependencyTierId[i]); 
 		}
 		return boxSize;
 	}

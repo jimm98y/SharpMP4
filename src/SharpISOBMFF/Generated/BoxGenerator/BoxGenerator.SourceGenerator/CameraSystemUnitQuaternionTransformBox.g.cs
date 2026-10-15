@@ -17,6 +17,9 @@ public partial class CameraSystemUnitQuaternionTransformBox : FullBox
 {
 	public const string TYPE = "uqua";
 	public override string DisplayName { get { return "CameraSystemUnitQuaternionTransformBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("cxfm"); }
+
 
 	protected double xyz0; 
 	public double Xyz0 { get { return this.xyz0; } set { this.xyz0 = value; } }
@@ -58,6 +61,16 @@ public partial class CameraSystemUnitQuaternionTransformBox : FullBox
 		boxSize += 32; // xyz0
 		boxSize += 32; // xyz1
 		boxSize += 32; // xyz2
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("xyz0", 32, this.xyz0); 
+		boxSize += builder.Field("xyz1", 32, this.xyz1); 
+		boxSize += builder.Field("xyz2", 32, this.xyz2); 
 		return boxSize;
 	}
 }

@@ -20,6 +20,7 @@ public partial class RectRecord : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "RectRecord"; } }
 
 	protected ushort top; 
@@ -65,6 +66,16 @@ public partial class RectRecord : IMp4Serializable
 		boxSize += 16; // left
 		boxSize += 16; // bottom
 		boxSize += 16; // right
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("top", 16, this.top); 
+		boxSize += builder.Field("left", 16, this.left); 
+		boxSize += builder.Field("bottom", 16, this.bottom); 
+		boxSize += builder.Field("right", 16, this.right); 
 		return boxSize;
 	}
 }

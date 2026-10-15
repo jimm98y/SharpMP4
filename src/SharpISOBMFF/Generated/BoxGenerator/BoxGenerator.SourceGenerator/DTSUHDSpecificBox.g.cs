@@ -36,6 +36,9 @@ public partial class DTSUHDSpecificBox : Box
 {
 	public const string TYPE = "udts";
 	public override string DisplayName { get { return "DTSUHDSpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(dtsx,dtsy,enca)"); }
+
 
 	protected byte DecoderProfileCode; 
 	public byte _DecoderProfileCode { get { return this.DecoderProfileCode; } set { this.DecoderProfileCode = value; } }
@@ -193,6 +196,44 @@ public partial class DTSUHDSpecificBox : Box
 			// boxSize += IsoStream.CalculateBoxSize(DTSExpansionBox); // DTSExpansionBox
 		}
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("DecoderProfileCode", 6, this.DecoderProfileCode); 
+		boxSize += builder.Field("FrameDurationCode", 2, this.FrameDurationCode); 
+		boxSize += builder.Field("MaxPayloadCode", 3, this.MaxPayloadCode); 
+		boxSize += builder.Field("NumPresentationsCode", 5, this.NumPresentationsCode); 
+		boxSize += builder.Field("ChannelMask", 32, this.ChannelMask); 
+		boxSize += builder.Field("BaseSamplingFrequencyCode", 1, this.BaseSamplingFrequencyCode); 
+		boxSize += builder.Field("SampleRateMod", 2, this.SampleRateMod); 
+		boxSize += builder.Field("RepresentationType", 3, this.RepresentationType); 
+		boxSize += builder.Field("StreamIndex", 3, this.StreamIndex); 
+		boxSize += builder.Field("ExpansionBoxPresent", 1, this.ExpansionBoxPresent); 
+
+		for (int i = 0; i < NumPresentationsCode + 1; i++)
+		{
+			boxSize += builder.Field($"IDTagPresent[{i}]", 1, this.IDTagPresent[i]); // bit(NumPresentations) IDTagPresent[NumPresentations]
+		}
+		boxSize += builder.Field("ByteAlign", (ulong)((8 - ((59 + NumPresentationsCode) % 8)) % 8 ), this.ByteAlign); // [0..7] to a byte: 58 bits and one a presentation are before it
+
+		for (int i = 0; i < NumPresentationsCode + 1; i++)
+		{
+
+			if (IDTagPresent[i])
+			{
+				boxSize += builder.Field($"PresentationIDTag[{i}]", 16 * 8, this.PresentationIDTag[i]); 
+			}
+		}
+
+		if (ExpansionBoxPresent)
+		{
+			// boxSize += builder.Field("DTSExpansionBox", IsoStream.CalculateBoxSize(DTSExpansionBox), this.DTSExpansionBox); 
+		}
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

@@ -14,6 +14,9 @@ public partial class ViewPackingInformationBox : FullBox
 {
 	public const string TYPE = "pkin";
 	public override string DisplayName { get { return "ViewPackingInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("pack"); }
+
 
 	protected uint view_packing_kind;  //  a FourCC for the kind of projection 
 	public uint ViewPackingKind { get { return this.view_packing_kind; } set { this.view_packing_kind = value; } }
@@ -43,6 +46,14 @@ public partial class ViewPackingInformationBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // view_packing_kind
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("view_packing_kind", 32, this.view_packing_kind); // a FourCC for the kind of projection 
 		return boxSize;
 	}
 }

@@ -15,6 +15,9 @@ public partial class TimestampSynchrony : Box
 {
 	public const string TYPE = "tssy";
 	public override string DisplayName { get { return "TimestampSynchrony"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ReceivedRtpHintSampleEntry(rrtp)"); }
+
 
 	protected byte reserved; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -50,6 +53,15 @@ public partial class TimestampSynchrony : Box
 		boxSize += base.CalculateSize();
 		boxSize += 6; // reserved
 		boxSize += 2; // timestamp_sync
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += builder.Field("timestamp_sync", 2, this.timestamp_sync); 
 		return boxSize;
 	}
 }

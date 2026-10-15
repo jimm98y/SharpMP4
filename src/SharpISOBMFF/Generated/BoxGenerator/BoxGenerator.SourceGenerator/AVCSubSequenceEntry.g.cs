@@ -145,6 +145,32 @@ public partial class AVCSubSequenceEntry : VisualSampleGroupEntry
 		boxSize += IsoStream.CalculateClassSize(dependency); // dependency
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("subSequenceIdentifer", 16, this.subSequenceIdentifer); 
+		boxSize += builder.Field("layerNumber", 8, this.layerNumber); 
+		boxSize += builder.Field("durationFlag", 1, this.durationFlag); 
+		boxSize += builder.Field("avgRateFlag", 1, this.avgRateFlag); 
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+
+		if (durationFlag)
+		{
+			boxSize += builder.Field("duration", 32, this.duration); 
+		}
+
+		if (avgRateFlag)
+		{
+			boxSize += builder.Field("accurateStatisticsFlag", 8, this.accurateStatisticsFlag); 
+			boxSize += builder.Field("avgBitRate", 16, this.avgBitRate); 
+			boxSize += builder.Field("avgFrameRate", 16, this.avgFrameRate); 
+		}
+		boxSize += builder.Field("numReferences", 8, this.numReferences); 
+		boxSize += builder.Field("dependency", IsoStream.CalculateClassSize(dependency), this.dependency); 
+		return boxSize;
+	}
 }
 
 }

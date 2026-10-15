@@ -18,6 +18,9 @@ public partial class ItemProtectionBox : FullBox
 {
 	public const string TYPE = "ipro";
 	public override string DisplayName { get { return "ItemProtectionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
+
 
 	protected ushort protection_count; 
 	public ushort ProtectionCount { get { return this.protection_count; } set { this.protection_count = value; } }
@@ -60,6 +63,18 @@ public partial class ItemProtectionBox : FullBox
 		// for (int i=0; i<protection_count; i++)
 			// boxSize += IsoStream.CalculateBoxSize(protection_information[i]); // protection_information
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("protection_count", 16, this.protection_count); 
+
+		// for (int i=0; i<protection_count; i++)
+			// boxSize += builder.Field($"protection_information[{i}]", IsoStream.CalculateBoxSize(protection_information[i]), this.protection_information[i]); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

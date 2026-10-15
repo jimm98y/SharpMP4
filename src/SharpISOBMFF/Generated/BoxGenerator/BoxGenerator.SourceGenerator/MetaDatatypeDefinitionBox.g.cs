@@ -16,6 +16,9 @@ public partial class MetaDatatypeDefinitionBox : Box
 {
 	public const string TYPE = "dtyp";
 	public override string DisplayName { get { return "MetaDatatypeDefinitionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
+
 
 	protected uint datatype_namespace; 
 	public uint DatatypeNamespace { get { return this.datatype_namespace; } set { this.datatype_namespace = value; } }
@@ -51,6 +54,15 @@ public partial class MetaDatatypeDefinitionBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 32; // datatype_namespace
 		boxSize += ((ulong)datatype_array.Length * 8); // datatype_array
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("datatype_namespace", 32, this.datatype_namespace); 
+		boxSize += builder.Field("datatype_array", ((ulong)datatype_array.Length * 8), this.datatype_array); 
 		return boxSize;
 	}
 }

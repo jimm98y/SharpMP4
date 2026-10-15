@@ -211,6 +211,47 @@ public partial class CencSampleEncryptionInformationGroupEntry : SampleGroupDesc
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("multi_key_flag", 1, this.multi_key_flag); 
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+		boxSize += builder.Field("crypt_byte_block", 4, this.crypt_byte_block); 
+		boxSize += builder.Field("skip_byte_block", 4, this.skip_byte_block); 
+		boxSize += builder.Field("isProtected", 8, this.isProtected); 
+
+		if (multi_key_flag)
+		{
+			boxSize += builder.Field("key_count", 16, this.key_count); 
+
+			for (int i=0; i < key_count; i++)
+			{
+				boxSize += builder.Field($"multi_Per_Sample_IV_Size[{i}]", 8, this.multi_Per_Sample_IV_Size[i]); 
+				boxSize += builder.Field($"multi_KID[{i}]", 16 * 8, this.multi_KID[i]); 
+
+				if (multi_Per_Sample_IV_Size[i] == 0)
+				{
+					boxSize += builder.Field($"multi_constant_IV_length[{i}]", 8, this.multi_constant_IV_length[i]); 
+					boxSize += builder.Field($"multi_constant_IV[{i}]", ((ulong)(multi_constant_IV_length[i]) * 8), this.multi_constant_IV[i]); 
+				}
+			}
+		}
+
+		else 
+		{
+			boxSize += builder.Field("Per_Sample_IV_Size", 8, this.Per_Sample_IV_Size); 
+			boxSize += builder.Field("KID", 16 * 8, this.KID); 
+
+			if (isProtected == 1 && Per_Sample_IV_Size == 0)
+			{
+				boxSize += builder.Field("constant_IV_size", 8, this.constant_IV_size); 
+				boxSize += builder.Field("constant_IV", ((ulong)(IsoStream.GetInt(constant_IV_size)) * 8), this.constant_IV); 
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

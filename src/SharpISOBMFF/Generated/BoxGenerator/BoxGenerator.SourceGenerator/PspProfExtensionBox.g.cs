@@ -16,6 +16,9 @@ public partial class PspProfExtensionBox : Box
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "PspProfExtensionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected uint unknown1; 
 	public uint Unknown1 { get { return this.unknown1; } set { this.unknown1 = value; } }
@@ -57,6 +60,17 @@ public partial class PspProfExtensionBox : Box
 		boxSize += 32; // entry_count
 		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("unknown1", 32, this.unknown1); 
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

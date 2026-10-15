@@ -16,6 +16,9 @@ public partial class AppleDataReferenceBox : FullBox
 {
 	public const string TYPE = "rdrf";
 	public override string DisplayName { get { return "AppleDataReferenceBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("rmda"); }
+
 
 	protected uint dataReferenceType; 
 	public uint DataReferenceType { get { return this.dataReferenceType; } set { this.dataReferenceType = value; } }
@@ -57,6 +60,16 @@ public partial class AppleDataReferenceBox : FullBox
 		boxSize += 32; // dataReferenceType
 		boxSize += 32; // count
 		boxSize += ((ulong)(count) * 8); // dataReference
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("dataReferenceType", 32, this.dataReferenceType); 
+		boxSize += builder.Field("count", 32, this.count); 
+		boxSize += builder.Field("dataReference", ((ulong)(count) * 8), this.dataReference); 
 		return boxSize;
 	}
 }

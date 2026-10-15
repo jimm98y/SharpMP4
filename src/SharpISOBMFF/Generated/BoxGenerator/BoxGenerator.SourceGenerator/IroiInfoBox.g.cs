@@ -27,6 +27,9 @@ public partial class IroiInfoBox : Box
 {
 	public const string TYPE = "iroi";
 	public override string DisplayName { get { return "IroiInfoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("scif"); }
+
 
 	protected byte iroi_type; 
 	public byte IroiType { get { return this.iroi_type; } set { this.iroi_type = value; } }
@@ -135,6 +138,33 @@ public partial class IroiInfoBox : Box
 				boxSize += 32; // top_left_mb
 				boxSize += 8; // roi_mb_width
 				boxSize += 8; // roi_mb_height
+			}
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("iroi_type", 2, this.iroi_type); 
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+
+		if (iroi_type == 0)
+		{
+			boxSize += builder.Field("grid_roi_mb_width", 8, this.grid_roi_mb_width); 
+			boxSize += builder.Field("grid_roi_mb_height", 8, this.grid_roi_mb_height); 
+		}
+
+		else if (iroi_type == 1)
+		{
+			boxSize += builder.Field("num_roi", 24, this.num_roi); 
+
+			for (int i=0; i< num_roi; i++)
+			{
+				boxSize += builder.Field($"top_left_mb[{i}]", 32, this.top_left_mb[i]); 
+				boxSize += builder.Field($"roi_mb_width[{i}]", 8, this.roi_mb_width[i]); 
+				boxSize += builder.Field($"roi_mb_height[{i}]", 8, this.roi_mb_height[i]); 
 			}
 		}
 		return boxSize;

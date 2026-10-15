@@ -20,6 +20,9 @@ public partial class CameraIntrinsicMatrixBox : FullBox
 {
 	public const string TYPE = "cmin";
 	public override string DisplayName { get { return "CameraIntrinsicMatrixBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected int matrix_focal_length_x; 
 	public int MatrixFocalLengthx { get { return this.matrix_focal_length_x; } set { this.matrix_focal_length_x = value; } }
@@ -84,6 +87,22 @@ public partial class CameraIntrinsicMatrixBox : FullBox
 		{
 			boxSize += 32; // matrix_focal_length_y
 			boxSize += 32; // matrix_skew
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("matrix_focal_length_x", 32, this.matrix_focal_length_x); 
+		boxSize += builder.Field("matrix_principal_point_x", 32, this.matrix_principal_point_x); 
+		boxSize += builder.Field("matrix_principal_point_y", 32, this.matrix_principal_point_y); 
+
+		if (( flags  &  0x1 ) ==  0x1 )
+		{
+			boxSize += builder.Field("matrix_focal_length_y", 32, this.matrix_focal_length_y); 
+			boxSize += builder.Field("matrix_skew", 32, this.matrix_skew); 
 		}
 		return boxSize;
 	}

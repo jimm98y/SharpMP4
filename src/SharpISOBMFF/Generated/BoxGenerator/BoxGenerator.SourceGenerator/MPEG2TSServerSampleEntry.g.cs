@@ -12,6 +12,9 @@ public partial class MPEG2TSServerSampleEntry : MPEG2TSSampleEntry
 {
 	public const string TYPE = "sm2t";
 	public override string DisplayName { get { return "MPEG2TSServerSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	public MPEG2TSServerSampleEntry(): base(IsoStream.FromFourCC("sm2t"))
 	{
@@ -35,6 +38,13 @@ public partial class MPEG2TSServerSampleEntry : MPEG2TSSampleEntry
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
 		return boxSize;
 	}
 }

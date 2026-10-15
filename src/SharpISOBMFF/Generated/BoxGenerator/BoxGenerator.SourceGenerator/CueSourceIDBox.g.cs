@@ -14,6 +14,10 @@ public partial class CueSourceIDBox : Box
 {
 	public const string TYPE = "vsid";
 	public override string DisplayName { get { return "CueSourceIDBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	// its definitions place it in no container: wherever it is, it is not misplaced
+	public override bool ValidatePlacement() { return IsPlacedIn(); }
+
 
 	protected uint sourceID; 
 	public uint SourceID { get { return this.sourceID; } set { this.sourceID = value; } }
@@ -43,6 +47,14 @@ public partial class CueSourceIDBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // sourceID
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sourceID", 32, this.sourceID); 
 		return boxSize;
 	}
 }

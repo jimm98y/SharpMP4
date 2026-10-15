@@ -17,6 +17,9 @@ public partial class MLPSpecificBox : Box
 {
 	public const string TYPE = "dmlp";
 	public override string DisplayName { get { return "MLPSpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(mlpa,enca)"); }
+
 
 	protected uint formatInfo; 
 	public uint FormatInfo { get { return this.formatInfo; } set { this.formatInfo = value; } }
@@ -64,6 +67,17 @@ public partial class MLPSpecificBox : Box
 		boxSize += 15; // peakDataRate
 		boxSize += 1; // reserved
 		boxSize += 32; // reserved2
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("formatInfo", 32, this.formatInfo); 
+		boxSize += builder.Field("peakDataRate", 15, this.peakDataRate); 
+		boxSize += builder.Field("reserved", 1, this.reserved); 
+		boxSize += builder.Field("reserved2", 32, this.reserved2); 
 		return boxSize;
 	}
 }

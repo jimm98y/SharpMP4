@@ -21,6 +21,9 @@ public partial class TimecodeMediaInfoBox : FullBox
 {
 	public const string TYPE = "tcmi";
 	public override string DisplayName { get { return "TimecodeMediaInfoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("tmcd"); }
+
 
 	protected short text_font; 
 	public short TextFont { get { return this.text_font; } set { this.text_font = value; } }
@@ -92,6 +95,21 @@ public partial class TimecodeMediaInfoBox : FullBox
 		boxSize += 48; // background_color
 		boxSize += 8; // font_name_length
 		boxSize += ((ulong)(font_name_length) * 8); // font_name
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("text_font", 16, this.text_font); 
+		boxSize += builder.Field("text_face", 16, this.text_face); 
+		boxSize += builder.Field("text_size", 16, this.text_size); 
+		boxSize += builder.Field("reserved", 16, this.reserved); 
+		boxSize += builder.Field("text_color", 48, this.text_color); 
+		boxSize += builder.Field("background_color", 48, this.background_color); 
+		boxSize += builder.Field("font_name_length", 8, this.font_name_length); 
+		boxSize += builder.Field("font_name", ((ulong)(font_name_length) * 8), this.font_name); 
 		return boxSize;
 	}
 }

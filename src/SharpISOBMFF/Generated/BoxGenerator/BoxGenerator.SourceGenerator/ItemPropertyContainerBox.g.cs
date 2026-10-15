@@ -19,6 +19,9 @@ public partial class ItemPropertyContainerBox : Box
 {
 	public const string TYPE = "ipco";
 	public override string DisplayName { get { return "ItemPropertyContainerBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("iprp"); }
+
 
 	public ItemPropertyContainerBox(): base(IsoStream.FromFourCC("ipco"))
 	{
@@ -54,6 +57,17 @@ public partial class ItemPropertyContainerBox : Box
 		/*  ItemProperty or ItemFullProperty, or FreeSpaceBox(es) */
 		/*  to fill the box */
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("properties", IsoStream.CalculateBoxSize(properties), this.properties); // boxes derived from
+		/*  ItemProperty or ItemFullProperty, or FreeSpaceBox(es) */
+		/*  to fill the box */
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

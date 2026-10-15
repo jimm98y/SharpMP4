@@ -18,6 +18,9 @@ aligned(8) class MetaDataKeyBox extends	Box(local_key_id) {
 public partial class MetaDataKeyBox : Box
 {
 	public override string DisplayName { get { return "MetaDataKeyBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? BoxPlacements.OfType(FourCC)); }
+
 	public MetaDataKeyDeclarationBox _MetaDataKeyDeclarationBox { get { return this.children.OfType<MetaDataKeyDeclarationBox>().FirstOrDefault(); } }
 	public MetaDataDatatypeBox _MetaDataDatatypeBox { get { return this.children.OfType<MetaDataDatatypeBox>().FirstOrDefault(); } }
 	public MetaDataLocaleBox _MetaDataLocaleBox { get { return this.children.OfType<MetaDataLocaleBox>().FirstOrDefault(); } }
@@ -64,6 +67,19 @@ public partial class MetaDataKeyBox : Box
 		// boxSize += IsoStream.CalculateBoxSize(MetaDataSetupBox); // MetaDataSetupBox
 		// boxSize += IsoStream.CalculateBoxSize(MetaDataExtensionsBox); // MetaDataExtensionsBox
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("MetaDataKeyDeclarationBox", IsoStream.CalculateBoxSize(MetaDataKeyDeclarationBox), this.MetaDataKeyDeclarationBox); 
+		// boxSize += builder.Field("MetaDataDatatypeBox", IsoStream.CalculateBoxSize(MetaDataDatatypeBox), this.MetaDataDatatypeBox); // optional
+		// boxSize += builder.Field("MetaDataLocaleBox", IsoStream.CalculateBoxSize(MetaDataLocaleBox), this.MetaDataLocaleBox); // optional
+		// boxSize += builder.Field("MetaDataSetupBox", IsoStream.CalculateBoxSize(MetaDataSetupBox), this.MetaDataSetupBox); // optional
+		// boxSize += builder.Field("MetaDataExtensionsBox", IsoStream.CalculateBoxSize(MetaDataExtensionsBox), this.MetaDataExtensionsBox); // optional
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

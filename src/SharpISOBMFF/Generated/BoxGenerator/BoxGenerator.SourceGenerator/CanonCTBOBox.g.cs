@@ -17,6 +17,9 @@ public partial class CanonCTBOBox : Box
 {
 	public const string TYPE = "CTBO";
 	public override string DisplayName { get { return "CanonCTBOBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("uuid"); }
+
 
 	protected uint entryCount; 
 	public uint EntryCount { get { return this.entryCount; } set { this.entryCount = value; } }
@@ -52,6 +55,15 @@ public partial class CanonCTBOBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 32; // entryCount
 		boxSize += IsoStream.CalculateClassSize(entries); // entries
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entryCount", 32, this.entryCount); 
+		boxSize += builder.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
 		return boxSize;
 	}
 }

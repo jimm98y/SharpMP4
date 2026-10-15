@@ -13,6 +13,9 @@ aligned(8) class QuickTimeTextBox(unsigned int(32) format) extends Box(format) {
 public partial class QuickTimeTextBox : Box
 {
 	public override string DisplayName { get { return "QuickTimeTextBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "udta", "tmcd" }); }
+
 
 	protected MultiLanguageString[] value; 
 	public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
@@ -42,6 +45,14 @@ public partial class QuickTimeTextBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSizeLangPrefixed(value); // value
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("value", IsoStream.CalculateStringSizeLangPrefixed(value), this.value); 
 		return boxSize;
 	}
 }

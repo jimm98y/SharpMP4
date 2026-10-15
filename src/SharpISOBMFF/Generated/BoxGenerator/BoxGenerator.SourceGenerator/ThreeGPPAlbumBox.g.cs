@@ -17,6 +17,9 @@ public partial class ThreeGPPAlbumBox : FullBox
 {
 	public const string TYPE = "albm";
 	public override string DisplayName { get { return "ThreeGPPAlbumBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected bool reserved = false; 
 	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -66,6 +69,17 @@ public partial class ThreeGPPAlbumBox : FullBox
 		boxSize += 15; // language
 		boxSize += IsoStream.CalculateStringSize(value); // value
 		if (this.trackNumberPresent) boxSize += 8; // trackNumber
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 1, this.reserved); 
+		boxSize += builder.Field("language", 15, this.language); 
+		boxSize += builder.Field("value", IsoStream.CalculateStringSize(value), this.value); 
+		if (this.trackNumberPresent) boxSize += builder.Field("trackNumber", 8, this.trackNumber); // optional
 		return boxSize;
 	}
 }

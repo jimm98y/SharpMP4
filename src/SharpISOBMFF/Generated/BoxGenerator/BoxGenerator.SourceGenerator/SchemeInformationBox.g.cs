@@ -14,6 +14,9 @@ public partial class SchemeInformationBox : Box
 {
 	public const string TYPE = "schi";
 	public override string DisplayName { get { return "SchemeInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("sinf", "rinf", "srpp"); }
+
 
 	public SchemeInformationBox(): base(IsoStream.FromFourCC("schi"))
 	{
@@ -43,6 +46,15 @@ public partial class SchemeInformationBox : Box
 		boxSize += base.CalculateSize();
 		// boxSize += IsoStream.CalculateBoxSize(scheme_specific_data); // scheme_specific_data
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("scheme_specific_data", IsoStream.CalculateBoxSize(scheme_specific_data), this.scheme_specific_data); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

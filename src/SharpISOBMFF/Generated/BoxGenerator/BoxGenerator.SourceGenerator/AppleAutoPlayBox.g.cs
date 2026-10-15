@@ -14,6 +14,9 @@ public partial class AppleAutoPlayBox : Box
 {
 	public const string TYPE = "play";
 	public override string DisplayName { get { return "AppleAutoPlayBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected byte autoplay; 
 	public byte Autoplay { get { return this.autoplay; } set { this.autoplay = value; } }
@@ -43,6 +46,14 @@ public partial class AppleAutoPlayBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 8; // autoplay
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("autoplay", 8, this.autoplay); 
 		return boxSize;
 	}
 }

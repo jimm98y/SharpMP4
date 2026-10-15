@@ -15,6 +15,9 @@ public partial class SphericalVideoHeader : FullBox
 {
 	public const string TYPE = "svhd";
 	public override string DisplayName { get { return "SphericalVideoHeader"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("sv3d"); }
+
 
 	protected BinaryUTF8String metadata_source; 
 	public BinaryUTF8String MetadataSource { get { return this.metadata_source; } set { this.metadata_source = value; } }
@@ -44,6 +47,14 @@ public partial class SphericalVideoHeader : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(metadata_source); // metadata_source
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("metadata_source", IsoStream.CalculateStringSize(metadata_source), this.metadata_source); 
 		return boxSize;
 	}
 }

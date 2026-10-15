@@ -19,6 +19,7 @@ public partial class FLACMetadataBlock : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "FLACMetadataBlock"; } }
 
 	protected bool LastMetadataBlockFlag; 
@@ -64,6 +65,16 @@ public partial class FLACMetadataBlock : IMp4Serializable
 		boxSize += 7; // BlockType
 		boxSize += 24; // Length
 		boxSize += ((ulong)(Length) * 8); // BlockData
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("LastMetadataBlockFlag", 1, this.LastMetadataBlockFlag); 
+		boxSize += builder.Field("BlockType", 7, this.BlockType); 
+		boxSize += builder.Field("Length", 24, this.Length); 
+		boxSize += builder.Field("BlockData", ((ulong)(Length) * 8), this.BlockData); 
 		return boxSize;
 	}
 }

@@ -17,6 +17,9 @@ public partial class TaicBox : FullBox
 {
 	public const string TYPE = "taic";
 	public override string DisplayName { get { return "TaicBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("SampleEntry", "ipco"); }
+
 
 	protected ulong time_uncertainty; 
 	public ulong TimeUncertainty { get { return this.time_uncertainty; } set { this.time_uncertainty = value; } }
@@ -64,6 +67,17 @@ public partial class TaicBox : FullBox
 		boxSize += 32; // clock_resolution
 		boxSize += 32; // clock_drift_rate
 		boxSize += 8; // clock_type
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("time_uncertainty", 64, this.time_uncertainty); 
+		boxSize += builder.Field("clock_resolution", 32, this.clock_resolution); 
+		boxSize += builder.Field("clock_drift_rate", 32, this.clock_drift_rate); 
+		boxSize += builder.Field("clock_type", 8, this.clock_type); 
 		return boxSize;
 	}
 }

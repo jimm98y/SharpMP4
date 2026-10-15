@@ -27,6 +27,9 @@ public partial class TranscodingInfoBox : Box
 {
 	public const string TYPE = "tran";
 	public override string DisplayName { get { return "TranscodingInfoBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("scif"); }
+
 
 	protected byte reserved = 0; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -133,6 +136,31 @@ public partial class TranscodingInfoBox : Box
 			boxSize += 24; // cabac_profile_level_idc
 			boxSize += 32; // cabac_max_bitrate
 			boxSize += 32; // cabac_avg_bitrate
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 4, this.reserved); 
+		boxSize += builder.Field("conversion_idc", 2, this.conversion_idc); 
+		boxSize += builder.Field("cavlc_info_present_flag", 1, this.cavlc_info_present_flag); 
+		boxSize += builder.Field("cabac_info_present_flag", 1, this.cabac_info_present_flag); 
+
+		if (cavlc_info_present_flag)
+		{
+			boxSize += builder.Field("cavlc_profile_level_idc", 24, this.cavlc_profile_level_idc); 
+			boxSize += builder.Field("cavlc_max_bitrate", 32, this.cavlc_max_bitrate); 
+			boxSize += builder.Field("cavlc_avg_bitrate", 32, this.cavlc_avg_bitrate); 
+		}
+
+		if (cabac_info_present_flag)
+		{
+			boxSize += builder.Field("cabac_profile_level_idc", 24, this.cabac_profile_level_idc); 
+			boxSize += builder.Field("cabac_max_bitrate", 32, this.cabac_max_bitrate); 
+			boxSize += builder.Field("cabac_avg_bitrate", 32, this.cabac_avg_bitrate); 
 		}
 		return boxSize;
 	}

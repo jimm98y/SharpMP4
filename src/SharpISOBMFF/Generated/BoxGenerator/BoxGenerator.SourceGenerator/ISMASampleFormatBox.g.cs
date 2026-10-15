@@ -18,6 +18,9 @@ public partial class ISMASampleFormatBox : FullBox
 {
 	public const string TYPE = "iSFM";
 	public override string DisplayName { get { return "ISMASampleFormatBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("schi"); }
+
 
 	protected bool selective_encryption; 
 	public bool SelectiveEncryption { get { return this.selective_encryption; } set { this.selective_encryption = value; } }
@@ -65,6 +68,17 @@ public partial class ISMASampleFormatBox : FullBox
 		boxSize += 7; // reserved
 		boxSize += 8; // key_indicator_length
 		boxSize += 8; // IV_length
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("selective_encryption", 1, this.selective_encryption); 
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+		boxSize += builder.Field("key_indicator_length", 8, this.key_indicator_length); 
+		boxSize += builder.Field("IV_length", 8, this.IV_length); 
 		return boxSize;
 	}
 }

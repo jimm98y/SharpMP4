@@ -19,6 +19,9 @@ public partial class A3DSampleEntrya3d3Dup : VisualSampleEntry
 {
 	public const string TYPE = "a3d3";
 	public override string DisplayName { get { return "A3DSampleEntrya3d3Dup"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 	public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
@@ -69,6 +72,20 @@ public partial class A3DSampleEntrya3d3Dup : VisualSampleEntry
 		// boxSize += IsoStream.CalculateBoxSize(intrinsic_camera_params); // intrinsic_camera_params
 		// boxSize += IsoStream.CalculateBoxSize(extrinsic_camera_params); // extrinsic_camera_params
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("a3dconfig", IsoStream.CalculateBoxSize(a3dconfig), this.a3dconfig); // mandatory
+		// boxSize += builder.Field("mvdscalinfosei", IsoStream.CalculateBoxSize(mvdscalinfosei), this.mvdscalinfosei); // optional
+		// boxSize += builder.Field("view_identifiers", IsoStream.CalculateBoxSize(view_identifiers), this.view_identifiers); // mandatory
+		// boxSize += builder.Field("descr", IsoStream.CalculateBoxSize(descr), this.descr); // optional
+		// boxSize += builder.Field("intrinsic_camera_params", IsoStream.CalculateBoxSize(intrinsic_camera_params), this.intrinsic_camera_params); // optional
+		// boxSize += builder.Field("extrinsic_camera_params", IsoStream.CalculateBoxSize(extrinsic_camera_params), this.extrinsic_camera_params); // optional
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

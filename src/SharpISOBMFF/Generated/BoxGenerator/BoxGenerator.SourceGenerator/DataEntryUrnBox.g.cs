@@ -16,6 +16,9 @@ public partial class DataEntryUrnBox : DataEntryBaseBox
 {
 	public const string TYPE = "urn ";
 	public override string DisplayName { get { return "DataEntryUrnBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("dref"); }
+
 
 	protected BinaryUTF8String name; 
 	public BinaryUTF8String Name { get { return this.name; } set { this.name = value; } }
@@ -51,6 +54,15 @@ public partial class DataEntryUrnBox : DataEntryBaseBox
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(name); // name
 		boxSize += IsoStream.CalculateStringSize(location); // location
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("name", IsoStream.CalculateStringSize(name), this.name); 
+		boxSize += builder.Field("location", IsoStream.CalculateStringSize(location), this.location); 
 		return boxSize;
 	}
 }

@@ -32,6 +32,9 @@ public partial class ColourInformationBox : Box
 {
 	public const string TYPE = "colr";
 	public override string DisplayName { get { return "ColourInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry", "ipco"); }
+
 
 	protected uint colour_type; 
 	public uint ColourType { get { return this.colour_type; } set { this.colour_type = value; } }
@@ -147,6 +150,37 @@ public partial class ColourInformationBox : Box
 		else if (colour_type == IsoStream.FromFourCC("prof"))
 		{
 			boxSize += IsoStream.CalculateClassSize(ICC_profile); // ICC_profile
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("colour_type", 32, this.colour_type); 
+
+		if (colour_type == IsoStream.FromFourCC("nclx") || colour_type == IsoStream.FromFourCC("nclc"))
+		{
+			boxSize += builder.Field("colour_primaries", 16, this.colour_primaries); 
+			boxSize += builder.Field("transfer_characteristics", 16, this.transfer_characteristics); 
+			boxSize += builder.Field("matrix_coefficients", 16, this.matrix_coefficients); 
+
+			if (colour_type == IsoStream.FromFourCC("nclx"))
+			{
+				boxSize += builder.Field("full_range_flag", 1, this.full_range_flag); 
+				boxSize += builder.Field("reserved", 7, this.reserved); 
+			}
+		}
+
+		else if (colour_type == IsoStream.FromFourCC("rICC"))
+		{
+			boxSize += builder.Field("ICC_profile", IsoStream.CalculateClassSize(ICC_profile), this.ICC_profile); // restricted ICC profile
+		}
+
+		else if (colour_type == IsoStream.FromFourCC("prof"))
+		{
+			boxSize += builder.Field("ICC_profile", IsoStream.CalculateClassSize(ICC_profile), this.ICC_profile); // unrestricted ICC profile
 		}
 		return boxSize;
 	}

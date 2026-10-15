@@ -19,6 +19,9 @@ public partial class EventMessageBox : Box
 {
 	public const string TYPE = "emsg";
 	public override string DisplayName { get { return "EventMessageBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected BinaryUTF8String schemeIdUri; 
 	public BinaryUTF8String SchemeIdUri { get { return this.schemeIdUri; } set { this.schemeIdUri = value; } }
@@ -84,6 +87,20 @@ public partial class EventMessageBox : Box
 		boxSize += 32; // eventDuration
 		boxSize += 32; // id
 		boxSize += ((ulong)messageData.Length * 8); // messageData
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("schemeIdUri", IsoStream.CalculateStringSize(schemeIdUri), this.schemeIdUri); 
+		boxSize += builder.Field("value", IsoStream.CalculateStringSize(value), this.value); 
+		boxSize += builder.Field("timescale", 32, this.timescale); 
+		boxSize += builder.Field("presentationTimeDelta", 32, this.presentationTimeDelta); 
+		boxSize += builder.Field("eventDuration", 32, this.eventDuration); 
+		boxSize += builder.Field("id", 32, this.id); 
+		boxSize += builder.Field("messageData", ((ulong)messageData.Length * 8), this.messageData); 
 		return boxSize;
 	}
 }

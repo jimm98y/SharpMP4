@@ -18,6 +18,7 @@ public partial class FontRecord : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "FontRecord"; } }
 
 	protected ushort fontId; 
@@ -57,6 +58,15 @@ public partial class FontRecord : IMp4Serializable
 		boxSize += 16; // fontId
 		boxSize += 8; // count
 		boxSize += ((ulong)(count) * 8); // fontName
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("fontId", 16, this.fontId); 
+		boxSize += builder.Field("count", 8, this.count); 
+		boxSize += builder.Field("fontName", ((ulong)(count) * 8), this.fontName); 
 		return boxSize;
 	}
 }

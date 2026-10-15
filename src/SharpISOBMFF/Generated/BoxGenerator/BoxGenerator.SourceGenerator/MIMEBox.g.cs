@@ -15,6 +15,9 @@ public partial class MIMEBox : FullBox
 {
 	public const string TYPE = "mime";
 	public override string DisplayName { get { return "MIMEBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("SampleEntry"); }
+
 
 	protected BinaryUTF8String content_type; 
 	public BinaryUTF8String ContentType { get { return this.content_type; } set { this.content_type = value; } }
@@ -44,6 +47,14 @@ public partial class MIMEBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(content_type); // content_type
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("content_type", IsoStream.CalculateStringSize(content_type), this.content_type); 
 		return boxSize;
 	}
 }

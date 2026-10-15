@@ -15,6 +15,9 @@ public partial class AppleQualityBox : Box
 {
 	public const string TYPE = "rmqu";
 	public override string DisplayName { get { return "AppleQualityBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("rmda"); }
+
 
 	protected uint flags; 
 	public uint Flags { get { return this.flags; } set { this.flags = value; } }
@@ -50,6 +53,15 @@ public partial class AppleQualityBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 32; // flags
 		boxSize += 32; // quality
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("flags", 32, this.flags); 
+		boxSize += builder.Field("quality", 32, this.quality); 
 		return boxSize;
 	}
 }

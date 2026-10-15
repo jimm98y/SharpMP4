@@ -17,6 +17,9 @@ public partial class PriorityRangeBox : Box
 {
 	public const string TYPE = "svpr";
 	public override string DisplayName { get { return "PriorityRangeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("scif", "mvif"); }
+
 
 	protected byte reserved1 = 0; 
 	public byte Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
@@ -64,6 +67,17 @@ public partial class PriorityRangeBox : Box
 		boxSize += 6; // min_priorityId
 		boxSize += 2; // reserved2
 		boxSize += 6; // max_priorityId
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved1", 2, this.reserved1); 
+		boxSize += builder.Field("min_priorityId", 6, this.min_priorityId); 
+		boxSize += builder.Field("reserved2", 2, this.reserved2); 
+		boxSize += builder.Field("max_priorityId", 6, this.max_priorityId); 
 		return boxSize;
 	}
 }

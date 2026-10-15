@@ -45,6 +45,14 @@ public partial class VvcOperatingPointsInformation : VisualSampleGroupEntry
 		boxSize += IsoStream.CalculateClassSize(oinf); // oinf
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("oinf", IsoStream.CalculateClassSize(oinf), this.oinf); 
+		return boxSize;
+	}
 }
 
 }

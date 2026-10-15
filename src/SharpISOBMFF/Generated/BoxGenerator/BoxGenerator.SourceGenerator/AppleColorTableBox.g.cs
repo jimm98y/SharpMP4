@@ -18,6 +18,9 @@ public partial class AppleColorTableBox : Box
 {
 	public const string TYPE = "ctab";
 	public override string DisplayName { get { return "AppleColorTableBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("moov"); }
+
 
 	protected int color_table_seed; 
 	public int ColorTableSeed { get { return this.color_table_seed; } set { this.color_table_seed = value; } }
@@ -65,6 +68,17 @@ public partial class AppleColorTableBox : Box
 		boxSize += 16; // flags
 		boxSize += 16; // color_table_size
 		boxSize += IsoStream.CalculateClassSize(colors); // colors
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("color_table_seed", 32, this.color_table_seed); 
+		boxSize += builder.Field("flags", 16, this.flags); 
+		boxSize += builder.Field("color_table_size", 16, this.color_table_size); 
+		boxSize += builder.Field("colors", IsoStream.CalculateClassSize(colors), this.colors); 
 		return boxSize;
 	}
 }

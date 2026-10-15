@@ -15,6 +15,9 @@ public partial class IpirBox : Box
 {
 	public const string TYPE = "ipir";
 	public override string DisplayName { get { return "IpirBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("tref"); }
+
 
 	protected uint entry_count; 
 	public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -50,6 +53,15 @@ public partial class IpirBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 32; // entry_count
 		boxSize += ((ulong)( entry_count ) * 32); // trackIDs
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		boxSize += builder.Field("trackIDs", ((ulong)( entry_count ) * 32), this.trackIDs); 
 		return boxSize;
 	}
 }

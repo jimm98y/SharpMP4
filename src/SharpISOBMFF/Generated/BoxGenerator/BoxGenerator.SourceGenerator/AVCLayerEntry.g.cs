@@ -74,6 +74,18 @@ public partial class AVCLayerEntry : VisualSampleGroupEntry
 		boxSize += 16; // avgFrameRate
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("layerNumber", 8, this.layerNumber); 
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+		boxSize += builder.Field("accurateStatisticsFlag", 1, this.accurateStatisticsFlag); 
+		boxSize += builder.Field("avgBitRate", 16, this.avgBitRate); 
+		boxSize += builder.Field("avgFrameRate", 16, this.avgFrameRate); 
+		return boxSize;
+	}
 }
 
 }

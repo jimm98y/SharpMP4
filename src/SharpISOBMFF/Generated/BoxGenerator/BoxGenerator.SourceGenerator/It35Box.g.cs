@@ -16,6 +16,9 @@ public partial class It35Box : MetaDataSampleEntry
 {
 	public const string TYPE = "it35";
 	public override string DisplayName { get { return "It35Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected byte it35_identifier_length; 
 	public byte It35IdentifierLength { get { return this.it35_identifier_length; } set { this.it35_identifier_length = value; } }
@@ -51,6 +54,15 @@ public partial class It35Box : MetaDataSampleEntry
 		boxSize += base.CalculateSize();
 		boxSize += 8; // it35_identifier_length
 		boxSize += (ulong)(8*it35_identifier_length ); // it35_prefix
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("it35_identifier_length", 8, this.it35_identifier_length); 
+		boxSize += builder.Field("it35_prefix", (ulong)(8*it35_identifier_length ), this.it35_prefix); 
 		return boxSize;
 	}
 }

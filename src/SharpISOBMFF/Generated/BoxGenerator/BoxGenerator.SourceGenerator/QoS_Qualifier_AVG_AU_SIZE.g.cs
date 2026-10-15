@@ -46,6 +46,14 @@ public partial class QoS_Qualifier_AVG_AU_SIZE : QoS_Qualifier
 		boxSize += 32; // AVG_AU_SIZE
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("AVG_AU_SIZE", 32, this.AVG_AU_SIZE); 
+		return boxSize;
+	}
 }
 
 }

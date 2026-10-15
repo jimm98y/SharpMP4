@@ -18,6 +18,9 @@ public partial class SchemeTypeBox : FullBox
 {
 	public const string TYPE = "schm";
 	public override string DisplayName { get { return "SchemeTypeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("sinf", "rinf", "srpp"); }
+
 
 	protected uint scheme_type;  //  4CC identifying the scheme
 	public uint SchemeType { get { return this.scheme_type; } set { this.scheme_type = value; } }
@@ -70,6 +73,20 @@ public partial class SchemeTypeBox : FullBox
 		if ((flags  &  0x000001) ==  0x000001)
 		{
 			boxSize += IsoStream.CalculateStringSize(scheme_uri); // scheme_uri
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("scheme_type", 32, this.scheme_type); // 4CC identifying the scheme
+		boxSize += builder.Field("scheme_version", 32, this.scheme_version); // scheme version
+
+		if ((flags  &  0x000001) ==  0x000001)
+		{
+			boxSize += builder.Field("scheme_uri", IsoStream.CalculateStringSize(scheme_uri), this.scheme_uri); // browser uri
 		}
 		return boxSize;
 	}

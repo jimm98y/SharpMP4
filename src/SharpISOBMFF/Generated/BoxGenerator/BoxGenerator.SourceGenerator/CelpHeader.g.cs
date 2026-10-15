@@ -29,6 +29,7 @@ public partial class CelpHeader : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "CelpHeader"; } }
 
 	protected bool ExcitationMode; 
@@ -127,6 +128,31 @@ public partial class CelpHeader : IMp4Serializable
 			boxSize += 5; // MPE_Configuration
 			boxSize += 2; // NumEnhLayers
 			boxSize += 1; // BandwidthScalabilityMode
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		const bool RPE = true;
+
+		const bool MPE = false;
+
+		boxSize += builder.Field("ExcitationMode", 1, this.ExcitationMode); 
+		boxSize += builder.Field("SampleRateMode", 1, this.SampleRateMode); 
+		boxSize += builder.Field("FineRateControl", 1, this.FineRateControl); 
+
+		if (ExcitationMode == RPE)
+		{
+			boxSize += builder.Field("RPE_Configuration", 3, this.RPE_Configuration); 
+		}
+
+		if (ExcitationMode == MPE)
+		{
+			boxSize += builder.Field("MPE_Configuration", 5, this.MPE_Configuration); 
+			boxSize += builder.Field("NumEnhLayers", 2, this.NumEnhLayers); 
+			boxSize += builder.Field("BandwidthScalabilityMode", 1, this.BandwidthScalabilityMode); 
 		}
 		return boxSize;
 	}

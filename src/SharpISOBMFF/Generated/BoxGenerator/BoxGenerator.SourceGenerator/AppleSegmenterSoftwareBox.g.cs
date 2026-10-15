@@ -17,6 +17,9 @@ public partial class AppleSegmenterSoftwareBox : FullBox
 {
 	public const string TYPE = "swre";
 	public override string DisplayName { get { return "AppleSegmenterSoftwareBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected bool reserved = false; 
 	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -58,6 +61,16 @@ public partial class AppleSegmenterSoftwareBox : FullBox
 		boxSize += 1; // reserved
 		boxSize += 15; // language
 		boxSize += IsoStream.CalculateStringSize(value); // value
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 1, this.reserved); 
+		boxSize += builder.Field("language", 15, this.language); 
+		boxSize += builder.Field("value", IsoStream.CalculateStringSize(value), this.value); 
 		return boxSize;
 	}
 }

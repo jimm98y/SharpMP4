@@ -18,6 +18,9 @@ public partial class SubTrackSampleGroupBox : FullBox
 {
 	public const string TYPE = "stsg";
 	public override string DisplayName { get { return "SubTrackSampleGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("strd"); }
+
 
 	protected uint grouping_type; 
 	public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -71,6 +74,20 @@ public partial class SubTrackSampleGroupBox : FullBox
 		for (int i = 0; i< item_count; i++)
 		{
 			boxSize += 32; // group_description_index
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("grouping_type", 32, this.grouping_type); 
+		boxSize += builder.Field("item_count", 16, this.item_count); 
+
+		for (int i = 0; i< item_count; i++)
+		{
+			boxSize += builder.Field($"group_description_index[{i}]", 32, this.group_description_index[i]); 
 		}
 		return boxSize;
 	}

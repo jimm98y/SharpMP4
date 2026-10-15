@@ -16,6 +16,9 @@ public partial class AppleComponentDetectBox : Box
 {
 	public const string TYPE = "rmcd";
 	public override string DisplayName { get { return "AppleComponentDetectBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("rmda"); }
+
 
 	protected uint flags; 
 	public uint Flags { get { return this.flags; } set { this.flags = value; } }
@@ -57,6 +60,16 @@ public partial class AppleComponentDetectBox : Box
 		boxSize += 32; // flags
 		boxSize += IsoStream.CalculateClassSize(description); // description
 		boxSize += 32; // minimumVersion
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("flags", 32, this.flags); 
+		boxSize += builder.Field("description", IsoStream.CalculateClassSize(description), this.description); 
+		boxSize += builder.Field("minimumVersion", 32, this.minimumVersion); 
 		return boxSize;
 	}
 }

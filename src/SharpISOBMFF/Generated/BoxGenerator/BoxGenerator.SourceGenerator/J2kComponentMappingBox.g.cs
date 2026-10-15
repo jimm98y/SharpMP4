@@ -16,6 +16,9 @@ public partial class J2kComponentMappingBox : Box
 {
 	public const string TYPE = "cmap";
 	public override string DisplayName { get { return "J2kComponentMappingBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("j2kH"); }
+
 
 	protected J2kComponentMapping[] mappings; 
 	public J2kComponentMapping[] Mappings { get { return this.mappings; } set { this.mappings = value; } }
@@ -45,6 +48,14 @@ public partial class J2kComponentMappingBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateClassSize(mappings); // mappings
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("mappings", IsoStream.CalculateClassSize(mappings), this.mappings); 
 		return boxSize;
 	}
 }

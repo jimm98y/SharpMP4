@@ -35,6 +35,9 @@ public partial class ViewIdentifierBox : FullBox
 {
 	public const string TYPE = "vwid";
 	public override string DisplayName { get { return "ViewIdentifierBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mvif", "AVCSampleEntry(avc1,avc3)", "AVC2SampleEntry(avc2,avc4)", "MVCSampleEntry(mvc1,mvc2,mvc3,mvc4)", "MVCDSampleEntry(mvd1,mvd2,mvd3,mvd4)", "A3DSampleEntry(a3d1,a3d2,a3d3,a3d4)"); }
+
 
 	protected byte reserved6 = 0; 
 	public byte Reserved6 { get { return this.reserved6; } set { this.reserved6 = value; } }
@@ -198,6 +201,38 @@ public partial class ViewIdentifierBox : FullBox
 				boxSize += 4; // reserved5
 				boxSize += 2; // dependent_component_idc
 				boxSize += 10; // ref_view_id
+			}
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved6", 2, this.reserved6); 
+		boxSize += builder.Field("min_temporal_id", 3, this.min_temporal_id); 
+		boxSize += builder.Field("max_temporal_id", 3, this.max_temporal_id); 
+		boxSize += builder.Field("num_views", 16, this.num_views); 
+
+		for (int i=0; i<num_views; i++)
+		{
+			boxSize += builder.Field($"reserved1[{i}]", 6, this.reserved1[i]); 
+			boxSize += builder.Field($"view_id[{i}]", 10, this.view_id[i]); 
+			boxSize += builder.Field($"reserved2[{i}]", 6, this.reserved2[i]); 
+			boxSize += builder.Field($"view_order_index[{i}]", 10, this.view_order_index[i]); 
+			boxSize += builder.Field($"texture_in_stream[{i}]", 1, this.texture_in_stream[i]); 
+			boxSize += builder.Field($"texture_in_track[{i}]", 1, this.texture_in_track[i]); 
+			boxSize += builder.Field($"depth_in_stream[{i}]", 1, this.depth_in_stream[i]); 
+			boxSize += builder.Field($"depth_in_track[{i}]", 1, this.depth_in_track[i]); 
+			boxSize += builder.Field($"base_view_type[{i}]", 2, this.base_view_type[i]); 
+			boxSize += builder.Field($"num_ref_views[{i}]", 10, this.num_ref_views[i]); 
+
+			for (int j = 0; j < num_ref_views[i]; j++)
+			{
+				boxSize += builder.Field($"reserved5[{i}][{j}]", 4, this.reserved5[i][j]); 
+				boxSize += builder.Field($"dependent_component_idc[{i}][{j}]", 2, this.dependent_component_idc[i][j]); 
+				boxSize += builder.Field($"ref_view_id[{i}][{j}]", 10, this.ref_view_id[i][j]); 
 			}
 		}
 		return boxSize;

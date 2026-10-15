@@ -62,6 +62,7 @@ public partial class program_config_element : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "program_config_element"; } }
 
 	protected byte element_instance_tag; 
@@ -387,6 +388,81 @@ public partial class program_config_element : IMp4Serializable
 		for (int i = 0; i < comment_field_bytes; i++)
 		{
 			boxSize += 8; // comment_field_data
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("element_instance_tag", 4, this.element_instance_tag); 
+		boxSize += builder.Field("object_type", 2, this.object_type); 
+		boxSize += builder.Field("sampling_frequency_index", 4, this.sampling_frequency_index); 
+		boxSize += builder.Field("num_front_channel_elements", 4, this.num_front_channel_elements); 
+		boxSize += builder.Field("num_side_channel_elements", 4, this.num_side_channel_elements); 
+		boxSize += builder.Field("num_back_channel_elements", 4, this.num_back_channel_elements); 
+		boxSize += builder.Field("num_lfe_channel_elements", 2, this.num_lfe_channel_elements); 
+		boxSize += builder.Field("num_assoc_data_elements", 3, this.num_assoc_data_elements); 
+		boxSize += builder.Field("num_valid_cc_elements", 4, this.num_valid_cc_elements); 
+		boxSize += builder.Field("mono_mixdown_present", 1, this.mono_mixdown_present); 
+
+		if (mono_mixdown_present == true)
+		{
+			boxSize += builder.Field("mono_mixdown_element_number", 4, this.mono_mixdown_element_number); 
+		}
+		boxSize += builder.Field("stereo_mixdown_present", 1, this.stereo_mixdown_present); 
+
+		if (stereo_mixdown_present == true)
+		{
+			boxSize += builder.Field("stereo_mixdown_element_number", 4, this.stereo_mixdown_element_number); 
+		}
+		boxSize += builder.Field("matrix_mixdown_idx_present", 1, this.matrix_mixdown_idx_present); 
+
+		if (matrix_mixdown_idx_present == true)
+		{
+			boxSize += builder.Field("matrix_mixdown_idx", 2, this.matrix_mixdown_idx); 
+			boxSize += builder.Field("pseudo_surround_enable", 1, this.pseudo_surround_enable); 
+		}
+
+		for (int i = 0; i < num_front_channel_elements; i++)
+		{
+			boxSize += builder.Field($"front_element_is_cpe[{i}]", 1, this.front_element_is_cpe[i]); 
+			boxSize += builder.Field($"front_element_tag_select[{i}]", 4, this.front_element_tag_select[i]); 
+		}
+
+		for (int i = 0; i < num_side_channel_elements; i++)
+		{
+			boxSize += builder.Field($"side_element_is_cpe[{i}]", 1, this.side_element_is_cpe[i]); 
+			boxSize += builder.Field($"side_element_tag_select[{i}]", 4, this.side_element_tag_select[i]); 
+		}
+
+		for (int i = 0; i < num_back_channel_elements; i++)
+		{
+			boxSize += builder.Field($"back_element_is_cpe[{i}]", 1, this.back_element_is_cpe[i]); 
+			boxSize += builder.Field($"back_element_tag_select[{i}]", 4, this.back_element_tag_select[i]); 
+		}
+
+		for (int i = 0; i < num_lfe_channel_elements; i++)
+		{
+			boxSize += builder.Field($"lfe_element_tag_select[{i}]", 4, this.lfe_element_tag_select[i]); 
+		}
+
+		for (int i = 0; i < num_assoc_data_elements; i++)
+		{
+			boxSize += builder.Field($"assoc_data_element_tag_select[{i}]", 4, this.assoc_data_element_tag_select[i]); 
+		}
+
+		for (int i = 0; i < num_valid_cc_elements; i++)
+		{
+			boxSize += builder.Field($"cc_element_is_ind_sw[{i}]", 1, this.cc_element_is_ind_sw[i]); 
+			boxSize += builder.Field($"valid_cc_element_tag_select[{i}]", 4, this.valid_cc_element_tag_select[i]); 
+		}
+		boxSize += builder.Field("byte_alignment", IsoStream.CalculateByteAlignmentSize(boxSize, byte_alignment), this.byte_alignment); // Note 1 
+		boxSize += builder.Field("comment_field_bytes", 8, this.comment_field_bytes); 
+
+		for (int i = 0; i < comment_field_bytes; i++)
+		{
+			boxSize += builder.Field($"comment_field_data[{i}]", 8, this.comment_field_data[i]); 
 		}
 		return boxSize;
 	}

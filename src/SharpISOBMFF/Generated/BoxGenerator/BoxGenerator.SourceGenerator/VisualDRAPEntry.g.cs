@@ -53,6 +53,15 @@ public partial class VisualDRAPEntry : VisualSampleGroupEntry
 		boxSize += 29; // reserved
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("DRAP_type", 3, this.DRAP_type); 
+		boxSize += builder.Field("reserved", 29, this.reserved); 
+		return boxSize;
+	}
 }
 
 }

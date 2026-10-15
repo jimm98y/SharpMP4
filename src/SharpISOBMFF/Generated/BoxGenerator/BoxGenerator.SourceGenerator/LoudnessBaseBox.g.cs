@@ -28,6 +28,9 @@ for (i = 1 ; i <= measurement_count; i++){
 public partial class LoudnessBaseBox : FullBox
 {
 	public override string DisplayName { get { return "LoudnessBaseBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected byte reserved = 0; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -141,6 +144,30 @@ public partial class LoudnessBaseBox : FullBox
 			boxSize += 8; // method_value
 			boxSize += 4; // measurement_system
 			boxSize += 4; // reliability
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 3, this.reserved); 
+		boxSize += builder.Field("downmix_ID", 7, this.downmix_ID); // matching downmix 
+		boxSize += builder.Field("DRC_set_ID", 6, this.DRC_set_ID); // to match a DRC box 
+		boxSize += builder.Field("bs_sample_peak_level", 12, this.bs_sample_peak_level); 
+		boxSize += builder.Field("bs_true_peak_level", 12, this.bs_true_peak_level); 
+		boxSize += builder.Field("measurement_system_for_TP", 4, this.measurement_system_for_TP); 
+		boxSize += builder.Field("reliability_for_TP", 4, this.reliability_for_TP); 
+		boxSize += builder.Field("measurement_count", 8, this.measurement_count); 
+		
+
+		for (int i = 0 ; i < measurement_count; i++)
+		{
+			boxSize += builder.Field($"method_definition[{i}]", 8, this.method_definition[i]); 
+			boxSize += builder.Field($"method_value[{i}]", 8, this.method_value[i]); 
+			boxSize += builder.Field($"measurement_system[{i}]", 4, this.measurement_system[i]); 
+			boxSize += builder.Field($"reliability[{i}]", 4, this.reliability[i]); 
 		}
 		return boxSize;
 	}

@@ -6,22 +6,41 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
+// 3GPP TS 26.245 5.17.3.13, HyperTextBox: a modifier of a timed text sample - after its text, not in the box tree - making a run of its characters a link
 aligned(8) class HrefBox() extends Box('href') {
-	 unsigned int(8) reserved1[6];
- unsigned int(16) dataReferenceIndex;
- Box boxes[];
- } 
+ unsigned int(16) startcharoffset;
+ unsigned int(16) endcharoffset;
+ unsigned int(8) urlLength;
+ unsigned int(8) url[urlLength];
+ unsigned int(8) altLength;
+ unsigned int(8) altstring[altLength];
+}
 */
 public partial class HrefBox : Box
 {
 	public const string TYPE = "href";
 	public override string DisplayName { get { return "HrefBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
 
-	protected byte[] reserved1; 
-	public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
 
-	protected ushort dataReferenceIndex; 
-	public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
+	protected ushort startcharoffset; 
+	public ushort Startcharoffset { get { return this.startcharoffset; } set { this.startcharoffset = value; } }
+
+	protected ushort endcharoffset; 
+	public ushort Endcharoffset { get { return this.endcharoffset; } set { this.endcharoffset = value; } }
+
+	protected byte urlLength; 
+	public byte UrlLength { get { return this.urlLength; } set { this.urlLength = value; } }
+
+	protected byte[] url; 
+	public byte[] Url { get { return this.url; } set { this.url = value; } }
+
+	protected byte altLength; 
+	public byte AltLength { get { return this.altLength; } set { this.altLength = value; } }
+
+	protected byte[] altstring; 
+	public byte[] Altstring { get { return this.altstring; } set { this.altstring = value; } }
 
 	public HrefBox(): base(IsoStream.FromFourCC("href"))
 	{
@@ -31,10 +50,12 @@ public partial class HrefBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 6,  out this.reserved1, "reserved1"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.dataReferenceIndex, "dataReferenceIndex"); 
-		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes, "boxes"); 
-		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.startcharoffset, "startcharoffset"); 
+		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.endcharoffset, "endcharoffset"); 
+		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.urlLength, "urlLength"); 
+		boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(urlLength),  out this.url, "url"); 
+		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.altLength, "altLength"); 
+		boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(altLength),  out this.altstring, "altstring"); 
 		return boxSize;
 	}
 
@@ -42,10 +63,12 @@ public partial class HrefBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8Array(6,  this.reserved1, "reserved1"); 
-		boxSize += stream.WriteUInt16( this.dataReferenceIndex, "dataReferenceIndex"); 
-		// boxSize += stream.WriteBox( this.boxes, "boxes"); 
-		boxSize += stream.WriteBoxArrayTillEnd(this);
+		boxSize += stream.WriteUInt16( this.startcharoffset, "startcharoffset"); 
+		boxSize += stream.WriteUInt16( this.endcharoffset, "endcharoffset"); 
+		boxSize += stream.WriteUInt8( this.urlLength, "urlLength"); 
+		boxSize += stream.WriteUInt8Array((uint)(urlLength),  this.url, "url"); 
+		boxSize += stream.WriteUInt8( this.altLength, "altLength"); 
+		boxSize += stream.WriteUInt8Array((uint)(altLength),  this.altstring, "altstring"); 
 		return boxSize;
 	}
 
@@ -53,10 +76,25 @@ public partial class HrefBox : Box
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		boxSize += 6 * 8; // reserved1
-		boxSize += 16; // dataReferenceIndex
-		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
-		boxSize += IsoStream.CalculateBoxArray(this);
+		boxSize += 16; // startcharoffset
+		boxSize += 16; // endcharoffset
+		boxSize += 8; // urlLength
+		boxSize += ((ulong)(urlLength) * 8); // url
+		boxSize += 8; // altLength
+		boxSize += ((ulong)(altLength) * 8); // altstring
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("startcharoffset", 16, this.startcharoffset); 
+		boxSize += builder.Field("endcharoffset", 16, this.endcharoffset); 
+		boxSize += builder.Field("urlLength", 8, this.urlLength); 
+		boxSize += builder.Field("url", ((ulong)(urlLength) * 8), this.url); 
+		boxSize += builder.Field("altLength", 8, this.altLength); 
+		boxSize += builder.Field("altstring", ((ulong)(altLength) * 8), this.altstring); 
 		return boxSize;
 	}
 }

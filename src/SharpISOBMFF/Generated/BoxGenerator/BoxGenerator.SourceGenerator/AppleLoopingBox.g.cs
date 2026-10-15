@@ -14,6 +14,9 @@ public partial class AppleLoopingBox : Box
 {
 	public const string TYPE = "LOOP";
 	public override string DisplayName { get { return "AppleLoopingBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected uint data;  //  0 normal, 1 palindromic
 	public uint Data { get { return this.data; } set { this.data = value; } }
@@ -43,6 +46,14 @@ public partial class AppleLoopingBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("data", 32, this.data); // 0 normal, 1 palindromic
 		return boxSize;
 	}
 }

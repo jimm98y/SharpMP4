@@ -16,6 +16,9 @@ public partial class ItemAuxiliaryInformationBox : ItemFullProperty
 {
 	public const string TYPE = "iaux";
 	public override string DisplayName { get { return "ItemAuxiliaryInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected uint aux_info_type; 
 	public uint AuxInfoType { get { return this.aux_info_type; } set { this.aux_info_type = value; } }
@@ -51,6 +54,15 @@ public partial class ItemAuxiliaryInformationBox : ItemFullProperty
 		boxSize += base.CalculateSize();
 		boxSize += 32; // aux_info_type
 		boxSize += 32; // aux_info_type_parameter
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("aux_info_type", 32, this.aux_info_type); 
+		boxSize += builder.Field("aux_info_type_parameter", 32, this.aux_info_type_parameter); 
 		return boxSize;
 	}
 }

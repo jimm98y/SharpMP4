@@ -17,6 +17,9 @@ public partial class PittasoftOriginalFileNameBox : Box
 {
 	public const string TYPE = "ptnm";
 	public override string DisplayName { get { return "PittasoftOriginalFileNameBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("free"); }
+
 
 	protected uint unknown; 
 	public uint Unknown { get { return this.unknown; } set { this.unknown = value; } }
@@ -52,6 +55,15 @@ public partial class PittasoftOriginalFileNameBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 32; // unknown
 		boxSize += IsoStream.CalculateStringSize(name); // name
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("unknown", 32, this.unknown); 
+		boxSize += builder.Field("name", IsoStream.CalculateStringSize(name), this.name); 
 		return boxSize;
 	}
 }

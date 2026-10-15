@@ -15,6 +15,9 @@ public partial class YawBox : Box
 {
 	public const string TYPE = "_yaw";
 	public override string DisplayName { get { return "YawBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected int numerator; 
 	public int Numerator { get { return this.numerator; } set { this.numerator = value; } }
@@ -50,6 +53,15 @@ public partial class YawBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 32; // numerator
 		boxSize += 32; // denominator
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("numerator", 32, this.numerator); 
+		boxSize += builder.Field("denominator", 32, this.denominator); 
 		return boxSize;
 	}
 }

@@ -16,6 +16,9 @@ public partial class TextMetaDataSampleEntry : MetaDataSampleEntry
 {
 	public const string TYPE = "mett";
 	public override string DisplayName { get { return "TextMetaDataSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected BinaryUTF8String content_encoding;  //  optional
 	protected bool content_encodingPresent;
@@ -60,6 +63,17 @@ public partial class TextMetaDataSampleEntry : MetaDataSampleEntry
 		boxSize += IsoStream.CalculateStringSize(mime_format); // mime_format
 		// boxSize += IsoStream.CalculateBoxSize(TextConfigBox); // TextConfigBox
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		if (this.content_encodingPresent) boxSize += builder.Field("content_encoding", IsoStream.CalculateStringSize(content_encoding), this.content_encoding); // optional
+		boxSize += builder.Field("mime_format", IsoStream.CalculateStringSize(mime_format), this.mime_format); 
+		// boxSize += builder.Field("TextConfigBox", IsoStream.CalculateBoxSize(TextConfigBox), this.TextConfigBox); // optional
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

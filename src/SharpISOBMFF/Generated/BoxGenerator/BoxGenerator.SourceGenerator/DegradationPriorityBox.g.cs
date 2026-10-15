@@ -18,6 +18,9 @@ public partial class DegradationPriorityBox : FullBox
 {
 	public const string TYPE = "stdp";
 	public override string DisplayName { get { return "DegradationPriorityBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl"); }
+
 
 	protected ushort[] priority; 
 	public ushort[] Priority { get { return this.priority; } set { this.priority = value; } }
@@ -68,6 +71,21 @@ public partial class DegradationPriorityBox : FullBox
 		for (int i=0; i < sample_count; i++)
 		{
 			boxSize += 16; // priority
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		int sample_count = priority.Length;
+
+		
+
+		for (int i=0; i < sample_count; i++)
+		{
+			boxSize += builder.Field($"priority[{i}]", 16, this.priority[i]); 
 		}
 		return boxSize;
 	}

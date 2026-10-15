@@ -14,6 +14,9 @@ public partial class AVCParameterSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "avcp";
 	public override string DisplayName { get { return "AVCParameterSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public AVCConfigurationBox Config { get { return this.children.OfType<AVCConfigurationBox>().FirstOrDefault(); } }
 
 	public AVCParameterSampleEntry(): base(IsoStream.FromFourCC("avcp"))
@@ -44,6 +47,15 @@ public partial class AVCParameterSampleEntry : VisualSampleEntry
 		boxSize += base.CalculateSize();
 		// boxSize += IsoStream.CalculateBoxSize(config); // config
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("config", IsoStream.CalculateBoxSize(config), this.config); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

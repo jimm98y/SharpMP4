@@ -15,6 +15,9 @@ public partial class JpegXLLevelBox : Box
 {
 	public const string TYPE = "jxll";
 	public override string DisplayName { get { return "JpegXLLevelBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected byte level; 
 	public byte Level { get { return this.level; } set { this.level = value; } }
@@ -44,6 +47,14 @@ public partial class JpegXLLevelBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 8; // level
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("level", 8, this.level); 
 		return boxSize;
 	}
 }

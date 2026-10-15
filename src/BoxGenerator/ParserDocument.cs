@@ -10,13 +10,21 @@ namespace BoxGenerator
         public Dictionary<string, PseudoClass> Classes { get; }
         public List<string> Containers { get; }
 
+        /// <summary>
+        /// Of each box - of its class and type, "Class|type", and of its type alone - the containers its definitions place it
+        /// in, as <see cref="BoxGenerator"/> reads them: of one none places, an empty list - or none at all. Of the sample
+        /// entries the definitions do not give, "stsd".
+        /// </summary>
+        public Dictionary<string, List<string>> Placements { get; }
+
         public SortedDictionary<string, List<PseudoClass>> Boxes { get; }
         public SortedDictionary<string, List<PseudoClass>> Entries { get; }
         public SortedDictionary<string, List<PseudoClass>> Descriptors { get; }
 
-        public ParserDocument(Dictionary<string, PseudoClass> parsedClasses, List<string> containers)
+        public ParserDocument(Dictionary<string, PseudoClass> parsedClasses, List<string> containers, Dictionary<string, List<string>> placements)
         {
             Classes = parsedClasses;
+            Placements = placements;
 
             // post-processing
             Containers = containers.Distinct().ToList();
@@ -215,6 +223,18 @@ namespace BoxGenerator
             "M8Y4","M8YA","M2RA","M2RG","M4RA","M4RG","Shr0","Shr1","Shr2","Shr3","Shr4","Shr5","Shr6","Shr7","nclc","BGGR","601N","601P","dtnt","dtNT","dtpa",
             "avs3","apv1"
             };
+
+            // the sample entries given here, not by the definitions: of 'stsd', as every sample entry is
+            foreach (var type in audioSampleEntryTypes.Concat(visualSampleEntryTypes))
+            {
+                if (!Placements.TryGetValue(type, out var places))
+                    Placements.Add(type, places = new List<string>());
+                if (places.Count == 0 || places.SequenceEqual(new[] { "*" }))
+                {
+                    places.Clear();
+                    places.Add("stsd");
+                }
+            }
 
             foreach (var type in audioSampleEntryTypes)
             {
@@ -766,7 +786,9 @@ namespace BoxGenerator
     {
         Read,
         Write,
-        Size
+        Size,
+        // ToString(BoxStringBuilder): each field as it is now, of the size it is written of
+        Describe
     }
 
     public class FieldTypeInfo

@@ -29,6 +29,7 @@ public partial class PARAconfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "PARAconfig"; } }
 
 	protected byte PARAmode; 
@@ -108,6 +109,29 @@ public partial class PARAconfig : IMp4Serializable
 			boxSize += IsoStream.CalculateClassSize(HILNconfig); // HILNconfig
 		}
 		boxSize += 1; // PARAextensionFlag
+
+		if (PARAextensionFlag)
+		{
+			/*  to be defined in MPEG-4 Phase 3  */
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("PARAmode", 2, this.PARAmode); 
+
+		if (PARAmode != 1)
+		{
+			boxSize += builder.Field("ErHVXCconfig", IsoStream.CalculateClassSize(ErHVXCconfig), this.ErHVXCconfig); 
+		}
+
+		if (PARAmode != 0)
+		{
+			boxSize += builder.Field("HILNconfig", IsoStream.CalculateClassSize(HILNconfig), this.HILNconfig); 
+		}
+		boxSize += builder.Field("PARAextensionFlag", 1, this.PARAextensionFlag); 
 
 		if (PARAextensionFlag)
 		{

@@ -22,6 +22,9 @@ public partial class RectRegionBox : Box
 {
 	public const string TYPE = "rrgn";
 	public override string DisplayName { get { return "RectRegionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("scif"); }
+
 
 	protected ushort base_region_tierID; 
 	public ushort BaseRegionTierID { get { return this.base_region_tierID; } set { this.base_region_tierID = value; } }
@@ -98,6 +101,24 @@ public partial class RectRegionBox : Box
 			boxSize += 16; // vertical_offset
 			boxSize += 16; // region_width
 			boxSize += 16; // region_height
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("base_region_tierID", 16, this.base_region_tierID); 
+		boxSize += builder.Field("dynamic_rect", 1, this.dynamic_rect); 
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+
+		if (dynamic_rect == false)
+		{
+			boxSize += builder.Field("horizontal_offset", 16, this.horizontal_offset); 
+			boxSize += builder.Field("vertical_offset", 16, this.vertical_offset); 
+			boxSize += builder.Field("region_width", 16, this.region_width); 
+			boxSize += builder.Field("region_height", 16, this.region_height); 
 		}
 		return boxSize;
 	}

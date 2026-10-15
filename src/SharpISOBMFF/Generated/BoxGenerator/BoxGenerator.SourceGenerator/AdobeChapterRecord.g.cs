@@ -17,6 +17,7 @@ public partial class AdobeChapterRecord : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "AdobeChapterRecord"; } }
 
 	protected ulong timestamp; 
@@ -56,6 +57,15 @@ public partial class AdobeChapterRecord : IMp4Serializable
 		boxSize += 64; // timestamp
 		boxSize += 8; // count
 		boxSize += ((ulong)(count) * 8); // title
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("timestamp", 64, this.timestamp); 
+		boxSize += builder.Field("count", 8, this.count); 
+		boxSize += builder.Field("title", ((ulong)(count) * 8), this.title); 
 		return boxSize;
 	}
 }

@@ -17,6 +17,9 @@ aligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(refe
 public partial class SingleItemTypeReferenceBoxLarge : Box
 {
 	public override string DisplayName { get { return "SingleItemTypeReferenceBoxLarge"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "iref" }); }
+
 
 	protected uint from_item_ID; 
 	public uint FromItemID { get { return this.from_item_ID; } set { this.from_item_ID = value; } }
@@ -70,6 +73,20 @@ public partial class SingleItemTypeReferenceBoxLarge : Box
 		for (int j=0; j<reference_count; j++)
 		{
 			boxSize += 32; // to_item_ID
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("from_item_ID", 32, this.from_item_ID); 
+		boxSize += builder.Field("reference_count", 16, this.reference_count); 
+
+		for (int j=0; j<reference_count; j++)
+		{
+			boxSize += builder.Field($"to_item_ID[{j}]", 32, this.to_item_ID[j]); 
 		}
 		return boxSize;
 	}

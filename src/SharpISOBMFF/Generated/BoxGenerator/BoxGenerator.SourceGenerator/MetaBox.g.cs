@@ -24,6 +24,9 @@ public partial class MetaBox : FullBox
 {
 	public const string TYPE = "meta";
 	public override string DisplayName { get { return "MetaBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file", "moov", "trak", "moof", "traf", "udta", "meco"); }
+
 	public HandlerBox TheHandler { get { return this.children.OfType<HandlerBox>().FirstOrDefault(); } }
 	public PrimaryItemBox PrimaryResource { get { return this.children.OfType<PrimaryItemBox>().FirstOrDefault(); } }
 	public DataInformationBox FileLocations { get { return this.children.OfType<DataInformationBox>().FirstOrDefault(); } }
@@ -93,6 +96,24 @@ public bool IsQuickTime { get { return HasFullBoxHeader ?? (GetParent() == null 
 		// boxSize += IsoStream.CalculateBoxSize(item_data); // item_data
 		// boxSize += IsoStream.CalculateBoxSize(other_boxes); // other_boxes
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += IsQuickTime ? base.ToString(builder) : HeaderToString(builder);
+		// boxSize += builder.Field("theHandler", IsoStream.CalculateBoxSize(theHandler), this.theHandler); 
+		// boxSize += builder.Field("primary_resource", IsoStream.CalculateBoxSize(primary_resource), this.primary_resource); // optional
+		// boxSize += builder.Field("file_locations", IsoStream.CalculateBoxSize(file_locations), this.file_locations); // optional
+		// boxSize += builder.Field("item_locations", IsoStream.CalculateBoxSize(item_locations), this.item_locations); // optional
+		// boxSize += builder.Field("protections", IsoStream.CalculateBoxSize(protections), this.protections); // optional
+		// boxSize += builder.Field("item_infos", IsoStream.CalculateBoxSize(item_infos), this.item_infos); // optional
+		// boxSize += builder.Field("IPMP_control", IsoStream.CalculateBoxSize(IPMP_control), this.IPMP_control); // optional
+		// boxSize += builder.Field("item_refs", IsoStream.CalculateBoxSize(item_refs), this.item_refs); // optional
+		// boxSize += builder.Field("item_data", IsoStream.CalculateBoxSize(item_data), this.item_data); // optional
+		// boxSize += builder.Field("other_boxes", IsoStream.CalculateBoxSize(other_boxes), this.other_boxes); // optional
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

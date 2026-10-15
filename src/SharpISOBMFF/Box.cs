@@ -18,6 +18,12 @@ namespace SharpISOBMFF
         ulong Read(IsoStream stream, ulong readSize);
         ulong Write(IsoStream stream);
         ulong CalculateSize();
+
+        /// <summary>
+        /// Its fields as they are now - read, or set since - each of its position, size and value, to the builder: what
+        /// <see cref="object.ToString"/> is made of. Its size, as <see cref="CalculateSize"/> counts it.
+        /// </summary>
+        ulong ToString(BoxStringBuilder builder);
     }
 
     public abstract class Box : IMp4Serializable, IHasBoxChildren
@@ -57,6 +63,84 @@ namespace SharpISOBMFF
 
         public Box() {  }
 
+        /// <summary>
+        /// Whether the box is in a container its definitions place it in - of the "containers" of its definitions in
+        /// Definitions\*.json: a parent of a type they name, the top of the file, a parent of a class they name. For
+        /// information alone: nothing enforces it, a box elsewhere is read and written all the same. True of a box whose
+        /// definitions place it in no container - it is not known to be misplaced - and of one of no definition.
+        /// </summary>
+        public virtual bool ValidatePlacement() { return true; }
+
+        /// <summary>
+        /// Whether the box's parent is one of the containers given: of a box type of four characters, a parent of that
+        /// type; "file", the top of the file - a parent that is the file, or none; "*", any; a class's name, a parent of
+        /// that class or one derived from it; "Class(type,type)", a parent of one of those types. Of none given, or null,
+        /// true: the definitions say nothing of where it belongs.
+        /// </summary>
+        protected bool IsPlacedIn(params string[] containers)
+        {
+            if (containers == null || containers.Length == 0)
+                return true;
+
+            IMp4Serializable parent = GetParent();
+            string parentType = parent is Box box && box.FourCC != 0 ? IsoStream.ToFourCC(box.FourCC) : null;
+            // of a sample entry protected or restricted - 'encv', 'resv' - the format it was, which its boxes are of: an 'avcC'
+            // is of an 'encv' of an 'avc1', not of one of an 'hvc1'; of one that does not say, of 'encv' itself
+            string originalType = parent is Box entry ? OriginalFormatOf(entry) : null;
+            if (originalType != null)
+                parentType = originalType;
+            foreach (string container in containers)
+            {
+                if (container == "*")
+                    return true;
+                if (container == "file")
+                {
+                    if (parent == null || parent is Container)
+                        return true;
+                    continue;
+                }
+                if (container.Length == 4)
+                {
+                    if (parentType == container)
+                        return true;
+                    continue;
+                }
+                int open = container.IndexOf('(');
+                if (open > 0 && container.EndsWith(")"))
+                {
+                    string[] types = container.Substring(open + 1, container.Length - open - 2).Split(',');
+                    if (parentType != null && types.Contains(parentType))
+                        return true;
+                    continue;
+                }
+                for (var type = parent?.GetType(); type != null; type = type.BaseType)
+                {
+                    if (type.Name == container)
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Of a sample entry protected or restricted, the format it was, of the 'frma' of its 'sinf' or 'rinf' (ISO/IEC 14496-12
+        /// 8.12.2); null of another box.
+        /// </summary>
+        private static string OriginalFormatOf(Box entry)
+        {
+            foreach (var scheme in entry.Children ?? Enumerable.Empty<Box>())
+            {
+                if (scheme.FourCC != IsoStream.FromFourCC("sinf") && scheme.FourCC != IsoStream.FromFourCC("rinf"))
+                    continue;
+                foreach (var child in scheme.Children ?? Enumerable.Empty<Box>())
+                {
+                    if (child is OriginalFormatBox frma && frma.DataFormat != 0)
+                        return IsoStream.ToFourCC(frma.DataFormat);
+                }
+            }
+            return null;
+        }
+
         public Box(uint boxType) 
         {
             FourCC = boxType;    
@@ -86,6 +170,31 @@ namespace SharpISOBMFF
         public virtual ulong CalculateSize()
         {
             return (ulong)(32 + 32 + (IsCountingLargeSize ? 64 : 0)) /* + IsoStream.CalculateBoxArray(this) */ + (ulong)(padding != null ? 8 * padding.Length : 0) + 8 * (ulong)(uuid != null ? uuid.Length : 0);
+        }
+
+        /// <summary>The box, its fields and its boxes, a line each, as <see cref="BoxStringBuilder"/> describes them.</summary>
+        public override string ToString() { return BoxStringBuilder.Format(this); }
+
+        public virtual ulong ToString(BoxStringBuilder builder)
+        {
+            return HeaderToString(builder);
+        }
+
+        /// <summary>
+        /// The header the box is written with: its size as it is now - of its fields and boxes as they are - its type, and
+        /// of a 'uuid' box, its user type.
+        /// </summary>
+        protected ulong HeaderToString(BoxStringBuilder builder)
+        {
+            ulong size = IsoStream.CalculateBoxSize(this) >> 3;
+            ulong boxSize = 0;
+            boxSize += builder.Field("size", 32, IsCountingLargeSize ? 1u : (uint)size);
+            boxSize += builder.Field("type", 32, FourCC);
+            if (IsCountingLargeSize)
+                boxSize += builder.Field("largesize", 64, size);
+            if (uuid != null)
+                boxSize += builder.Field("usertype", 8 * (ulong)uuid.Length, uuid);
+            return boxSize;
         }
     }
 
@@ -204,6 +313,14 @@ namespace SharpISOBMFF
             boxSize += (ulong)data.Length << 3; // data
             return boxSize;
         }
+
+        public override ulong ToString(BoxStringBuilder builder)
+        {
+            ulong boxSize = 0;
+            boxSize += base.ToString(builder);
+            boxSize += builder.Field("data", (ulong)data.Length << 3, this.data);
+            return boxSize;
+        }
     }
 
     public class InvalidBox : UnknownBox
@@ -226,6 +343,13 @@ namespace SharpISOBMFF
 
         /// <summary>Why the box's syntax could not read it.</summary>
         public string Error { get; }
+
+        public override ulong ToString(BoxStringBuilder builder)
+        {
+            ulong boxSize = base.ToString(builder);
+            boxSize += builder.Field("error", 0, Error);
+            return boxSize;
+        }
     }
 
     public class UnknownEntry : SampleGroupDescriptionEntry
@@ -260,6 +384,14 @@ namespace SharpISOBMFF
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += (ulong)data.Length << 3; // data
+            return boxSize;
+        }
+
+        public override ulong ToString(BoxStringBuilder builder)
+        {
+            ulong boxSize = 0;
+            boxSize += base.ToString(builder);
+            boxSize += builder.Field("data", (ulong)data.Length << 3, this.data);
             return boxSize;
         }
     }
@@ -301,6 +433,13 @@ namespace SharpISOBMFF
             ulong boxSize = 0;
             boxSize += (ulong)data.Length << 3; // data
             return boxSize;
+        }
+
+        public override string ToString() { return BoxStringBuilder.Format(this); }
+
+        public virtual ulong ToString(BoxStringBuilder builder)
+        {
+            return builder.Field("data", (ulong)data.Length << 3, this.data);
         }
     }
 
@@ -394,6 +533,14 @@ namespace SharpISOBMFF
         {
             return 0;
         }
+
+        public override string ToString() { return BoxStringBuilder.Format(this); }
+
+        /// <summary>Of its fields, none: its tag and size, written before them, <see cref="BoxStringBuilder"/> describes.</summary>
+        public virtual ulong ToString(BoxStringBuilder builder)
+        {
+            return 0;
+        }
     }
 
     public class InvalidDescriptor : UnknownDescriptor
@@ -417,6 +564,13 @@ namespace SharpISOBMFF
 
         /// <summary>Why the descriptor's syntax could not read it.</summary>
         public string Error { get; }
+
+        public override ulong ToString(BoxStringBuilder builder)
+        {
+            ulong boxSize = base.ToString(builder);
+            boxSize += builder.Field("error", 0, Error);
+            return boxSize;
+        }
     }
 
     public class UnknownDescriptor : Descriptor
@@ -445,6 +599,13 @@ namespace SharpISOBMFF
         {
             ulong boxSize = base.CalculateSize();
             boxSize += (ulong)data.Length << 3;
+            return boxSize;
+        }
+
+        public override ulong ToString(BoxStringBuilder builder)
+        {
+            ulong boxSize = base.ToString(builder);
+            boxSize += builder.Field("data", (ulong)data.Length << 3, this.data);
             return boxSize;
         }
     }

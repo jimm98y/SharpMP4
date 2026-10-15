@@ -32,6 +32,9 @@ public partial class TrackFragmentHeaderBox : FullBox
 {
 	public const string TYPE = "tfhd";
 	public override string DisplayName { get { return "TrackFragmentHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("traf"); }
+
 
 	protected uint track_ID;  //  all the following are optional fields
 	protected bool track_IDPresent;
@@ -155,6 +158,40 @@ public partial class TrackFragmentHeaderBox : FullBox
 		if ((flags  &  0x20) ==  0x20)
 		{
 			boxSize += 32; // default_sample_flags
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		if (this.track_IDPresent) boxSize += builder.Field("track_ID", 32, this.track_ID); // all the following are optional fields
+		/*  their presence is indicated by bits in the tf_flags */
+
+		if ((flags  &  0x1) ==  0x1)
+		{
+			boxSize += builder.Field("base_data_offset", 64, this.base_data_offset); 
+		}
+
+		if ((flags  &  0x2) ==  0x2)
+		{
+			boxSize += builder.Field("sample_description_index", 32, this.sample_description_index); 
+		}
+
+		if ((flags  &  0x8) ==  0x8)
+		{
+			boxSize += builder.Field("default_sample_duration", 32, this.default_sample_duration); 
+		}
+
+		if ((flags  &  0x10) ==  0x10)
+		{
+			boxSize += builder.Field("default_sample_size", 32, this.default_sample_size); 
+		}
+
+		if ((flags  &  0x20) ==  0x20)
+		{
+			boxSize += builder.Field("default_sample_flags", 32, this.default_sample_flags); 
 		}
 		return boxSize;
 	}

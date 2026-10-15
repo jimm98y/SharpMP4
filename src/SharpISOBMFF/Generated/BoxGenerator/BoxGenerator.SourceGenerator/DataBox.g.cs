@@ -16,6 +16,9 @@ public partial class DataBox : Box
 {
 	public const string TYPE = "data";
 	public override string DisplayName { get { return "DataBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
+
 
 	protected uint dataType; 
 	public uint DataType { get { return this.dataType; } set { this.dataType = value; } }
@@ -57,6 +60,16 @@ public partial class DataBox : Box
 		boxSize += 32; // dataType
 		boxSize += 32; // dataLang
 		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("dataType", 32, this.dataType); 
+		boxSize += builder.Field("dataLang", 32, this.dataLang); 
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

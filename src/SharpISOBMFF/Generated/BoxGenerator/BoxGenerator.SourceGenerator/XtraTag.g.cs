@@ -21,6 +21,7 @@ public partial class XtraTag : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "XtraTag"; } }
 
 	protected uint inputSize; 
@@ -72,6 +73,17 @@ public partial class XtraTag : IMp4Serializable
 		boxSize += ((ulong)(tagLength) * 8); // tagName
 		boxSize += 32; // count
 		boxSize += IsoStream.CalculateClassSize(values); // values
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("inputSize", 32, this.inputSize); 
+		boxSize += builder.Field("tagLength", 32, this.tagLength); 
+		boxSize += builder.Field("tagName", ((ulong)(tagLength) * 8), this.tagName); 
+		boxSize += builder.Field("count", 32, this.count); 
+		boxSize += builder.Field("values", IsoStream.CalculateClassSize(values), this.values); 
 		return boxSize;
 	}
 }

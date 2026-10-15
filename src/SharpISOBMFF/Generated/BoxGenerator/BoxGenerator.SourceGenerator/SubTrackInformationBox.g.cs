@@ -18,6 +18,9 @@ public partial class SubTrackInformationBox : FullBox
 {
 	public const string TYPE = "stri";
 	public override string DisplayName { get { return "SubTrackInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("strk"); }
+
 
 	protected short switch_group = 0; 
 	public short SwitchGroup { get { return this.switch_group; } set { this.switch_group = value; } }
@@ -65,6 +68,17 @@ public partial class SubTrackInformationBox : FullBox
 		boxSize += 16; // alternate_group
 		boxSize += 32; // sub_track_ID
 		boxSize += ((ulong)attribute_list.Length * 32); // attribute_list
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("switch_group", 16, this.switch_group); 
+		boxSize += builder.Field("alternate_group", 16, this.alternate_group); 
+		boxSize += builder.Field("sub_track_ID", 32, this.sub_track_ID); 
+		boxSize += builder.Field("attribute_list", ((ulong)attribute_list.Length * 32), this.attribute_list); // to the end of the box
 		return boxSize;
 	}
 }

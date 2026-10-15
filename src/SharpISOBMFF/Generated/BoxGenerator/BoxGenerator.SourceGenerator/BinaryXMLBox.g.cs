@@ -15,6 +15,9 @@ public partial class BinaryXMLBox : FullBox
 {
 	public const string TYPE = "bxml";
 	public override string DisplayName { get { return "BinaryXMLBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
+
 
 	protected byte[] data;  //  to end of box
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
@@ -44,6 +47,14 @@ public partial class BinaryXMLBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); // to end of box
 		return boxSize;
 	}
 }

@@ -14,6 +14,9 @@ public partial class hintPacketsSentnpckDup : Box
 {
 	public const string TYPE = "npck";
 	public override string DisplayName { get { return "hintPacketsSentnpckDup"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("hinf"); }
+
 
 	protected uint packetssent; 
 	public uint Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
@@ -43,6 +46,14 @@ public partial class hintPacketsSentnpckDup : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // packetssent
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("packetssent", 32, this.packetssent); 
 		return boxSize;
 	}
 }

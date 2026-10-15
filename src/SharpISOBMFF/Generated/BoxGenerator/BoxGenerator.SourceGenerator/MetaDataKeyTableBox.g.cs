@@ -15,6 +15,9 @@ public partial class MetaDataKeyTableBox : FullBox
 {
 	public const string TYPE = "keys";
 	public override string DisplayName { get { return "MetaDataKeyTableBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("BoxedMetaDataSampleEntry(mebx)", "meta"); }
+
 
 	protected uint entry_count; 
 	public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -51,6 +54,16 @@ public partial class MetaDataKeyTableBox : FullBox
 		boxSize += 32; // entry_count
 		// boxSize += IsoStream.CalculateBoxSize(MetaDataKeyBox); // MetaDataKeyBox
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		// boxSize += builder.Field("MetaDataKeyBox", IsoStream.CalculateBoxSize(MetaDataKeyBox), this.MetaDataKeyBox); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

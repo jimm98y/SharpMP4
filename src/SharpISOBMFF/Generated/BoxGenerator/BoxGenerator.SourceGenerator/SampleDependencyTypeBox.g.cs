@@ -20,6 +20,9 @@ public partial class SampleDependencyTypeBox : FullBox
 {
 	public const string TYPE = "sdtp";
 	public override string DisplayName { get { return "SampleDependencyTypeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl", "traf"); }
+
 
 	protected byte[] is_leading; 
 	public byte[] IsLeading { get { return this.is_leading; } set { this.is_leading = value; } }
@@ -88,6 +91,23 @@ public partial class SampleDependencyTypeBox : FullBox
 			boxSize += 2; // sample_depends_on
 			boxSize += 2; // sample_is_depended_on
 			boxSize += 2; // sample_has_redundancy
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		int sample_count = is_leading.Length;
+
+
+		for (int i=0; i < sample_count; i++)
+		{
+			boxSize += builder.Field($"is_leading[{i}]", 2, this.is_leading[i]); 
+			boxSize += builder.Field($"sample_depends_on[{i}]", 2, this.sample_depends_on[i]); 
+			boxSize += builder.Field($"sample_is_depended_on[{i}]", 2, this.sample_is_depended_on[i]); 
+			boxSize += builder.Field($"sample_has_redundancy[{i}]", 2, this.sample_has_redundancy[i]); 
 		}
 		return boxSize;
 	}

@@ -110,5 +110,25 @@ namespace SharpISOBMFF
         {
             return 8 + 32 + (ulong)UnitSize.Length * (OffsetBits(UnitOffsetCode) + SizeBits(UnitSizeCode));
         }
+
+        public override string ToString() { return BoxStringBuilder.Format(this); }
+
+        public ulong ToString(BoxStringBuilder builder)
+        {
+            ulong size = 0;
+            size += builder.Field("unit_offset_code", 3, UnitOffsetCode);
+            size += builder.Field("unit_size_code", 3, UnitSizeCode);
+            size += builder.Field("reserved", 2, Reserved);
+            size += builder.Field("num_compressed_units", 32, (uint)UnitSize.Length);
+
+            uint offsetBits = OffsetBits(UnitOffsetCode), sizeBits = SizeBits(UnitSizeCode);
+            for (int i = 0; i < UnitSize.Length; i++)
+            {
+                if (offsetBits != 0)
+                    size += builder.Field($"unit_offset[{i}]", offsetBits, UnitOffset[i]);
+                size += builder.Field($"unit_size[{i}]", sizeBits, UnitSize[i]);
+            }
+            return size;
+        }
     }
 }

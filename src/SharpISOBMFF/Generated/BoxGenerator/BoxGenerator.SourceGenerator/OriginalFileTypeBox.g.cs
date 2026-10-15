@@ -13,6 +13,9 @@ public partial class OriginalFileTypeBox : Box
 {
 	public const string TYPE = "otyp";
 	public override string DisplayName { get { return "OriginalFileTypeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file", "otyp"); }
+
 
 	public OriginalFileTypeBox(): base(IsoStream.FromFourCC("otyp"))
 	{
@@ -39,6 +42,14 @@ public partial class OriginalFileTypeBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

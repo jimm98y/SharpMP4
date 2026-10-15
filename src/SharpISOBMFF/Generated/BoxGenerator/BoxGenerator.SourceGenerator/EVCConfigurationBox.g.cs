@@ -14,6 +14,9 @@ public partial class EVCConfigurationBox : Box
 {
 	public const string TYPE = "evcC";
 	public override string DisplayName { get { return "EVCConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("EVCSampleEntry(evc1)", "VisualSampleEntry(encv)", "RestrictedSampleEntry(resv)", "ipco"); }
+
 
 	protected EVCDecoderConfigurationRecord EVCConfig; 
 	public EVCDecoderConfigurationRecord _EVCConfig { get { return this.EVCConfig; } set { this.EVCConfig = value; } }
@@ -43,6 +46,14 @@ public partial class EVCConfigurationBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateClassSize(EVCConfig); // EVCConfig
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("EVCConfig", IsoStream.CalculateClassSize(EVCConfig), this.EVCConfig); 
 		return boxSize;
 	}
 }

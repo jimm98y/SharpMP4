@@ -26,6 +26,9 @@ public partial class CompositionToDecodeBox : FullBox
 {
 	public const string TYPE = "cslg";
 	public override string DisplayName { get { return "CompositionToDecodeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl", "trep"); }
+
 
 	protected long compositionToDTSShift; 
 	public long CompositionToDTSShift { get { return this.compositionToDTSShift; } set { this.compositionToDTSShift = value; } }
@@ -117,6 +120,31 @@ public partial class CompositionToDecodeBox : FullBox
 			boxSize += 64; // greatestDecodeToDisplayDelta
 			boxSize += 64; // compositionStartTime
 			boxSize += 64; // compositionEndTime
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version==0)
+		{
+			boxSize += builder.Field("compositionToDTSShift", 32, this.compositionToDTSShift); 
+			boxSize += builder.Field("leastDecodeToDisplayDelta", 32, this.leastDecodeToDisplayDelta); 
+			boxSize += builder.Field("greatestDecodeToDisplayDelta", 32, this.greatestDecodeToDisplayDelta); 
+			boxSize += builder.Field("compositionStartTime", 32, this.compositionStartTime); 
+			boxSize += builder.Field("compositionEndTime", 32, this.compositionEndTime); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("compositionToDTSShift", 64, this.compositionToDTSShift); 
+			boxSize += builder.Field("leastDecodeToDisplayDelta", 64, this.leastDecodeToDisplayDelta); 
+			boxSize += builder.Field("greatestDecodeToDisplayDelta", 64, this.greatestDecodeToDisplayDelta); 
+			boxSize += builder.Field("compositionStartTime", 64, this.compositionStartTime); 
+			boxSize += builder.Field("compositionEndTime", 64, this.compositionEndTime); 
 		}
 		return boxSize;
 	}

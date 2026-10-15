@@ -15,6 +15,9 @@ public partial class Stereoscopic3D : FullBox
 {
 	public const string TYPE = "st3d";
 	public override string DisplayName { get { return "Stereoscopic3D"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry"); }
+
 
 	protected byte stereo_mode; 
 	public byte StereoMode { get { return this.stereo_mode; } set { this.stereo_mode = value; } }
@@ -44,6 +47,14 @@ public partial class Stereoscopic3D : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 8; // stereo_mode
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("stereo_mode", 8, this.stereo_mode); 
 		return boxSize;
 	}
 }

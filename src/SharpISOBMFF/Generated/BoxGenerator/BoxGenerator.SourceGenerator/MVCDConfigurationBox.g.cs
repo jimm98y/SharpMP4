@@ -15,6 +15,9 @@ public partial class MVCDConfigurationBox : Box
 {
 	public const string TYPE = "mvdC";
 	public override string DisplayName { get { return "MVCDConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AVCSampleEntry(avc1,avc3)", "MVCSampleEntry(mvc1,mvc2,mvc3,mvc4)", "MVCDSampleEntry(mvd1,mvd2,mvd3,mvd4)"); }
+
 
 	protected MVDDecoderConfigurationRecord MVDConfig; 
 	public MVDDecoderConfigurationRecord _MVDConfig { get { return this.MVDConfig; } set { this.MVDConfig = value; } }
@@ -51,6 +54,16 @@ public partial class MVCDConfigurationBox : Box
 		boxSize += IsoStream.CalculateClassSize(MVDConfig); // MVDConfig
 		// boxSize += IsoStream.CalculateBoxSize(mvdDepthRes); // mvdDepthRes
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("MVDConfig", IsoStream.CalculateClassSize(MVDConfig), this.MVDConfig); 
+		// boxSize += builder.Field("mvdDepthRes", IsoStream.CalculateBoxSize(mvdDepthRes), this.mvdDepthRes); //Optional
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

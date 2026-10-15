@@ -14,6 +14,9 @@ public partial class HEVCTileConfigurationBox : Box
 {
 	public const string TYPE = "hvtC";
 	public override string DisplayName { get { return "HEVCTileConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("HEVCTileSampleEntry(hvt1)", "HEVCTileSSHInfoSampleEntry(hvt3)", "HEVCSliceSegmentDataSampleEntry(hvt2)"); }
+
 
 	protected HEVCTileTierLevelConfigurationRecord HEVCTileTierLevelConfig; 
 	public HEVCTileTierLevelConfigurationRecord _HEVCTileTierLevelConfig { get { return this.HEVCTileTierLevelConfig; } set { this.HEVCTileTierLevelConfig = value; } }
@@ -43,6 +46,14 @@ public partial class HEVCTileConfigurationBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateClassSize(HEVCTileTierLevelConfig); // HEVCTileTierLevelConfig
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("HEVCTileTierLevelConfig", IsoStream.CalculateClassSize(HEVCTileTierLevelConfig), this.HEVCTileTierLevelConfig); 
 		return boxSize;
 	}
 }

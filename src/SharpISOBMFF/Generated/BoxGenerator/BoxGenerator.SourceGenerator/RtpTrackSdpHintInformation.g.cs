@@ -14,6 +14,9 @@ public partial class RtpTrackSdpHintInformation : Box
 {
 	public const string TYPE = "sdp ";
 	public override string DisplayName { get { return "RtpTrackSdpHintInformation"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("hnti"); }
+
 
 	protected byte[] sdptext; 
 	public byte[] Sdptext { get { return this.sdptext; } set { this.sdptext = value; } }
@@ -43,6 +46,14 @@ public partial class RtpTrackSdpHintInformation : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += ((ulong)sdptext.Length * 8); // sdptext
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sdptext", ((ulong)sdptext.Length * 8), this.sdptext); 
 		return boxSize;
 	}
 }

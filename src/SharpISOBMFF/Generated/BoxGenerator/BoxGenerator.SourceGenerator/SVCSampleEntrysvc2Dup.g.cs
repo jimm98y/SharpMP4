@@ -12,6 +12,9 @@ public partial class SVCSampleEntrysvc2Dup : VisualSampleEntry
 {
 	public const string TYPE = "svc2";
 	public override string DisplayName { get { return "SVCSampleEntrysvc2Dup"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public SVCConfigurationBox Svcconfig { get { return this.children.OfType<SVCConfigurationBox>().FirstOrDefault(); } }
 	public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 	public ScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ScalabilityInformationSEIBox>().FirstOrDefault(); } }
@@ -54,6 +57,18 @@ public partial class SVCSampleEntrysvc2Dup : VisualSampleEntry
 		// boxSize += IsoStream.CalculateBoxSize(scalability); // scalability
 		// boxSize += IsoStream.CalculateBoxSize(method); // method
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("svcconfig", IsoStream.CalculateBoxSize(svcconfig), this.svcconfig); 
+		// boxSize += builder.Field("descr", IsoStream.CalculateBoxSize(descr), this.descr); // optional
+		// boxSize += builder.Field("scalability", IsoStream.CalculateBoxSize(scalability), this.scalability); // optional
+		// boxSize += builder.Field("method", IsoStream.CalculateBoxSize(method), this.method); // optional
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

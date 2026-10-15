@@ -22,6 +22,9 @@ public partial class SubsegmentIndexBox : FullBox
 {
 	public const string TYPE = "ssix";
 	public override string DisplayName { get { return "SubsegmentIndexBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected uint subsegment_count; 
 	public uint SubsegmentCount { get { return this.subsegment_count; } set { this.subsegment_count = value; } }
@@ -96,6 +99,25 @@ public partial class SubsegmentIndexBox : FullBox
 			{
 				boxSize += 8; // level
 				boxSize += 24; // range_size
+			}
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("subsegment_count", 32, this.subsegment_count); 
+
+		for (int  i=0; i < subsegment_count; i++)
+		{
+			boxSize += builder.Field($"range_count[{i}]", 32, this.range_count[i]); 
+
+			for (int  j=0; j < range_count[i]; j++)
+			{
+				boxSize += builder.Field($"level[{i}][{j}]", 8, this.level[i][j]); 
+				boxSize += builder.Field($"range_size[{i}][{j}]", 24, this.range_size[i][j]); 
 			}
 		}
 		return boxSize;

@@ -46,6 +46,14 @@ public partial class QoS_Qualifier_PREF_MAX_DELAY : QoS_Qualifier
 		boxSize += 32; // PREF_MAX_DELAY
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("PREF_MAX_DELAY", 32, this.PREF_MAX_DELAY); 
+		return boxSize;
+	}
 }
 
 }

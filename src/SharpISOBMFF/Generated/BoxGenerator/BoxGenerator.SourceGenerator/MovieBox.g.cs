@@ -13,6 +13,9 @@ public partial class MovieBox : Box
 {
 	public const string TYPE = "moov";
 	public override string DisplayName { get { return "MovieBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	public MovieBox(): base(IsoStream.FromFourCC("moov"))
 	{
@@ -39,6 +42,14 @@ public partial class MovieBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

@@ -25,6 +25,9 @@ public partial class SampleToGroupBox : FullBox
 {
 	public const string TYPE = "sbgp";
 	public override string DisplayName { get { return "SampleToGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl", "traf"); }
+
 
 	protected uint grouping_type; 
 	public uint GroupingType { get { return this.grouping_type; } set { this.grouping_type = value; } }
@@ -103,6 +106,26 @@ public partial class SampleToGroupBox : FullBox
 		{
 			boxSize += 32; // sample_count
 			boxSize += 32; // group_description_index
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("grouping_type", 32, this.grouping_type); 
+
+		if (version == 1)
+		{
+			boxSize += builder.Field("grouping_type_parameter", 32, this.grouping_type_parameter); 
+		}
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+
+		for (int i=0; i < entry_count; i++)
+		{
+			boxSize += builder.Field($"sample_count[{i}]", 32, this.sample_count[i]); 
+			boxSize += builder.Field($"group_description_index[{i}]", 32, this.group_description_index[i]); 
 		}
 		return boxSize;
 	}

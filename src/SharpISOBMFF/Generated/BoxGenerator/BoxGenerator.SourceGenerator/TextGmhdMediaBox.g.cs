@@ -14,6 +14,9 @@ public partial class TextGmhdMediaBox : Box
 {
 	public const string TYPE = "text";
 	public override string DisplayName { get { return "TextGmhdMediaBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd", "gmhd"); }
+
 
 	protected byte[] textData; 
 	public byte[] TextData { get { return this.textData; } set { this.textData = value; } }
@@ -43,6 +46,14 @@ public partial class TextGmhdMediaBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 36 * 8; // textData
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("textData", 36 * 8, this.textData); 
 		return boxSize;
 	}
 }

@@ -69,6 +69,14 @@ namespace SharpISOBMFF
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString() { return BoxStringBuilder.Format(this); }
+
+        // of no fields read
+        public virtual ulong ToString(BoxStringBuilder builder)
+        {
+            return 0;
+        }
     }
 
     public class StructuredAudioSpecificConfig : IMp4Serializable
@@ -96,6 +104,14 @@ namespace SharpISOBMFF
         public virtual ulong CalculateSize()
         {
             throw new NotImplementedException();
+        }
+
+        public override string ToString() { return BoxStringBuilder.Format(this); }
+
+        // of no fields read
+        public virtual ulong ToString(BoxStringBuilder builder)
+        {
+            return 0;
         }
     }
 

@@ -15,6 +15,9 @@ public partial class FLACSampleEntry : AudioSampleEntry
 {
 	public const string TYPE = "fLaC";
 	public override string DisplayName { get { return "FLACSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public FLACSpecificBox _FLACSpecificBox { get { return this.children.OfType<FLACSpecificBox>().FirstOrDefault(); } }
 
 	public FLACSampleEntry(): base(IsoStream.FromFourCC("fLaC"))
@@ -45,6 +48,15 @@ public partial class FLACSampleEntry : AudioSampleEntry
 		boxSize += base.CalculateSize();
 		// boxSize += IsoStream.CalculateBoxSize(FLACSpecificBox); // FLACSpecificBox
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("FLACSpecificBox", IsoStream.CalculateBoxSize(FLACSpecificBox), this.FLACSpecificBox); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

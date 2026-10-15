@@ -16,6 +16,9 @@ public partial class CreationTimeProperty : ItemFullProperty
 {
 	public const string TYPE = "crtt";
 	public override string DisplayName { get { return "CreationTimeProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected ulong creation_time; 
 	public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -45,6 +48,14 @@ public partial class CreationTimeProperty : ItemFullProperty
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 64; // creation_time
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("creation_time", 64, this.creation_time); 
 		return boxSize;
 	}
 }

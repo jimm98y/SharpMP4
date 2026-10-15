@@ -123,6 +123,31 @@ public partial class VvcSubpicIDEntry : VisualSampleGroupEntry
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("rect_region_flag", 1, this.rect_region_flag); 
+		boxSize += builder.Field("reserved", 2, this.reserved); 
+		boxSize += builder.Field("continuous_id_flag", 1, this.continuous_id_flag); 
+		boxSize += builder.Field("num_subpics_minus1", 12, this.num_subpics_minus1); 
+
+		for (int i = 0; i <= num_subpics_minus1; i++)
+		{
+
+			if ((continuous_id_flag && i == 0) || !continuous_id_flag)
+			{
+				boxSize += builder.Field($"subpic_id[{i}]", 16, this.subpic_id[i]); 
+			}
+
+			if (rect_region_flag)
+			{
+				boxSize += builder.Field($"groupID[{i}]", 16, this.groupID[i]); 
+			}
+		}
+		return boxSize;
+	}
 }
 
 }

@@ -18,6 +18,9 @@ public partial class ThreeGPPClassificationBox : FullBox
 {
 	public const string TYPE = "clsf";
 	public override string DisplayName { get { return "ThreeGPPClassificationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected uint classificationEntity; 
 	public uint ClassificationEntity { get { return this.classificationEntity; } set { this.classificationEntity = value; } }
@@ -71,6 +74,18 @@ public partial class ThreeGPPClassificationBox : FullBox
 		boxSize += 1; // reserved
 		boxSize += 15; // language
 		boxSize += IsoStream.CalculateStringSize(value); // value
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("classificationEntity", 32, this.classificationEntity); 
+		boxSize += builder.Field("classificationTable", 16, this.classificationTable); 
+		boxSize += builder.Field("reserved", 1, this.reserved); 
+		boxSize += builder.Field("language", 15, this.language); 
+		boxSize += builder.Field("value", IsoStream.CalculateStringSize(value), this.value); 
 		return boxSize;
 	}
 }

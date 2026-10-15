@@ -53,6 +53,15 @@ public partial class DepthOfFieldBracketingEntry : VisualSampleGroupEntry
 		boxSize += 8; // f_stop_denominator
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("f_stop_numerator", 8, this.f_stop_numerator); 
+		boxSize += builder.Field("f_stop_denominator", 8, this.f_stop_denominator); 
+		return boxSize;
+	}
 }
 
 }

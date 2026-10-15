@@ -14,6 +14,9 @@ public partial class TrackReferenceTypeBoxvdepDup : Box
 {
 	public const string TYPE = "vdep";
 	public override string DisplayName { get { return "TrackReferenceTypeBoxvdepDup"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("tref"); }
+
 
 	protected uint[] trackIds; 
 	public uint[] TrackIds { get { return this.trackIds; } set { this.trackIds = value; } }
@@ -43,6 +46,14 @@ public partial class TrackReferenceTypeBoxvdepDup : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += ((ulong)trackIds.Length * 32); // trackIds
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("trackIds", ((ulong)trackIds.Length * 32), this.trackIds); 
 		return boxSize;
 	}
 }

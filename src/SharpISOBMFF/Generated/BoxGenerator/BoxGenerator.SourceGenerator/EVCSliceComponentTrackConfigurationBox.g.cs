@@ -14,6 +14,9 @@ public partial class EVCSliceComponentTrackConfigurationBox : Box
 {
 	public const string TYPE = "evsC";
 	public override string DisplayName { get { return "EVCSliceComponentTrackConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("EVCSliceComponentTrackSampleEntry(evs1,evs2)"); }
+
 
 	protected EVCSliceComponentTrackConfigurationRecord config; 
 	public EVCSliceComponentTrackConfigurationRecord Config { get { return this.config; } set { this.config = value; } }
@@ -43,6 +46,14 @@ public partial class EVCSliceComponentTrackConfigurationBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateClassSize(config); // config
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("config", IsoStream.CalculateClassSize(config), this.config); 
 		return boxSize;
 	}
 }

@@ -17,6 +17,9 @@ public partial class HandlerBox : FullBox
 {
 	public const string TYPE = "hdlr";
 	public override string DisplayName { get { return "HandlerBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)", "mdia", "minf"); }
+
 
 	protected uint pre_defined = 0; 
 	public uint PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
@@ -64,6 +67,17 @@ public partial class HandlerBox : FullBox
 		boxSize += 32; // handler_type
 		boxSize += 3 * 32; // reserved
 		boxSize += IsoStream.CalculateStringSize(name); // name
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("pre_defined", 32, this.pre_defined); 
+		boxSize += builder.Field("handler_type", 32, this.handler_type); 
+		boxSize += builder.Field("reserved", 3 * 32, this.reserved); 
+		boxSize += builder.Field("name", IsoStream.CalculateStringSize(name), this.name); // utf8string in ISOBMFF, counted in QuickTime: all that is left, as bytes
 		return boxSize;
 	}
 }

@@ -15,6 +15,9 @@ public partial class AppleCompressedMoovDataBox : Box
 {
 	public const string TYPE = "cmvd";
 	public override string DisplayName { get { return "AppleCompressedMoovDataBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("cmov"); }
+
 
 	protected uint uncompressedSize; 
 	public uint UncompressedSize { get { return this.uncompressedSize; } set { this.uncompressedSize = value; } }
@@ -50,6 +53,15 @@ public partial class AppleCompressedMoovDataBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 32; // uncompressedSize
 		boxSize += ((ulong)compressedData.Length * 8); // compressedData
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("uncompressedSize", 32, this.uncompressedSize); 
+		boxSize += builder.Field("compressedData", ((ulong)compressedData.Length * 8), this.compressedData); 
 		return boxSize;
 	}
 }

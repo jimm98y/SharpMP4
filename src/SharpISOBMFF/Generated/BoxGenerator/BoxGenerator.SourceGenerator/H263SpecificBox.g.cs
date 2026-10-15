@@ -17,6 +17,9 @@ public partial class H263SpecificBox : Box
 {
 	public const string TYPE = "d263";
 	public override string DisplayName { get { return "H263SpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(s263,encv)"); }
+
 
 	protected uint vendor; 
 	public uint Vendor { get { return this.vendor; } set { this.vendor = value; } }
@@ -64,6 +67,17 @@ public partial class H263SpecificBox : Box
 		boxSize += 8; // decoderVersion
 		boxSize += 8; // level
 		boxSize += 8; // profile
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("vendor", 32, this.vendor); 
+		boxSize += builder.Field("decoderVersion", 8, this.decoderVersion); 
+		boxSize += builder.Field("level", 8, this.level); 
+		boxSize += builder.Field("profile", 8, this.profile); 
 		return boxSize;
 	}
 }

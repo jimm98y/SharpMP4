@@ -15,6 +15,9 @@ public partial class SuggestedTransitionPeriodProperty : ItemFullProperty
 {
 	public const string TYPE = "stpe";
 	public override string DisplayName { get { return "SuggestedTransitionPeriodProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected byte transition_period; 
 	public byte TransitionPeriod { get { return this.transition_period; } set { this.transition_period = value; } }
@@ -44,6 +47,14 @@ public partial class SuggestedTransitionPeriodProperty : ItemFullProperty
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 8; // transition_period
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("transition_period", 8, this.transition_period); 
 		return boxSize;
 	}
 }

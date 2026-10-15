@@ -17,6 +17,9 @@ public partial class CanonTimedMetadataSampleEntry : SampleEntry
 {
 	public const string TYPE = "CTMD";
 	public override string DisplayName { get { return "CanonTimedMetadataSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected uint recordCount; 
 	public uint RecordCount { get { return this.recordCount; } set { this.recordCount = value; } }
@@ -52,6 +55,15 @@ public partial class CanonTimedMetadataSampleEntry : SampleEntry
 		boxSize += base.CalculateSize();
 		boxSize += 32; // recordCount
 		boxSize += IsoStream.CalculateClassSize(recordTypes); // recordTypes
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("recordCount", 32, this.recordCount); 
+		boxSize += builder.Field("recordTypes", IsoStream.CalculateClassSize(recordTypes), this.recordTypes); 
 		return boxSize;
 	}
 }

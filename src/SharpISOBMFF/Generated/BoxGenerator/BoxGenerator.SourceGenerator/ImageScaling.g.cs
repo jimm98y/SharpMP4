@@ -18,6 +18,9 @@ public partial class ImageScaling : ItemFullProperty
 {
 	public const string TYPE = "iscl";
 	public override string DisplayName { get { return "ImageScaling"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected ushort target_width_numerator; 
 	public ushort TargetWidthNumerator { get { return this.target_width_numerator; } set { this.target_width_numerator = value; } }
@@ -65,6 +68,17 @@ public partial class ImageScaling : ItemFullProperty
 		boxSize += 16; // target_width_denominator
 		boxSize += 16; // target_height_numerator
 		boxSize += 16; // target_height_denominator
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("target_width_numerator", 16, this.target_width_numerator); 
+		boxSize += builder.Field("target_width_denominator", 16, this.target_width_denominator); 
+		boxSize += builder.Field("target_height_numerator", 16, this.target_height_numerator); 
+		boxSize += builder.Field("target_height_denominator", 16, this.target_height_denominator); 
 		return boxSize;
 	}
 }

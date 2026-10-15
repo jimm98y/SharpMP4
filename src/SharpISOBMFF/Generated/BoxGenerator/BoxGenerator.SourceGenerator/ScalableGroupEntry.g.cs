@@ -180,6 +180,39 @@ public partial class ScalableGroupEntry : VisualSampleGroupEntry
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("groupID", 8, this.groupID); 
+		boxSize += builder.Field("primary_groupID", 8, this.primary_groupID); 
+		boxSize += builder.Field("is_tier_IDR", 1, this.is_tier_IDR); 
+		boxSize += builder.Field("noInterLayerPredFlag", 1, this.noInterLayerPredFlag); 
+		boxSize += builder.Field("useRefBasePicFlag", 1, this.useRefBasePicFlag); 
+		boxSize += builder.Field("storeBaseRepFlag", 1, this.storeBaseRepFlag); 
+		boxSize += builder.Field("is_tl_switching_point", 1, this.is_tl_switching_point); 
+		boxSize += builder.Field("reserved", 3, this.reserved); 
+		boxSize += builder.Field("tl_switching_distance", 8, this.tl_switching_distance); 
+
+		if (groupID == primary_groupID)
+		{
+			// boxSize += builder.Field("TierInfoBox", IsoStream.CalculateBoxSize(TierInfoBox), this.TierInfoBox); // Mandatory
+			// boxSize += builder.Field("SVCDependencyRangeBox", IsoStream.CalculateBoxSize(SVCDependencyRangeBox), this.SVCDependencyRangeBox); // Mandatory
+			// boxSize += builder.Field("PriorityRangeBox", IsoStream.CalculateBoxSize(PriorityRangeBox), this.PriorityRangeBox); // Mandatory
+			/* Optional Boxes or fields may follow when defined later */
+			// boxSize += builder.Field("TierBitRateBox", IsoStream.CalculateBoxSize(TierBitRateBox), this.TierBitRateBox); // optional
+			// boxSize += builder.Field("RectRegionBox", IsoStream.CalculateBoxSize(RectRegionBox), this.RectRegionBox); // optional
+			// boxSize += builder.Field("BufferingBox", IsoStream.CalculateBoxSize(BufferingBox), this.BufferingBox); // optional
+			// boxSize += builder.Field("TierDependencyBox", IsoStream.CalculateBoxSize(TierDependencyBox), this.TierDependencyBox); // optional
+			// boxSize += builder.Field("InitialParameterSetBox", IsoStream.CalculateBoxSize(InitialParameterSetBox), this.InitialParameterSetBox); // optional
+			// boxSize += builder.Field("IroiInfoBox", IsoStream.CalculateBoxSize(IroiInfoBox), this.IroiInfoBox); // optional
+			// boxSize += builder.Field("ProtectionSchemeInfoBox", IsoStream.CalculateBoxSize(ProtectionSchemeInfoBox), this.ProtectionSchemeInfoBox); // optional
+			// boxSize += builder.Field("TranscodingInfoBox", IsoStream.CalculateBoxSize(TranscodingInfoBox), this.TranscodingInfoBox); // optional
+		}
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

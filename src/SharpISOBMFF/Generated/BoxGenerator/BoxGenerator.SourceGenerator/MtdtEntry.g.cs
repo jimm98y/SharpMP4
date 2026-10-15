@@ -22,6 +22,7 @@ public partial class MtdtEntry : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "MtdtEntry"; } }
 
 	protected ushort size; 
@@ -79,6 +80,18 @@ public partial class MtdtEntry : IMp4Serializable
 		boxSize += 15; // language
 		boxSize += 16; // dataType
 		boxSize += ((ulong)(size-10) * 8); // data
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("size", 16, this.size); 
+		boxSize += builder.Field("type", 32, this.type); 
+		boxSize += builder.Field("reserved", 1, this.reserved); 
+		boxSize += builder.Field("language", 15, this.language); 
+		boxSize += builder.Field("dataType", 16, this.dataType); 
+		boxSize += builder.Field("data", ((ulong)(size-10) * 8), this.data); 
 		return boxSize;
 	}
 }

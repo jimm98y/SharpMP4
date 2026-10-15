@@ -22,6 +22,9 @@ public partial class MicrosoftWaveFormatExBox : Box
 {
 	public const string TYPE = "wfex";
 	public override string DisplayName { get { return "MicrosoftWaveFormatExBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(wma )"); }
+
 
 	protected ushort format_tag; 
 	public ushort FormatTag { get { return this.format_tag; } set { this.format_tag = value; } }
@@ -95,6 +98,21 @@ public partial class MicrosoftWaveFormatExBox : Box
 		boxSize += 16; // bits_per_sample
 		if (this.extra_sizePresent) boxSize += 16; // extra_size
 		boxSize += ((ulong)extra.Length * 8); // extra
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("format_tag", 16, this.format_tag); 
+		boxSize += builder.Field("channels", 16, this.channels); 
+		boxSize += builder.Field("samples_per_sec", 32, this.samples_per_sec); 
+		boxSize += builder.Field("avg_bytes_per_sec", 32, this.avg_bytes_per_sec); 
+		boxSize += builder.Field("block_align", 16, this.block_align); 
+		boxSize += builder.Field("bits_per_sample", 16, this.bits_per_sample); 
+		if (this.extra_sizePresent) boxSize += builder.Field("extra_size", 16, this.extra_size); // optional
+		boxSize += builder.Field("extra", ((ulong)extra.Length * 8), this.extra); 
 		return boxSize;
 	}
 }

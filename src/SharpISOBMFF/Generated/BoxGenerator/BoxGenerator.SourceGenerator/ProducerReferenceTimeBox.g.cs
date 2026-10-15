@@ -21,6 +21,9 @@ public partial class ProducerReferenceTimeBox : FullBox
 {
 	public const string TYPE = "prft";
 	public override string DisplayName { get { return "ProducerReferenceTimeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected uint reference_track_ID; 
 	public uint ReferenceTrackID { get { return this.reference_track_ID; } set { this.reference_track_ID = value; } }
@@ -88,6 +91,25 @@ public partial class ProducerReferenceTimeBox : FullBox
 		else 
 		{
 			boxSize += 64; // media_time
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reference_track_ID", 32, this.reference_track_ID); 
+		boxSize += builder.Field("ntp_timestamp", 64, this.ntp_timestamp); 
+
+		if (version==0)
+		{
+			boxSize += builder.Field("media_time", 32, this.media_time); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("media_time", 64, this.media_time); 
 		}
 		return boxSize;
 	}

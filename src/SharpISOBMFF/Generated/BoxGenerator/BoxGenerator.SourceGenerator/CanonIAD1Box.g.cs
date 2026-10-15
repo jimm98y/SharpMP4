@@ -23,6 +23,9 @@ public partial class CanonIAD1Box : FullBox
 {
 	public const string TYPE = "IAD1";
 	public override string DisplayName { get { return "CanonIAD1Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("CDI1"); }
+
 
 	protected ushort image_width; 
 	public ushort ImageWidth { get { return this.image_width; } set { this.image_width = value; } }
@@ -88,6 +91,20 @@ public partial class CanonIAD1Box : FullBox
 		boxSize += 16; // unknown2
 		boxSize += 16; // unknown3
 		boxSize += IsoStream.CalculateClassSize(areas); // areas
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("image_width", 16, this.image_width); 
+		boxSize += builder.Field("image_height", 16, this.image_height); 
+		boxSize += builder.Field("unknown1", 16, this.unknown1); // 1
+		boxSize += builder.Field("image_kind", 16, this.image_kind); // 0 small, 2 big (sliced?)
+		boxSize += builder.Field("unknown2", 16, this.unknown2); // 1
+		boxSize += builder.Field("unknown3", 16, this.unknown3); // 0
+		boxSize += builder.Field("areas", IsoStream.CalculateClassSize(areas), this.areas); // small: the crop, the whole; big: the crop, left and top optical black, the active area
 		return boxSize;
 	}
 }

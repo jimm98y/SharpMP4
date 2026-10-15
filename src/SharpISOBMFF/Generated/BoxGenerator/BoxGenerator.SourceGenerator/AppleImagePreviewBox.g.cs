@@ -17,6 +17,9 @@ public partial class AppleImagePreviewBox : Box
 {
 	public const string TYPE = "pnot";
 	public override string DisplayName { get { return "AppleImagePreviewBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected uint modificationDate; 
 	public uint ModificationDate { get { return this.modificationDate; } set { this.modificationDate = value; } }
@@ -64,6 +67,17 @@ public partial class AppleImagePreviewBox : Box
 		boxSize += 16; // version
 		boxSize += 32; // atomType
 		boxSize += 16; // atomIndex
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("modificationDate", 32, this.modificationDate); 
+		boxSize += builder.Field("version", 16, this.version); 
+		boxSize += builder.Field("atomType", 32, this.atomType); 
+		boxSize += builder.Field("atomIndex", 16, this.atomIndex); 
 		return boxSize;
 	}
 }

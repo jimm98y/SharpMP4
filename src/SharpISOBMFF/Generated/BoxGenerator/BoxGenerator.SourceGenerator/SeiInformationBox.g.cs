@@ -21,6 +21,9 @@ public partial class SeiInformationBox : Box
 {
 	public const string TYPE = "seii";
 	public override string DisplayName { get { return "SeiInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("schi", "VisualSampleEntry"); }
+
 
 	protected ushort numRequiredSEIs; 
 	public ushort NumRequiredSEIs { get { return this.numRequiredSEIs; } set { this.numRequiredSEIs = value; } }
@@ -93,6 +96,25 @@ public partial class SeiInformationBox : Box
 		for (int i = 0; i < numNotRequiredSEIs; i++)
 		{
 			boxSize += 16; // notrequiredSEI_ID
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("numRequiredSEIs", 16, this.numRequiredSEIs); 
+
+		for (int i = 0; i < numRequiredSEIs; i++)
+		{
+			boxSize += builder.Field($"requiredSEI_ID[{i}]", 16, this.requiredSEI_ID[i]); 
+		}
+		boxSize += builder.Field("numNotRequiredSEIs", 16, this.numNotRequiredSEIs); 
+
+		for (int i = 0; i < numNotRequiredSEIs; i++)
+		{
+			boxSize += builder.Field($"notrequiredSEI_ID[{i}]", 16, this.notrequiredSEI_ID[i]); 
 		}
 		return boxSize;
 	}

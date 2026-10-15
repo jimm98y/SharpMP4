@@ -20,6 +20,9 @@ public partial class TimeToSampleBox : FullBox
 {
 	public const string TYPE = "stts";
 	public override string DisplayName { get { return "TimeToSampleBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl"); }
+
 
 	protected uint entry_count; 
 	public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -77,6 +80,21 @@ public partial class TimeToSampleBox : FullBox
 		{
 			boxSize += 32; // sample_count
 			boxSize += 32; // sample_delta
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		
+
+		for (int i=0; i < entry_count; i++)
+		{
+			boxSize += builder.Field($"sample_count[{i}]", 32, this.sample_count[i]); 
+			boxSize += builder.Field($"sample_delta[{i}]", 32, this.sample_delta[i]); 
 		}
 		return boxSize;
 	}

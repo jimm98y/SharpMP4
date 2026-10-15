@@ -21,6 +21,9 @@ public partial class SVCDependencyRangeBox : Box
 {
 	public const string TYPE = "svdr";
 	public override string DisplayName { get { return "SVCDependencyRangeBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("scif"); }
+
 
 	protected byte min_dependency_id; 
 	public byte MinDependencyId { get { return this.min_dependency_id; } set { this.min_dependency_id = value; } }
@@ -92,6 +95,21 @@ public partial class SVCDependencyRangeBox : Box
 		boxSize += 3; // max_temporal_id
 		boxSize += 6; // reserved0
 		boxSize += 4; // max_quality_id
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("min_dependency_id", 3, this.min_dependency_id); 
+		boxSize += builder.Field("min_temporal_id", 3, this.min_temporal_id); 
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += builder.Field("min_quality_id", 4, this.min_quality_id); 
+		boxSize += builder.Field("max_dependency_id", 3, this.max_dependency_id); 
+		boxSize += builder.Field("max_temporal_id", 3, this.max_temporal_id); 
+		boxSize += builder.Field("reserved0", 6, this.reserved0); 
+		boxSize += builder.Field("max_quality_id", 4, this.max_quality_id); 
 		return boxSize;
 	}
 }

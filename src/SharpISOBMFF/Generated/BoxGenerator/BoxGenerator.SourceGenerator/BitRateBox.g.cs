@@ -16,6 +16,9 @@ public partial class BitRateBox : Box
 {
 	public const string TYPE = "btrt";
 	public override string DisplayName { get { return "BitRateBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("SampleEntry"); }
+
 
 	protected uint bufferSizeDB; 
 	public uint BufferSizeDB { get { return this.bufferSizeDB; } set { this.bufferSizeDB = value; } }
@@ -57,6 +60,16 @@ public partial class BitRateBox : Box
 		boxSize += 32; // bufferSizeDB
 		boxSize += 32; // maxBitrate
 		boxSize += 32; // avgBitrate
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("bufferSizeDB", 32, this.bufferSizeDB); 
+		boxSize += builder.Field("maxBitrate", 32, this.maxBitrate); 
+		boxSize += builder.Field("avgBitrate", 32, this.avgBitrate); 
 		return boxSize;
 	}
 }

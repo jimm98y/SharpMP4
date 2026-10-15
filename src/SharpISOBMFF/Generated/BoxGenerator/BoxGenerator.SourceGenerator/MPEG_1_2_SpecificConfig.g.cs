@@ -19,6 +19,7 @@ public partial class MPEG_1_2_SpecificConfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "MPEG_1_2_SpecificConfig"; } }
 
 	protected bool extension; 
@@ -46,6 +47,13 @@ public partial class MPEG_1_2_SpecificConfig : IMp4Serializable
 	{
 		ulong boxSize = 0;
 		boxSize += 1; // extension
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("extension", 1, this.extension); 
 		return boxSize;
 	}
 }

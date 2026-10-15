@@ -14,6 +14,9 @@ public partial class OMATransactionTrackingBox : FullBox
 {
 	public const string TYPE = "odtt";
 	public override string DisplayName { get { return "OMATransactionTrackingBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mdri"); }
+
 
 	protected byte[] transactionID; 
 	public byte[] TransactionID { get { return this.transactionID; } set { this.transactionID = value; } }
@@ -43,6 +46,14 @@ public partial class OMATransactionTrackingBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 16 * 8; // transactionID
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("transactionID", 16 * 8, this.transactionID); 
 		return boxSize;
 	}
 }

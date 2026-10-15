@@ -23,6 +23,7 @@ public partial class HILNconfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "HILNconfig"; } }
 
 	protected bool HILNquantMode; 
@@ -74,6 +75,17 @@ public partial class HILNconfig : IMp4Serializable
 		boxSize += 4; // HILNsampleRateCode
 		boxSize += 12; // HILNframeLength
 		boxSize += 2; // HILNcontMode
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("HILNquantMode", 1, this.HILNquantMode); 
+		boxSize += builder.Field("HILNmaxNumLine", 8, this.HILNmaxNumLine); 
+		boxSize += builder.Field("HILNsampleRateCode", 4, this.HILNsampleRateCode); 
+		boxSize += builder.Field("HILNframeLength", 12, this.HILNframeLength); 
+		boxSize += builder.Field("HILNcontMode", 2, this.HILNcontMode); 
 		return boxSize;
 	}
 }

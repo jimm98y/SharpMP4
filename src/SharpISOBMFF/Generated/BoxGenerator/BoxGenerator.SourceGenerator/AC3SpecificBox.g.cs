@@ -21,6 +21,9 @@ public partial class AC3SpecificBox : Box
 {
 	public const string TYPE = "dac3";
 	public override string DisplayName { get { return "AC3SpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(ac-3,enca)", "wave"); }
+
 
 	protected byte fscod; 
 	public byte Fscod { get { return this.fscod; } set { this.fscod = value; } }
@@ -86,6 +89,20 @@ public partial class AC3SpecificBox : Box
 		boxSize += 1; // lfeon
 		boxSize += 5; // bit_rate_code
 		boxSize += 5; // reserved
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("fscod", 2, this.fscod); 
+		boxSize += builder.Field("bsid", 5, this.bsid); 
+		boxSize += builder.Field("bsmod", 3, this.bsmod); 
+		boxSize += builder.Field("acmod", 3, this.acmod); 
+		boxSize += builder.Field("lfeon", 1, this.lfeon); 
+		boxSize += builder.Field("bit_rate_code", 5, this.bit_rate_code); 
+		boxSize += builder.Field("reserved", 5, this.reserved); 
 		return boxSize;
 	}
 }

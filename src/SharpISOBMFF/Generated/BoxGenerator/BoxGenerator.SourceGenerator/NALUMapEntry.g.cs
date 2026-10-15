@@ -172,6 +172,45 @@ public partial class NALUMapEntry : VisualSampleGroupEntry
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += builder.Field("large_size", 1, this.large_size); 
+		boxSize += builder.Field("rle", 1, this.rle); 
+
+		if (large_size)
+		{
+			boxSize += builder.Field("entry_count", 16, this.entry_count); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("entry_count", 8, this.entry_count); 
+		}
+
+		for (int i=0; i< entry_count; i++)
+		{
+
+			if (rle)
+			{
+
+				if (large_size)
+				{
+					boxSize += builder.Field($"NALU_start_number[{i}]", 16, this.NALU_start_number[i]); 
+				}
+
+				else 
+				{
+					boxSize += builder.Field($"NALU_start_number[{i}]", 8, this.NALU_start_number[i]); 
+				}
+			}
+			boxSize += builder.Field($"groupID[{i}]", 16, this.groupID[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

@@ -15,6 +15,9 @@ public partial class IPMPControlBox : FullBox
 {
 	public const string TYPE = "ipmc";
 	public override string DisplayName { get { return "IPMPControlBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("moov", "meta"); }
+
 
 	protected Descriptor toollist; 
 	public Descriptor Toollist { get { return this.toollist; } set { this.toollist = value; } }
@@ -56,6 +59,16 @@ public partial class IPMPControlBox : FullBox
 		// boxSize += IsoStream.CalculateDescriptorSize(toollist); // toollist
 		boxSize += 8; // count
 		// boxSize += IsoStream.CalculateDescriptorSize(descriptor); // descriptor
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("toollist", IsoStream.CalculateDescriptorSize(toollist), this.toollist); 
+		boxSize += builder.Field("count", 8, this.count); 
+		// boxSize += builder.Field("descriptor", IsoStream.CalculateDescriptorSize(descriptor), this.descriptor); 
 		return boxSize;
 	}
 }

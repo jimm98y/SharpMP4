@@ -17,6 +17,9 @@ public partial class CopyrightBox : FullBox
 {
 	public const string TYPE = "cprt";
 	public override string DisplayName { get { return "CopyrightBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected bool pad = false; 
 	public bool Pad { get { return this.pad; } set { this.pad = value; } }
@@ -58,6 +61,16 @@ public partial class CopyrightBox : FullBox
 		boxSize += 1; // pad
 		boxSize += 15; // language
 		boxSize += IsoStream.CalculateStringSize(notice); // notice
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("pad", 1, this.pad); 
+		boxSize += builder.Field("language", 15, this.language); // ISO-639-2/T language code
+		boxSize += builder.Field("notice", IsoStream.CalculateStringSize(notice), this.notice); 
 		return boxSize;
 	}
 }

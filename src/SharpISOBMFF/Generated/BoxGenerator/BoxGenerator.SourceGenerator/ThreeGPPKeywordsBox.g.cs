@@ -20,6 +20,9 @@ public partial class ThreeGPPKeywordsBox : FullBox
 {
 	public const string TYPE = "kywd";
 	public override string DisplayName { get { return "ThreeGPPKeywordsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected bool reserved = false; 
 	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -86,6 +89,22 @@ public partial class ThreeGPPKeywordsBox : FullBox
 		{
 			boxSize += 8; // keywordSize
 			boxSize += (ulong)(8*keywordSize[i] ); // keyword
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 1, this.reserved); 
+		boxSize += builder.Field("language", 15, this.language); 
+		boxSize += builder.Field("keywordCount", 8, this.keywordCount); 
+
+		for (int i = 0; i < keywordCount; i++)
+		{
+			boxSize += builder.Field($"keywordSize[{i}]", 8, this.keywordSize[i]); 
+			boxSize += builder.Field($"keyword[{i}]", (ulong)(8*keywordSize[i] ), this.keyword[i]); 
 		}
 		return boxSize;
 	}

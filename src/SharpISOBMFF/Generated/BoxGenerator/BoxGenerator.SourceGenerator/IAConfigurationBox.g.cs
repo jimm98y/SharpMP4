@@ -17,6 +17,9 @@ public partial class IAConfigurationBox : Box
 {
 	public const string TYPE = "iacb";
 	public override string DisplayName { get { return "IAConfigurationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(iamf)"); }
+
 
 	protected byte configurationVersion = 1; 
 	public byte ConfigurationVersion { get { return this.configurationVersion; } set { this.configurationVersion = value; } }
@@ -58,6 +61,16 @@ public partial class IAConfigurationBox : Box
 		boxSize += 8; // configurationVersion
 		boxSize += IsoStream.CalculateLeb128Size(configOBUs_size); // configOBUs_size
 		boxSize += ((ulong)(configOBUs_size) * 8); // configOBUs
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("configurationVersion", 8, this.configurationVersion); 
+		boxSize += builder.Field("configOBUs_size", IsoStream.CalculateLeb128Size(configOBUs_size), this.configOBUs_size); 
+		boxSize += builder.Field("configOBUs", ((ulong)(configOBUs_size) * 8), this.configOBUs); 
 		return boxSize;
 	}
 }

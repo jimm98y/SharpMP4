@@ -48,6 +48,14 @@ public partial class AV1ForwardKeyFrameSampleGroupEntry : VisualSampleGroupEntry
 		boxSize += 8; // fwd_distance
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("fwd_distance", 8, this.fwd_distance); 
+		return boxSize;
+	}
 }
 
 }

@@ -34,6 +34,7 @@ public partial class VvcPTLRecord : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "VvcPTLRecord"; } }
 
 	protected byte reserved = 0; 
@@ -200,6 +201,45 @@ public partial class VvcPTLRecord : IMp4Serializable
 		for (int j=0; j < ptl_num_sub_profiles; j++)
 		{
 			boxSize += 32; // general_sub_profile_idc
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("reserved", 2, this.reserved); 
+		boxSize += builder.Field("num_bytes_constraint_info", 6, this.num_bytes_constraint_info); 
+		boxSize += builder.Field("general_profile_idc", 7, this.general_profile_idc); 
+		boxSize += builder.Field("general_tier_flag", 1, this.general_tier_flag); 
+		boxSize += builder.Field("general_level_idc", 8, this.general_level_idc); 
+		boxSize += builder.Field("ptl_frame_only_constraint_flag", 1, this.ptl_frame_only_constraint_flag); 
+		boxSize += builder.Field("ptl_multi_layer_enabled_flag", 1, this.ptl_multi_layer_enabled_flag); 
+		boxSize += builder.Field("general_constraint_info", (ulong)(8*num_bytes_constraint_info - 2 ), this.general_constraint_info); 
+
+		for (int i=num_sublayers - 2; i >= 0; i--)
+		{
+			boxSize += builder.Field($"ptl_sublayer_level_present_flag[{i}]", 1, this.ptl_sublayer_level_present_flag[i]); 
+		}
+
+		for (int j=num_sublayers; j<=8 && num_sublayers > 1; j++)
+		{
+			boxSize += builder.Field($"ptl_reserved_zero_bit[{j}]", 1, this.ptl_reserved_zero_bit[j]); 
+		}
+
+		for (int i=num_sublayers-2; i >= 0; i--)
+		{
+
+			if (ptl_sublayer_level_present_flag[i])
+			{
+				boxSize += builder.Field($"sublayer_level_idc[{i}]", 8, this.sublayer_level_idc[i]); 
+			}
+		}
+		boxSize += builder.Field("ptl_num_sub_profiles", 8, this.ptl_num_sub_profiles); 
+
+		for (int j=0; j < ptl_num_sub_profiles; j++)
+		{
+			boxSize += builder.Field($"general_sub_profile_idc[{j}]", 32, this.general_sub_profile_idc[j]); 
 		}
 		return boxSize;
 	}

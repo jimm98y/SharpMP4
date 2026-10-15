@@ -16,6 +16,9 @@ public partial class ExifBox : Box
 {
 	public const string TYPE = "Exif";
 	public override string DisplayName { get { return "ExifBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected uint tiff_header_offset; 
 	public uint TiffHeaderOffset { get { return this.tiff_header_offset; } set { this.tiff_header_offset = value; } }
@@ -51,6 +54,15 @@ public partial class ExifBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 32; // tiff_header_offset
 		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("tiff_header_offset", 32, this.tiff_header_offset); 
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

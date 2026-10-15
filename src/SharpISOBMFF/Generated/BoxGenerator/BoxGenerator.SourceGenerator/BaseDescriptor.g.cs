@@ -38,6 +38,13 @@ public abstract partial class BaseDescriptor : Descriptor
 		/*  empty. To be filled by classes extending this class. */
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		/*  empty. To be filled by classes extending this class. */
+		return boxSize;
+	}
 }
 
 }

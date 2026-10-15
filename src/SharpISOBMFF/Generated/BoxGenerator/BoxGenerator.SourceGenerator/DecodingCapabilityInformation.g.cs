@@ -52,6 +52,15 @@ public partial class DecodingCapabilityInformation : VisualSampleGroupEntry
 		boxSize += (ulong)(8*dci_nal_unit_length ); // dci_nal_unit
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("dci_nal_unit_length", 16, this.dci_nal_unit_length); 
+		boxSize += builder.Field("dci_nal_unit", (ulong)(8*dci_nal_unit_length ), this.dci_nal_unit); 
+		return boxSize;
+	}
 }
 
 }

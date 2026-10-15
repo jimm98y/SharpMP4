@@ -14,6 +14,9 @@ public partial class MultiviewInformationBox : FullBox
 {
 	public const string TYPE = "mvci";
 	public override string DisplayName { get { return "MultiviewInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("minf"); }
+
 
 	public MultiviewInformationBox(uint flags = 0): base(IsoStream.FromFourCC("mvci"), 0, flags)
 	{
@@ -40,6 +43,14 @@ public partial class MultiviewInformationBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

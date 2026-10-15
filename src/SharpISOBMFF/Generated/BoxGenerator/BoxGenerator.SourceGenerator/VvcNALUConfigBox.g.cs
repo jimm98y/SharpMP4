@@ -15,6 +15,9 @@ public partial class VvcNALUConfigBox : FullBox
 {
 	public const string TYPE = "vvnC";
 	public override string DisplayName { get { return "VvcNALUConfigBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VvcSubpicSampleEntry(vvs1)", "VvcNonVCLSampleEntry(vvcN)"); }
+
 
 	protected byte reserved =0; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -50,6 +53,15 @@ public partial class VvcNALUConfigBox : FullBox
 		boxSize += base.CalculateSize();
 		boxSize += 6; // reserved
 		boxSize += 2; // LengthSizeMinusOne
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += builder.Field("LengthSizeMinusOne", 2, this.LengthSizeMinusOne); 
 		return boxSize;
 	}
 }

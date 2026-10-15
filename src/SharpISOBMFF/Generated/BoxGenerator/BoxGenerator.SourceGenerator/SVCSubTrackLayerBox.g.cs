@@ -25,6 +25,9 @@ public partial class SVCSubTrackLayerBox : FullBox
 {
 	public const string TYPE = "sstl";
 	public override string DisplayName { get { return "SVCSubTrackLayerBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("strd"); }
+
 
 	protected ushort item_count; 
 	public ushort ItemCount { get { return this.item_count; } set { this.item_count = value; } }
@@ -121,6 +124,26 @@ public partial class SVCSubTrackLayerBox : FullBox
 			boxSize += 2; // quality_id_range
 			boxSize += 2; // temporal_id_range
 			boxSize += 2; // priority_id_range
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("item_count", 16, this.item_count); 
+
+		for (int i = 0; i< item_count; i++)
+		{
+			boxSize += builder.Field($"dependency_id[{i}]", 3, this.dependency_id[i]); 
+			boxSize += builder.Field($"quality_id[{i}]", 4, this.quality_id[i]); 
+			boxSize += builder.Field($"temporal_id[{i}]", 3, this.temporal_id[i]); 
+			boxSize += builder.Field($"priority_id[{i}]", 6, this.priority_id[i]); 
+			boxSize += builder.Field($"dependency_id_range[{i}]", 2, this.dependency_id_range[i]); 
+			boxSize += builder.Field($"quality_id_range[{i}]", 2, this.quality_id_range[i]); 
+			boxSize += builder.Field($"temporal_id_range[{i}]", 2, this.temporal_id_range[i]); 
+			boxSize += builder.Field($"priority_id_range[{i}]", 2, this.priority_id_range[i]); 
 		}
 		return boxSize;
 	}

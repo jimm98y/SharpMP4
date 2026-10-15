@@ -23,6 +23,7 @@ public partial class UsacChannelConfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "UsacChannelConfig"; } }
 
 	protected EscapedValue numOutChannels; 
@@ -68,6 +69,18 @@ public partial class UsacChannelConfig : IMp4Serializable
 		for (int i = 0; i < numOutChannels; i++)
 		{
 			boxSize += 5; // bsOutputChannelPos
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("numOutChannels", IsoStream.CalculateClassSize(numOutChannels), this.numOutChannels); 
+
+		for (int i = 0; i < numOutChannels; i++)
+		{
+			boxSize += builder.Field($"bsOutputChannelPos[{i}]", 5, this.bsOutputChannelPos[i]); 
 		}
 		return boxSize;
 	}

@@ -46,6 +46,14 @@ public partial class SubpicLevelInfoEntry : VisualSampleGroupEntry
 		boxSize += 8; // level_idc
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("level_idc", 8, this.level_idc); 
+		return boxSize;
+	}
 }
 
 }

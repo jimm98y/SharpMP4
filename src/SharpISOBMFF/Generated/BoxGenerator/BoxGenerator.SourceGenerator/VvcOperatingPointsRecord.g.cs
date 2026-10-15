@@ -61,6 +61,7 @@ public partial class VvcOperatingPointsRecord : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "VvcOperatingPointsRecord"; } }
 
 	protected byte num_profile_tier_level_minus1; 
@@ -388,6 +389,77 @@ public partial class VvcOperatingPointsRecord : IMp4Serializable
 				boxSize += 8; // direct_ref_layerID
 			}
 			boxSize += 8; // max_tid_il_ref_pics_plus1
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("num_profile_tier_level_minus1", 8, this.num_profile_tier_level_minus1); 
+
+		for (int i=0; i<=num_profile_tier_level_minus1; i++)
+		{
+			boxSize += builder.Field($"ptl_max_temporal_id[{i}]", 8, this.ptl_max_temporal_id[i]); 
+			boxSize += builder.Field($"ptl[{i}]", IsoStream.CalculateClassSize(ptl[i]), this.ptl[i]); 
+		}
+		boxSize += builder.Field("all_independent_layers_flag", 1, this.all_independent_layers_flag); 
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+
+		if (all_independent_layers_flag)
+		{
+			boxSize += builder.Field("each_layer_is_an_ols_flag", 1, this.each_layer_is_an_ols_flag); 
+			boxSize += builder.Field("reserved0", 7, this.reserved0); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("ols_mode_idc", 8, this.ols_mode_idc); 
+		}
+		boxSize += builder.Field("num_operating_points", 16, this.num_operating_points); 
+
+		for (int i=0; i<num_operating_points; i++)
+		{
+			boxSize += builder.Field($"output_layer_set_idx[{i}]", 16, this.output_layer_set_idx[i]); 
+			boxSize += builder.Field($"ptl_idx[{i}]", 8, this.ptl_idx[i]); 
+			boxSize += builder.Field($"max_temporal_id[{i}]", 8, this.max_temporal_id[i]); 
+			boxSize += builder.Field($"layer_count[{i}]", 8, this.layer_count[i]); 
+
+			for (int j=0; j<layer_count[i]; j++)
+			{
+				boxSize += builder.Field($"layer_id[{i}][{j}]", 6, this.layer_id[i][j]); 
+				boxSize += builder.Field($"is_outputlayer[{i}][{j}]", 1, this.is_outputlayer[i][j]); 
+				boxSize += builder.Field($"reserved1[{i}][{j}]", 1, this.reserved1[i][j]); 
+			}
+			boxSize += builder.Field($"reserved00[{i}]", 6, this.reserved00[i]); 
+			boxSize += builder.Field($"frame_rate_info_flag[{i}]", 1, this.frame_rate_info_flag[i]); 
+			boxSize += builder.Field($"bit_rate_info_flag[{i}]", 1, this.bit_rate_info_flag[i]); 
+
+			if (frame_rate_info_flag[i])
+			{
+				boxSize += builder.Field($"avgFrameRate[{i}]", 16, this.avgFrameRate[i]); 
+				boxSize += builder.Field($"reserved10[{i}]", 6, this.reserved10[i]); 
+				boxSize += builder.Field($"constantFrameRate[{i}]", 2, this.constantFrameRate[i]); 
+			}
+
+			if (bit_rate_info_flag[i])
+			{
+				boxSize += builder.Field($"maxBitRate[{i}]", 32, this.maxBitRate[i]); 
+				boxSize += builder.Field($"avgBitRate[{i}]", 32, this.avgBitRate[i]); 
+			}
+		}
+		boxSize += builder.Field("max_layer_count", 8, this.max_layer_count); 
+
+		for (int i=0; i<max_layer_count; i++)
+		{
+			boxSize += builder.Field($"layerID[{i}]", 8, this.layerID[i]); 
+			boxSize += builder.Field($"num_direct_ref_layers[{i}]", 8, this.num_direct_ref_layers[i]); 
+
+			for (int j=0; j<num_direct_ref_layers[i]; j++)
+			{
+				boxSize += builder.Field($"direct_ref_layerID[{i}][{j}]", 8, this.direct_ref_layerID[i][j]); 
+			}
+			boxSize += builder.Field($"max_tid_il_ref_pics_plus1[{i}]", 8, this.max_tid_il_ref_pics_plus1[i]); 
 		}
 		return boxSize;
 	}

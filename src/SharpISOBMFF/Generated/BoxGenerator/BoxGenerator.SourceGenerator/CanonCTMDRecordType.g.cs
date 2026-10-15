@@ -18,6 +18,7 @@ public partial class CanonCTMDRecordType : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "CanonCTMDRecordType"; } }
 
 	protected uint recordType; 
@@ -51,6 +52,14 @@ public partial class CanonCTMDRecordType : IMp4Serializable
 		ulong boxSize = 0;
 		boxSize += 32; // recordType
 		boxSize += 32; // recordSize
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("recordType", 32, this.recordType); 
+		boxSize += builder.Field("recordSize", 32, this.recordSize); 
 		return boxSize;
 	}
 }

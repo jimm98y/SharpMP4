@@ -16,6 +16,9 @@ public partial class CanonCMT1Box : Box
 {
 	public const string TYPE = "CMT1";
 	public override string DisplayName { get { return "CanonCMT1Box"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("uuid"); }
+
 
 	protected byte[] tiff; 
 	public byte[] Tiff { get { return this.tiff; } set { this.tiff = value; } }
@@ -45,6 +48,14 @@ public partial class CanonCMT1Box : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += ((ulong)tiff.Length * 8); // tiff
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("tiff", ((ulong)tiff.Length * 8), this.tiff); 
 		return boxSize;
 	}
 }

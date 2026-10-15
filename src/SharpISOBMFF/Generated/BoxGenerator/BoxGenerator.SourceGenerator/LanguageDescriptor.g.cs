@@ -45,6 +45,14 @@ public partial class LanguageDescriptor : OCI_Descriptor
 		boxSize += 24; // languageCode
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("languageCode", 24, this.languageCode); 
+		return boxSize;
+	}
 }
 
 }

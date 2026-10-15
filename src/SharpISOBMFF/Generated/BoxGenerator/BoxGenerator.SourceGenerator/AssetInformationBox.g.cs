@@ -15,6 +15,9 @@ public partial class AssetInformationBox : FullBox
 {
 	public const string TYPE = "ainf";
 	public override string DisplayName { get { return "AssetInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("moov"); }
+
 
 	protected byte[] profileVersion; 
 	public byte[] ProfileVersion { get { return this.profileVersion; } set { this.profileVersion = value; } }
@@ -50,6 +53,15 @@ public partial class AssetInformationBox : FullBox
 		boxSize += base.CalculateSize();
 		boxSize += 4 * 8; // profileVersion
 		boxSize += IsoStream.CalculateStringSize(apid); // apid
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("profileVersion", 4 * 8, this.profileVersion); 
+		boxSize += builder.Field("apid", IsoStream.CalculateStringSize(apid), this.apid); 
 		return boxSize;
 	}
 }

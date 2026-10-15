@@ -15,6 +15,9 @@ unsigned int(16) data_reference_index;
 public abstract partial class SampleEntry : Box
 {
 	public override string DisplayName { get { return "SampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected byte[] reservedSampleEntry = []; 
 	public byte[] ReservedSampleEntry { get { return this.reservedSampleEntry; } set { this.reservedSampleEntry = value; } }
@@ -50,6 +53,15 @@ public abstract partial class SampleEntry : Box
 		boxSize += base.CalculateSize();
 		boxSize += 6 * 8; // reservedSampleEntry
 		boxSize += 16; // data_reference_index
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reservedSampleEntry", 6 * 8, this.reservedSampleEntry); 
+		boxSize += builder.Field("data_reference_index", 16, this.data_reference_index); 
 		return boxSize;
 	}
 }

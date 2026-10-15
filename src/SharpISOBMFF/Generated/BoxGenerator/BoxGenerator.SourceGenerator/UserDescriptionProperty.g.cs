@@ -19,6 +19,9 @@ public partial class UserDescriptionProperty : ItemFullProperty
 {
 	public const string TYPE = "udes";
 	public override string DisplayName { get { return "UserDescriptionProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected BinaryUTF8String lang; 
 	public BinaryUTF8String Lang { get { return this.lang; } set { this.lang = value; } }
@@ -66,6 +69,17 @@ public partial class UserDescriptionProperty : ItemFullProperty
 		boxSize += IsoStream.CalculateStringSize(name); // name
 		boxSize += IsoStream.CalculateStringSize(description); // description
 		boxSize += IsoStream.CalculateStringSize(tags); // tags
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("lang", IsoStream.CalculateStringSize(lang), this.lang); 
+		boxSize += builder.Field("name", IsoStream.CalculateStringSize(name), this.name); 
+		boxSize += builder.Field("description", IsoStream.CalculateStringSize(description), this.description); 
+		boxSize += builder.Field("tags", IsoStream.CalculateStringSize(tags), this.tags); 
 		return boxSize;
 	}
 }

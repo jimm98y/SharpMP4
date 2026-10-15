@@ -16,6 +16,9 @@ public partial class PspMtdtBox : Box
 {
 	public const string TYPE = "MTDT";
 	public override string DisplayName { get { return "PspMtdtBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("uuid"); }
+
 
 	protected ushort entry_count; 
 	public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -51,6 +54,15 @@ public partial class PspMtdtBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 16; // entry_count
 		boxSize += IsoStream.CalculateClassSize(entries); // entries
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 16, this.entry_count); 
+		boxSize += builder.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
 		return boxSize;
 	}
 }

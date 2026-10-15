@@ -38,6 +38,7 @@ public partial class sbr_header : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "sbr_header"; } }
 
 	protected bool bs_amp_res; 
@@ -166,6 +167,34 @@ public partial class sbr_header : IMp4Serializable
 			boxSize += 2; // bs_limiter_gains
 			boxSize += 1; // bs_interpol_freq
 			boxSize += 1; // bs_smoothing_mode
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("bs_amp_res", 1, this.bs_amp_res); 
+		boxSize += builder.Field("bs_start_freq", 4, this.bs_start_freq); 
+		boxSize += builder.Field("bs_stop_freq", 4, this.bs_stop_freq); 
+		boxSize += builder.Field("bs_xover_band", 3, this.bs_xover_band); 
+		boxSize += builder.Field("bs_reserved", 2, this.bs_reserved); 
+		boxSize += builder.Field("bs_header_extra_1", 1, this.bs_header_extra_1); 
+		boxSize += builder.Field("bs_header_extra_2", 1, this.bs_header_extra_2); 
+
+		if (bs_header_extra_1)
+		{
+			boxSize += builder.Field("bs_freq_scale", 2, this.bs_freq_scale); 
+			boxSize += builder.Field("bs_alter_scale", 1, this.bs_alter_scale); 
+			boxSize += builder.Field("bs_noise_bands", 2, this.bs_noise_bands); 
+		}
+
+		if (bs_header_extra_2)
+		{
+			boxSize += builder.Field("bs_limiter_bands", 2, this.bs_limiter_bands); 
+			boxSize += builder.Field("bs_limiter_gains", 2, this.bs_limiter_gains); 
+			boxSize += builder.Field("bs_interpol_freq", 1, this.bs_interpol_freq); 
+			boxSize += builder.Field("bs_smoothing_mode", 1, this.bs_smoothing_mode); 
 		}
 		return boxSize;
 	}

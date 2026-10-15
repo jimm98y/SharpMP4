@@ -15,6 +15,9 @@ public partial class RtpMovieHintInformation : Box
 {
 	public const string TYPE = "rtp ";
 	public override string DisplayName { get { return "RtpMovieHintInformation"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("hnti", "stsd"); }
+
 
 	protected uint descriptionformat = IsoStream.FromFourCC("sdp "); 
 	public uint Descriptionformat { get { return this.descriptionformat; } set { this.descriptionformat = value; } }
@@ -53,6 +56,16 @@ public partial class RtpMovieHintInformation : Box
 		boxSize += 32; // descriptionformat
 		boxSize += ((ulong)sdptext.Length * 8); // sdptext
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("descriptionformat", 32, this.descriptionformat); 
+		boxSize += builder.Field("sdptext", ((ulong)sdptext.Length * 8), this.sdptext); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

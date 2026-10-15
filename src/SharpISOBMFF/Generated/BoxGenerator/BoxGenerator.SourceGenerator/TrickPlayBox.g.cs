@@ -15,6 +15,9 @@ public partial class TrickPlayBox : FullBox
 {
 	public const string TYPE = "trik";
 	public override string DisplayName { get { return "TrickPlayBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("traf"); }
+
 
 	protected TrickPlayEntry[] entries; 
 	public TrickPlayEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
@@ -44,6 +47,14 @@ public partial class TrickPlayBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateClassSize(entries); // entries
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
 		return boxSize;
 	}
 }

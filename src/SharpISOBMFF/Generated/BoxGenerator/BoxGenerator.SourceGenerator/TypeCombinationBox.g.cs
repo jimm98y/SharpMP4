@@ -14,6 +14,9 @@ public partial class TypeCombinationBox : Box
 {
 	public const string TYPE = "tyco";
 	public override string DisplayName { get { return "TypeCombinationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("etyp"); }
+
 
 	protected uint[] compatible_brands;  //  to end of the box
 	public uint[] CompatibleBrands { get { return this.compatible_brands; } set { this.compatible_brands = value; } }
@@ -43,6 +46,14 @@ public partial class TypeCombinationBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += ((ulong)compatible_brands.Length * 32); // compatible_brands
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("compatible_brands", ((ulong)compatible_brands.Length * 32), this.compatible_brands); // to end of the box
 		return boxSize;
 	}
 }

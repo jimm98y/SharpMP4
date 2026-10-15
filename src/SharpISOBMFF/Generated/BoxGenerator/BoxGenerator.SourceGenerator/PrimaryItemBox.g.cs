@@ -19,6 +19,9 @@ public partial class PrimaryItemBox : FullBox
 {
 	public const string TYPE = "pitm";
 	public override string DisplayName { get { return "PrimaryItemBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
+
 
 	protected uint item_ID; 
 	public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
@@ -74,6 +77,23 @@ public partial class PrimaryItemBox : FullBox
 		else 
 		{
 			boxSize += 32; // item_ID
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version == 0)
+		{
+			boxSize += builder.Field("item_ID", 16, this.item_ID); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("item_ID", 32, this.item_ID); 
 		}
 		return boxSize;
 	}

@@ -25,6 +25,9 @@ public partial class ExtrinsicCameraParametersBox : FullBox
 {
 	public const string TYPE = "ecam";
 	public override string DisplayName { get { return "ExtrinsicCameraParametersBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("MVCDSampleEntry(mvd1,mvd2,mvd3,mvd4)", "A3DSampleEntry(a3d1,a3d2,a3d3,a3d4)"); }
+
 
 	protected byte reserved =0; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -131,6 +134,31 @@ public partial class ExtrinsicCameraParametersBox : FullBox
 			}
 			boxSize += 8; // exponent_t
 			boxSize += 64; // mantissa_t
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += builder.Field("ref_view_id", 10, this.ref_view_id); 
+		boxSize += builder.Field("prec_rotation_param", 8, this.prec_rotation_param); 
+		boxSize += builder.Field("prec_translation_param", 8, this.prec_translation_param); 
+
+		for (int j=0; j<3; j++)
+		{
+			/*  row  */
+
+			for (int k=0; k<3; k++)
+			{
+				/*  column  */
+				boxSize += builder.Field($"exponent_r[{j}][{k}]", 8, this.exponent_r[j][k]); 
+				boxSize += builder.Field($"mantissa_r[{j}][{k}]", 64, this.mantissa_r[j][k]); 
+			}
+			boxSize += builder.Field($"exponent_t[{j}]", 8, this.exponent_t[j]); 
+			boxSize += builder.Field($"mantissa_t[{j}]", 64, this.mantissa_t[j]); 
 		}
 		return boxSize;
 	}

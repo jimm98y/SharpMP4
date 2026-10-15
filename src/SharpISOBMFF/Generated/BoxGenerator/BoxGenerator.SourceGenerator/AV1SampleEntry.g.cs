@@ -17,6 +17,9 @@ public partial class AV1SampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "av01";
 	public override string DisplayName { get { return "AV1SampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public AV1CodecConfigurationBox Config { get { return this.children.OfType<AV1CodecConfigurationBox>().FirstOrDefault(); } }
 
 	public AV1SampleEntry(): base(IsoStream.FromFourCC("av01"))
@@ -47,6 +50,15 @@ public partial class AV1SampleEntry : VisualSampleEntry
 		boxSize += base.CalculateSize();
 		// boxSize += IsoStream.CalculateBoxSize(config); // config
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("config", IsoStream.CalculateBoxSize(config), this.config); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

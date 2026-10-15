@@ -20,6 +20,7 @@ public partial class DSTSpecificConfig : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "DSTSpecificConfig"; } }
 
 	protected bool DSDDST_Coded; 
@@ -59,6 +60,15 @@ public partial class DSTSpecificConfig : IMp4Serializable
 		boxSize += 1; // DSDDST_Coded
 		boxSize += 14; // N_Channels
 		boxSize += 1; // reserved
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("DSDDST_Coded", 1, this.DSDDST_Coded); 
+		boxSize += builder.Field("N_Channels", 14, this.N_Channels); 
+		boxSize += builder.Field("reserved", 1, this.reserved); 
 		return boxSize;
 	}
 }

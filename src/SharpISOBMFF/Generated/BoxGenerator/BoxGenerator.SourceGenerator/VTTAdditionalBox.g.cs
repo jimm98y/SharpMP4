@@ -14,6 +14,10 @@ public partial class VTTAdditionalBox : Box
 {
 	public const string TYPE = "vtta";
 	public override string DisplayName { get { return "VTTAdditionalBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	// its definitions place it in no container: wherever it is, it is not misplaced
+	public override bool ValidatePlacement() { return IsPlacedIn(); }
+
 
 	protected BinaryUTF8String cueAdditionalText; 
 	public BinaryUTF8String CueAdditionalText { get { return this.cueAdditionalText; } set { this.cueAdditionalText = value; } }
@@ -43,6 +47,14 @@ public partial class VTTAdditionalBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(cueAdditionalText); // cueAdditionalText
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("cueAdditionalText", IsoStream.CalculateStringSize(cueAdditionalText), this.cueAdditionalText); 
 		return boxSize;
 	}
 }

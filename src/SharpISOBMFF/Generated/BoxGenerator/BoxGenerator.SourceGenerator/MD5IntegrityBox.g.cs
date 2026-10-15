@@ -25,6 +25,9 @@ public partial class MD5IntegrityBox : FullBox
 {
 	public const string TYPE = "md5i";
 	public override string DisplayName { get { return "MD5IntegrityBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
+
 
 	protected byte[] input_MD5; 
 	public byte[] InputMD5 { get { return this.input_MD5; } set { this.input_MD5 = value; } }
@@ -119,6 +122,31 @@ public partial class MD5IntegrityBox : FullBox
 			for (int i=0; i<num_entries; i++)
 			{
 				boxSize += 32; // group_description_index
+			}
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("input_MD5", 16 * 8, this.input_MD5); 
+		boxSize += builder.Field("input_4cc", 32, this.input_4cc); 
+
+		if (input_4cc == IsoStream.FromFourCC("sgpd"))
+		{
+			boxSize += builder.Field("grouping_type", 32, this.grouping_type); 
+
+			if ((flags & 1) == 1)
+			{
+				boxSize += builder.Field("grouping_type_parameter", 32, this.grouping_type_parameter); 
+			}
+			boxSize += builder.Field("num_entries", 32, this.num_entries); 
+
+			for (int i=0; i<num_entries; i++)
+			{
+				boxSize += builder.Field($"group_description_index[{i}]", 32, this.group_description_index[i]); 
 			}
 		}
 		return boxSize;

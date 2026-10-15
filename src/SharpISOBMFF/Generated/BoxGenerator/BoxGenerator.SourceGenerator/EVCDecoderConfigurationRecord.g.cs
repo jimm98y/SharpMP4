@@ -38,6 +38,7 @@ public partial class EVCDecoderConfigurationRecord : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "EVCDecoderConfigurationRecord"; } }
 
 	protected byte configurationVersion =1; 
@@ -202,6 +203,39 @@ public partial class EVCDecoderConfigurationRecord : IMp4Serializable
 			{
 				boxSize += 16; // nalUnitLength
 				boxSize += (ulong)(8*nalUnitLength[j][i] ); // nalUnit
+			}
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("configurationVersion", 8, this.configurationVersion); 
+		boxSize += builder.Field("profile_idc", 8, this.profile_idc); 
+		boxSize += builder.Field("level_idc", 8, this.level_idc); 
+		boxSize += builder.Field("toolset_idc", 32, this.toolset_idc); 
+		boxSize += builder.Field("chroma_format_idc", 2, this.chroma_format_idc); 
+		boxSize += builder.Field("bit_depth_luma_minus8", 3, this.bit_depth_luma_minus8); 
+		boxSize += builder.Field("bit_depth_chroma_minus8", 3, this.bit_depth_chroma_minus8); 
+		boxSize += builder.Field("pic_width_in_luma_samples", 32, this.pic_width_in_luma_samples); 
+		boxSize += builder.Field("pic_height_in_luma_samples", 32, this.pic_height_in_luma_samples); 
+		boxSize += builder.Field("reserved", 5, this.reserved); 
+		boxSize += builder.Field("sps_in_stream", 1, this.sps_in_stream); 
+		boxSize += builder.Field("pps_in_stream", 1, this.pps_in_stream); 
+		boxSize += builder.Field("aps_in_stream", 1, this.aps_in_stream); 
+		boxSize += builder.Field("numOfArrays", 8, this.numOfArrays); 
+
+		for (int j=0; j<numOfArrays; j++)
+		{
+			boxSize += builder.Field($"reserved0[{j}]", 2, this.reserved0[j]); 
+			boxSize += builder.Field($"NAL_unit_type[{j}]", 6, this.NAL_unit_type[j]); 
+			boxSize += builder.Field($"numNalus[{j}]", 16, this.numNalus[j]); 
+
+			for (int i=0; i<numNalus[j]; i++)
+			{
+				boxSize += builder.Field($"nalUnitLength[{j}][{i}]", 16, this.nalUnitLength[j][i]); 
+				boxSize += builder.Field($"nalUnit[{j}][{i}]", (ulong)(8*nalUnitLength[j][i] ), this.nalUnit[j][i]); 
 			}
 		}
 		return boxSize;

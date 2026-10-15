@@ -16,6 +16,9 @@ public partial class TrackSelectionBox : FullBox
 {
 	public const string TYPE = "tsel";
 	public override string DisplayName { get { return "TrackSelectionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected int switch_group = 0; 
 	public int SwitchGroup { get { return this.switch_group; } set { this.switch_group = value; } }
@@ -51,6 +54,15 @@ public partial class TrackSelectionBox : FullBox
 		boxSize += base.CalculateSize();
 		boxSize += 32; // switch_group
 		boxSize += ((ulong)attribute_list.Length * 32); // attribute_list
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("switch_group", 32, this.switch_group); 
+		boxSize += builder.Field("attribute_list", ((ulong)attribute_list.Length * 32), this.attribute_list); // to end of the box
 		return boxSize;
 	}
 }

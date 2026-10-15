@@ -16,6 +16,9 @@ public partial class MetaDataLocaleBox : Box
 {
 	public const string TYPE = "loca";
 	public override string DisplayName { get { return "MetaDataLocaleBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
+
 
 	protected BinaryUTF8String locale_string; 
 	public BinaryUTF8String LocaleString { get { return this.locale_string; } set { this.locale_string = value; } }
@@ -45,6 +48,14 @@ public partial class MetaDataLocaleBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(locale_string); // locale_string
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("locale_string", IsoStream.CalculateStringSize(locale_string), this.locale_string); 
 		return boxSize;
 	}
 }

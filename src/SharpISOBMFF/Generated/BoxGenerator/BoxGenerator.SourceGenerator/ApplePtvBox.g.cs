@@ -18,6 +18,9 @@ public partial class ApplePtvBox : Box
 {
 	public const string TYPE = "ptv ";
 	public override string DisplayName { get { return "ApplePtvBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
+
 
 	protected ushort displaySize; 
 	public ushort DisplaySize { get { return this.displaySize; } set { this.displaySize = value; } }
@@ -71,6 +74,18 @@ public partial class ApplePtvBox : Box
 		boxSize += 16; // reserved2
 		boxSize += 8; // slideShow
 		boxSize += 8; // playOnOpen
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("displaySize", 16, this.displaySize); 
+		boxSize += builder.Field("reserved1", 16, this.reserved1); 
+		boxSize += builder.Field("reserved2", 16, this.reserved2); 
+		boxSize += builder.Field("slideShow", 8, this.slideShow); 
+		boxSize += builder.Field("playOnOpen", 8, this.playOnOpen); 
 		return boxSize;
 	}
 }

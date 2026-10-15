@@ -14,6 +14,9 @@ public partial class TrackReferenceBox : Box
 {
 	public const string TYPE = "tref";
 	public override string DisplayName { get { return "TrackReferenceBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("trak"); }
+
 	public IEnumerable<TrackReferenceTypeBox> _TrackReferenceTypeBox { get { return this.children.OfType<TrackReferenceTypeBox>(); } }
 
 	public TrackReferenceBox(): base(IsoStream.FromFourCC("tref"))
@@ -44,6 +47,15 @@ public partial class TrackReferenceBox : Box
 		boxSize += base.CalculateSize();
 		// boxSize += IsoStream.CalculateBoxSize(TrackReferenceTypeBox); // TrackReferenceTypeBox
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("TrackReferenceTypeBox", IsoStream.CalculateBoxSize(TrackReferenceTypeBox), this.TrackReferenceTypeBox); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

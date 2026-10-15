@@ -15,6 +15,9 @@ public partial class ISMAKMSBox : FullBox
 {
 	public const string TYPE = "iKMS";
 	public override string DisplayName { get { return "ISMAKMSBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("schi"); }
+
 
 	protected BinaryUTF8String kms_URI; 
 	public BinaryUTF8String KmsURI { get { return this.kms_URI; } set { this.kms_URI = value; } }
@@ -44,6 +47,14 @@ public partial class ISMAKMSBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(kms_URI); // kms_URI
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("kms_URI", IsoStream.CalculateStringSize(kms_URI), this.kms_URI); 
 		return boxSize;
 	}
 }

@@ -19,6 +19,7 @@ public partial class CanonCTBOEntry : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "CanonCTBOEntry"; } }
 
 	protected uint index; 
@@ -58,6 +59,15 @@ public partial class CanonCTBOEntry : IMp4Serializable
 		boxSize += 32; // index
 		boxSize += 64; // offset
 		boxSize += 64; // size
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("index", 32, this.index); 
+		boxSize += builder.Field("offset", 64, this.offset); 
+		boxSize += builder.Field("size", 64, this.size); 
 		return boxSize;
 	}
 }

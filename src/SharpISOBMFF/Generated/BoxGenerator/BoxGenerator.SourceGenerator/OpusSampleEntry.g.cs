@@ -14,6 +14,9 @@ public partial class OpusSampleEntry : AudioSampleEntry
 {
 	public const string TYPE = "Opus";
 	public override string DisplayName { get { return "OpusSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public OpusSpecificBox _OpusSpecificBox { get { return this.children.OfType<OpusSpecificBox>().FirstOrDefault(); } }
 
 	public OpusSampleEntry(): base(IsoStream.FromFourCC("Opus"))
@@ -44,6 +47,15 @@ public partial class OpusSampleEntry : AudioSampleEntry
 		boxSize += base.CalculateSize();
 		// boxSize += IsoStream.CalculateBoxSize(OpusSpecificBox); // OpusSpecificBox
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("OpusSpecificBox", IsoStream.CalculateBoxSize(OpusSpecificBox), this.OpusSpecificBox); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

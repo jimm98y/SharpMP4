@@ -35,6 +35,7 @@ public partial class LHEVCDecoderConfigurationRecord : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "LHEVCDecoderConfigurationRecord"; } }
 
 	protected byte configurationVersion = 1; 
@@ -182,6 +183,36 @@ public partial class LHEVCDecoderConfigurationRecord : IMp4Serializable
 			{
 				boxSize += 16; // nalUnitLength
 				boxSize += (ulong)(8*nalUnitLength[j][i] ); // nalUnit
+			}
+		}
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("configurationVersion", 8, this.configurationVersion); 
+		boxSize += builder.Field("reserved", 4, this.reserved); 
+		boxSize += builder.Field("min_spatial_segmentation_idc", 12, this.min_spatial_segmentation_idc); 
+		boxSize += builder.Field("reserved0", 6, this.reserved0); 
+		boxSize += builder.Field("parallelismType", 2, this.parallelismType); 
+		boxSize += builder.Field("reserved1", 2, this.reserved1); 
+		boxSize += builder.Field("numTemporalLayers", 3, this.numTemporalLayers); 
+		boxSize += builder.Field("temporalIdNested", 1, this.temporalIdNested); 
+		boxSize += builder.Field("lengthSizeMinusOne", 2, this.lengthSizeMinusOne); 
+		boxSize += builder.Field("numOfArrays", 8, this.numOfArrays); 
+
+		for (int j = 0; j <numOfArrays; j ++)
+		{
+			boxSize += builder.Field($"array_completeness[{j}]", 1, this.array_completeness[j]); 
+			boxSize += builder.Field($"reserved2[{j}]", 1, this.reserved2[j]); 
+			boxSize += builder.Field($"NAL_unit_type[{j}]", 6, this.NAL_unit_type[j]); 
+			boxSize += builder.Field($"numNalus[{j}]", 16, this.numNalus[j]); 
+
+			for (int i = 0; i <numNalus[j]; i ++)
+			{
+				boxSize += builder.Field($"nalUnitLength[{j}][{i}]", 16, this.nalUnitLength[j][i]); 
+				boxSize += builder.Field($"nalUnit[{j}][{i}]", (ulong)(8*nalUnitLength[j][i] ), this.nalUnit[j][i]); 
 			}
 		}
 		return boxSize;

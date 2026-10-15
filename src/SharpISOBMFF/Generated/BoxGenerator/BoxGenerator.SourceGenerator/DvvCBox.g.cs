@@ -23,6 +23,9 @@ public partial class DvvCBox : Box
 {
 	public const string TYPE = "dvvC";
 	public override string DisplayName { get { return "DvvCBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry(dvav,dva1,dvhe,dvh1,dav1,avc1,avc2,avc3,avc4,hev1,hvc1,av01,encv,resv)"); }
+
 
 	protected byte dv_version_major; 
 	public byte DvVersionMajor { get { return this.dv_version_major; } set { this.dv_version_major = value; } }
@@ -106,6 +109,23 @@ public partial class DvvCBox : Box
 		boxSize += 4; // dv_bl_signal_compatibility_id
 		boxSize += 28; // reserved
 		boxSize += 4 * 32; // reserved0
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("dv_version_major", 8, this.dv_version_major); 
+		boxSize += builder.Field("dv_version_minor", 8, this.dv_version_minor); 
+		boxSize += builder.Field("dv_profile", 7, this.dv_profile); 
+		boxSize += builder.Field("dv_level", 6, this.dv_level); 
+		boxSize += builder.Field("rpu_present_flag", 1, this.rpu_present_flag); 
+		boxSize += builder.Field("el_present_flag", 1, this.el_present_flag); 
+		boxSize += builder.Field("bl_present_flag", 1, this.bl_present_flag); 
+		boxSize += builder.Field("dv_bl_signal_compatibility_id", 4, this.dv_bl_signal_compatibility_id); 
+		boxSize += builder.Field("reserved", 28, this.reserved); 
+		boxSize += builder.Field("reserved0", 4 * 32, this.reserved0); 
 		return boxSize;
 	}
 }

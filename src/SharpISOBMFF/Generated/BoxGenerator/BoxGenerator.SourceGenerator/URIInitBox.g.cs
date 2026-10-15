@@ -15,6 +15,9 @@ public partial class URIInitBox : FullBox
 {
 	public const string TYPE = "uriI";
 	public override string DisplayName { get { return "URIInitBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("URIMetaSampleEntry(urim)"); }
+
 
 	protected byte[] uri_initialization_data; 
 	public byte[] UriInitializationData { get { return this.uri_initialization_data; } set { this.uri_initialization_data = value; } }
@@ -44,6 +47,14 @@ public partial class URIInitBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += ((ulong)uri_initialization_data.Length * 8); // uri_initialization_data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("uri_initialization_data", ((ulong)uri_initialization_data.Length * 8), this.uri_initialization_data); 
 		return boxSize;
 	}
 }

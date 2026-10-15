@@ -27,6 +27,9 @@ public partial class MediaHeaderBox : FullBox
 {
 	public const string TYPE = "mdhd";
 	public override string DisplayName { get { return "MediaHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("mdia"); }
+
 
 	protected ulong creation_time; 
 	public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
@@ -131,6 +134,33 @@ public partial class MediaHeaderBox : FullBox
 		boxSize += 1; // pad
 		boxSize += 15; // language
 		boxSize += 16; // pre_defined
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version==1)
+		{
+			boxSize += builder.Field("creation_time", 64, this.creation_time); 
+			boxSize += builder.Field("modification_time", 64, this.modification_time); 
+			boxSize += builder.Field("timescale", 32, this.timescale); 
+			boxSize += builder.Field("duration", 64, this.duration); 
+		}
+
+		else 
+		{
+			/*  version==0 */
+			boxSize += builder.Field("creation_time", 32, this.creation_time); 
+			boxSize += builder.Field("modification_time", 32, this.modification_time); 
+			boxSize += builder.Field("timescale", 32, this.timescale); 
+			boxSize += builder.Field("duration", 32, this.duration); 
+		}
+		boxSize += builder.Field("pad", 1, this.pad); 
+		boxSize += builder.Field("language", 15, this.language); // ISO-639-2/T language code
+		boxSize += builder.Field("pre_defined", 16, this.pre_defined); 
 		return boxSize;
 	}
 }

@@ -14,6 +14,9 @@ public partial class CanonCompressorVersionBox : Box
 {
 	public const string TYPE = "CNCV";
 	public override string DisplayName { get { return "CanonCompressorVersionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("udta", "uuid"); }
+
 
 	protected BinaryUTF8String compressorVersion; 
 	public BinaryUTF8String CompressorVersion { get { return this.compressorVersion; } set { this.compressorVersion = value; } }
@@ -43,6 +46,14 @@ public partial class CanonCompressorVersionBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(compressorVersion); // compressorVersion
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("compressorVersion", IsoStream.CalculateStringSize(compressorVersion), this.compressorVersion); 
 		return boxSize;
 	}
 }

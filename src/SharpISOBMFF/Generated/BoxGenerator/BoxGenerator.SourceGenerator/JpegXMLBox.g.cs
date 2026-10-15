@@ -15,6 +15,9 @@ public partial class JpegXMLBox : Box
 {
 	public const string TYPE = "xml ";
 	public override string DisplayName { get { return "JpegXMLBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected BinaryUTF8String data; 
 	public BinaryUTF8String Data { get { return this.data; } set { this.data = value; } }
@@ -44,6 +47,14 @@ public partial class JpegXMLBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateStringSize(data); // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("data", IsoStream.CalculateStringSize(data), this.data); 
 		return boxSize;
 	}
 }

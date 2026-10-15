@@ -99,12 +99,12 @@
     },
     {
       "type": "Box",
-      "containers": [ "*" ],
+      "containers": [ {"AudioSampleEntry": ["mp4a", "enca"]}, {"VisualSampleEntry": ["mp4v", "encv"]}, {"MpegSampleEntry": ["mp4s", "encs"]}, "wave", {"AudioSampleEntry": ["m4ae"]} ],
       "syntax": "aligned(8) class ESDBox\r\n extends FullBox('esds', version = 0, 0) {\r\n ES_Descriptor ES;\r\n }"
     },
     {
       "type": "Box",
-      "containers": [ "*" ],
+      "containers": [ "stsd" ],
       "syntax": "class MpegSampleEntry() extends SampleEntry ('mp4s') {\r\n Box ES;\r\n }"
     }
   ]

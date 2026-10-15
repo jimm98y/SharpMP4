@@ -33,6 +33,9 @@ public partial class TrackEncryptionBox : FullBox
 {
 	public const string TYPE = "tenc";
 	public override string DisplayName { get { return "TrackEncryptionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("schi"); }
+
 
 	protected byte reserved = 0; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -169,6 +172,40 @@ public partial class TrackEncryptionBox : FullBox
 		{
 			boxSize += 8; // defaultConstantIVSize
 			boxSize += ((ulong)(defaultConstantIVSize) * 8); // defaultConstantIV
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 8, this.reserved); 
+
+		if (version == 0)
+		{
+			boxSize += builder.Field("reserved0", 8, this.reserved0); 
+		}
+
+		else 
+		{
+			boxSize += builder.Field("default_crypt_byte_block", 4, this.default_crypt_byte_block); 
+			boxSize += builder.Field("default_skip_byte_block", 4, this.default_skip_byte_block); 
+
+			if (version >= 2)
+			{
+				boxSize += builder.Field("use_AES_256", 1, this.use_AES_256); 
+				boxSize += builder.Field("reserved1", 7, this.reserved1); 
+			}
+		}
+		boxSize += builder.Field("default_isProtected", 8, this.default_isProtected); 
+		boxSize += builder.Field("default_Per_Sample_IV_Size", 8, this.default_Per_Sample_IV_Size); 
+		boxSize += builder.Field("default_KID", 16 * 8, this.default_KID); 
+
+		if (default_isProtected == 1 && default_Per_Sample_IV_Size == 0)
+		{
+			boxSize += builder.Field("defaultConstantIVSize", 8, this.defaultConstantIVSize); 
+			boxSize += builder.Field("defaultConstantIV", ((ulong)(defaultConstantIVSize) * 8), this.defaultConstantIV); 
 		}
 		return boxSize;
 	}

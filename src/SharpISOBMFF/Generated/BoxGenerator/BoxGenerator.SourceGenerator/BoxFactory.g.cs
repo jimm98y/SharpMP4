@@ -320,7 +320,7 @@ namespace SharpISOBMFF
                case "cmid":  return new CameraIDBox();
                case "cmID":  return new CmIDBox();
                case "cmin":  return new CameraIntrinsicMatrixBox();
-               case "cmnm":  return new ModelBox();
+               case "cmnm":  return new CameraModelNameBox();
                case "cmov":  return new AppleCompressedMoovBox();
                case "CMP1":  return new CanonCMP1TagsBox();
                case "cmpC":  return new GenericCompressionConfigurationBox();
@@ -750,7 +750,7 @@ namespace SharpISOBMFF
                case "MMA1":  return new MinoltaMMA1Box();
                case "MNG ": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("MNG "));break;
                case "moat":  return new MoatBox();
-               case "modl":  return new ModelBoxmodlDup(); // TODO: fix duplicate
+               case "modl":  return new ModelBox();
                case "moof":  return new MovieFragmentBox();
                case "moov":  return new MovieBox();
                case "mp1v": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("mp1v"));break;
@@ -1013,7 +1013,7 @@ namespace SharpISOBMFF
                case "snal":  return new ItemListPreviewImageBox();
                case "snim":  return new DataEntrySeqNumImdaBox();
                case "snro":  return new SequenceOffset();
-               case "SNum":  return new SerialNumberBoxSNumDup(); // TODO: fix duplicate
+               case "SNum":  return new CameraSerialNumberBox();
                case "snut":  return new SnutTrackGroupTypeBox();
                case "soaa":  return new AlbumArtistSortBox();
                case "soal":  return new AlbumSortBox();
@@ -1117,7 +1117,7 @@ namespace SharpISOBMFF
                case "tmci":  return new TimecodeMediaInfoMisspelledBox();
                case "tmin":  return new HintMinRelativeTime();
                case "tmpo":  return new AppleBeatsPerMinuteBox();
-               case "tnal":  return new ThumbnailImageBoxtnalDup(); // TODO: fix duplicate
+               case "tnal":  return new AppleThumbnailImageBox();
                case "tnam":  return new TrackNameBox();
                case "tols":  return new TargetOlsProperty();
                case "totl":  return new HintBytesSenttotlDup(); // TODO: fix duplicate

@@ -15,6 +15,9 @@ public partial class IdentifiedMediaDataBox : Box
 {
 	public const string TYPE = "imda";
 	public override string DisplayName { get { return "IdentifiedMediaDataBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected uint imda_identifier; 
 	public uint ImdaIdentifier { get { return this.imda_identifier; } set { this.imda_identifier = value; } }
@@ -50,6 +53,15 @@ public partial class IdentifiedMediaDataBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 32; // imda_identifier
 		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("imda_identifier", 32, this.imda_identifier); 
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); // until the end of the box
 		return boxSize;
 	}
 }

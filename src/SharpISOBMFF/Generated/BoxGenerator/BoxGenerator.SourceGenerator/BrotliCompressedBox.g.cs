@@ -16,6 +16,9 @@ public partial class BrotliCompressedBox : Box
 {
 	public const string TYPE = "brob";
 	public override string DisplayName { get { return "BrotliCompressedBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
+
 
 	protected uint box_type; 
 	public uint BoxType { get { return this.box_type; } set { this.box_type = value; } }
@@ -51,6 +54,15 @@ public partial class BrotliCompressedBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 32; // box_type
 		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("box_type", 32, this.box_type); 
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

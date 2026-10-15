@@ -23,6 +23,9 @@ public partial class AlternativeStartupSequencePropertiesBox : FullBox
 {
 	public const string TYPE = "assp";
 	public override string DisplayName { get { return "AlternativeStartupSequencePropertiesBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("trep"); }
+
 
 	protected int min_initial_alt_startup_offset; 
 	public int MinInitialAltStartupOffset { get { return this.min_initial_alt_startup_offset; } set { this.min_initial_alt_startup_offset = value; } }
@@ -106,6 +109,29 @@ public partial class AlternativeStartupSequencePropertiesBox : FullBox
 			{
 				boxSize += 32; // grouping_type_parameter
 				boxSize += 32; // min_initial_alt_startup_offset0
+			}
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+
+		if (version == 0)
+		{
+			boxSize += builder.Field("min_initial_alt_startup_offset", 32, this.min_initial_alt_startup_offset); 
+		}
+
+		else if (version == 1)
+		{
+			boxSize += builder.Field("num_entries", 32, this.num_entries); 
+
+			for (int j=0; j < num_entries; j++)
+			{
+				boxSize += builder.Field($"grouping_type_parameter[{j}]", 32, this.grouping_type_parameter[j]); 
+				boxSize += builder.Field($"min_initial_alt_startup_offset0[{j}]", 32, this.min_initial_alt_startup_offset0[j]); 
 			}
 		}
 		return boxSize;

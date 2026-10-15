@@ -22,6 +22,9 @@ public partial class AVCMVCSampleEntry : AVCSampleEntry
 {
 	public const string TYPE = "avc1";
 	public override string DisplayName { get { return "AVCMVCSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 	public ViewScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ViewScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
 	public MVCConfigurationBox Mvcconfig { get { return this.children.OfType<MVCConfigurationBox>().FirstOrDefault(); } }
@@ -84,6 +87,23 @@ public partial class AVCMVCSampleEntry : AVCSampleEntry
 		// boxSize += IsoStream.CalculateBoxSize(mvdscalinfosei); // mvdscalinfosei
 		// boxSize += IsoStream.CalculateBoxSize(a3dconfig); // a3dconfig
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("scalability", IsoStream.CalculateBoxSize(scalability), this.scalability); // optional
+		// boxSize += builder.Field("view_identifiers", IsoStream.CalculateBoxSize(view_identifiers), this.view_identifiers); // optional
+		// boxSize += builder.Field("mvcconfig", IsoStream.CalculateBoxSize(mvcconfig), this.mvcconfig); // optional
+		// boxSize += builder.Field("view_priority_method", IsoStream.CalculateBoxSize(view_priority_method), this.view_priority_method); // optional
+		// boxSize += builder.Field("intrinsic_camera_params", IsoStream.CalculateBoxSize(intrinsic_camera_params), this.intrinsic_camera_params); // optional
+		// boxSize += builder.Field("extrinsic_camera_params", IsoStream.CalculateBoxSize(extrinsic_camera_params), this.extrinsic_camera_params); // optional
+		// boxSize += builder.Field("mvcdconfig", IsoStream.CalculateBoxSize(mvcdconfig), this.mvcdconfig); // optional
+		// boxSize += builder.Field("mvdscalinfosei", IsoStream.CalculateBoxSize(mvdscalinfosei), this.mvdscalinfosei); // optional
+		// boxSize += builder.Field("a3dconfig", IsoStream.CalculateBoxSize(a3dconfig), this.a3dconfig); // optional
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

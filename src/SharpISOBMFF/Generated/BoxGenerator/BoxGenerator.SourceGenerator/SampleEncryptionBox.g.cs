@@ -16,6 +16,9 @@ public partial class SampleEncryptionBox : FullBox
 {
 	public const string TYPE = "senc";
 	public override string DisplayName { get { return "SampleEncryptionBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("traf", "trak"); }
+
 
 	protected uint sample_count; 
 	public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
@@ -51,6 +54,15 @@ public partial class SampleEncryptionBox : FullBox
 		boxSize += base.CalculateSize();
 		boxSize += 32; // sample_count
 		boxSize += ((ulong)sample_data.Length * 8); // sample_data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sample_count", 32, this.sample_count); 
+		boxSize += builder.Field("sample_data", ((ulong)sample_data.Length * 8), this.sample_data); // each sample's IV and subsamples (23001-7 7.2), whose IV size is the track's - its 'tenc', or the sample's 'seig' group - and not in the box: SharpMP4's SampleEncryptionReader reads them
 		return boxSize;
 	}
 }

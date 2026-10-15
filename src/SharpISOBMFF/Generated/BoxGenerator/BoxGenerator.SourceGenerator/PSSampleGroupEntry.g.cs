@@ -67,6 +67,17 @@ public partial class PSSampleGroupEntry : VisualSampleGroupEntry
 		boxSize += 5; // reserved
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("sps_present", 1, this.sps_present); 
+		boxSize += builder.Field("pps_present", 1, this.pps_present); 
+		boxSize += builder.Field("aps_present", 1, this.aps_present); 
+		boxSize += builder.Field("reserved", 5, this.reserved); 
+		return boxSize;
+	}
 }
 
 }

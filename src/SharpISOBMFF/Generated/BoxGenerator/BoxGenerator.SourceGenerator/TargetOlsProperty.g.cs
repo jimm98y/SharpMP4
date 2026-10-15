@@ -15,6 +15,9 @@ public partial class TargetOlsProperty : ItemFullProperty
 {
 	public const string TYPE = "tols";
 	public override string DisplayName { get { return "TargetOlsProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected ushort target_ols_idx; 
 	public ushort TargetOlsIdx { get { return this.target_ols_idx; } set { this.target_ols_idx = value; } }
@@ -44,6 +47,14 @@ public partial class TargetOlsProperty : ItemFullProperty
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 16; // target_ols_idx
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("target_ols_idx", 16, this.target_ols_idx); 
 		return boxSize;
 	}
 }

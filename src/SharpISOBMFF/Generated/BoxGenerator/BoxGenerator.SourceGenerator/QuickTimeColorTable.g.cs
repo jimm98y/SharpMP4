@@ -20,6 +20,7 @@ public partial class QuickTimeColorTable : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "QuickTimeColorTable"; } }
 
 	protected int color_table_seed; 
@@ -65,6 +66,16 @@ public partial class QuickTimeColorTable : IMp4Serializable
 		boxSize += 16; // flags
 		boxSize += 16; // color_table_size
 		boxSize += IsoStream.CalculateClassSize(colors); // colors
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("color_table_seed", 32, this.color_table_seed); 
+		boxSize += builder.Field("flags", 16, this.flags); 
+		boxSize += builder.Field("color_table_size", 16, this.color_table_size); 
+		boxSize += builder.Field("colors", IsoStream.CalculateClassSize(colors), this.colors); 
 		return boxSize;
 	}
 }

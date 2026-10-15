@@ -130,6 +130,27 @@ public partial class LayerInfoGroupEntry : VisualSampleGroupEntry
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 2, this.reserved); 
+		boxSize += builder.Field("num_layers_in_track", 6, this.num_layers_in_track); 
+
+		for (int i=0; i<num_layers_in_track; i++)
+		{
+			boxSize += builder.Field($"reserved0[{i}]", 2, this.reserved0[i]); 
+			boxSize += builder.Field($"irap_gdr_pics_in_layer_only_flag[{i}]", 1, this.irap_gdr_pics_in_layer_only_flag[i]); 
+			boxSize += builder.Field($"completeness_flag[{i}]", 1, this.completeness_flag[i]); 
+			boxSize += builder.Field($"layer_id[{i}]", 6, this.layer_id[i]); 
+			boxSize += builder.Field($"min_TemporalId[{i}]", 3, this.min_TemporalId[i]); 
+			boxSize += builder.Field($"max_TemporalId[{i}]", 3, this.max_TemporalId[i]); 
+			boxSize += builder.Field($"reserved00[{i}]", 1, this.reserved00[i]); 
+			boxSize += builder.Field($"sub_layer_presence_flags[{i}]", 7, this.sub_layer_presence_flags[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

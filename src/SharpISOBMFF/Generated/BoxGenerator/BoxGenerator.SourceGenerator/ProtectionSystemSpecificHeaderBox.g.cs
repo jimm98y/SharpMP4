@@ -21,6 +21,9 @@ public partial class ProtectionSystemSpecificHeaderBox : FullBox
 {
 	public const string TYPE = "pssh";
 	public override string DisplayName { get { return "ProtectionSystemSpecificHeaderBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("moov", "moof", "meta"); }
+
 
 	protected byte[] systemId; 
 	public byte[] SystemId { get { return this.systemId; } set { this.systemId = value; } }
@@ -86,6 +89,22 @@ public partial class ProtectionSystemSpecificHeaderBox : FullBox
 		}
 		boxSize += 32; // dataSize
 		boxSize += ((ulong)(dataSize) * 8); // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("systemId", 16 * 8, this.systemId); 
+
+		if (version > 0)
+		{
+			boxSize += builder.Field("count", 32, this.count); 
+			boxSize += builder.Field("keyIDs", IsoStream.CalculateClassSize(keyIDs), this.keyIDs); 
+		}
+		boxSize += builder.Field("dataSize", 32, this.dataSize); 
+		boxSize += builder.Field("data", ((ulong)(dataSize) * 8), this.data); 
 		return boxSize;
 	}
 }

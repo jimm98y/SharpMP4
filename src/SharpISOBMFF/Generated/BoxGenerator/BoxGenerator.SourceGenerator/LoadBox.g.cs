@@ -17,6 +17,9 @@ public partial class LoadBox : Box
 {
 	public const string TYPE = "load";
 	public override string DisplayName { get { return "LoadBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("trak"); }
+
 
 	protected int preloadStartTime; 
 	public int PreloadStartTime { get { return this.preloadStartTime; } set { this.preloadStartTime = value; } }
@@ -64,6 +67,17 @@ public partial class LoadBox : Box
 		boxSize += 32; // preloadDuration
 		boxSize += 32; // preloadFlags
 		boxSize += 32; // defaultHints
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("preloadStartTime", 32, this.preloadStartTime); 
+		boxSize += builder.Field("preloadDuration", 32, this.preloadDuration); 
+		boxSize += builder.Field("preloadFlags", 32, this.preloadFlags); 
+		boxSize += builder.Field("defaultHints", 32, this.defaultHints); 
 		return boxSize;
 	}
 }

@@ -15,6 +15,9 @@ public partial class WipeTransitionEffectProperty : ItemFullProperty
 {
 	public const string TYPE = "wipe";
 	public override string DisplayName { get { return "WipeTransitionEffectProperty"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected byte transition_direction; 
 	public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
@@ -44,6 +47,14 @@ public partial class WipeTransitionEffectProperty : ItemFullProperty
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 8; // transition_direction
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("transition_direction", 8, this.transition_direction); 
 		return boxSize;
 	}
 }

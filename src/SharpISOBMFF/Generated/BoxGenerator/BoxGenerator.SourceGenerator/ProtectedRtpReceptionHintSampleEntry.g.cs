@@ -47,6 +47,15 @@ public partial class ProtectedRtpReceptionHintSampleEntry : RtpReceptionHintSamp
 		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("SchemeInformation", IsoStream.CalculateBoxSize(SchemeInformation), this.SchemeInformation); 
+		boxSize += builder.Children(this);
+		return boxSize;
+	}
 }
 
 }

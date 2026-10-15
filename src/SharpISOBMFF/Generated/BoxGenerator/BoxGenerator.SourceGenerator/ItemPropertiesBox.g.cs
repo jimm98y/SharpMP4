@@ -16,6 +16,9 @@ public partial class ItemPropertiesBox : Box
 {
 	public const string TYPE = "iprp";
 	public override string DisplayName { get { return "ItemPropertiesBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
+
 	public ItemPropertyContainerBox PropertyContainer { get { return this.children.OfType<ItemPropertyContainerBox>().FirstOrDefault(); } }
 	public IEnumerable<ItemPropertyAssociationBox> Association { get { return this.children.OfType<ItemPropertyAssociationBox>(); } }
 
@@ -50,6 +53,16 @@ public partial class ItemPropertiesBox : Box
 		// boxSize += IsoStream.CalculateBoxSize(property_container); // property_container
 		// boxSize += IsoStream.CalculateBoxSize(association); // association
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		// boxSize += builder.Field("property_container", IsoStream.CalculateBoxSize(property_container), this.property_container); 
+		// boxSize += builder.Field("association", IsoStream.CalculateBoxSize(association), this.association); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

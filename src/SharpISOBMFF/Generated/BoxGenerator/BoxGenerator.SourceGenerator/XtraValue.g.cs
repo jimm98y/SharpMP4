@@ -18,6 +18,7 @@ public partial class XtraValue : IMp4Serializable
 	protected IMp4Serializable parent = null;
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public override string ToString() { return BoxStringBuilder.Format(this); }
 	public virtual string DisplayName { get { return "XtraValue"; } }
 
 	protected uint length; 
@@ -57,6 +58,15 @@ public partial class XtraValue : IMp4Serializable
 		boxSize += 32; // length
 		boxSize += 16; // type
 		boxSize += ((ulong)(length-6) * 8); // value
+		return boxSize;
+	}
+
+	public virtual ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += builder.Field("length", 32, this.length); 
+		boxSize += builder.Field("type", 16, this.type); 
+		boxSize += builder.Field("value", ((ulong)(length-6) * 8), this.value); 
 		return boxSize;
 	}
 }

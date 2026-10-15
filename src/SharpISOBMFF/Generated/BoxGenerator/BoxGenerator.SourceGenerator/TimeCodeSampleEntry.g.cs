@@ -20,6 +20,9 @@ public partial class TimeCodeSampleEntry : SampleEntry
 {
 	public const string TYPE = "tmcd";
 	public override string DisplayName { get { return "TimeCodeSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd", "gmhd"); }
+
 
 	protected uint reserved; 
 	public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -85,6 +88,21 @@ public partial class TimeCodeSampleEntry : SampleEntry
 		boxSize += 8; // reserved2
 		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 32, this.reserved); 
+		boxSize += builder.Field("timecodeFlags", 32, this.timecodeFlags); 
+		boxSize += builder.Field("timeScale", 32, this.timeScale); 
+		boxSize += builder.Field("frameDuration", 32, this.frameDuration); 
+		boxSize += builder.Field("numberOfFrames", 8, this.numberOfFrames); 
+		boxSize += builder.Field("reserved2", 8, this.reserved2); 
+		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

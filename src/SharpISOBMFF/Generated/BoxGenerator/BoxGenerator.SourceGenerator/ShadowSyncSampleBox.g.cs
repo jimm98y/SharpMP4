@@ -20,6 +20,9 @@ public partial class ShadowSyncSampleBox : FullBox
 {
 	public const string TYPE = "stsh";
 	public override string DisplayName { get { return "ShadowSyncSampleBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stbl"); }
+
 
 	protected uint entry_count; 
 	public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
@@ -77,6 +80,21 @@ public partial class ShadowSyncSampleBox : FullBox
 		{
 			boxSize += 32; // shadowed_sample_number
 			boxSize += 32; // sync_sample_number
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		
+
+		for (int i=0; i < entry_count; i++)
+		{
+			boxSize += builder.Field($"shadowed_sample_number[{i}]", 32, this.shadowed_sample_number[i]); 
+			boxSize += builder.Field($"sync_sample_number[{i}]", 32, this.sync_sample_number[i]); 
 		}
 		return boxSize;
 	}

@@ -83,6 +83,21 @@ public partial class AlternativeStartupEntry : VisualSampleGroupEntry
 		boxSize += IsoStream.CalculateClassSize(items); // items
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("roll_count", 16, this.roll_count); 
+		boxSize += builder.Field("first_output_sample", 16, this.first_output_sample); 
+
+		for (int i=0; i < roll_count; i++)
+		{
+			boxSize += builder.Field($"sample_offset[{i}]", 32, this.sample_offset[i]); // optional, until the end of the structure
+		}
+		boxSize += builder.Field("items", IsoStream.CalculateClassSize(items), this.items); 
+		return boxSize;
+	}
 }
 
 }

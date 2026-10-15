@@ -15,6 +15,9 @@ public partial class SynchronizedTrackBox : Box
 {
 	public const string TYPE = "sync";
 	public override string DisplayName { get { return "SynchronizedTrackBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("tref"); }
+
 
 	protected uint[] track_IDs; 
 	public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
@@ -47,6 +50,15 @@ public partial class SynchronizedTrackBox : Box
 		boxSize += base.CalculateSize();
 		/*  a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to */
 		boxSize += ((ulong)track_IDs.Length * 32); // track_IDs
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		/*  a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to */
+		boxSize += builder.Field("track_IDs", ((ulong)track_IDs.Length * 32), this.track_IDs); 
 		return boxSize;
 	}
 }

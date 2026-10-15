@@ -24,6 +24,9 @@ public partial class FDSessionGroupBox : Box
 {
 	public const string TYPE = "segr";
 	public override string DisplayName { get { return "FDSessionGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("fiin"); }
+
 
 	protected ushort num_session_groups; 
 	public ushort NumSessionGroups { get { return this.num_session_groups; } set { this.num_session_groups = value; } }
@@ -117,6 +120,30 @@ public partial class FDSessionGroupBox : Box
 			for (int k=0; k < num_channels_in_session_group[i]; k++)
 			{
 				boxSize += 32; // hint_track_ID
+			}
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("num_session_groups", 16, this.num_session_groups); 
+
+		for (int i=0; i < num_session_groups; i++)
+		{
+			boxSize += builder.Field($"entry_count[{i}]", 8, this.entry_count[i]); 
+
+			for (int j=0; j < entry_count[i]; j++)
+			{
+				boxSize += builder.Field($"group_ID[{i}][{j}]", 32, this.group_ID[i][j]); 
+			}
+			boxSize += builder.Field($"num_channels_in_session_group[{i}]", 16, this.num_channels_in_session_group[i]); 
+
+			for (int k=0; k < num_channels_in_session_group[i]; k++)
+			{
+				boxSize += builder.Field($"hint_track_ID[{i}][{k}]", 32, this.hint_track_ID[i][k]); 
 			}
 		}
 		return boxSize;

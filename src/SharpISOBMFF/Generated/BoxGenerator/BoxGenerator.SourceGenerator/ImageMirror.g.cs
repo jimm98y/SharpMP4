@@ -16,6 +16,9 @@ public partial class ImageMirror : ItemProperty
 {
 	public const string TYPE = "imir";
 	public override string DisplayName { get { return "ImageMirror"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
+
 
 	protected byte reserved = 0; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -51,6 +54,15 @@ public partial class ImageMirror : ItemProperty
 		boxSize += base.CalculateSize();
 		boxSize += 7; // reserved
 		boxSize += 1; // axis
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+		boxSize += builder.Field("axis", 1, this.axis); 
 		return boxSize;
 	}
 }

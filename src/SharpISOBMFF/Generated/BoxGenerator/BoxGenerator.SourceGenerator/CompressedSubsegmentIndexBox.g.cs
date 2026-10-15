@@ -14,6 +14,10 @@ public partial class CompressedSubsegmentIndexBox : CompressedBox
 {
 	public const string TYPE = "!ssx";
 	public override string DisplayName { get { return "CompressedSubsegmentIndexBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	// its definitions place it in no container: wherever it is, it is not misplaced
+	public override bool ValidatePlacement() { return IsPlacedIn(); }
+
 
 	public CompressedSubsegmentIndexBox(): base(IsoStream.FromFourCC("!ssx"))
 	{
@@ -37,6 +41,13 @@ public partial class CompressedSubsegmentIndexBox : CompressedBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
 		return boxSize;
 	}
 }

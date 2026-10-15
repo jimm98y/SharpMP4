@@ -16,6 +16,9 @@ public partial class StereoVideoGroupBox : TrackGroupTypeBox
 {
 	public const string TYPE = "ster";
 	public override string DisplayName { get { return "StereoVideoGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("trgr"); }
+
 
 	protected bool left_view_flag; 
 	public bool LeftViewFlag { get { return this.left_view_flag; } set { this.left_view_flag = value; } }
@@ -51,6 +54,15 @@ public partial class StereoVideoGroupBox : TrackGroupTypeBox
 		boxSize += base.CalculateSize();
 		boxSize += 1; // left_view_flag
 		boxSize += 31; // reserved
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("left_view_flag", 1, this.left_view_flag); 
+		boxSize += builder.Field("reserved", 31, this.reserved); 
 		return boxSize;
 	}
 }

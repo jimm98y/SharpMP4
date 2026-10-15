@@ -14,6 +14,9 @@ public partial class HorizontalFieldOfViewBox : Box
 {
 	public const string TYPE = "hfov";
 	public override string DisplayName { get { return "HorizontalFieldOfViewBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("VisualSampleEntry"); }
+
 
 	protected uint field_of_view; 
 	public uint FieldOfView { get { return this.field_of_view; } set { this.field_of_view = value; } }
@@ -43,6 +46,14 @@ public partial class HorizontalFieldOfViewBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // field_of_view
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("field_of_view", 32, this.field_of_view); 
 		return boxSize;
 	}
 }

@@ -22,6 +22,9 @@ public partial class TfrfBox : FullBox
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "TfrfBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
+
 
 	protected byte fragmentCount; 
 	public byte FragmentCount { get { return this.fragmentCount; } set { this.fragmentCount = value; } }
@@ -105,6 +108,30 @@ public partial class TfrfBox : FullBox
 			{
 				boxSize += 32; // fragmentAbsoluteTime
 				boxSize += 32; // fragmentAbsoluteDuration
+			}
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("fragmentCount", 8, this.fragmentCount); 
+
+		for (int i = 0; i < fragmentCount; i++)
+		{
+
+			if (version == 0x1)
+			{
+				boxSize += builder.Field($"fragmentAbsoluteTime[{i}]", 64, this.fragmentAbsoluteTime[i]); 
+				boxSize += builder.Field($"fragmentAbsoluteDuration[{i}]", 64, this.fragmentAbsoluteDuration[i]); 
+			}
+
+			else 
+			{
+				boxSize += builder.Field($"fragmentAbsoluteTime[{i}]", 32, this.fragmentAbsoluteTime[i]); 
+				boxSize += builder.Field($"fragmentAbsoluteDuration[{i}]", 32, this.fragmentAbsoluteDuration[i]); 
 			}
 		}
 		return boxSize;

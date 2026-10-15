@@ -22,6 +22,9 @@ public partial class OpusSpecificBox : Box
 {
 	public const string TYPE = "dOps";
 	public override string DisplayName { get { return "OpusSpecificBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(Opus,enca)"); }
+
 
 	protected byte Version; 
 	public byte _Version { get { return this.Version; } set { this.Version = value; } }
@@ -98,6 +101,24 @@ public partial class OpusSpecificBox : Box
 		if (ChannelMappingFamily != 0)
 		{
 			boxSize += IsoStream.CalculateClassSize(ChannelMappingTable); // ChannelMappingTable
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("Version", 8, this.Version); 
+		boxSize += builder.Field("OutputChannelCount", 8, this.OutputChannelCount); 
+		boxSize += builder.Field("PreSkip", 16, this.PreSkip); 
+		boxSize += builder.Field("InputSampleRate", 32, this.InputSampleRate); 
+		boxSize += builder.Field("OutputGain", 16, this.OutputGain); 
+		boxSize += builder.Field("ChannelMappingFamily", 8, this.ChannelMappingFamily); 
+
+		if (ChannelMappingFamily != 0)
+		{
+			boxSize += builder.Field("ChannelMappingTable", IsoStream.CalculateClassSize(ChannelMappingTable), this.ChannelMappingTable); 
 		}
 		return boxSize;
 	}

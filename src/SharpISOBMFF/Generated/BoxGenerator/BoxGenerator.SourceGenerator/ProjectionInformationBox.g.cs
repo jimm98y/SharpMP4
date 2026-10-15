@@ -15,6 +15,9 @@ public partial class ProjectionInformationBox : FullBox
 {
 	public const string TYPE = "prji";
 	public override string DisplayName { get { return "ProjectionInformationBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("proj"); }
+
 
 	protected uint projection_kind;  //  a FourCC for the kind of projection 
 	public uint ProjectionKind { get { return this.projection_kind; } set { this.projection_kind = value; } }
@@ -44,6 +47,14 @@ public partial class ProjectionInformationBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += 32; // projection_kind
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("projection_kind", 32, this.projection_kind); // a FourCC for the kind of projection 
 		return boxSize;
 	}
 }

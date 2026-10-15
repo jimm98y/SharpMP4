@@ -74,6 +74,20 @@ public partial class ScalableNALUMapEntry : VisualSampleGroupEntry
 		}
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("reserved", 8, this.reserved); 
+		boxSize += builder.Field("NALU_count", 8, this.NALU_count); 
+
+		for (int i=0; i< NALU_count; i++)
+		{
+			boxSize += builder.Field($"groupID[{i}]", 8, this.groupID[i]); 
+		}
+		return boxSize;
+	}
 }
 
 }

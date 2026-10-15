@@ -20,6 +20,9 @@ public partial class TextSampleEntry : SampleEntry
 {
 	public const string TYPE = "enct";
 	public override string DisplayName { get { return "TextSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	protected uint displayFlags; 
 	public uint DisplayFlags { get { return this.displayFlags; } set { this.displayFlags = value; } }
@@ -85,6 +88,21 @@ public partial class TextSampleEntry : SampleEntry
 		boxSize += IsoStream.CalculateClassSize(styleRecord); // styleRecord
 		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("displayFlags", 32, this.displayFlags); 
+		boxSize += builder.Field("horizontalJustification", 8, this.horizontalJustification); 
+		boxSize += builder.Field("verticalJustification", 8, this.verticalJustification); 
+		boxSize += builder.Field("backgroundColorRgba", 4 * 8, this.backgroundColorRgba); 
+		boxSize += builder.Field("rectRecord", IsoStream.CalculateClassSize(rectRecord), this.rectRecord); 
+		boxSize += builder.Field("styleRecord", IsoStream.CalculateClassSize(styleRecord), this.styleRecord); 
+		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

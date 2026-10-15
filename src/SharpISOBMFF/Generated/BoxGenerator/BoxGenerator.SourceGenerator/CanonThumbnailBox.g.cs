@@ -21,6 +21,9 @@ public partial class CanonThumbnailBox : FullBox
 {
 	public const string TYPE = "THMB";
 	public override string DisplayName { get { return "CanonThumbnailBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("uuid"); }
+
 
 	protected ushort width; 
 	public ushort Width { get { return this.width; } set { this.width = value; } }
@@ -80,6 +83,19 @@ public partial class CanonThumbnailBox : FullBox
 		boxSize += 16; // unknown1
 		boxSize += 16; // unknown2
 		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("width", 16, this.width); 
+		boxSize += builder.Field("height", 16, this.height); 
+		boxSize += builder.Field("thumbnailSize", 32, this.thumbnailSize); 
+		boxSize += builder.Field("unknown1", 16, this.unknown1); 
+		boxSize += builder.Field("unknown2", 16, this.unknown2); 
+		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

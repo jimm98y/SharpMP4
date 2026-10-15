@@ -15,6 +15,9 @@ public partial class AlternativesEntityGroupBox : EntityToGroupBox
 {
 	public const string TYPE = "altr";
 	public override string DisplayName { get { return "AlternativesEntityGroupBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("grpl"); }
+
 
 	public AlternativesEntityGroupBox(): base(IsoStream.FromFourCC("altr"), 0, 0)
 	{
@@ -38,6 +41,13 @@ public partial class AlternativesEntityGroupBox : EntityToGroupBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
 		return boxSize;
 	}
 }

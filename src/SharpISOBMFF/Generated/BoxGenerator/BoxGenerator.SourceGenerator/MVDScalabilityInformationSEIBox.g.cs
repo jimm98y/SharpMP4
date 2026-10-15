@@ -15,6 +15,9 @@ public partial class MVDScalabilityInformationSEIBox : Box
 {
 	public const string TYPE = "3sib";
 	public override string DisplayName { get { return "MVDScalabilityInformationSEIBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("AVCMVCSampleEntry(avc1,avc3)", "AVC2MVCSampleEntry(avc2,avc4)", "MVCSampleEntry(mvc1,mvc2,mvc3,mvc4)", "MVCDSampleEntry(mvd1,mvd2,mvd3,mvd4)", "A3DSampleEntry(a3d1,a3d2,a3d3,a3d4)"); }
+
 
 	protected byte[] mvdscalinfosei; 
 	public byte[] Mvdscalinfosei { get { return this.mvdscalinfosei; } set { this.mvdscalinfosei = value; } }
@@ -44,6 +47,14 @@ public partial class MVDScalabilityInformationSEIBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += (ulong)(8*size-64 ); // mvdscalinfosei
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("mvdscalinfosei", (ulong)(8*size-64 ), this.mvdscalinfosei); 
 		return boxSize;
 	}
 }

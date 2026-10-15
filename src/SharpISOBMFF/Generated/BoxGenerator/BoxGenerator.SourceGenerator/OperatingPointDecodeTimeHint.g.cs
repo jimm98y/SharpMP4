@@ -48,6 +48,14 @@ public partial class OperatingPointDecodeTimeHint : VisualSampleGroupEntry
 		boxSize += 32; // delta_time
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("delta_time", 32, this.delta_time); 
+		return boxSize;
+	}
 }
 
 }

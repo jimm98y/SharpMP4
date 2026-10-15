@@ -27,6 +27,9 @@ public partial class SubpicMultipleGroupsBox : EntityToGroupBox
 {
 	public const string TYPE = "amgl";
 	public override string DisplayName { get { return "SubpicMultipleGroupsBox"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("grpl"); }
+
 
 	protected bool level_is_present_flag; 
 	public bool LevelIsPresentFlag { get { return this.level_is_present_flag; } set { this.level_is_present_flag = value; } }
@@ -150,6 +153,38 @@ public partial class SubpicMultipleGroupsBox : EntityToGroupBox
 		for (int i = 0; i < num_subgroup_ids; i++)
 		{
 			boxSize += 16; // num_active_tracks
+		}
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("level_is_present_flag", 1, this.level_is_present_flag); 
+		boxSize += builder.Field("level_is_static_flag", 1, this.level_is_static_flag); 
+		boxSize += builder.Field("reserved", 7, this.reserved); 
+
+		if ( level_is_present_flag )
+		{
+			boxSize += builder.Field("level_idc", 8, this.level_idc); 
+		}
+
+		if ( level_is_static_flag == false )
+		{
+			boxSize += builder.Field("level_info_entity_idx", 32, this.level_info_entity_idx); 
+		}
+		boxSize += builder.Field("num_subgroup_ids", 16, this.num_subgroup_ids); 
+		ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8);
+
+		for (int i = 0; i < num_entities_in_group; i++)
+		{
+			boxSize += builder.Field($"track_subgroup_id[{i}]", (ulong)(subgroupIdLen ), this.track_subgroup_id[i]); 
+		}
+
+		for (int i = 0; i < num_subgroup_ids; i++)
+		{
+			boxSize += builder.Field($"num_active_tracks[{i}]", 16, this.num_active_tracks[i]); 
 		}
 		return boxSize;
 	}

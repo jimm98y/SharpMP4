@@ -15,6 +15,9 @@ class VolumetricVisualSampleEntry(codingname)
 public partial class VolumetricVisualSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "VolumetricVisualSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "stsd" }); }
+
 
 	protected byte[] compressorname;  //  other boxes from derived specifications
 	public byte[] Compressorname { get { return this.compressorname; } set { this.compressorname = value; } }
@@ -47,6 +50,15 @@ public partial class VolumetricVisualSampleEntry : SampleEntry
 		boxSize += base.CalculateSize();
 		boxSize += 32 * 8; // compressorname
 		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("compressorname", 32 * 8, this.compressorname); // other boxes from derived specifications
+		boxSize += builder.Children(this);
 		return boxSize;
 	}
 }

@@ -13,6 +13,9 @@ public partial class DfxpSampleEntry : SampleEntry
 {
 	public const string TYPE = "dfxp";
 	public override string DisplayName { get { return "DfxpSampleEntry"; } }
+	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
+	public override bool ValidatePlacement() { return IsPlacedIn("stsd"); }
+
 
 	public DfxpSampleEntry(): base(IsoStream.FromFourCC("dfxp"))
 	{
@@ -36,6 +39,13 @@ public partial class DfxpSampleEntry : SampleEntry
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
+		return boxSize;
+	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
 		return boxSize;
 	}
 }

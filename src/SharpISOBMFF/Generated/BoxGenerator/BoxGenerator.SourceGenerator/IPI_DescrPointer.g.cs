@@ -45,6 +45,14 @@ public partial class IPI_DescrPointer : BaseDescriptor
 		boxSize += 16; // IPI_ES_Id
 		return boxSize;
 	}
+
+	public override ulong ToString(BoxStringBuilder builder)
+	{
+		ulong boxSize = 0;
+		boxSize += base.ToString(builder);
+		boxSize += builder.Field("IPI_ES_Id", 16, this.IPI_ES_Id); 
+		return boxSize;
+	}
 }
 
 }
