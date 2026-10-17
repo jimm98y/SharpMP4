@@ -97,10 +97,10 @@ outputBuilder.ProcessAnnexBTrackSample(videoTrack.TrackID, annexB);
 ```
 The other audio tracks are made of their codec's configuration, as an encoder hands it out or a file has it, and take a frame a sample:
 ```cs
-var flac = new FlacTrack(FlacTrack.ParseStreamHeader(header)); // 'fLaC' and the metadata blocks, STREAMINFO first
+var flac = new FlacTrack(FlacStreamHeader.Parse(header));     // 'fLaC' and the metadata blocks, STREAMINFO first
 var alac = new AlacTrack(alacSpecificConfig);                   // the 24 byte magic cookie
 var mp3 = new Mp3Track(2, 44100);                              // MPEG-1 or MPEG-2 audio, by the rate
-var ac3 = AC3SyncFrame.TryParse(frame, out var syncFrame) ? new AC3Track(syncFrame) : null; // of a sync frame's syncinfo and bsi
+var ac3 = new AC3Track(AC3SyncFrame.Parse(frame));             // a sync frame's syncinfo and bsi
 var eac3 = new EAC3Track(dataRate, substreams);                 // 'dec3''s data rate and independent substreams
 ```
 An MP3 encoder hands out one frame or several at a time: `Mp3Track.ParseFrames` splits them, a sample each.

@@ -80,6 +80,24 @@ namespace SharpMP4.Tracks
         }
 
         /// <summary>
+        /// Ctor, of the ADTS header of a frame of the stream: its rate and channels, of 16 bit samples. See
+        /// <see cref="AdtsHeader.Parse(byte[], int, int)"/>.
+        /// </summary>
+        /// <exception cref="ArgumentException">Of a header of channel configuration 0, whose channels its frames say in-band.</exception>
+        public AACTrack(AdtsHeader header) :
+            this(ChannelCountOf(header), (header ?? throw new ArgumentNullException(nameof(header))).SamplingRate, 16, header.ChannelConfiguration)
+        { }
+
+        private static byte ChannelCountOf(AdtsHeader header)
+        {
+            if (header == null)
+                throw new ArgumentNullException(nameof(header));
+            if (header.ChannelCount == 0)
+                throw new ArgumentException("An ADTS header of channel configuration 0 says its channels in a program config element of its frames.", nameof(header));
+            return header.ChannelCount;
+        }
+
+        /// <summary>
         /// Ctor with initialization from the <see cref="SampleEntry"/>.
         /// </summary>
         /// <param name="config"><see cref="ESDBox"/>.</param>
@@ -367,6 +385,14 @@ namespace SharpMP4.Tracks
         public byte RawDataBlockCountMinus1 { get; set; }
         public ushort CRC { get; set; }
 
+        /// <summary>The sampling rate of the sampling frequency index (ISO/IEC 14496-3 Table 1.18); 0 of a reserved one.</summary>
+        public uint SamplingRate =>
+            SamplingFrequencyIndex <= 11 && AudioSpecificConfigDescriptor.SamplingFrequencyMap.TryGetValue(SamplingFrequencyIndex, out uint rate) ? rate
+            : SamplingFrequencyIndex == 12 ? 7350u : 0u;
+
+        /// <summary>The channels of the channel configuration: 8 of 7, of 7.1; 0 of 0, of channels said in-band.</summary>
+        public byte ChannelCount => ChannelConfiguration == 7 ? (byte)8 : ChannelConfiguration;
+
         /// <summary>
         /// Checks whether the AAC sample has ADTS header.
         /// </summary>
@@ -391,7 +417,51 @@ namespace SharpMP4.Tracks
             if (!HasHeader(buffer, offset, length))
                 return 0;
 
-            return ((buffer[offset + 1] >> 4) & 0x1) == 1 ? 9 : 7;
+            // protection_absent 0: a CRC follows the 7 bytes
+            return (buffer[offset + 1] & 0x1) == 0 ? 9 : 7;
+        }
+
+        /// <summary>Reads the ADTS header at the start of the sample: see <see cref="TryParse(byte[], int, int, out AdtsHeader)"/>.</summary>
+        public static bool TryParse(byte[] sample, out AdtsHeader header) => TryParse(sample, 0, sample?.Length ?? 0, out header);
+
+        /// <summary>
+        /// Reads the ADTS header at the offset. False of no sync word, of a header shorter than its 7 bytes - or 9, of its CRC -
+        /// of a layer other than 0, or of the forbidden sampling frequency index 15.
+        /// </summary>
+        public static bool TryParse(byte[] buffer, int offset, int length, out AdtsHeader header) => Read(buffer, offset, length, out header) == null;
+
+        /// <summary>Reads the ADTS header at the start of the sample: see <see cref="Parse(byte[], int, int)"/>.</summary>
+        public static AdtsHeader Parse(byte[] sample) => Parse(sample, 0, sample?.Length ?? 0);
+
+        /// <summary>Reads the ADTS header at the offset.</summary>
+        /// <exception cref="ArgumentException">Of no sync word, of a header too short, or of a layer or frequency it cannot have.</exception>
+        public static AdtsHeader Parse(byte[] buffer, int offset, int length)
+        {
+            string error = Read(buffer, offset, length, out AdtsHeader header);
+            if (error != null)
+                throw new ArgumentException(error, nameof(buffer));
+            return header;
+        }
+
+        // the header, or why there is none
+        private static string Read(byte[] buffer, int offset, int length, out AdtsHeader header)
+        {
+            header = null;
+            if (buffer == null || offset < 0 || length < 0 || offset + length > buffer.Length || length < 2
+                || buffer[offset] != 0xFF || buffer[offset + 1] >> 4 != 0xF)
+                return "An ADTS header begins with its sync word, 12 bits of 1.";
+            if (length < ((buffer[offset + 1] & 0x1) == 0 ? 9 : 7))
+                return "An ADTS header is of 7 bytes, or 9 of its CRC.";
+
+            var read = new AdtsHeader();
+            read.ReadFields(buffer, offset);
+            if (read.Layer != 0)
+                return $"An ADTS header's layer is 0, not {read.Layer}.";
+            if (read.SamplingFrequencyIndex == 15)
+                return "An ADTS header's sampling frequency index 15 is forbidden.";
+
+            header = read;
+            return null;
         }
 
         /// <summary>
@@ -408,21 +478,27 @@ namespace SharpMP4.Tracks
             if (!(sample[0] == 0xFF && sample[1] >> 4 == 0xF))
                 throw new ArgumentOutOfRangeException();
 
+            ReadFields(sample, 0);
+        }
+
+        // the fields of a header at the offset, its sync word and length known to be there
+        private void ReadFields(byte[] sample, int offset)
+        {
             // fixed header:
             // 1 bit ID, 2 bits layer, 1 bit protection absent
-            int i = sample[1];
+            int i = sample[offset + 1];
             MpegVersion = ((i >> 3) & 0x1) == 1;
             Layer = (byte)((i >> 1) & 0x3);
             ProtectionAbsent = (i & 0x1) == 1;
 
             // 2 bits profile, 4 bits sample frequency, 1 bit private bit
-            i = sample[2];
+            i = sample[offset + 2];
             Profile = (byte)(((i >> 6) & 0x3) + 1);
             SamplingFrequencyIndex = (byte)((i >> 2) & 0xF);
             PrivateBit = ((i >> 1) & 0x1) == 1;
 
             // 3 bits channel configuration, 1 bit copy, 1 bit home
-            i = (i << 8) | sample[3];
+            i = (i << 8) | sample[offset + 3];
             ChannelConfiguration = (byte)((i >> 6) & 0x7);
             Originality = ((i >> 5) & 0x1) == 1;
             Home = ((i >> 4) & 0x1) == 1;
@@ -432,15 +508,15 @@ namespace SharpMP4.Tracks
             // 11 bits adtsBufferFullness, 2 bits rawDataBlockCount
             CopyrightIDBit = ((i >> 3) & 0x1) == 1;
             CopyrightIDStart = ((i >> 2) & 0x1) == 1;
-            i = (i << 16) | sample[4] << 8 | sample[5];
+            i = (i << 16) | sample[offset + 4] << 8 | sample[offset + 5];
             FrameLength = (ushort)((i >> 5) & 0x1FFF);
-            i = (i << 8) | sample[6];
+            i = (i << 8) | sample[offset + 6];
             BufferFullness = (ushort)((i >> 2) & 0x7FF);
             RawDataBlockCountMinus1 = (byte)(i & 0x3);
 
             if(!ProtectionAbsent)
             {
-                CRC = (ushort)(sample[7] << 8 | sample[8]);
+                CRC = (ushort)(sample[offset + 7] << 8 | sample[offset + 8]);
             }
         }
     }

@@ -210,17 +210,36 @@ namespace SharpMP4.Tracks
             return buffer != null && offset >= 0 && length >= 2 && offset + 2 <= buffer.Length && buffer[offset] == 0x0B && buffer[offset + 1] == 0x77;
         }
 
+        /// <summary>Reads the sync frame header at the start of the frame: see <see cref="TryParse(byte[], int, int, out AC3SyncFrame)"/>.</summary>
         public static bool TryParse(byte[] frame, out AC3SyncFrame syncFrame) => TryParse(frame, 0, frame?.Length ?? 0, out syncFrame);
 
         /// <summary>
         /// Reads the sync frame header at the offset. False of no sync frame, of one too short, of a reserved fscod or
         /// frmsizecod, or of one of E-AC-3 (bsid above 10).
         /// </summary>
-        public static bool TryParse(byte[] buffer, int offset, int length, out AC3SyncFrame syncFrame)
+        public static bool TryParse(byte[] buffer, int offset, int length, out AC3SyncFrame syncFrame) => Read(buffer, offset, length, out syncFrame) == null;
+
+        /// <summary>Reads the sync frame header at the start of the frame: see <see cref="Parse(byte[], int, int)"/>.</summary>
+        public static AC3SyncFrame Parse(byte[] frame) => Parse(frame, 0, frame?.Length ?? 0);
+
+        /// <summary>Reads the sync frame header at the offset.</summary>
+        /// <exception cref="ArgumentException">Of no sync frame, of one too short or reserved, or of one of E-AC-3.</exception>
+        public static AC3SyncFrame Parse(byte[] buffer, int offset, int length)
+        {
+            string error = Read(buffer, offset, length, out AC3SyncFrame syncFrame);
+            if (error != null)
+                throw new ArgumentException(error, nameof(buffer));
+            return syncFrame;
+        }
+
+        // the header, or why there is none
+        private static string Read(byte[] buffer, int offset, int length, out AC3SyncFrame syncFrame)
         {
             syncFrame = null;
-            if (!HasSyncWord(buffer, offset, length) || length < HeaderLength || offset + HeaderLength > buffer.Length)
-                return false;
+            if (!HasSyncWord(buffer, offset, length))
+                return "An AC-3 sync frame begins with its sync word, 0x0B77.";
+            if (length < HeaderLength || offset + HeaderLength > buffer.Length)
+                return $"An AC-3 sync frame's header is of {HeaderLength} bytes.";
 
             var frame = new AC3SyncFrame
             {
@@ -232,8 +251,10 @@ namespace SharpMP4.Tracks
             frame.Bsid = (byte)bits.Read(5);
             frame.Bsmod = (byte)bits.Read(3);
             frame.Acmod = (byte)bits.Read(3);
-            if (frame.Fscod == 3 || frame.Bsid > 10 || frame.BitRateCode >= AC3Track.BitRates.Length)
-                return false;
+            if (frame.Bsid > 10)
+                return $"A sync frame of bsid {frame.Bsid} is of E-AC-3, not of AC-3.";
+            if (frame.Fscod == 3 || frame.BitRateCode >= AC3Track.BitRates.Length)
+                return $"An AC-3 sync frame's fscod {frame.Fscod} or frmsizecod {frame.Frmsizecod} is reserved.";
             if ((frame.Acmod & 0x1) != 0 && frame.Acmod != 0x1)
                 frame.Cmixlev = (byte)bits.Read(2);
             if ((frame.Acmod & 0x4) != 0)
@@ -243,7 +264,7 @@ namespace SharpMP4.Tracks
             frame.Lfeon = bits.Read(1) == 1;
 
             syncFrame = frame;
-            return true;
+            return null;
         }
     }
 
