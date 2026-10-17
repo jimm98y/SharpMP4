@@ -296,10 +296,46 @@ public class AudioTrackTests
         Assert.AreEqual("fLaC", System.Text.Encoding.ASCII.GetString(header, 0, 4));
         Assert.AreEqual(0x00, header[4], "STREAMINFO, not the last");
         Assert.AreEqual(0x81, header[4 + 4 + 34], "PADDING, the last");
-        var blocks = FlacTrack.ParseStreamHeader(header);
-        Assert.AreEqual(2, blocks.Count);
-        CollectionAssert.AreEqual(Hex(StreamInfo), blocks[0].Data);
-        Assert.AreEqual((byte)1, blocks[1].Type);
+        var parsed = FlacStreamHeader.Parse(header);
+        Assert.AreEqual(2, parsed.MetadataBlocks.Count);
+        CollectionAssert.AreEqual(Hex(StreamInfo), parsed.StreamInfo);
+        Assert.AreEqual((byte)1, parsed.MetadataBlocks[1].Type);
+
+        var read = new FlacTrack(parsed);
+        Assert.AreEqual((track.SamplingRate, track.ChannelCount, track.BitsPerSample), (read.SamplingRate, read.ChannelCount, read.BitsPerSample));
+        CollectionAssert.AreEqual(header, read.CreateStreamHeader(), "made of it, the header it was");
+
+        // at an offset, and of what is no stream header
+        byte[] offsetHeader = new byte[] { 0xFF }.Concat(header).ToArray();
+        Assert.IsTrue(FlacStreamHeader.TryParse(offsetHeader, 1, header.Length, out _));
+        Assert.IsFalse(FlacStreamHeader.TryParse(Hex("664c6143"), out _), "no STREAMINFO");
+        Assert.IsFalse(FlacStreamHeader.TryParse(header.Take(20).ToArray(), out _), "a block past the end");
+        Assert.ThrowsExactly<ArgumentException>(() => FlacStreamHeader.Parse(Hex("4f676753000200000000")), "no 'fLaC'");
+    }
+
+    /// <summary>
+    /// An ADTS header's fields, and a track of its rate and channels: AAC LC at 44100 Hz, stereo, a frame of 256 bytes; one of
+    /// no sync word, too short, or of channels said in-band, is none.
+    /// </summary>
+    [TestMethod]
+    public void ReadsAnAdtsHeader()
+    {
+        // 0xFFF, MPEG-4, layer 0, no CRC; profile LC, index 4, configuration 2; frame of 256 bytes, fullness 0x7FF, 1 block
+        byte[] adts = Hex("fff15080201ffc");
+        var header = AdtsHeader.Parse(adts);
+        Assert.AreEqual(((byte)2, (byte)4, 44100u, (byte)2, (byte)2, (ushort)256, (ushort)0x7FF, true),
+            (header.Profile, header.SamplingFrequencyIndex, header.SamplingRate, header.ChannelConfiguration, header.ChannelCount, header.FrameLength, header.BufferFullness, header.ProtectionAbsent));
+
+        var track = new AACTrack(AdtsHeader.Parse(adts));
+        Assert.AreEqual((44100u, (byte)2, (byte)2), (track.SamplingRate, track.ChannelCount, track.ChannelConfiguration));
+
+        Assert.AreEqual((7, 9), (AdtsHeader.GetLength(Hex("fff15080201ffcaa"), 0, 8), AdtsHeader.GetLength(Hex("fff05080201ffc1234aa"), 0, 10)), "of no CRC, and of one");
+        Assert.AreEqual((ushort)0x1234, AdtsHeader.Parse(Hex("fff05080201ffc1234")).CRC);
+        Assert.IsTrue(AdtsHeader.TryParse(Hex("00fff15080201ffc"), 1, 7, out _), "at an offset");
+        Assert.IsFalse(AdtsHeader.TryParse(Hex("fff1508020"), out _), "too short");
+        Assert.IsFalse(AdtsHeader.TryParse(Hex("fff17c80201ffc"), out _), "frequency index 15");
+        Assert.ThrowsExactly<ArgumentException>(() => AdtsHeader.Parse(Hex("0b7712341e40e300")), "no sync word");
+        Assert.ThrowsExactly<ArgumentException>(() => new AACTrack(AdtsHeader.Parse(Hex("fff15000201ffc"))), "channel configuration 0");
     }
 
     // ALACSpecificConfig of ffmpeg's ALAC encoder: frames of 4096, 24 bits, 2 channels, 44100 Hz
@@ -346,13 +382,14 @@ public class AudioTrackTests
         Assert.AreEqual(((byte)0, (byte)1, true), (frame.Cmixlev, frame.Surmixlev, frame.Lfeon));
         Assert.AreEqual((48000u, (byte)6, (ushort)448, 1792), (frame.SamplingRate, frame.ChannelCount, frame.BitRate, frame.FrameLength));
 
-        var track = new AC3Track(frame);
+        var track = new AC3Track(AC3SyncFrame.Parse(Hex("0b7712341e40e300")));
         Assert.AreEqual((48000u, (byte)6, (ushort)448, (byte)8, (byte)7, true), (track.SamplingRate, track.ChannelCount, track.BitRate, track.Bsid, track.Acmod, track.Lfeon));
 
         Assert.IsTrue(AC3SyncFrame.TryParse(Hex("ff0b7712341e40e300"), 1, 8, out _), "at an offset");
         Assert.IsFalse(AC3SyncFrame.TryParse(Hex("0b7700001c80e100"), out _), "bsid 16, of E-AC-3");
         Assert.IsFalse(AC3SyncFrame.TryParse(Hex("0b7800001c40e100"), out _), "no sync word");
         Assert.IsFalse(AC3SyncFrame.TryParse(Hex("0b7700001c40"), out _), "too short");
+        Assert.ThrowsExactly<ArgumentException>(() => AC3SyncFrame.Parse(Hex("0b7700001c80e100")), "E-AC-3");
     }
 
     /// <summary>

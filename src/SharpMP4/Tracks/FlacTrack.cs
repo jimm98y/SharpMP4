@@ -45,6 +45,12 @@ namespace SharpMP4.Tracks
             ReadStreamInfo();
         }
 
+        /// <summary>
+        /// Ctor, of a stream's header: see <see cref="FlacStreamHeader.Parse(byte[], int, int)"/>.
+        /// </summary>
+        public FlacTrack(FlacStreamHeader header) : this((header ?? throw new ArgumentNullException(nameof(header))).MetadataBlocks)
+        { }
+
         /// <summary>Ctor, of a stream's STREAMINFO block's data alone.</summary>
         public FlacTrack(byte[] streamInfo) : this(new[] { (STREAMINFO, streamInfo) })
         { }
@@ -88,7 +94,7 @@ namespace SharpMP4.Tracks
 
         /// <summary>
         /// The stream's header as a FLAC file starts with it: 'fLaC', then each metadata block with its header, the last
-        /// marked so - what a decoder of a FLAC stream is given first.
+        /// marked so - what a decoder of a FLAC stream is given first, and what <see cref="FlacStreamHeader.Parse(byte[])"/> reads.
         /// </summary>
         public byte[] CreateStreamHeader()
         {
@@ -103,35 +109,6 @@ namespace SharpMP4.Tracks
                 header.AddRange(data);
             }
             return header.ToArray();
-        }
-
-        /// <summary>
-        /// The metadata blocks of a FLAC stream's header - 'fLaC' and the blocks, each with its header - as
-        /// <see cref="FlacTrack(IEnumerable{ValueTuple{byte, byte[]}})"/> takes them.
-        /// </summary>
-        public static List<(byte Type, byte[] Data)> ParseStreamHeader(byte[] header)
-        {
-            if (header == null || header.Length < 8 || header[0] != 'f' || header[1] != 'L' || header[2] != 'a' || header[3] != 'C')
-                throw new ArgumentException("A FLAC stream's header begins with 'fLaC'.", nameof(header));
-
-            var blocks = new List<(byte, byte[])>();
-            int position = 4;
-            while (position + 4 <= header.Length)
-            {
-                bool last = (header[position] & 0x80) != 0;
-                byte type = (byte)(header[position] & 0x7F);
-                int length = (header[position + 1] << 16) | (header[position + 2] << 8) | header[position + 3];
-                position += 4;
-                if (position + length > header.Length)
-                    throw new ArgumentException("A FLAC metadata block runs past the header's end.", nameof(header));
-                var data = new byte[length];
-                Buffer.BlockCopy(header, position, data, 0, length);
-                blocks.Add((type, data));
-                position += length;
-                if (last)
-                    break;
-            }
-            return blocks;
         }
 
         /// <summary>
@@ -186,6 +163,81 @@ namespace SharpMP4.Tracks
         public override ITrack Clone()
         {
             return CopySettingsTo(new FlacTrack(MetadataBlocks.Select(b => (b.Type, (byte[])b.Data.Clone()))));
+        }
+    }
+
+    /// <summary>
+    /// FLAC stream header (RFC 9639 6, 8): 'fLaC', then the stream's metadata blocks, each with its header - STREAMINFO first,
+    /// the last marked so. What an encoder hands out of a stream before its frames, and what a FLAC file starts with.
+    /// </summary>
+    public class FlacStreamHeader
+    {
+        /// <summary>The stream's metadata blocks, STREAMINFO first, each its type and its data - without the header of each.</summary>
+        public List<(byte Type, byte[] Data)> MetadataBlocks { get; } = new List<(byte Type, byte[] Data)>();
+
+        /// <summary>The STREAMINFO block's data: 34 bytes.</summary>
+        public byte[] StreamInfo => MetadataBlocks.Count > 0 ? MetadataBlocks[0].Data : null;
+
+        /// <summary>Whether a stream header starts at the offset: of its marker, 'fLaC'.</summary>
+        public static bool HasMarker(byte[] buffer, int offset, int length)
+        {
+            return buffer != null && offset >= 0 && length >= 4 && offset + 4 <= buffer.Length &&
+                buffer[offset] == 'f' && buffer[offset + 1] == 'L' && buffer[offset + 2] == 'a' && buffer[offset + 3] == 'C';
+        }
+
+        /// <summary>Reads a stream header: see <see cref="TryParse(byte[], int, int, out FlacStreamHeader)"/>.</summary>
+        public static bool TryParse(byte[] header, out FlacStreamHeader streamHeader) => TryParse(header, 0, header?.Length ?? 0, out streamHeader);
+
+        /// <summary>
+        /// Reads the stream header at the offset. False of no 'fLaC', of a block that runs past the end, or of a header that
+        /// does not begin with its STREAMINFO, of 34 bytes.
+        /// </summary>
+        public static bool TryParse(byte[] buffer, int offset, int length, out FlacStreamHeader streamHeader) => Read(buffer, offset, length, out streamHeader) == null;
+
+        /// <summary>Reads a stream header: see <see cref="Parse(byte[], int, int)"/>.</summary>
+        public static FlacStreamHeader Parse(byte[] header) => Parse(header, 0, header?.Length ?? 0);
+
+        /// <summary>Reads the stream header at the offset.</summary>
+        /// <exception cref="ArgumentException">Of no 'fLaC', of a block that runs past the end, or of no STREAMINFO first.</exception>
+        public static FlacStreamHeader Parse(byte[] buffer, int offset, int length)
+        {
+            string error = Read(buffer, offset, length, out FlacStreamHeader streamHeader);
+            if (error != null)
+                throw new ArgumentException(error, nameof(buffer));
+            return streamHeader;
+        }
+
+        // the header, or why there is none
+        private static string Read(byte[] buffer, int offset, int length, out FlacStreamHeader streamHeader)
+        {
+            streamHeader = null;
+            if (!HasMarker(buffer, offset, length))
+                return "A FLAC stream's header begins with 'fLaC'.";
+
+            int end = Math.Min(buffer.Length, offset + length);
+            var header = new FlacStreamHeader();
+            int position = offset + 4;
+            while (position + 4 <= end)
+            {
+                bool last = (buffer[position] & 0x80) != 0;
+                byte type = (byte)(buffer[position] & 0x7F);
+                int blockLength = (buffer[position + 1] << 16) | (buffer[position + 2] << 8) | buffer[position + 3];
+                position += 4;
+                if (position + blockLength > end)
+                    return "A FLAC metadata block runs past the header's end.";
+                var data = new byte[blockLength];
+                Buffer.BlockCopy(buffer, position, data, 0, blockLength);
+                header.MetadataBlocks.Add((type, data));
+                position += blockLength;
+                if (last)
+                    break;
+            }
+
+            if (header.MetadataBlocks.Count == 0 || header.MetadataBlocks[0].Type != FlacTrack.STREAMINFO || header.StreamInfo.Length < FlacTrack.STREAMINFO_SIZE)
+                return "A FLAC stream's metadata begins with its STREAMINFO block, of 34 bytes.";
+
+            streamHeader = header;
+            return null;
         }
     }
 }
