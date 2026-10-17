@@ -334,17 +334,42 @@ public class AudioTrackTests
     }
 
     /// <summary>
-    /// An AC-3 sync frame's syncinfo and bsi make a track of its parameters: 48000 Hz, 448 kbit/s, 3/2 with LFE - six
-    /// channels - past the mix levels its acmod has; one of E-AC-3, of bsid 16, is none.
+    /// An AC-3 sync frame's syncinfo and bsi, read as AdtsHeader reads AAC's, make a track of its parameters: 48000 Hz,
+    /// 448 kbit/s, 3/2 with LFE - six channels - past the mix levels its acmod has; one of E-AC-3, of bsid 16, is none.
     /// </summary>
     [TestMethod]
     public void ReadsAnAC3SyncFrame()
     {
-        // 0x0B77, crc1, fscod 0 and frmsizecod 30; bsid 8, bsmod 0; acmod 7, cmixlev, surmixlev, lfeon 1
-        Assert.IsTrue(AC3Track.TryParseSyncFrame(Hex("0b7700001e40e100"), 0, out var track));
-        Assert.AreEqual((48000u, (byte)6, (ushort)448, (byte)8), (track.SamplingRate, track.ChannelCount, track.BitRate, track.Bsid));
-        Assert.IsFalse(AC3Track.TryParseSyncFrame(Hex("0b7700001e80e100"), 0, out _), "bsid 16, of E-AC-3");
-        Assert.IsFalse(AC3Track.TryParseSyncFrame(Hex("0b7800001c40e100"), 0, out _), "no sync word");
+        // 0x0B77, crc1 0x1234, fscod 0 and frmsizecod 30; bsid 8, bsmod 0; acmod 7, cmixlev 0, surmixlev 1, lfeon 1
+        Assert.IsTrue(AC3SyncFrame.TryParse(Hex("0b7712341e40e300"), out var frame));
+        Assert.AreEqual(((ushort)0x1234, (byte)0, (byte)30, (byte)8, (byte)0, (byte)7), (frame.Crc1, frame.Fscod, frame.Frmsizecod, frame.Bsid, frame.Bsmod, frame.Acmod));
+        Assert.AreEqual(((byte)0, (byte)1, true), (frame.Cmixlev, frame.Surmixlev, frame.Lfeon));
+        Assert.AreEqual((48000u, (byte)6, (ushort)448, 1792), (frame.SamplingRate, frame.ChannelCount, frame.BitRate, frame.FrameLength));
+
+        var track = new AC3Track(frame);
+        Assert.AreEqual((48000u, (byte)6, (ushort)448, (byte)8, (byte)7, true), (track.SamplingRate, track.ChannelCount, track.BitRate, track.Bsid, track.Acmod, track.Lfeon));
+
+        Assert.IsTrue(AC3SyncFrame.TryParse(Hex("ff0b7712341e40e300"), 1, 8, out _), "at an offset");
+        Assert.IsFalse(AC3SyncFrame.TryParse(Hex("0b7700001c80e100"), out _), "bsid 16, of E-AC-3");
+        Assert.IsFalse(AC3SyncFrame.TryParse(Hex("0b7800001c40e100"), out _), "no sync word");
+        Assert.IsFalse(AC3SyncFrame.TryParse(Hex("0b7700001c40"), out _), "too short");
+    }
+
+    /// <summary>
+    /// A sync frame's length (ETSI TS 102 366 Table 4.13): of its bit rate and rate, and at 44.1 kHz one more word of an odd
+    /// frmsizecod.
+    /// </summary>
+    [TestMethod]
+    [DataRow(0, 0, 128)]      // 48 kHz, 32 kbit/s: 64 words
+    [DataRow(0, 37, 2560)]    // 48 kHz, 640 kbit/s: 1280 words
+    [DataRow(1, 0, 138)]      // 44.1 kHz, 32 kbit/s: 69 words
+    [DataRow(1, 1, 140)]      // and 70 words, of an odd frmsizecod
+    [DataRow(1, 37, 2788)]    // 44.1 kHz, 640 kbit/s: 1394 words
+    [DataRow(2, 0, 192)]      // 32 kHz, 32 kbit/s: 96 words
+    [DataRow(2, 37, 3840)]    // 32 kHz, 640 kbit/s: 1920 words
+    public void KnowsTheLengthOfAnAC3SyncFrame(int fscod, int frmsizecod, int length)
+    {
+        Assert.AreEqual(length, new AC3SyncFrame { Fscod = (byte)fscod, Frmsizecod = (byte)frmsizecod }.FrameLength);
     }
 
     /// <summary>An AC-3 track's 'dac3' reads back as it was written, and its rate and frames of 1536 samples.</summary>
