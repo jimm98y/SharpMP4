@@ -44,7 +44,7 @@ namespace SharpMP4.Tracks
         public ushort BitRate => BitRateCode < BitRates.Length ? BitRates[BitRateCode] : (ushort)0;
 
         /// <summary>
-        /// Ctor, of the fields of the stream's bit stream information, which <see cref="TryParseSyncFrame"/> reads of a frame.
+        /// Ctor, of the fields of the stream's bit stream information, which <see cref="AC3SyncFrame"/> reads of a frame.
         /// </summary>
         public AC3Track(byte fscod, byte bsid, byte bsmod, byte acmod, bool lfeon, byte bitRateCode)
         {
@@ -56,6 +56,14 @@ namespace SharpMP4.Tracks
             BitRateCode = bitRateCode;
             Timescale = SamplingRate;
             DefaultSampleDuration = AC3_SAMPLES_PER_FRAME;
+        }
+
+        /// <summary>
+        /// Ctor, of the fields of a sync frame of the stream: see <see cref="AC3SyncFrame.TryParse(byte[], int, int, out AC3SyncFrame)"/>.
+        /// </summary>
+        public AC3Track(AC3SyncFrame syncFrame)
+            : this(syncFrame?.Fscod ?? throw new ArgumentNullException(nameof(syncFrame)), syncFrame.Bsid, syncFrame.Bsmod, syncFrame.Acmod, syncFrame.Lfeon, syncFrame.BitRateCode)
+        {
         }
 
         /// <summary>
@@ -75,37 +83,6 @@ namespace SharpMP4.Tracks
             BitRateCode = dac3.BitRateCode;
             Timescale = timescale == 0 ? SamplingRate : timescale;
             DefaultSampleDuration = sampleDuration > 0 ? sampleDuration : AC3_SAMPLES_PER_FRAME;
-        }
-
-        /// <summary>
-        /// An AC-3 sync frame's fields (ETSI TS 102 366 4.3): its syncinfo - the sync word 0x0B77, crc1, fscod and frmsizecod
-        /// - and the first fields of its bsi, bsid, bsmod, acmod and, after the mix levels acmod has, lfeon. False of no
-        /// sync frame, or one of E-AC-3 (bsid above 10).
-        /// </summary>
-        public static bool TryParseSyncFrame(byte[] frame, int offset, out AC3Track track)
-        {
-            track = null;
-            if (frame == null || offset < 0 || offset + 8 > frame.Length || frame[offset] != 0x0B || frame[offset + 1] != 0x77)
-                return false;
-
-            byte fscod = (byte)(frame[offset + 4] >> 6);
-            byte frmsizecod = (byte)(frame[offset + 4] & 0x3F);
-            var bits = new BitReader(frame, offset + 5);
-            byte bsid = (byte)bits.Read(5);
-            byte bsmod = (byte)bits.Read(3);
-            byte acmod = (byte)bits.Read(3);
-            if (fscod == 3 || bsid > 10 || frmsizecod / 2 >= BitRates.Length)
-                return false;
-            if ((acmod & 0x1) != 0 && acmod != 0x1)
-                bits.Read(2); // cmixlev
-            if ((acmod & 0x4) != 0)
-                bits.Read(2); // surmixlev
-            if (acmod == 0x2)
-                bits.Read(2); // dsurmod
-            bool lfeon = bits.Read(1) == 1;
-
-            track = new AC3Track(fscod, bsid, bsmod, acmod, lfeon, (byte)(frmsizecod / 2));
-            return true;
         }
 
         /// <summary>
@@ -177,6 +154,96 @@ namespace SharpMP4.Tracks
                 }
                 return value;
             }
+        }
+    }
+
+    /// <summary>
+    /// AC-3 sync frame header (ETSI TS 102 366 4.3): its syncinfo - the sync word 0x0B77, crc1, fscod and frmsizecod - and
+    /// the fields of its bsi up to lfeon: bsid, bsmod, acmod and the mix levels acmod has.
+    /// </summary>
+    public class AC3SyncFrame
+    {
+        /// <summary>The bytes of the syncinfo and of the bsi up to lfeon: what <see cref="TryParse(byte[], int, int, out AC3SyncFrame)"/> reads.</summary>
+        public const int HeaderLength = 8;
+
+        public ushort Crc1 { get; set; }
+        public byte Fscod { get; set; } // 3 is reserved
+        public byte Frmsizecod { get; set; }
+        public byte Bsid { get; set; } // 8 of AC-3, of its versions up to 10; E-AC-3's of 11 to 16
+        public byte Bsmod { get; set; }
+        public byte Acmod { get; set; }
+        public byte Cmixlev { get; set; } // of an acmod of three front channels
+        public byte Surmixlev { get; set; } // of an acmod of surround channels
+        public byte Dsurmod { get; set; } // of 2/0
+        public bool Lfeon { get; set; }
+
+        /// <summary>The bit rate's code: frmsizecod / 2, what the 'dac3' carries.</summary>
+        public byte BitRateCode => (byte)(Frmsizecod / 2);
+
+        public uint SamplingRate => Fscod < AC3Track.SampleRates.Length ? AC3Track.SampleRates[Fscod] : 0;
+
+        /// <summary>The bit rate in kbit/s.</summary>
+        public ushort BitRate => BitRateCode < AC3Track.BitRates.Length ? AC3Track.BitRates[BitRateCode] : (ushort)0;
+
+        /// <summary>The channels, the LFE among them.</summary>
+        public byte ChannelCount => (byte)(AC3Track.AcmodChannels[Acmod & 0x7] + (Lfeon ? 1 : 0));
+
+        /// <summary>
+        /// The length of the sync frame in bytes, of its frmsizecod and fscod (ETSI TS 102 366 4.4.1.4, Table 4.13): of the
+        /// 16 bit words 1536 samples take at the bit rate, and at 44.1 kHz one more of an odd frmsizecod.
+        /// </summary>
+        public int FrameLength
+        {
+            get
+            {
+                uint samplingRate = SamplingRate;
+                if (samplingRate == 0 || BitRate == 0)
+                    return 0;
+                int words = (int)(BitRate * 96000u / samplingRate) + (Fscod == 1 ? Frmsizecod & 1 : 0);
+                return words * 2;
+            }
+        }
+
+        /// <summary>Whether a sync frame starts at the offset: of its sync word, 0x0B77.</summary>
+        public static bool HasSyncWord(byte[] buffer, int offset, int length)
+        {
+            return buffer != null && offset >= 0 && length >= 2 && offset + 2 <= buffer.Length && buffer[offset] == 0x0B && buffer[offset + 1] == 0x77;
+        }
+
+        public static bool TryParse(byte[] frame, out AC3SyncFrame syncFrame) => TryParse(frame, 0, frame?.Length ?? 0, out syncFrame);
+
+        /// <summary>
+        /// Reads the sync frame header at the offset. False of no sync frame, of one too short, of a reserved fscod or
+        /// frmsizecod, or of one of E-AC-3 (bsid above 10).
+        /// </summary>
+        public static bool TryParse(byte[] buffer, int offset, int length, out AC3SyncFrame syncFrame)
+        {
+            syncFrame = null;
+            if (!HasSyncWord(buffer, offset, length) || length < HeaderLength || offset + HeaderLength > buffer.Length)
+                return false;
+
+            var frame = new AC3SyncFrame
+            {
+                Crc1 = (ushort)(buffer[offset + 2] << 8 | buffer[offset + 3]),
+                Fscod = (byte)(buffer[offset + 4] >> 6),
+                Frmsizecod = (byte)(buffer[offset + 4] & 0x3F),
+            };
+            var bits = new AC3Track.BitReader(buffer, offset + 5);
+            frame.Bsid = (byte)bits.Read(5);
+            frame.Bsmod = (byte)bits.Read(3);
+            frame.Acmod = (byte)bits.Read(3);
+            if (frame.Fscod == 3 || frame.Bsid > 10 || frame.BitRateCode >= AC3Track.BitRates.Length)
+                return false;
+            if ((frame.Acmod & 0x1) != 0 && frame.Acmod != 0x1)
+                frame.Cmixlev = (byte)bits.Read(2);
+            if ((frame.Acmod & 0x4) != 0)
+                frame.Surmixlev = (byte)bits.Read(2);
+            if (frame.Acmod == 0x2)
+                frame.Dsurmod = (byte)bits.Read(2);
+            frame.Lfeon = bits.Read(1) == 1;
+
+            syncFrame = frame;
+            return true;
         }
     }
 
