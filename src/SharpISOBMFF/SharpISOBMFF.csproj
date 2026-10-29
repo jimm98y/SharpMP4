@@ -49,6 +49,7 @@
 		<AdditionalFiles Include="Definitions\IAMF-boxes.json" />
 		<AdditionalFiles Include="Definitions\JPEGXL-boxes.json" />
 		<AdditionalFiles Include="Definitions\ISMACryp-boxes.json" />
+		<AdditionalFiles Include="Definitions\ICC-profile.json" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(AutoGenerateCode) == 'true'">

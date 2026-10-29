@@ -23,7 +23,6 @@ namespace SharpISOBMFF
         public CompressedBox(uint boxtype) : base(boxtype) {  }
     }
 
-    public class ICC_profile : UnknownClass { } // ISO 15076‐1 or ICC.1:2010, or https://github.com/xcorail/metadata-extractor/blob/master/Source/com/drew/metadata/icc/IccReader.java#L50
     public class DRCCoefficientsBasic : UnknownBox { } // ISO/IEC 23003‐4
     public class DRCInstructionsBasic : UnknownBox { } // ISO/IEC 23003‐4
     public class DRCCoefficientsUniDRC : UnknownBox { } // ISO/IEC 23003‐4

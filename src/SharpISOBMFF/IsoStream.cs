@@ -2913,6 +2913,19 @@ namespace SharpISOBMFF
             return WriteUInt32Array((uint)value.Length, value, name);
         }
 
+        /// <summary>Signed numbers of 32 bits to the end, two's complement: as unsigned ones are read, of their bits.</summary>
+        public ulong ReadInt32ArrayTillEnd(ulong boxSize, ulong readSize, out int[] value, string name)
+        {
+            ulong consumed = ReadUInt32ArrayTillEnd(boxSize, readSize, out uint[] values, name);
+            value = Array.ConvertAll(values, v => unchecked((int)v));
+            return consumed;
+        }
+
+        public ulong WriteInt32ArrayTillEnd(int[] value, string name)
+        {
+            return WriteUInt32ArrayTillEnd(Array.ConvertAll(value, v => unchecked((uint)v)), name);
+        }
+
         public ulong ReadUInt8Array(ulong boxSize, ulong readSize, uint count, out byte[] value, string name)
         {
             CheckFieldFits(boxSize, readSize, (ulong)count * 8, name);
