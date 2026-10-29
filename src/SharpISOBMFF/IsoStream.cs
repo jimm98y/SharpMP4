@@ -760,6 +760,43 @@ namespace SharpISOBMFF
             return size;
         }
 
+        /// <summary>A string of so many bytes - a length another field gives - kept as they are, a zero of them too.</summary>
+        public ulong ReadString(ulong boxSize, ulong readSize, uint length, out BinaryUTF8String value, string name)
+        {
+            CheckFieldFits(boxSize, readSize, (ulong)length * 8, name);
+            ulong size = ReadBytes(length, out byte[] bytes);
+            value = new BinaryUTF8String(bytes) { IsZeroTerminated = false };
+            LogEnd(name, size, EscapeString(value.ToString()));
+            return size;
+        }
+
+        /// <summary>A string of UTF-16BE of so many 16-bit units - a length another field gives - kept as its bytes are.</summary>
+        public ulong ReadUtf16String(ulong boxSize, ulong readSize, uint length, out BinaryUTF16String value, string name)
+        {
+            CheckFieldFits(boxSize, readSize, (ulong)length * 16, name);
+            ulong size = ReadBytes((ulong)length * 2, out byte[] bytes);
+            value = new BinaryUTF16String(bytes);
+            LogEnd(name, size, EscapeString(value.ToString()));
+            return size;
+        }
+
+        /// <summary>A string of UTF-16BE of all the bytes left in the box, kept as they are: an odd last byte too.</summary>
+        public ulong ReadUtf16StringTillEnd(ulong boxSize, ulong readSize, out BinaryUTF16String value, string name)
+        {
+            ulong size = ReadUInt8ArrayTillEnd(boxSize, readSize, out byte[] bytes, name);
+            value = new BinaryUTF16String(bytes);
+            return size;
+        }
+
+        public ulong WriteUtf16String(BinaryUTF16String value, string name)
+        {
+            if (value.Length == 0)
+                return 0;
+            ulong size = WriteBytes((ulong)value.Length, value.Bytes);
+            LogEnd(name, size, EscapeString(value.ToString()));
+            return size;
+        }
+
         public ulong ReadStringZeroTerminated(ulong boxSize, ulong readSize, out BinaryUTF8String value, string name)
         {
             ulong remaining = readSize - boxSize;
@@ -857,6 +894,11 @@ namespace SharpISOBMFF
         {
             ulong count = (ulong)value.Length;
             return count << 3;
+        }
+
+        public static ulong CalculateStringSize(BinaryUTF16String value)
+        {
+            return (ulong)value.Length << 3;
         }
 
         public static ulong CalculateStringSize(BinaryUTF8String[] value)
@@ -3225,6 +3267,44 @@ namespace SharpISOBMFF
         public static string GetString(byte[] text)
         {
             return Encoding.UTF8.GetString(text);
+        }
+    }
+
+    /// <summary>
+    /// A string of UTF-16, big endian - an ICC profile's - kept as the bytes it was read of, which write back as they were:
+    /// a terminating zero, or an odd last byte, too.
+    /// </summary>
+    public struct BinaryUTF16String
+    {
+        public int Length { get { return Bytes == null ? 0 : Bytes.Length; } }
+
+        public byte[] Bytes { get; set; }
+
+        public BinaryUTF16String(byte[] bytes)
+        {
+            this.Bytes = bytes;
+        }
+
+        public BinaryUTF16String(string text)
+        {
+            Bytes = Encoding.BigEndianUnicode.GetBytes(text);
+        }
+
+        /// <summary>The characters of its bytes, all of them: a terminating zero is one.</summary>
+        public override string ToString()
+        {
+            return Bytes == null ? "" : Encoding.BigEndianUnicode.GetString(Bytes);
+        }
+
+        /// <summary>The text, up to the first zero; what follows it, if anything, is left out.</summary>
+        public string Text
+        {
+            get
+            {
+                string all = ToString();
+                int end = all.IndexOf('\0');
+                return end < 0 ? all : all.Substring(0, end);
+            }
         }
     }
 

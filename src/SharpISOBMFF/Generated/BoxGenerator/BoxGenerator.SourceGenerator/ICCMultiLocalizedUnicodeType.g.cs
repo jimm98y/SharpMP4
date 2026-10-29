@@ -17,7 +17,7 @@ aligned(8) class ICCMultiLocalizedUnicodeType {
 		unsigned int(32) length;
 		unsigned int(32) offset;	// of its string, from the start of the element
 	}
-	unsigned int(8) strings[];	// UTF-16BE, each record's at its offset
+	utf16string strings;	// UTF-16BE, each record's at its offset: all that is left
 }
 */
 public partial class ICCMultiLocalizedUnicodeType : IMp4Serializable
@@ -39,7 +39,7 @@ public partial class ICCMultiLocalizedUnicodeType : IMp4Serializable
 		unsigned int(32) length;
 		unsigned int(32) offset;	// of its string, from the start of the element
 	}
-	unsigned int(8) strings[];	// UTF-16BE, each record's at its offset
+	utf16string strings;	// UTF-16BE, each record's at its offset: all that is left
 }"; } }
 	public virtual string DisplayName { get { return "ICCMultiLocalizedUnicodeType"; } }
 
@@ -67,8 +67,8 @@ public partial class ICCMultiLocalizedUnicodeType : IMp4Serializable
 	protected uint[] offset;  //  of its string, from the start of the element
 	public uint[] Offset { get { return this.offset; } set { this.offset = value; } }
 
-	protected byte[] strings = [];  //  UTF-16BE, each record's at its offset
-	public byte[] Strings { get { return this.strings; } set { this.strings = value; } }
+	protected BinaryUTF16String strings;  //  UTF-16BE, each record's at its offset: all that is left
+	public BinaryUTF16String Strings { get { return this.strings; } set { this.strings = value; } }
 
 	public ICCMultiLocalizedUnicodeType(): base()
 	{
@@ -93,7 +93,7 @@ public partial class ICCMultiLocalizedUnicodeType : IMp4Serializable
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.length[i], "length"); 
 			boxSize += stream.ReadUInt32(boxSize, readSize,  out this.offset[i], "offset"); // of its string, from the start of the element
 		}
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.strings, "strings"); // UTF-16BE, each record's at its offset
+		boxSize += stream.ReadUtf16StringTillEnd(boxSize, readSize,  out this.strings, "strings"); // UTF-16BE, each record's at its offset: all that is left
 		return boxSize;
 	}
 
@@ -112,7 +112,7 @@ public partial class ICCMultiLocalizedUnicodeType : IMp4Serializable
 			boxSize += stream.WriteUInt32( this.length[i], "length"); 
 			boxSize += stream.WriteUInt32( this.offset[i], "offset"); // of its string, from the start of the element
 		}
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.strings, "strings"); // UTF-16BE, each record's at its offset
+		boxSize += stream.WriteUtf16String( this.strings, "strings"); // UTF-16BE, each record's at its offset: all that is left
 		return boxSize;
 	}
 
@@ -131,7 +131,7 @@ public partial class ICCMultiLocalizedUnicodeType : IMp4Serializable
 			boxSize += 32; // length
 			boxSize += 32; // offset
 		}
-		boxSize += ((ulong)strings.Length * 8); // strings
+		boxSize += IsoStream.CalculateStringSize(strings); // strings
 		return boxSize;
 	}
 
@@ -150,7 +150,7 @@ public partial class ICCMultiLocalizedUnicodeType : IMp4Serializable
 			boxSize += tracer.Field($"length[{i}]", 32, this.length[i]); 
 			boxSize += tracer.Field($"offset[{i}]", 32, this.offset[i]); // of its string, from the start of the element
 		}
-		boxSize += tracer.Field("strings", ((ulong)strings.Length * 8), this.strings); // UTF-16BE, each record's at its offset
+		boxSize += tracer.Field("strings", IsoStream.CalculateStringSize(strings), this.strings); // UTF-16BE, each record's at its offset: all that is left
 		return boxSize;
 	}
 }

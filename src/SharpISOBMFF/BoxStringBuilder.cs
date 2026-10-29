@@ -122,6 +122,8 @@ namespace SharpISOBMFF
                     return Quoted(s);
                 case BinaryUTF8String s:
                     return Quoted(s.ToString());
+                case BinaryUTF16String s:
+                    return Quoted(s.ToString());
                 case MultiLanguageString s:
                     return $"{s.Language}: {Quoted(s.Value.ToString())}";
                 case byte[] bytes:

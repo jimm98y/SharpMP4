@@ -9,7 +9,7 @@ namespace SharpISOBMFF
 aligned(8) class ICCTextType {
 	unsigned int(32) type_signature;
 	unsigned int(32) reserved = 0;
-	unsigned int(8) text[];	// 7-bit ASCII, of a terminating null
+	bytestring text;	// 7-bit ASCII, of a terminating null: all that is left, as bytes
 }
 */
 public partial class ICCTextType : IMp4Serializable
@@ -23,7 +23,7 @@ public partial class ICCTextType : IMp4Serializable
 	public virtual string Syntax { get { return @"aligned(8) class ICCTextType {
 	unsigned int(32) type_signature;
 	unsigned int(32) reserved = 0;
-	unsigned int(8) text[];	// 7-bit ASCII, of a terminating null
+	bytestring text;	// 7-bit ASCII, of a terminating null: all that is left, as bytes
 }"; } }
 	public virtual string DisplayName { get { return "ICCTextType"; } }
 
@@ -33,8 +33,8 @@ public partial class ICCTextType : IMp4Serializable
 	protected uint reserved = 0; 
 	public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-	protected byte[] text = [];  //  7-bit ASCII, of a terminating null
-	public byte[] Text { get { return this.text; } set { this.text = value; } }
+	protected BinaryUTF8String text;  //  7-bit ASCII, of a terminating null: all that is left, as bytes
+	public BinaryUTF8String Text { get { return this.text; } set { this.text = value; } }
 
 	public ICCTextType(): base()
 	{
@@ -45,7 +45,7 @@ public partial class ICCTextType : IMp4Serializable
 		ulong boxSize = 0;
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.type_signature, "type_signature"); 
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.reserved, "reserved"); 
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.text, "text"); // 7-bit ASCII, of a terminating null
+		boxSize += stream.ReadStringTillEnd(boxSize, readSize,  out this.text, "text"); // 7-bit ASCII, of a terminating null: all that is left, as bytes
 		return boxSize;
 	}
 
@@ -54,7 +54,7 @@ public partial class ICCTextType : IMp4Serializable
 		ulong boxSize = 0;
 		boxSize += stream.WriteUInt32( this.type_signature, "type_signature"); 
 		boxSize += stream.WriteUInt32( this.reserved, "reserved"); 
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.text, "text"); // 7-bit ASCII, of a terminating null
+		boxSize += stream.WriteStringZeroTerminated( this.text, "text"); // 7-bit ASCII, of a terminating null: all that is left, as bytes
 		return boxSize;
 	}
 
@@ -63,7 +63,7 @@ public partial class ICCTextType : IMp4Serializable
 		ulong boxSize = 0;
 		boxSize += 32; // type_signature
 		boxSize += 32; // reserved
-		boxSize += ((ulong)text.Length * 8); // text
+		boxSize += IsoStream.CalculateStringSize(text); // text
 		return boxSize;
 	}
 
@@ -72,7 +72,7 @@ public partial class ICCTextType : IMp4Serializable
 		ulong boxSize = 0;
 		boxSize += tracer.Field("type_signature", 32, this.type_signature); 
 		boxSize += tracer.Field("reserved", 32, this.reserved); 
-		boxSize += tracer.Field("text", ((ulong)text.Length * 8), this.text); // 7-bit ASCII, of a terminating null
+		boxSize += tracer.Field("text", IsoStream.CalculateStringSize(text), this.text); // 7-bit ASCII, of a terminating null: all that is left, as bytes
 		return boxSize;
 	}
 }

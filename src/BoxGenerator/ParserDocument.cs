@@ -585,7 +585,8 @@ namespace BoxGenerator
                 case "utf8string":
                 case "utfstring":
                 case "utf8list":
-                case "bytestring": // a string kept as the bytes to the end of the box, whatever its form
+                case "bytestring": // a string kept as the bytes to the end of the box, whatever its form - or, of a length, of so many
+                case "utf16string": // UTF-16BE, of a length in 16-bit units, or to the end of the box
                 case "string":
                     info.FieldType = ParsedBoxType.String;
                     break;
@@ -684,6 +685,15 @@ namespace BoxGenerator
                     else
                         info.FieldType = ParsedBoxType.Class;
                 }
+            }
+
+            // a counted string - 'bytestring ascii[ascii_count]', 'utf16string unicode[unicode_count]' - is one string of so
+            // many bytes or 16-bit units, not an array of strings
+            if (info.Type is "bytestring" or "utf16string" && info.ArrayDimensions == 1 && info.ArrayLengthVariable != "[]")
+            {
+                info.StringLength = info.ArrayLengthVariable.TrimStart('[').TrimEnd(']');
+                info.ArrayDimensions = 0;
+                info.ArrayLengthVariable = "";
             }
 
             // workaround: Iso639
@@ -804,6 +814,9 @@ namespace BoxGenerator
         public int ElementSizeInBits { get; internal set; }
         public string ElementSizeVariable { get; internal set; }
         public string ArrayLengthVariable { get; internal set; }
+
+        /// <summary>Of a counted string, its length: in bytes of a 'bytestring', in 16-bit units of a 'utf16string'; else null.</summary>
+        public string StringLength { get; internal set; }
 
         public PseudoClass[] Ancestors { get; internal set; }
     }

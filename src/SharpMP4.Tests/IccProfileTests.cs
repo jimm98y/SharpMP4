@@ -161,7 +161,7 @@ public class IccProfileTests
         StringAssert.Contains(text, "cprt: ICCMultiLocalizedUnicodeType");
         var mluc = (ICCMultiLocalizedUnicodeType)colr.ICCProfile.Elements.Single(e => e.Name == "cprt").Value;
         Assert.AreEqual(1u, mluc.RecordCount);
-        CollectionAssert.AreEqual(System.Text.Encoding.BigEndianUnicode.GetBytes("(c)"), mluc.Strings);
+        Assert.AreEqual("(c)", mluc.Strings.ToString());
         StringAssert.Contains(text, "alignment");
         Assert.AreEqual(colr.ICCProfile.CalculateSize(), new BoxTracer().Append(colr.ICCProfile));
     }
@@ -177,6 +177,7 @@ public class IccProfileTests
             Assert.Inconclusive("No conformance files.");
 
         int profiles = 0;
+        var texts = new List<string>();
         string conformance = Path.Combine(root.FullName, "conformance");
         foreach (var file in new[]
         {
@@ -201,6 +202,8 @@ public class IccProfileTests
                 Assert.AreEqual("acsp", IsoStream.ToFourCC(profile.Header.ProfileFileSignature), file);
                 // the elements of the types of a class, each read of it
                 Assert.IsTrue(profile.Elements.Any(e => e.Value != null), file);
+                texts.AddRange(profile.Elements.Select(e => e.Value).OfType<ICCTextType>().Select(t => t.Text.Text));
+                texts.AddRange(profile.Elements.Select(e => e.Value).OfType<ICCTextDescriptionType>().SelectMany(t => new[] { t.Ascii.Text, t.Unicode.Text }));
             }
 
             using var written = new MemoryStream();
@@ -209,6 +212,8 @@ public class IccProfileTests
         }
         if (profiles == 0)
             Assert.Inconclusive("No ICC profiles in the conformance files.");
+        // a copyright, as text: of its bytes, its null too
+        Assert.IsTrue(texts.Any(t => t.Contains("Copyright", StringComparison.OrdinalIgnoreCase)), string.Join(Environment.NewLine, texts));
     }
 
     private static IEnumerable<T> Boxes<T>(IEnumerable<Box>? boxes) where T : Box

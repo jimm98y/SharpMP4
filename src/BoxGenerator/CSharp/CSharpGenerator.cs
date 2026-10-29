@@ -1786,7 +1786,15 @@ namespace SharpISOBMFF
                 }
                 else if (info.Type == "bytestring")
                 {
-                    csharpResult = "stream.ReadStringTillEnd(boxSize, readSize, ";
+                    csharpResult = info.StringLength != null
+                        ? $"stream.ReadString(boxSize, readSize, (uint)({info.StringLength}), "
+                        : "stream.ReadStringTillEnd(boxSize, readSize, ";
+                }
+                else if (info.Type == "utf16string")
+                {
+                    csharpResult = info.StringLength != null
+                        ? $"stream.ReadUtf16String(boxSize, readSize, (uint)({info.StringLength}), "
+                        : "stream.ReadUtf16StringTillEnd(boxSize, readSize, ";
                 }
                 else
                 {
@@ -1931,6 +1939,10 @@ namespace SharpISOBMFF
                 {
                     // TODO array
                     csharpResult = "stream.WriteStringSizeLangPrefixed(";
+                }
+                else if (info.Type == "utf16string")
+                {
+                    csharpResult = "stream.WriteUtf16String(";
                 }
                 else
                 {
@@ -2189,6 +2201,8 @@ namespace SharpISOBMFF
             {
                 if (info.Type == "MultiLanguageString")
                     t = "MultiLanguageString";
+                else if (info.Type == "utf16string")
+                    t = "BinaryUTF16String";
                 else
                     t = "BinaryUTF8String";
             }
