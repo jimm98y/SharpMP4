@@ -7,13 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class GeneralTypeBox(code) extends Box(code) {
-      unsigned int(32)    major_brand;
-      unsigned int(32)    minor_version;
-      unsigned int(32)    compatible_brands[];    // to end of the box
-    }
+	unsigned int(32)    major_brand;
+	unsigned int(32)    minor_version;
+	unsigned int(32)    compatible_brands[];    // to end of the box
+}
 */
 public partial class GeneralTypeBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class GeneralTypeBox(code) extends Box(code) {
+	unsigned int(32)    major_brand;
+	unsigned int(32)    minor_version;
+	unsigned int(32)    compatible_brands[];    // to end of the box
+}"; } }
 	public override string DisplayName { get { return "GeneralTypeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
@@ -25,7 +31,7 @@ public partial class GeneralTypeBox : Box
 	protected uint minor_version; 
 	public uint MinorVersion { get { return this.minor_version; } set { this.minor_version = value; } }
 
-	protected uint[] compatible_brands;  //  to end of the box
+	protected uint[] compatible_brands = [];  //  to end of the box
 	public uint[] CompatibleBrands { get { return this.compatible_brands; } set { this.compatible_brands = value; } }
 
 	public GeneralTypeBox(uint code): base(code)
@@ -62,13 +68,13 @@ public partial class GeneralTypeBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("major_brand", 32, this.major_brand); 
-		boxSize += builder.Field("minor_version", 32, this.minor_version); 
-		boxSize += builder.Field("compatible_brands", ((ulong)compatible_brands.Length * 32), this.compatible_brands); // to end of the box
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("major_brand", 32, this.major_brand); 
+		boxSize += tracer.Field("minor_version", 32, this.minor_version); 
+		boxSize += tracer.Field("compatible_brands", ((ulong)compatible_brands.Length * 32), this.compatible_brands); // to end of the box
 		return boxSize;
 	}
 }

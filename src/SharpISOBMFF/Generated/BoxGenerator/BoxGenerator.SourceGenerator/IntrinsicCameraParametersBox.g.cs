@@ -6,27 +6,46 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class IntrinsicCameraParametersBox extends FullBox ('icam', version=0, flags) { 
- unsigned int(6)  
- reserved=0;  
- unsigned int(10)  ref_view_id; 
- unsigned int(32) prec_focal_length; 
- unsigned int(32) prec_principal_point; 
- unsigned int(32) prec_skew_factor; 
- unsigned int(8) exponent_focal_length_x; 
- signed   int(64) mantissa_focal_length_x; 
- unsigned int(8) exponent_focal_length_y; 
- signed   int(64) mantissa_focal_length_y;  
- unsigned int(8) exponent_principal_point_x; 
- signed   int(64) mantissa_principal_point_x; 
- unsigned int(8) exponent_principal_point_y; 
- signed   int(64) mantissa_principal_point_y; 
- unsigned int(8) exponent_skew_factor; 
- signed   int(64) mantissa_skew_factor; 
-} 
+class IntrinsicCameraParametersBox extends FullBox ('icam', version=0, flags) {
+	unsigned int(6)
+	reserved=0;
+	unsigned int(10)  ref_view_id;
+	unsigned int(32) prec_focal_length;
+	unsigned int(32) prec_principal_point;
+	unsigned int(32) prec_skew_factor;
+	unsigned int(8) exponent_focal_length_x;
+	signed   int(64) mantissa_focal_length_x;
+	unsigned int(8) exponent_focal_length_y;
+	signed   int(64) mantissa_focal_length_y;
+	unsigned int(8) exponent_principal_point_x;
+	signed   int(64) mantissa_principal_point_x;
+	unsigned int(8) exponent_principal_point_y;
+	signed   int(64) mantissa_principal_point_y;
+	unsigned int(8) exponent_skew_factor;
+	signed   int(64) mantissa_skew_factor;
+}
 */
 public partial class IntrinsicCameraParametersBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class IntrinsicCameraParametersBox extends FullBox ('icam', version=0, flags) {
+	unsigned int(6)
+	reserved=0;
+	unsigned int(10)  ref_view_id;
+	unsigned int(32) prec_focal_length;
+	unsigned int(32) prec_principal_point;
+	unsigned int(32) prec_skew_factor;
+	unsigned int(8) exponent_focal_length_x;
+	signed   int(64) mantissa_focal_length_x;
+	unsigned int(8) exponent_focal_length_y;
+	signed   int(64) mantissa_focal_length_y;
+	unsigned int(8) exponent_principal_point_x;
+	signed   int(64) mantissa_principal_point_x;
+	unsigned int(8) exponent_principal_point_y;
+	signed   int(64) mantissa_principal_point_y;
+	unsigned int(8) exponent_skew_factor;
+	signed   int(64) mantissa_skew_factor;
+}"; } }
 	public const string TYPE = "icam";
 	public override string DisplayName { get { return "IntrinsicCameraParametersBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -148,25 +167,25 @@ public partial class IntrinsicCameraParametersBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 6, this.reserved); 
-		boxSize += builder.Field("ref_view_id", 10, this.ref_view_id); 
-		boxSize += builder.Field("prec_focal_length", 32, this.prec_focal_length); 
-		boxSize += builder.Field("prec_principal_point", 32, this.prec_principal_point); 
-		boxSize += builder.Field("prec_skew_factor", 32, this.prec_skew_factor); 
-		boxSize += builder.Field("exponent_focal_length_x", 8, this.exponent_focal_length_x); 
-		boxSize += builder.Field("mantissa_focal_length_x", 64, this.mantissa_focal_length_x); 
-		boxSize += builder.Field("exponent_focal_length_y", 8, this.exponent_focal_length_y); 
-		boxSize += builder.Field("mantissa_focal_length_y", 64, this.mantissa_focal_length_y); 
-		boxSize += builder.Field("exponent_principal_point_x", 8, this.exponent_principal_point_x); 
-		boxSize += builder.Field("mantissa_principal_point_x", 64, this.mantissa_principal_point_x); 
-		boxSize += builder.Field("exponent_principal_point_y", 8, this.exponent_principal_point_y); 
-		boxSize += builder.Field("mantissa_principal_point_y", 64, this.mantissa_principal_point_y); 
-		boxSize += builder.Field("exponent_skew_factor", 8, this.exponent_skew_factor); 
-		boxSize += builder.Field("mantissa_skew_factor", 64, this.mantissa_skew_factor); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 6, this.reserved); 
+		boxSize += tracer.Field("ref_view_id", 10, this.ref_view_id); 
+		boxSize += tracer.Field("prec_focal_length", 32, this.prec_focal_length); 
+		boxSize += tracer.Field("prec_principal_point", 32, this.prec_principal_point); 
+		boxSize += tracer.Field("prec_skew_factor", 32, this.prec_skew_factor); 
+		boxSize += tracer.Field("exponent_focal_length_x", 8, this.exponent_focal_length_x); 
+		boxSize += tracer.Field("mantissa_focal_length_x", 64, this.mantissa_focal_length_x); 
+		boxSize += tracer.Field("exponent_focal_length_y", 8, this.exponent_focal_length_y); 
+		boxSize += tracer.Field("mantissa_focal_length_y", 64, this.mantissa_focal_length_y); 
+		boxSize += tracer.Field("exponent_principal_point_x", 8, this.exponent_principal_point_x); 
+		boxSize += tracer.Field("mantissa_principal_point_x", 64, this.mantissa_principal_point_x); 
+		boxSize += tracer.Field("exponent_principal_point_y", 8, this.exponent_principal_point_y); 
+		boxSize += tracer.Field("mantissa_principal_point_y", 64, this.mantissa_principal_point_y); 
+		boxSize += tracer.Field("exponent_skew_factor", 8, this.exponent_skew_factor); 
+		boxSize += tracer.Field("mantissa_skew_factor", 64, this.mantissa_skew_factor); 
 		return boxSize;
 	}
 }

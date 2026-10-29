@@ -6,25 +6,35 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class StereoViewInformationBox extends FullBox('stri', 0, 0) { 
-unsigned int(4) reserved;   
-// reserved, set to 0 
-unsigned int(1) eye_views_reversed; 
-unsigned int(1) has_additional_views; 
-unsigned int(1) has_right_eye_view; // video contains a right-eye view 
-unsigned int(1) has_left_eye_view; 
-// video contains a left-eye view 
-} 
+aligned(8) class StereoViewInformationBox extends FullBox('stri', 0, 0) {
+	unsigned int(4) reserved;
+	// reserved, set to 0
+	unsigned int(1) eye_views_reversed;
+	unsigned int(1) has_additional_views;
+	unsigned int(1) has_right_eye_view; // video contains a right-eye view
+	unsigned int(1) has_left_eye_view;
+	// video contains a left-eye view
+}
 */
 public partial class StereoViewInformationBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class StereoViewInformationBox extends FullBox('stri', 0, 0) {
+	unsigned int(4) reserved;
+	// reserved, set to 0
+	unsigned int(1) eye_views_reversed;
+	unsigned int(1) has_additional_views;
+	unsigned int(1) has_right_eye_view; // video contains a right-eye view
+	unsigned int(1) has_left_eye_view;
+	// video contains a left-eye view
+}"; } }
 	public const string TYPE = "stri";
 	public override string DisplayName { get { return "StereoViewInformationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("eyes"); }
 
 
-	protected byte reserved;  //  reserved, set to 0 
+	protected byte reserved;  //  reserved, set to 0
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
 	protected bool eye_views_reversed; 
@@ -33,10 +43,10 @@ public partial class StereoViewInformationBox : FullBox
 	protected bool has_additional_views; 
 	public bool HasAdditionalViews { get { return this.has_additional_views; } set { this.has_additional_views = value; } }
 
-	protected bool has_right_eye_view;  //  video contains a right-eye view 
+	protected bool has_right_eye_view;  //  video contains a right-eye view
 	public bool HasRightEyeView { get { return this.has_right_eye_view; } set { this.has_right_eye_view = value; } }
 
-	protected bool has_left_eye_view;  //  video contains a left-eye view 
+	protected bool has_left_eye_view;  //  video contains a left-eye view
 	public bool HasLeftEyeView { get { return this.has_left_eye_view; } set { this.has_left_eye_view = value; } }
 
 	public StereoViewInformationBox(): base(IsoStream.FromFourCC("stri"), 0, 0)
@@ -47,11 +57,11 @@ public partial class StereoViewInformationBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.reserved, "reserved"); // reserved, set to 0 
+		boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.reserved, "reserved"); // reserved, set to 0
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.eye_views_reversed, "eye_views_reversed"); 
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.has_additional_views, "has_additional_views"); 
-		boxSize += stream.ReadBit(boxSize, readSize,  out this.has_right_eye_view, "has_right_eye_view"); // video contains a right-eye view 
-		boxSize += stream.ReadBit(boxSize, readSize,  out this.has_left_eye_view, "has_left_eye_view"); // video contains a left-eye view 
+		boxSize += stream.ReadBit(boxSize, readSize,  out this.has_right_eye_view, "has_right_eye_view"); // video contains a right-eye view
+		boxSize += stream.ReadBit(boxSize, readSize,  out this.has_left_eye_view, "has_left_eye_view"); // video contains a left-eye view
 		return boxSize;
 	}
 
@@ -59,11 +69,11 @@ public partial class StereoViewInformationBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteBits(4,  this.reserved, "reserved"); // reserved, set to 0 
+		boxSize += stream.WriteBits(4,  this.reserved, "reserved"); // reserved, set to 0
 		boxSize += stream.WriteBit( this.eye_views_reversed, "eye_views_reversed"); 
 		boxSize += stream.WriteBit( this.has_additional_views, "has_additional_views"); 
-		boxSize += stream.WriteBit( this.has_right_eye_view, "has_right_eye_view"); // video contains a right-eye view 
-		boxSize += stream.WriteBit( this.has_left_eye_view, "has_left_eye_view"); // video contains a left-eye view 
+		boxSize += stream.WriteBit( this.has_right_eye_view, "has_right_eye_view"); // video contains a right-eye view
+		boxSize += stream.WriteBit( this.has_left_eye_view, "has_left_eye_view"); // video contains a left-eye view
 		return boxSize;
 	}
 
@@ -79,15 +89,15 @@ public partial class StereoViewInformationBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 4, this.reserved); // reserved, set to 0 
-		boxSize += builder.Field("eye_views_reversed", 1, this.eye_views_reversed); 
-		boxSize += builder.Field("has_additional_views", 1, this.has_additional_views); 
-		boxSize += builder.Field("has_right_eye_view", 1, this.has_right_eye_view); // video contains a right-eye view 
-		boxSize += builder.Field("has_left_eye_view", 1, this.has_left_eye_view); // video contains a left-eye view 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 4, this.reserved); // reserved, set to 0
+		boxSize += tracer.Field("eye_views_reversed", 1, this.eye_views_reversed); 
+		boxSize += tracer.Field("has_additional_views", 1, this.has_additional_views); 
+		boxSize += tracer.Field("has_right_eye_view", 1, this.has_right_eye_view); // video contains a right-eye view
+		boxSize += tracer.Field("has_left_eye_view", 1, this.has_left_eye_view); // video contains a left-eye view
 		return boxSize;
 	}
 }

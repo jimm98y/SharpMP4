@@ -11,6 +11,9 @@ aligned(8) class HintMaxRelativeTime extends Box('tmax') {
 */
 public partial class HintMaxRelativeTime : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class HintMaxRelativeTime extends Box('tmax') {
+	int(32)		time; }		// largest relative transmission time, milliseconds"; } }
 	public const string TYPE = "tmax";
 	public override string DisplayName { get { return "HintMaxRelativeTime"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -48,11 +51,11 @@ public partial class HintMaxRelativeTime : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("time", 32, this.time); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("time", 32, this.time); 
 		return boxSize;
 	}
 }

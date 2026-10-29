@@ -7,12 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class KodakDurationBox() extends Box ('tima'){
- unsigned int(32) duration;
- }
-
+	unsigned int(32) duration;
+}
 */
 public partial class KodakDurationBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class KodakDurationBox() extends Box ('tima'){
+	unsigned int(32) duration;
+}"; } }
 	public const string TYPE = "tima";
 	public override string DisplayName { get { return "KodakDurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +53,11 @@ public partial class KodakDurationBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("duration", 32, this.duration); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("duration", 32, this.duration); 
 		return boxSize;
 	}
 }

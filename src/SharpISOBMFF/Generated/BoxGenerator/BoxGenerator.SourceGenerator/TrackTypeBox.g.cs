@@ -11,6 +11,9 @@ aligned(8) class TrackTypeBox extends GeneralTypeBox ('ttyp')
 */
 public partial class TrackTypeBox : GeneralTypeBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TrackTypeBox extends GeneralTypeBox ('ttyp')
+{}"; } }
 	public const string TYPE = "ttyp";
 	public override string DisplayName { get { return "TrackTypeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -42,10 +45,10 @@ public partial class TrackTypeBox : GeneralTypeBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

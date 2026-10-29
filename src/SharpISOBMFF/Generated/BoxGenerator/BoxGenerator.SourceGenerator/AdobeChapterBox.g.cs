@@ -7,13 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AdobeChapterBox() extends FullBox('chpl', version = 0, 0) {
- unsigned int(32) unknown; unsigned int(8) count;
- AdobeChapterRecord chapters[]; 
- }
- 
+	unsigned int(32) unknown;
+	unsigned int(8) count;
+	AdobeChapterRecord chapters[];
+}
 */
 public partial class AdobeChapterBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AdobeChapterBox() extends FullBox('chpl', version = 0, 0) {
+	unsigned int(32) unknown;
+	unsigned int(8) count;
+	AdobeChapterRecord chapters[];
+}"; } }
 	public const string TYPE = "chpl";
 	public override string DisplayName { get { return "AdobeChapterBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -26,7 +32,7 @@ public partial class AdobeChapterBox : FullBox
 	protected byte count; 
 	public byte Count { get { return this.count; } set { this.count = value; } }
 
-	protected AdobeChapterRecord[] chapters; 
+	protected AdobeChapterRecord[] chapters = []; 
 	public AdobeChapterRecord[] Chapters { get { return this.chapters; } set { this.chapters = value; } }
 
 	public AdobeChapterBox(): base(IsoStream.FromFourCC("chpl"), 0, 0)
@@ -63,13 +69,13 @@ public partial class AdobeChapterBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("unknown", 32, this.unknown); 
-		boxSize += builder.Field("count", 8, this.count); 
-		boxSize += builder.Field("chapters", IsoStream.CalculateClassSize(chapters), this.chapters); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("unknown", 32, this.unknown); 
+		boxSize += tracer.Field("count", 8, this.count); 
+		boxSize += tracer.Field("chapters", IsoStream.CalculateClassSize(chapters), this.chapters); 
 		return boxSize;
 	}
 }

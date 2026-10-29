@@ -8,64 +8,63 @@ namespace SharpISOBMFF
 /*
 class ALSSpecificConfig()
 {
-  uimsbf(32) als_id;
-  uimsbf(32) samp_freq;
-  uimsbf(32) samples;
-  uimsbf(16) channels;
-  uimsbf(3) file_type;
-  uimsbf(3) resolution;
-  uimsbf(1) floating;
-  uimsbf(1) msb_first;
-  uimsbf(16) frame_length;
-  uimsbf(8) random_access;
-  uimsbf(2) ra_flag;
-  uimsbf(1) adapt_order;
-  uimsbf(2) coef_table;
-  uimsbf(1) long_term_prediction;
-  uimsbf(10) max_order;
-  uimsbf(2) block_switching;
-  uimsbf(1) bgmc_mode;
-  uimsbf(1) sb_part;
-  uimsbf(1) joint_stereo;
-  uimsbf(1) mc_coding;
-  uimsbf(1) chan_config;
-  uimsbf(1) chan_sort;
-  uimsbf(1) crc_enabled;
-  uimsbf(1) RLSLMS;
-  uimsbf(5) reserved;
-  uimsbf(1) aux_data_enabled;
-  if (chan_config) {
-    uimsbf(16) chan_config_info;
-  }
-  if (chan_sort) {
-    for (c = 0; c <= channels; c++)
-      uimsbf(ChBits(channels)) chan_pos[c]; // ChBits = ceil[log2(channels+1)] = 1..16
-  }
-  byte_alignment(); // byte_align, 0..7 bits: relative to the start of ALSSpecificConfig
-  uimsbf(32) header_size;
-  uimsbf(32) trailer_size;
-  if (header_size != 0xFFFFFFFF) {
-    bslbf(8) orig_header[header_size];
-  }
-  if (trailer_size != 0xFFFFFFFF) {
-    bslbf(8) orig_trailer[trailer_size];
-  }
-  if (crc_enabled) {
-    uimsbf(32) crc;
-  }
-  if ((ra_flag == 2) && (random_access > 0)) {
-    for (f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++) {
-      uimsbf(32) ra_unit_size[f];
-    }
-  }
-  if (aux_data_enabled) {
-    uimsbf(32) aux_size;
-    bslbf(8) aux_data[aux_size];
-  }
+	uimsbf(32) als_id;
+	uimsbf(32) samp_freq;
+	uimsbf(32) samples;
+	uimsbf(16) channels;
+	uimsbf(3) file_type;
+	uimsbf(3) resolution;
+	uimsbf(1) floating;
+	uimsbf(1) msb_first;
+	uimsbf(16) frame_length;
+	uimsbf(8) random_access;
+	uimsbf(2) ra_flag;
+	uimsbf(1) adapt_order;
+	uimsbf(2) coef_table;
+	uimsbf(1) long_term_prediction;
+	uimsbf(10) max_order;
+	uimsbf(2) block_switching;
+	uimsbf(1) bgmc_mode;
+	uimsbf(1) sb_part;
+	uimsbf(1) joint_stereo;
+	uimsbf(1) mc_coding;
+	uimsbf(1) chan_config;
+	uimsbf(1) chan_sort;
+	uimsbf(1) crc_enabled;
+	uimsbf(1) RLSLMS;
+	uimsbf(5) reserved;
+	uimsbf(1) aux_data_enabled;
+	if (chan_config) {
+		uimsbf(16) chan_config_info;
+	}
+	if (chan_sort) {
+		for (c = 0; c <= channels; c++)
+			uimsbf(ChBits(channels)) chan_pos[c]; // ChBits = ceil[log2(channels+1)] = 1..16
+	}
+	byte_alignment(); // byte_align, 0..7 bits: relative to the start of ALSSpecificConfig
+	uimsbf(32) header_size;
+	uimsbf(32) trailer_size;
+	if (header_size != 0xFFFFFFFF) {
+		bslbf(8) orig_header[header_size];
+	}
+	if (trailer_size != 0xFFFFFFFF) {
+		bslbf(8) orig_trailer[trailer_size];
+	}
+	if (crc_enabled) {
+		uimsbf(32) crc;
+	}
+	if ((ra_flag == 2) && (random_access > 0)) {
+		for (f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++) {
+			uimsbf(32) ra_unit_size[f];
+		}
+	}
+	if (aux_data_enabled) {
+		uimsbf(32) aux_size;
+		bslbf(8) aux_data[aux_size];
+	}
 }
 
 // ISO/IEC 23003-3 (not at hand) as FFmpeg's USAC decoder reads it (libavcodec/aac/aacdec_usac.c, ff_aac_usac_config_decode), by the spec's names it gives: the element configs; extension element configs and config extensions to their lengths, as bytes; UsacDecoderConfig, UsacCoreConfig, SbrDfltHeader and Mps212Config written out in place
-
 */
 public partial class ALSSpecificConfig : IMp4Serializable
 {
@@ -74,6 +73,66 @@ public partial class ALSSpecificConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class ALSSpecificConfig()
+{
+	uimsbf(32) als_id;
+	uimsbf(32) samp_freq;
+	uimsbf(32) samples;
+	uimsbf(16) channels;
+	uimsbf(3) file_type;
+	uimsbf(3) resolution;
+	uimsbf(1) floating;
+	uimsbf(1) msb_first;
+	uimsbf(16) frame_length;
+	uimsbf(8) random_access;
+	uimsbf(2) ra_flag;
+	uimsbf(1) adapt_order;
+	uimsbf(2) coef_table;
+	uimsbf(1) long_term_prediction;
+	uimsbf(10) max_order;
+	uimsbf(2) block_switching;
+	uimsbf(1) bgmc_mode;
+	uimsbf(1) sb_part;
+	uimsbf(1) joint_stereo;
+	uimsbf(1) mc_coding;
+	uimsbf(1) chan_config;
+	uimsbf(1) chan_sort;
+	uimsbf(1) crc_enabled;
+	uimsbf(1) RLSLMS;
+	uimsbf(5) reserved;
+	uimsbf(1) aux_data_enabled;
+	if (chan_config) {
+		uimsbf(16) chan_config_info;
+	}
+	if (chan_sort) {
+		for (c = 0; c <= channels; c++)
+			uimsbf(ChBits(channels)) chan_pos[c]; // ChBits = ceil[log2(channels+1)] = 1..16
+	}
+	byte_alignment(); // byte_align, 0..7 bits: relative to the start of ALSSpecificConfig
+	uimsbf(32) header_size;
+	uimsbf(32) trailer_size;
+	if (header_size != 0xFFFFFFFF) {
+		bslbf(8) orig_header[header_size];
+	}
+	if (trailer_size != 0xFFFFFFFF) {
+		bslbf(8) orig_trailer[trailer_size];
+	}
+	if (crc_enabled) {
+		uimsbf(32) crc;
+	}
+	if ((ra_flag == 2) && (random_access > 0)) {
+		for (f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++) {
+			uimsbf(32) ra_unit_size[f];
+		}
+	}
+	if (aux_data_enabled) {
+		uimsbf(32) aux_size;
+		bslbf(8) aux_data[aux_size];
+	}
+}
+
+// ISO/IEC 23003-3 (not at hand) as FFmpeg's USAC decoder reads it (libavcodec/aac/aacdec_usac.c, ff_aac_usac_config_decode), by the spec's names it gives: the element configs; extension element configs and config extensions to their lengths, as bytes; UsacDecoderConfig, UsacCoreConfig, SbrDfltHeader and Mps212Config written out in place"; } }
 	public virtual string DisplayName { get { return "ALSSpecificConfig"; } }
 
 	protected uint als_id; 
@@ -169,10 +228,10 @@ public partial class ALSSpecificConfig : IMp4Serializable
 	protected uint trailer_size; 
 	public uint TrailerSize { get { return this.trailer_size; } set { this.trailer_size = value; } }
 
-	protected byte[] orig_header; 
+	protected byte[] orig_header = []; 
 	public byte[] OrigHeader { get { return this.orig_header; } set { this.orig_header = value; } }
 
-	protected byte[] orig_trailer; 
+	protected byte[] orig_trailer = []; 
 	public byte[] OrigTrailer { get { return this.orig_trailer; } set { this.orig_trailer = value; } }
 
 	protected uint crc; 
@@ -184,7 +243,7 @@ public partial class ALSSpecificConfig : IMp4Serializable
 	protected uint aux_size; 
 	public uint AuxSize { get { return this.aux_size; } set { this.aux_size = value; } }
 
-	protected byte[] aux_data; 
+	protected byte[] aux_data = []; 
 	public byte[] AuxData { get { return this.aux_data; } set { this.aux_data = value; } }
 
 	public ALSSpecificConfig(): base()
@@ -430,39 +489,39 @@ public partial class ALSSpecificConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("als_id", 32, this.als_id); 
-		boxSize += builder.Field("samp_freq", 32, this.samp_freq); 
-		boxSize += builder.Field("samples", 32, this.samples); 
-		boxSize += builder.Field("channels", 16, this.channels); 
-		boxSize += builder.Field("file_type", 3, this.file_type); 
-		boxSize += builder.Field("resolution", 3, this.resolution); 
-		boxSize += builder.Field("floating", 1, this.floating); 
-		boxSize += builder.Field("msb_first", 1, this.msb_first); 
-		boxSize += builder.Field("frame_length", 16, this.frame_length); 
-		boxSize += builder.Field("random_access", 8, this.random_access); 
-		boxSize += builder.Field("ra_flag", 2, this.ra_flag); 
-		boxSize += builder.Field("adapt_order", 1, this.adapt_order); 
-		boxSize += builder.Field("coef_table", 2, this.coef_table); 
-		boxSize += builder.Field("long_term_prediction", 1, this.long_term_prediction); 
-		boxSize += builder.Field("max_order", 10, this.max_order); 
-		boxSize += builder.Field("block_switching", 2, this.block_switching); 
-		boxSize += builder.Field("bgmc_mode", 1, this.bgmc_mode); 
-		boxSize += builder.Field("sb_part", 1, this.sb_part); 
-		boxSize += builder.Field("joint_stereo", 1, this.joint_stereo); 
-		boxSize += builder.Field("mc_coding", 1, this.mc_coding); 
-		boxSize += builder.Field("chan_config", 1, this.chan_config); 
-		boxSize += builder.Field("chan_sort", 1, this.chan_sort); 
-		boxSize += builder.Field("crc_enabled", 1, this.crc_enabled); 
-		boxSize += builder.Field("RLSLMS", 1, this.RLSLMS); 
-		boxSize += builder.Field("reserved", 5, this.reserved); 
-		boxSize += builder.Field("aux_data_enabled", 1, this.aux_data_enabled); 
+		boxSize += tracer.Field("als_id", 32, this.als_id); 
+		boxSize += tracer.Field("samp_freq", 32, this.samp_freq); 
+		boxSize += tracer.Field("samples", 32, this.samples); 
+		boxSize += tracer.Field("channels", 16, this.channels); 
+		boxSize += tracer.Field("file_type", 3, this.file_type); 
+		boxSize += tracer.Field("resolution", 3, this.resolution); 
+		boxSize += tracer.Field("floating", 1, this.floating); 
+		boxSize += tracer.Field("msb_first", 1, this.msb_first); 
+		boxSize += tracer.Field("frame_length", 16, this.frame_length); 
+		boxSize += tracer.Field("random_access", 8, this.random_access); 
+		boxSize += tracer.Field("ra_flag", 2, this.ra_flag); 
+		boxSize += tracer.Field("adapt_order", 1, this.adapt_order); 
+		boxSize += tracer.Field("coef_table", 2, this.coef_table); 
+		boxSize += tracer.Field("long_term_prediction", 1, this.long_term_prediction); 
+		boxSize += tracer.Field("max_order", 10, this.max_order); 
+		boxSize += tracer.Field("block_switching", 2, this.block_switching); 
+		boxSize += tracer.Field("bgmc_mode", 1, this.bgmc_mode); 
+		boxSize += tracer.Field("sb_part", 1, this.sb_part); 
+		boxSize += tracer.Field("joint_stereo", 1, this.joint_stereo); 
+		boxSize += tracer.Field("mc_coding", 1, this.mc_coding); 
+		boxSize += tracer.Field("chan_config", 1, this.chan_config); 
+		boxSize += tracer.Field("chan_sort", 1, this.chan_sort); 
+		boxSize += tracer.Field("crc_enabled", 1, this.crc_enabled); 
+		boxSize += tracer.Field("RLSLMS", 1, this.RLSLMS); 
+		boxSize += tracer.Field("reserved", 5, this.reserved); 
+		boxSize += tracer.Field("aux_data_enabled", 1, this.aux_data_enabled); 
 
 		if (chan_config)
 		{
-			boxSize += builder.Field("chan_config_info", 16, this.chan_config_info); 
+			boxSize += tracer.Field("chan_config_info", 16, this.chan_config_info); 
 		}
 
 		if (chan_sort)
@@ -470,26 +529,26 @@ public partial class ALSSpecificConfig : IMp4Serializable
 
 			for (int c = 0; c <= channels; c++)
 			{
-				boxSize += builder.Field($"chan_pos[{c}]", (ulong)(ChBits(channels) ), this.chan_pos[c]); // ChBits = ceil[log2(channels+1)] = 1..16
+				boxSize += tracer.Field($"chan_pos[{c}]", (ulong)(ChBits(channels) ), this.chan_pos[c]); // ChBits = ceil[log2(channels+1)] = 1..16
 			}
 		}
-		boxSize += builder.Field("byte_alignment", IsoStream.CalculateByteAlignmentSize(boxSize, byte_alignment), this.byte_alignment); // byte_align, 0..7 bits: relative to the start of ALSSpecificConfig
-		boxSize += builder.Field("header_size", 32, this.header_size); 
-		boxSize += builder.Field("trailer_size", 32, this.trailer_size); 
+		boxSize += tracer.Field("byte_alignment", IsoStream.CalculateByteAlignmentSize(boxSize, byte_alignment), this.byte_alignment); // byte_align, 0..7 bits: relative to the start of ALSSpecificConfig
+		boxSize += tracer.Field("header_size", 32, this.header_size); 
+		boxSize += tracer.Field("trailer_size", 32, this.trailer_size); 
 
 		if (header_size != 0xFFFFFFFF)
 		{
-			boxSize += builder.Field("orig_header", ((ulong)(header_size) * 8), this.orig_header); 
+			boxSize += tracer.Field("orig_header", ((ulong)(header_size) * 8), this.orig_header); 
 		}
 
 		if (trailer_size != 0xFFFFFFFF)
 		{
-			boxSize += builder.Field("orig_trailer", ((ulong)(trailer_size) * 8), this.orig_trailer); 
+			boxSize += tracer.Field("orig_trailer", ((ulong)(trailer_size) * 8), this.orig_trailer); 
 		}
 
 		if (crc_enabled)
 		{
-			boxSize += builder.Field("crc", 32, this.crc); 
+			boxSize += tracer.Field("crc", 32, this.crc); 
 		}
 
 		if ((ra_flag == 2) && (random_access > 0))
@@ -497,14 +556,14 @@ public partial class ALSSpecificConfig : IMp4Serializable
 
 			for (int f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++)
 			{
-				boxSize += builder.Field($"ra_unit_size[{f}]", 32, this.ra_unit_size[f]); 
+				boxSize += tracer.Field($"ra_unit_size[{f}]", 32, this.ra_unit_size[f]); 
 			}
 		}
 
 		if (aux_data_enabled)
 		{
-			boxSize += builder.Field("aux_size", 32, this.aux_size); 
-			boxSize += builder.Field("aux_data", ((ulong)(aux_size) * 8), this.aux_data); 
+			boxSize += tracer.Field("aux_size", 32, this.aux_size); 
+			boxSize += tracer.Field("aux_data", ((ulong)(aux_size) * 8), this.aux_data); 
 		}
 		return boxSize;
 	}

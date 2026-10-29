@@ -149,6 +149,10 @@ namespace Sharp{type}
          public int[] ReadNextBits { get; set; }
 ");
 
+            // the syntax the class is defined of, as the specification's table gives it
+            resultCode.Append($"\r\n         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>\r\n" +
+                $"         public string Syntax {{ get {{ return @\"{ituClass.Syntax.Replace("\"", "\"\"")}\"; }} }}\r\n");
+
             resultCode.Append(GenerateCtor(ituClass));
 
             resultCode.Append($@"

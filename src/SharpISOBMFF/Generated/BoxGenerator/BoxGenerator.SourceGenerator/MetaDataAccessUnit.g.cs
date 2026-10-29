@@ -7,10 +7,8 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class MetaDataAccessUnit {
-Box boxes[];
+	Box boxes[];
 }
-
-
 */
 public partial class MetaDataAccessUnit : IMp4Serializable
 {
@@ -19,9 +17,13 @@ public partial class MetaDataAccessUnit : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class MetaDataAccessUnit {
+	Box boxes[];
+}"; } }
 	public virtual string DisplayName { get { return "MetaDataAccessUnit"; } }
 
-	protected Box[] boxes; 
+	protected Box[] boxes = []; 
 	public Box[] Boxes { get { return this.boxes; } set { this.boxes = value; } }
 
 	public MetaDataAccessUnit(): base()
@@ -49,10 +51,10 @@ public partial class MetaDataAccessUnit : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += tracer.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
 		return boxSize;
 	}
 }

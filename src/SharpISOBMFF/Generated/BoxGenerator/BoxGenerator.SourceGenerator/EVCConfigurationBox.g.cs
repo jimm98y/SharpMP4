@@ -12,6 +12,10 @@ class EVCConfigurationBox extends Box('evcC') {
 */
 public partial class EVCConfigurationBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class EVCConfigurationBox extends Box('evcC') {
+	EVCDecoderConfigurationRecord() EVCConfig;
+}"; } }
 	public const string TYPE = "evcC";
 	public override string DisplayName { get { return "EVCConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class EVCConfigurationBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("EVCConfig", IsoStream.CalculateClassSize(EVCConfig), this.EVCConfig); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("EVCConfig", IsoStream.CalculateClassSize(EVCConfig), this.EVCConfig); 
 		return boxSize;
 	}
 }

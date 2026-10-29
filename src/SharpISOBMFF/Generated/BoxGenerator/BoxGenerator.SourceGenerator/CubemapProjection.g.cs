@@ -7,13 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class CubemapProjection extends ProjectionDataBox('cbmp', 0, 0) {
-    unsigned int(32) layout;
-    unsigned int(32) projection_padding;
- }
-
+	unsigned int(32) layout;
+	unsigned int(32) projection_padding;
+}
 */
 public partial class CubemapProjection : ProjectionDataBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class CubemapProjection extends ProjectionDataBox('cbmp', 0, 0) {
+	unsigned int(32) layout;
+	unsigned int(32) projection_padding;
+}"; } }
 	public const string TYPE = "cbmp";
 	public override string DisplayName { get { return "CubemapProjection"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -57,12 +61,12 @@ public partial class CubemapProjection : ProjectionDataBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("layout", 32, this.layout); 
-		boxSize += builder.Field("projection_padding", 32, this.projection_padding); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("layout", 32, this.layout); 
+		boxSize += tracer.Field("projection_padding", 32, this.projection_padding); 
 		return boxSize;
 	}
 }

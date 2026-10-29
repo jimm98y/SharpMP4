@@ -21,7 +21,7 @@
       "description": "AVC Sub-sequence group",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "class AVCSubSequenceEntry () extends VisualSampleGroupEntry ('avss')\r\n{\r\n\t\tunsigned int(16) subSequenceIdentifer;\r\n\t\tunsigned int(8)  layerNumber; \r\n\t\tunsigned int(1)  durationFlag;\r\n\t\tunsigned int(1)  avgRateFlag;\r\n\t\tunsigned int(6)  reserved = 0; \r\n\t\tif (durationFlag)\r\n\t\t\tunsigned int(32) duration;\r\n\t\tif (avgRateFlag)\r\n\t\t{\r\n\t\t\tunsigned int(7)  reserved = 0;\r\n\t\t\tunsigned int(1)  accurateStatisticsFlag;\r\n\t\t\tunsigned int(16) avgBitRate;\r\n\t\t\tunsigned int(16) avgFrameRate;\r\n\t\t}\r\n\t\tunsigned int(8) numReferences;\r\n\t\tDependencyInfo dependency[numReferences];\r\n\t}\r\n}"
+      "syntax": "class AVCSubSequenceEntry () extends VisualSampleGroupEntry ('avss')\r\n{\r\n\tunsigned int(16) subSequenceIdentifer;\r\n\tunsigned int(8)  layerNumber;\r\n\tunsigned int(1)  durationFlag;\r\n\tunsigned int(1)  avgRateFlag;\r\n\tunsigned int(6)  reserved = 0;\r\n\tif (durationFlag)\r\n\t\tunsigned int(32) duration;\r\n\tif (avgRateFlag)\r\n\t{\r\n\t\tunsigned int(7)  reserved = 0;\r\n\t\tunsigned int(1)  accurateStatisticsFlag;\r\n\t\tunsigned int(16) avgBitRate;\r\n\t\tunsigned int(16) avgFrameRate;\r\n\t}\r\n\tunsigned int(8) numReferences;\r\n\tDependencyInfo dependency[numReferences];\r\n}"
     },
     {
       "fourcc": "dcfi",
@@ -35,7 +35,7 @@
       "description": "SVC decode re-timing",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "class DecodeRetimingEntry() extends VisualSampleGroupEntry ('dtrt') { \r\n\tunsigned int(8) tierCount;\r\n\tfor (i=1; i<=tierCount; i++) {\r\n\t\tunsigned int(16) tierID;\r\n\t\tsigned int(16) delta;\r\n\t}\r\n}"
+      "syntax": "class DecodeRetimingEntry() extends VisualSampleGroupEntry ('dtrt') {\r\n\tunsigned int(8) tierCount;\r\n\tfor (i=1; i<=tierCount; i++) {\r\n\t\tunsigned int(16) tierID;\r\n\t\tsigned int(16) delta;\r\n\t}\r\n}"
     },
     {
       "fourcc": "eob ",
@@ -77,7 +77,7 @@
       "description": "MVC Scalability Information",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "class MultiviewGroupEntry() extends VisualSampleGroupEntry ('mvif') { \r\n\tunsigned int(8) groupID;\r\n\tunsigned int(8) primary_groupID;\r\n\tbit(4) reserved = 0;\r\n\tunsigned int(1) is_tl_switching_point;\r\n\tbit(3) reserved = 0;\r\n\tunsigned int(8) tl_switching_distance;\r\n\t\r\n\tif (groupID == primary_groupID)\t// primary definition of tier\r\n\t{\r\n\t\tViewIdentifierBox();\t\t\t// Mandatory\r\n\t\tTierInfoBox(); \t\t\t\t// Mandatory\r\n\t\tTierDependencyBox(); \t\t// Mandatory\r\n\t\tPriorityRangeBox();\t\t\t// Mandatory\r\n\r\n\t\t//Optional Boxes or fields may follow when defined later\r\n\t\tTierBitRateBox();\t\t\t\t\t\t// optional\r\n\t\tBufferingBox();\t\t\t\t\t\t// optional\r\n\t\tInitialParameterSetBox();\t\t\t// optional\r\n\t\tProtectionSchemeInfoBox();\t\t\t// optional\r\n\t\tViewPriorityBox();\t\t\t\t\t// optional\r\n\t}\r\n}"
+      "syntax": "class MultiviewGroupEntry() extends VisualSampleGroupEntry ('mvif') {\r\n\tunsigned int(8) groupID;\r\n\tunsigned int(8) primary_groupID;\r\n\tbit(4) reserved = 0;\r\n\tunsigned int(1) is_tl_switching_point;\r\n\tbit(3) reserved = 0;\r\n\tunsigned int(8) tl_switching_distance;\r\n\r\n\tif (groupID == primary_groupID)\t// primary definition of tier\r\n\t{\r\n\t\tViewIdentifierBox();\t\t\t// Mandatory\r\n\t\tTierInfoBox(); \t\t\t\t// Mandatory\r\n\t\tTierDependencyBox(); \t\t// Mandatory\r\n\t\tPriorityRangeBox();\t\t\t// Mandatory\r\n\r\n\t\t//Optional Boxes or fields may follow when defined later\r\n\t\tTierBitRateBox();\t\t\t\t\t\t// optional\r\n\t\tBufferingBox();\t\t\t\t\t\t// optional\r\n\t\tInitialParameterSetBox();\t\t\t// optional\r\n\t\tProtectionSchemeInfoBox();\t\t\t// optional\r\n\t\tViewPriorityBox();\t\t\t\t\t// optional\r\n\t}\r\n}"
     },
     {
       "fourcc": "nalm",
@@ -98,7 +98,7 @@
       "description": "L-HEVC and VVC Operating Point Decode Time Hint",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "class OperatingPointDecodeTimeHint()\r\nextends VisualSampleGroupEntry ('opth')\r\n{\r\n\tsigned int(32) delta_time;\r\n}\r\n"
+      "syntax": "class OperatingPointDecodeTimeHint()\r\n\textends VisualSampleGroupEntry ('opth')\r\n{\r\n\tsigned int(32) delta_time;\r\n}"
     },
     {
       "fourcc": "pase",
@@ -126,14 +126,14 @@
       "description": "SVC Scalability Information",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "class ScalableGroupEntry() extends VisualSampleGroupEntry ('scif') { \r\n\tunsigned int(8) groupID;\r\n\tunsigned int(8) primary_groupID;\r\n\tunsigned int(1) is_tier_IDR;\r\n\tunsigned int(1) noInterLayerPredFlag; \r\n\tunsigned int(1) useRefBasePicFlag;\r\n\tunsigned int(1) storeBaseRepFlag; \r\n\tunsigned int(1) is_tl_switching_point;\r\n\tbit(3) reserved = 0;\r\n\tunsigned int(8) tl_switching_distance;\r\n\t\r\n\tif (groupID == primary_groupID)\t// primary definition of tier\r\n\t{\r\n\t\tTierInfoBox(); \t\t\t\t// Mandatory\r\n\t\tSVCDependencyRangeBox();\t// Mandatory\r\n\t\tPriorityRangeBox();\t\t\t// Mandatory\r\n\r\n\t\t//Optional Boxes or fields may follow when defined later\r\n\t\tTierBitRateBox();\t\t\t\t\t\t// optional\r\n\t\tRectRegionBox();\t\t\t\t\t\t// optional\r\n\t\tBufferingBox();\t\t\t\t\t\t// optional\r\n\t\tTierDependencyBox(); \t\t\t\t// optional\r\n\t\tInitialParameterSetBox();\t\t\t// optional\r\n\t\tIroiInfoBox();\t\t\t\t\t\t\t// optional\r\n\t\tProtectionSchemeInfoBox();\t\t\t// optional\r\n\t\tTranscodingInfoBox();\t\t\t\t// optional\r\n\t}\r\n}"
+      "syntax": "class ScalableGroupEntry() extends VisualSampleGroupEntry ('scif') {\r\n\tunsigned int(8) groupID;\r\n\tunsigned int(8) primary_groupID;\r\n\tunsigned int(1) is_tier_IDR;\r\n\tunsigned int(1) noInterLayerPredFlag;\r\n\tunsigned int(1) useRefBasePicFlag;\r\n\tunsigned int(1) storeBaseRepFlag;\r\n\tunsigned int(1) is_tl_switching_point;\r\n\tbit(3) reserved = 0;\r\n\tunsigned int(8) tl_switching_distance;\r\n\r\n\tif (groupID == primary_groupID)\t// primary definition of tier\r\n\t{\r\n\t\tTierInfoBox(); \t\t\t\t// Mandatory\r\n\t\tSVCDependencyRangeBox();\t// Mandatory\r\n\t\tPriorityRangeBox();\t\t\t// Mandatory\r\n\r\n\t\t//Optional Boxes or fields may follow when defined later\r\n\t\tTierBitRateBox();\t\t\t\t\t\t// optional\r\n\t\tRectRegionBox();\t\t\t\t\t\t// optional\r\n\t\tBufferingBox();\t\t\t\t\t\t// optional\r\n\t\tTierDependencyBox(); \t\t\t\t// optional\r\n\t\tInitialParameterSetBox();\t\t\t// optional\r\n\t\tIroiInfoBox();\t\t\t\t\t\t\t// optional\r\n\t\tProtectionSchemeInfoBox();\t\t\t// optional\r\n\t\tTranscodingInfoBox();\t\t\t\t// optional\r\n\t}\r\n}"
     },
     {
       "fourcc": "scnm",
       "description": "AVC/SVC/MVC map groups",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "class ScalableNALUMapEntry() extends VisualSampleGroupEntry ('scnm') { \r\n\tbit(8) reserved = 0;\r\n\tunsigned int(8) NALU_count;\r\n\tfor (i=1; i<= NALU_count; i++)\r\n\t\tunsigned int(8) groupID;\r\n\t}\r\n}"
+      "syntax": "class ScalableNALUMapEntry() extends VisualSampleGroupEntry ('scnm') {\r\n\tbit(8) reserved = 0;\r\n\tunsigned int(8) NALU_count;\r\n\tfor (i=1; i<= NALU_count; i++)\r\n\t\tunsigned int(8) groupID;\r\n}"
     },
     {
       "fourcc": "spid",
@@ -175,14 +175,14 @@
       "description": "Sync sample groups",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "class SyncSampleEntry() extends VisualSampleGroupEntry ('sync')\r\n{\r\n\t\tbit(2) reserved = 0;\r\n\t\tunsigned int(6) NAL_unit_type;\r\n}"
+      "syntax": "class SyncSampleEntry() extends VisualSampleGroupEntry ('sync')\r\n{\r\n\tbit(2) reserved = 0;\r\n\tunsigned int(6) NAL_unit_type;\r\n}"
     },
     {
       "fourcc": "trif",
       "description": "HEVC Tile Region",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "class RectangularRegionGroupEntry() extends VisualSampleGroupEntry ('trif')\r\n{\r\n\tunsigned int(16) groupID;\r\n\tunsigned int(1) rect_region_flag;\r\n\tif (!rect_region_flag)\r\n\t\tbit(7)  reserved = 0;\r\n\telse {\r\n\t\tunsigned int(2) independent_idc;\r\n\t\tunsigned int(1) full_picture;\r\n\t\tunsigned int(1) filtering_disabled;\r\n\t\tunsigned int(1) has_dependency_list;\r\n\t\tbit(2)  reserved = 0;\r\n\t\tif (!full_picture) {\r\n\t\t\tunsigned int(16) horizontal_offset;\r\n\t\t\tunsigned int(16) vertical_offset;\r\n\t\t}\r\n\t\tunsigned int(16) region_width;\r\n\t\tunsigned int(16) region_height;\r\n\t\tif (has_dependency_list) {\r\n\t\t\tunsigned int(16) dependency_rect_region_count;\r\n\t\t\tfor (i=1; i<= dependency_rect_region_count; i++)\r\n\t\t\t\tunsigned int(16) dependencyRectRegionGroupID;\r\n\t}\r\n}\r\n}"
+      "syntax": "class RectangularRegionGroupEntry() extends VisualSampleGroupEntry ('trif')\r\n{\r\n\tunsigned int(16) groupID;\r\n\tunsigned int(1) rect_region_flag;\r\n\tif (!rect_region_flag)\r\n\t\tbit(7)  reserved = 0;\r\n\telse {\r\n\t\tunsigned int(2) independent_idc;\r\n\t\tunsigned int(1) full_picture;\r\n\t\tunsigned int(1) filtering_disabled;\r\n\t\tunsigned int(1) has_dependency_list;\r\n\t\tbit(2)  reserved = 0;\r\n\t\tif (!full_picture) {\r\n\t\t\tunsigned int(16) horizontal_offset;\r\n\t\t\tunsigned int(16) vertical_offset;\r\n\t\t}\r\n\t\tunsigned int(16) region_width;\r\n\t\tunsigned int(16) region_height;\r\n\t\tif (has_dependency_list) {\r\n\t\t\tunsigned int(16) dependency_rect_region_count;\r\n\t\t\tfor (i=1; i<= dependency_rect_region_count; i++)\r\n\t\t\t\tunsigned int(16) dependencyRectRegionGroupID;\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "fourcc": "tsas",

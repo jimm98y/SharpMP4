@@ -7,16 +7,25 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class EntityToGroupBox(grouping_type, version, flags)
-extends FullBox(grouping_type, version, flags) {
+	extends FullBox(grouping_type, version, flags) {
 	unsigned int(32) group_id;
 	unsigned int(32) num_entities_in_group;
 	for(i=0; i<num_entities_in_group; i++)
 		unsigned int(32) entity_id;
-// the remaining data may be specified for a particular grouping_type
+	// the remaining data may be specified for a particular grouping_type
 }
 */
 public partial class EntityToGroupBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class EntityToGroupBox(grouping_type, version, flags)
+	extends FullBox(grouping_type, version, flags) {
+	unsigned int(32) group_id;
+	unsigned int(32) num_entities_in_group;
+	for(i=0; i<num_entities_in_group; i++)
+		unsigned int(32) entity_id;
+	// the remaining data may be specified for a particular grouping_type
+}"; } }
 	public override string DisplayName { get { return "EntityToGroupBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "grpl" }); }
@@ -78,16 +87,16 @@ public partial class EntityToGroupBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("group_id", 32, this.group_id); 
-		boxSize += builder.Field("num_entities_in_group", 32, this.num_entities_in_group); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("group_id", 32, this.group_id); 
+		boxSize += tracer.Field("num_entities_in_group", 32, this.num_entities_in_group); 
 
 		for (int i=0; i<num_entities_in_group; i++)
 		{
-			boxSize += builder.Field($"entity_id[{i}]", 32, this.entity_id[i]); // the remaining data may be specified for a particular grouping_type
+			boxSize += tracer.Field($"entity_id[{i}]", 32, this.entity_id[i]); // the remaining data may be specified for a particular grouping_type
 		}
 		return boxSize;
 	}

@@ -7,18 +7,22 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class UserBox(uuid) extends Box('uuid') {
- bit(8) data[];
- } 
+	bit(8) data[];
+}
 */
 public partial class UserBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class UserBox(uuid) extends Box('uuid') {
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "UserBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
 
 
-	protected byte[] data; 
+	protected byte[] data = []; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public UserBox(byte[] uuid): base(IsoStream.FromFourCC("uuid"), uuid)
@@ -52,12 +56,12 @@ public partial class UserBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

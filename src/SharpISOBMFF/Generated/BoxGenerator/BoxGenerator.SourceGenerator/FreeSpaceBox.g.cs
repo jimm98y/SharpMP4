@@ -7,18 +7,22 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FreeSpaceBox extends Box('free') {
-unsigned int(8) data[];
+	unsigned int(8) data[];
 }
 */
 public partial class FreeSpaceBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class FreeSpaceBox extends Box('free') {
+	unsigned int(8) data[];
+}"; } }
 	public const string TYPE = "free";
 	public override string DisplayName { get { return "FreeSpaceBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
 
 
-	protected StreamMarker data; 
+	protected StreamMarker data = new StreamMarker(0, 0, null); 
 	public StreamMarker Data { get { return this.data; } set { this.data = value; } }
 
 	public FreeSpaceBox(): base(IsoStream.FromFourCC("free"))
@@ -52,12 +56,12 @@ public partial class FreeSpaceBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

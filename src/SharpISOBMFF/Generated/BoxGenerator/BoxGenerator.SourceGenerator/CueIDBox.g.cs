@@ -7,11 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class CueIDBox() extends Box ('iden') {
- boxstring cueID; 
- }
+	boxstring cueID;
+}
 */
 public partial class CueIDBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class CueIDBox() extends Box ('iden') {
+	boxstring cueID;
+}"; } }
 	public const string TYPE = "iden";
 	public override string DisplayName { get { return "CueIDBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +54,11 @@ public partial class CueIDBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("cueID", IsoStream.CalculateStringSize(cueID), this.cueID); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("cueID", IsoStream.CalculateStringSize(cueID), this.cueID); 
 		return boxSize;
 	}
 }

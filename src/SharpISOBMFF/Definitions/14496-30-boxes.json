@@ -37,35 +37,35 @@
       "description": "",
       "containers": [],
       "type": "Box",
-      "syntax": "class CueSourceIDBox() extends Box ('vsid') {\r\n unsigned int(32) sourceID; \r\n }"
+      "syntax": "class CueSourceIDBox() extends Box ('vsid') {\r\n\tunsigned int(32) sourceID;\r\n}"
     },
     {
       "fourcc": "ctim",
       "description": "",
       "containers": [],
       "type": "Box",
-      "syntax": "class CueTimeBox() extends Box ('ctim') {\r\n boxstring cueCurrentTime; \r\n }"
+      "syntax": "class CueTimeBox() extends Box ('ctim') {\r\n\tboxstring cueCurrentTime;\r\n}"
     },
     {
       "fourcc": "iden",
       "description": "",
       "containers": [],
       "type": "Box",
-      "syntax": "class CueIDBox() extends Box ('iden') {\r\n boxstring cueID; \r\n }"
+      "syntax": "class CueIDBox() extends Box ('iden') {\r\n\tboxstring cueID;\r\n}"
     },
     {
       "fourcc": "sttg",
       "description": "",
       "containers": [],
       "type": "Box",
-      "syntax": "class CueSettingsBox() extends Box ('sttg') {\r\n boxstring settings; \r\n }"
+      "syntax": "class CueSettingsBox() extends Box ('sttg') {\r\n\tboxstring settings;\r\n}"
     },
     {
       "fourcc": "payl",
       "description": "",
       "containers": [],
       "type": "Box",
-      "syntax": "class CuePayloadBox() extends Box ('payl') {\r\n boxstring cueText; \r\n }"
+      "syntax": "class CuePayloadBox() extends Box ('payl') {\r\n\tboxstring cueText;\r\n}"
     },
     {
       "fourcc": "vtte",
@@ -79,7 +79,7 @@
       "description": "",
       "containers": [],
       "type": "Box",
-      "syntax": "class VTTAdditionalBox() extends Box ('vtta') {\r\n boxstring cueAdditionalText; \r\n }"
+      "syntax": "class VTTAdditionalBox() extends Box ('vtta') {\r\n\tboxstring cueAdditionalText;\r\n}"
     }
   ]
 }

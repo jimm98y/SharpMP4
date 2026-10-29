@@ -15,6 +15,13 @@ class SAPEntry() extends  SampleGroupDescriptionEntry('sap ')
 */
 public partial class SAPEntry : SampleGroupDescriptionEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class SAPEntry() extends  SampleGroupDescriptionEntry('sap ')
+{
+	unsigned int(1) dependent_flag;
+	unsigned int(3) reserved;
+	unsigned int(4) SAP_type;
+}"; } }
 	public const string TYPE = "sap ";
 	public override string DisplayName { get { return "SAPEntry"; } }
 
@@ -61,13 +68,13 @@ public partial class SAPEntry : SampleGroupDescriptionEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("dependent_flag", 1, this.dependent_flag); 
-		boxSize += builder.Field("reserved", 3, this.reserved); 
-		boxSize += builder.Field("SAP_type", 4, this.SAP_type); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("dependent_flag", 1, this.dependent_flag); 
+		boxSize += tracer.Field("reserved", 3, this.reserved); 
+		boxSize += tracer.Field("SAP_type", 4, this.SAP_type); 
 		return boxSize;
 	}
 }

@@ -7,18 +7,22 @@ namespace SharpISOBMFF
 {
 /*
 class TomTomADBox() extends Box ('TTAD') {
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class TomTomADBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class TomTomADBox() extends Box ('TTAD') {
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "TTAD";
 	public override string DisplayName { get { return "TomTomADBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("TTMD"); }
 
 
-	protected byte[] data; 
+	protected byte[] data = []; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public TomTomADBox(): base(IsoStream.FromFourCC("TTAD"))
@@ -49,11 +53,11 @@ public partial class TomTomADBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

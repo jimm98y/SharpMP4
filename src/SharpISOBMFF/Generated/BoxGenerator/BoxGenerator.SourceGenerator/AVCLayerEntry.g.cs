@@ -17,6 +17,15 @@ class AVCLayerEntry() extends VisualSampleGroupEntry ('avll')
 */
 public partial class AVCLayerEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AVCLayerEntry() extends VisualSampleGroupEntry ('avll')
+{
+	unsigned int(8)  layerNumber;
+	unsigned int(7)  reserved = 0;
+	unsigned int(1)  accurateStatisticsFlag;
+	unsigned int(16) avgBitRate;
+	unsigned int(16) avgFrameRate;
+}"; } }
 	public const string TYPE = "avll";
 	public override string DisplayName { get { return "AVCLayerEntry"; } }
 
@@ -75,15 +84,15 @@ public partial class AVCLayerEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("layerNumber", 8, this.layerNumber); 
-		boxSize += builder.Field("reserved", 7, this.reserved); 
-		boxSize += builder.Field("accurateStatisticsFlag", 1, this.accurateStatisticsFlag); 
-		boxSize += builder.Field("avgBitRate", 16, this.avgBitRate); 
-		boxSize += builder.Field("avgFrameRate", 16, this.avgFrameRate); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("layerNumber", 8, this.layerNumber); 
+		boxSize += tracer.Field("reserved", 7, this.reserved); 
+		boxSize += tracer.Field("accurateStatisticsFlag", 1, this.accurateStatisticsFlag); 
+		boxSize += tracer.Field("avgBitRate", 16, this.avgBitRate); 
+		boxSize += tracer.Field("avgFrameRate", 16, this.avgFrameRate); 
 		return boxSize;
 	}
 }

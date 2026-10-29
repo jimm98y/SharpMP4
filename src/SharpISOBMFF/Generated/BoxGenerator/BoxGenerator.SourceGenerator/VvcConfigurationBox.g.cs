@@ -12,6 +12,10 @@ class VvcConfigurationBox extends FullBox('vvcC',version=0,flags) {
 */
 public partial class VvcConfigurationBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class VvcConfigurationBox extends FullBox('vvcC',version=0,flags) {
+	VvcDecoderConfigurationRecord() VvcConfig;
+}"; } }
 	public const string TYPE = "vvcC";
 	public override string DisplayName { get { return "VvcConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class VvcConfigurationBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("VvcConfig", IsoStream.CalculateClassSize(VvcConfig), this.VvcConfig); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("VvcConfig", IsoStream.CalculateClassSize(VvcConfig), this.VvcConfig); 
 		return boxSize;
 	}
 }

@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ImageScaling
-extends ItemFullProperty('iscl', version = 0, flags = 0) {
+	extends ItemFullProperty('iscl', version = 0, flags = 0) {
 	unsigned int(16) target_width_numerator;
 	unsigned int(16) target_width_denominator;
 	unsigned int(16) target_height_numerator;
@@ -16,6 +16,14 @@ extends ItemFullProperty('iscl', version = 0, flags = 0) {
 */
 public partial class ImageScaling : ItemFullProperty
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ImageScaling
+	extends ItemFullProperty('iscl', version = 0, flags = 0) {
+	unsigned int(16) target_width_numerator;
+	unsigned int(16) target_width_denominator;
+	unsigned int(16) target_height_numerator;
+	unsigned int(16) target_height_denominator;
+}"; } }
 	public const string TYPE = "iscl";
 	public override string DisplayName { get { return "ImageScaling"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -71,14 +79,14 @@ public partial class ImageScaling : ItemFullProperty
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("target_width_numerator", 16, this.target_width_numerator); 
-		boxSize += builder.Field("target_width_denominator", 16, this.target_width_denominator); 
-		boxSize += builder.Field("target_height_numerator", 16, this.target_height_numerator); 
-		boxSize += builder.Field("target_height_denominator", 16, this.target_height_denominator); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("target_width_numerator", 16, this.target_width_numerator); 
+		boxSize += tracer.Field("target_width_denominator", 16, this.target_width_denominator); 
+		boxSize += tracer.Field("target_height_numerator", 16, this.target_height_numerator); 
+		boxSize += tracer.Field("target_height_denominator", 16, this.target_height_denominator); 
 		return boxSize;
 	}
 }

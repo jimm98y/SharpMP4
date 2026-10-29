@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ItemInfoBox
-		extends FullBox('iinf', version, 0) {
+	extends FullBox('iinf', version, 0) {
 	if (version == 0) {
 		unsigned int(16)	entry_count;
 	} else {
@@ -18,6 +18,16 @@ aligned(8) class ItemInfoBox
 */
 public partial class ItemInfoBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ItemInfoBox
+	extends FullBox('iinf', version, 0) {
+	if (version == 0) {
+		unsigned int(16)	entry_count;
+	} else {
+		unsigned int(32) entry_count;
+	}
+	ItemInfoEntry[ entry_count ]		item_infos;
+}"; } }
 	public const string TYPE = "iinf";
 	public override string DisplayName { get { return "ItemInfoBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -89,22 +99,22 @@ public partial class ItemInfoBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if (version == 0)
 		{
-			boxSize += builder.Field("entry_count", 16, this.entry_count); 
+			boxSize += tracer.Field("entry_count", 16, this.entry_count); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("entry_count", 32, this.entry_count); 
+			boxSize += tracer.Field("entry_count", 32, this.entry_count); 
 		}
-		// boxSize += builder.Field("item_infos", IsoStream.CalculateBoxSize(item_infos), this.item_infos); 
-		boxSize += builder.Children(this);
+		// boxSize += tracer.Field("item_infos", IsoStream.CalculateBoxSize(item_infos), this.item_infos); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

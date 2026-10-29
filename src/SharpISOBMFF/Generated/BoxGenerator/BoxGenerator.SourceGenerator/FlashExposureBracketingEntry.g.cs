@@ -7,13 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FlashExposureBracketingEntry
-extends VisualSampleGroupEntry('afbr') {
+	extends VisualSampleGroupEntry('afbr') {
 	int(8) flash_exposure_numerator;
 	int(8) flash_exposure_denominator;
 }
 */
 public partial class FlashExposureBracketingEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class FlashExposureBracketingEntry
+	extends VisualSampleGroupEntry('afbr') {
+	int(8) flash_exposure_numerator;
+	int(8) flash_exposure_denominator;
+}"; } }
 	public const string TYPE = "afbr";
 	public override string DisplayName { get { return "FlashExposureBracketingEntry"; } }
 
@@ -54,12 +60,12 @@ public partial class FlashExposureBracketingEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("flash_exposure_numerator", 8, this.flash_exposure_numerator); 
-		boxSize += builder.Field("flash_exposure_denominator", 8, this.flash_exposure_denominator); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("flash_exposure_numerator", 8, this.flash_exposure_numerator); 
+		boxSize += tracer.Field("flash_exposure_denominator", 8, this.flash_exposure_denominator); 
 		return boxSize;
 	}
 }

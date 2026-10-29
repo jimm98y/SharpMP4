@@ -23,6 +23,21 @@ aligned(8) class EditListBox extends FullBox('elst', version, flags) {
 */
 public partial class EditListBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class EditListBox extends FullBox('elst', version, flags) {
+	unsigned int(32)	entry_count;
+	for (i=1; i <= entry_count; i++) {
+		if (version==1) {
+			unsigned int(64) edit_duration;
+			int(64) media_time;
+		} else { // version==0
+			unsigned int(32) edit_duration;
+			int(32)	media_time;
+		}
+		int(16) media_rate_integer;
+		int(16) media_rate_fraction;
+	}
+}"; } }
 	public const string TYPE = "elst";
 	public override string DisplayName { get { return "EditListBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -133,29 +148,29 @@ public partial class EditListBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entry_count", 32, this.entry_count); 
 
 		for (int i=0; i < entry_count; i++)
 		{
 
 			if (version==1)
 			{
-				boxSize += builder.Field($"edit_duration[{i}]", 64, this.edit_duration[i]); 
-				boxSize += builder.Field($"media_time[{i}]", 64, this.media_time[i]); 
+				boxSize += tracer.Field($"edit_duration[{i}]", 64, this.edit_duration[i]); 
+				boxSize += tracer.Field($"media_time[{i}]", 64, this.media_time[i]); 
 			}
 
 			else 
 			{
 				/*  version==0 */
-				boxSize += builder.Field($"edit_duration[{i}]", 32, this.edit_duration[i]); 
-				boxSize += builder.Field($"media_time[{i}]", 32, this.media_time[i]); 
+				boxSize += tracer.Field($"edit_duration[{i}]", 32, this.edit_duration[i]); 
+				boxSize += tracer.Field($"media_time[{i}]", 32, this.media_time[i]); 
 			}
-			boxSize += builder.Field($"media_rate_integer[{i}]", 16, this.media_rate_integer[i]); 
-			boxSize += builder.Field($"media_rate_fraction[{i}]", 16, this.media_rate_fraction[i]); 
+			boxSize += tracer.Field($"media_rate_integer[{i}]", 16, this.media_rate_integer[i]); 
+			boxSize += tracer.Field($"media_rate_fraction[{i}]", 16, this.media_rate_fraction[i]); 
 		}
 		return boxSize;
 	}

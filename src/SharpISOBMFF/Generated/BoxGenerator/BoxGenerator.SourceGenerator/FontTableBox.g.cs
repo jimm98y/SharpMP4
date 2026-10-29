@@ -7,13 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FontTableBox() extends Box('ftab') {
- unsigned int(16) entryCount;
- FontRecord fontEntries[entryCount];
- }
- 
+	unsigned int(16) entryCount;
+	FontRecord fontEntries[entryCount];
+}
 */
 public partial class FontTableBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class FontTableBox() extends Box('ftab') {
+	unsigned int(16) entryCount;
+	FontRecord fontEntries[entryCount];
+}"; } }
 	public const string TYPE = "ftab";
 	public override string DisplayName { get { return "FontTableBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -23,7 +27,7 @@ public partial class FontTableBox : Box
 	protected ushort entryCount; 
 	public ushort EntryCount { get { return this.entryCount; } set { this.entryCount = value; } }
 
-	protected FontRecord[] fontEntries; 
+	protected FontRecord[] fontEntries = []; 
 	public FontRecord[] FontEntries { get { return this.fontEntries; } set { this.fontEntries = value; } }
 
 	public FontTableBox(): base(IsoStream.FromFourCC("ftab"))
@@ -57,12 +61,12 @@ public partial class FontTableBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entryCount", 16, this.entryCount); 
-		boxSize += builder.Field("fontEntries", IsoStream.CalculateClassSize(fontEntries), this.fontEntries); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entryCount", 16, this.entryCount); 
+		boxSize += tracer.Field("fontEntries", IsoStream.CalculateClassSize(fontEntries), this.fontEntries); 
 		return boxSize;
 	}
 }

@@ -14,6 +14,12 @@ aligned(8) class VideoMediaHeaderBox
 */
 public partial class VideoMediaHeaderBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class VideoMediaHeaderBox
+	extends FullBox('vmhd', version = 0, 1) {
+	template unsigned int(16)		graphicsmode = 0;	// copy, see below
+	template unsigned int(16)[3]	opcolor = {0, 0, 0};
+}"; } }
 	public const string TYPE = "vmhd";
 	public override string DisplayName { get { return "VideoMediaHeaderBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -57,12 +63,12 @@ public partial class VideoMediaHeaderBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("graphicsmode", 16, this.graphicsmode); // copy, see below
-		boxSize += builder.Field("opcolor", 3 * 16, this.opcolor); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("graphicsmode", 16, this.graphicsmode); // copy, see below
+		boxSize += tracer.Field("opcolor", 3 * 16, this.opcolor); 
 		return boxSize;
 	}
 }

@@ -8,10 +8,8 @@ namespace SharpISOBMFF
 /*
 class MPEG_1_2_SpecificConfig()
 {
-  bslbf(1) extension;
+	bslbf(1) extension;
 }
-
-
 */
 public partial class MPEG_1_2_SpecificConfig : IMp4Serializable
 {
@@ -20,6 +18,11 @@ public partial class MPEG_1_2_SpecificConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class MPEG_1_2_SpecificConfig()
+{
+	bslbf(1) extension;
+}"; } }
 	public virtual string DisplayName { get { return "MPEG_1_2_SpecificConfig"; } }
 
 	protected bool extension; 
@@ -50,10 +53,10 @@ public partial class MPEG_1_2_SpecificConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("extension", 1, this.extension); 
+		boxSize += tracer.Field("extension", 1, this.extension); 
 		return boxSize;
 	}
 }

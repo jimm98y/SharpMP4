@@ -13,6 +13,11 @@ class AudioRollRecoveryEntry() extends AudioSampleGroupEntry ('roll')
 */
 public partial class AudioRollRecoveryEntry : AudioSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AudioRollRecoveryEntry() extends AudioSampleGroupEntry ('roll')
+{
+	signed int(16) roll_distance;
+}"; } }
 	public const string TYPE = "roll";
 	public override string DisplayName { get { return "AudioRollRecoveryEntry"; } }
 
@@ -47,11 +52,11 @@ public partial class AudioRollRecoveryEntry : AudioSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("roll_distance", 16, this.roll_distance); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("roll_distance", 16, this.roll_distance); 
 		return boxSize;
 	}
 }

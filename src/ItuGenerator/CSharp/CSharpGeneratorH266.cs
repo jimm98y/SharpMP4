@@ -83,7 +83,7 @@ namespace ItuGenerator.CSharp
                 .Replace("dph_sei_single_component_flag ? ", "dph_sei_single_component_flag != 0 ?")
                 .Replace("sps_rpl1_same_as_rpl0_flag ?", "sps_rpl1_same_as_rpl0_flag != 0 ?")
                 .Replace("sps_sublayer_cpb_params_present_flag ?", "sps_sublayer_cpb_params_present_flag != 0 ?")
-                .Replace("sps_same_qp_table_for_chroma_flag ? 1 : ( sps_joint_cbcr_enabled_flag ? 3 : 2 )", "sps_same_qp_table_for_chroma_flag != 0 ? 1 : ( sps_joint_cbcr_enabled_flag != 0 ? 3 : 2 ) ")
+                .Replace("sps_same_qp_table_for_chroma_flag ? 1 : ( sps_joint_cbcr_enabled_flag ? 3 : 2 )", "sps_same_qp_table_for_chroma_flag != 0 ? 1 : ( sps_joint_cbcr_enabled_flag != 0 ? 3 : 2 )")
                 .Replace("intrinsic_params_equal_flag ? 0 : num_views_minus1", "(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)")
                 .Replace("bp_sublayer_initial_cpb_removal_delay_present_flag ?", "bp_sublayer_initial_cpb_removal_delay_present_flag != 0 ?")
                 .Replace("vps_sublayer_cpb_params_present_flag ? 0", "vps_sublayer_cpb_params_present_flag != 0 ? 0");

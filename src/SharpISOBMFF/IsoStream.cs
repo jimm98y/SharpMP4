@@ -1875,6 +1875,10 @@ namespace SharpISOBMFF
 
         public ulong WriteUInt8ArrayTillEnd(StreamMarker data, string name)
         {
+            // of no bytes - of a box made, not read - there is no stream to copy of
+            if (data.Length == 0)
+                return 0;
+
             IsoStream readStream = data.Stream;
             long originalPosition = readStream.GetCurrentOffset();
             readStream.SeekFromBeginning(data.Position);
@@ -2907,6 +2911,19 @@ namespace SharpISOBMFF
         public ulong WriteUInt32ArrayTillEnd(uint[] value, string name)
         {
             return WriteUInt32Array((uint)value.Length, value, name);
+        }
+
+        /// <summary>Signed numbers of 32 bits to the end, two's complement: as unsigned ones are read, of their bits.</summary>
+        public ulong ReadInt32ArrayTillEnd(ulong boxSize, ulong readSize, out int[] value, string name)
+        {
+            ulong consumed = ReadUInt32ArrayTillEnd(boxSize, readSize, out uint[] values, name);
+            value = Array.ConvertAll(values, v => unchecked((int)v));
+            return consumed;
+        }
+
+        public ulong WriteInt32ArrayTillEnd(int[] value, string name)
+        {
+            return WriteUInt32ArrayTillEnd(Array.ConvertAll(value, v => unchecked((uint)v)), name);
         }
 
         public ulong ReadUInt8Array(ulong boxSize, ulong readSize, uint count, out byte[] value, string name)

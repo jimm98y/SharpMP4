@@ -8,10 +8,8 @@ namespace SharpISOBMFF
 /*
 class CelpBWSenhHeader()
 {
-  uimsbf(2) BWS_configuration;
+	uimsbf(2) BWS_configuration;
 }
-
-
 */
 public partial class CelpBWSenhHeader : IMp4Serializable
 {
@@ -20,6 +18,11 @@ public partial class CelpBWSenhHeader : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class CelpBWSenhHeader()
+{
+	uimsbf(2) BWS_configuration;
+}"; } }
 	public virtual string DisplayName { get { return "CelpBWSenhHeader"; } }
 
 	protected byte BWS_configuration; 
@@ -50,10 +53,10 @@ public partial class CelpBWSenhHeader : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("BWS_configuration", 2, this.BWS_configuration); 
+		boxSize += tracer.Field("BWS_configuration", 2, this.BWS_configuration); 
 		return boxSize;
 	}
 }

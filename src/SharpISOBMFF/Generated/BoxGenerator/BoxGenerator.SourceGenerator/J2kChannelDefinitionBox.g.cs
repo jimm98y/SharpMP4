@@ -7,12 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class J2kChannelDefinitionBox() extends Box('cdef') {
-	 unsigned int(16) channel_count;
- Channel channels[];
- } 
+	unsigned int(16) channel_count;
+	Channel channels[];
+}
 */
 public partial class J2kChannelDefinitionBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class J2kChannelDefinitionBox() extends Box('cdef') {
+	unsigned int(16) channel_count;
+	Channel channels[];
+}"; } }
 	public const string TYPE = "cdef";
 	public override string DisplayName { get { return "J2kChannelDefinitionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -22,7 +27,7 @@ public partial class J2kChannelDefinitionBox : Box
 	protected ushort channel_count; 
 	public ushort ChannelCount { get { return this.channel_count; } set { this.channel_count = value; } }
 
-	protected Channel[] channels; 
+	protected Channel[] channels = []; 
 	public Channel[] Channels { get { return this.channels; } set { this.channels = value; } }
 
 	public J2kChannelDefinitionBox(): base(IsoStream.FromFourCC("cdef"))
@@ -56,12 +61,12 @@ public partial class J2kChannelDefinitionBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("channel_count", 16, this.channel_count); 
-		boxSize += builder.Field("channels", IsoStream.CalculateClassSize(channels), this.channels); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("channel_count", 16, this.channel_count); 
+		boxSize += tracer.Field("channels", IsoStream.CalculateClassSize(channels), this.channels); 
 		return boxSize;
 	}
 }

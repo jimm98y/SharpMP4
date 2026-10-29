@@ -14,6 +14,12 @@ class XMLMetaDataSampleEntry() extends MetaDataSampleEntry ('metx') {
 */
 public partial class XMLMetaDataSampleEntry : MetaDataSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class XMLMetaDataSampleEntry() extends MetaDataSampleEntry ('metx') {
+	utf8string content_encoding; // optional
+	utf8list namespace;
+	utf8list schema_location; // optional
+}"; } }
 	public const string TYPE = "metx";
 	public override string DisplayName { get { return "XMLMetaDataSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -67,13 +73,13 @@ public partial class XMLMetaDataSampleEntry : MetaDataSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		if (this.content_encodingPresent) boxSize += builder.Field("content_encoding", IsoStream.CalculateStringSize(content_encoding), this.content_encoding); // optional
-		boxSize += builder.Field("ns", IsoStream.CalculateStringSize(ns), this.ns); 
-		if (this.schema_locationPresent) boxSize += builder.Field("schema_location", IsoStream.CalculateStringSize(schema_location), this.schema_location); // optional
+		boxSize += base.Trace(tracer);
+		if (this.content_encodingPresent) boxSize += tracer.Field("content_encoding", IsoStream.CalculateStringSize(content_encoding), this.content_encoding); // optional
+		boxSize += tracer.Field("ns", IsoStream.CalculateStringSize(ns), this.ns); 
+		if (this.schema_locationPresent) boxSize += tracer.Field("schema_location", IsoStream.CalculateStringSize(schema_location), this.schema_location); // optional
 		return boxSize;
 	}
 }

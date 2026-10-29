@@ -7,12 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class MovieFragmentHeaderBox
-			extends FullBox('mfhd', 0, 0){
+	extends FullBox('mfhd', 0, 0){
 	unsigned int(32)	sequence_number;
 }
 */
 public partial class MovieFragmentHeaderBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MovieFragmentHeaderBox
+	extends FullBox('mfhd', 0, 0){
+	unsigned int(32)	sequence_number;
+}"; } }
 	public const string TYPE = "mfhd";
 	public override string DisplayName { get { return "MovieFragmentHeaderBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +55,11 @@ public partial class MovieFragmentHeaderBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("sequence_number", 32, this.sequence_number); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("sequence_number", 32, this.sequence_number); 
 		return boxSize;
 	}
 }

@@ -28,13 +28,40 @@ aligned(8) class TrackHeaderBox
 	const unsigned int(16)	reserved = 0;
 	template int(32)[9]	matrix=
 		{ 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };
-		// unity matrix
+	// unity matrix
 	unsigned int(32) width;
 	unsigned int(32) height;
 }
 */
 public partial class TrackHeaderBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TrackHeaderBox
+	extends FullBox('tkhd', version, flags){
+	if (version==1) {
+		unsigned int(64)	creation_time;
+		unsigned int(64)	modification_time;
+		unsigned int(32)	track_ID;
+		const unsigned int(32)	reserved = 0;
+		unsigned int(64)	duration;
+	} else { // version==0
+		unsigned int(32)	creation_time;
+		unsigned int(32)	modification_time;
+		unsigned int(32)	track_ID;
+		const unsigned int(32)	reserved = 0;
+		unsigned int(32)	duration;
+	}
+	const unsigned int(32)[2]	reserved = 0;
+	template int(16) layer = 0;
+	template int(16) alternate_group = 0;
+	template int(16)	volume = {if track_is_audio 0x0100 else 0};
+	const unsigned int(16)	reserved = 0;
+	template int(32)[9]	matrix=
+		{ 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };
+	// unity matrix
+	unsigned int(32) width;
+	unsigned int(32) height;
+}"; } }
 	public const string TYPE = "tkhd";
 	public override string DisplayName { get { return "TrackHeaderBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -59,7 +86,7 @@ public partial class TrackHeaderBox : FullBox
 	protected uint reserved0 = 0; 
 	public uint Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
-	protected uint[] reserved1 = []; 
+	protected uint[] reserved1 = new uint[2]; 
 	public uint[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
 
 	protected short layer = 0; 
@@ -190,37 +217,37 @@ public partial class TrackHeaderBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if (version==1)
 		{
-			boxSize += builder.Field("creation_time", 64, this.creation_time); 
-			boxSize += builder.Field("modification_time", 64, this.modification_time); 
-			boxSize += builder.Field("track_ID", 32, this.track_ID); 
-			boxSize += builder.Field("reserved", 32, this.reserved); 
-			boxSize += builder.Field("duration", 64, this.duration); 
+			boxSize += tracer.Field("creation_time", 64, this.creation_time); 
+			boxSize += tracer.Field("modification_time", 64, this.modification_time); 
+			boxSize += tracer.Field("track_ID", 32, this.track_ID); 
+			boxSize += tracer.Field("reserved", 32, this.reserved); 
+			boxSize += tracer.Field("duration", 64, this.duration); 
 		}
 
 		else 
 		{
 			/*  version==0 */
-			boxSize += builder.Field("creation_time", 32, this.creation_time); 
-			boxSize += builder.Field("modification_time", 32, this.modification_time); 
-			boxSize += builder.Field("track_ID", 32, this.track_ID); 
-			boxSize += builder.Field("reserved0", 32, this.reserved0); 
-			boxSize += builder.Field("duration", 32, this.duration); 
+			boxSize += tracer.Field("creation_time", 32, this.creation_time); 
+			boxSize += tracer.Field("modification_time", 32, this.modification_time); 
+			boxSize += tracer.Field("track_ID", 32, this.track_ID); 
+			boxSize += tracer.Field("reserved0", 32, this.reserved0); 
+			boxSize += tracer.Field("duration", 32, this.duration); 
 		}
-		boxSize += builder.Field("reserved1", 2 * 32, this.reserved1); 
-		boxSize += builder.Field("layer", 16, this.layer); 
-		boxSize += builder.Field("alternate_group", 16, this.alternate_group); 
-		boxSize += builder.Field("volume", 16, this.volume); 
-		boxSize += builder.Field("reserved2", 16, this.reserved2); 
-		boxSize += builder.Field("matrix", 9 * 32, this.matrix); // unity matrix
-		boxSize += builder.Field("width", 32, this.width); 
-		boxSize += builder.Field("height", 32, this.height); 
+		boxSize += tracer.Field("reserved1", 2 * 32, this.reserved1); 
+		boxSize += tracer.Field("layer", 16, this.layer); 
+		boxSize += tracer.Field("alternate_group", 16, this.alternate_group); 
+		boxSize += tracer.Field("volume", 16, this.volume); 
+		boxSize += tracer.Field("reserved2", 16, this.reserved2); 
+		boxSize += tracer.Field("matrix", 9 * 32, this.matrix); // unity matrix
+		boxSize += tracer.Field("width", 32, this.width); 
+		boxSize += tracer.Field("height", 32, this.height); 
 		return boxSize;
 	}
 }

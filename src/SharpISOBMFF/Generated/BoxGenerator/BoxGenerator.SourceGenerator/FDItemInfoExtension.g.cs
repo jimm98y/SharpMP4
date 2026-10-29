@@ -18,6 +18,16 @@ aligned(8) class FDItemInfoExtension() extends ItemInfoExtension ('fdel') {
 */
 public partial class FDItemInfoExtension : ItemInfoExtension
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class FDItemInfoExtension() extends ItemInfoExtension ('fdel') {
+	utf8string content_location;
+	utf8string content_MD5;
+	unsigned int(64) content_length;
+	unsigned int(64) transfer_length;
+	unsigned int(8) entry_count;
+	for (i=1; i <= entry_count; i++)
+		unsigned int(32) group_id;
+}"; } }
 	public const string TYPE = "fdel";
 	public override string DisplayName { get { return "FDItemInfoExtension"; } }
 
@@ -95,19 +105,19 @@ public partial class FDItemInfoExtension : ItemInfoExtension
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("content_location", IsoStream.CalculateStringSize(content_location), this.content_location); 
-		boxSize += builder.Field("content_MD5", IsoStream.CalculateStringSize(content_MD5), this.content_MD5); 
-		boxSize += builder.Field("content_length", 64, this.content_length); 
-		boxSize += builder.Field("transfer_length", 64, this.transfer_length); 
-		boxSize += builder.Field("entry_count", 8, this.entry_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("content_location", IsoStream.CalculateStringSize(content_location), this.content_location); 
+		boxSize += tracer.Field("content_MD5", IsoStream.CalculateStringSize(content_MD5), this.content_MD5); 
+		boxSize += tracer.Field("content_length", 64, this.content_length); 
+		boxSize += tracer.Field("transfer_length", 64, this.transfer_length); 
+		boxSize += tracer.Field("entry_count", 8, this.entry_count); 
 
 		for (int i=0; i < entry_count; i++)
 		{
-			boxSize += builder.Field($"group_id[{i}]", 32, this.group_id[i]); 
+			boxSize += tracer.Field($"group_id[{i}]", 32, this.group_id[i]); 
 		}
 		return boxSize;
 	}

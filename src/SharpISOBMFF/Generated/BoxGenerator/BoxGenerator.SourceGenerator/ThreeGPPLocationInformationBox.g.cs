@@ -20,6 +20,18 @@ aligned(8) class ThreeGPPLocationInformationBox() extends FullBox('loci', versio
 */
 public partial class ThreeGPPLocationInformationBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ThreeGPPLocationInformationBox() extends FullBox('loci', version = 0, 0) {
+	bit(1) reserved = 0;
+	unsigned int(5)[3] language;
+	string placeName;
+	unsigned int(8) role;
+	fixedpoint1616 longitude;
+	fixedpoint1616 latitude;
+	fixedpoint1616 altitude;
+	string astronomicalBody;
+	string additionalNotes;
+}"; } }
 	public const string TYPE = "loci";
 	public override string DisplayName { get { return "ThreeGPPLocationInformationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -29,7 +41,7 @@ public partial class ThreeGPPLocationInformationBox : FullBox
 	protected bool reserved = false; 
 	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-	protected string language; 
+	protected string language = "und"; 
 	public string Language { get { return this.language; } set { this.language = value; } }
 
 	protected BinaryUTF8String placeName; 
@@ -105,19 +117,19 @@ public partial class ThreeGPPLocationInformationBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 1, this.reserved); 
-		boxSize += builder.Field("language", 15, this.language); 
-		boxSize += builder.Field("placeName", IsoStream.CalculateStringSize(placeName), this.placeName); 
-		boxSize += builder.Field("role", 8, this.role); 
-		boxSize += builder.Field("longitude", 32, this.longitude); 
-		boxSize += builder.Field("latitude", 32, this.latitude); 
-		boxSize += builder.Field("altitude", 32, this.altitude); 
-		boxSize += builder.Field("astronomicalBody", IsoStream.CalculateStringSize(astronomicalBody), this.astronomicalBody); 
-		boxSize += builder.Field("additionalNotes", IsoStream.CalculateStringSize(additionalNotes), this.additionalNotes); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 1, this.reserved); 
+		boxSize += tracer.Field("language", 15, this.language); 
+		boxSize += tracer.Field("placeName", IsoStream.CalculateStringSize(placeName), this.placeName); 
+		boxSize += tracer.Field("role", 8, this.role); 
+		boxSize += tracer.Field("longitude", 32, this.longitude); 
+		boxSize += tracer.Field("latitude", 32, this.latitude); 
+		boxSize += tracer.Field("altitude", 32, this.altitude); 
+		boxSize += tracer.Field("astronomicalBody", IsoStream.CalculateStringSize(astronomicalBody), this.astronomicalBody); 
+		boxSize += tracer.Field("additionalNotes", IsoStream.CalculateStringSize(additionalNotes), this.additionalNotes); 
 		return boxSize;
 	}
 }

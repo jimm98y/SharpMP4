@@ -18,6 +18,16 @@ class SVCPriorityLayerInfoBox extends Box('qlif'){
 */
 public partial class SVCPriorityLayerInfoBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class SVCPriorityLayerInfoBox extends Box('qlif'){
+	unsigned int(8) pr_layer_num;
+	for(j=0; j< pr_layer_num; j++){
+		unsigned int(8) pr_layer;
+		unsigned int(24) profile_level_idc;
+		unsigned int(32) max_bitrate;
+		unsigned int(32) avg_bitrate;
+	}
+}"; } }
 	public const string TYPE = "qlif";
 	public override string DisplayName { get { return "SVCPriorityLayerInfoBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -95,18 +105,18 @@ public partial class SVCPriorityLayerInfoBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("pr_layer_num", 8, this.pr_layer_num); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("pr_layer_num", 8, this.pr_layer_num); 
 
 		for (int j=0; j< pr_layer_num; j++)
 		{
-			boxSize += builder.Field($"pr_layer[{j}]", 8, this.pr_layer[j]); 
-			boxSize += builder.Field($"profile_level_idc[{j}]", 24, this.profile_level_idc[j]); 
-			boxSize += builder.Field($"max_bitrate[{j}]", 32, this.max_bitrate[j]); 
-			boxSize += builder.Field($"avg_bitrate[{j}]", 32, this.avg_bitrate[j]); 
+			boxSize += tracer.Field($"pr_layer[{j}]", 8, this.pr_layer[j]); 
+			boxSize += tracer.Field($"profile_level_idc[{j}]", 24, this.profile_level_idc[j]); 
+			boxSize += tracer.Field($"max_bitrate[{j}]", 32, this.max_bitrate[j]); 
+			boxSize += tracer.Field($"avg_bitrate[{j}]", 32, this.avg_bitrate[j]); 
 		}
 		return boxSize;
 	}

@@ -6,54 +6,53 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class VvcOperatingPointsRecord { 
-unsigned int(8) num_profile_tier_level_minus1;
-for (i=0; i<=num_profile_tier_level_minus1; i++) { 
- unsigned int(8) ptl_max_temporal_id[i]; 
- VvcPTLRecord(ptl_max_temporal_id[i]+1) ptl[i];
-} 
-unsigned int(1) all_independent_layers_flag; 
-bit(7) reserved = 0; 
-if (all_independent_layers_flag){ 
- unsigned int(1) each_layer_is_an_ols_flag; 
- bit(7) reserved = 0; 
-} 
-else 
- unsigned int(8) ols_mode_idc; 
-unsigned int(16) num_operating_points; 
-for (i=0; i<num_operating_points; i++) { 
- unsigned int(16) output_layer_set_idx; 
- unsigned int(8) ptl_idx; 
- unsigned int(8) max_temporal_id; 
- unsigned int(8) layer_count; 
- for (j=0; j<layer_count; j++) { 
-  unsigned int(6) layer_id; 
-  unsigned int(1) is_outputlayer;
-  bit(1) reserved = 0;
- }
- bit(6) reserved = 0; 
- unsigned int(1) frame_rate_info_flag;
- unsigned int(1) bit_rate_info_flag;
- if (frame_rate_info_flag) { 
-  unsigned int(16) avgFrameRate; 
-  bit(6) reserved = 0; 
-  unsigned int(2) constantFrameRate;
- } 
- if (bit_rate_info_flag) { 
-  unsigned int(32) maxBitRate; 
-  unsigned int(32) avgBitRate;
- }
+class VvcOperatingPointsRecord {
+	unsigned int(8) num_profile_tier_level_minus1;
+	for (i=0; i<=num_profile_tier_level_minus1; i++) {
+		unsigned int(8) ptl_max_temporal_id[i];
+		VvcPTLRecord(ptl_max_temporal_id[i]+1) ptl[i];
+	}
+	unsigned int(1) all_independent_layers_flag;
+	bit(7) reserved = 0;
+	if (all_independent_layers_flag){
+		unsigned int(1) each_layer_is_an_ols_flag;
+		bit(7) reserved = 0;
+	}
+	else
+		unsigned int(8) ols_mode_idc;
+	unsigned int(16) num_operating_points;
+	for (i=0; i<num_operating_points; i++) {
+		unsigned int(16) output_layer_set_idx;
+		unsigned int(8) ptl_idx;
+		unsigned int(8) max_temporal_id;
+		unsigned int(8) layer_count;
+		for (j=0; j<layer_count; j++) {
+			unsigned int(6) layer_id;
+			unsigned int(1) is_outputlayer;
+			bit(1) reserved = 0;
+		}
+		bit(6) reserved = 0;
+		unsigned int(1) frame_rate_info_flag;
+		unsigned int(1) bit_rate_info_flag;
+		if (frame_rate_info_flag) {
+			unsigned int(16) avgFrameRate;
+			bit(6) reserved = 0;
+			unsigned int(2) constantFrameRate;
+		}
+		if (bit_rate_info_flag) {
+			unsigned int(32) maxBitRate;
+			unsigned int(32) avgBitRate;
+		}
+	}
+	unsigned int(8) max_layer_count;
+	for (i=0; i<max_layer_count; i++) {
+		unsigned int(8) layerID;
+		unsigned int(8) num_direct_ref_layers;
+		for (j=0; j<num_direct_ref_layers; j++)
+			unsigned int(8) direct_ref_layerID;
+		unsigned int(8) max_tid_il_ref_pics_plus1;
+	}
 }
-unsigned int(8) max_layer_count; 
-for (i=0; i<max_layer_count; i++) { 
- unsigned int(8) layerID; 
- unsigned int(8) num_direct_ref_layers; 
- for (j=0; j<num_direct_ref_layers; j++) 
-  unsigned int(8) direct_ref_layerID; 
- unsigned int(8) max_tid_il_ref_pics_plus1; 
- }
-}
-
 */
 public partial class VvcOperatingPointsRecord : IMp4Serializable
 {
@@ -62,6 +61,54 @@ public partial class VvcOperatingPointsRecord : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class VvcOperatingPointsRecord {
+	unsigned int(8) num_profile_tier_level_minus1;
+	for (i=0; i<=num_profile_tier_level_minus1; i++) {
+		unsigned int(8) ptl_max_temporal_id[i];
+		VvcPTLRecord(ptl_max_temporal_id[i]+1) ptl[i];
+	}
+	unsigned int(1) all_independent_layers_flag;
+	bit(7) reserved = 0;
+	if (all_independent_layers_flag){
+		unsigned int(1) each_layer_is_an_ols_flag;
+		bit(7) reserved = 0;
+	}
+	else
+		unsigned int(8) ols_mode_idc;
+	unsigned int(16) num_operating_points;
+	for (i=0; i<num_operating_points; i++) {
+		unsigned int(16) output_layer_set_idx;
+		unsigned int(8) ptl_idx;
+		unsigned int(8) max_temporal_id;
+		unsigned int(8) layer_count;
+		for (j=0; j<layer_count; j++) {
+			unsigned int(6) layer_id;
+			unsigned int(1) is_outputlayer;
+			bit(1) reserved = 0;
+		}
+		bit(6) reserved = 0;
+		unsigned int(1) frame_rate_info_flag;
+		unsigned int(1) bit_rate_info_flag;
+		if (frame_rate_info_flag) {
+			unsigned int(16) avgFrameRate;
+			bit(6) reserved = 0;
+			unsigned int(2) constantFrameRate;
+		}
+		if (bit_rate_info_flag) {
+			unsigned int(32) maxBitRate;
+			unsigned int(32) avgBitRate;
+		}
+	}
+	unsigned int(8) max_layer_count;
+	for (i=0; i<max_layer_count; i++) {
+		unsigned int(8) layerID;
+		unsigned int(8) num_direct_ref_layers;
+		for (j=0; j<num_direct_ref_layers; j++)
+			unsigned int(8) direct_ref_layerID;
+		unsigned int(8) max_tid_il_ref_pics_plus1;
+	}
+}"; } }
 	public virtual string DisplayName { get { return "VvcOperatingPointsRecord"; } }
 
 	protected byte num_profile_tier_level_minus1; 
@@ -393,73 +440,73 @@ public partial class VvcOperatingPointsRecord : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("num_profile_tier_level_minus1", 8, this.num_profile_tier_level_minus1); 
+		boxSize += tracer.Field("num_profile_tier_level_minus1", 8, this.num_profile_tier_level_minus1); 
 
 		for (int i=0; i<=num_profile_tier_level_minus1; i++)
 		{
-			boxSize += builder.Field($"ptl_max_temporal_id[{i}]", 8, this.ptl_max_temporal_id[i]); 
-			boxSize += builder.Field($"ptl[{i}]", IsoStream.CalculateClassSize(ptl[i]), this.ptl[i]); 
+			boxSize += tracer.Field($"ptl_max_temporal_id[{i}]", 8, this.ptl_max_temporal_id[i]); 
+			boxSize += tracer.Field($"ptl[{i}]", IsoStream.CalculateClassSize(ptl[i]), this.ptl[i]); 
 		}
-		boxSize += builder.Field("all_independent_layers_flag", 1, this.all_independent_layers_flag); 
-		boxSize += builder.Field("reserved", 7, this.reserved); 
+		boxSize += tracer.Field("all_independent_layers_flag", 1, this.all_independent_layers_flag); 
+		boxSize += tracer.Field("reserved", 7, this.reserved); 
 
 		if (all_independent_layers_flag)
 		{
-			boxSize += builder.Field("each_layer_is_an_ols_flag", 1, this.each_layer_is_an_ols_flag); 
-			boxSize += builder.Field("reserved0", 7, this.reserved0); 
+			boxSize += tracer.Field("each_layer_is_an_ols_flag", 1, this.each_layer_is_an_ols_flag); 
+			boxSize += tracer.Field("reserved0", 7, this.reserved0); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("ols_mode_idc", 8, this.ols_mode_idc); 
+			boxSize += tracer.Field("ols_mode_idc", 8, this.ols_mode_idc); 
 		}
-		boxSize += builder.Field("num_operating_points", 16, this.num_operating_points); 
+		boxSize += tracer.Field("num_operating_points", 16, this.num_operating_points); 
 
 		for (int i=0; i<num_operating_points; i++)
 		{
-			boxSize += builder.Field($"output_layer_set_idx[{i}]", 16, this.output_layer_set_idx[i]); 
-			boxSize += builder.Field($"ptl_idx[{i}]", 8, this.ptl_idx[i]); 
-			boxSize += builder.Field($"max_temporal_id[{i}]", 8, this.max_temporal_id[i]); 
-			boxSize += builder.Field($"layer_count[{i}]", 8, this.layer_count[i]); 
+			boxSize += tracer.Field($"output_layer_set_idx[{i}]", 16, this.output_layer_set_idx[i]); 
+			boxSize += tracer.Field($"ptl_idx[{i}]", 8, this.ptl_idx[i]); 
+			boxSize += tracer.Field($"max_temporal_id[{i}]", 8, this.max_temporal_id[i]); 
+			boxSize += tracer.Field($"layer_count[{i}]", 8, this.layer_count[i]); 
 
 			for (int j=0; j<layer_count[i]; j++)
 			{
-				boxSize += builder.Field($"layer_id[{i}][{j}]", 6, this.layer_id[i][j]); 
-				boxSize += builder.Field($"is_outputlayer[{i}][{j}]", 1, this.is_outputlayer[i][j]); 
-				boxSize += builder.Field($"reserved1[{i}][{j}]", 1, this.reserved1[i][j]); 
+				boxSize += tracer.Field($"layer_id[{i}][{j}]", 6, this.layer_id[i][j]); 
+				boxSize += tracer.Field($"is_outputlayer[{i}][{j}]", 1, this.is_outputlayer[i][j]); 
+				boxSize += tracer.Field($"reserved1[{i}][{j}]", 1, this.reserved1[i][j]); 
 			}
-			boxSize += builder.Field($"reserved00[{i}]", 6, this.reserved00[i]); 
-			boxSize += builder.Field($"frame_rate_info_flag[{i}]", 1, this.frame_rate_info_flag[i]); 
-			boxSize += builder.Field($"bit_rate_info_flag[{i}]", 1, this.bit_rate_info_flag[i]); 
+			boxSize += tracer.Field($"reserved00[{i}]", 6, this.reserved00[i]); 
+			boxSize += tracer.Field($"frame_rate_info_flag[{i}]", 1, this.frame_rate_info_flag[i]); 
+			boxSize += tracer.Field($"bit_rate_info_flag[{i}]", 1, this.bit_rate_info_flag[i]); 
 
 			if (frame_rate_info_flag[i])
 			{
-				boxSize += builder.Field($"avgFrameRate[{i}]", 16, this.avgFrameRate[i]); 
-				boxSize += builder.Field($"reserved10[{i}]", 6, this.reserved10[i]); 
-				boxSize += builder.Field($"constantFrameRate[{i}]", 2, this.constantFrameRate[i]); 
+				boxSize += tracer.Field($"avgFrameRate[{i}]", 16, this.avgFrameRate[i]); 
+				boxSize += tracer.Field($"reserved10[{i}]", 6, this.reserved10[i]); 
+				boxSize += tracer.Field($"constantFrameRate[{i}]", 2, this.constantFrameRate[i]); 
 			}
 
 			if (bit_rate_info_flag[i])
 			{
-				boxSize += builder.Field($"maxBitRate[{i}]", 32, this.maxBitRate[i]); 
-				boxSize += builder.Field($"avgBitRate[{i}]", 32, this.avgBitRate[i]); 
+				boxSize += tracer.Field($"maxBitRate[{i}]", 32, this.maxBitRate[i]); 
+				boxSize += tracer.Field($"avgBitRate[{i}]", 32, this.avgBitRate[i]); 
 			}
 		}
-		boxSize += builder.Field("max_layer_count", 8, this.max_layer_count); 
+		boxSize += tracer.Field("max_layer_count", 8, this.max_layer_count); 
 
 		for (int i=0; i<max_layer_count; i++)
 		{
-			boxSize += builder.Field($"layerID[{i}]", 8, this.layerID[i]); 
-			boxSize += builder.Field($"num_direct_ref_layers[{i}]", 8, this.num_direct_ref_layers[i]); 
+			boxSize += tracer.Field($"layerID[{i}]", 8, this.layerID[i]); 
+			boxSize += tracer.Field($"num_direct_ref_layers[{i}]", 8, this.num_direct_ref_layers[i]); 
 
 			for (int j=0; j<num_direct_ref_layers[i]; j++)
 			{
-				boxSize += builder.Field($"direct_ref_layerID[{i}][{j}]", 8, this.direct_ref_layerID[i][j]); 
+				boxSize += tracer.Field($"direct_ref_layerID[{i}][{j}]", 8, this.direct_ref_layerID[i][j]); 
 			}
-			boxSize += builder.Field($"max_tid_il_ref_pics_plus1[{i}]", 8, this.max_tid_il_ref_pics_plus1[i]); 
+			boxSize += tracer.Field($"max_tid_il_ref_pics_plus1[{i}]", 8, this.max_tid_il_ref_pics_plus1[i]); 
 		}
 		return boxSize;
 	}

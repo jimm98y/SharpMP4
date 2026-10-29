@@ -6,55 +6,55 @@
       "fourcc": "JXL ",
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "// The signature a JPEG XL container starts with: 0x0D0A870A\r\naligned(8) class JpegXLSignatureBox extends Box('JXL ') {\r\n unsigned int(32) signature;\r\n }"
+      "syntax": "// The signature a JPEG XL container starts with: 0x0D0A870A\r\naligned(8) class JpegXLSignatureBox extends Box('JXL ') {\r\n\tunsigned int(32) signature;\r\n}"
     },
     {
       "fourcc": "jxll",
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "// The level of the codestream, 5 or 10\r\naligned(8) class JpegXLLevelBox extends Box('jxll') {\r\n unsigned int(8) level;\r\n }"
+      "syntax": "// The level of the codestream, 5 or 10\r\naligned(8) class JpegXLLevelBox extends Box('jxll') {\r\n\tunsigned int(8) level;\r\n}"
     },
     {
       "fourcc": "jxlc",
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "// The codestream, whole\r\naligned(8) class JpegXLCodestreamBox extends Box('jxlc') {\r\n bit(8) data[];\r\n }"
+      "syntax": "// The codestream, whole\r\naligned(8) class JpegXLCodestreamBox extends Box('jxlc') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "fourcc": "jxlp",
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "// A part of the codestream: its index, the last part's with the top bit set\r\naligned(8) class JpegXLPartialCodestreamBox extends Box('jxlp') {\r\n unsigned int(1) is_last;\r\n unsigned int(31) index;\r\n bit(8) data[];\r\n }"
+      "syntax": "// A part of the codestream: its index, the last part's with the top bit set\r\naligned(8) class JpegXLPartialCodestreamBox extends Box('jxlp') {\r\n\tunsigned int(1) is_last;\r\n\tunsigned int(31) index;\r\n\tbit(8) data[];\r\n}"
     },
     {
       "fourcc": "jbrd",
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "// What it takes to make the JPEG file a JPEG XL codestream was made of again, byte for byte\r\naligned(8) class JpegBitstreamReconstructionBox extends Box('jbrd') {\r\n bit(8) data[];\r\n }"
+      "syntax": "// What it takes to make the JPEG file a JPEG XL codestream was made of again, byte for byte\r\naligned(8) class JpegBitstreamReconstructionBox extends Box('jbrd') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "fourcc": "jxli",
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "// The index of an animation's key frames (ISO/IEC 18181-2 9.3): of the frames indexed, the ticks a second is of (TNUM/TDEN), and of each frame its offset in the codestream from the frame before, its duration in ticks and the frames it stands for, varints\r\naligned(8) class JpegXLFrameIndexBox extends Box('jxli') {\r\n varint frame_count; // NF\r\n unsigned int(32) tick_numerator; // TNUM\r\n unsigned int(32) tick_denominator; // TDEN\r\n for (i = 0; i < frame_count; i++) {\r\n varint offset; // OFFi\r\n varint duration; // Ti\r\n varint frames; // Fi\r\n }\r\n }"
+      "syntax": "// The index of an animation's key frames (ISO/IEC 18181-2 9.3): of the frames indexed, the ticks a second is of (TNUM/TDEN), and of each frame its offset in the codestream from the frame before, its duration in ticks and the frames it stands for, varints\r\naligned(8) class JpegXLFrameIndexBox extends Box('jxli') {\r\n\tvarint frame_count; // NF\r\n\tunsigned int(32) tick_numerator; // TNUM\r\n\tunsigned int(32) tick_denominator; // TDEN\r\n\tfor (i = 0; i < frame_count; i++) {\r\n\t\tvarint offset; // OFFi\r\n\t\tvarint duration; // Ti\r\n\t\tvarint frames; // Fi\r\n\t}\r\n}"
     },
     {
       "fourcc": "Exif",
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "// Exif: where in it the TIFF header is, then the Exif\r\naligned(8) class ExifBox extends Box('Exif') {\r\n unsigned int(32) tiff_header_offset;\r\n bit(8) data[];\r\n }"
+      "syntax": "// Exif: where in it the TIFF header is, then the Exif\r\naligned(8) class ExifBox extends Box('Exif') {\r\n\tunsigned int(32) tiff_header_offset;\r\n\tbit(8) data[];\r\n}"
     },
     {
       "fourcc": "xml ",
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "// XMP, a box of the file, not a full box as the XMLBox of a 'meta' is (JPEG 2000's XML box too)\r\naligned(8) class JpegXMLBox extends Box('xml ') {\r\n string data;\r\n }"
+      "syntax": "// XMP, a box of the file, not a full box as the XMLBox of a 'meta' is (JPEG 2000's XML box too)\r\naligned(8) class JpegXMLBox extends Box('xml ') {\r\n\tstring data;\r\n}"
     },
     {
       "fourcc": "brob",
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "// A box compressed with Brotli: the type of the box it is, then that box's content, compressed\r\naligned(8) class BrotliCompressedBox extends Box('brob') {\r\n unsigned int(32) box_type;\r\n bit(8) data[];\r\n }"
+      "syntax": "// A box compressed with Brotli: the type of the box it is, then that box's content, compressed\r\naligned(8) class BrotliCompressedBox extends Box('brob') {\r\n\tunsigned int(32) box_type;\r\n\tbit(8) data[];\r\n}"
     }
   ]
 }

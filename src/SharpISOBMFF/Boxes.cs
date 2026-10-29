@@ -23,7 +23,6 @@ namespace SharpISOBMFF
         public CompressedBox(uint boxtype) : base(boxtype) {  }
     }
 
-    public class ICC_profile : UnknownClass { } // ISO 15076‐1 or ICC.1:2010, or https://github.com/xcorail/metadata-extractor/blob/master/Source/com/drew/metadata/icc/IccReader.java#L50
     public class DRCCoefficientsBasic : UnknownBox { } // ISO/IEC 23003‐4
     public class DRCInstructionsBasic : UnknownBox { } // ISO/IEC 23003‐4
     public class DRCCoefficientsUniDRC : UnknownBox { } // ISO/IEC 23003‐4
@@ -45,6 +44,9 @@ namespace SharpISOBMFF
 
     public class SpatialSpecificConfig : IMp4Serializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public virtual string Syntax { get { return null; } }
+
         public virtual string DisplayName { get { return nameof(SpatialSpecificConfig); } }
         protected IMp4Serializable parent = null;
         public IMp4Serializable GetParent() { return parent; }
@@ -73,7 +75,7 @@ namespace SharpISOBMFF
         public override string ToString() { return BoxStringBuilder.Format(this); }
 
         // of no fields read
-        public virtual ulong ToString(BoxStringBuilder builder)
+        public virtual ulong Trace(BoxTracer tracer)
         {
             return 0;
         }
@@ -81,6 +83,9 @@ namespace SharpISOBMFF
 
     public class StructuredAudioSpecificConfig : IMp4Serializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public virtual string Syntax { get { return null; } }
+
         public virtual string DisplayName { get { return nameof(StructuredAudioSpecificConfig); } }
         protected IMp4Serializable parent = null;
         public IMp4Serializable GetParent() { return parent; }
@@ -109,7 +114,7 @@ namespace SharpISOBMFF
         public override string ToString() { return BoxStringBuilder.Format(this); }
 
         // of no fields read
-        public virtual ulong ToString(BoxStringBuilder builder)
+        public virtual ulong Trace(BoxTracer tracer)
         {
             return 0;
         }

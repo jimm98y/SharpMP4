@@ -15,6 +15,13 @@ aligned(8) class RelyBox() extends Box('rely') {
 */
 public partial class RelyBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// an RTP hint sample entry's reliability, as GPAC's rely_box_read reads it
+aligned(8) class RelyBox() extends Box('rely') {
+	bit(6) reserved = 0;
+	unsigned int(1) preferred;
+	unsigned int(1) required;
+}"; } }
 	public const string TYPE = "rely";
 	public override string DisplayName { get { return "RelyBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -64,13 +71,13 @@ public partial class RelyBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 6, this.reserved); 
-		boxSize += builder.Field("preferred", 1, this.preferred); 
-		boxSize += builder.Field("required", 1, this.required); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 6, this.reserved); 
+		boxSize += tracer.Field("preferred", 1, this.preferred); 
+		boxSize += tracer.Field("required", 1, this.required); 
 		return boxSize;
 	}
 }

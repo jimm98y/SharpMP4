@@ -13,6 +13,11 @@ aligned(8) class DataEntryImdaBox (bit(24) flags)
 */
 public partial class DataEntryImdaBox : DataEntryBaseBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class DataEntryImdaBox (bit(24) flags)
+	extends DataEntryBaseBox('imdt', flags) {
+	unsigned int(32) imda_ref_identifier;
+}"; } }
 	public const string TYPE = "imdt";
 	public override string DisplayName { get { return "DataEntryImdaBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +55,11 @@ public partial class DataEntryImdaBox : DataEntryBaseBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("imda_ref_identifier", 32, this.imda_ref_identifier); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("imda_ref_identifier", 32, this.imda_ref_identifier); 
 		return boxSize;
 	}
 }

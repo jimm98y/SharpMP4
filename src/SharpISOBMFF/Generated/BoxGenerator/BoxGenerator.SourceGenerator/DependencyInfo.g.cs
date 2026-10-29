@@ -6,13 +6,12 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class DependencyInfo  
-{ 
-unsigned int(8)   subSeqDirectionFlag; 
-unsigned int(8)   layerNumber; 
-unsigned int(16)  subSequenceIdentifier; 
-} 
-
+aligned(8) class DependencyInfo
+{
+	unsigned int(8)   subSeqDirectionFlag;
+	unsigned int(8)   layerNumber;
+	unsigned int(16)  subSequenceIdentifier;
+}
 */
 public partial class DependencyInfo : IMp4Serializable
 {
@@ -21,6 +20,13 @@ public partial class DependencyInfo : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class DependencyInfo
+{
+	unsigned int(8)   subSeqDirectionFlag;
+	unsigned int(8)   layerNumber;
+	unsigned int(16)  subSequenceIdentifier;
+}"; } }
 	public virtual string DisplayName { get { return "DependencyInfo"; } }
 
 	protected byte subSeqDirectionFlag; 
@@ -63,12 +69,12 @@ public partial class DependencyInfo : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("subSeqDirectionFlag", 8, this.subSeqDirectionFlag); 
-		boxSize += builder.Field("layerNumber", 8, this.layerNumber); 
-		boxSize += builder.Field("subSequenceIdentifier", 16, this.subSequenceIdentifier); 
+		boxSize += tracer.Field("subSeqDirectionFlag", 8, this.subSeqDirectionFlag); 
+		boxSize += tracer.Field("layerNumber", 8, this.layerNumber); 
+		boxSize += tracer.Field("subSequenceIdentifier", 16, this.subSequenceIdentifier); 
 		return boxSize;
 	}
 }

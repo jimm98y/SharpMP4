@@ -13,6 +13,11 @@ class PixelAspectRatioEntry() extends VisualSampleGroupEntry ('pasr'){
 */
 public partial class PixelAspectRatioEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class PixelAspectRatioEntry() extends VisualSampleGroupEntry ('pasr'){
+	unsigned int(32) hSpacing;
+	unsigned int(32) vSpacing;
+}"; } }
 	public const string TYPE = "pasr";
 	public override string DisplayName { get { return "PixelAspectRatioEntry"; } }
 
@@ -53,12 +58,12 @@ public partial class PixelAspectRatioEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("hSpacing", 32, this.hSpacing); 
-		boxSize += builder.Field("vSpacing", 32, this.vSpacing); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("hSpacing", 32, this.hSpacing); 
+		boxSize += tracer.Field("vSpacing", 32, this.vSpacing); 
 		return boxSize;
 	}
 }

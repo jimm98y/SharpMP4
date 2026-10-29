@@ -12,6 +12,10 @@ class TemporalSubLayerEntry() extends VisualSampleGroupEntry ('tsas')
 */
 public partial class TemporalSubLayerEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class TemporalSubLayerEntry() extends VisualSampleGroupEntry ('tsas')
+{
+}"; } }
 	public const string TYPE = "tsas";
 	public override string DisplayName { get { return "TemporalSubLayerEntry"; } }
 
@@ -40,10 +44,10 @@ public partial class TemporalSubLayerEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

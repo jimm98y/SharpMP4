@@ -17,6 +17,15 @@ aligned(8) class SRTPProcessBox extends FullBox('srpp', version, 0) {
 */
 public partial class SRTPProcessBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SRTPProcessBox extends FullBox('srpp', version, 0) {
+	unsigned int(32)		encryption_algorithm_rtp;
+	unsigned int(32)		encryption_algorithm_rtcp;
+	unsigned int(32)		integrity_algorithm_rtp;
+	unsigned int(32)		integrity_algorithm_rtcp;
+	SchemeTypeBox			scheme_type_box;
+	SchemeInformationBox	info;
+}"; } }
 	public const string TYPE = "srpp";
 	public override string DisplayName { get { return "SRTPProcessBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -83,17 +92,17 @@ public partial class SRTPProcessBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("encryption_algorithm_rtp", 32, this.encryption_algorithm_rtp); 
-		boxSize += builder.Field("encryption_algorithm_rtcp", 32, this.encryption_algorithm_rtcp); 
-		boxSize += builder.Field("integrity_algorithm_rtp", 32, this.integrity_algorithm_rtp); 
-		boxSize += builder.Field("integrity_algorithm_rtcp", 32, this.integrity_algorithm_rtcp); 
-		// boxSize += builder.Field("scheme_type_box", IsoStream.CalculateBoxSize(scheme_type_box), this.scheme_type_box); 
-		// boxSize += builder.Field("info", IsoStream.CalculateBoxSize(info), this.info); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("encryption_algorithm_rtp", 32, this.encryption_algorithm_rtp); 
+		boxSize += tracer.Field("encryption_algorithm_rtcp", 32, this.encryption_algorithm_rtcp); 
+		boxSize += tracer.Field("integrity_algorithm_rtp", 32, this.integrity_algorithm_rtp); 
+		boxSize += tracer.Field("integrity_algorithm_rtcp", 32, this.integrity_algorithm_rtcp); 
+		// boxSize += tracer.Field("scheme_type_box", IsoStream.CalculateBoxSize(scheme_type_box), this.scheme_type_box); 
+		// boxSize += tracer.Field("info", IsoStream.CalculateBoxSize(info), this.info); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

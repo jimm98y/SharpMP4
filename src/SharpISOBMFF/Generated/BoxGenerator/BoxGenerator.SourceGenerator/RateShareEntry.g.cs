@@ -24,6 +24,22 @@ class RateShareEntry() extends SampleGroupDescriptionEntry('rash') {
 */
 public partial class RateShareEntry : SampleGroupDescriptionEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class RateShareEntry() extends SampleGroupDescriptionEntry('rash') {
+	unsigned int(16)	operation_point_count;
+	if (operation_point_count == 1) {
+		unsigned int(16)		target_rate_share;
+	}
+	else {
+		for (i=0; i < operation_point_count; i++) {
+			unsigned int(32)	available_bitrate;
+			unsigned int(16)	target_rate_share;
+		}
+	}
+	unsigned int(32)	maximum_bitrate;
+	unsigned int(32)	minimum_bitrate;
+	unsigned int(8)	discard_priority;
+}"; } }
 	public const string TYPE = "rash";
 	public override string DisplayName { get { return "RateShareEntry"; } }
 
@@ -132,15 +148,15 @@ public partial class RateShareEntry : SampleGroupDescriptionEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("operation_point_count", 16, this.operation_point_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("operation_point_count", 16, this.operation_point_count); 
 
 		if (operation_point_count == 1)
 		{
-			boxSize += builder.Field("target_rate_share", 16, this.target_rate_share); 
+			boxSize += tracer.Field("target_rate_share", 16, this.target_rate_share); 
 		}
 
 		else 
@@ -148,13 +164,13 @@ public partial class RateShareEntry : SampleGroupDescriptionEntry
 
 			for (int i=0; i < operation_point_count; i++)
 			{
-				boxSize += builder.Field($"available_bitrate[{i}]", 32, this.available_bitrate[i]); 
-				boxSize += builder.Field($"target_rate_share0[{i}]", 16, this.target_rate_share0[i]); 
+				boxSize += tracer.Field($"available_bitrate[{i}]", 32, this.available_bitrate[i]); 
+				boxSize += tracer.Field($"target_rate_share0[{i}]", 16, this.target_rate_share0[i]); 
 			}
 		}
-		boxSize += builder.Field("maximum_bitrate", 32, this.maximum_bitrate); 
-		boxSize += builder.Field("minimum_bitrate", 32, this.minimum_bitrate); 
-		boxSize += builder.Field("discard_priority", 8, this.discard_priority); 
+		boxSize += tracer.Field("maximum_bitrate", 32, this.maximum_bitrate); 
+		boxSize += tracer.Field("minimum_bitrate", 32, this.minimum_bitrate); 
+		boxSize += tracer.Field("discard_priority", 8, this.discard_priority); 
 		return boxSize;
 	}
 }

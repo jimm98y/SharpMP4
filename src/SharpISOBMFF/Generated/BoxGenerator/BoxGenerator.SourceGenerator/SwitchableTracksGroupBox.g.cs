@@ -14,6 +14,12 @@ aligned(8) class SwitchableTracksGroupBox extends EntityToGroupBox('swtk',0,0)
 */
 public partial class SwitchableTracksGroupBox : EntityToGroupBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SwitchableTracksGroupBox extends EntityToGroupBox('swtk',0,0)
+{
+	for (i = 0; i < num_entities_in_group; i++)
+		unsigned int(16) track_switch_hierarchy_id[i];
+}"; } }
 	public const string TYPE = "swtk";
 	public override string DisplayName { get { return "SwitchableTracksGroupBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -64,14 +70,14 @@ public partial class SwitchableTracksGroupBox : EntityToGroupBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		for (int i = 0; i < num_entities_in_group; i++)
 		{
-			boxSize += builder.Field($"track_switch_hierarchy_id[{i}]", 16, this.track_switch_hierarchy_id[i]); 
+			boxSize += tracer.Field($"track_switch_hierarchy_id[{i}]", 16, this.track_switch_hierarchy_id[i]); 
 		}
 		return boxSize;
 	}

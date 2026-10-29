@@ -18,6 +18,16 @@ aligned(8) class MVCSubTrackViewBox
 */
 public partial class MVCSubTrackViewBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MVCSubTrackViewBox
+	extends FullBox('mstv', 0, 0) {
+	unsigned int(16) item_count;
+	for(i = 0; i< item_count; i++) {
+		unsigned int(10)	view_id;
+		unsigned int(4)	temporal_id;
+		unsigned int(2)	reserved;
+	}
+}"; } }
 	public const string TYPE = "mstv";
 	public override string DisplayName { get { return "MVCSubTrackViewBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -88,17 +98,17 @@ public partial class MVCSubTrackViewBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("item_count", 16, this.item_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("item_count", 16, this.item_count); 
 
 		for (int i = 0; i< item_count; i++)
 		{
-			boxSize += builder.Field($"view_id[{i}]", 10, this.view_id[i]); 
-			boxSize += builder.Field($"temporal_id[{i}]", 4, this.temporal_id[i]); 
-			boxSize += builder.Field($"reserved[{i}]", 2, this.reserved[i]); 
+			boxSize += tracer.Field($"view_id[{i}]", 10, this.view_id[i]); 
+			boxSize += tracer.Field($"temporal_id[{i}]", 4, this.temporal_id[i]); 
+			boxSize += tracer.Field($"reserved[{i}]", 2, this.reserved[i]); 
 		}
 		return boxSize;
 	}

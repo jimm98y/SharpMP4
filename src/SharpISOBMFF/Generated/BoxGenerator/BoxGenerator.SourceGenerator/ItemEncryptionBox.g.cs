@@ -8,27 +8,46 @@ namespace SharpISOBMFF
 /*
 aligned(8) class ItemEncryptionBox extends ItemFullProperty('ienc', version, flags=0)
 {
-      unsigned int(8) reserved = 0;
-      if (version==0) { 
-            unsigned int(8) reserved = 0;
-      } else { // version is 1 or greater
-            unsigned int(4) crypt_byte_block;
-            unsigned int(4) skip_byte_block;
-      }
-      unsigned int(8) num_keys;
-      for (i=1; i<= num_keys; i++) {
-         unsigned int(8) Per_Sample_IV_Size;
-         unsigned int(8)[16] KID;
-         if (Per_Sample_IV_Size == 0) { 
-            unsigned int(8) constant_IV_size; 
-            unsigned int(8)[constant_IV_size] constant_IV;
-         }
-      }
+	unsigned int(8) reserved = 0;
+	if (version==0) {
+		unsigned int(8) reserved = 0;
+	} else { // version is 1 or greater
+		unsigned int(4) crypt_byte_block;
+		unsigned int(4) skip_byte_block;
+	}
+	unsigned int(8) num_keys;
+	for (i=1; i<= num_keys; i++) {
+		unsigned int(8) Per_Sample_IV_Size;
+		unsigned int(8)[16] KID;
+		if (Per_Sample_IV_Size == 0) {
+			unsigned int(8) constant_IV_size;
+			unsigned int(8)[constant_IV_size] constant_IV;
+		}
+	}
 }
-
 */
 public partial class ItemEncryptionBox : ItemFullProperty
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ItemEncryptionBox extends ItemFullProperty('ienc', version, flags=0)
+{
+	unsigned int(8) reserved = 0;
+	if (version==0) {
+		unsigned int(8) reserved = 0;
+	} else { // version is 1 or greater
+		unsigned int(4) crypt_byte_block;
+		unsigned int(4) skip_byte_block;
+	}
+	unsigned int(8) num_keys;
+	for (i=1; i<= num_keys; i++) {
+		unsigned int(8) Per_Sample_IV_Size;
+		unsigned int(8)[16] KID;
+		if (Per_Sample_IV_Size == 0) {
+			unsigned int(8) constant_IV_size;
+			unsigned int(8)[constant_IV_size] constant_IV;
+		}
+	}
+}"; } }
 	public const string TYPE = "ienc";
 	public override string DisplayName { get { return "ItemEncryptionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -169,34 +188,34 @@ public partial class ItemEncryptionBox : ItemFullProperty
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 8, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 8, this.reserved); 
 
 		if (version==0)
 		{
-			boxSize += builder.Field("reserved0", 8, this.reserved0); 
+			boxSize += tracer.Field("reserved0", 8, this.reserved0); 
 		}
 
 		else 
 		{
 			/*  version is 1 or greater */
-			boxSize += builder.Field("crypt_byte_block", 4, this.crypt_byte_block); 
-			boxSize += builder.Field("skip_byte_block", 4, this.skip_byte_block); 
+			boxSize += tracer.Field("crypt_byte_block", 4, this.crypt_byte_block); 
+			boxSize += tracer.Field("skip_byte_block", 4, this.skip_byte_block); 
 		}
-		boxSize += builder.Field("num_keys", 8, this.num_keys); 
+		boxSize += tracer.Field("num_keys", 8, this.num_keys); 
 
 		for (int i=0; i< num_keys; i++)
 		{
-			boxSize += builder.Field($"Per_Sample_IV_Size[{i}]", 8, this.Per_Sample_IV_Size[i]); 
-			boxSize += builder.Field($"KID[{i}]", 16 * 8, this.KID[i]); 
+			boxSize += tracer.Field($"Per_Sample_IV_Size[{i}]", 8, this.Per_Sample_IV_Size[i]); 
+			boxSize += tracer.Field($"KID[{i}]", 16 * 8, this.KID[i]); 
 
 			if (Per_Sample_IV_Size[i] == 0)
 			{
-				boxSize += builder.Field($"constant_IV_size[{i}]", 8, this.constant_IV_size[i]); 
-				boxSize += builder.Field($"constant_IV[{i}]", ((ulong)(IsoStream.GetInt(constant_IV_size[i])) * 8), this.constant_IV[i]); 
+				boxSize += tracer.Field($"constant_IV_size[{i}]", 8, this.constant_IV_size[i]); 
+				boxSize += tracer.Field($"constant_IV[{i}]", ((ulong)(IsoStream.GetInt(constant_IV_size[i])) * 8), this.constant_IV[i]); 
 			}
 		}
 		return boxSize;

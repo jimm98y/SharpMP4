@@ -7,13 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ImageRotation
-extends ItemProperty('irot') {
+	extends ItemProperty('irot') {
 	unsigned int(6) reserved = 0;
 	unsigned int(2) angle;
 }
 */
 public partial class ImageRotation : ItemProperty
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ImageRotation
+	extends ItemProperty('irot') {
+	unsigned int(6) reserved = 0;
+	unsigned int(2) angle;
+}"; } }
 	public const string TYPE = "irot";
 	public override string DisplayName { get { return "ImageRotation"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -57,12 +63,12 @@ public partial class ImageRotation : ItemProperty
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 6, this.reserved); 
-		boxSize += builder.Field("angle", 2, this.angle); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 6, this.reserved); 
+		boxSize += tracer.Field("angle", 2, this.angle); 
 		return boxSize;
 	}
 }

@@ -8,38 +8,36 @@ namespace SharpISOBMFF
 /*
 class GASpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType)
 {
-  bslbf(1) frameLengthFlag;
-  bslbf(1) dependsOnCoreCoder;
-  if (dependsOnCoreCoder) {
-    uimsbf(14) coreCoderDelay;
-  }
-  bslbf(1) extensionFlag;
-  if (!channelConfiguration) {
-    program_config_element();
-  }
-  if ((audioObjectType == 6) || (audioObjectType == 20)) {
-    uimsbf(3) layerNr;
-  }
-  if (extensionFlag) {
-    if (audioObjectType == 22) {
-      bslbf(5) numOfSubFrame;
-      bslbf(11) layer_length;
-    }
-    if (audioObjectType == 17 || audioObjectType == 19 ||
-      audioObjectType == 20 || audioObjectType == 23) {
+	bslbf(1) frameLengthFlag;
+	bslbf(1) dependsOnCoreCoder;
+	if (dependsOnCoreCoder) {
+		uimsbf(14) coreCoderDelay;
+	}
+	bslbf(1) extensionFlag;
+	if (!channelConfiguration) {
+		program_config_element();
+	}
+	if ((audioObjectType == 6) || (audioObjectType == 20)) {
+		uimsbf(3) layerNr;
+	}
+	if (extensionFlag) {
+		if (audioObjectType == 22) {
+			bslbf(5) numOfSubFrame;
+			bslbf(11) layer_length;
+		}
+		if (audioObjectType == 17 || audioObjectType == 19 ||
+			audioObjectType == 20 || audioObjectType == 23) {
 
-      bslbf(1) aacSectionDataResilienceFlag;
-      bslbf(1) aacScalefactorDataResilienceFlag;
-      bslbf(1) aacSpectralDataResilienceFlag;
-    }
-    bslbf(1) extensionFlag3;
-    if (extensionFlag3) {
-      /* tbd in version 3 *//*
-    }
-  }
+			bslbf(1) aacSectionDataResilienceFlag;
+			bslbf(1) aacScalefactorDataResilienceFlag;
+			bslbf(1) aacSpectralDataResilienceFlag;
+		}
+		bslbf(1) extensionFlag3;
+		if (extensionFlag3) {
+			/* tbd in version 3 *//*
+		}
+	}
 }
-
-
 */
 public partial class GASpecificConfig : IMp4Serializable
 {
@@ -48,6 +46,39 @@ public partial class GASpecificConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class GASpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType)
+{
+	bslbf(1) frameLengthFlag;
+	bslbf(1) dependsOnCoreCoder;
+	if (dependsOnCoreCoder) {
+		uimsbf(14) coreCoderDelay;
+	}
+	bslbf(1) extensionFlag;
+	if (!channelConfiguration) {
+		program_config_element();
+	}
+	if ((audioObjectType == 6) || (audioObjectType == 20)) {
+		uimsbf(3) layerNr;
+	}
+	if (extensionFlag) {
+		if (audioObjectType == 22) {
+			bslbf(5) numOfSubFrame;
+			bslbf(11) layer_length;
+		}
+		if (audioObjectType == 17 || audioObjectType == 19 ||
+			audioObjectType == 20 || audioObjectType == 23) {
+
+			bslbf(1) aacSectionDataResilienceFlag;
+			bslbf(1) aacScalefactorDataResilienceFlag;
+			bslbf(1) aacSpectralDataResilienceFlag;
+		}
+		bslbf(1) extensionFlag3;
+		if (extensionFlag3) {
+			/* tbd in version 3 */
+		}
+	}
+}"; } }
 	public virtual string DisplayName { get { return "GASpecificConfig"; } }
 
 	protected bool frameLengthFlag; 
@@ -134,7 +165,7 @@ public partial class GASpecificConfig : IMp4Serializable
 			}
 
 			if (audioObjectType == 17 || audioObjectType == 19 ||
-      audioObjectType == 20 || audioObjectType == 23)
+			audioObjectType == 20 || audioObjectType == 23)
 			{
 				boxSize += stream.ReadBit(boxSize, readSize,  out this.aacSectionDataResilienceFlag, "aacSectionDataResilienceFlag"); 
 				boxSize += stream.ReadBit(boxSize, readSize,  out this.aacScalefactorDataResilienceFlag, "aacScalefactorDataResilienceFlag"); 
@@ -182,7 +213,7 @@ public partial class GASpecificConfig : IMp4Serializable
 			}
 
 			if (audioObjectType == 17 || audioObjectType == 19 ||
-      audioObjectType == 20 || audioObjectType == 23)
+			audioObjectType == 20 || audioObjectType == 23)
 			{
 				boxSize += stream.WriteBit( this.aacSectionDataResilienceFlag, "aacSectionDataResilienceFlag"); 
 				boxSize += stream.WriteBit( this.aacScalefactorDataResilienceFlag, "aacScalefactorDataResilienceFlag"); 
@@ -230,7 +261,7 @@ public partial class GASpecificConfig : IMp4Serializable
 			}
 
 			if (audioObjectType == 17 || audioObjectType == 19 ||
-      audioObjectType == 20 || audioObjectType == 23)
+			audioObjectType == 20 || audioObjectType == 23)
 			{
 				boxSize += 1; // aacSectionDataResilienceFlag
 				boxSize += 1; // aacScalefactorDataResilienceFlag
@@ -246,26 +277,26 @@ public partial class GASpecificConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("frameLengthFlag", 1, this.frameLengthFlag); 
-		boxSize += builder.Field("dependsOnCoreCoder", 1, this.dependsOnCoreCoder); 
+		boxSize += tracer.Field("frameLengthFlag", 1, this.frameLengthFlag); 
+		boxSize += tracer.Field("dependsOnCoreCoder", 1, this.dependsOnCoreCoder); 
 
 		if (dependsOnCoreCoder)
 		{
-			boxSize += builder.Field("coreCoderDelay", 14, this.coreCoderDelay); 
+			boxSize += tracer.Field("coreCoderDelay", 14, this.coreCoderDelay); 
 		}
-		boxSize += builder.Field("extensionFlag", 1, this.extensionFlag); 
+		boxSize += tracer.Field("extensionFlag", 1, this.extensionFlag); 
 
 		if (channelConfiguration == 0)
 		{
-			boxSize += builder.Field("program_config_element", IsoStream.CalculateClassSize(program_config_element), this.program_config_element); 
+			boxSize += tracer.Field("program_config_element", IsoStream.CalculateClassSize(program_config_element), this.program_config_element); 
 		}
 
 		if ((audioObjectType == 6) || (audioObjectType == 20))
 		{
-			boxSize += builder.Field("layerNr", 3, this.layerNr); 
+			boxSize += tracer.Field("layerNr", 3, this.layerNr); 
 		}
 
 		if (extensionFlag)
@@ -273,18 +304,18 @@ public partial class GASpecificConfig : IMp4Serializable
 
 			if (audioObjectType == 22)
 			{
-				boxSize += builder.Field("numOfSubFrame", 5, this.numOfSubFrame); 
-				boxSize += builder.Field("layer_length", 11, this.layer_length); 
+				boxSize += tracer.Field("numOfSubFrame", 5, this.numOfSubFrame); 
+				boxSize += tracer.Field("layer_length", 11, this.layer_length); 
 			}
 
 			if (audioObjectType == 17 || audioObjectType == 19 ||
-      audioObjectType == 20 || audioObjectType == 23)
+			audioObjectType == 20 || audioObjectType == 23)
 			{
-				boxSize += builder.Field("aacSectionDataResilienceFlag", 1, this.aacSectionDataResilienceFlag); 
-				boxSize += builder.Field("aacScalefactorDataResilienceFlag", 1, this.aacScalefactorDataResilienceFlag); 
-				boxSize += builder.Field("aacSpectralDataResilienceFlag", 1, this.aacSpectralDataResilienceFlag); 
+				boxSize += tracer.Field("aacSectionDataResilienceFlag", 1, this.aacSectionDataResilienceFlag); 
+				boxSize += tracer.Field("aacScalefactorDataResilienceFlag", 1, this.aacScalefactorDataResilienceFlag); 
+				boxSize += tracer.Field("aacSpectralDataResilienceFlag", 1, this.aacSpectralDataResilienceFlag); 
 			}
-			boxSize += builder.Field("extensionFlag3", 1, this.extensionFlag3); 
+			boxSize += tracer.Field("extensionFlag3", 1, this.extensionFlag3); 
 
 			if (extensionFlag3)
 			{

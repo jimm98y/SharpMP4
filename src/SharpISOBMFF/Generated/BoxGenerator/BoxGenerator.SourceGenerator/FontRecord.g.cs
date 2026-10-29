@@ -7,10 +7,10 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FontRecord() {
- unsigned int(16) fontId;
- unsigned int(8) count;
- unsigned int(8) fontName[count];
- }
+	unsigned int(16) fontId;
+	unsigned int(8) count;
+	unsigned int(8) fontName[count];
+}
 */
 public partial class FontRecord : IMp4Serializable
 {
@@ -19,6 +19,12 @@ public partial class FontRecord : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class FontRecord() {
+	unsigned int(16) fontId;
+	unsigned int(8) count;
+	unsigned int(8) fontName[count];
+}"; } }
 	public virtual string DisplayName { get { return "FontRecord"; } }
 
 	protected ushort fontId; 
@@ -27,7 +33,7 @@ public partial class FontRecord : IMp4Serializable
 	protected byte count; 
 	public byte Count { get { return this.count; } set { this.count = value; } }
 
-	protected byte[] fontName; 
+	protected byte[] fontName = []; 
 	public byte[] FontName { get { return this.fontName; } set { this.fontName = value; } }
 
 	public FontRecord(): base()
@@ -61,12 +67,12 @@ public partial class FontRecord : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("fontId", 16, this.fontId); 
-		boxSize += builder.Field("count", 8, this.count); 
-		boxSize += builder.Field("fontName", ((ulong)(count) * 8), this.fontName); 
+		boxSize += tracer.Field("fontId", 16, this.fontId); 
+		boxSize += tracer.Field("count", 8, this.count); 
+		boxSize += tracer.Field("fontName", ((ulong)(count) * 8), this.fontName); 
 		return boxSize;
 	}
 }

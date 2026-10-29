@@ -6,11 +6,12 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class ChannelLayout extends FullBox('chnl', version, flags=0) {	if (version==0) {
+aligned(8) class ChannelLayout extends FullBox('chnl', version, flags=0) {
+	if (version==0) {
 		unsigned int(8) stream_structure;
 		if (stream_structure & channelStructured) {
 			unsigned int(8) definedLayout;
- 			if (definedLayout==0) {
+			if (definedLayout==0) {
 				for (i = 1 ; i <= layout_channel_count ; i++) {
 					//  layout_channel_count comes from the sample entry
 					unsigned int(8) speaker_position;
@@ -20,8 +21,8 @@ aligned(8) class ChannelLayout extends FullBox('chnl', version, flags=0) {	if (v
 					}
 				}
 			} else {
-				unsigned int(64)	omittedChannelsMap; 
-						// a ‘1’ bit indicates ‘not in this track’
+				unsigned int(64)	omittedChannelsMap;
+				// a ‘1’ bit indicates ‘not in this track’
 			}
 		}
 		if (stream_structure & objectStructured) {
@@ -47,20 +48,72 @@ aligned(8) class ChannelLayout extends FullBox('chnl', version, flags=0) {	if (v
 				unsigned int(3) channel_order_definition;
 				unsigned int(1) omitted_channels_present;
 				if (omitted_channels_present == 1) {
-					unsigned int(64)	omittedChannelsMap; 
-							// a ‘1’ bit indicates ‘not in this track’
+					unsigned int(64)	omittedChannelsMap;
+					// a ‘1’ bit indicates ‘not in this track’
 				}
 			}
 		}
 		if (stream_structure & objectStructured) {
-							// object_count is derived from baseChannelCount
+			// object_count is derived from baseChannelCount
 		}
 	}
 }
-
 */
 public partial class ChannelLayout : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ChannelLayout extends FullBox('chnl', version, flags=0) {
+	if (version==0) {
+		unsigned int(8) stream_structure;
+		if (stream_structure & channelStructured) {
+			unsigned int(8) definedLayout;
+			if (definedLayout==0) {
+				for (i = 1 ; i <= layout_channel_count ; i++) {
+					//  layout_channel_count comes from the sample entry
+					unsigned int(8) speaker_position;
+					if (speaker_position == 126) {	// explicit position
+						signed int (16) azimuth;
+						signed int (8)  elevation;
+					}
+				}
+			} else {
+				unsigned int(64)	omittedChannelsMap;
+				// a ‘1’ bit indicates ‘not in this track’
+			}
+		}
+		if (stream_structure & objectStructured) {
+			unsigned int(8) object_count;
+		}
+	} else {
+		unsigned int(4) stream_structure;
+		unsigned int(4) format_ordering;
+		unsigned int(8) baseChannelCount;
+		if (stream_structure & channelStructured) {
+			unsigned int(8) definedLayout;
+			if (definedLayout==0) {
+				unsigned int(8) layout_channel_count;
+				for (i = 1 ; i <= layout_channel_count ; i++) {
+					unsigned int(8) speaker_position;
+					if (speaker_position == 126) {	// explicit position
+						signed int (16) azimuth;
+						signed int (8)  elevation;
+					}
+				}
+			} else {
+				int(4) reserved = 0;
+				unsigned int(3) channel_order_definition;
+				unsigned int(1) omitted_channels_present;
+				if (omitted_channels_present == 1) {
+					unsigned int(64)	omittedChannelsMap;
+					// a ‘1’ bit indicates ‘not in this track’
+				}
+			}
+		}
+		if (stream_structure & objectStructured) {
+			// object_count is derived from baseChannelCount
+		}
+	}
+}"; } }
 	public const string TYPE = "chnl";
 	public override string DisplayName { get { return "ChannelLayout"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -384,18 +437,18 @@ public partial class ChannelLayout : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if (version==0)
 		{
-			boxSize += builder.Field("stream_structure", 8, this.stream_structure); 
+			boxSize += tracer.Field("stream_structure", 8, this.stream_structure); 
 
 			if ((stream_structure  &  1) ==  1)
 			{
-				boxSize += builder.Field("definedLayout", 8, this.definedLayout); 
+				boxSize += tracer.Field("definedLayout", 8, this.definedLayout); 
 
 				if (definedLayout==0)
 				{
@@ -403,65 +456,65 @@ public partial class ChannelLayout : FullBox
 					for (int i = 0 ; i < layout_channel_count ; i++)
 					{
 						/*   layout_channel_count comes from the sample entry */
-						boxSize += builder.Field($"speaker_position[{i}]", 8, this.speaker_position[i]); 
+						boxSize += tracer.Field($"speaker_position[{i}]", 8, this.speaker_position[i]); 
 
 						if (speaker_position[i] == 126)
 						{
 							/*  explicit position */
-							boxSize += builder.Field($"azimuth[{i}]", 16, this.azimuth[i]); 
-							boxSize += builder.Field($"elevation[{i}]", 8, this.elevation[i]); 
+							boxSize += tracer.Field($"azimuth[{i}]", 16, this.azimuth[i]); 
+							boxSize += tracer.Field($"elevation[{i}]", 8, this.elevation[i]); 
 						}
 					}
 				}
 
 				else 
 				{
-					boxSize += builder.Field("omittedChannelsMap", 64, this.omittedChannelsMap); // a ‘1’ bit indicates ‘not in this track’
+					boxSize += tracer.Field("omittedChannelsMap", 64, this.omittedChannelsMap); // a ‘1’ bit indicates ‘not in this track’
 				}
 			}
 
 			if ((stream_structure  &  2) ==  2)
 			{
-				boxSize += builder.Field("object_count", 8, this.object_count); 
+				boxSize += tracer.Field("object_count", 8, this.object_count); 
 			}
 		}
 
 		else 
 		{
-			boxSize += builder.Field("stream_structure", 4, this.stream_structure); 
-			boxSize += builder.Field("format_ordering", 4, this.format_ordering); 
-			boxSize += builder.Field("baseChannelCount", 8, this.baseChannelCount); 
+			boxSize += tracer.Field("stream_structure", 4, this.stream_structure); 
+			boxSize += tracer.Field("format_ordering", 4, this.format_ordering); 
+			boxSize += tracer.Field("baseChannelCount", 8, this.baseChannelCount); 
 
 			if ((stream_structure  &  1) ==  1)
 			{
-				boxSize += builder.Field("definedLayout", 8, this.definedLayout); 
+				boxSize += tracer.Field("definedLayout", 8, this.definedLayout); 
 
 				if (definedLayout==0)
 				{
-					boxSize += builder.Field("layout_channel_count", 8, this.layout_channel_count); 
+					boxSize += tracer.Field("layout_channel_count", 8, this.layout_channel_count); 
 
 					for (int i = 0 ; i < layout_channel_count ; i++)
 					{
-						boxSize += builder.Field($"speaker_position[{i}]", 8, this.speaker_position[i]); 
+						boxSize += tracer.Field($"speaker_position[{i}]", 8, this.speaker_position[i]); 
 
 						if (speaker_position[i] == 126)
 						{
 							/*  explicit position */
-							boxSize += builder.Field($"azimuth[{i}]", 16, this.azimuth[i]); 
-							boxSize += builder.Field($"elevation[{i}]", 8, this.elevation[i]); 
+							boxSize += tracer.Field($"azimuth[{i}]", 16, this.azimuth[i]); 
+							boxSize += tracer.Field($"elevation[{i}]", 8, this.elevation[i]); 
 						}
 					}
 				}
 
 				else 
 				{
-					boxSize += builder.Field("reserved", 4, this.reserved); 
-					boxSize += builder.Field("channel_order_definition", 3, this.channel_order_definition); 
-					boxSize += builder.Field("omitted_channels_present", 1, this.omitted_channels_present); 
+					boxSize += tracer.Field("reserved", 4, this.reserved); 
+					boxSize += tracer.Field("channel_order_definition", 3, this.channel_order_definition); 
+					boxSize += tracer.Field("omitted_channels_present", 1, this.omitted_channels_present); 
 
 					if (omitted_channels_present == true)
 					{
-						boxSize += builder.Field("omittedChannelsMap", 64, this.omittedChannelsMap); // a ‘1’ bit indicates ‘not in this track’
+						boxSize += tracer.Field("omittedChannelsMap", 64, this.omittedChannelsMap); // a ‘1’ bit indicates ‘not in this track’
 					}
 				}
 			}

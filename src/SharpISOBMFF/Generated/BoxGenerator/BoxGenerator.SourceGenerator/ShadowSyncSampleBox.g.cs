@@ -18,6 +18,16 @@ aligned(8) class ShadowSyncSampleBox
 */
 public partial class ShadowSyncSampleBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ShadowSyncSampleBox
+	extends FullBox('stsh', version = 0, 0) {
+	unsigned int(32)	entry_count;
+	int i;
+	for (i=0; i < entry_count; i++) {
+		unsigned int(32)	shadowed_sample_number;
+		unsigned int(32)	sync_sample_number;
+	}
+}"; } }
 	public const string TYPE = "stsh";
 	public override string DisplayName { get { return "ShadowSyncSampleBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -84,17 +94,17 @@ public partial class ShadowSyncSampleBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entry_count", 32, this.entry_count); 
 		
 
 		for (int i=0; i < entry_count; i++)
 		{
-			boxSize += builder.Field($"shadowed_sample_number[{i}]", 32, this.shadowed_sample_number[i]); 
-			boxSize += builder.Field($"sync_sample_number[{i}]", 32, this.sync_sample_number[i]); 
+			boxSize += tracer.Field($"shadowed_sample_number[{i}]", 32, this.shadowed_sample_number[i]); 
+			boxSize += tracer.Field($"sync_sample_number[{i}]", 32, this.sync_sample_number[i]); 
 		}
 		return boxSize;
 	}

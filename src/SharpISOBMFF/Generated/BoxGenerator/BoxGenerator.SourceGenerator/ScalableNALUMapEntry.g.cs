@@ -6,16 +6,22 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class ScalableNALUMapEntry() extends VisualSampleGroupEntry ('scnm') { 
+class ScalableNALUMapEntry() extends VisualSampleGroupEntry ('scnm') {
 	bit(8) reserved = 0;
 	unsigned int(8) NALU_count;
 	for (i=1; i<= NALU_count; i++)
 		unsigned int(8) groupID;
-	}
-
+}
 */
 public partial class ScalableNALUMapEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ScalableNALUMapEntry() extends VisualSampleGroupEntry ('scnm') {
+	bit(8) reserved = 0;
+	unsigned int(8) NALU_count;
+	for (i=1; i<= NALU_count; i++)
+		unsigned int(8) groupID;
+}"; } }
 	public const string TYPE = "scnm";
 	public override string DisplayName { get { return "ScalableNALUMapEntry"; } }
 
@@ -75,16 +81,16 @@ public partial class ScalableNALUMapEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 8, this.reserved); 
-		boxSize += builder.Field("NALU_count", 8, this.NALU_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 8, this.reserved); 
+		boxSize += tracer.Field("NALU_count", 8, this.NALU_count); 
 
 		for (int i=0; i< NALU_count; i++)
 		{
-			boxSize += builder.Field($"groupID[{i}]", 8, this.groupID[i]); 
+			boxSize += tracer.Field($"groupID[{i}]", 8, this.groupID[i]); 
 		}
 		return boxSize;
 	}

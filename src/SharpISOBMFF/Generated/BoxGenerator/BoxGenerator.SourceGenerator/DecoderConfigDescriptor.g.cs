@@ -7,19 +7,31 @@ namespace SharpISOBMFF
 {
 /*
 class DecoderConfigDescriptor extends BaseDescriptor : bit(8) tag=DecoderConfigDescrTag {
- bit(8) objectTypeIndication;
- bit(6) streamType;
- bit(1) upStream;
- const bit(1) reserved=1;
- bit(24) bufferSizeDB;
- bit(32) maxBitrate;
- bit(32) avgBitrate;
- DecoderSpecificInfo decSpecificInfo[0 .. 1];
- ProfileLevelIndicationIndexDescriptor profileLevelIndicationIndexDescr [0..255];
- }
+	bit(8) objectTypeIndication;
+	bit(6) streamType;
+	bit(1) upStream;
+	const bit(1) reserved=1;
+	bit(24) bufferSizeDB;
+	bit(32) maxBitrate;
+	bit(32) avgBitrate;
+	DecoderSpecificInfo decSpecificInfo[0 .. 1];
+	ProfileLevelIndicationIndexDescriptor profileLevelIndicationIndexDescr [0..255];
+}
 */
 public partial class DecoderConfigDescriptor : BaseDescriptor
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class DecoderConfigDescriptor extends BaseDescriptor : bit(8) tag=DecoderConfigDescrTag {
+	bit(8) objectTypeIndication;
+	bit(6) streamType;
+	bit(1) upStream;
+	const bit(1) reserved=1;
+	bit(24) bufferSizeDB;
+	bit(32) maxBitrate;
+	bit(32) avgBitrate;
+	DecoderSpecificInfo decSpecificInfo[0 .. 1];
+	ProfileLevelIndicationIndexDescriptor profileLevelIndicationIndexDescr [0..255];
+}"; } }
 	public const byte TYPE = DescriptorTags.DecoderConfigDescrTag;
 	public override string DisplayName { get { return "DecoderConfigDescriptor"; } }
 
@@ -101,20 +113,20 @@ public partial class DecoderConfigDescriptor : BaseDescriptor
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("objectTypeIndication", 8, this.objectTypeIndication); 
-		boxSize += builder.Field("streamType", 6, this.streamType); 
-		boxSize += builder.Field("upStream", 1, this.upStream); 
-		boxSize += builder.Field("reserved", 1, this.reserved); 
-		boxSize += builder.Field("bufferSizeDB", 24, this.bufferSizeDB); 
-		boxSize += builder.Field("maxBitrate", 32, this.maxBitrate); 
-		boxSize += builder.Field("avgBitrate", 32, this.avgBitrate); 
-		// boxSize += builder.Field("decSpecificInfo", IsoStream.CalculateDescriptorSize(decSpecificInfo), this.decSpecificInfo); 
-		// boxSize += builder.Field("profileLevelIndicationIndexDescr", IsoStream.CalculateDescriptorSize(profileLevelIndicationIndexDescr), this.profileLevelIndicationIndexDescr); 
-		boxSize += builder.Descriptors(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("objectTypeIndication", 8, this.objectTypeIndication); 
+		boxSize += tracer.Field("streamType", 6, this.streamType); 
+		boxSize += tracer.Field("upStream", 1, this.upStream); 
+		boxSize += tracer.Field("reserved", 1, this.reserved); 
+		boxSize += tracer.Field("bufferSizeDB", 24, this.bufferSizeDB); 
+		boxSize += tracer.Field("maxBitrate", 32, this.maxBitrate); 
+		boxSize += tracer.Field("avgBitrate", 32, this.avgBitrate); 
+		// boxSize += tracer.Field("decSpecificInfo", IsoStream.CalculateDescriptorSize(decSpecificInfo), this.decSpecificInfo); 
+		// boxSize += tracer.Field("profileLevelIndicationIndexDescr", IsoStream.CalculateDescriptorSize(profileLevelIndicationIndexDescr), this.profileLevelIndicationIndexDescr); 
+		boxSize += tracer.Descriptors(this);
 		return boxSize;
 	}
 }

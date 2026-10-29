@@ -10,6 +10,8 @@ aligned(8) class ItemFullProperty(property_type, version, flags) extends FullBox
 */
 public partial class ItemFullProperty : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ItemFullProperty(property_type, version, flags) extends FullBox(property_type, version, flags){}"; } }
 	public override string DisplayName { get { return "ItemFullProperty"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
@@ -40,10 +42,10 @@ public partial class ItemFullProperty : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

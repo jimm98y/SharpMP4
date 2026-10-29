@@ -12,6 +12,10 @@ aligned(8) class NullMediaHeaderBox
 */
 public partial class NullMediaHeaderBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class NullMediaHeaderBox
+	extends FullBox('nmhd', version = 0, flags) {
+}"; } }
 	public const string TYPE = "nmhd";
 	public override string DisplayName { get { return "NullMediaHeaderBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -43,10 +47,10 @@ public partial class NullMediaHeaderBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

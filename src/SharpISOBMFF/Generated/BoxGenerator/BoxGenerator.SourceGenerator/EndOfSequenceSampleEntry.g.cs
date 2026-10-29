@@ -15,6 +15,13 @@ class EndOfSequenceSampleEntry() extends VisualSampleGroupEntry ('eos ')
 */
 public partial class EndOfSequenceSampleEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class EndOfSequenceSampleEntry() extends VisualSampleGroupEntry ('eos ')
+{
+	unsigned int(8) num_eos_nal_unit_minus1;
+	for (i=0; i <= num_eos_nal_unit_minus1; i++)
+		bit(16) eosNalUnit[i];
+}"; } }
 	public const string TYPE = "eos ";
 	public override string DisplayName { get { return "EndOfSequenceSampleEntry"; } }
 
@@ -68,15 +75,15 @@ public partial class EndOfSequenceSampleEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("num_eos_nal_unit_minus1", 8, this.num_eos_nal_unit_minus1); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("num_eos_nal_unit_minus1", 8, this.num_eos_nal_unit_minus1); 
 
 		for (int i=0; i <= num_eos_nal_unit_minus1; i++)
 		{
-			boxSize += builder.Field($"eosNalUnit[{i}]", 16, this.eosNalUnit[i]); 
+			boxSize += tracer.Field($"eosNalUnit[{i}]", 16, this.eosNalUnit[i]); 
 		}
 		return boxSize;
 	}

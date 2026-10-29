@@ -7,11 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class IPMPDecoderConfiguration extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
- // IPMP system specific configuration information
- }
+	// IPMP system specific configuration information
+}
 */
 public partial class IPMPDecoderConfiguration : DecoderSpecificInfo
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class IPMPDecoderConfiguration extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
+	// IPMP system specific configuration information
+}"; } }
 	public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
 	public override string DisplayName { get { return "IPMPDecoderConfiguration"; } }
 
@@ -43,10 +47,10 @@ public partial class IPMPDecoderConfiguration : DecoderSpecificInfo
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		/*  IPMP system specific configuration information */
 		return boxSize;
 	}

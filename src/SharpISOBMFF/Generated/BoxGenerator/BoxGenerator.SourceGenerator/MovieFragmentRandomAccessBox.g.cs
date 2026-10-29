@@ -13,6 +13,11 @@ aligned(8) class MovieFragmentRandomAccessBox
 */
 public partial class MovieFragmentRandomAccessBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MovieFragmentRandomAccessBox
+	extends Box('mfra')
+{
+}"; } }
 	public const string TYPE = "mfra";
 	public override string DisplayName { get { return "MovieFragmentRandomAccessBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -47,11 +52,11 @@ public partial class MovieFragmentRandomAccessBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

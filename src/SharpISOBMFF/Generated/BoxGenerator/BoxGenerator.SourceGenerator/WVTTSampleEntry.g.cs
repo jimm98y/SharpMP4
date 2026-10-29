@@ -14,6 +14,12 @@ class WVTTSampleEntry() extends PlainTextSampleEntry ('wvtt'){
 */
 public partial class WVTTSampleEntry : PlainTextSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class WVTTSampleEntry() extends PlainTextSampleEntry ('wvtt'){
+	WebVTTConfigurationBox	config;
+	WebVTTSourceLabelBox		label;	// recommended
+	BitRateBox (); 					// optional
+}"; } }
 	public const string TYPE = "wvtt";
 	public override string DisplayName { get { return "WVTTSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -60,14 +66,14 @@ public partial class WVTTSampleEntry : PlainTextSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("config", IsoStream.CalculateBoxSize(config), this.config); 
-		// boxSize += builder.Field("label", IsoStream.CalculateBoxSize(label), this.label); // recommended
-		// boxSize += builder.Field("BitRateBox", IsoStream.CalculateBoxSize(BitRateBox), this.BitRateBox); // optional
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("config", IsoStream.CalculateBoxSize(config), this.config); 
+		// boxSize += tracer.Field("label", IsoStream.CalculateBoxSize(label), this.label); // recommended
+		// boxSize += tracer.Field("BitRateBox", IsoStream.CalculateBoxSize(BitRateBox), this.BitRateBox); // optional
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

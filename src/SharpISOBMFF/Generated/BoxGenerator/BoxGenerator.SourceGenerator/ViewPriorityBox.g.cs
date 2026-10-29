@@ -7,19 +7,22 @@ namespace SharpISOBMFF
 {
 /*
 class ViewPriorityBox extends Box ('vipr') {
- ViprEntry entries[]; 
-} 
- 
+	ViprEntry entries[];
+}
 */
 public partial class ViewPriorityBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ViewPriorityBox extends Box ('vipr') {
+	ViprEntry entries[];
+}"; } }
 	public const string TYPE = "vipr";
 	public override string DisplayName { get { return "ViewPriorityBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("sgpd"); }
 
 
-	protected ViprEntry[] entries; 
+	protected ViprEntry[] entries = []; 
 	public ViprEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
 
 	public ViewPriorityBox(): base(IsoStream.FromFourCC("vipr"))
@@ -50,11 +53,11 @@ public partial class ViewPriorityBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
 		return boxSize;
 	}
 }

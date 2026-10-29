@@ -7,13 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ItemPropertiesBox
-		extends Box('iprp') {
+	extends Box('iprp') {
 	ItemPropertyContainerBox property_container;
 	ItemPropertyAssociationBox association[];
- }
+}
 */
 public partial class ItemPropertiesBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ItemPropertiesBox
+	extends Box('iprp') {
+	ItemPropertyContainerBox property_container;
+	ItemPropertyAssociationBox association[];
+}"; } }
 	public const string TYPE = "iprp";
 	public override string DisplayName { get { return "ItemPropertiesBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -56,13 +62,13 @@ public partial class ItemPropertiesBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("property_container", IsoStream.CalculateBoxSize(property_container), this.property_container); 
-		// boxSize += builder.Field("association", IsoStream.CalculateBoxSize(association), this.association); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("property_container", IsoStream.CalculateBoxSize(property_container), this.property_container); 
+		// boxSize += tracer.Field("association", IsoStream.CalculateBoxSize(association), this.association); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

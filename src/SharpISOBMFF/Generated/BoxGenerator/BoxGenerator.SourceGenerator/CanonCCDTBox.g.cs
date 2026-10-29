@@ -8,14 +8,20 @@ namespace SharpISOBMFF
 /*
 // Canon.pm, CCDT: the type of an image, and the track it is in
 aligned(8) class CanonCCDTBox() extends Box('CCDT') {
- unsigned int(64) imageType;
- unsigned int(32) dualPixel;
- unsigned int(32) trackIndex;
+	unsigned int(64) imageType;
+	unsigned int(32) dualPixel;
+	unsigned int(32) trackIndex;
 }
-
 */
 public partial class CanonCCDTBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// Canon.pm, CCDT: the type of an image, and the track it is in
+aligned(8) class CanonCCDTBox() extends Box('CCDT') {
+	unsigned int(64) imageType;
+	unsigned int(32) dualPixel;
+	unsigned int(32) trackIndex;
+}"; } }
 	public const string TYPE = "CCDT";
 	public override string DisplayName { get { return "CanonCCDTBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -65,13 +71,13 @@ public partial class CanonCCDTBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("imageType", 64, this.imageType); 
-		boxSize += builder.Field("dualPixel", 32, this.dualPixel); 
-		boxSize += builder.Field("trackIndex", 32, this.trackIndex); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("imageType", 64, this.imageType); 
+		boxSize += tracer.Field("dualPixel", 32, this.dualPixel); 
+		boxSize += tracer.Field("trackIndex", 32, this.trackIndex); 
 		return boxSize;
 	}
 }

@@ -16,6 +16,14 @@ aligned(8) class ACLRBox() extends Box('ACLR') {
 */
 public partial class ACLRBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// Avid's color range, as FFmpeg's mov_write_avid_tag writes it: 1 video range, 2 full range
+aligned(8) class ACLRBox() extends Box('ACLR') {
+	unsigned int(32) tag;
+	unsigned int(32) version;
+	unsigned int(32) colorRange;
+	unsigned int(32) reserved;
+}"; } }
 	public const string TYPE = "ACLR";
 	public override string DisplayName { get { return "ACLRBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -71,14 +79,14 @@ public partial class ACLRBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("tag", 32, this.tag); 
-		boxSize += builder.Field("version", 32, this.version); 
-		boxSize += builder.Field("colorRange", 32, this.colorRange); 
-		boxSize += builder.Field("reserved", 32, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("tag", 32, this.tag); 
+		boxSize += tracer.Field("version", 32, this.version); 
+		boxSize += tracer.Field("colorRange", 32, this.colorRange); 
+		boxSize += tracer.Field("reserved", 32, this.reserved); 
 		return boxSize;
 	}
 }

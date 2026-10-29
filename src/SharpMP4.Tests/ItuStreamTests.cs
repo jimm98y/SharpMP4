@@ -361,6 +361,9 @@ public class ItuStreamTests
 
     private sealed class Serializable : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         public ulong Read(IItuContext context, ItuStream stream) => throw new NotSupportedException();
         public ulong Write(IItuContext context, ItuStream stream) => throw new NotSupportedException();
         public int HasMoreRbspData { get; set; }

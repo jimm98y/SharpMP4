@@ -7,18 +7,22 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class IPMPInfoBox() extends FullBox('imif') {
- Descriptor descriptor[0 .. 255];
- }
+	Descriptor descriptor[0 .. 255];
+}
 */
 public partial class IPMPInfoBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class IPMPInfoBox() extends FullBox('imif') {
+	Descriptor descriptor[0 .. 255];
+}"; } }
 	public const string TYPE = "imif";
 	public override string DisplayName { get { return "IPMPInfoBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("sinf"); }
 
 
-	protected Descriptor[] descriptor; 
+	protected Descriptor[] descriptor = []; 
 	public Descriptor[] Descriptor { get { return this.descriptor; } set { this.descriptor = value; } }
 
 	public IPMPInfoBox(): base(IsoStream.FromFourCC("imif"))
@@ -49,11 +53,11 @@ public partial class IPMPInfoBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("descriptor", IsoStream.CalculateDescriptorSize(descriptor), this.descriptor); 
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("descriptor", IsoStream.CalculateDescriptorSize(descriptor), this.descriptor); 
 		return boxSize;
 	}
 }

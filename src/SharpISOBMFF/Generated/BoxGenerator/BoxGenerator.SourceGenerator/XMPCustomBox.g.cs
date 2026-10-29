@@ -7,11 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class XMPCustomBox() extends Box('uuid be7acfcb97a942e89c71999491e3afac') {
-	 string data;
- }
+	string data;
+}
 */
 public partial class XMPCustomBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class XMPCustomBox() extends Box('uuid be7acfcb97a942e89c71999491e3afac') {
+	string data;
+}"; } }
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "XMPCustomBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class XMPCustomBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("data", IsoStream.CalculateStringSize(data), this.data); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("data", IsoStream.CalculateStringSize(data), this.data); 
 		return boxSize;
 	}
 }

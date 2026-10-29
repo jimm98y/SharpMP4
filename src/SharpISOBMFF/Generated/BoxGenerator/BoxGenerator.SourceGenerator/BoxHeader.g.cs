@@ -7,8 +7,8 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class BoxHeader (
-		unsigned int(32) boxtype,
-		optional unsigned int(8)[16] extended_type) {
+	unsigned int(32) boxtype,
+	optional unsigned int(8)[16] extended_type) {
 	unsigned int(32) size;
 	unsigned int(32) type = boxtype;
 	if (size==1) {
@@ -28,6 +28,21 @@ public partial class BoxHeader : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class BoxHeader (
+	unsigned int(32) boxtype,
+	optional unsigned int(8)[16] extended_type) {
+	unsigned int(32) size;
+	unsigned int(32) type = boxtype;
+	if (size==1) {
+		unsigned int(64) largesize;
+	} else if (size==0) {
+		// box extends to end of file
+	}
+	if (type=='uuid') {
+		unsigned int(8)[16] usertype = extended_type;
+	}
+}"; } }
 	public virtual string DisplayName { get { return "BoxHeader"; } }
 
 	protected uint size; 
@@ -39,7 +54,7 @@ public partial class BoxHeader : IMp4Serializable
 	protected ulong largesize; 
 	public ulong Largesize { get { return this.largesize; } set { this.largesize = value; } }
 
-	protected byte[] usertype; // = extended_type
+	protected byte[] usertype = new byte[16]; // = extended_type
 	public byte[] Usertype { get { return this.usertype; } set { this.usertype = value; } }
 
 	public BoxHeader(uint boxtype = 0, byte[] extended_type = null): base()
@@ -117,15 +132,15 @@ public partial class BoxHeader : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("size", 32, this.size); 
-		boxSize += builder.Field("type", 32, this.type); 
+		boxSize += tracer.Field("size", 32, this.size); 
+		boxSize += tracer.Field("type", 32, this.type); 
 
 		if (size==1)
 		{
-			boxSize += builder.Field("largesize", 64, this.largesize); 
+			boxSize += tracer.Field("largesize", 64, this.largesize); 
 		}
 
 		else if (size==0)
@@ -135,7 +150,7 @@ public partial class BoxHeader : IMp4Serializable
 
 		if (type==IsoStream.FromFourCC("uuid"))
 		{
-			boxSize += builder.Field("usertype", 16 * 8, this.usertype); 
+			boxSize += tracer.Field("usertype", 16 * 8, this.usertype); 
 		}
 		return boxSize;
 	}

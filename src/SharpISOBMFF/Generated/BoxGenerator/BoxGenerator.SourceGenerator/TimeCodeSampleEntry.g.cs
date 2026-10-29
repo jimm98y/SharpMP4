@@ -7,17 +7,27 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class TimeCodeSampleEntry() extends SampleEntry('tmcd') {
- unsigned int(32) reserved;
- unsigned int(32) timecodeFlags;
- unsigned int(32) timeScale;
- unsigned int(32) frameDuration;
- unsigned int(8) numberOfFrames;
- unsigned int(8) reserved2;
- Box boxes[];
- } 
+	unsigned int(32) reserved;
+	unsigned int(32) timecodeFlags;
+	unsigned int(32) timeScale;
+	unsigned int(32) frameDuration;
+	unsigned int(8) numberOfFrames;
+	unsigned int(8) reserved2;
+	Box boxes[];
+}
 */
 public partial class TimeCodeSampleEntry : SampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TimeCodeSampleEntry() extends SampleEntry('tmcd') {
+	unsigned int(32) reserved;
+	unsigned int(32) timecodeFlags;
+	unsigned int(32) timeScale;
+	unsigned int(32) frameDuration;
+	unsigned int(8) numberOfFrames;
+	unsigned int(8) reserved2;
+	Box boxes[];
+}"; } }
 	public const string TYPE = "tmcd";
 	public override string DisplayName { get { return "TimeCodeSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -91,18 +101,18 @@ public partial class TimeCodeSampleEntry : SampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 32, this.reserved); 
-		boxSize += builder.Field("timecodeFlags", 32, this.timecodeFlags); 
-		boxSize += builder.Field("timeScale", 32, this.timeScale); 
-		boxSize += builder.Field("frameDuration", 32, this.frameDuration); 
-		boxSize += builder.Field("numberOfFrames", 8, this.numberOfFrames); 
-		boxSize += builder.Field("reserved2", 8, this.reserved2); 
-		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 32, this.reserved); 
+		boxSize += tracer.Field("timecodeFlags", 32, this.timecodeFlags); 
+		boxSize += tracer.Field("timeScale", 32, this.timeScale); 
+		boxSize += tracer.Field("frameDuration", 32, this.frameDuration); 
+		boxSize += tracer.Field("numberOfFrames", 8, this.numberOfFrames); 
+		boxSize += tracer.Field("reserved2", 8, this.reserved2); 
+		// boxSize += tracer.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

@@ -13,6 +13,11 @@ aligned(8) class StereoEntityGroupBox extends EntityToGroupBox('ster',0,0)
 */
 public partial class StereoEntityGroupBox : EntityToGroupBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// ISO/IEC 23008-12 entity group 'ster': the fields of an EntityToGroupBox alone, as 23008-12-entity-groups.json has it
+aligned(8) class StereoEntityGroupBox extends EntityToGroupBox('ster',0,0)
+{
+}"; } }
 	public const string TYPE = "ster";
 	public override string DisplayName { get { return "StereoEntityGroupBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -44,10 +49,10 @@ public partial class StereoEntityGroupBox : EntityToGroupBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

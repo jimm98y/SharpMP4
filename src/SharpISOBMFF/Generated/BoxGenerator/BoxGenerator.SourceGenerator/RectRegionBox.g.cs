@@ -10,7 +10,7 @@ class RectRegionBox extends Box('rrgn'){
 	unsigned int(16) base_region_tierID;
 	unsigned int(1) dynamic_rect;
 	bit(7) reserved = 0;
-	if(dynamic_rect == 0) { 
+	if(dynamic_rect == 0) {
 		unsigned int(16) horizontal_offset;
 		unsigned int(16) vertical_offset;
 		unsigned int(16) region_width;
@@ -20,6 +20,18 @@ class RectRegionBox extends Box('rrgn'){
 */
 public partial class RectRegionBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class RectRegionBox extends Box('rrgn'){
+	unsigned int(16) base_region_tierID;
+	unsigned int(1) dynamic_rect;
+	bit(7) reserved = 0;
+	if(dynamic_rect == 0) {
+		unsigned int(16) horizontal_offset;
+		unsigned int(16) vertical_offset;
+		unsigned int(16) region_width;
+		unsigned int(16) region_height;
+	}
+}"; } }
 	public const string TYPE = "rrgn";
 	public override string DisplayName { get { return "RectRegionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -105,20 +117,20 @@ public partial class RectRegionBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("base_region_tierID", 16, this.base_region_tierID); 
-		boxSize += builder.Field("dynamic_rect", 1, this.dynamic_rect); 
-		boxSize += builder.Field("reserved", 7, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("base_region_tierID", 16, this.base_region_tierID); 
+		boxSize += tracer.Field("dynamic_rect", 1, this.dynamic_rect); 
+		boxSize += tracer.Field("reserved", 7, this.reserved); 
 
 		if (dynamic_rect == false)
 		{
-			boxSize += builder.Field("horizontal_offset", 16, this.horizontal_offset); 
-			boxSize += builder.Field("vertical_offset", 16, this.vertical_offset); 
-			boxSize += builder.Field("region_width", 16, this.region_width); 
-			boxSize += builder.Field("region_height", 16, this.region_height); 
+			boxSize += tracer.Field("horizontal_offset", 16, this.horizontal_offset); 
+			boxSize += tracer.Field("vertical_offset", 16, this.vertical_offset); 
+			boxSize += tracer.Field("region_width", 16, this.region_width); 
+			boxSize += tracer.Field("region_height", 16, this.region_height); 
 		}
 		return boxSize;
 	}

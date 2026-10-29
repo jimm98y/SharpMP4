@@ -16,6 +16,14 @@ aligned(8) class ChunkOffsetBox
 */
 public partial class ChunkOffsetBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ChunkOffsetBox
+	extends FullBox('stco', version = 0, 0) {
+	unsigned int(32)	entry_count;
+	for (i=1; i <= entry_count; i++) {
+		unsigned int(32)	chunk_offset;
+	}
+}"; } }
 	public const string TYPE = "stco";
 	public override string DisplayName { get { return "ChunkOffsetBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -72,15 +80,15 @@ public partial class ChunkOffsetBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entry_count", 32, this.entry_count); 
 
 		for (int i=0; i < entry_count; i++)
 		{
-			boxSize += builder.Field($"chunk_offset[{i}]", 32, this.chunk_offset[i]); 
+			boxSize += tracer.Field($"chunk_offset[{i}]", 32, this.chunk_offset[i]); 
 		}
 		return boxSize;
 	}

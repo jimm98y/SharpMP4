@@ -7,20 +7,18 @@ namespace SharpISOBMFF
 {
 /*
 class SLSSpecificConfig(samplingFrequencyIndex,
-  channelConfiguration,
-  audioObjectType)
+	channelConfiguration,
+	audioObjectType)
 {
-  uimsbf(3) pcmWordLength;
-  uimsbf(1) aac_core_present;
-  uimsbf(1) lle_main_stream;
-  uimsbf(1) reserved_bit;
-  uimsbf(3) frameLength;
-  if (!channelConfiguration) {
-    program_config_element();
-  }
+	uimsbf(3) pcmWordLength;
+	uimsbf(1) aac_core_present;
+	uimsbf(1) lle_main_stream;
+	uimsbf(1) reserved_bit;
+	uimsbf(3) frameLength;
+	if (!channelConfiguration) {
+		program_config_element();
+	}
 }
-
-
 */
 public partial class SLSSpecificConfig : IMp4Serializable
 {
@@ -29,6 +27,20 @@ public partial class SLSSpecificConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class SLSSpecificConfig(samplingFrequencyIndex,
+	channelConfiguration,
+	audioObjectType)
+{
+	uimsbf(3) pcmWordLength;
+	uimsbf(1) aac_core_present;
+	uimsbf(1) lle_main_stream;
+	uimsbf(1) reserved_bit;
+	uimsbf(3) frameLength;
+	if (!channelConfiguration) {
+		program_config_element();
+	}
+}"; } }
 	public virtual string DisplayName { get { return "SLSSpecificConfig"; } }
 
 	protected byte pcmWordLength; 
@@ -113,18 +125,18 @@ public partial class SLSSpecificConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("pcmWordLength", 3, this.pcmWordLength); 
-		boxSize += builder.Field("aac_core_present", 1, this.aac_core_present); 
-		boxSize += builder.Field("lle_main_stream", 1, this.lle_main_stream); 
-		boxSize += builder.Field("reserved_bit", 1, this.reserved_bit); 
-		boxSize += builder.Field("frameLength", 3, this.frameLength); 
+		boxSize += tracer.Field("pcmWordLength", 3, this.pcmWordLength); 
+		boxSize += tracer.Field("aac_core_present", 1, this.aac_core_present); 
+		boxSize += tracer.Field("lle_main_stream", 1, this.lle_main_stream); 
+		boxSize += tracer.Field("reserved_bit", 1, this.reserved_bit); 
+		boxSize += tracer.Field("frameLength", 3, this.frameLength); 
 
 		if (channelConfiguration == 0)
 		{
-			boxSize += builder.Field("program_config_element", IsoStream.CalculateClassSize(program_config_element), this.program_config_element); 
+			boxSize += tracer.Field("program_config_element", IsoStream.CalculateClassSize(program_config_element), this.program_config_element); 
 		}
 		return boxSize;
 	}

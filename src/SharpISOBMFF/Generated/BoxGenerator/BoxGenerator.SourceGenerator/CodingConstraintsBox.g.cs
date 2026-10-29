@@ -12,10 +12,16 @@ class CodingConstraintsBox extends FullBox('ccst', version = 0, flags = 0){
 	unsigned int(4) max_ref_per_pic;
 	unsigned int(26) reserved;
 }
-
 */
 public partial class CodingConstraintsBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class CodingConstraintsBox extends FullBox('ccst', version = 0, flags = 0){
+	unsigned int(1) all_ref_pics_intra;
+	unsigned int(1) intra_pred_used;
+	unsigned int(4) max_ref_per_pic;
+	unsigned int(26) reserved;
+}"; } }
 	public const string TYPE = "ccst";
 	public override string DisplayName { get { return "CodingConstraintsBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -71,14 +77,14 @@ public partial class CodingConstraintsBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("all_ref_pics_intra", 1, this.all_ref_pics_intra); 
-		boxSize += builder.Field("intra_pred_used", 1, this.intra_pred_used); 
-		boxSize += builder.Field("max_ref_per_pic", 4, this.max_ref_per_pic); 
-		boxSize += builder.Field("reserved", 26, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("all_ref_pics_intra", 1, this.all_ref_pics_intra); 
+		boxSize += tracer.Field("intra_pred_used", 1, this.intra_pred_used); 
+		boxSize += tracer.Field("max_ref_per_pic", 4, this.max_ref_per_pic); 
+		boxSize += tracer.Field("reserved", 26, this.reserved); 
 		return boxSize;
 	}
 }

@@ -8,10 +8,12 @@ namespace SharpISOBMFF
 /*
 aligned(8) class hintPacketsSent extends Box('npck') {
 	uint(32)	packetssent; }	// total packets sent
-
 */
 public partial class hintPacketsSentnpckDup : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class hintPacketsSent extends Box('npck') {
+	uint(32)	packetssent; }	// total packets sent"; } }
 	public const string TYPE = "npck";
 	public override string DisplayName { get { return "hintPacketsSentnpckDup"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +51,11 @@ public partial class hintPacketsSentnpckDup : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("packetssent", 32, this.packetssent); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("packetssent", 32, this.packetssent); 
 		return boxSize;
 	}
 }

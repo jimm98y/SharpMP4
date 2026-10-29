@@ -7,11 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AppleHostComputerBox() extends Box('©hst') {
- Box boxes[];
- } 
+	Box boxes[];
+}
 */
 public partial class AppleHostComputerBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AppleHostComputerBox() extends Box('©hst') {
+	Box boxes[];
+}"; } }
 	public const string TYPE = "©hst";
 	public override string DisplayName { get { return "AppleHostComputerBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,12 +53,12 @@ public partial class AppleHostComputerBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

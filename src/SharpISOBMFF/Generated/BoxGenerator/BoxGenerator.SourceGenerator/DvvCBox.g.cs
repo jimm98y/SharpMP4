@@ -7,20 +7,33 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class DvvCBox() extends Box('dvvC') {
- unsigned int(8) dv_version_major;
- unsigned int(8) dv_version_minor;
- unsigned int(7) dv_profile;
- unsigned int(6) dv_level;
- bit(1) rpu_present_flag;
- bit(1) el_present_flag;
- bit(1) bl_present_flag;
- unsigned int(4) dv_bl_signal_compatibility_id;
- const unsigned int(28) reserved = 0;
- const unsigned int(32)[4] reserved = 0;
- } 
+	unsigned int(8) dv_version_major;
+	unsigned int(8) dv_version_minor;
+	unsigned int(7) dv_profile;
+	unsigned int(6) dv_level;
+	bit(1) rpu_present_flag;
+	bit(1) el_present_flag;
+	bit(1) bl_present_flag;
+	unsigned int(4) dv_bl_signal_compatibility_id;
+	const unsigned int(28) reserved = 0;
+	const unsigned int(32)[4] reserved = 0;
+}
 */
 public partial class DvvCBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class DvvCBox() extends Box('dvvC') {
+	unsigned int(8) dv_version_major;
+	unsigned int(8) dv_version_minor;
+	unsigned int(7) dv_profile;
+	unsigned int(6) dv_level;
+	bit(1) rpu_present_flag;
+	bit(1) el_present_flag;
+	bit(1) bl_present_flag;
+	unsigned int(4) dv_bl_signal_compatibility_id;
+	const unsigned int(28) reserved = 0;
+	const unsigned int(32)[4] reserved = 0;
+}"; } }
 	public const string TYPE = "dvvC";
 	public override string DisplayName { get { return "DvvCBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -54,7 +67,7 @@ public partial class DvvCBox : Box
 	protected uint reserved = 0; 
 	public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-	protected uint[] reserved0 = []; 
+	protected uint[] reserved0 = new uint[4]; 
 	public uint[] Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
 	public DvvCBox(): base(IsoStream.FromFourCC("dvvC"))
@@ -112,20 +125,20 @@ public partial class DvvCBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("dv_version_major", 8, this.dv_version_major); 
-		boxSize += builder.Field("dv_version_minor", 8, this.dv_version_minor); 
-		boxSize += builder.Field("dv_profile", 7, this.dv_profile); 
-		boxSize += builder.Field("dv_level", 6, this.dv_level); 
-		boxSize += builder.Field("rpu_present_flag", 1, this.rpu_present_flag); 
-		boxSize += builder.Field("el_present_flag", 1, this.el_present_flag); 
-		boxSize += builder.Field("bl_present_flag", 1, this.bl_present_flag); 
-		boxSize += builder.Field("dv_bl_signal_compatibility_id", 4, this.dv_bl_signal_compatibility_id); 
-		boxSize += builder.Field("reserved", 28, this.reserved); 
-		boxSize += builder.Field("reserved0", 4 * 32, this.reserved0); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("dv_version_major", 8, this.dv_version_major); 
+		boxSize += tracer.Field("dv_version_minor", 8, this.dv_version_minor); 
+		boxSize += tracer.Field("dv_profile", 7, this.dv_profile); 
+		boxSize += tracer.Field("dv_level", 6, this.dv_level); 
+		boxSize += tracer.Field("rpu_present_flag", 1, this.rpu_present_flag); 
+		boxSize += tracer.Field("el_present_flag", 1, this.el_present_flag); 
+		boxSize += tracer.Field("bl_present_flag", 1, this.bl_present_flag); 
+		boxSize += tracer.Field("dv_bl_signal_compatibility_id", 4, this.dv_bl_signal_compatibility_id); 
+		boxSize += tracer.Field("reserved", 28, this.reserved); 
+		boxSize += tracer.Field("reserved0", 4 * 32, this.reserved0); 
 		return boxSize;
 	}
 }

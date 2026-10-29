@@ -6,20 +6,32 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class SubsegmentIndexBox extends FullBox('ssix', 0, 0) { 
- unsigned int(32) subsegment_count; 
- for( i=1; i <= subsegment_count; i++) 
- { 
-  unsigned int(32) range_count; 
-  for ( j=1; j <= range_count; j++) { 
-   unsigned int(8) level; 
-   unsigned int(24) range_size; 
-  }  
- } 
-} 
+aligned(8) class SubsegmentIndexBox extends FullBox('ssix', 0, 0) {
+	unsigned int(32) subsegment_count;
+	for( i=1; i <= subsegment_count; i++)
+	{
+		unsigned int(32) range_count;
+		for ( j=1; j <= range_count; j++) {
+			unsigned int(8) level;
+			unsigned int(24) range_size;
+		}
+	}
+}
 */
 public partial class SubsegmentIndexBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SubsegmentIndexBox extends FullBox('ssix', 0, 0) {
+	unsigned int(32) subsegment_count;
+	for( i=1; i <= subsegment_count; i++)
+	{
+		unsigned int(32) range_count;
+		for ( j=1; j <= range_count; j++) {
+			unsigned int(8) level;
+			unsigned int(24) range_size;
+		}
+	}
+}"; } }
 	public const string TYPE = "ssix";
 	public override string DisplayName { get { return "SubsegmentIndexBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -104,20 +116,20 @@ public partial class SubsegmentIndexBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("subsegment_count", 32, this.subsegment_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("subsegment_count", 32, this.subsegment_count); 
 
 		for (int  i=0; i < subsegment_count; i++)
 		{
-			boxSize += builder.Field($"range_count[{i}]", 32, this.range_count[i]); 
+			boxSize += tracer.Field($"range_count[{i}]", 32, this.range_count[i]); 
 
 			for (int  j=0; j < range_count[i]; j++)
 			{
-				boxSize += builder.Field($"level[{i}][{j}]", 8, this.level[i][j]); 
-				boxSize += builder.Field($"range_size[{i}][{j}]", 24, this.range_size[i][j]); 
+				boxSize += tracer.Field($"level[{i}][{j}]", 8, this.level[i][j]); 
+				boxSize += tracer.Field($"range_size[{i}][{j}]", 24, this.range_size[i][j]); 
 			}
 		}
 		return boxSize;

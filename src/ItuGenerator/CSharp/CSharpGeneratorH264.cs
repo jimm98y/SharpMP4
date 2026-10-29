@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace ItuGenerator.CSharp
 {
@@ -51,14 +52,13 @@ namespace ItuGenerator.CSharp
             // 11/2007 edition specifies it, with its parameter set counts minus one; later editions
             // changed that. Both tables are kept as specified, and the message is read by the later
             // one unless that does not end where the payload does and the 2007 one does.
-            definitions = definitions.Replace(
+            definitions = IndentedText.Replace(definitions,
                 "scalability_info( payloadSize )  /* specified in Annex G */ 5",
-                "{\n if( ScalabilityInfo2007 )\n  scalability_info_2007( payloadSize ) 5\n else\n  scalability_info( payloadSize ) 5\n}");
+                "{\nif( ScalabilityInfo2007 )\nscalability_info_2007( payloadSize ) 5\nelse\nscalability_info( payloadSize ) 5\n}");
 
             // The 2007 table counts the characters of the URI with a variable of its own, which the
             // generator does not follow; the later table reads the same bytes without one.
-            definitions = definitions
-                            .Replace("  PriorityIdSettingUriIdx = 0", "")
+            definitions = Regex.Replace(definitions, @"^[ \t]*PriorityIdSettingUriIdx = 0\r?\n", "", RegexOptions.Multiline)
                             .Replace("priority_id_setting_uri[ PriorityIdSettingUriIdx ] 5 b(8)", "priority_id_setting_uri 5 b(8)")
                             .Replace("while( priority_id_setting_uri[ PriorityIdSettingUriIdx++ ]  !=  0 )", "while( priority_id_setting_uri !=  0 )");
             return definitions;

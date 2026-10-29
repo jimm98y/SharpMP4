@@ -6,23 +6,38 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class ExtrinsicCameraParametersBox extends FullBox ('ecam', version=0, flags) { 
- unsigned int(6)  reserved=0; 
- unsigned int(10)  ref_view_id; 
- unsigned int(8) prec_rotation_param; 
- unsigned int(8) prec_translation_param; 
- for (j=1; j<=3; j++) { /* row *//*   
-  for (k=1; k<=3; k++) { /* column *//* 
-   unsigned int(8) exponent_r[j][k]; 
-   signed   int(64) mantissa_r [j][k]; 
-  } 
-  unsigned int(8) exponent_t[j]; 
-  signed   int(64) mantissa_t[j]; 
- } 
+class ExtrinsicCameraParametersBox extends FullBox ('ecam', version=0, flags) {
+	unsigned int(6)  reserved=0;
+	unsigned int(10)  ref_view_id;
+	unsigned int(8) prec_rotation_param;
+	unsigned int(8) prec_translation_param;
+	for (j=1; j<=3; j++) { /* row *//*
+		for (k=1; k<=3; k++) { /* column *//*
+			unsigned int(8) exponent_r[j][k];
+			signed   int(64) mantissa_r [j][k];
+		}
+		unsigned int(8) exponent_t[j];
+		signed   int(64) mantissa_t[j];
+	}
 }
 */
 public partial class ExtrinsicCameraParametersBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ExtrinsicCameraParametersBox extends FullBox ('ecam', version=0, flags) {
+	unsigned int(6)  reserved=0;
+	unsigned int(10)  ref_view_id;
+	unsigned int(8) prec_rotation_param;
+	unsigned int(8) prec_translation_param;
+	for (j=1; j<=3; j++) { /* row */
+		for (k=1; k<=3; k++) { /* column */
+			unsigned int(8) exponent_r[j][k];
+			signed   int(64) mantissa_r [j][k];
+		}
+		unsigned int(8) exponent_t[j];
+		signed   int(64) mantissa_t[j];
+	}
+}"; } }
 	public const string TYPE = "ecam";
 	public override string DisplayName { get { return "ExtrinsicCameraParametersBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -138,14 +153,14 @@ public partial class ExtrinsicCameraParametersBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 6, this.reserved); 
-		boxSize += builder.Field("ref_view_id", 10, this.ref_view_id); 
-		boxSize += builder.Field("prec_rotation_param", 8, this.prec_rotation_param); 
-		boxSize += builder.Field("prec_translation_param", 8, this.prec_translation_param); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 6, this.reserved); 
+		boxSize += tracer.Field("ref_view_id", 10, this.ref_view_id); 
+		boxSize += tracer.Field("prec_rotation_param", 8, this.prec_rotation_param); 
+		boxSize += tracer.Field("prec_translation_param", 8, this.prec_translation_param); 
 
 		for (int j=0; j<3; j++)
 		{
@@ -154,11 +169,11 @@ public partial class ExtrinsicCameraParametersBox : FullBox
 			for (int k=0; k<3; k++)
 			{
 				/*  column  */
-				boxSize += builder.Field($"exponent_r[{j}][{k}]", 8, this.exponent_r[j][k]); 
-				boxSize += builder.Field($"mantissa_r[{j}][{k}]", 64, this.mantissa_r[j][k]); 
+				boxSize += tracer.Field($"exponent_r[{j}][{k}]", 8, this.exponent_r[j][k]); 
+				boxSize += tracer.Field($"mantissa_r[{j}][{k}]", 64, this.mantissa_r[j][k]); 
 			}
-			boxSize += builder.Field($"exponent_t[{j}]", 8, this.exponent_t[j]); 
-			boxSize += builder.Field($"mantissa_t[{j}]", 64, this.mantissa_t[j]); 
+			boxSize += tracer.Field($"exponent_t[{j}]", 8, this.exponent_t[j]); 
+			boxSize += tracer.Field($"mantissa_t[{j}]", 64, this.mantissa_t[j]); 
 		}
 		return boxSize;
 	}

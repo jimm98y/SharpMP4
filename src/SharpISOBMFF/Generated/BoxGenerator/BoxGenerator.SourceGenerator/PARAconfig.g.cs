@@ -8,20 +8,18 @@ namespace SharpISOBMFF
 /*
 class PARAconfig()
 {
-  uimsbf(2) PARAmode;
-  if (PARAmode != 1) {
-    ErHVXCconfig();
-  }
-  if (PARAmode != 0) {
-    HILNconfig();
-  }
-  uimsbf(1) PARAextensionFlag;
-  if (PARAextensionFlag) {
-    /* to be defined in MPEG-4 Phase 3 *//*
-  }
+	uimsbf(2) PARAmode;
+	if (PARAmode != 1) {
+		ErHVXCconfig();
+	}
+	if (PARAmode != 0) {
+		HILNconfig();
+	}
+	uimsbf(1) PARAextensionFlag;
+	if (PARAextensionFlag) {
+		/* to be defined in MPEG-4 Phase 3 *//*
+	}
 }
-
-
 */
 public partial class PARAconfig : IMp4Serializable
 {
@@ -30,6 +28,21 @@ public partial class PARAconfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class PARAconfig()
+{
+	uimsbf(2) PARAmode;
+	if (PARAmode != 1) {
+		ErHVXCconfig();
+	}
+	if (PARAmode != 0) {
+		HILNconfig();
+	}
+	uimsbf(1) PARAextensionFlag;
+	if (PARAextensionFlag) {
+		/* to be defined in MPEG-4 Phase 3 */
+	}
+}"; } }
 	public virtual string DisplayName { get { return "PARAconfig"; } }
 
 	protected byte PARAmode; 
@@ -117,21 +130,21 @@ public partial class PARAconfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("PARAmode", 2, this.PARAmode); 
+		boxSize += tracer.Field("PARAmode", 2, this.PARAmode); 
 
 		if (PARAmode != 1)
 		{
-			boxSize += builder.Field("ErHVXCconfig", IsoStream.CalculateClassSize(ErHVXCconfig), this.ErHVXCconfig); 
+			boxSize += tracer.Field("ErHVXCconfig", IsoStream.CalculateClassSize(ErHVXCconfig), this.ErHVXCconfig); 
 		}
 
 		if (PARAmode != 0)
 		{
-			boxSize += builder.Field("HILNconfig", IsoStream.CalculateClassSize(HILNconfig), this.HILNconfig); 
+			boxSize += tracer.Field("HILNconfig", IsoStream.CalculateClassSize(HILNconfig), this.HILNconfig); 
 		}
-		boxSize += builder.Field("PARAextensionFlag", 1, this.PARAextensionFlag); 
+		boxSize += tracer.Field("PARAextensionFlag", 1, this.PARAextensionFlag); 
 
 		if (PARAextensionFlag)
 		{

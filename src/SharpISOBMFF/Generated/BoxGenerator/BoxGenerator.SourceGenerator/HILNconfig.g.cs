@@ -8,14 +8,12 @@ namespace SharpISOBMFF
 /*
 class HILNconfig()
 {
-  uimsbf(1) HILNquantMode;
-  uimsbf(8) HILNmaxNumLine;
-  uimsbf(4) HILNsampleRateCode;
-  uimsbf(12) HILNframeLength;
-  uimsbf(2) HILNcontMode;
+	uimsbf(1) HILNquantMode;
+	uimsbf(8) HILNmaxNumLine;
+	uimsbf(4) HILNsampleRateCode;
+	uimsbf(12) HILNframeLength;
+	uimsbf(2) HILNcontMode;
 }
-
-
 */
 public partial class HILNconfig : IMp4Serializable
 {
@@ -24,6 +22,15 @@ public partial class HILNconfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class HILNconfig()
+{
+	uimsbf(1) HILNquantMode;
+	uimsbf(8) HILNmaxNumLine;
+	uimsbf(4) HILNsampleRateCode;
+	uimsbf(12) HILNframeLength;
+	uimsbf(2) HILNcontMode;
+}"; } }
 	public virtual string DisplayName { get { return "HILNconfig"; } }
 
 	protected bool HILNquantMode; 
@@ -78,14 +85,14 @@ public partial class HILNconfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("HILNquantMode", 1, this.HILNquantMode); 
-		boxSize += builder.Field("HILNmaxNumLine", 8, this.HILNmaxNumLine); 
-		boxSize += builder.Field("HILNsampleRateCode", 4, this.HILNsampleRateCode); 
-		boxSize += builder.Field("HILNframeLength", 12, this.HILNframeLength); 
-		boxSize += builder.Field("HILNcontMode", 2, this.HILNcontMode); 
+		boxSize += tracer.Field("HILNquantMode", 1, this.HILNquantMode); 
+		boxSize += tracer.Field("HILNmaxNumLine", 8, this.HILNmaxNumLine); 
+		boxSize += tracer.Field("HILNsampleRateCode", 4, this.HILNsampleRateCode); 
+		boxSize += tracer.Field("HILNframeLength", 12, this.HILNframeLength); 
+		boxSize += tracer.Field("HILNcontMode", 2, this.HILNcontMode); 
 		return boxSize;
 	}
 }

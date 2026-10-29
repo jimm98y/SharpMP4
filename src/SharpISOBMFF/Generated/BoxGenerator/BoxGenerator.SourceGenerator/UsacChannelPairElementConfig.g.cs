@@ -8,34 +8,32 @@ namespace SharpISOBMFF
 /*
 class UsacChannelPairElementConfig(coreSbrFrameLengthIndex)
 {
-  bslbf(1) tw_mdct;
-  bslbf(1) noiseFilling;
-  if (coreSbrFrameLengthIndex >= 2 && coreSbrFrameLengthIndex <= 4) {
-    SbrConfig() sbrConfig;
-    uimsbf(2) stereoConfigIndex;
-  }
-  if (stereoConfigIndex > 0) {
-    uimsbf(3) bsFreqRes;
-    uimsbf(3) bsFixedGainDMX;
-    uimsbf(2) bsTempShapeConfig;
-    uimsbf(2) bsDecorrConfig;
-    bslbf(1) bsHighRateMode;
-    bslbf(1) bsPhaseCoding;
-    bslbf(1) bsOttBandsPhasePresent;
-    if (bsOttBandsPhasePresent) {
-      uimsbf(5) bsOttBandsPhase;
-    }
-    if (stereoConfigIndex > 1) {
-      uimsbf(5) bsResidualBands;
-      bslbf(1) bsPseudoLr;
-    }
-    if (bsTempShapeConfig == 2) {
-      bslbf(1) bsEnvQuantMode;
-    }
-  }
+	bslbf(1) tw_mdct;
+	bslbf(1) noiseFilling;
+	if (coreSbrFrameLengthIndex >= 2 && coreSbrFrameLengthIndex <= 4) {
+		SbrConfig() sbrConfig;
+		uimsbf(2) stereoConfigIndex;
+	}
+	if (stereoConfigIndex > 0) {
+		uimsbf(3) bsFreqRes;
+		uimsbf(3) bsFixedGainDMX;
+		uimsbf(2) bsTempShapeConfig;
+		uimsbf(2) bsDecorrConfig;
+		bslbf(1) bsHighRateMode;
+		bslbf(1) bsPhaseCoding;
+		bslbf(1) bsOttBandsPhasePresent;
+		if (bsOttBandsPhasePresent) {
+			uimsbf(5) bsOttBandsPhase;
+		}
+		if (stereoConfigIndex > 1) {
+			uimsbf(5) bsResidualBands;
+			bslbf(1) bsPseudoLr;
+		}
+		if (bsTempShapeConfig == 2) {
+			bslbf(1) bsEnvQuantMode;
+		}
+	}
 }
-
-
 */
 public partial class UsacChannelPairElementConfig : IMp4Serializable
 {
@@ -44,6 +42,35 @@ public partial class UsacChannelPairElementConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class UsacChannelPairElementConfig(coreSbrFrameLengthIndex)
+{
+	bslbf(1) tw_mdct;
+	bslbf(1) noiseFilling;
+	if (coreSbrFrameLengthIndex >= 2 && coreSbrFrameLengthIndex <= 4) {
+		SbrConfig() sbrConfig;
+		uimsbf(2) stereoConfigIndex;
+	}
+	if (stereoConfigIndex > 0) {
+		uimsbf(3) bsFreqRes;
+		uimsbf(3) bsFixedGainDMX;
+		uimsbf(2) bsTempShapeConfig;
+		uimsbf(2) bsDecorrConfig;
+		bslbf(1) bsHighRateMode;
+		bslbf(1) bsPhaseCoding;
+		bslbf(1) bsOttBandsPhasePresent;
+		if (bsOttBandsPhasePresent) {
+			uimsbf(5) bsOttBandsPhase;
+		}
+		if (stereoConfigIndex > 1) {
+			uimsbf(5) bsResidualBands;
+			bslbf(1) bsPseudoLr;
+		}
+		if (bsTempShapeConfig == 2) {
+			bslbf(1) bsEnvQuantMode;
+		}
+	}
+}"; } }
 	public virtual string DisplayName { get { return "UsacChannelPairElementConfig"; } }
 
 	protected bool tw_mdct; 
@@ -222,42 +249,42 @@ public partial class UsacChannelPairElementConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("tw_mdct", 1, this.tw_mdct); 
-		boxSize += builder.Field("noiseFilling", 1, this.noiseFilling); 
+		boxSize += tracer.Field("tw_mdct", 1, this.tw_mdct); 
+		boxSize += tracer.Field("noiseFilling", 1, this.noiseFilling); 
 
 		if (coreSbrFrameLengthIndex >= 2 && coreSbrFrameLengthIndex <= 4)
 		{
-			boxSize += builder.Field("sbrConfig", IsoStream.CalculateClassSize(sbrConfig), this.sbrConfig); 
-			boxSize += builder.Field("stereoConfigIndex", 2, this.stereoConfigIndex); 
+			boxSize += tracer.Field("sbrConfig", IsoStream.CalculateClassSize(sbrConfig), this.sbrConfig); 
+			boxSize += tracer.Field("stereoConfigIndex", 2, this.stereoConfigIndex); 
 		}
 
 		if (stereoConfigIndex > 0)
 		{
-			boxSize += builder.Field("bsFreqRes", 3, this.bsFreqRes); 
-			boxSize += builder.Field("bsFixedGainDMX", 3, this.bsFixedGainDMX); 
-			boxSize += builder.Field("bsTempShapeConfig", 2, this.bsTempShapeConfig); 
-			boxSize += builder.Field("bsDecorrConfig", 2, this.bsDecorrConfig); 
-			boxSize += builder.Field("bsHighRateMode", 1, this.bsHighRateMode); 
-			boxSize += builder.Field("bsPhaseCoding", 1, this.bsPhaseCoding); 
-			boxSize += builder.Field("bsOttBandsPhasePresent", 1, this.bsOttBandsPhasePresent); 
+			boxSize += tracer.Field("bsFreqRes", 3, this.bsFreqRes); 
+			boxSize += tracer.Field("bsFixedGainDMX", 3, this.bsFixedGainDMX); 
+			boxSize += tracer.Field("bsTempShapeConfig", 2, this.bsTempShapeConfig); 
+			boxSize += tracer.Field("bsDecorrConfig", 2, this.bsDecorrConfig); 
+			boxSize += tracer.Field("bsHighRateMode", 1, this.bsHighRateMode); 
+			boxSize += tracer.Field("bsPhaseCoding", 1, this.bsPhaseCoding); 
+			boxSize += tracer.Field("bsOttBandsPhasePresent", 1, this.bsOttBandsPhasePresent); 
 
 			if (bsOttBandsPhasePresent)
 			{
-				boxSize += builder.Field("bsOttBandsPhase", 5, this.bsOttBandsPhase); 
+				boxSize += tracer.Field("bsOttBandsPhase", 5, this.bsOttBandsPhase); 
 			}
 
 			if (stereoConfigIndex > 1)
 			{
-				boxSize += builder.Field("bsResidualBands", 5, this.bsResidualBands); 
-				boxSize += builder.Field("bsPseudoLr", 1, this.bsPseudoLr); 
+				boxSize += tracer.Field("bsResidualBands", 5, this.bsResidualBands); 
+				boxSize += tracer.Field("bsPseudoLr", 1, this.bsPseudoLr); 
 			}
 
 			if (bsTempShapeConfig == 2)
 			{
-				boxSize += builder.Field("bsEnvQuantMode", 1, this.bsEnvQuantMode); 
+				boxSize += tracer.Field("bsEnvQuantMode", 1, this.bsEnvQuantMode); 
 			}
 		}
 		return boxSize;

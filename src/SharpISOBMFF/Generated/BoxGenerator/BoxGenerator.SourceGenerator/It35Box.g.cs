@@ -14,6 +14,12 @@ class It35Box() extends MetaDataSampleEntry('it35') {
 */
 public partial class It35Box : MetaDataSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// ITU-T T.35 metadata's sample entry, as Chromium's MetadataIT35SampleEntry reads it
+class It35Box() extends MetaDataSampleEntry('it35') {
+	unsigned int(8) it35_identifier_length;
+	bit(8*it35_identifier_length) it35_prefix;
+}"; } }
 	public const string TYPE = "it35";
 	public override string DisplayName { get { return "It35Box"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -23,7 +29,7 @@ public partial class It35Box : MetaDataSampleEntry
 	protected byte it35_identifier_length; 
 	public byte It35IdentifierLength { get { return this.it35_identifier_length; } set { this.it35_identifier_length = value; } }
 
-	protected byte[] it35_prefix; 
+	protected byte[] it35_prefix = []; 
 	public byte[] It35Prefix { get { return this.it35_prefix; } set { this.it35_prefix = value; } }
 
 	public It35Box(): base(IsoStream.FromFourCC("it35"))
@@ -57,12 +63,12 @@ public partial class It35Box : MetaDataSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("it35_identifier_length", 8, this.it35_identifier_length); 
-		boxSize += builder.Field("it35_prefix", (ulong)(8*it35_identifier_length ), this.it35_prefix); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("it35_identifier_length", 8, this.it35_identifier_length); 
+		boxSize += tracer.Field("it35_prefix", (ulong)(8*it35_identifier_length ), this.it35_prefix); 
 		return boxSize;
 	}
 }

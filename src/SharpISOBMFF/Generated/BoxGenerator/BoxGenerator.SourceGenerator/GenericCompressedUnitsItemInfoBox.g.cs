@@ -8,11 +8,16 @@ namespace SharpISOBMFF
 /*
 // ISO/IEC 23001-17 generic compressed units: of each unit compressed alone, where it is and its size - of fields sized by the codes it starts with, which CompressedUnitsInfo reads
 aligned(8) class GenericCompressedUnitsItemInfoBox() extends FullBox('icef') {
-	 CompressedUnitsInfo units;
- } 
+	CompressedUnitsInfo units;
+}
 */
 public partial class GenericCompressedUnitsItemInfoBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// ISO/IEC 23001-17 generic compressed units: of each unit compressed alone, where it is and its size - of fields sized by the codes it starts with, which CompressedUnitsInfo reads
+aligned(8) class GenericCompressedUnitsItemInfoBox() extends FullBox('icef') {
+	CompressedUnitsInfo units;
+}"; } }
 	public const string TYPE = "icef";
 	public override string DisplayName { get { return "GenericCompressedUnitsItemInfoBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +55,11 @@ public partial class GenericCompressedUnitsItemInfoBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("units", IsoStream.CalculateClassSize(units), this.units); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("units", IsoStream.CalculateClassSize(units), this.units); 
 		return boxSize;
 	}
 }

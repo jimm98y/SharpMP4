@@ -7,6 +7,9 @@ namespace SharpISOBMFF
 {
     public class Container : IMp4Serializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public virtual string Syntax { get { return null; } }
+
         public virtual string DisplayName { get { return nameof(Container); } }
         protected IMp4Serializable parent = null;
         public IMp4Serializable GetParent() { return parent; }
@@ -130,18 +133,18 @@ namespace SharpISOBMFF
         /// <summary>The file's boxes, a line each of their fields, as <see cref="BoxStringBuilder"/> describes them.</summary>
         public override string ToString() { return BoxStringBuilder.Format(this); }
 
-        public ulong ToString(BoxStringBuilder builder)
+        public ulong Trace(BoxTracer tracer)
         {
             ulong size = 0;
             foreach (var box in Children)
             {
-                size += builder.Append(box);
+                size += tracer.Append(box);
             }
 
             // what is after the last box, of a stream that cannot seek: its bytes (of one that can, its Padding)
             if (this.Padding == null && this.PaddingBytes != null)
             {
-                size += builder.Field("padding", (ulong)this.PaddingBytes.Length << 3, this.PaddingBytes);
+                size += tracer.Field("padding", (ulong)this.PaddingBytes.Length << 3, this.PaddingBytes);
             }
 
             return size;

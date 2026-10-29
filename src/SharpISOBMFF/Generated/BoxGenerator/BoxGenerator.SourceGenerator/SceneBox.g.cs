@@ -7,11 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class SceneBox() extends Box('scen') {
- string value;
+	string value;
 }
 */
 public partial class SceneBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SceneBox() extends Box('scen') {
+	string value;
+}"; } }
 	public const string TYPE = "scen";
 	public override string DisplayName { get { return "SceneBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class SceneBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("value", IsoStream.CalculateStringSize(value), this.value); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("value", IsoStream.CalculateStringSize(value), this.value); 
 		return boxSize;
 	}
 }

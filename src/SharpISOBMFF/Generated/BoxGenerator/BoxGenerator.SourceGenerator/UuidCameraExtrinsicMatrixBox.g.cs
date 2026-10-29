@@ -8,34 +8,62 @@ namespace SharpISOBMFF
 /*
 // Apple's camera extrinsic matrix, of the layout of 'cmex', as an iPhone's spatial photo has it of each eye
 aligned(8) class UuidCameraExtrinsicMatrixBox() extends FullBox('uuid 4363e9145b7d4aab97aebea69803b434') {
-	 if( flags & 0x1 ) { 
- signed int(32) pos_x;
- }
- if( flags & 0x2 ) { 
- signed int(32) pos_y;
- }
- if( flags & 0x4 ) { 
- signed int(32) pos_z;
- }
- if( flags & 0x8 ) { 
- if( flags & 0x10 ) { 
- signed int(32) quat_x;
- signed int(32) quat_y;
- signed int(32) quat_z;
- }
- else { 
- signed int(16) quat_x_short;
- signed int(16) quat_y_short;
- signed int(16) quat_z_short;
- }
- }
- if( flags & 0x20 ) { 
- unsigned int(32) world_coordinate_system_id;
- }
- } 
+	if( flags & 0x1 ) {
+		signed int(32) pos_x;
+	}
+	if( flags & 0x2 ) {
+		signed int(32) pos_y;
+	}
+	if( flags & 0x4 ) {
+		signed int(32) pos_z;
+	}
+	if( flags & 0x8 ) {
+		if( flags & 0x10 ) {
+			signed int(32) quat_x;
+			signed int(32) quat_y;
+			signed int(32) quat_z;
+		}
+		else {
+			signed int(16) quat_x_short;
+			signed int(16) quat_y_short;
+			signed int(16) quat_z_short;
+		}
+	}
+	if( flags & 0x20 ) {
+		unsigned int(32) world_coordinate_system_id;
+	}
+}
 */
 public partial class UuidCameraExtrinsicMatrixBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// Apple's camera extrinsic matrix, of the layout of 'cmex', as an iPhone's spatial photo has it of each eye
+aligned(8) class UuidCameraExtrinsicMatrixBox() extends FullBox('uuid 4363e9145b7d4aab97aebea69803b434') {
+	if( flags & 0x1 ) {
+		signed int(32) pos_x;
+	}
+	if( flags & 0x2 ) {
+		signed int(32) pos_y;
+	}
+	if( flags & 0x4 ) {
+		signed int(32) pos_z;
+	}
+	if( flags & 0x8 ) {
+		if( flags & 0x10 ) {
+			signed int(32) quat_x;
+			signed int(32) quat_y;
+			signed int(32) quat_z;
+		}
+		else {
+			signed int(16) quat_x_short;
+			signed int(16) quat_y_short;
+			signed int(16) quat_z_short;
+		}
+	}
+	if( flags & 0x20 ) {
+		unsigned int(32) world_coordinate_system_id;
+	}
+}"; } }
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "UuidCameraExtrinsicMatrixBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -211,24 +239,24 @@ public partial class UuidCameraExtrinsicMatrixBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if (( flags  &  0x1 ) ==  0x1 )
 		{
-			boxSize += builder.Field("pos_x", 32, this.pos_x); 
+			boxSize += tracer.Field("pos_x", 32, this.pos_x); 
 		}
 
 		if (( flags  &  0x2 ) ==  0x2 )
 		{
-			boxSize += builder.Field("pos_y", 32, this.pos_y); 
+			boxSize += tracer.Field("pos_y", 32, this.pos_y); 
 		}
 
 		if (( flags  &  0x4 ) ==  0x4 )
 		{
-			boxSize += builder.Field("pos_z", 32, this.pos_z); 
+			boxSize += tracer.Field("pos_z", 32, this.pos_z); 
 		}
 
 		if (( flags  &  0x8 ) ==  0x8 )
@@ -236,22 +264,22 @@ public partial class UuidCameraExtrinsicMatrixBox : FullBox
 
 			if (( flags  &  0x10 ) ==  0x10 )
 			{
-				boxSize += builder.Field("quat_x", 32, this.quat_x); 
-				boxSize += builder.Field("quat_y", 32, this.quat_y); 
-				boxSize += builder.Field("quat_z", 32, this.quat_z); 
+				boxSize += tracer.Field("quat_x", 32, this.quat_x); 
+				boxSize += tracer.Field("quat_y", 32, this.quat_y); 
+				boxSize += tracer.Field("quat_z", 32, this.quat_z); 
 			}
 
 			else 
 			{
-				boxSize += builder.Field("quat_x_short", 16, this.quat_x_short); 
-				boxSize += builder.Field("quat_y_short", 16, this.quat_y_short); 
-				boxSize += builder.Field("quat_z_short", 16, this.quat_z_short); 
+				boxSize += tracer.Field("quat_x_short", 16, this.quat_x_short); 
+				boxSize += tracer.Field("quat_y_short", 16, this.quat_y_short); 
+				boxSize += tracer.Field("quat_z_short", 16, this.quat_z_short); 
 			}
 		}
 
 		if (( flags  &  0x20 ) ==  0x20 )
 		{
-			boxSize += builder.Field("world_coordinate_system_id", 32, this.world_coordinate_system_id); 
+			boxSize += tracer.Field("world_coordinate_system_id", 32, this.world_coordinate_system_id); 
 		}
 		return boxSize;
 	}

@@ -7,19 +7,31 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class OMACommonHeadersBox() extends FullBox('ohdr') {
-	 unsigned int(8) encryptionMethod;
- unsigned int(8) paddingScheme;
- unsigned int(64) plaintextLength;
- unsigned int(16) contentIDLength;
- unsigned int(16) rightsIssuerLength;
- unsigned int(16) textualHeadersLength;
- unsigned int(8) contentID[contentIDLength];
- unsigned int(8) rightsIssuerURL[rightsIssuerLength];
- unsigned int(8) textualHeaders[textualHeadersLength];
- } 
+	unsigned int(8) encryptionMethod;
+	unsigned int(8) paddingScheme;
+	unsigned int(64) plaintextLength;
+	unsigned int(16) contentIDLength;
+	unsigned int(16) rightsIssuerLength;
+	unsigned int(16) textualHeadersLength;
+	unsigned int(8) contentID[contentIDLength];
+	unsigned int(8) rightsIssuerURL[rightsIssuerLength];
+	unsigned int(8) textualHeaders[textualHeadersLength];
+}
 */
 public partial class OMACommonHeadersBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class OMACommonHeadersBox() extends FullBox('ohdr') {
+	unsigned int(8) encryptionMethod;
+	unsigned int(8) paddingScheme;
+	unsigned int(64) plaintextLength;
+	unsigned int(16) contentIDLength;
+	unsigned int(16) rightsIssuerLength;
+	unsigned int(16) textualHeadersLength;
+	unsigned int(8) contentID[contentIDLength];
+	unsigned int(8) rightsIssuerURL[rightsIssuerLength];
+	unsigned int(8) textualHeaders[textualHeadersLength];
+}"; } }
 	public const string TYPE = "ohdr";
 	public override string DisplayName { get { return "OMACommonHeadersBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -44,13 +56,13 @@ public partial class OMACommonHeadersBox : FullBox
 	protected ushort textualHeadersLength; 
 	public ushort TextualHeadersLength { get { return this.textualHeadersLength; } set { this.textualHeadersLength = value; } }
 
-	protected byte[] contentID; 
+	protected byte[] contentID = []; 
 	public byte[] ContentID { get { return this.contentID; } set { this.contentID = value; } }
 
-	protected byte[] rightsIssuerURL; 
+	protected byte[] rightsIssuerURL = []; 
 	public byte[] RightsIssuerURL { get { return this.rightsIssuerURL; } set { this.rightsIssuerURL = value; } }
 
-	protected byte[] textualHeaders; 
+	protected byte[] textualHeaders = []; 
 	public byte[] TextualHeaders { get { return this.textualHeaders; } set { this.textualHeaders = value; } }
 
 	public OMACommonHeadersBox(): base(IsoStream.FromFourCC("ohdr"))
@@ -105,19 +117,19 @@ public partial class OMACommonHeadersBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("encryptionMethod", 8, this.encryptionMethod); 
-		boxSize += builder.Field("paddingScheme", 8, this.paddingScheme); 
-		boxSize += builder.Field("plaintextLength", 64, this.plaintextLength); 
-		boxSize += builder.Field("contentIDLength", 16, this.contentIDLength); 
-		boxSize += builder.Field("rightsIssuerLength", 16, this.rightsIssuerLength); 
-		boxSize += builder.Field("textualHeadersLength", 16, this.textualHeadersLength); 
-		boxSize += builder.Field("contentID", ((ulong)(contentIDLength) * 8), this.contentID); 
-		boxSize += builder.Field("rightsIssuerURL", ((ulong)(rightsIssuerLength) * 8), this.rightsIssuerURL); 
-		boxSize += builder.Field("textualHeaders", ((ulong)(textualHeadersLength) * 8), this.textualHeaders); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("encryptionMethod", 8, this.encryptionMethod); 
+		boxSize += tracer.Field("paddingScheme", 8, this.paddingScheme); 
+		boxSize += tracer.Field("plaintextLength", 64, this.plaintextLength); 
+		boxSize += tracer.Field("contentIDLength", 16, this.contentIDLength); 
+		boxSize += tracer.Field("rightsIssuerLength", 16, this.rightsIssuerLength); 
+		boxSize += tracer.Field("textualHeadersLength", 16, this.textualHeadersLength); 
+		boxSize += tracer.Field("contentID", ((ulong)(contentIDLength) * 8), this.contentID); 
+		boxSize += tracer.Field("rightsIssuerURL", ((ulong)(rightsIssuerLength) * 8), this.rightsIssuerURL); 
+		boxSize += tracer.Field("textualHeaders", ((ulong)(textualHeadersLength) * 8), this.textualHeaders); 
 		return boxSize;
 	}
 }

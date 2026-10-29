@@ -7,22 +7,21 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class EC3SpecificEntry() {
- bit(2) fscod;
- bit(5) bsid;
- bit(5) bsmod;
- bit(3) acmod;
- bit(1) lfeon;
- bit(3) reserved;
- bit(4) numDepSub;
- if(numDepSub > 0) {
- bit(9) chanLoc;
- }
- else 
- {
- bit(1) reserved2;
- }
- }
- 
+	bit(2) fscod;
+	bit(5) bsid;
+	bit(5) bsmod;
+	bit(3) acmod;
+	bit(1) lfeon;
+	bit(3) reserved;
+	bit(4) numDepSub;
+	if(numDepSub > 0) {
+		bit(9) chanLoc;
+	}
+	else
+	{
+		bit(1) reserved2;
+	}
+}
 */
 public partial class EC3SpecificEntry : IMp4Serializable
 {
@@ -31,6 +30,23 @@ public partial class EC3SpecificEntry : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class EC3SpecificEntry() {
+	bit(2) fscod;
+	bit(5) bsid;
+	bit(5) bsmod;
+	bit(3) acmod;
+	bit(1) lfeon;
+	bit(3) reserved;
+	bit(4) numDepSub;
+	if(numDepSub > 0) {
+		bit(9) chanLoc;
+	}
+	else
+	{
+		bit(1) reserved2;
+	}
+}"; } }
 	public virtual string DisplayName { get { return "EC3SpecificEntry"; } }
 
 	protected byte fscod; 
@@ -133,25 +149,25 @@ public partial class EC3SpecificEntry : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("fscod", 2, this.fscod); 
-		boxSize += builder.Field("bsid", 5, this.bsid); 
-		boxSize += builder.Field("bsmod", 5, this.bsmod); 
-		boxSize += builder.Field("acmod", 3, this.acmod); 
-		boxSize += builder.Field("lfeon", 1, this.lfeon); 
-		boxSize += builder.Field("reserved", 3, this.reserved); 
-		boxSize += builder.Field("numDepSub", 4, this.numDepSub); 
+		boxSize += tracer.Field("fscod", 2, this.fscod); 
+		boxSize += tracer.Field("bsid", 5, this.bsid); 
+		boxSize += tracer.Field("bsmod", 5, this.bsmod); 
+		boxSize += tracer.Field("acmod", 3, this.acmod); 
+		boxSize += tracer.Field("lfeon", 1, this.lfeon); 
+		boxSize += tracer.Field("reserved", 3, this.reserved); 
+		boxSize += tracer.Field("numDepSub", 4, this.numDepSub); 
 
 		if (numDepSub > 0)
 		{
-			boxSize += builder.Field("chanLoc", 9, this.chanLoc); 
+			boxSize += tracer.Field("chanLoc", 9, this.chanLoc); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("reserved2", 1, this.reserved2); 
+			boxSize += tracer.Field("reserved2", 1, this.reserved2); 
 		}
 		return boxSize;
 	}

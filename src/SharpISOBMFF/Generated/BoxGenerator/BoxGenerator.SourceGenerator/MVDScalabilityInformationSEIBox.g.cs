@@ -13,13 +13,18 @@ class MVDScalabilityInformationSEIBox extends Box('3sib', size)
 */
 public partial class MVDScalabilityInformationSEIBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class MVDScalabilityInformationSEIBox extends Box('3sib', size)
+{
+	unsigned int(8*size-64)	mvdscalinfosei;
+}"; } }
 	public const string TYPE = "3sib";
 	public override string DisplayName { get { return "MVDScalabilityInformationSEIBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("AVCMVCSampleEntry(avc1,avc3)", "AVC2MVCSampleEntry(avc2,avc4)", "MVCSampleEntry(mvc1,mvc2,mvc3,mvc4)", "MVCDSampleEntry(mvd1,mvd2,mvd3,mvd4)", "A3DSampleEntry(a3d1,a3d2,a3d3,a3d4)"); }
 
 
-	protected byte[] mvdscalinfosei; 
+	protected byte[] mvdscalinfosei = []; 
 	public byte[] Mvdscalinfosei { get { return this.mvdscalinfosei; } set { this.mvdscalinfosei = value; } }
 
 	public MVDScalabilityInformationSEIBox(ulong size = 0): base(IsoStream.FromFourCC("3sib"), size)
@@ -50,11 +55,11 @@ public partial class MVDScalabilityInformationSEIBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("mvdscalinfosei", (ulong)(8*size-64 ), this.mvdscalinfosei); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("mvdscalinfosei", (ulong)(8*size-64 ), this.mvdscalinfosei); 
 		return boxSize;
 	}
 }

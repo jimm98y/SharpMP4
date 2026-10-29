@@ -7,13 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 abstract class IP_IdentificationDataSet extends BaseDescriptor
- : bit(8) tag=ContentIdentDescrTag..SupplContentIdentDescrTag
- {
- // empty. To be filled by classes extending this class.
- }
+: bit(8) tag=ContentIdentDescrTag..SupplContentIdentDescrTag
+{
+	// empty. To be filled by classes extending this class.
+}
 */
 public abstract partial class IP_IdentificationDataSet : BaseDescriptor
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"abstract class IP_IdentificationDataSet extends BaseDescriptor
+: bit(8) tag=ContentIdentDescrTag..SupplContentIdentDescrTag
+{
+	// empty. To be filled by classes extending this class.
+}"; } }
 	public byte TagMin { get; set; } = DescriptorTags.ContentIdentDescrTag;
 	public byte TagMax { get; set; } = DescriptorTags.SupplContentIdentDescrTag;	public override string DisplayName { get { return "IP_IdentificationDataSet"; } }
 
@@ -45,10 +51,10 @@ public abstract partial class IP_IdentificationDataSet : BaseDescriptor
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		/*  empty. To be filled by classes extending this class. */
 		return boxSize;
 	}

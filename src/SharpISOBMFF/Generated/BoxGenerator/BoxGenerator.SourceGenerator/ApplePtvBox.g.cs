@@ -7,15 +7,23 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ApplePtvBox() extends Box('ptv ') {
-	 unsigned int(16) displaySize;
- unsigned int(16) reserved1;
- unsigned int(16) reserved2;
- unsigned int(8) slideShow;
- unsigned int(8) playOnOpen;
- } 
+	unsigned int(16) displaySize;
+	unsigned int(16) reserved1;
+	unsigned int(16) reserved2;
+	unsigned int(8) slideShow;
+	unsigned int(8) playOnOpen;
+}
 */
 public partial class ApplePtvBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ApplePtvBox() extends Box('ptv ') {
+	unsigned int(16) displaySize;
+	unsigned int(16) reserved1;
+	unsigned int(16) reserved2;
+	unsigned int(8) slideShow;
+	unsigned int(8) playOnOpen;
+}"; } }
 	public const string TYPE = "ptv ";
 	public override string DisplayName { get { return "ApplePtvBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -77,15 +85,15 @@ public partial class ApplePtvBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("displaySize", 16, this.displaySize); 
-		boxSize += builder.Field("reserved1", 16, this.reserved1); 
-		boxSize += builder.Field("reserved2", 16, this.reserved2); 
-		boxSize += builder.Field("slideShow", 8, this.slideShow); 
-		boxSize += builder.Field("playOnOpen", 8, this.playOnOpen); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("displaySize", 16, this.displaySize); 
+		boxSize += tracer.Field("reserved1", 16, this.reserved1); 
+		boxSize += tracer.Field("reserved2", 16, this.reserved2); 
+		boxSize += tracer.Field("slideShow", 8, this.slideShow); 
+		boxSize += tracer.Field("playOnOpen", 8, this.playOnOpen); 
 		return boxSize;
 	}
 }

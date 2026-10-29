@@ -11,6 +11,9 @@ aligned(8) class SegmentTypeBox extends GeneralTypeBox ('styp')
 */
 public partial class SegmentTypeBox : GeneralTypeBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SegmentTypeBox extends GeneralTypeBox ('styp')
+{}"; } }
 	public const string TYPE = "styp";
 	public override string DisplayName { get { return "SegmentTypeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -42,10 +45,10 @@ public partial class SegmentTypeBox : GeneralTypeBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

@@ -6,12 +6,10 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-// Sequence Entry  
-abstract class SampleGroupDescriptionEntry (unsigned int(32) grouping_type) 
-{ 
-} 
-
-
+// Sequence Entry
+abstract class SampleGroupDescriptionEntry (unsigned int(32) grouping_type)
+{
+}
 */
 public abstract partial class SampleGroupDescriptionEntry : IHasBoxChildren
 {
@@ -20,6 +18,11 @@ public abstract partial class SampleGroupDescriptionEntry : IHasBoxChildren
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"// Sequence Entry
+abstract class SampleGroupDescriptionEntry (unsigned int(32) grouping_type)
+{
+}"; } }
 	public virtual string DisplayName { get { return "SampleGroupDescriptionEntry"; } }
 
 	protected List<Box> children= new List<Box>(); 
@@ -47,7 +50,7 @@ public abstract partial class SampleGroupDescriptionEntry : IHasBoxChildren
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
 		return boxSize;

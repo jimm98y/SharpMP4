@@ -7,14 +7,21 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class H263SpecificBox() extends Box('d263') {
-	 unsigned int(32) vendor;
-	 unsigned int(8) decoderVersion;
- unsigned int(8) level;
- unsigned int(8) profile;
- } 
+	unsigned int(32) vendor;
+	unsigned int(8) decoderVersion;
+	unsigned int(8) level;
+	unsigned int(8) profile;
+}
 */
 public partial class H263SpecificBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class H263SpecificBox() extends Box('d263') {
+	unsigned int(32) vendor;
+	unsigned int(8) decoderVersion;
+	unsigned int(8) level;
+	unsigned int(8) profile;
+}"; } }
 	public const string TYPE = "d263";
 	public override string DisplayName { get { return "H263SpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -70,14 +77,14 @@ public partial class H263SpecificBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("vendor", 32, this.vendor); 
-		boxSize += builder.Field("decoderVersion", 8, this.decoderVersion); 
-		boxSize += builder.Field("level", 8, this.level); 
-		boxSize += builder.Field("profile", 8, this.profile); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("vendor", 32, this.vendor); 
+		boxSize += tracer.Field("decoderVersion", 8, this.decoderVersion); 
+		boxSize += tracer.Field("level", 8, this.level); 
+		boxSize += tracer.Field("profile", 8, this.profile); 
 		return boxSize;
 	}
 }

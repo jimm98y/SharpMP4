@@ -12,13 +12,17 @@ aligned(8) class RtpTrackSdpHintInformation extends Box('sdp ') {
 */
 public partial class RtpTrackSdpHintInformation : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class RtpTrackSdpHintInformation extends Box('sdp ') {
+	char	sdptext[];
+}"; } }
 	public const string TYPE = "sdp ";
 	public override string DisplayName { get { return "RtpTrackSdpHintInformation"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("hnti"); }
 
 
-	protected byte[] sdptext; 
+	protected byte[] sdptext = []; 
 	public byte[] Sdptext { get { return this.sdptext; } set { this.sdptext = value; } }
 
 	public RtpTrackSdpHintInformation(): base(IsoStream.FromFourCC("sdp "))
@@ -49,11 +53,11 @@ public partial class RtpTrackSdpHintInformation : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("sdptext", ((ulong)sdptext.Length * 8), this.sdptext); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("sdptext", ((ulong)sdptext.Length * 8), this.sdptext); 
 		return boxSize;
 	}
 }

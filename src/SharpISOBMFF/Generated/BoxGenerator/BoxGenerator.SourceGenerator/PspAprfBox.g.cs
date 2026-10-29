@@ -7,19 +7,31 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class PspAprfBox() extends Box('APRF') {
-	 unsigned int(32) unknown1;
- unsigned int(32) unknown2;
- unsigned int(32) codec;
- unsigned int(32) unknown3;
- unsigned int(32) unknown4;
- unsigned int(32) maxBitrate;
- unsigned int(32) avgBitrate;
- unsigned int(32) frameRate;
- unsigned int(32) channels;
- }
+	unsigned int(32) unknown1;
+	unsigned int(32) unknown2;
+	unsigned int(32) codec;
+	unsigned int(32) unknown3;
+	unsigned int(32) unknown4;
+	unsigned int(32) maxBitrate;
+	unsigned int(32) avgBitrate;
+	unsigned int(32) frameRate;
+	unsigned int(32) channels;
+}
 */
 public partial class PspAprfBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class PspAprfBox() extends Box('APRF') {
+	unsigned int(32) unknown1;
+	unsigned int(32) unknown2;
+	unsigned int(32) codec;
+	unsigned int(32) unknown3;
+	unsigned int(32) unknown4;
+	unsigned int(32) maxBitrate;
+	unsigned int(32) avgBitrate;
+	unsigned int(32) frameRate;
+	unsigned int(32) channels;
+}"; } }
 	public const string TYPE = "APRF";
 	public override string DisplayName { get { return "PspAprfBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -105,19 +117,19 @@ public partial class PspAprfBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("unknown1", 32, this.unknown1); 
-		boxSize += builder.Field("unknown2", 32, this.unknown2); 
-		boxSize += builder.Field("codec", 32, this.codec); 
-		boxSize += builder.Field("unknown3", 32, this.unknown3); 
-		boxSize += builder.Field("unknown4", 32, this.unknown4); 
-		boxSize += builder.Field("maxBitrate", 32, this.maxBitrate); 
-		boxSize += builder.Field("avgBitrate", 32, this.avgBitrate); 
-		boxSize += builder.Field("frameRate", 32, this.frameRate); 
-		boxSize += builder.Field("channels", 32, this.channels); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("unknown1", 32, this.unknown1); 
+		boxSize += tracer.Field("unknown2", 32, this.unknown2); 
+		boxSize += tracer.Field("codec", 32, this.codec); 
+		boxSize += tracer.Field("unknown3", 32, this.unknown3); 
+		boxSize += tracer.Field("unknown4", 32, this.unknown4); 
+		boxSize += tracer.Field("maxBitrate", 32, this.maxBitrate); 
+		boxSize += tracer.Field("avgBitrate", 32, this.avgBitrate); 
+		boxSize += tracer.Field("frameRate", 32, this.frameRate); 
+		boxSize += tracer.Field("channels", 32, this.channels); 
 		return boxSize;
 	}
 }

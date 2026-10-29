@@ -11,6 +11,9 @@ aligned(8) class hintrepeatedBytesSent extends Box('drep') {
 */
 public partial class hintrepeatedBytesSent : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class hintrepeatedBytesSent extends Box('drep') {
+	uint(64)	bytessent; }	// total bytes in repeated packets"; } }
 	public const string TYPE = "drep";
 	public override string DisplayName { get { return "hintrepeatedBytesSent"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -48,11 +51,11 @@ public partial class hintrepeatedBytesSent : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("bytessent", 64, this.bytessent); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("bytessent", 64, this.bytessent); 
 		return boxSize;
 	}
 }

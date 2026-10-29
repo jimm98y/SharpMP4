@@ -13,6 +13,11 @@ class EndOfBitstreamSampleEntry() extends VisualSampleGroupEntry ('eob ')
 */
 public partial class EndOfBitstreamSampleEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class EndOfBitstreamSampleEntry() extends VisualSampleGroupEntry ('eob ')
+{
+	bit(16) eobNalUnit;
+}"; } }
 	public const string TYPE = "eob ";
 	public override string DisplayName { get { return "EndOfBitstreamSampleEntry"; } }
 
@@ -47,11 +52,11 @@ public partial class EndOfBitstreamSampleEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("eobNalUnit", 16, this.eobNalUnit); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("eobNalUnit", 16, this.eobNalUnit); 
 		return boxSize;
 	}
 }

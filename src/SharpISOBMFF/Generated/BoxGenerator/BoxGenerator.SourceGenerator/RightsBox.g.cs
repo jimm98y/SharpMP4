@@ -7,19 +7,22 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class RightsBox() extends Box('righ') {
- RightsEntry entries[];
+	RightsEntry entries[];
 }
-
 */
 public partial class RightsBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class RightsBox() extends Box('righ') {
+	RightsEntry entries[];
+}"; } }
 	public const string TYPE = "righ";
 	public override string DisplayName { get { return "RightsBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("schi"); }
 
 
-	protected RightsEntry[] entries; 
+	protected RightsEntry[] entries = []; 
 	public RightsEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
 
 	public RightsBox(): base(IsoStream.FromFourCC("righ"))
@@ -50,11 +53,11 @@ public partial class RightsBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
 		return boxSize;
 	}
 }

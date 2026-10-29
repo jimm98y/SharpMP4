@@ -13,12 +13,25 @@ namespace SharpMP4.Readers
     public readonly struct SampleTiming
     {
         public SampleTiming(long pts, long dts, long duration, bool isSyncSample)
+            : this(pts, dts, duration, isSyncSample, -1, 0)
+        {
+        }
+
+        public SampleTiming(long pts, long dts, long duration, bool isSyncSample, long offset, uint size)
         {
             PTS = pts;
             DTS = dts;
             Duration = duration;
             IsSyncSample = isSyncSample;
+            Offset = offset;
+            Size = size;
         }
+
+        /// <summary>Where the sample is, in the file: -1 where it is not known.</summary>
+        public long Offset { get; }
+
+        /// <summary>The sample's size, in bytes.</summary>
+        public uint Size { get; }
 
         /// <summary>When it is shown: its decode time and its composition offset, as <see cref="MediaSample.PTS"/>.</summary>
         public long PTS { get; }
@@ -58,6 +71,9 @@ namespace SharpMP4.Readers
         }
 
         public bool IsRandomAccessPoint { get; set; }
+
+        /// <summary>Where the sample is, in the file: -1 where it is not known, as of samples read as one.</summary>
+        public long Offset { get; set; } = -1;
 
         /// <summary>
         /// The sample, where it lies in the reader's buffer for its track. It is valid until the next sample of the same
@@ -679,6 +695,7 @@ namespace SharpMP4.Readers
 
             var mediaSample = new MediaSample(pts, dts, duration,
                 new ArraySegment<byte>(trackContext.SampleBuffer, 0, (int)sampleSize), isRandomAccessPoint);
+            mediaSample.Offset = startAddress;
             mediaSample.Encryption = trackContext.SampleEncryptions != null && sampleIndex < trackContext.SampleEncryptions.Length ? trackContext.SampleEncryptions[sampleIndex] : null;
             Decrypt(trackContext.ProtectionOfEntry(trackContext.EntryOfChunk[trackContext.CursorChunk]), mediaSample);
 
@@ -754,6 +771,7 @@ namespace SharpMP4.Readers
 
             var mediaSample = new MediaSample(pts, dts, sampleDuration,
                 new ArraySegment<byte>(trackContext.SampleBuffer, 0, (int)sampleSize), isRandomAccessPoint);
+            mediaSample.Offset = startAddress;
             mediaSample.Encryption = trackContext.FragmentEncryption != null && trackContext.SampleIndex < trackContext.FragmentEncryption.Length ? trackContext.FragmentEncryption[trackContext.SampleIndex] : null;
             Decrypt(trackContext.FragmentProtection, mediaSample);
 
@@ -856,7 +874,8 @@ namespace SharpMP4.Readers
                     break;
 
                 long dts = trackContext.CursorDts;
-                timings.Add(new SampleTiming(dts + trackContext.CursorCompositionOffset, dts, trackContext.CursorDuration, trackContext.CursorIsSyncSample));
+                timings.Add(new SampleTiming(dts + trackContext.CursorCompositionOffset, dts, trackContext.CursorDuration, trackContext.CursorIsSyncSample,
+                    trackContext.CursorAddress, trackContext.SampleSizeAt(i)));
             }
 
             if (this.IsFragmented)
@@ -968,14 +987,21 @@ namespace SharpMP4.Readers
                     long startDts = tfdt != null ? (long)tfdt.BaseMediaDecodeTime : endDts;
                     long dts = startDts;
                     uint count = 0;
+                    // where the samples are, as reading finds them: a run without a data offset where the one before ends
+                    long baseAddress = timings != null ? BaseDataOffsetOf((MovieFragmentBox)children[moofIndex], found) : 0;
+                    long address = baseAddress;
                     foreach (var trun in found.Children.OfType<TrackRunBox>())
                     {
+                        if ((trun.Flags & 0x1) == 0x1)
+                            address = baseAddress + trun.DataOffset;
                         var entries = EntriesOf(trun);
                         for (int j = 0; j < entries.Length; j++)
                         {
                             long duration = RequiredDurationOf(trackID, entries[j], tfhd, trackContext.Trex);
+                            uint size = timings != null ? RequiredSizeOf(trackID, entries[j], tfhd, trackContext.Trex) : 0;
                             timings?.Add(new SampleTiming(dts + CompositionOffsetOf(entries[j]), dts, duration,
-                                IsSyncSampleOf(SampleFlagsOf(trun, j, entries[j], tfhd, trackContext.Trex))));
+                                IsSyncSampleOf(SampleFlagsOf(trun, j, entries[j], tfhd, trackContext.Trex)), address, size));
+                            address += size;
                             dts += duration;
                             count++;
                         }

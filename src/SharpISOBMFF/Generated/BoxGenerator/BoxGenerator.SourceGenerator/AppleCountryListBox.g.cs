@@ -7,13 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 class AppleCountryListBox() extends Box ('ctry') {
- unsigned int(16) entry_count;
- CountryListEntry entries[];
- }
- 
+	unsigned int(16) entry_count;
+	CountryListEntry entries[];
+}
 */
 public partial class AppleCountryListBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AppleCountryListBox() extends Box ('ctry') {
+	unsigned int(16) entry_count;
+	CountryListEntry entries[];
+}"; } }
 	public const string TYPE = "ctry";
 	public override string DisplayName { get { return "AppleCountryListBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -23,7 +27,7 @@ public partial class AppleCountryListBox : Box
 	protected ushort entry_count; 
 	public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
-	protected CountryListEntry[] entries; 
+	protected CountryListEntry[] entries = []; 
 	public CountryListEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
 
 	public AppleCountryListBox(): base(IsoStream.FromFourCC("ctry"))
@@ -57,12 +61,12 @@ public partial class AppleCountryListBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entry_count", 16, this.entry_count); 
-		boxSize += builder.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entry_count", 16, this.entry_count); 
+		boxSize += tracer.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
 		return boxSize;
 	}
 }

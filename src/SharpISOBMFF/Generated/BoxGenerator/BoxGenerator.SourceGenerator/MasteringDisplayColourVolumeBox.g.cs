@@ -19,6 +19,17 @@ class MasteringDisplayColourVolumeBox extends Box('mdcv'){
 */
 public partial class MasteringDisplayColourVolumeBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class MasteringDisplayColourVolumeBox extends Box('mdcv'){
+	for (c = 0; c<3; c++) {
+		unsigned int(16) display_primaries_x;
+		unsigned int(16) display_primaries_y;
+	}
+	unsigned int(16) white_point_x;
+	unsigned int(16) white_point_y;
+	unsigned int(32) max_display_mastering_luminance;
+	unsigned int(32) min_display_mastering_luminance;
+}"; } }
 	public const string TYPE = "mdcv";
 	public override string DisplayName { get { return "MasteringDisplayColourVolumeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -100,20 +111,20 @@ public partial class MasteringDisplayColourVolumeBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		for (int c = 0; c<3; c++)
 		{
-			boxSize += builder.Field($"display_primaries_x[{c}]", 16, this.display_primaries_x[c]); 
-			boxSize += builder.Field($"display_primaries_y[{c}]", 16, this.display_primaries_y[c]); 
+			boxSize += tracer.Field($"display_primaries_x[{c}]", 16, this.display_primaries_x[c]); 
+			boxSize += tracer.Field($"display_primaries_y[{c}]", 16, this.display_primaries_y[c]); 
 		}
-		boxSize += builder.Field("white_point_x", 16, this.white_point_x); 
-		boxSize += builder.Field("white_point_y", 16, this.white_point_y); 
-		boxSize += builder.Field("max_display_mastering_luminance", 32, this.max_display_mastering_luminance); 
-		boxSize += builder.Field("min_display_mastering_luminance", 32, this.min_display_mastering_luminance); 
+		boxSize += tracer.Field("white_point_x", 16, this.white_point_x); 
+		boxSize += tracer.Field("white_point_y", 16, this.white_point_y); 
+		boxSize += tracer.Field("max_display_mastering_luminance", 32, this.max_display_mastering_luminance); 
+		boxSize += tracer.Field("min_display_mastering_luminance", 32, this.min_display_mastering_luminance); 
 		return boxSize;
 	}
 }

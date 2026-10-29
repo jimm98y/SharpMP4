@@ -49,7 +49,7 @@ namespace ItuGenerator.CSharp
             definitions = definitions.Replace("\r\n", "\n");
 
             // The units: each read on its own, from its start code to the next, the user data after a header one of them
-            definitions = definitions.Replace("next_start_code()\nwhile ( next_bits()== user_data_start_code){\nuser_data()\n}\n", "next_start_code()\n");
+            definitions = IndentedText.Replace(definitions, "next_start_code()\nwhile ( next_bits()== user_data_start_code){\nuser_data()\n}\n", "next_start_code()\n");
 
             // The visual object sequence: its start code and profile, to the next start code - the studio profiles' visual
             // objects (6.2.13) not read - and its end code a unit of its own
@@ -113,11 +113,11 @@ namespace ItuGenerator.CSharp
                 "while ( before_start_code( $2 ) )$1$2");
 
             // A quantisation matrix (6.3.3): of so many bits a value, to the value of 0 or the 64th
-            definitions = Regex.Replace(definitions, @"^(\w+)(\[i\])?\s+(\d+)\*\[2-64\]\s+uimsbf\s*$",
+            definitions = Regex.Replace(definitions, @"^([ \t]*\w+)(\[i\])?\s+(\d+)\*\[2-64\]\s+uimsbf\s*$",
                 m => m.Groups[2].Success ? $"{m.Groups[1].Value}( i )" : $"{m.Groups[1].Value}()", RegexOptions.Multiline);
 
             // The elements of a number of bits of the stream's: their size here
-            definitions = Regex.Replace(definitions, @"^(\w+)\s+\d+-\d+\s+(uimsbf|bslbf)\s*$", "$1 u(v)", RegexOptions.Multiline);
+            definitions = Regex.Replace(definitions, @"^([ \t]*\w+)\s+\d+-\d+\s+(uimsbf|bslbf)\s*$", "$1 u(v)", RegexOptions.Multiline);
 
             // An element's number of bits and mnemonic: bslbf and uimsbf unsigned, simsbf two's complement
             definitions = Regex.Replace(definitions, @"^(.*?\S)\s+(\d+)\s+(uimsbf|bslbf)\s*$", "$1 u($2)", RegexOptions.Multiline);
@@ -151,21 +151,16 @@ namespace ItuGenerator.CSharp
             int count = 0;
             for (int i = 0; i < lines.Length; i++)
             {
-                if (Regex.IsMatch(lines[i], @"^\w+\(.*\)\s*\{\s*$"))
+                if (Regex.IsMatch(lines[i], @"^[ \t]*\w+\(.*\)\s*\{\s*$"))
                     count = 0;
-                else if (lines[i] == "marker_bit u(1)" && ++count > 1)
-                    lines[i] = $"marker_bit_{count} u(1)";
+                else if (lines[i].Trim() == "marker_bit u(1)" && ++count > 1)
+                    lines[i] = lines[i].Substring(0, lines[i].Length - lines[i].TrimStart().Length) + $"marker_bit_{count} u(1)";
             }
             return string.Join("\n", lines);
         }
 
         /// <summary>A replacement the text must have the place of: where it has not, the text is not the one this was made for.</summary>
-        private static string Fix(string definitions, string text, string replacement)
-        {
-            if (!definitions.Contains(text))
-                throw new InvalidOperationException($"MPEG4.js has no '{text}'");
-            return definitions.Replace(text, replacement);
-        }
+        private static string Fix(string definitions, string text, string replacement) => IndentedText.Fix(definitions, text, replacement, "MPEG4.js");
 
         public string FixCondition(string condition, MethodType methodType)
         {

@@ -7,22 +7,33 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class TrackRunBox extends FullBox('trun', version, tr_flags) {
-    unsigned int(32)	sample_count;
-    if(flags & 0x1) {
-       signed int(32)	data_offset;
-    }
-    if(flags & 0x4) {
-       unsigned int(32)	first_sample_flags;
-    }
-    // all fields in the following array are optional
-    // as indicated by bits set in the tr_flags
-    TrunEntry(version, flags)[ sample_count ];
+	unsigned int(32)	sample_count;
+	if(flags & 0x1) {
+		signed int(32)	data_offset;
+	}
+	if(flags & 0x4) {
+		unsigned int(32)	first_sample_flags;
+	}
+	// all fields in the following array are optional
+	// as indicated by bits set in the tr_flags
+	TrunEntry(version, flags)[ sample_count ];
 }
-
-
 */
 public partial class TrackRunBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TrackRunBox extends FullBox('trun', version, tr_flags) {
+	unsigned int(32)	sample_count;
+	if(flags & 0x1) {
+		signed int(32)	data_offset;
+	}
+	if(flags & 0x4) {
+		unsigned int(32)	first_sample_flags;
+	}
+	// all fields in the following array are optional
+	// as indicated by bits set in the tr_flags
+	TrunEntry(version, flags)[ sample_count ];
+}"; } }
 	public const string TYPE = "trun";
 	public override string DisplayName { get { return "TrackRunBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -38,7 +49,7 @@ public partial class TrackRunBox : FullBox
 	protected uint first_sample_flags; 
 	public uint FirstSampleFlags { get { return this.first_sample_flags; } set { this.first_sample_flags = value; } }
 
-	protected TrunEntry[] TrunEntry; 
+	protected TrunEntry[] TrunEntry = []; 
 	public TrunEntry[] _TrunEntry { get { return this.TrunEntry; } set { this.TrunEntry = value; } }
 
 	public TrackRunBox(byte version = 0, uint tr_flags = 0): base(IsoStream.FromFourCC("trun"), version, tr_flags)
@@ -108,24 +119,24 @@ public partial class TrackRunBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("sample_count", 32, this.sample_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("sample_count", 32, this.sample_count); 
 
 		if ((flags  &  0x1) ==  0x1)
 		{
-			boxSize += builder.Field("data_offset", 32, this.data_offset); 
+			boxSize += tracer.Field("data_offset", 32, this.data_offset); 
 		}
 
 		if ((flags  &  0x4) ==  0x4)
 		{
-			boxSize += builder.Field("first_sample_flags", 32, this.first_sample_flags); 
+			boxSize += tracer.Field("first_sample_flags", 32, this.first_sample_flags); 
 		}
 		/*  all fields in the following array are optional */
 		/*  as indicated by bits set in the tr_flags */
-		boxSize += builder.Field("TrunEntry", IsoStream.CalculateClassSize(TrunEntry), this.TrunEntry); 
+		boxSize += tracer.Field("TrunEntry", IsoStream.CalculateClassSize(TrunEntry), this.TrunEntry); 
 		return boxSize;
 	}
 }

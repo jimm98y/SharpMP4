@@ -6,14 +6,20 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class VisualDRAPEntry() 
-extends VisualSampleGroupEntry('drap') {
+class VisualDRAPEntry()
+	extends VisualSampleGroupEntry('drap') {
 	unsigned int(3) DRAP_type;
 	unsigned int(29) reserved = 0;
 }
 */
 public partial class VisualDRAPEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class VisualDRAPEntry()
+	extends VisualSampleGroupEntry('drap') {
+	unsigned int(3) DRAP_type;
+	unsigned int(29) reserved = 0;
+}"; } }
 	public const string TYPE = "drap";
 	public override string DisplayName { get { return "VisualDRAPEntry"; } }
 
@@ -54,12 +60,12 @@ public partial class VisualDRAPEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("DRAP_type", 3, this.DRAP_type); 
-		boxSize += builder.Field("reserved", 29, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("DRAP_type", 3, this.DRAP_type); 
+		boxSize += tracer.Field("reserved", 29, this.reserved); 
 		return boxSize;
 	}
 }

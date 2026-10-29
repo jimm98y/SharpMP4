@@ -8,11 +8,16 @@ namespace SharpISOBMFF
 /*
 // XMP, a box of the file, not a full box as the XMLBox of a 'meta' is (JPEG 2000's XML box too)
 aligned(8) class JpegXMLBox extends Box('xml ') {
- string data;
- }
+	string data;
+}
 */
 public partial class JpegXMLBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// XMP, a box of the file, not a full box as the XMLBox of a 'meta' is (JPEG 2000's XML box too)
+aligned(8) class JpegXMLBox extends Box('xml ') {
+	string data;
+}"; } }
 	public const string TYPE = "xml ";
 	public override string DisplayName { get { return "JpegXMLBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +55,11 @@ public partial class JpegXMLBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("data", IsoStream.CalculateStringSize(data), this.data); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("data", IsoStream.CalculateStringSize(data), this.data); 
 		return boxSize;
 	}
 }

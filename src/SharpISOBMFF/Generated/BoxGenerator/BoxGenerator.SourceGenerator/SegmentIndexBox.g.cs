@@ -6,32 +6,56 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class SegmentIndexBox extends FullBox('sidx', version, 0) { 
-  unsigned int(32) reference_ID; 
-  unsigned int(32) timescale; 
-  if (version==0) { 
-   unsigned int(32) earliest_presentation_time; 
-   unsigned int(32) first_offset; 
-  }
-  else { 
-   unsigned int(64) earliest_presentation_time; 
-   unsigned int(64) first_offset; 
-  }
- unsigned int(16) reserved = 0; 
- unsigned int(16) reference_count; 
- for(i=1; i <= reference_count; i++) 
- {  
-  bit(1)   reference_type; 
-  unsigned int(31) referenced_size; 
-  unsigned int(32) subsegment_duration; 
-  bit(1)    starts_with_SAP; 
-  unsigned int(3) SAP_type; 
-  unsigned int(28) SAP_delta_time;
- } 
-} 
+aligned(8) class SegmentIndexBox extends FullBox('sidx', version, 0) {
+	unsigned int(32) reference_ID;
+	unsigned int(32) timescale;
+	if (version==0) {
+		unsigned int(32) earliest_presentation_time;
+		unsigned int(32) first_offset;
+	}
+	else {
+		unsigned int(64) earliest_presentation_time;
+		unsigned int(64) first_offset;
+	}
+	unsigned int(16) reserved = 0;
+	unsigned int(16) reference_count;
+	for(i=1; i <= reference_count; i++)
+	{
+		bit(1)   reference_type;
+		unsigned int(31) referenced_size;
+		unsigned int(32) subsegment_duration;
+		bit(1)    starts_with_SAP;
+		unsigned int(3) SAP_type;
+		unsigned int(28) SAP_delta_time;
+	}
+}
 */
 public partial class SegmentIndexBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SegmentIndexBox extends FullBox('sidx', version, 0) {
+	unsigned int(32) reference_ID;
+	unsigned int(32) timescale;
+	if (version==0) {
+		unsigned int(32) earliest_presentation_time;
+		unsigned int(32) first_offset;
+	}
+	else {
+		unsigned int(64) earliest_presentation_time;
+		unsigned int(64) first_offset;
+	}
+	unsigned int(16) reserved = 0;
+	unsigned int(16) reference_count;
+	for(i=1; i <= reference_count; i++)
+	{
+		bit(1)   reference_type;
+		unsigned int(31) referenced_size;
+		unsigned int(32) subsegment_duration;
+		bit(1)    starts_with_SAP;
+		unsigned int(3) SAP_type;
+		unsigned int(28) SAP_delta_time;
+	}
+}"; } }
 	public const string TYPE = "sidx";
 	public override string DisplayName { get { return "SegmentIndexBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -183,35 +207,35 @@ public partial class SegmentIndexBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reference_ID", 32, this.reference_ID); 
-		boxSize += builder.Field("timescale", 32, this.timescale); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reference_ID", 32, this.reference_ID); 
+		boxSize += tracer.Field("timescale", 32, this.timescale); 
 
 		if (version==0)
 		{
-			boxSize += builder.Field("earliest_presentation_time", 32, this.earliest_presentation_time); 
-			boxSize += builder.Field("first_offset", 32, this.first_offset); 
+			boxSize += tracer.Field("earliest_presentation_time", 32, this.earliest_presentation_time); 
+			boxSize += tracer.Field("first_offset", 32, this.first_offset); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("earliest_presentation_time", 64, this.earliest_presentation_time); 
-			boxSize += builder.Field("first_offset", 64, this.first_offset); 
+			boxSize += tracer.Field("earliest_presentation_time", 64, this.earliest_presentation_time); 
+			boxSize += tracer.Field("first_offset", 64, this.first_offset); 
 		}
-		boxSize += builder.Field("reserved", 16, this.reserved); 
-		boxSize += builder.Field("reference_count", 16, this.reference_count); 
+		boxSize += tracer.Field("reserved", 16, this.reserved); 
+		boxSize += tracer.Field("reference_count", 16, this.reference_count); 
 
 		for (int i=0; i < reference_count; i++)
 		{
-			boxSize += builder.Field($"reference_type[{i}]", 1, this.reference_type[i]); 
-			boxSize += builder.Field($"referenced_size[{i}]", 31, this.referenced_size[i]); 
-			boxSize += builder.Field($"subsegment_duration[{i}]", 32, this.subsegment_duration[i]); 
-			boxSize += builder.Field($"starts_with_SAP[{i}]", 1, this.starts_with_SAP[i]); 
-			boxSize += builder.Field($"SAP_type[{i}]", 3, this.SAP_type[i]); 
-			boxSize += builder.Field($"SAP_delta_time[{i}]", 28, this.SAP_delta_time[i]); 
+			boxSize += tracer.Field($"reference_type[{i}]", 1, this.reference_type[i]); 
+			boxSize += tracer.Field($"referenced_size[{i}]", 31, this.referenced_size[i]); 
+			boxSize += tracer.Field($"subsegment_duration[{i}]", 32, this.subsegment_duration[i]); 
+			boxSize += tracer.Field($"starts_with_SAP[{i}]", 1, this.starts_with_SAP[i]); 
+			boxSize += tracer.Field($"SAP_type[{i}]", 3, this.SAP_type[i]); 
+			boxSize += tracer.Field($"SAP_delta_time[{i}]", 28, this.SAP_delta_time[i]); 
 		}
 		return boxSize;
 	}

@@ -8,18 +8,30 @@ namespace SharpISOBMFF
 /*
 // 'tcmi' misspelled, as the writer of FFmpeg's sample mp4-with-mov-in24-ver.mp4 put it: its fields
 class TimecodeMediaInfoMisspelledBox() extends FullBox ('tmci'){
- signed int(16) text_font;
- signed int(16) text_face;
- signed int(16) text_size;
- signed int(16) reserved;
- unsigned int(48) text_color;
- unsigned int(48) background_color;
- unsigned int(8) font_name_length;
- unsigned int(8) font_name[font_name_length];
- }
+	signed int(16) text_font;
+	signed int(16) text_face;
+	signed int(16) text_size;
+	signed int(16) reserved;
+	unsigned int(48) text_color;
+	unsigned int(48) background_color;
+	unsigned int(8) font_name_length;
+	unsigned int(8) font_name[font_name_length];
+}
 */
 public partial class TimecodeMediaInfoMisspelledBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// 'tcmi' misspelled, as the writer of FFmpeg's sample mp4-with-mov-in24-ver.mp4 put it: its fields
+class TimecodeMediaInfoMisspelledBox() extends FullBox ('tmci'){
+	signed int(16) text_font;
+	signed int(16) text_face;
+	signed int(16) text_size;
+	signed int(16) reserved;
+	unsigned int(48) text_color;
+	unsigned int(48) background_color;
+	unsigned int(8) font_name_length;
+	unsigned int(8) font_name[font_name_length];
+}"; } }
 	public const string TYPE = "tmci";
 	public override string DisplayName { get { return "TimecodeMediaInfoMisspelledBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -47,7 +59,7 @@ public partial class TimecodeMediaInfoMisspelledBox : FullBox
 	protected byte font_name_length; 
 	public byte FontNameLength { get { return this.font_name_length; } set { this.font_name_length = value; } }
 
-	protected byte[] font_name; 
+	protected byte[] font_name = []; 
 	public byte[] FontName { get { return this.font_name; } set { this.font_name = value; } }
 
 	public TimecodeMediaInfoMisspelledBox(): base(IsoStream.FromFourCC("tmci"))
@@ -99,18 +111,18 @@ public partial class TimecodeMediaInfoMisspelledBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("text_font", 16, this.text_font); 
-		boxSize += builder.Field("text_face", 16, this.text_face); 
-		boxSize += builder.Field("text_size", 16, this.text_size); 
-		boxSize += builder.Field("reserved", 16, this.reserved); 
-		boxSize += builder.Field("text_color", 48, this.text_color); 
-		boxSize += builder.Field("background_color", 48, this.background_color); 
-		boxSize += builder.Field("font_name_length", 8, this.font_name_length); 
-		boxSize += builder.Field("font_name", ((ulong)(font_name_length) * 8), this.font_name); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("text_font", 16, this.text_font); 
+		boxSize += tracer.Field("text_face", 16, this.text_face); 
+		boxSize += tracer.Field("text_size", 16, this.text_size); 
+		boxSize += tracer.Field("reserved", 16, this.reserved); 
+		boxSize += tracer.Field("text_color", 48, this.text_color); 
+		boxSize += tracer.Field("background_color", 48, this.background_color); 
+		boxSize += tracer.Field("font_name_length", 8, this.font_name_length); 
+		boxSize += tracer.Field("font_name", ((ulong)(font_name_length) * 8), this.font_name); 
 		return boxSize;
 	}
 }

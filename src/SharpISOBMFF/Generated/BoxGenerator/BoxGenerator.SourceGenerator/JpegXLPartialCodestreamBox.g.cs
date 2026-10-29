@@ -8,13 +8,20 @@ namespace SharpISOBMFF
 /*
 // A part of the codestream: its index, the last part's with the top bit set
 aligned(8) class JpegXLPartialCodestreamBox extends Box('jxlp') {
- unsigned int(1) is_last;
- unsigned int(31) index;
- bit(8) data[];
- }
+	unsigned int(1) is_last;
+	unsigned int(31) index;
+	bit(8) data[];
+}
 */
 public partial class JpegXLPartialCodestreamBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// A part of the codestream: its index, the last part's with the top bit set
+aligned(8) class JpegXLPartialCodestreamBox extends Box('jxlp') {
+	unsigned int(1) is_last;
+	unsigned int(31) index;
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "jxlp";
 	public override string DisplayName { get { return "JpegXLPartialCodestreamBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -27,7 +34,7 @@ public partial class JpegXLPartialCodestreamBox : Box
 	protected uint index; 
 	public uint Index { get { return this.index; } set { this.index = value; } }
 
-	protected byte[] data; 
+	protected byte[] data = []; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public JpegXLPartialCodestreamBox(): base(IsoStream.FromFourCC("jxlp"))
@@ -64,13 +71,13 @@ public partial class JpegXLPartialCodestreamBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("is_last", 1, this.is_last); 
-		boxSize += builder.Field("index", 31, this.index); 
-		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("is_last", 1, this.is_last); 
+		boxSize += tracer.Field("index", 31, this.index); 
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

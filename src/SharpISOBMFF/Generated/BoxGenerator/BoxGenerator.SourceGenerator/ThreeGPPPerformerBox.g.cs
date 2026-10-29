@@ -10,10 +10,16 @@ aligned(8) class ThreeGPPPerformerBox() extends FullBox('perf', version = 0, 0) 
 	bit(1) reserved = 0;
 	unsigned int(5)[3] language;
 	string value;
-} 
+}
 */
 public partial class ThreeGPPPerformerBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ThreeGPPPerformerBox() extends FullBox('perf', version = 0, 0) {
+	bit(1) reserved = 0;
+	unsigned int(5)[3] language;
+	string value;
+}"; } }
 	public const string TYPE = "perf";
 	public override string DisplayName { get { return "ThreeGPPPerformerBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -23,7 +29,7 @@ public partial class ThreeGPPPerformerBox : FullBox
 	protected bool reserved = false; 
 	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-	protected string language; 
+	protected string language = "und"; 
 	public string Language { get { return this.language; } set { this.language = value; } }
 
 	protected BinaryUTF8String value; 
@@ -63,13 +69,13 @@ public partial class ThreeGPPPerformerBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 1, this.reserved); 
-		boxSize += builder.Field("language", 15, this.language); 
-		boxSize += builder.Field("value", IsoStream.CalculateStringSize(value), this.value); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 1, this.reserved); 
+		boxSize += tracer.Field("language", 15, this.language); 
+		boxSize += tracer.Field("value", IsoStream.CalculateStringSize(value), this.value); 
 		return boxSize;
 	}
 }

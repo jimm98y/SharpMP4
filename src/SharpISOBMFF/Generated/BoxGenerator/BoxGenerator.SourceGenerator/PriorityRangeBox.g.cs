@@ -15,6 +15,13 @@ class PriorityRangeBox extends Box('svpr') {
 */
 public partial class PriorityRangeBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class PriorityRangeBox extends Box('svpr') {
+	bit(2) reserved1 = 0;
+	unsigned int(6) min_priorityId;
+	bit(2) reserved2 = 0;
+	unsigned int(6) max_priorityId;
+}"; } }
 	public const string TYPE = "svpr";
 	public override string DisplayName { get { return "PriorityRangeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -70,14 +77,14 @@ public partial class PriorityRangeBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved1", 2, this.reserved1); 
-		boxSize += builder.Field("min_priorityId", 6, this.min_priorityId); 
-		boxSize += builder.Field("reserved2", 2, this.reserved2); 
-		boxSize += builder.Field("max_priorityId", 6, this.max_priorityId); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved1", 2, this.reserved1); 
+		boxSize += tracer.Field("min_priorityId", 6, this.min_priorityId); 
+		boxSize += tracer.Field("reserved2", 2, this.reserved2); 
+		boxSize += tracer.Field("max_priorityId", 6, this.max_priorityId); 
 		return boxSize;
 	}
 }

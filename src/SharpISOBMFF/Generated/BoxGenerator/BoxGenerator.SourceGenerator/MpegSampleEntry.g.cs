@@ -7,11 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class MpegSampleEntry() extends SampleEntry ('mp4s') {
- Box ES;
- }
+	Box ES;
+}
 */
 public partial class MpegSampleEntry : SampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class MpegSampleEntry() extends SampleEntry ('mp4s') {
+	Box ES;
+}"; } }
 	public const string TYPE = "mp4s";
 	public override string DisplayName { get { return "MpegSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,12 +54,12 @@ public partial class MpegSampleEntry : SampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("ES", IsoStream.CalculateBoxSize(ES), this.ES); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("ES", IsoStream.CalculateBoxSize(ES), this.ES); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

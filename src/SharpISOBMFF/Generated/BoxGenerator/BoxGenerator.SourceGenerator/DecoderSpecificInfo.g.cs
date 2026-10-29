@@ -7,12 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 abstract class DecoderSpecificInfo extends BaseDescriptor : bit(8) tag=DecSpecificInfoTag
- {
- // empty. To be filled by classes extending this class.
- }
+{
+	// empty. To be filled by classes extending this class.
+}
 */
 public abstract partial class DecoderSpecificInfo : BaseDescriptor
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"abstract class DecoderSpecificInfo extends BaseDescriptor : bit(8) tag=DecSpecificInfoTag
+{
+	// empty. To be filled by classes extending this class.
+}"; } }
 	public override string DisplayName { get { return "DecoderSpecificInfo"; } }
 
 	public DecoderSpecificInfo(): base(DescriptorTags.DecSpecificInfoTag)
@@ -43,10 +48,10 @@ public abstract partial class DecoderSpecificInfo : BaseDescriptor
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		/*  empty. To be filled by classes extending this class. */
 		return boxSize;
 	}

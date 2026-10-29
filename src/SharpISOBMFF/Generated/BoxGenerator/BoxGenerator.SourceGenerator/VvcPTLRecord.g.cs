@@ -22,11 +22,11 @@ aligned(8) class VvcPTLRecord(num_sublayers) {
 	for (i=num_sublayers-2; i >= 0; i--) {
 		if (ptl_sublayer_level_present_flag[i])
 			unsigned int(8) sublayer_level_idc[i];
-		}
+	}
 	unsigned int(8) ptl_num_sub_profiles;
 	for (j=0; j < ptl_num_sub_profiles; j++)
 		unsigned int(32) general_sub_profile_idc[j];
-} 
+}
 */
 public partial class VvcPTLRecord : IMp4Serializable
 {
@@ -35,6 +35,28 @@ public partial class VvcPTLRecord : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class VvcPTLRecord(num_sublayers) {
+	bit(2) reserved = 0;
+	unsigned int(6) num_bytes_constraint_info;
+	unsigned int(7) general_profile_idc;
+	unsigned int(1) general_tier_flag;
+	unsigned int(8) general_level_idc;
+	unsigned int(1) ptl_frame_only_constraint_flag;
+	unsigned int(1) ptl_multi_layer_enabled_flag;
+	unsigned int(8*num_bytes_constraint_info - 2) general_constraint_info;
+	for (i=num_sublayers - 2; i >= 0; i--)
+		unsigned int(1) ptl_sublayer_level_present_flag[i];
+	for (j=num_sublayers; j<=8 && num_sublayers > 1; j++)
+		bit(1) ptl_reserved_zero_bit = 0;
+	for (i=num_sublayers-2; i >= 0; i--) {
+		if (ptl_sublayer_level_present_flag[i])
+			unsigned int(8) sublayer_level_idc[i];
+	}
+	unsigned int(8) ptl_num_sub_profiles;
+	for (j=0; j < ptl_num_sub_profiles; j++)
+		unsigned int(32) general_sub_profile_idc[j];
+}"; } }
 	public virtual string DisplayName { get { return "VvcPTLRecord"; } }
 
 	protected byte reserved = 0; 
@@ -58,7 +80,7 @@ public partial class VvcPTLRecord : IMp4Serializable
 	protected bool ptl_multi_layer_enabled_flag; 
 	public bool PtlMultiLayerEnabledFlag { get { return this.ptl_multi_layer_enabled_flag; } set { this.ptl_multi_layer_enabled_flag = value; } }
 
-	protected byte[] general_constraint_info; 
+	protected byte[] general_constraint_info = []; 
 	public byte[] GeneralConstraintInfo { get { return this.general_constraint_info; } set { this.general_constraint_info = value; } }
 
 	protected bool[] ptl_sublayer_level_present_flag; 
@@ -205,26 +227,26 @@ public partial class VvcPTLRecord : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("reserved", 2, this.reserved); 
-		boxSize += builder.Field("num_bytes_constraint_info", 6, this.num_bytes_constraint_info); 
-		boxSize += builder.Field("general_profile_idc", 7, this.general_profile_idc); 
-		boxSize += builder.Field("general_tier_flag", 1, this.general_tier_flag); 
-		boxSize += builder.Field("general_level_idc", 8, this.general_level_idc); 
-		boxSize += builder.Field("ptl_frame_only_constraint_flag", 1, this.ptl_frame_only_constraint_flag); 
-		boxSize += builder.Field("ptl_multi_layer_enabled_flag", 1, this.ptl_multi_layer_enabled_flag); 
-		boxSize += builder.Field("general_constraint_info", (ulong)(8*num_bytes_constraint_info - 2 ), this.general_constraint_info); 
+		boxSize += tracer.Field("reserved", 2, this.reserved); 
+		boxSize += tracer.Field("num_bytes_constraint_info", 6, this.num_bytes_constraint_info); 
+		boxSize += tracer.Field("general_profile_idc", 7, this.general_profile_idc); 
+		boxSize += tracer.Field("general_tier_flag", 1, this.general_tier_flag); 
+		boxSize += tracer.Field("general_level_idc", 8, this.general_level_idc); 
+		boxSize += tracer.Field("ptl_frame_only_constraint_flag", 1, this.ptl_frame_only_constraint_flag); 
+		boxSize += tracer.Field("ptl_multi_layer_enabled_flag", 1, this.ptl_multi_layer_enabled_flag); 
+		boxSize += tracer.Field("general_constraint_info", (ulong)(8*num_bytes_constraint_info - 2 ), this.general_constraint_info); 
 
 		for (int i=num_sublayers - 2; i >= 0; i--)
 		{
-			boxSize += builder.Field($"ptl_sublayer_level_present_flag[{i}]", 1, this.ptl_sublayer_level_present_flag[i]); 
+			boxSize += tracer.Field($"ptl_sublayer_level_present_flag[{i}]", 1, this.ptl_sublayer_level_present_flag[i]); 
 		}
 
 		for (int j=num_sublayers; j<=8 && num_sublayers > 1; j++)
 		{
-			boxSize += builder.Field($"ptl_reserved_zero_bit[{j}]", 1, this.ptl_reserved_zero_bit[j]); 
+			boxSize += tracer.Field($"ptl_reserved_zero_bit[{j}]", 1, this.ptl_reserved_zero_bit[j]); 
 		}
 
 		for (int i=num_sublayers-2; i >= 0; i--)
@@ -232,14 +254,14 @@ public partial class VvcPTLRecord : IMp4Serializable
 
 			if (ptl_sublayer_level_present_flag[i])
 			{
-				boxSize += builder.Field($"sublayer_level_idc[{i}]", 8, this.sublayer_level_idc[i]); 
+				boxSize += tracer.Field($"sublayer_level_idc[{i}]", 8, this.sublayer_level_idc[i]); 
 			}
 		}
-		boxSize += builder.Field("ptl_num_sub_profiles", 8, this.ptl_num_sub_profiles); 
+		boxSize += tracer.Field("ptl_num_sub_profiles", 8, this.ptl_num_sub_profiles); 
 
 		for (int j=0; j < ptl_num_sub_profiles; j++)
 		{
-			boxSize += builder.Field($"general_sub_profile_idc[{j}]", 32, this.general_sub_profile_idc[j]); 
+			boxSize += tracer.Field($"general_sub_profile_idc[{j}]", 32, this.general_sub_profile_idc[j]); 
 		}
 		return boxSize;
 	}

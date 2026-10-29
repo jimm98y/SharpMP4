@@ -7,13 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 class AmbientViewingEnvironmentBox extends Box('amve'){
-	unsigned int(32) ambient_illuminance; 
+	unsigned int(32) ambient_illuminance;
 	unsigned int(16) ambient_light_x;
 	unsigned int(16) ambient_light_y;
 }
 */
 public partial class AmbientViewingEnvironmentBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AmbientViewingEnvironmentBox extends Box('amve'){
+	unsigned int(32) ambient_illuminance;
+	unsigned int(16) ambient_light_x;
+	unsigned int(16) ambient_light_y;
+}"; } }
 	public const string TYPE = "amve";
 	public override string DisplayName { get { return "AmbientViewingEnvironmentBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -63,13 +69,13 @@ public partial class AmbientViewingEnvironmentBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("ambient_illuminance", 32, this.ambient_illuminance); 
-		boxSize += builder.Field("ambient_light_x", 16, this.ambient_light_x); 
-		boxSize += builder.Field("ambient_light_y", 16, this.ambient_light_y); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("ambient_illuminance", 32, this.ambient_illuminance); 
+		boxSize += tracer.Field("ambient_light_x", 16, this.ambient_light_x); 
+		boxSize += tracer.Field("ambient_light_y", 16, this.ambient_light_y); 
 		return boxSize;
 	}
 }

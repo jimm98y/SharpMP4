@@ -7,14 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class EC3SpecificBox() extends Box('dec3') {
- bit(13) dataRate;
- bit(3) numIndSub;
- EC3SpecificEntry entries[numIndSub + 1];
- }
- 
+	bit(13) dataRate;
+	bit(3) numIndSub;
+	EC3SpecificEntry entries[numIndSub + 1];
+}
 */
 public partial class EC3SpecificBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class EC3SpecificBox() extends Box('dec3') {
+	bit(13) dataRate;
+	bit(3) numIndSub;
+	EC3SpecificEntry entries[numIndSub + 1];
+}"; } }
 	public const string TYPE = "dec3";
 	public override string DisplayName { get { return "EC3SpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -27,7 +32,7 @@ public partial class EC3SpecificBox : Box
 	protected byte numIndSub; 
 	public byte NumIndSub { get { return this.numIndSub; } set { this.numIndSub = value; } }
 
-	protected EC3SpecificEntry[] entries; 
+	protected EC3SpecificEntry[] entries = []; 
 	public EC3SpecificEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
 
 	public EC3SpecificBox(): base(IsoStream.FromFourCC("dec3"))
@@ -64,13 +69,13 @@ public partial class EC3SpecificBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("dataRate", 13, this.dataRate); 
-		boxSize += builder.Field("numIndSub", 3, this.numIndSub); 
-		boxSize += builder.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("dataRate", 13, this.dataRate); 
+		boxSize += tracer.Field("numIndSub", 3, this.numIndSub); 
+		boxSize += tracer.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
 		return boxSize;
 	}
 }

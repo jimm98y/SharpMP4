@@ -7,13 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 class TierDependencyBox extends Box('ldep'){
-	unsigned int(16) entry_count; 
+	unsigned int(16) entry_count;
 	for (i=0; i < entry_count; i++)
 		unsigned int(16) dependencyTierId;
 }
 */
 public partial class TierDependencyBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class TierDependencyBox extends Box('ldep'){
+	unsigned int(16) entry_count;
+	for (i=0; i < entry_count; i++)
+		unsigned int(16) dependencyTierId;
+}"; } }
 	public const string TYPE = "ldep";
 	public override string DisplayName { get { return "TierDependencyBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -70,15 +76,15 @@ public partial class TierDependencyBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entry_count", 16, this.entry_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entry_count", 16, this.entry_count); 
 
 		for (int i=0; i < entry_count; i++)
 		{
-			boxSize += builder.Field($"dependencyTierId[{i}]", 16, this.dependencyTierId[i]); 
+			boxSize += tracer.Field($"dependencyTierId[{i}]", 16, this.dependencyTierId[i]); 
 		}
 		return boxSize;
 	}

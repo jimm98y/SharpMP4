@@ -7,12 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 class WipeTransitionEffectProperty
-extends ItemFullProperty('wipe', version=0, flags=0) {
+	extends ItemFullProperty('wipe', version=0, flags=0) {
 	unsigned int(8) transition_direction;
 }
 */
 public partial class WipeTransitionEffectProperty : ItemFullProperty
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class WipeTransitionEffectProperty
+	extends ItemFullProperty('wipe', version=0, flags=0) {
+	unsigned int(8) transition_direction;
+}"; } }
 	public const string TYPE = "wipe";
 	public override string DisplayName { get { return "WipeTransitionEffectProperty"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +55,11 @@ public partial class WipeTransitionEffectProperty : ItemFullProperty
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("transition_direction", 8, this.transition_direction); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("transition_direction", 8, this.transition_direction); 
 		return boxSize;
 	}
 }

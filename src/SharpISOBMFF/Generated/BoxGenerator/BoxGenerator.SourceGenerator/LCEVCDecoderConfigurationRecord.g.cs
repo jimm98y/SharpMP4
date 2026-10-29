@@ -39,6 +39,32 @@ public partial class LCEVCDecoderConfigurationRecord : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"// as FFmpeg's ff_isom_write_lvcc writes it: the byte after the size is 0xFF, the NAL unit arrays as hvcC's
+aligned(8) class LCEVCDecoderConfigurationRecord {
+	unsigned int(8) configurationVersion = 1;
+	unsigned int(8) LCEVCProfileIndication;
+	unsigned int(8) LCEVCLevelIndication;
+	unsigned int(2) chroma_format_idc;
+	unsigned int(3) bit_depth_luma_minus8;
+	unsigned int(3) bit_depth_chroma_minus8;
+	unsigned int(2) lengthSizeMinusOne;
+	bit(6) reserved = '111111'b;
+	unsigned int(32) pic_width_in_luma_samples;
+	unsigned int(32) pic_height_in_luma_samples;
+	bit(8) reserved0 = 0xFF;
+	unsigned int(8) numOfArrays;
+	for (j=0; j < numOfArrays; j++) {
+		bit(1) array_completeness;
+		bit(1) reserved1 = 0;
+		unsigned int(6) NAL_unit_type;
+		unsigned int(16) numNalus;
+		for (i=0; i< numNalus; i++) {
+			unsigned int(16) nalUnitLength;
+			bit(8*nalUnitLength) nalUnit;
+		}
+	}
+}"; } }
 	public virtual string DisplayName { get { return "LCEVCDecoderConfigurationRecord"; } }
 
 	protected byte configurationVersion = 1; 
@@ -203,33 +229,33 @@ public partial class LCEVCDecoderConfigurationRecord : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("configurationVersion", 8, this.configurationVersion); 
-		boxSize += builder.Field("LCEVCProfileIndication", 8, this.LCEVCProfileIndication); 
-		boxSize += builder.Field("LCEVCLevelIndication", 8, this.LCEVCLevelIndication); 
-		boxSize += builder.Field("chroma_format_idc", 2, this.chroma_format_idc); 
-		boxSize += builder.Field("bit_depth_luma_minus8", 3, this.bit_depth_luma_minus8); 
-		boxSize += builder.Field("bit_depth_chroma_minus8", 3, this.bit_depth_chroma_minus8); 
-		boxSize += builder.Field("lengthSizeMinusOne", 2, this.lengthSizeMinusOne); 
-		boxSize += builder.Field("reserved", 6, this.reserved); 
-		boxSize += builder.Field("pic_width_in_luma_samples", 32, this.pic_width_in_luma_samples); 
-		boxSize += builder.Field("pic_height_in_luma_samples", 32, this.pic_height_in_luma_samples); 
-		boxSize += builder.Field("reserved0", 8, this.reserved0); 
-		boxSize += builder.Field("numOfArrays", 8, this.numOfArrays); 
+		boxSize += tracer.Field("configurationVersion", 8, this.configurationVersion); 
+		boxSize += tracer.Field("LCEVCProfileIndication", 8, this.LCEVCProfileIndication); 
+		boxSize += tracer.Field("LCEVCLevelIndication", 8, this.LCEVCLevelIndication); 
+		boxSize += tracer.Field("chroma_format_idc", 2, this.chroma_format_idc); 
+		boxSize += tracer.Field("bit_depth_luma_minus8", 3, this.bit_depth_luma_minus8); 
+		boxSize += tracer.Field("bit_depth_chroma_minus8", 3, this.bit_depth_chroma_minus8); 
+		boxSize += tracer.Field("lengthSizeMinusOne", 2, this.lengthSizeMinusOne); 
+		boxSize += tracer.Field("reserved", 6, this.reserved); 
+		boxSize += tracer.Field("pic_width_in_luma_samples", 32, this.pic_width_in_luma_samples); 
+		boxSize += tracer.Field("pic_height_in_luma_samples", 32, this.pic_height_in_luma_samples); 
+		boxSize += tracer.Field("reserved0", 8, this.reserved0); 
+		boxSize += tracer.Field("numOfArrays", 8, this.numOfArrays); 
 
 		for (int j=0; j < numOfArrays; j++)
 		{
-			boxSize += builder.Field($"array_completeness[{j}]", 1, this.array_completeness[j]); 
-			boxSize += builder.Field($"reserved1[{j}]", 1, this.reserved1[j]); 
-			boxSize += builder.Field($"NAL_unit_type[{j}]", 6, this.NAL_unit_type[j]); 
-			boxSize += builder.Field($"numNalus[{j}]", 16, this.numNalus[j]); 
+			boxSize += tracer.Field($"array_completeness[{j}]", 1, this.array_completeness[j]); 
+			boxSize += tracer.Field($"reserved1[{j}]", 1, this.reserved1[j]); 
+			boxSize += tracer.Field($"NAL_unit_type[{j}]", 6, this.NAL_unit_type[j]); 
+			boxSize += tracer.Field($"numNalus[{j}]", 16, this.numNalus[j]); 
 
 			for (int i=0; i< numNalus[j]; i++)
 			{
-				boxSize += builder.Field($"nalUnitLength[{j}][{i}]", 16, this.nalUnitLength[j][i]); 
-				boxSize += builder.Field($"nalUnit[{j}][{i}]", (ulong)(8*nalUnitLength[j][i] ), this.nalUnit[j][i]); 
+				boxSize += tracer.Field($"nalUnitLength[{j}][{i}]", 16, this.nalUnitLength[j][i]); 
+				boxSize += tracer.Field($"nalUnit[{j}][{i}]", (ulong)(8*nalUnitLength[j][i] ), this.nalUnit[j][i]); 
 			}
 		}
 		return boxSize;

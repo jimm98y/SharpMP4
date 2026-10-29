@@ -10,6 +10,9 @@ namespace SharpH261
     /// </summary>
     public sealed class PictureData : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         public int LeadingBits { get; set; }
         public int LeadingBitCount { get; set; }
         public byte[] Data { get; set; } = Array.Empty<byte>();

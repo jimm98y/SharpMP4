@@ -13,6 +13,11 @@ class TrackExtensionPropertiesBox extends FullBox('trep', 0, 0) {
 */
 public partial class TrackExtensionPropertiesBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class TrackExtensionPropertiesBox extends FullBox('trep', 0, 0) {
+	unsigned int(32) track_ID;
+	// Any number of boxes may follow
+}"; } }
 	public const string TYPE = "trep";
 	public override string DisplayName { get { return "TrackExtensionPropertiesBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -53,12 +58,12 @@ public partial class TrackExtensionPropertiesBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("track_ID", 32, this.track_ID); // Any number of boxes may follow
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("track_ID", 32, this.track_ID); // Any number of boxes may follow
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

@@ -7,11 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class OMACoverURLBox() extends FullBox('cvru') {
-	 string content;
- } 
+	string content;
+}
 */
 public partial class OMACoverURLBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class OMACoverURLBox() extends FullBox('cvru') {
+	string content;
+}"; } }
 	public const string TYPE = "cvru";
 	public override string DisplayName { get { return "OMACoverURLBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class OMACoverURLBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("content", IsoStream.CalculateStringSize(content), this.content); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("content", IsoStream.CalculateStringSize(content), this.content); 
 		return boxSize;
 	}
 }

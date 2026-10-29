@@ -7,12 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 class ControllerTypeBox() extends Box ('ctyp'){
- // the movie controller's type, a four character code (QuickTime 'ctyp')
- unsigned int(32) controller_type;
- }
+	// the movie controller's type, a four character code (QuickTime 'ctyp')
+	unsigned int(32) controller_type;
+}
 */
 public partial class ControllerTypeBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ControllerTypeBox() extends Box ('ctyp'){
+	// the movie controller's type, a four character code (QuickTime 'ctyp')
+	unsigned int(32) controller_type;
+}"; } }
 	public const string TYPE = "ctyp";
 	public override string DisplayName { get { return "ControllerTypeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -53,12 +58,12 @@ public partial class ControllerTypeBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		/*  the movie controller's type, a four character code (QuickTime 'ctyp') */
-		boxSize += builder.Field("controller_type", 32, this.controller_type); 
+		boxSize += tracer.Field("controller_type", 32, this.controller_type); 
 		return boxSize;
 	}
 }

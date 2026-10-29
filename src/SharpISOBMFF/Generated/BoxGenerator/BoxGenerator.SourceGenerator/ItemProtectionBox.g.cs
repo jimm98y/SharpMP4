@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ItemProtectionBox
-		extends FullBox('ipro', version = 0, 0) {
+	extends FullBox('ipro', version = 0, 0) {
 	unsigned int(16) protection_count;
 	for (i=1; i<=protection_count; i++) {
 		ProtectionSchemeInfoBox	protection_information;
@@ -16,6 +16,14 @@ aligned(8) class ItemProtectionBox
 */
 public partial class ItemProtectionBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ItemProtectionBox
+	extends FullBox('ipro', version = 0, 0) {
+	unsigned int(16) protection_count;
+	for (i=1; i<=protection_count; i++) {
+		ProtectionSchemeInfoBox	protection_information;
+	}
+}"; } }
 	public const string TYPE = "ipro";
 	public override string DisplayName { get { return "ItemProtectionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -66,15 +74,15 @@ public partial class ItemProtectionBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("protection_count", 16, this.protection_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("protection_count", 16, this.protection_count); 
 
 		// for (int i=0; i<protection_count; i++)
-			// boxSize += builder.Field($"protection_information[{i}]", IsoStream.CalculateBoxSize(protection_information[i]), this.protection_information[i]); 
-		boxSize += builder.Children(this);
+			// boxSize += tracer.Field($"protection_information[{i}]", IsoStream.CalculateBoxSize(protection_information[i]), this.protection_information[i]); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

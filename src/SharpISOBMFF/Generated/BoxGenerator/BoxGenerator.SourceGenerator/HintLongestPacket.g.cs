@@ -11,6 +11,9 @@ aligned(8) class HintLongestPacket extends Box('dmax') {
 */
 public partial class HintLongestPacket : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class HintLongestPacket extends Box('dmax') {
+	uint(32)	time; }			// longest packet duration, milliseconds"; } }
 	public const string TYPE = "dmax";
 	public override string DisplayName { get { return "HintLongestPacket"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -48,11 +51,11 @@ public partial class HintLongestPacket : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("time", 32, this.time); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("time", 32, this.time); 
 		return boxSize;
 	}
 }

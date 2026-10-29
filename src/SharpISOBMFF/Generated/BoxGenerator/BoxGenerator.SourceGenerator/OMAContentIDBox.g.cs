@@ -7,12 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class OMAContentIDBox() extends FullBox('ccid') {
-	 unsigned int(16) contentIDLength;
- unsigned int(8) contentID[contentIDLength];
- } 
+	unsigned int(16) contentIDLength;
+	unsigned int(8) contentID[contentIDLength];
+}
 */
 public partial class OMAContentIDBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class OMAContentIDBox() extends FullBox('ccid') {
+	unsigned int(16) contentIDLength;
+	unsigned int(8) contentID[contentIDLength];
+}"; } }
 	public const string TYPE = "ccid";
 	public override string DisplayName { get { return "OMAContentIDBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -22,7 +27,7 @@ public partial class OMAContentIDBox : FullBox
 	protected ushort contentIDLength; 
 	public ushort ContentIDLength { get { return this.contentIDLength; } set { this.contentIDLength = value; } }
 
-	protected byte[] contentID; 
+	protected byte[] contentID = []; 
 	public byte[] ContentID { get { return this.contentID; } set { this.contentID = value; } }
 
 	public OMAContentIDBox(): base(IsoStream.FromFourCC("ccid"))
@@ -56,12 +61,12 @@ public partial class OMAContentIDBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("contentIDLength", 16, this.contentIDLength); 
-		boxSize += builder.Field("contentID", ((ulong)(contentIDLength) * 8), this.contentID); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("contentIDLength", 16, this.contentIDLength); 
+		boxSize += tracer.Field("contentID", ((ulong)(contentIDLength) * 8), this.contentID); 
 		return boxSize;
 	}
 }

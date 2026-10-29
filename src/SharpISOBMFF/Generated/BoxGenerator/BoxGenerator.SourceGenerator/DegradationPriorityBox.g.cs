@@ -16,6 +16,14 @@ aligned(8) class DegradationPriorityBox
 */
 public partial class DegradationPriorityBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class DegradationPriorityBox
+	extends FullBox('stdp', version = 0, 0) {
+	int i;
+	for (i=0; i < sample_count; i++) {
+		unsigned int(16)	priority;
+	}
+}"; } }
 	public const string TYPE = "stdp";
 	public override string DisplayName { get { return "DegradationPriorityBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -75,17 +83,17 @@ public partial class DegradationPriorityBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		int sample_count = priority.Length;
 
 		
 
 		for (int i=0; i < sample_count; i++)
 		{
-			boxSize += builder.Field($"priority[{i}]", 16, this.priority[i]); 
+			boxSize += tracer.Field($"priority[{i}]", 16, this.priority[i]); 
 		}
 		return boxSize;
 	}

@@ -15,6 +15,13 @@ aligned(8) class LoudnessBox extends Box('ludt') {
 */
 public partial class LoudnessBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class LoudnessBox extends Box('ludt') {
+	// not more than one TrackLoudnessInfo box with version>=1 is allowed
+	TrackLoudnessInfo[]			loudness;
+	// not more than one AlbumLoudnessInfo box with version>=1 is allowed
+	AlbumLoudnessInfo[] albumLoudness;
+}"; } }
 	public const string TYPE = "ludt";
 	public override string DisplayName { get { return "LoudnessBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -60,14 +67,14 @@ public partial class LoudnessBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		/*  not more than one TrackLoudnessInfo box with version>=1 is allowed */
-		// boxSize += builder.Field("loudness", IsoStream.CalculateBoxSize(loudness), this.loudness); // not more than one AlbumLoudnessInfo box with version>=1 is allowed
-		// boxSize += builder.Field("albumLoudness", IsoStream.CalculateBoxSize(albumLoudness), this.albumLoudness); 
-		boxSize += builder.Children(this);
+		// boxSize += tracer.Field("loudness", IsoStream.CalculateBoxSize(loudness), this.loudness); // not more than one AlbumLoudnessInfo box with version>=1 is allowed
+		// boxSize += tracer.Field("albumLoudness", IsoStream.CalculateBoxSize(albumLoudness), this.albumLoudness); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

@@ -14,6 +14,12 @@ aligned(8) class DataEntryUrnBox (bit(24) flags)
 */
 public partial class DataEntryUrnBox : DataEntryBaseBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class DataEntryUrnBox (bit(24) flags)
+	extends DataEntryBaseBox('urn ', flags) {
+	utf8string name;
+	utf8string location;
+}"; } }
 	public const string TYPE = "urn ";
 	public override string DisplayName { get { return "DataEntryUrnBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -57,12 +63,12 @@ public partial class DataEntryUrnBox : DataEntryBaseBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("name", IsoStream.CalculateStringSize(name), this.name); 
-		boxSize += builder.Field("location", IsoStream.CalculateStringSize(location), this.location); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("name", IsoStream.CalculateStringSize(name), this.name); 
+		boxSize += tracer.Field("location", IsoStream.CalculateStringSize(location), this.location); 
 		return boxSize;
 	}
 }

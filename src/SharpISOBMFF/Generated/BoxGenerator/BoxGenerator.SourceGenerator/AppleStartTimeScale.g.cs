@@ -7,18 +7,22 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AppleStartTimeScale() extends Box('©TSC') {
- MultiLanguageString value[]; 
- } 
+	MultiLanguageString value[];
+}
 */
 public partial class AppleStartTimeScale : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AppleStartTimeScale() extends Box('©TSC') {
+	MultiLanguageString value[];
+}"; } }
 	public const string TYPE = "©TSC";
 	public override string DisplayName { get { return "AppleStartTimeScale"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("udta", "ilst"); }
 
 
-	protected MultiLanguageString[] value; 
+	protected MultiLanguageString[] value = []; 
 	public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
 
 	public AppleStartTimeScale(): base(IsoStream.FromFourCC("©TSC"))
@@ -49,11 +53,11 @@ public partial class AppleStartTimeScale : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("value", IsoStream.CalculateStringSizeLangPrefixed(value), this.value); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("value", IsoStream.CalculateStringSizeLangPrefixed(value), this.value); 
 		return boxSize;
 	}
 }

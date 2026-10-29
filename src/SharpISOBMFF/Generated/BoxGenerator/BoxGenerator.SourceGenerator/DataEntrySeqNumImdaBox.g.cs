@@ -12,6 +12,10 @@ aligned(8) class DataEntrySeqNumImdaBox (bit(24) flags)
 */
 public partial class DataEntrySeqNumImdaBox : DataEntryBaseBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class DataEntrySeqNumImdaBox (bit(24) flags)
+	extends DataEntryBaseBox ('snim', flags) {
+}"; } }
 	public const string TYPE = "snim";
 	public override string DisplayName { get { return "DataEntrySeqNumImdaBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -43,10 +47,10 @@ public partial class DataEntrySeqNumImdaBox : DataEntryBaseBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

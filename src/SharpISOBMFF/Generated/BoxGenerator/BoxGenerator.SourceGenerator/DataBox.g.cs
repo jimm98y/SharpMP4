@@ -7,13 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class DataBox() extends Box('data') {
-unsigned int(32) dataType;
- unsigned int(32) dataLang;
- bit(8) data[];
- } 
+	unsigned int(32) dataType;
+	unsigned int(32) dataLang;
+	bit(8) data[];
+}
 */
 public partial class DataBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class DataBox() extends Box('data') {
+	unsigned int(32) dataType;
+	unsigned int(32) dataLang;
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "data";
 	public override string DisplayName { get { return "DataBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -26,7 +32,7 @@ public partial class DataBox : Box
 	protected uint dataLang; 
 	public uint DataLang { get { return this.dataLang; } set { this.dataLang = value; } }
 
-	protected byte[] data; 
+	protected byte[] data = []; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public DataBox(): base(IsoStream.FromFourCC("data"))
@@ -63,13 +69,13 @@ public partial class DataBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("dataType", 32, this.dataType); 
-		boxSize += builder.Field("dataLang", 32, this.dataLang); 
-		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("dataType", 32, this.dataType); 
+		boxSize += tracer.Field("dataLang", 32, this.dataLang); 
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

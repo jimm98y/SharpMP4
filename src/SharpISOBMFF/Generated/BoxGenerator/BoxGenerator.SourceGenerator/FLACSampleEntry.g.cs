@@ -8,11 +8,16 @@ namespace SharpISOBMFF
 /*
 // Encapsulation of FLAC in ISO Base Media File Format (Xiph, isoflac.txt), 3.3.1 FLAC Sample Entry
 class FLACSampleEntry() extends AudioSampleEntry ('fLaC'){
- FLACSpecificBox();
- }
+	FLACSpecificBox();
+}
 */
 public partial class FLACSampleEntry : AudioSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// Encapsulation of FLAC in ISO Base Media File Format (Xiph, isoflac.txt), 3.3.1 FLAC Sample Entry
+class FLACSampleEntry() extends AudioSampleEntry ('fLaC'){
+	FLACSpecificBox();
+}"; } }
 	public const string TYPE = "fLaC";
 	public override string DisplayName { get { return "FLACSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -51,12 +56,12 @@ public partial class FLACSampleEntry : AudioSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("FLACSpecificBox", IsoStream.CalculateBoxSize(FLACSpecificBox), this.FLACSpecificBox); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("FLACSpecificBox", IsoStream.CalculateBoxSize(FLACSpecificBox), this.FLACSpecificBox); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

@@ -8,27 +8,46 @@ namespace SharpISOBMFF
 /*
 // ISO/IEC 14496-1:2010's InitialObjectDescriptor, as an MP4 file has it (ISO/IEC 14496-14): ES_ID_Inc for its ES_Descriptors
 aligned(8) class IOD_Descriptor extends BaseDescriptor : bit(8) tag=MP4_IOD_Tag {
- bit(10) ObjectDescriptorID;
- bit(1) URL_Flag;
- bit(1) includeInlineProfileLevelFlag;
- bit(4) reserved;
- if (URL_Flag) {
-  bit(8) URLlength;
-  bit(8) URLstring[URLlength];
- }
- else {
-  bit(8) ODProfileLevelIndication;
-  bit(8) sceneProfileLevelIndication;
-  bit(8) audioProfileLevelIndication;
-  bit(8) visualProfileLevelIndication;
-  bit(8) graphicsProfileLevelIndication;
- }
- ES_ID_Inc esIdInc[1 .. 255];
- }
- 
+	bit(10) ObjectDescriptorID;
+	bit(1) URL_Flag;
+	bit(1) includeInlineProfileLevelFlag;
+	bit(4) reserved;
+	if (URL_Flag) {
+		bit(8) URLlength;
+		bit(8) URLstring[URLlength];
+	}
+	else {
+		bit(8) ODProfileLevelIndication;
+		bit(8) sceneProfileLevelIndication;
+		bit(8) audioProfileLevelIndication;
+		bit(8) visualProfileLevelIndication;
+		bit(8) graphicsProfileLevelIndication;
+	}
+	ES_ID_Inc esIdInc[1 .. 255];
+}
 */
 public partial class IOD_Descriptor : BaseDescriptor
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// ISO/IEC 14496-1:2010's InitialObjectDescriptor, as an MP4 file has it (ISO/IEC 14496-14): ES_ID_Inc for its ES_Descriptors
+aligned(8) class IOD_Descriptor extends BaseDescriptor : bit(8) tag=MP4_IOD_Tag {
+	bit(10) ObjectDescriptorID;
+	bit(1) URL_Flag;
+	bit(1) includeInlineProfileLevelFlag;
+	bit(4) reserved;
+	if (URL_Flag) {
+		bit(8) URLlength;
+		bit(8) URLstring[URLlength];
+	}
+	else {
+		bit(8) ODProfileLevelIndication;
+		bit(8) sceneProfileLevelIndication;
+		bit(8) audioProfileLevelIndication;
+		bit(8) visualProfileLevelIndication;
+		bit(8) graphicsProfileLevelIndication;
+	}
+	ES_ID_Inc esIdInc[1 .. 255];
+}"; } }
 	public const byte TYPE = DescriptorTags.MP4_IOD_Tag;
 	public override string DisplayName { get { return "IOD_Descriptor"; } }
 
@@ -47,7 +66,7 @@ public partial class IOD_Descriptor : BaseDescriptor
 	protected byte URLlength; 
 	public byte _URLlength { get { return this.URLlength; } set { this.URLlength = value; } }
 
-	protected byte[] URLstring; 
+	protected byte[] URLstring = []; 
 	public byte[] _URLstring { get { return this.URLstring; } set { this.URLstring = value; } }
 
 	protected byte ODProfileLevelIndication; 
@@ -154,31 +173,31 @@ public partial class IOD_Descriptor : BaseDescriptor
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("ObjectDescriptorID", 10, this.ObjectDescriptorID); 
-		boxSize += builder.Field("URL_Flag", 1, this.URL_Flag); 
-		boxSize += builder.Field("includeInlineProfileLevelFlag", 1, this.includeInlineProfileLevelFlag); 
-		boxSize += builder.Field("reserved", 4, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("ObjectDescriptorID", 10, this.ObjectDescriptorID); 
+		boxSize += tracer.Field("URL_Flag", 1, this.URL_Flag); 
+		boxSize += tracer.Field("includeInlineProfileLevelFlag", 1, this.includeInlineProfileLevelFlag); 
+		boxSize += tracer.Field("reserved", 4, this.reserved); 
 
 		if (URL_Flag)
 		{
-			boxSize += builder.Field("URLlength", 8, this.URLlength); 
-			boxSize += builder.Field("URLstring", ((ulong)(URLlength) * 8), this.URLstring); 
+			boxSize += tracer.Field("URLlength", 8, this.URLlength); 
+			boxSize += tracer.Field("URLstring", ((ulong)(URLlength) * 8), this.URLstring); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("ODProfileLevelIndication", 8, this.ODProfileLevelIndication); 
-			boxSize += builder.Field("sceneProfileLevelIndication", 8, this.sceneProfileLevelIndication); 
-			boxSize += builder.Field("audioProfileLevelIndication", 8, this.audioProfileLevelIndication); 
-			boxSize += builder.Field("visualProfileLevelIndication", 8, this.visualProfileLevelIndication); 
-			boxSize += builder.Field("graphicsProfileLevelIndication", 8, this.graphicsProfileLevelIndication); 
+			boxSize += tracer.Field("ODProfileLevelIndication", 8, this.ODProfileLevelIndication); 
+			boxSize += tracer.Field("sceneProfileLevelIndication", 8, this.sceneProfileLevelIndication); 
+			boxSize += tracer.Field("audioProfileLevelIndication", 8, this.audioProfileLevelIndication); 
+			boxSize += tracer.Field("visualProfileLevelIndication", 8, this.visualProfileLevelIndication); 
+			boxSize += tracer.Field("graphicsProfileLevelIndication", 8, this.graphicsProfileLevelIndication); 
 		}
-		// boxSize += builder.Field("esIdInc", IsoStream.CalculateDescriptorSize(esIdInc), this.esIdInc); 
-		boxSize += builder.Descriptors(this);
+		// boxSize += tracer.Field("esIdInc", IsoStream.CalculateDescriptorSize(esIdInc), this.esIdInc); 
+		boxSize += tracer.Descriptors(this);
 		return boxSize;
 	}
 }

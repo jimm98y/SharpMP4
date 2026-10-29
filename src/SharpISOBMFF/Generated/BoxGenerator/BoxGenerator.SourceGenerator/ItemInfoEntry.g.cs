@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ItemInfoEntry
-		extends FullBox('infe', version, flags) {
+	extends FullBox('infe', version, flags) {
 	if ((version == 0) || (version == 1)) {
 		unsigned int(16) item_ID;
 		unsigned int(16) item_protection_index;
@@ -43,6 +43,41 @@ aligned(8) class ItemInfoEntry
 */
 public partial class ItemInfoEntry : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ItemInfoEntry
+	extends FullBox('infe', version, flags) {
+	if ((version == 0) || (version == 1)) {
+		unsigned int(16) item_ID;
+		unsigned int(16) item_protection_index;
+		utf8string item_name;
+		utf8string content_type;
+		utf8string content_encoding; //optional
+	}
+	if (version == 1) {
+		unsigned int(32) extension_type; //optional
+		if (extension_type == 'fdel') {
+			FDItemInfoExtension() fdItemInfoExtension;
+		} else {
+			ItemInfoExtension(extension_type); //optional
+		}
+	}
+	if (version >= 2) {
+		if (version == 2) {
+			unsigned int(16) item_ID;
+		} else if (version == 3) {
+			unsigned int(32) item_ID;
+		}
+		unsigned int(16) item_protection_index;
+		unsigned int(32) item_type;
+		utf8string item_name;
+		if (item_type=='mime') {
+			utf8string content_type;
+			utf8string content_encoding; //optional
+		} else if (item_type == 'uri ') {
+			utf8string item_uri_type;
+		}
+	}
+}"; } }
 	public const string TYPE = "infe";
 	public override string DisplayName { get { return "ItemInfoEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -269,32 +304,32 @@ public partial class ItemInfoEntry : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if ((version == 0) || (version == 1))
 		{
-			boxSize += builder.Field("item_ID", 16, this.item_ID); 
-			boxSize += builder.Field("item_protection_index", 16, this.item_protection_index); 
-			boxSize += builder.Field("item_name", IsoStream.CalculateStringSize(item_name), this.item_name); 
-			boxSize += builder.Field("content_type", IsoStream.CalculateStringSize(content_type), this.content_type); 
-			if (this.content_encodingPresent) boxSize += builder.Field("content_encoding", IsoStream.CalculateStringSize(content_encoding), this.content_encoding); //optional
+			boxSize += tracer.Field("item_ID", 16, this.item_ID); 
+			boxSize += tracer.Field("item_protection_index", 16, this.item_protection_index); 
+			boxSize += tracer.Field("item_name", IsoStream.CalculateStringSize(item_name), this.item_name); 
+			boxSize += tracer.Field("content_type", IsoStream.CalculateStringSize(content_type), this.content_type); 
+			if (this.content_encodingPresent) boxSize += tracer.Field("content_encoding", IsoStream.CalculateStringSize(content_encoding), this.content_encoding); //optional
 		}
 
 		if (version == 1)
 		{
-			if (this.extension_typePresent) boxSize += builder.Field("extension_type", 32, this.extension_type); //optional
+			if (this.extension_typePresent) boxSize += tracer.Field("extension_type", 32, this.extension_type); //optional
 
 			if (extension_type == IsoStream.FromFourCC("fdel"))
 			{
-				boxSize += builder.Field("fdItemInfoExtension", IsoStream.CalculateClassSize(fdItemInfoExtension), this.fdItemInfoExtension); 
+				boxSize += tracer.Field("fdItemInfoExtension", IsoStream.CalculateClassSize(fdItemInfoExtension), this.fdItemInfoExtension); 
 			}
 
 			else 
 			{
-				if (this.ItemInfoExtensionPresent) boxSize += builder.Field("ItemInfoExtension", IsoStream.CalculateClassSize(ItemInfoExtension), this.ItemInfoExtension); //optional
+				if (this.ItemInfoExtensionPresent) boxSize += tracer.Field("ItemInfoExtension", IsoStream.CalculateClassSize(ItemInfoExtension), this.ItemInfoExtension); //optional
 			}
 		}
 
@@ -303,29 +338,29 @@ public partial class ItemInfoEntry : FullBox
 
 			if (version == 2)
 			{
-				boxSize += builder.Field("item_ID", 16, this.item_ID); 
+				boxSize += tracer.Field("item_ID", 16, this.item_ID); 
 			}
 
 			else if (version == 3)
 			{
-				boxSize += builder.Field("item_ID", 32, this.item_ID); 
+				boxSize += tracer.Field("item_ID", 32, this.item_ID); 
 			}
-			boxSize += builder.Field("item_protection_index", 16, this.item_protection_index); 
-			boxSize += builder.Field("item_type", 32, this.item_type); 
-			boxSize += builder.Field("item_name", IsoStream.CalculateStringSize(item_name), this.item_name); 
+			boxSize += tracer.Field("item_protection_index", 16, this.item_protection_index); 
+			boxSize += tracer.Field("item_type", 32, this.item_type); 
+			boxSize += tracer.Field("item_name", IsoStream.CalculateStringSize(item_name), this.item_name); 
 
 			if (item_type==IsoStream.FromFourCC("mime"))
 			{
-				boxSize += builder.Field("content_type", IsoStream.CalculateStringSize(content_type), this.content_type); 
-				if (this.content_encodingPresent) boxSize += builder.Field("content_encoding", IsoStream.CalculateStringSize(content_encoding), this.content_encoding); //optional
+				boxSize += tracer.Field("content_type", IsoStream.CalculateStringSize(content_type), this.content_type); 
+				if (this.content_encodingPresent) boxSize += tracer.Field("content_encoding", IsoStream.CalculateStringSize(content_encoding), this.content_encoding); //optional
 			}
 
 			else if (item_type == IsoStream.FromFourCC("uri "))
 			{
-				boxSize += builder.Field("item_uri_type", IsoStream.CalculateStringSize(item_uri_type), this.item_uri_type); 
+				boxSize += tracer.Field("item_uri_type", IsoStream.CalculateStringSize(item_uri_type), this.item_uri_type); 
 			}
 		}
-		boxSize += builder.Children(this);
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

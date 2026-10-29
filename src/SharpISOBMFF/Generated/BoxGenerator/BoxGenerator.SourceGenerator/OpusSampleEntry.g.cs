@@ -7,11 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class OpusSampleEntry() extends AudioSampleEntry ('Opus'){
- OpusSpecificBox();
- }
+	OpusSpecificBox();
+}
 */
 public partial class OpusSampleEntry : AudioSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class OpusSampleEntry() extends AudioSampleEntry ('Opus'){
+	OpusSpecificBox();
+}"; } }
 	public const string TYPE = "Opus";
 	public override string DisplayName { get { return "OpusSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,12 +54,12 @@ public partial class OpusSampleEntry : AudioSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("OpusSpecificBox", IsoStream.CalculateBoxSize(OpusSpecificBox), this.OpusSpecificBox); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("OpusSpecificBox", IsoStream.CalculateBoxSize(OpusSpecificBox), this.OpusSpecificBox); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

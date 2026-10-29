@@ -6,12 +6,14 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class PlainTextSampleEntry(codingname) extends SampleEntry (codingname) { 
-} 
-
+class PlainTextSampleEntry(codingname) extends SampleEntry (codingname) {
+}
 */
 public partial class PlainTextSampleEntry : SampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class PlainTextSampleEntry(codingname) extends SampleEntry (codingname) {
+}"; } }
 	public override string DisplayName { get { return "PlainTextSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? BoxPlacements.OfType(FourCC)); }
@@ -42,10 +44,10 @@ public partial class PlainTextSampleEntry : SampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

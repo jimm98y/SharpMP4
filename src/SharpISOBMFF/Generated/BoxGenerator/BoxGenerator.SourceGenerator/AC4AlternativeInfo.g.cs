@@ -7,13 +7,13 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AC4AlternativeInfo() {
- bit(16) name_len;
- bit(8) presentation_name[name_len];
- bit(5) n_targets;
- for (i = 0; i < n_targets; i++) {
-  bit(3) target_md_compat;
-  bit(8) target_device_category;
- }
+	bit(16) name_len;
+	bit(8) presentation_name[name_len];
+	bit(5) n_targets;
+	for (i = 0; i < n_targets; i++) {
+		bit(3) target_md_compat;
+		bit(8) target_device_category;
+	}
 }
 */
 public partial class AC4AlternativeInfo : IMp4Serializable
@@ -23,12 +23,22 @@ public partial class AC4AlternativeInfo : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class AC4AlternativeInfo() {
+	bit(16) name_len;
+	bit(8) presentation_name[name_len];
+	bit(5) n_targets;
+	for (i = 0; i < n_targets; i++) {
+		bit(3) target_md_compat;
+		bit(8) target_device_category;
+	}
+}"; } }
 	public virtual string DisplayName { get { return "AC4AlternativeInfo"; } }
 
 	protected ushort name_len; 
 	public ushort NameLen { get { return this.name_len; } set { this.name_len = value; } }
 
-	protected byte[] presentation_name; 
+	protected byte[] presentation_name = []; 
 	public byte[] PresentationName { get { return this.presentation_name; } set { this.presentation_name = value; } }
 
 	protected byte n_targets; 
@@ -91,17 +101,17 @@ public partial class AC4AlternativeInfo : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("name_len", 16, this.name_len); 
-		boxSize += builder.Field("presentation_name", ((ulong)(name_len) * 8), this.presentation_name); 
-		boxSize += builder.Field("n_targets", 5, this.n_targets); 
+		boxSize += tracer.Field("name_len", 16, this.name_len); 
+		boxSize += tracer.Field("presentation_name", ((ulong)(name_len) * 8), this.presentation_name); 
+		boxSize += tracer.Field("n_targets", 5, this.n_targets); 
 
 		for (int i = 0; i < n_targets; i++)
 		{
-			boxSize += builder.Field($"target_md_compat[{i}]", 3, this.target_md_compat[i]); 
-			boxSize += builder.Field($"target_device_category[{i}]", 8, this.target_device_category[i]); 
+			boxSize += tracer.Field($"target_md_compat[{i}]", 3, this.target_md_compat[i]); 
+			boxSize += tracer.Field($"target_device_category[{i}]", 8, this.target_device_category[i]); 
 		}
 		return boxSize;
 	}

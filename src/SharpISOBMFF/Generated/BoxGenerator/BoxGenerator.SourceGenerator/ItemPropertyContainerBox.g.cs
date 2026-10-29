@@ -10,13 +10,20 @@ aligned(8) class ItemPropertyContainerBox
 	extends Box('ipco')
 {
 	Box properties[];	// boxes derived from
-		// ItemProperty or ItemFullProperty, or FreeSpaceBox(es)
-		// to fill the box
+	// ItemProperty or ItemFullProperty, or FreeSpaceBox(es)
+	// to fill the box
 }
-
 */
 public partial class ItemPropertyContainerBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ItemPropertyContainerBox
+	extends Box('ipco')
+{
+	Box properties[];	// boxes derived from
+	// ItemProperty or ItemFullProperty, or FreeSpaceBox(es)
+	// to fill the box
+}"; } }
 	public const string TYPE = "ipco";
 	public override string DisplayName { get { return "ItemPropertyContainerBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -60,14 +67,14 @@ public partial class ItemPropertyContainerBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("properties", IsoStream.CalculateBoxSize(properties), this.properties); // boxes derived from
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("properties", IsoStream.CalculateBoxSize(properties), this.properties); // boxes derived from
 		/*  ItemProperty or ItemFullProperty, or FreeSpaceBox(es) */
 		/*  to fill the box */
-		boxSize += builder.Children(this);
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

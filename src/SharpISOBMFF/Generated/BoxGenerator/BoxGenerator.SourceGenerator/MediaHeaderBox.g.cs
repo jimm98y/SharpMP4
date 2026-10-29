@@ -25,6 +25,23 @@ aligned(8) class MediaHeaderBox extends FullBox('mdhd', version, 0) {
 */
 public partial class MediaHeaderBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MediaHeaderBox extends FullBox('mdhd', version, 0) {
+	if (version==1) {
+		unsigned int(64)	creation_time;
+		unsigned int(64)	modification_time;
+		unsigned int(32)	timescale;
+		unsigned int(64)	duration;
+	} else { // version==0
+		unsigned int(32)	creation_time;
+		unsigned int(32)	modification_time;
+		unsigned int(32)	timescale;
+		unsigned int(32)	duration;
+	}
+	bit(1)	pad = 0;
+	unsigned int(5)[3]	language;	// ISO-639-2/T language code
+	unsigned int(16)	pre_defined = 0;
+}"; } }
 	public const string TYPE = "mdhd";
 	public override string DisplayName { get { return "MediaHeaderBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -46,7 +63,7 @@ public partial class MediaHeaderBox : FullBox
 	protected bool pad = false; 
 	public bool Pad { get { return this.pad; } set { this.pad = value; } }
 
-	protected string language;  //  ISO-639-2/T language code
+	protected string language = "und";  //  ISO-639-2/T language code
 	public string Language { get { return this.language; } set { this.language = value; } }
 
 	protected ushort pre_defined = 0; 
@@ -137,30 +154,30 @@ public partial class MediaHeaderBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if (version==1)
 		{
-			boxSize += builder.Field("creation_time", 64, this.creation_time); 
-			boxSize += builder.Field("modification_time", 64, this.modification_time); 
-			boxSize += builder.Field("timescale", 32, this.timescale); 
-			boxSize += builder.Field("duration", 64, this.duration); 
+			boxSize += tracer.Field("creation_time", 64, this.creation_time); 
+			boxSize += tracer.Field("modification_time", 64, this.modification_time); 
+			boxSize += tracer.Field("timescale", 32, this.timescale); 
+			boxSize += tracer.Field("duration", 64, this.duration); 
 		}
 
 		else 
 		{
 			/*  version==0 */
-			boxSize += builder.Field("creation_time", 32, this.creation_time); 
-			boxSize += builder.Field("modification_time", 32, this.modification_time); 
-			boxSize += builder.Field("timescale", 32, this.timescale); 
-			boxSize += builder.Field("duration", 32, this.duration); 
+			boxSize += tracer.Field("creation_time", 32, this.creation_time); 
+			boxSize += tracer.Field("modification_time", 32, this.modification_time); 
+			boxSize += tracer.Field("timescale", 32, this.timescale); 
+			boxSize += tracer.Field("duration", 32, this.duration); 
 		}
-		boxSize += builder.Field("pad", 1, this.pad); 
-		boxSize += builder.Field("language", 15, this.language); // ISO-639-2/T language code
-		boxSize += builder.Field("pre_defined", 16, this.pre_defined); 
+		boxSize += tracer.Field("pad", 1, this.pad); 
+		boxSize += tracer.Field("language", 15, this.language); // ISO-639-2/T language code
+		boxSize += tracer.Field("pre_defined", 16, this.pre_defined); 
 		return boxSize;
 	}
 }

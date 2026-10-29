@@ -10,6 +10,8 @@ namespace SharpISOBMFF
 */
 public partial class SVCSampleEntrysvc2Dup : VisualSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @""; } }
 	public const string TYPE = "svc2";
 	public override string DisplayName { get { return "SVCSampleEntrysvc2Dup"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -60,15 +62,15 @@ public partial class SVCSampleEntrysvc2Dup : VisualSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("svcconfig", IsoStream.CalculateBoxSize(svcconfig), this.svcconfig); 
-		// boxSize += builder.Field("descr", IsoStream.CalculateBoxSize(descr), this.descr); // optional
-		// boxSize += builder.Field("scalability", IsoStream.CalculateBoxSize(scalability), this.scalability); // optional
-		// boxSize += builder.Field("method", IsoStream.CalculateBoxSize(method), this.method); // optional
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("svcconfig", IsoStream.CalculateBoxSize(svcconfig), this.svcconfig); 
+		// boxSize += tracer.Field("descr", IsoStream.CalculateBoxSize(descr), this.descr); // optional
+		// boxSize += tracer.Field("scalability", IsoStream.CalculateBoxSize(scalability), this.scalability); // optional
+		// boxSize += tracer.Field("method", IsoStream.CalculateBoxSize(method), this.method); // optional
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

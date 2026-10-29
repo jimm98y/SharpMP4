@@ -7,10 +7,10 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class XtraValue() {
- unsigned int(32) length;
- unsigned int(16) type;
- unsigned int(8) value[length-6];
- }
+	unsigned int(32) length;
+	unsigned int(16) type;
+	unsigned int(8) value[length-6];
+}
 */
 public partial class XtraValue : IMp4Serializable
 {
@@ -19,6 +19,12 @@ public partial class XtraValue : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class XtraValue() {
+	unsigned int(32) length;
+	unsigned int(16) type;
+	unsigned int(8) value[length-6];
+}"; } }
 	public virtual string DisplayName { get { return "XtraValue"; } }
 
 	protected uint length; 
@@ -27,7 +33,7 @@ public partial class XtraValue : IMp4Serializable
 	protected ushort type; 
 	public ushort Type { get { return this.type; } set { this.type = value; } }
 
-	protected byte[] value; 
+	protected byte[] value = []; 
 	public byte[] Value { get { return this.value; } set { this.value = value; } }
 
 	public XtraValue(): base()
@@ -61,12 +67,12 @@ public partial class XtraValue : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("length", 32, this.length); 
-		boxSize += builder.Field("type", 16, this.type); 
-		boxSize += builder.Field("value", ((ulong)(length-6) * 8), this.value); 
+		boxSize += tracer.Field("length", 32, this.length); 
+		boxSize += tracer.Field("type", 16, this.type); 
+		boxSize += tracer.Field("value", ((ulong)(length-6) * 8), this.value); 
 		return boxSize;
 	}
 }

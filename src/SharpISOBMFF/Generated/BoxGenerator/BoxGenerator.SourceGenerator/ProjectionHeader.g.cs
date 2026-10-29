@@ -7,14 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ProjectionHeader extends FullBox('prhd', 0, 0) {
-    int(32) pose_yaw_degrees;
-    int(32) pose_pitch_degrees;
-    int(32) pose_roll_degrees;
- }
-
+	int(32) pose_yaw_degrees;
+	int(32) pose_pitch_degrees;
+	int(32) pose_roll_degrees;
+}
 */
 public partial class ProjectionHeader : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ProjectionHeader extends FullBox('prhd', 0, 0) {
+	int(32) pose_yaw_degrees;
+	int(32) pose_pitch_degrees;
+	int(32) pose_roll_degrees;
+}"; } }
 	public const string TYPE = "prhd";
 	public override string DisplayName { get { return "ProjectionHeader"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -64,13 +69,13 @@ public partial class ProjectionHeader : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("pose_yaw_degrees", 32, this.pose_yaw_degrees); 
-		boxSize += builder.Field("pose_pitch_degrees", 32, this.pose_pitch_degrees); 
-		boxSize += builder.Field("pose_roll_degrees", 32, this.pose_roll_degrees); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("pose_yaw_degrees", 32, this.pose_yaw_degrees); 
+		boxSize += tracer.Field("pose_pitch_degrees", 32, this.pose_pitch_degrees); 
+		boxSize += tracer.Field("pose_roll_degrees", 32, this.pose_roll_degrees); 
 		return boxSize;
 	}
 }

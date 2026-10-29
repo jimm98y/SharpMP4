@@ -17,6 +17,15 @@ aligned(8) class HintMediaHeaderBox
 */
 public partial class HintMediaHeaderBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class HintMediaHeaderBox
+	extends FullBox('hmhd', version = 0, 0) {
+	unsigned int(16)	maxPDUsize;
+	unsigned int(16)	avgPDUsize;
+	unsigned int(32)	maxbitrate;
+	unsigned int(32)	avgbitrate;
+	unsigned int(32)	reserved = 0;
+}"; } }
 	public const string TYPE = "hmhd";
 	public override string DisplayName { get { return "HintMediaHeaderBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -78,15 +87,15 @@ public partial class HintMediaHeaderBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("maxPDUsize", 16, this.maxPDUsize); 
-		boxSize += builder.Field("avgPDUsize", 16, this.avgPDUsize); 
-		boxSize += builder.Field("maxbitrate", 32, this.maxbitrate); 
-		boxSize += builder.Field("avgbitrate", 32, this.avgbitrate); 
-		boxSize += builder.Field("reserved", 32, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("maxPDUsize", 16, this.maxPDUsize); 
+		boxSize += tracer.Field("avgPDUsize", 16, this.avgPDUsize); 
+		boxSize += tracer.Field("maxbitrate", 32, this.maxbitrate); 
+		boxSize += tracer.Field("avgbitrate", 32, this.avgbitrate); 
+		boxSize += tracer.Field("reserved", 32, this.reserved); 
 		return boxSize;
 	}
 }

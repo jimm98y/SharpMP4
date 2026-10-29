@@ -6,11 +6,10 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class CountryListEntry() { 
- unsigned int(16) country_count;
- unsigned int(16) country[ country_count ];
- }
-
+class CountryListEntry() {
+	unsigned int(16) country_count;
+	unsigned int(16) country[ country_count ];
+}
 */
 public partial class CountryListEntry : IMp4Serializable
 {
@@ -19,12 +18,17 @@ public partial class CountryListEntry : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class CountryListEntry() {
+	unsigned int(16) country_count;
+	unsigned int(16) country[ country_count ];
+}"; } }
 	public virtual string DisplayName { get { return "CountryListEntry"; } }
 
 	protected ushort country_count; 
 	public ushort CountryCount { get { return this.country_count; } set { this.country_count = value; } }
 
-	protected ushort[] country; 
+	protected ushort[] country = []; 
 	public ushort[] Country { get { return this.country; } set { this.country = value; } }
 
 	public CountryListEntry(): base()
@@ -55,11 +59,11 @@ public partial class CountryListEntry : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("country_count", 16, this.country_count); 
-		boxSize += builder.Field("country", ((ulong)( country_count ) * 16), this.country); 
+		boxSize += tracer.Field("country_count", 16, this.country_count); 
+		boxSize += tracer.Field("country", ((ulong)( country_count ) * 16), this.country); 
 		return boxSize;
 	}
 }

@@ -7,14 +7,21 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class OMAAccessUnitFormatBox() extends FullBox('odaf') {
-	 bit(7) reserved;
- bit(1) selectiveEncrypted;
- unsigned int(8) keyIndicatorLength;
- unsigned int(8) initialVectorLength;
- } 
+	bit(7) reserved;
+	bit(1) selectiveEncrypted;
+	unsigned int(8) keyIndicatorLength;
+	unsigned int(8) initialVectorLength;
+}
 */
 public partial class OMAAccessUnitFormatBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class OMAAccessUnitFormatBox() extends FullBox('odaf') {
+	bit(7) reserved;
+	bit(1) selectiveEncrypted;
+	unsigned int(8) keyIndicatorLength;
+	unsigned int(8) initialVectorLength;
+}"; } }
 	public const string TYPE = "odaf";
 	public override string DisplayName { get { return "OMAAccessUnitFormatBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -70,14 +77,14 @@ public partial class OMAAccessUnitFormatBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 7, this.reserved); 
-		boxSize += builder.Field("selectiveEncrypted", 1, this.selectiveEncrypted); 
-		boxSize += builder.Field("keyIndicatorLength", 8, this.keyIndicatorLength); 
-		boxSize += builder.Field("initialVectorLength", 8, this.initialVectorLength); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 7, this.reserved); 
+		boxSize += tracer.Field("selectiveEncrypted", 1, this.selectiveEncrypted); 
+		boxSize += tracer.Field("keyIndicatorLength", 8, this.keyIndicatorLength); 
+		boxSize += tracer.Field("initialVectorLength", 8, this.initialVectorLength); 
 		return boxSize;
 	}
 }

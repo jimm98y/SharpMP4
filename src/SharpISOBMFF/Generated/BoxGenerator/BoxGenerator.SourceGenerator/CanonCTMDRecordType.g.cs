@@ -7,10 +7,9 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class CanonCTMDRecordType() {
- unsigned int(32) recordType;
- unsigned int(32) recordSize;
+	unsigned int(32) recordType;
+	unsigned int(32) recordSize;
 }
-
 */
 public partial class CanonCTMDRecordType : IMp4Serializable
 {
@@ -19,6 +18,11 @@ public partial class CanonCTMDRecordType : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class CanonCTMDRecordType() {
+	unsigned int(32) recordType;
+	unsigned int(32) recordSize;
+}"; } }
 	public virtual string DisplayName { get { return "CanonCTMDRecordType"; } }
 
 	protected uint recordType; 
@@ -55,11 +59,11 @@ public partial class CanonCTMDRecordType : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("recordType", 32, this.recordType); 
-		boxSize += builder.Field("recordSize", 32, this.recordSize); 
+		boxSize += tracer.Field("recordType", 32, this.recordType); 
+		boxSize += tracer.Field("recordSize", 32, this.recordSize); 
 		return boxSize;
 	}
 }

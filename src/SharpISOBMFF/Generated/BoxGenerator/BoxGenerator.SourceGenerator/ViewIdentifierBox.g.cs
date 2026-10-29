@@ -6,7 +6,7 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class ViewIdentifierBox extends FullBox ('vwid', version=0, flags) 
+class ViewIdentifierBox extends FullBox ('vwid', version=0, flags)
 {
 	unsigned int(2) 	reserved6 = 0;
 	unsigned int(3) 	min_temporal_id;
@@ -33,6 +33,31 @@ class ViewIdentifierBox extends FullBox ('vwid', version=0, flags)
 */
 public partial class ViewIdentifierBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ViewIdentifierBox extends FullBox ('vwid', version=0, flags)
+{
+	unsigned int(2) 	reserved6 = 0;
+	unsigned int(3) 	min_temporal_id;
+	unsigned int(3) 	max_temporal_id;
+	unsigned int(16)	num_views;
+	for (i=0; i<num_views; i++) {
+		unsigned int(6) 	reserved1 = 0;
+		unsigned int(10) 	view_id[i];
+		unsigned int(6) 	reserved2 = 0;
+		unsigned int(10) 	view_order_index;
+		unsigned int(1)	texture_in_stream[i];
+		unsigned int(1)	texture_in_track[i];
+		unsigned int(1)	depth_in_stream[i];
+		unsigned int(1)	depth_in_track[i];
+		unsigned int(2) 	base_view_type;
+		unsigned int(10) 	num_ref_views;
+		for (j = 0; j < num_ref_views; j++) {
+			unsigned int(4) 	reserved5 = 0;
+			unsigned int(2) 	dependent_component_idc[i][j];
+			unsigned int(10) 	ref_view_id[i][j];
+		}
+	}
+}"; } }
 	public const string TYPE = "vwid";
 	public override string DisplayName { get { return "ViewIdentifierBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -206,33 +231,33 @@ public partial class ViewIdentifierBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved6", 2, this.reserved6); 
-		boxSize += builder.Field("min_temporal_id", 3, this.min_temporal_id); 
-		boxSize += builder.Field("max_temporal_id", 3, this.max_temporal_id); 
-		boxSize += builder.Field("num_views", 16, this.num_views); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved6", 2, this.reserved6); 
+		boxSize += tracer.Field("min_temporal_id", 3, this.min_temporal_id); 
+		boxSize += tracer.Field("max_temporal_id", 3, this.max_temporal_id); 
+		boxSize += tracer.Field("num_views", 16, this.num_views); 
 
 		for (int i=0; i<num_views; i++)
 		{
-			boxSize += builder.Field($"reserved1[{i}]", 6, this.reserved1[i]); 
-			boxSize += builder.Field($"view_id[{i}]", 10, this.view_id[i]); 
-			boxSize += builder.Field($"reserved2[{i}]", 6, this.reserved2[i]); 
-			boxSize += builder.Field($"view_order_index[{i}]", 10, this.view_order_index[i]); 
-			boxSize += builder.Field($"texture_in_stream[{i}]", 1, this.texture_in_stream[i]); 
-			boxSize += builder.Field($"texture_in_track[{i}]", 1, this.texture_in_track[i]); 
-			boxSize += builder.Field($"depth_in_stream[{i}]", 1, this.depth_in_stream[i]); 
-			boxSize += builder.Field($"depth_in_track[{i}]", 1, this.depth_in_track[i]); 
-			boxSize += builder.Field($"base_view_type[{i}]", 2, this.base_view_type[i]); 
-			boxSize += builder.Field($"num_ref_views[{i}]", 10, this.num_ref_views[i]); 
+			boxSize += tracer.Field($"reserved1[{i}]", 6, this.reserved1[i]); 
+			boxSize += tracer.Field($"view_id[{i}]", 10, this.view_id[i]); 
+			boxSize += tracer.Field($"reserved2[{i}]", 6, this.reserved2[i]); 
+			boxSize += tracer.Field($"view_order_index[{i}]", 10, this.view_order_index[i]); 
+			boxSize += tracer.Field($"texture_in_stream[{i}]", 1, this.texture_in_stream[i]); 
+			boxSize += tracer.Field($"texture_in_track[{i}]", 1, this.texture_in_track[i]); 
+			boxSize += tracer.Field($"depth_in_stream[{i}]", 1, this.depth_in_stream[i]); 
+			boxSize += tracer.Field($"depth_in_track[{i}]", 1, this.depth_in_track[i]); 
+			boxSize += tracer.Field($"base_view_type[{i}]", 2, this.base_view_type[i]); 
+			boxSize += tracer.Field($"num_ref_views[{i}]", 10, this.num_ref_views[i]); 
 
 			for (int j = 0; j < num_ref_views[i]; j++)
 			{
-				boxSize += builder.Field($"reserved5[{i}][{j}]", 4, this.reserved5[i][j]); 
-				boxSize += builder.Field($"dependent_component_idc[{i}][{j}]", 2, this.dependent_component_idc[i][j]); 
-				boxSize += builder.Field($"ref_view_id[{i}][{j}]", 10, this.ref_view_id[i][j]); 
+				boxSize += tracer.Field($"reserved5[{i}][{j}]", 4, this.reserved5[i][j]); 
+				boxSize += tracer.Field($"dependent_component_idc[{i}][{j}]", 2, this.dependent_component_idc[i][j]); 
+				boxSize += tracer.Field($"ref_view_id[{i}][{j}]", 10, this.ref_view_id[i][j]); 
 			}
 		}
 		return boxSize;

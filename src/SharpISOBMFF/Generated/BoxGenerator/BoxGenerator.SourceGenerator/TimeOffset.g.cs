@@ -9,11 +9,13 @@ namespace SharpISOBMFF
 class TimeOffset() extends Box('tsro') {
 	int(32)		offset;
 }
-
-
 */
 public partial class TimeOffset : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class TimeOffset() extends Box('tsro') {
+	int(32)		offset;
+}"; } }
 	public const string TYPE = "tsro";
 	public override string DisplayName { get { return "TimeOffset"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -51,11 +53,11 @@ public partial class TimeOffset : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("offset", 32, this.offset); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("offset", 32, this.offset); 
 		return boxSize;
 	}
 }

@@ -196,28 +196,28 @@
       "description": "MVD stream",
       "type": "MVCDSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class MVCDSampleEntry() extends VisualSampleEntry ('mvd1') {\r\n\tMVCDConfigurationBox\tmvcdconfig;\t\t// mandatory\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\r\n\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params;\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}\r\n"
+      "syntax": "class MVCDSampleEntry() extends VisualSampleEntry ('mvd1') {\r\n\tMVCDConfigurationBox\tmvcdconfig;\t\t// mandatory\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\r\n\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params;\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}"
     },
     {
       "fourcc": "mvd2",
       "description": "MVD stream",
       "type": "MVCDSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class MVCDSampleEntry() extends VisualSampleEntry ('mvd2') {\r\n\tMVCDConfigurationBox\tmvcdconfig;\t\t// mandatory\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\r\n\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params;\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}\r\n"
+      "syntax": "class MVCDSampleEntry() extends VisualSampleEntry ('mvd2') {\r\n\tMVCDConfigurationBox\tmvcdconfig;\t\t// mandatory\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\r\n\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params;\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}"
     },
     {
       "fourcc": "mvd3",
       "description": "MVD stream",
       "type": "MVCDSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class MVCDSampleEntry() extends VisualSampleEntry ('mvd3') {\r\n\tMVCDConfigurationBox\tmvcdconfig;\t\t// mandatory\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\r\n\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params;\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}\r\n"
+      "syntax": "class MVCDSampleEntry() extends VisualSampleEntry ('mvd3') {\r\n\tMVCDConfigurationBox\tmvcdconfig;\t\t// mandatory\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\r\n\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params;\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}"
     },
     {
       "fourcc": "mvd4",
       "description": "MVD stream",
       "type": "MVCDSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class MVCDSampleEntry() extends VisualSampleEntry ('mvd4') {\r\n\tMVCDConfigurationBox\tmvcdconfig;\t\t// mandatory\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\r\n\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params;\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}\r\n"
+      "syntax": "class MVCDSampleEntry() extends VisualSampleEntry ('mvd4') {\r\n\tMVCDConfigurationBox\tmvcdconfig;\t\t// mandatory\r\n\tMVDScalabilityInformationSEIBox\tmvdscalinfosei;\t// optional\r\n\tViewIdentifierBox\tview_identifiers;\t\t// mandatory\r\n\tMPEG4ExtensionDescriptorsBox descr;\t\t// optional\r\n\tIntrinsicCameraParametersBox\tintrinsic_camera_params;\t// optional\r\n\tExtrinsicCameraParametersBox\textrinsic_camera_params;\t// optional\r\n\tA3DConfigurationBox\ta3dconfig;\t// optional\r\n}"
     },
     {
       "fourcc": "a3d1",
@@ -308,7 +308,7 @@
       "description": "HEVC Tile Track with Slice Segment Header Info",
       "containers": [ "stsd" ],
       "type": "HEVCTileSSHInfoSampleEntry",
-      "syntax": "class HEVCTileSSHInfoSampleEntry() extends VisualSampleEntry ('hvt3'){\r\n\tHEVCTileConfigurationBox config(); // optional \r\n}"
+      "syntax": "class HEVCTileSSHInfoSampleEntry() extends VisualSampleEntry ('hvt3'){\r\n\tHEVCTileConfigurationBox config(); // optional\r\n}"
     },
     {
       "fourcc": "hvt2",
@@ -364,14 +364,14 @@
       "description": "Essential Video Coding slice component track without parameter sets",
       "containers": [ "stsd" ],
       "type": "EVCSliceComponentTrackSampleEntry",
-      "syntax": "class EVCSliceComponentTrackSampleEntry() \r\n      extends VisualSampleEntry ('evs1' or 'evs2'){\r\n\tEVCSliceComponentTrackConfigurationBox\tconfig;\r\n}"
+      "syntax": "class EVCSliceComponentTrackSampleEntry()\r\n\textends VisualSampleEntry ('evs1' or 'evs2'){\r\n\tEVCSliceComponentTrackConfigurationBox\tconfig;\r\n}"
     },
     {
       "fourcc": "evs2",
       "description": "Essential Video Coding slice component track without parameter sets",
       "containers": [ "stsd" ],
       "type": "EVCSliceComponentTrackSampleEntry",
-      "syntax": "class EVCSliceComponentTrackSampleEntry() \r\n      extends VisualSampleEntry ('evs1' or 'evs2'){\r\n\tEVCSliceComponentTrackConfigurationBox\tconfig;\r\n}"
+      "syntax": "class EVCSliceComponentTrackSampleEntry()\r\n\textends VisualSampleEntry ('evs1' or 'evs2'){\r\n\tEVCSliceComponentTrackConfigurationBox\tconfig;\r\n}"
     }
   ]
 }

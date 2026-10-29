@@ -12,6 +12,10 @@ aligned(8) class ExtendedTypeBox extends Box('etyp') {
 */
 public partial class ExtendedTypeBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ExtendedTypeBox extends Box('etyp') {
+	TypeCombinationBox	compatible_combinations[];	// to end of the box
+}"; } }
 	public const string TYPE = "etyp";
 	public override string DisplayName { get { return "ExtendedTypeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,12 +54,12 @@ public partial class ExtendedTypeBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("compatible_combinations", IsoStream.CalculateBoxSize(compatible_combinations), this.compatible_combinations); // to end of the box
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("compatible_combinations", IsoStream.CalculateBoxSize(compatible_combinations), this.compatible_combinations); // to end of the box
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

@@ -7,32 +7,57 @@ namespace SharpISOBMFF
 {
 /*
 class ES_Descriptor extends BaseDescriptor : bit(8) tag=ES_DescrTag {
- bit(16) ES_ID;
- bit(1) streamDependenceFlag;
- bit(1) URL_Flag;
- bit(1) OCRstreamFlag;
- bit(5) streamPriority;
- if (streamDependenceFlag)
- bit(16) dependsOn_ES_ID;
- if (URL_Flag) {
- bit(8) URLlength;
- bit(8) URLstring[URLlength];
- }
- if (OCRstreamFlag)
- bit(16) OCR_ES_Id;
- DecoderConfigDescriptor decConfigDescr;
- SLConfigDescriptor slConfigDescr;
- IPI_DescrPointer ipiPtr[0 .. 1];
- IP_IdentificationDataSet ipIDS[0 .. 255];
- IPMP_DescriptorPointer ipmpDescrPtr[0 .. 255];
- LanguageDescriptor langDescr[0 .. 255];
- QoS_Descriptor qosDescr[0 .. 1];
- RegistrationDescriptor regDescr[0 .. 1];
- ExtensionDescriptor extDescr[0 .. 255];
- }
+	bit(16) ES_ID;
+	bit(1) streamDependenceFlag;
+	bit(1) URL_Flag;
+	bit(1) OCRstreamFlag;
+	bit(5) streamPriority;
+	if (streamDependenceFlag)
+		bit(16) dependsOn_ES_ID;
+	if (URL_Flag) {
+		bit(8) URLlength;
+		bit(8) URLstring[URLlength];
+	}
+	if (OCRstreamFlag)
+		bit(16) OCR_ES_Id;
+	DecoderConfigDescriptor decConfigDescr;
+	SLConfigDescriptor slConfigDescr;
+	IPI_DescrPointer ipiPtr[0 .. 1];
+	IP_IdentificationDataSet ipIDS[0 .. 255];
+	IPMP_DescriptorPointer ipmpDescrPtr[0 .. 255];
+	LanguageDescriptor langDescr[0 .. 255];
+	QoS_Descriptor qosDescr[0 .. 1];
+	RegistrationDescriptor regDescr[0 .. 1];
+	ExtensionDescriptor extDescr[0 .. 255];
+}
 */
 public partial class ES_Descriptor : BaseDescriptor
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ES_Descriptor extends BaseDescriptor : bit(8) tag=ES_DescrTag {
+	bit(16) ES_ID;
+	bit(1) streamDependenceFlag;
+	bit(1) URL_Flag;
+	bit(1) OCRstreamFlag;
+	bit(5) streamPriority;
+	if (streamDependenceFlag)
+		bit(16) dependsOn_ES_ID;
+	if (URL_Flag) {
+		bit(8) URLlength;
+		bit(8) URLstring[URLlength];
+	}
+	if (OCRstreamFlag)
+		bit(16) OCR_ES_Id;
+	DecoderConfigDescriptor decConfigDescr;
+	SLConfigDescriptor slConfigDescr;
+	IPI_DescrPointer ipiPtr[0 .. 1];
+	IP_IdentificationDataSet ipIDS[0 .. 255];
+	IPMP_DescriptorPointer ipmpDescrPtr[0 .. 255];
+	LanguageDescriptor langDescr[0 .. 255];
+	QoS_Descriptor qosDescr[0 .. 1];
+	RegistrationDescriptor regDescr[0 .. 1];
+	ExtensionDescriptor extDescr[0 .. 255];
+}"; } }
 	public const byte TYPE = DescriptorTags.ES_DescrTag;
 	public override string DisplayName { get { return "ES_Descriptor"; } }
 
@@ -57,7 +82,7 @@ public partial class ES_Descriptor : BaseDescriptor
 	protected byte URLlength; 
 	public byte _URLlength { get { return this.URLlength; } set { this.URLlength = value; } }
 
-	protected byte[] URLstring; 
+	protected byte[] URLstring = []; 
 	public byte[] _URLstring { get { return this.URLstring; } set { this.URLstring = value; } }
 
 	protected ushort OCR_ES_Id; 
@@ -190,41 +215,41 @@ public partial class ES_Descriptor : BaseDescriptor
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("ES_ID", 16, this.ES_ID); 
-		boxSize += builder.Field("streamDependenceFlag", 1, this.streamDependenceFlag); 
-		boxSize += builder.Field("URL_Flag", 1, this.URL_Flag); 
-		boxSize += builder.Field("OCRstreamFlag", 1, this.OCRstreamFlag); 
-		boxSize += builder.Field("streamPriority", 5, this.streamPriority); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("ES_ID", 16, this.ES_ID); 
+		boxSize += tracer.Field("streamDependenceFlag", 1, this.streamDependenceFlag); 
+		boxSize += tracer.Field("URL_Flag", 1, this.URL_Flag); 
+		boxSize += tracer.Field("OCRstreamFlag", 1, this.OCRstreamFlag); 
+		boxSize += tracer.Field("streamPriority", 5, this.streamPriority); 
 
 		if (streamDependenceFlag)
 		{
-			boxSize += builder.Field("dependsOn_ES_ID", 16, this.dependsOn_ES_ID); 
+			boxSize += tracer.Field("dependsOn_ES_ID", 16, this.dependsOn_ES_ID); 
 		}
 
 		if (URL_Flag)
 		{
-			boxSize += builder.Field("URLlength", 8, this.URLlength); 
-			boxSize += builder.Field("URLstring", ((ulong)(URLlength) * 8), this.URLstring); 
+			boxSize += tracer.Field("URLlength", 8, this.URLlength); 
+			boxSize += tracer.Field("URLstring", ((ulong)(URLlength) * 8), this.URLstring); 
 		}
 
 		if (OCRstreamFlag)
 		{
-			boxSize += builder.Field("OCR_ES_Id", 16, this.OCR_ES_Id); 
+			boxSize += tracer.Field("OCR_ES_Id", 16, this.OCR_ES_Id); 
 		}
-		// boxSize += builder.Field("decConfigDescr", IsoStream.CalculateDescriptorSize(decConfigDescr), this.decConfigDescr); 
-		// boxSize += builder.Field("slConfigDescr", IsoStream.CalculateDescriptorSize(slConfigDescr), this.slConfigDescr); 
-		// boxSize += builder.Field("ipiPtr", IsoStream.CalculateDescriptorSize(ipiPtr), this.ipiPtr); 
-		// boxSize += builder.Field("ipIDS", IsoStream.CalculateDescriptorSize(ipIDS), this.ipIDS); 
-		// boxSize += builder.Field("ipmpDescrPtr", IsoStream.CalculateDescriptorSize(ipmpDescrPtr), this.ipmpDescrPtr); 
-		// boxSize += builder.Field("langDescr", IsoStream.CalculateDescriptorSize(langDescr), this.langDescr); 
-		// boxSize += builder.Field("qosDescr", IsoStream.CalculateDescriptorSize(qosDescr), this.qosDescr); 
-		// boxSize += builder.Field("regDescr", IsoStream.CalculateDescriptorSize(regDescr), this.regDescr); 
-		// boxSize += builder.Field("extDescr", IsoStream.CalculateDescriptorSize(extDescr), this.extDescr); 
-		boxSize += builder.Descriptors(this);
+		// boxSize += tracer.Field("decConfigDescr", IsoStream.CalculateDescriptorSize(decConfigDescr), this.decConfigDescr); 
+		// boxSize += tracer.Field("slConfigDescr", IsoStream.CalculateDescriptorSize(slConfigDescr), this.slConfigDescr); 
+		// boxSize += tracer.Field("ipiPtr", IsoStream.CalculateDescriptorSize(ipiPtr), this.ipiPtr); 
+		// boxSize += tracer.Field("ipIDS", IsoStream.CalculateDescriptorSize(ipIDS), this.ipIDS); 
+		// boxSize += tracer.Field("ipmpDescrPtr", IsoStream.CalculateDescriptorSize(ipmpDescrPtr), this.ipmpDescrPtr); 
+		// boxSize += tracer.Field("langDescr", IsoStream.CalculateDescriptorSize(langDescr), this.langDescr); 
+		// boxSize += tracer.Field("qosDescr", IsoStream.CalculateDescriptorSize(qosDescr), this.qosDescr); 
+		// boxSize += tracer.Field("regDescr", IsoStream.CalculateDescriptorSize(regDescr), this.regDescr); 
+		// boxSize += tracer.Field("extDescr", IsoStream.CalculateDescriptorSize(extDescr), this.extDescr); 
+		boxSize += tracer.Descriptors(this);
 		return boxSize;
 	}
 }

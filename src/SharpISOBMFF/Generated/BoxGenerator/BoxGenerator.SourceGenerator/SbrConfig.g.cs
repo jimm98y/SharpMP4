@@ -8,27 +8,25 @@ namespace SharpISOBMFF
 /*
 class SbrConfig()
 {
-  bslbf(1) harmonicSBR;
-  bslbf(1) bs_interTes;
-  bslbf(1) bs_pvc;
-  uimsbf(4) dflt_start_freq;
-  uimsbf(4) dflt_stop_freq;
-  bslbf(1) dflt_header_extra1;
-  bslbf(1) dflt_header_extra2;
-  if (dflt_header_extra1) {
-    uimsbf(2) dflt_freq_scale;
-    bslbf(1) dflt_alter_scale;
-    uimsbf(2) dflt_noise_bands;
-  }
-  if (dflt_header_extra2) {
-    uimsbf(2) dflt_limiter_bands;
-    uimsbf(2) dflt_limiter_gains;
-    bslbf(1) dflt_interpol_freq;
-    bslbf(1) dflt_smoothing_mode;
-  }
+	bslbf(1) harmonicSBR;
+	bslbf(1) bs_interTes;
+	bslbf(1) bs_pvc;
+	uimsbf(4) dflt_start_freq;
+	uimsbf(4) dflt_stop_freq;
+	bslbf(1) dflt_header_extra1;
+	bslbf(1) dflt_header_extra2;
+	if (dflt_header_extra1) {
+		uimsbf(2) dflt_freq_scale;
+		bslbf(1) dflt_alter_scale;
+		uimsbf(2) dflt_noise_bands;
+	}
+	if (dflt_header_extra2) {
+		uimsbf(2) dflt_limiter_bands;
+		uimsbf(2) dflt_limiter_gains;
+		bslbf(1) dflt_interpol_freq;
+		bslbf(1) dflt_smoothing_mode;
+	}
 }
-
-
 */
 public partial class SbrConfig : IMp4Serializable
 {
@@ -37,6 +35,28 @@ public partial class SbrConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class SbrConfig()
+{
+	bslbf(1) harmonicSBR;
+	bslbf(1) bs_interTes;
+	bslbf(1) bs_pvc;
+	uimsbf(4) dflt_start_freq;
+	uimsbf(4) dflt_stop_freq;
+	bslbf(1) dflt_header_extra1;
+	bslbf(1) dflt_header_extra2;
+	if (dflt_header_extra1) {
+		uimsbf(2) dflt_freq_scale;
+		bslbf(1) dflt_alter_scale;
+		uimsbf(2) dflt_noise_bands;
+	}
+	if (dflt_header_extra2) {
+		uimsbf(2) dflt_limiter_bands;
+		uimsbf(2) dflt_limiter_gains;
+		bslbf(1) dflt_interpol_freq;
+		bslbf(1) dflt_smoothing_mode;
+	}
+}"; } }
 	public virtual string DisplayName { get { return "SbrConfig"; } }
 
 	protected bool harmonicSBR; 
@@ -169,30 +189,30 @@ public partial class SbrConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("harmonicSBR", 1, this.harmonicSBR); 
-		boxSize += builder.Field("bs_interTes", 1, this.bs_interTes); 
-		boxSize += builder.Field("bs_pvc", 1, this.bs_pvc); 
-		boxSize += builder.Field("dflt_start_freq", 4, this.dflt_start_freq); 
-		boxSize += builder.Field("dflt_stop_freq", 4, this.dflt_stop_freq); 
-		boxSize += builder.Field("dflt_header_extra1", 1, this.dflt_header_extra1); 
-		boxSize += builder.Field("dflt_header_extra2", 1, this.dflt_header_extra2); 
+		boxSize += tracer.Field("harmonicSBR", 1, this.harmonicSBR); 
+		boxSize += tracer.Field("bs_interTes", 1, this.bs_interTes); 
+		boxSize += tracer.Field("bs_pvc", 1, this.bs_pvc); 
+		boxSize += tracer.Field("dflt_start_freq", 4, this.dflt_start_freq); 
+		boxSize += tracer.Field("dflt_stop_freq", 4, this.dflt_stop_freq); 
+		boxSize += tracer.Field("dflt_header_extra1", 1, this.dflt_header_extra1); 
+		boxSize += tracer.Field("dflt_header_extra2", 1, this.dflt_header_extra2); 
 
 		if (dflt_header_extra1)
 		{
-			boxSize += builder.Field("dflt_freq_scale", 2, this.dflt_freq_scale); 
-			boxSize += builder.Field("dflt_alter_scale", 1, this.dflt_alter_scale); 
-			boxSize += builder.Field("dflt_noise_bands", 2, this.dflt_noise_bands); 
+			boxSize += tracer.Field("dflt_freq_scale", 2, this.dflt_freq_scale); 
+			boxSize += tracer.Field("dflt_alter_scale", 1, this.dflt_alter_scale); 
+			boxSize += tracer.Field("dflt_noise_bands", 2, this.dflt_noise_bands); 
 		}
 
 		if (dflt_header_extra2)
 		{
-			boxSize += builder.Field("dflt_limiter_bands", 2, this.dflt_limiter_bands); 
-			boxSize += builder.Field("dflt_limiter_gains", 2, this.dflt_limiter_gains); 
-			boxSize += builder.Field("dflt_interpol_freq", 1, this.dflt_interpol_freq); 
-			boxSize += builder.Field("dflt_smoothing_mode", 1, this.dflt_smoothing_mode); 
+			boxSize += tracer.Field("dflt_limiter_bands", 2, this.dflt_limiter_bands); 
+			boxSize += tracer.Field("dflt_limiter_gains", 2, this.dflt_limiter_gains); 
+			boxSize += tracer.Field("dflt_interpol_freq", 1, this.dflt_interpol_freq); 
+			boxSize += tracer.Field("dflt_smoothing_mode", 1, this.dflt_smoothing_mode); 
 		}
 		return boxSize;
 	}

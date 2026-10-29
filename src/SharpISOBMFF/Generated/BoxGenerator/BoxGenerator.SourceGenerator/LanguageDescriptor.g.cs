@@ -7,11 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class LanguageDescriptor extends OCI_Descriptor : bit(8) tag=LanguageDescrTag {
- bit(24) languageCode;
- }
+	bit(24) languageCode;
+}
 */
 public partial class LanguageDescriptor : OCI_Descriptor
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class LanguageDescriptor extends OCI_Descriptor : bit(8) tag=LanguageDescrTag {
+	bit(24) languageCode;
+}"; } }
 	public const byte TYPE = DescriptorTags.LanguageDescrTag;
 	public override string DisplayName { get { return "LanguageDescriptor"; } }
 
@@ -46,11 +50,11 @@ public partial class LanguageDescriptor : OCI_Descriptor
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("languageCode", 24, this.languageCode); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("languageCode", 24, this.languageCode); 
 		return boxSize;
 	}
 }

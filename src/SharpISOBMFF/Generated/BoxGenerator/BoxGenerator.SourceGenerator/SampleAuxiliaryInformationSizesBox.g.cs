@@ -46,6 +46,44 @@ aligned(8) class SampleAuxiliaryInformationSizesBox
 */
 public partial class SampleAuxiliaryInformationSizesBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SampleAuxiliaryInformationSizesBox
+	extends FullBox('saiz', version, flags)
+{
+	if(version == 0) {
+		if (flags & 1) {
+			unsigned int(32) aux_info_type;
+			unsigned int(32) aux_info_type_parameter;
+		}
+		unsigned int(8) default_sample_info_size;
+		unsigned int(32) sample_count;
+		if (default_sample_info_size == 0) {
+			unsigned int(8) sample_info_size[ sample_count ];
+		}
+	}
+	else if(version == 1) {
+		if (flags & 1) {
+			unsigned int(32) aux_info_type;
+			unsigned int(32) aux_info_type_parameter;
+		}
+		unsigned int(16) default_sample_info_size;
+		unsigned int(32) sample_count;
+		if (default_sample_info_size == 0) {
+			unsigned int(16) sample_info_size[ sample_count ];
+		}
+	}
+	else if(version == 2) {
+		if (flags & 1) {
+			unsigned int(32) aux_info_type;
+			unsigned int(32) aux_info_type_parameter;
+		}
+		unsigned int(32) default_sample_info_size;
+		unsigned int(32) sample_count;
+		if (default_sample_info_size == 0) {
+			unsigned int(32) sample_info_size[ sample_count ];
+		}
+	}
+}"; } }
 	public const string TYPE = "saiz";
 	public override string DisplayName { get { return "SampleAuxiliaryInformationSizesBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -64,7 +102,7 @@ public partial class SampleAuxiliaryInformationSizesBox : FullBox
 	protected uint sample_count; 
 	public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
 
-	protected uint[] sample_info_size; 
+	protected uint[] sample_info_size = []; 
 	public uint[] SampleInfoSize { get { return this.sample_info_size; } set { this.sample_info_size = value; } }
 
 	public SampleAuxiliaryInformationSizesBox(byte version = 0, uint flags = 0): base(IsoStream.FromFourCC("saiz"), version, flags)
@@ -245,25 +283,25 @@ public partial class SampleAuxiliaryInformationSizesBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if (version == 0)
 		{
 
 			if ((flags  &  1) ==  1)
 			{
-				boxSize += builder.Field("aux_info_type", 32, this.aux_info_type); 
-				boxSize += builder.Field("aux_info_type_parameter", 32, this.aux_info_type_parameter); 
+				boxSize += tracer.Field("aux_info_type", 32, this.aux_info_type); 
+				boxSize += tracer.Field("aux_info_type_parameter", 32, this.aux_info_type_parameter); 
 			}
-			boxSize += builder.Field("default_sample_info_size", 8, this.default_sample_info_size); 
-			boxSize += builder.Field("sample_count", 32, this.sample_count); 
+			boxSize += tracer.Field("default_sample_info_size", 8, this.default_sample_info_size); 
+			boxSize += tracer.Field("sample_count", 32, this.sample_count); 
 
 			if (default_sample_info_size == 0)
 			{
-				boxSize += builder.Field("sample_info_size", ((ulong)( sample_count ) * 8), this.sample_info_size); 
+				boxSize += tracer.Field("sample_info_size", ((ulong)( sample_count ) * 8), this.sample_info_size); 
 			}
 		}
 
@@ -272,15 +310,15 @@ public partial class SampleAuxiliaryInformationSizesBox : FullBox
 
 			if ((flags  &  1) ==  1)
 			{
-				boxSize += builder.Field("aux_info_type", 32, this.aux_info_type); 
-				boxSize += builder.Field("aux_info_type_parameter", 32, this.aux_info_type_parameter); 
+				boxSize += tracer.Field("aux_info_type", 32, this.aux_info_type); 
+				boxSize += tracer.Field("aux_info_type_parameter", 32, this.aux_info_type_parameter); 
 			}
-			boxSize += builder.Field("default_sample_info_size", 16, this.default_sample_info_size); 
-			boxSize += builder.Field("sample_count", 32, this.sample_count); 
+			boxSize += tracer.Field("default_sample_info_size", 16, this.default_sample_info_size); 
+			boxSize += tracer.Field("sample_count", 32, this.sample_count); 
 
 			if (default_sample_info_size == 0)
 			{
-				boxSize += builder.Field("sample_info_size", ((ulong)( sample_count ) * 16), this.sample_info_size); 
+				boxSize += tracer.Field("sample_info_size", ((ulong)( sample_count ) * 16), this.sample_info_size); 
 			}
 		}
 
@@ -289,15 +327,15 @@ public partial class SampleAuxiliaryInformationSizesBox : FullBox
 
 			if ((flags  &  1) ==  1)
 			{
-				boxSize += builder.Field("aux_info_type", 32, this.aux_info_type); 
-				boxSize += builder.Field("aux_info_type_parameter", 32, this.aux_info_type_parameter); 
+				boxSize += tracer.Field("aux_info_type", 32, this.aux_info_type); 
+				boxSize += tracer.Field("aux_info_type_parameter", 32, this.aux_info_type_parameter); 
 			}
-			boxSize += builder.Field("default_sample_info_size", 32, this.default_sample_info_size); 
-			boxSize += builder.Field("sample_count", 32, this.sample_count); 
+			boxSize += tracer.Field("default_sample_info_size", 32, this.default_sample_info_size); 
+			boxSize += tracer.Field("sample_count", 32, this.sample_count); 
 
 			if (default_sample_info_size == 0)
 			{
-				boxSize += builder.Field("sample_info_size", ((ulong)( sample_count ) * 32), this.sample_info_size); 
+				boxSize += tracer.Field("sample_info_size", ((ulong)( sample_count ) * 32), this.sample_info_size); 
 			}
 		}
 		return boxSize;

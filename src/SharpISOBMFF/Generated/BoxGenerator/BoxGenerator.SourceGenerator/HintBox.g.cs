@@ -7,19 +7,24 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class HintBox() extends Box('hint') {
- // a track reference (ISO/IEC 14496-12 8.3.3): the IDs of the tracks a hint track hints, one or more
- unsigned int(32) track_IDs[];
- } 
+	// a track reference (ISO/IEC 14496-12 8.3.3): the IDs of the tracks a hint track hints, one or more
+	unsigned int(32) track_IDs[];
+}
 */
 public partial class HintBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class HintBox() extends Box('hint') {
+	// a track reference (ISO/IEC 14496-12 8.3.3): the IDs of the tracks a hint track hints, one or more
+	unsigned int(32) track_IDs[];
+}"; } }
 	public const string TYPE = "hint";
 	public override string DisplayName { get { return "HintBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("tref"); }
 
 
-	protected uint[] track_IDs; 
+	protected uint[] track_IDs = []; 
 	public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
 
 	public HintBox(): base(IsoStream.FromFourCC("hint"))
@@ -53,12 +58,12 @@ public partial class HintBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		/*  a track reference (ISO/IEC 14496-12 8.3.3): the IDs of the tracks a hint track hints, one or more */
-		boxSize += builder.Field("track_IDs", ((ulong)track_IDs.Length * 32), this.track_IDs); 
+		boxSize += tracer.Field("track_IDs", ((ulong)track_IDs.Length * 32), this.track_IDs); 
 		return boxSize;
 	}
 }

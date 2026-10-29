@@ -13,6 +13,11 @@ aligned(8) class RtpMovieHintInformation extends Box('rtp ') {
 */
 public partial class RtpMovieHintInformation : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class RtpMovieHintInformation extends Box('rtp ') {
+	uint(32) descriptionformat = 'sdp ';
+	char  sdptext[];
+}"; } }
 	public const string TYPE = "rtp ";
 	public override string DisplayName { get { return "RtpMovieHintInformation"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -22,7 +27,7 @@ public partial class RtpMovieHintInformation : Box
 	protected uint descriptionformat = IsoStream.FromFourCC("sdp "); 
 	public uint Descriptionformat { get { return this.descriptionformat; } set { this.descriptionformat = value; } }
 
-	protected byte[] sdptext; 
+	protected byte[] sdptext = []; 
 	public byte[] Sdptext { get { return this.sdptext; } set { this.sdptext = value; } }
 
 	public RtpMovieHintInformation(): base(IsoStream.FromFourCC("rtp "))
@@ -59,13 +64,13 @@ public partial class RtpMovieHintInformation : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("descriptionformat", 32, this.descriptionformat); 
-		boxSize += builder.Field("sdptext", ((ulong)sdptext.Length * 8), this.sdptext); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("descriptionformat", 32, this.descriptionformat); 
+		boxSize += tracer.Field("sdptext", ((ulong)sdptext.Length * 8), this.sdptext); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

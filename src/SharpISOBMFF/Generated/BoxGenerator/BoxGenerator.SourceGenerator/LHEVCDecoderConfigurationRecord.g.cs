@@ -7,26 +7,26 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class LHEVCDecoderConfigurationRecord {
-unsigned int(8) configurationVersion = 1;
-bit(4) reserved = '1111'b;
-unsigned int(12) min_spatial_segmentation_idc;
-bit(6) reserved = '111111'b;
-unsigned int(2) parallelismType;
-bit(2) reserved = '11'b;
-bit(3) numTemporalLayers;
-bit(1) temporalIdNested;
-unsigned int(2) lengthSizeMinusOne;
-unsigned int(8) numOfArrays;
-for (j = 0; j <numOfArrays; j ++) {
-bit(1) array_completeness;
-unsigned int(1) reserved = 0;
-unsigned int(6) NAL_unit_type;
-unsigned int(16) numNalus;
-for (i = 0; i <numNalus; i ++) {
-unsigned int(16) nalUnitLength;
-bit(8*nalUnitLength) nalUnit;
-}
-}
+	unsigned int(8) configurationVersion = 1;
+	bit(4) reserved = '1111'b;
+	unsigned int(12) min_spatial_segmentation_idc;
+	bit(6) reserved = '111111'b;
+	unsigned int(2) parallelismType;
+	bit(2) reserved = '11'b;
+	bit(3) numTemporalLayers;
+	bit(1) temporalIdNested;
+	unsigned int(2) lengthSizeMinusOne;
+	unsigned int(8) numOfArrays;
+	for (j = 0; j <numOfArrays; j ++) {
+		bit(1) array_completeness;
+		unsigned int(1) reserved = 0;
+		unsigned int(6) NAL_unit_type;
+		unsigned int(16) numNalus;
+		for (i = 0; i <numNalus; i ++) {
+			unsigned int(16) nalUnitLength;
+			bit(8*nalUnitLength) nalUnit;
+		}
+	}
 }
 */
 public partial class LHEVCDecoderConfigurationRecord : IMp4Serializable
@@ -36,6 +36,29 @@ public partial class LHEVCDecoderConfigurationRecord : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class LHEVCDecoderConfigurationRecord {
+	unsigned int(8) configurationVersion = 1;
+	bit(4) reserved = '1111'b;
+	unsigned int(12) min_spatial_segmentation_idc;
+	bit(6) reserved = '111111'b;
+	unsigned int(2) parallelismType;
+	bit(2) reserved = '11'b;
+	bit(3) numTemporalLayers;
+	bit(1) temporalIdNested;
+	unsigned int(2) lengthSizeMinusOne;
+	unsigned int(8) numOfArrays;
+	for (j = 0; j <numOfArrays; j ++) {
+		bit(1) array_completeness;
+		unsigned int(1) reserved = 0;
+		unsigned int(6) NAL_unit_type;
+		unsigned int(16) numNalus;
+		for (i = 0; i <numNalus; i ++) {
+			unsigned int(16) nalUnitLength;
+			bit(8*nalUnitLength) nalUnit;
+		}
+	}
+}"; } }
 	public virtual string DisplayName { get { return "LHEVCDecoderConfigurationRecord"; } }
 
 	protected byte configurationVersion = 1; 
@@ -188,31 +211,31 @@ public partial class LHEVCDecoderConfigurationRecord : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("configurationVersion", 8, this.configurationVersion); 
-		boxSize += builder.Field("reserved", 4, this.reserved); 
-		boxSize += builder.Field("min_spatial_segmentation_idc", 12, this.min_spatial_segmentation_idc); 
-		boxSize += builder.Field("reserved0", 6, this.reserved0); 
-		boxSize += builder.Field("parallelismType", 2, this.parallelismType); 
-		boxSize += builder.Field("reserved1", 2, this.reserved1); 
-		boxSize += builder.Field("numTemporalLayers", 3, this.numTemporalLayers); 
-		boxSize += builder.Field("temporalIdNested", 1, this.temporalIdNested); 
-		boxSize += builder.Field("lengthSizeMinusOne", 2, this.lengthSizeMinusOne); 
-		boxSize += builder.Field("numOfArrays", 8, this.numOfArrays); 
+		boxSize += tracer.Field("configurationVersion", 8, this.configurationVersion); 
+		boxSize += tracer.Field("reserved", 4, this.reserved); 
+		boxSize += tracer.Field("min_spatial_segmentation_idc", 12, this.min_spatial_segmentation_idc); 
+		boxSize += tracer.Field("reserved0", 6, this.reserved0); 
+		boxSize += tracer.Field("parallelismType", 2, this.parallelismType); 
+		boxSize += tracer.Field("reserved1", 2, this.reserved1); 
+		boxSize += tracer.Field("numTemporalLayers", 3, this.numTemporalLayers); 
+		boxSize += tracer.Field("temporalIdNested", 1, this.temporalIdNested); 
+		boxSize += tracer.Field("lengthSizeMinusOne", 2, this.lengthSizeMinusOne); 
+		boxSize += tracer.Field("numOfArrays", 8, this.numOfArrays); 
 
 		for (int j = 0; j <numOfArrays; j ++)
 		{
-			boxSize += builder.Field($"array_completeness[{j}]", 1, this.array_completeness[j]); 
-			boxSize += builder.Field($"reserved2[{j}]", 1, this.reserved2[j]); 
-			boxSize += builder.Field($"NAL_unit_type[{j}]", 6, this.NAL_unit_type[j]); 
-			boxSize += builder.Field($"numNalus[{j}]", 16, this.numNalus[j]); 
+			boxSize += tracer.Field($"array_completeness[{j}]", 1, this.array_completeness[j]); 
+			boxSize += tracer.Field($"reserved2[{j}]", 1, this.reserved2[j]); 
+			boxSize += tracer.Field($"NAL_unit_type[{j}]", 6, this.NAL_unit_type[j]); 
+			boxSize += tracer.Field($"numNalus[{j}]", 16, this.numNalus[j]); 
 
 			for (int i = 0; i <numNalus[j]; i ++)
 			{
-				boxSize += builder.Field($"nalUnitLength[{j}][{i}]", 16, this.nalUnitLength[j][i]); 
-				boxSize += builder.Field($"nalUnit[{j}][{i}]", (ulong)(8*nalUnitLength[j][i] ), this.nalUnit[j][i]); 
+				boxSize += tracer.Field($"nalUnitLength[{j}][{i}]", 16, this.nalUnitLength[j][i]); 
+				boxSize += tracer.Field($"nalUnit[{j}][{i}]", (ulong)(8*nalUnitLength[j][i] ), this.nalUnit[j][i]); 
 			}
 		}
 		return boxSize;

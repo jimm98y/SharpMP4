@@ -23,6 +23,21 @@ class TemporalLayerEntry() extends VisualSampleGroupEntry ('tscl')
 */
 public partial class TemporalLayerEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class TemporalLayerEntry() extends VisualSampleGroupEntry ('tscl')
+{
+	unsigned int(8)  temporalLayerId;
+	unsigned int(2)  tlprofile_space;
+	unsigned int(1)  tltier_flag;
+	unsigned int(5)  tlprofile_idc;
+	unsigned int(32) tlprofile_compatibility_flags;
+	unsigned int(48) tlconstraint_indicator_flags;
+	unsigned int(8)  tllevel_idc;
+	unsigned int(16) tlMaxBitRate;
+	unsigned int(16) tlAvgBitRate;
+	unsigned int(8)  tlConstantFrameRate;
+	unsigned int(16) tlAvgFrameRate;
+}"; } }
 	public const string TYPE = "tscl";
 	public override string DisplayName { get { return "TemporalLayerEntry"; } }
 
@@ -117,21 +132,21 @@ public partial class TemporalLayerEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("temporalLayerId", 8, this.temporalLayerId); 
-		boxSize += builder.Field("tlprofile_space", 2, this.tlprofile_space); 
-		boxSize += builder.Field("tltier_flag", 1, this.tltier_flag); 
-		boxSize += builder.Field("tlprofile_idc", 5, this.tlprofile_idc); 
-		boxSize += builder.Field("tlprofile_compatibility_flags", 32, this.tlprofile_compatibility_flags); 
-		boxSize += builder.Field("tlconstraint_indicator_flags", 48, this.tlconstraint_indicator_flags); 
-		boxSize += builder.Field("tllevel_idc", 8, this.tllevel_idc); 
-		boxSize += builder.Field("tlMaxBitRate", 16, this.tlMaxBitRate); 
-		boxSize += builder.Field("tlAvgBitRate", 16, this.tlAvgBitRate); 
-		boxSize += builder.Field("tlConstantFrameRate", 8, this.tlConstantFrameRate); 
-		boxSize += builder.Field("tlAvgFrameRate", 16, this.tlAvgFrameRate); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("temporalLayerId", 8, this.temporalLayerId); 
+		boxSize += tracer.Field("tlprofile_space", 2, this.tlprofile_space); 
+		boxSize += tracer.Field("tltier_flag", 1, this.tltier_flag); 
+		boxSize += tracer.Field("tlprofile_idc", 5, this.tlprofile_idc); 
+		boxSize += tracer.Field("tlprofile_compatibility_flags", 32, this.tlprofile_compatibility_flags); 
+		boxSize += tracer.Field("tlconstraint_indicator_flags", 48, this.tlconstraint_indicator_flags); 
+		boxSize += tracer.Field("tllevel_idc", 8, this.tllevel_idc); 
+		boxSize += tracer.Field("tlMaxBitRate", 16, this.tlMaxBitRate); 
+		boxSize += tracer.Field("tlAvgBitRate", 16, this.tlAvgBitRate); 
+		boxSize += tracer.Field("tlConstantFrameRate", 8, this.tlConstantFrameRate); 
+		boxSize += tracer.Field("tlAvgFrameRate", 16, this.tlAvgFrameRate); 
 		return boxSize;
 	}
 }

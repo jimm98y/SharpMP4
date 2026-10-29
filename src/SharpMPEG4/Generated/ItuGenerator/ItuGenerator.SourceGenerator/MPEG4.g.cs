@@ -13,9 +13,9 @@ namespace SharpMPEG4
 
     /*
 VisualObjectSequence() {
-visual_object_sequence_start_code u(32)
-profile_and_level_indication u(8)
-next_start_code()
+    visual_object_sequence_start_code u(32)
+    profile_and_level_indication u(8)
+    next_start_code()
 }
     */
     public class VisualObjectSequence : IItuSerializable
@@ -29,6 +29,13 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"VisualObjectSequence() {
+    visual_object_sequence_start_code u(32)
+    profile_and_level_indication u(8)
+    next_start_code()
+}"; } }
 
          public VisualObjectSequence()
          { 
@@ -68,11 +75,9 @@ next_start_code()
     }
 
     /*
-
-
 VisualObjectSequenceEnd() {
-visual_object_sequence_end_code u(32)
-next_start_code()
+    visual_object_sequence_end_code u(32)
+    next_start_code()
 }
     */
     public class VisualObjectSequenceEnd : IItuSerializable
@@ -84,6 +89,12 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"VisualObjectSequenceEnd() {
+    visual_object_sequence_end_code u(32)
+    next_start_code()
+}"; } }
 
          public VisualObjectSequenceEnd()
          { 
@@ -121,20 +132,18 @@ next_start_code()
     }
 
     /*
-
-
 VisualObject() {
-visual_object_start_code u(32)
-is_visual_object_identifier u(1)
-if (is_visual_object_identifier) {
-visual_object_verid u(4)
-visual_object_priority u(3)
-}
-visual_object_type u(4)
-if (visual_object_type == 1 || visual_object_type == 2) {
-video_signal_type()
-}
-next_start_code()
+    visual_object_start_code u(32)
+    is_visual_object_identifier u(1)
+    if (is_visual_object_identifier) {
+        visual_object_verid u(4)
+        visual_object_priority u(3)
+    }
+    visual_object_type u(4)
+    if (visual_object_type == 1 || visual_object_type == 2) {
+        video_signal_type()
+    }
+    next_start_code()
 }
     */
     public class VisualObject : IItuSerializable
@@ -156,6 +165,21 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"VisualObject() {
+    visual_object_start_code u(32)
+    is_visual_object_identifier u(1)
+    if (is_visual_object_identifier) {
+        visual_object_verid u(4)
+        visual_object_priority u(3)
+    }
+    visual_object_type u(4)
+    if (visual_object_type == 1 || visual_object_type == 2) {
+        video_signal_type()
+    }
+    next_start_code()
+}"; } }
 
          public VisualObject()
          { 
@@ -224,11 +248,9 @@ next_start_code()
     }
 
     /*
-
-
 VideoObject() {
-video_object_start_code u(32)
-next_start_code()
+    video_object_start_code u(32)
+    next_start_code()
 }
     */
     public class VideoObject : IItuSerializable
@@ -240,6 +262,12 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"VideoObject() {
+    video_object_start_code u(32)
+    next_start_code()
+}"; } }
 
          public VideoObject()
          { 
@@ -277,20 +305,18 @@ next_start_code()
     }
 
     /*
-
-
 video_signal_type() {
-video_signal_type u(1)
-if (video_signal_type) {
-video_format u(3)
-video_range u(1)
-colour_description u(1)
-if (colour_description) {
-colour_primaries u(8)
-transfer_characteristics u(8)
-matrix_coefficients u(8)
-}
-}
+    video_signal_type u(1)
+    if (video_signal_type) {
+        video_format u(3)
+        video_range u(1)
+        colour_description u(1)
+        if (colour_description) {
+            colour_primaries u(8)
+            transfer_characteristics u(8)
+            matrix_coefficients u(8)
+        }
+    }
 }
     */
     public class VideoSignalType : IItuSerializable
@@ -312,6 +338,21 @@ matrix_coefficients u(8)
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"video_signal_type() {
+    video_signal_type u(1)
+    if (video_signal_type) {
+        video_format u(3)
+        video_range u(1)
+        colour_description u(1)
+        if (colour_description) {
+            colour_primaries u(8)
+            transfer_characteristics u(8)
+            matrix_coefficients u(8)
+        }
+    }
+}"; } }
 
          public VideoSignalType()
          { 
@@ -374,13 +415,11 @@ matrix_coefficients u(8)
     }
 
     /*
-
-
 user_data() {
-user_data_start_code u(32)
-while ( before_start_code( user_data ) ) {
-user_data u(8)
-}
+    user_data_start_code u(32)
+    while ( before_start_code( user_data ) ) {
+        user_data u(8)
+    }
 }
     */
     public class UserData : IItuSerializable
@@ -392,6 +431,14 @@ user_data u(8)
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"user_data() {
+    user_data_start_code u(32)
+    while ( before_start_code( user_data ) ) {
+        user_data u(8)
+    }
+}"; } }
 
          public UserData()
          { 
@@ -442,215 +489,213 @@ user_data u(8)
     }
 
     /*
-
-
 VideoObjectLayer() {
-video_object_layer_start_code u(32)
-random_accessible_vol u(1)
-video_object_type_indication u(8)
-if ( video_object_type_indication == 18 ) {
-fgs_layer_type u(2)
-video_object_layer_priority u(3)
-aspect_ratio_info u(4)
-if (aspect_ratio_info == 15) {
-par_width u(8)
-par_height u(8)
-}
-vol_control_parameters u(1)
-if (vol_control_parameters) {
-chroma_format u(2)
-low_delay u(1)
-}
-marker_bit u(1)
-vop_time_increment_resolution u(16)
-marker_bit_2 u(1)
-fixed_vop_rate u(1)
-if (fixed_vop_rate)
-fixed_vop_time_increment u(v)
-marker_bit_3 u(1)
-video_object_layer_width u(13)
-marker_bit_4 u(1)
-video_object_layer_height u(13)
-marker_bit_5 u(1)
-interlaced u(1)
-if (fgs_layer_type == 2 || fgs_layer_type == 3)
-fgs_ref_layer_id u(4)
-if (fgs_layer_type == 1 || fgs_layer_type == 3) {
-fgs_frequency_weighting_enable u(1)
-if ( fgs_frequency_weighting_enable ) {
-load_fgs_frequency_weighting_matrix u(1)
-if (load_fgs_frequency_weighting_matrix)
-fgs_frequency_weighting_matrix()
-}
-}
-if (fgs_layer_type == 2 || fgs_layer_type == 3)
-{
-fgst_frequency_weighting_enable u(1)
-if ( fgst_frequency_weighting_enable ) {
-load_fgst_frequency_weighting_matrix u(1)
-if (load_fgst_frequency_weighting_matrix)
-fgst_frequency_weighting_matrix()
-}
-}
-quarter_sample u(1)
-fgs_resync_marker_disable u(1)
-next_start_code()
-} else {
-is_object_layer_identifier u(1)
-if (is_object_layer_identifier) {
-video_object_layer_verid u(4)
-video_object_layer_priority u(3)
-}
-aspect_ratio_info u(4)
-if (aspect_ratio_info == 15) {
-par_width u(8)
-par_height u(8)
-}
-vol_control_parameters u(1)
-if (vol_control_parameters) {
-chroma_format u(2)
-low_delay u(1)
-vbv_parameters u(1)
-if (vbv_parameters) {
-first_half_bit_rate u(15)
-marker_bit_6 u(1)
-latter_half_bit_rate u(15)
-marker_bit_7 u(1)
-first_half_vbv_buffer_size u(15)
-marker_bit_8 u(1)
-latter_half_vbv_buffer_size u(3)
-first_half_vbv_occupancy u(11)
-marker_bit_9 u(1)
-latter_half_vbv_occupancy u(15)
-marker_bit_10 u(1)
-}
-}
-video_object_layer_shape u(2)
-    if (video_object_layer_shape == 3
-&& video_object_layer_verid != 1)
-video_object_layer_shape_extension u(4)
-marker_bit_11 u(1)
-vop_time_increment_resolution u(16)
-marker_bit_12 u(1)
-fixed_vop_rate u(1)
-if (fixed_vop_rate)
-fixed_vop_time_increment u(v)
-if (video_object_layer_shape != 2) {
-if (video_object_layer_shape == 0) {
-marker_bit_13 u(1)
-video_object_layer_width u(13)
-marker_bit_14 u(1)
-video_object_layer_height u(13)
-marker_bit_15 u(1)
-}
-interlaced u(1)
-obmc_disable u(1)
-    if (video_object_layer_verid == 1)
-sprite_enable u(1)
-else
-sprite_enable u(2)
-if (sprite_enable == 1 || sprite_enable == 2) {
-if (sprite_enable != 2) {
-sprite_width u(13)
-marker_bit_16 u(1)
-sprite_height u(13)
-marker_bit_17 u(1)
-sprite_left_coordinate i(13)
-marker_bit_18 u(1)
-sprite_top_coordinate i(13)
-marker_bit_19 u(1)
-}
-no_of_sprite_warping_points u(6)
-sprite_warping_accuracy u(2)
-sprite_brightness_change u(1)
-if (sprite_enable != 2)
-low_latency_sprite_enable u(1)
-}
-    if (video_object_layer_verid != 1 &&
-video_object_layer_shape != 0)
-sadct_disable u(1)
-not_8_bit u(1)
-if (not_8_bit) {
-quant_precision u(4)
-bits_per_pixel u(4)
-}
-if (video_object_layer_shape == 3) {
-no_gray_quant_update u(1)
-composition_method u(1)
-linear_composition u(1)
-}
-quant_type u(1)
-if (quant_type) {
-load_intra_quant_mat u(1)
-if (load_intra_quant_mat)
-intra_quant_mat()
-load_nonintra_quant_mat u(1)
-if (load_nonintra_quant_mat)
-nonintra_quant_mat()
-if(video_object_layer_shape == 3) {
-for(i=0; i<aux_comp_count; i++) {
-load_intra_quant_mat_grayscale u(1)
-if(load_intra_quant_mat_grayscale)
-intra_quant_mat_grayscale( i )
-load_nonintra_quant_mat_grayscale u(1)
-if(load_nonintra_quant_mat_grayscale)
-nonintra_quant_mat_grayscale( i )
-}
-}
-}
-    if (video_object_layer_verid != 1)
-quarter_sample u(1)
-complexity_estimation_disable u(1)
-if (!complexity_estimation_disable)
-define_vop_complexity_estimation_header()
-resync_marker_disable u(1)
-data_partitioned u(1)
-if(data_partitioned)
-reversible_vlc u(1)
-if(video_object_layer_verid != 1) {
-newpred_enable u(1)
-if (newpred_enable) {
-requested_upstream_message_type u(2)
-newpred_segment_type u(1)
-}
-reduced_resolution_vop_enable u(1)
-}
-scalability u(1)
-if (scalability) {
-hierarchy_type u(1)
-ref_layer_id u(4)
-ref_layer_sampling_direc u(1)
-hor_sampling_factor_n u(5)
-hor_sampling_factor_m u(5)
-vert_sampling_factor_n u(5)
-vert_sampling_factor_m u(5)
-enhancement_type u(1)
-    if (video_object_layer_shape == 1 && hierarchy_type == 0) {
-use_ref_shape u(1)
-use_ref_texture u(1)
-shape_hor_sampling_factor_n u(5)
-shape_hor_sampling_factor_m u(5)
-shape_vert_sampling_factor_n u(5)
-shape_vert_sampling_factor_m u(5)
-}
-}
-}
-else {
-if(video_object_layer_verid != 1) {
-scalability u(1)
-if(scalability) {
-ref_layer_id u(4)
-shape_hor_sampling_factor_n u(5)
-shape_hor_sampling_factor_m u(5)
-shape_vert_sampling_factor_n u(5)
-shape_vert_sampling_factor_m u(5)
-}
-}
-resync_marker_disable u(1)
-}
-next_start_code()
-}
-}
+        video_object_layer_start_code u(32)
+        random_accessible_vol u(1)
+        video_object_type_indication u(8)
+        if ( video_object_type_indication == 18 ) {
+            fgs_layer_type u(2)
+            video_object_layer_priority u(3)
+            aspect_ratio_info u(4)
+            if (aspect_ratio_info == 15) {
+                par_width u(8)
+                par_height u(8)
+            }
+            vol_control_parameters u(1)
+            if (vol_control_parameters) {
+                chroma_format u(2)
+                low_delay u(1)
+            }
+            marker_bit u(1)
+            vop_time_increment_resolution u(16)
+            marker_bit_2 u(1)
+            fixed_vop_rate u(1)
+            if (fixed_vop_rate)
+                fixed_vop_time_increment u(v)
+            marker_bit_3 u(1)
+            video_object_layer_width u(13)
+            marker_bit_4 u(1)
+            video_object_layer_height u(13)
+            marker_bit_5 u(1)
+            interlaced u(1)
+            if (fgs_layer_type == 2 || fgs_layer_type == 3)
+                fgs_ref_layer_id u(4)
+            if (fgs_layer_type == 1 || fgs_layer_type == 3) {
+                fgs_frequency_weighting_enable u(1)
+                if ( fgs_frequency_weighting_enable ) {
+                    load_fgs_frequency_weighting_matrix u(1)
+                    if (load_fgs_frequency_weighting_matrix)
+                        fgs_frequency_weighting_matrix()
+                }
+            }
+            if (fgs_layer_type == 2 || fgs_layer_type == 3)
+            {
+                fgst_frequency_weighting_enable u(1)
+                if ( fgst_frequency_weighting_enable ) {
+                    load_fgst_frequency_weighting_matrix u(1)
+                    if (load_fgst_frequency_weighting_matrix)
+                        fgst_frequency_weighting_matrix()
+                }
+            }
+            quarter_sample u(1)
+            fgs_resync_marker_disable u(1)
+            next_start_code()
+        } else {
+            is_object_layer_identifier u(1)
+            if (is_object_layer_identifier) {
+                video_object_layer_verid u(4)
+                video_object_layer_priority u(3)
+            }
+            aspect_ratio_info u(4)
+            if (aspect_ratio_info == 15) {
+                par_width u(8)
+                par_height u(8)
+            }
+            vol_control_parameters u(1)
+            if (vol_control_parameters) {
+                chroma_format u(2)
+                low_delay u(1)
+                vbv_parameters u(1)
+                if (vbv_parameters) {
+                    first_half_bit_rate u(15)
+                    marker_bit_6 u(1)
+                    latter_half_bit_rate u(15)
+                    marker_bit_7 u(1)
+                    first_half_vbv_buffer_size u(15)
+                    marker_bit_8 u(1)
+                    latter_half_vbv_buffer_size u(3)
+                    first_half_vbv_occupancy u(11)
+                    marker_bit_9 u(1)
+                    latter_half_vbv_occupancy u(15)
+                    marker_bit_10 u(1)
+                }
+            }
+            video_object_layer_shape u(2)
+            if (video_object_layer_shape == 3
+                && video_object_layer_verid != 1)
+                video_object_layer_shape_extension u(4)
+            marker_bit_11 u(1)
+            vop_time_increment_resolution u(16)
+            marker_bit_12 u(1)
+            fixed_vop_rate u(1)
+            if (fixed_vop_rate)
+                fixed_vop_time_increment u(v)
+            if (video_object_layer_shape != 2) {
+                if (video_object_layer_shape == 0) {
+                    marker_bit_13 u(1)
+                    video_object_layer_width u(13)
+                    marker_bit_14 u(1)
+                    video_object_layer_height u(13)
+                    marker_bit_15 u(1)
+                }
+                interlaced u(1)
+                obmc_disable u(1)
+                if (video_object_layer_verid == 1)
+                    sprite_enable u(1)
+                else
+                    sprite_enable u(2)
+                if (sprite_enable == 1 || sprite_enable == 2) {
+                    if (sprite_enable != 2) {
+                        sprite_width u(13)
+                        marker_bit_16 u(1)
+                        sprite_height u(13)
+                        marker_bit_17 u(1)
+                        sprite_left_coordinate i(13)
+                        marker_bit_18 u(1)
+                        sprite_top_coordinate i(13)
+                        marker_bit_19 u(1)
+                    }
+                    no_of_sprite_warping_points u(6)
+                    sprite_warping_accuracy u(2)
+                    sprite_brightness_change u(1)
+                    if (sprite_enable != 2)
+                        low_latency_sprite_enable u(1)
+                }
+                if (video_object_layer_verid != 1 &&
+                    video_object_layer_shape != 0)
+                    sadct_disable u(1)
+                not_8_bit u(1)
+                if (not_8_bit) {
+                    quant_precision u(4)
+                    bits_per_pixel u(4)
+                }
+                if (video_object_layer_shape == 3) {
+                    no_gray_quant_update u(1)
+                    composition_method u(1)
+                    linear_composition u(1)
+                }
+                quant_type u(1)
+                if (quant_type) {
+                    load_intra_quant_mat u(1)
+                    if (load_intra_quant_mat)
+                        intra_quant_mat()
+                    load_nonintra_quant_mat u(1)
+                    if (load_nonintra_quant_mat)
+                        nonintra_quant_mat()
+                    if(video_object_layer_shape == 3) {
+                        for(i=0; i<aux_comp_count; i++) {
+                            load_intra_quant_mat_grayscale u(1)
+                            if(load_intra_quant_mat_grayscale)
+                                intra_quant_mat_grayscale( i )
+                            load_nonintra_quant_mat_grayscale u(1)
+                            if(load_nonintra_quant_mat_grayscale)
+                                nonintra_quant_mat_grayscale( i )
+                        }
+                    }
+                }
+                if (video_object_layer_verid != 1)
+                    quarter_sample u(1)
+                complexity_estimation_disable u(1)
+                if (!complexity_estimation_disable)
+                    define_vop_complexity_estimation_header()
+                resync_marker_disable u(1)
+                data_partitioned u(1)
+                if(data_partitioned)
+                    reversible_vlc u(1)
+                if(video_object_layer_verid != 1) {
+                    newpred_enable u(1)
+                    if (newpred_enable) {
+                        requested_upstream_message_type u(2)
+                        newpred_segment_type u(1)
+                    }
+                    reduced_resolution_vop_enable u(1)
+                }
+                scalability u(1)
+                if (scalability) {
+                    hierarchy_type u(1)
+                    ref_layer_id u(4)
+                    ref_layer_sampling_direc u(1)
+                    hor_sampling_factor_n u(5)
+                    hor_sampling_factor_m u(5)
+                    vert_sampling_factor_n u(5)
+                    vert_sampling_factor_m u(5)
+                    enhancement_type u(1)
+                    if (video_object_layer_shape == 1 && hierarchy_type == 0) {
+                        use_ref_shape u(1)
+                        use_ref_texture u(1)
+                        shape_hor_sampling_factor_n u(5)
+                        shape_hor_sampling_factor_m u(5)
+                        shape_vert_sampling_factor_n u(5)
+                        shape_vert_sampling_factor_m u(5)
+                    }
+                }
+            }
+            else {
+                if(video_object_layer_verid != 1) {
+                    scalability u(1)
+                    if(scalability) {
+                        ref_layer_id u(4)
+                        shape_hor_sampling_factor_n u(5)
+                        shape_hor_sampling_factor_m u(5)
+                        shape_vert_sampling_factor_n u(5)
+                        shape_vert_sampling_factor_m u(5)
+                    }
+                }
+                resync_marker_disable u(1)
+            }
+            next_start_code()
+        }
+    }
     */
     public class VideoObjectLayer : IItuSerializable
     {
@@ -872,6 +917,215 @@ next_start_code()
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
 
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"VideoObjectLayer() {
+        video_object_layer_start_code u(32)
+        random_accessible_vol u(1)
+        video_object_type_indication u(8)
+        if ( video_object_type_indication == 18 ) {
+            fgs_layer_type u(2)
+            video_object_layer_priority u(3)
+            aspect_ratio_info u(4)
+            if (aspect_ratio_info == 15) {
+                par_width u(8)
+                par_height u(8)
+            }
+            vol_control_parameters u(1)
+            if (vol_control_parameters) {
+                chroma_format u(2)
+                low_delay u(1)
+            }
+            marker_bit u(1)
+            vop_time_increment_resolution u(16)
+            marker_bit_2 u(1)
+            fixed_vop_rate u(1)
+            if (fixed_vop_rate)
+                fixed_vop_time_increment u(v)
+            marker_bit_3 u(1)
+            video_object_layer_width u(13)
+            marker_bit_4 u(1)
+            video_object_layer_height u(13)
+            marker_bit_5 u(1)
+            interlaced u(1)
+            if (fgs_layer_type == 2 || fgs_layer_type == 3)
+                fgs_ref_layer_id u(4)
+            if (fgs_layer_type == 1 || fgs_layer_type == 3) {
+                fgs_frequency_weighting_enable u(1)
+                if ( fgs_frequency_weighting_enable ) {
+                    load_fgs_frequency_weighting_matrix u(1)
+                    if (load_fgs_frequency_weighting_matrix)
+                        fgs_frequency_weighting_matrix()
+                }
+            }
+            if (fgs_layer_type == 2 || fgs_layer_type == 3)
+            {
+                fgst_frequency_weighting_enable u(1)
+                if ( fgst_frequency_weighting_enable ) {
+                    load_fgst_frequency_weighting_matrix u(1)
+                    if (load_fgst_frequency_weighting_matrix)
+                        fgst_frequency_weighting_matrix()
+                }
+            }
+            quarter_sample u(1)
+            fgs_resync_marker_disable u(1)
+            next_start_code()
+        } else {
+            is_object_layer_identifier u(1)
+            if (is_object_layer_identifier) {
+                video_object_layer_verid u(4)
+                video_object_layer_priority u(3)
+            }
+            aspect_ratio_info u(4)
+            if (aspect_ratio_info == 15) {
+                par_width u(8)
+                par_height u(8)
+            }
+            vol_control_parameters u(1)
+            if (vol_control_parameters) {
+                chroma_format u(2)
+                low_delay u(1)
+                vbv_parameters u(1)
+                if (vbv_parameters) {
+                    first_half_bit_rate u(15)
+                    marker_bit_6 u(1)
+                    latter_half_bit_rate u(15)
+                    marker_bit_7 u(1)
+                    first_half_vbv_buffer_size u(15)
+                    marker_bit_8 u(1)
+                    latter_half_vbv_buffer_size u(3)
+                    first_half_vbv_occupancy u(11)
+                    marker_bit_9 u(1)
+                    latter_half_vbv_occupancy u(15)
+                    marker_bit_10 u(1)
+                }
+            }
+            video_object_layer_shape u(2)
+            if (video_object_layer_shape == 3
+                && video_object_layer_verid != 1)
+                video_object_layer_shape_extension u(4)
+            marker_bit_11 u(1)
+            vop_time_increment_resolution u(16)
+            marker_bit_12 u(1)
+            fixed_vop_rate u(1)
+            if (fixed_vop_rate)
+                fixed_vop_time_increment u(v)
+            if (video_object_layer_shape != 2) {
+                if (video_object_layer_shape == 0) {
+                    marker_bit_13 u(1)
+                    video_object_layer_width u(13)
+                    marker_bit_14 u(1)
+                    video_object_layer_height u(13)
+                    marker_bit_15 u(1)
+                }
+                interlaced u(1)
+                obmc_disable u(1)
+                if (video_object_layer_verid == 1)
+                    sprite_enable u(1)
+                else
+                    sprite_enable u(2)
+                if (sprite_enable == 1 || sprite_enable == 2) {
+                    if (sprite_enable != 2) {
+                        sprite_width u(13)
+                        marker_bit_16 u(1)
+                        sprite_height u(13)
+                        marker_bit_17 u(1)
+                        sprite_left_coordinate i(13)
+                        marker_bit_18 u(1)
+                        sprite_top_coordinate i(13)
+                        marker_bit_19 u(1)
+                    }
+                    no_of_sprite_warping_points u(6)
+                    sprite_warping_accuracy u(2)
+                    sprite_brightness_change u(1)
+                    if (sprite_enable != 2)
+                        low_latency_sprite_enable u(1)
+                }
+                if (video_object_layer_verid != 1 &&
+                    video_object_layer_shape != 0)
+                    sadct_disable u(1)
+                not_8_bit u(1)
+                if (not_8_bit) {
+                    quant_precision u(4)
+                    bits_per_pixel u(4)
+                }
+                if (video_object_layer_shape == 3) {
+                    no_gray_quant_update u(1)
+                    composition_method u(1)
+                    linear_composition u(1)
+                }
+                quant_type u(1)
+                if (quant_type) {
+                    load_intra_quant_mat u(1)
+                    if (load_intra_quant_mat)
+                        intra_quant_mat()
+                    load_nonintra_quant_mat u(1)
+                    if (load_nonintra_quant_mat)
+                        nonintra_quant_mat()
+                    if(video_object_layer_shape == 3) {
+                        for(i=0; i<aux_comp_count; i++) {
+                            load_intra_quant_mat_grayscale u(1)
+                            if(load_intra_quant_mat_grayscale)
+                                intra_quant_mat_grayscale( i )
+                            load_nonintra_quant_mat_grayscale u(1)
+                            if(load_nonintra_quant_mat_grayscale)
+                                nonintra_quant_mat_grayscale( i )
+                        }
+                    }
+                }
+                if (video_object_layer_verid != 1)
+                    quarter_sample u(1)
+                complexity_estimation_disable u(1)
+                if (!complexity_estimation_disable)
+                    define_vop_complexity_estimation_header()
+                resync_marker_disable u(1)
+                data_partitioned u(1)
+                if(data_partitioned)
+                    reversible_vlc u(1)
+                if(video_object_layer_verid != 1) {
+                    newpred_enable u(1)
+                    if (newpred_enable) {
+                        requested_upstream_message_type u(2)
+                        newpred_segment_type u(1)
+                    }
+                    reduced_resolution_vop_enable u(1)
+                }
+                scalability u(1)
+                if (scalability) {
+                    hierarchy_type u(1)
+                    ref_layer_id u(4)
+                    ref_layer_sampling_direc u(1)
+                    hor_sampling_factor_n u(5)
+                    hor_sampling_factor_m u(5)
+                    vert_sampling_factor_n u(5)
+                    vert_sampling_factor_m u(5)
+                    enhancement_type u(1)
+                    if (video_object_layer_shape == 1 && hierarchy_type == 0) {
+                        use_ref_shape u(1)
+                        use_ref_texture u(1)
+                        shape_hor_sampling_factor_n u(5)
+                        shape_hor_sampling_factor_m u(5)
+                        shape_vert_sampling_factor_n u(5)
+                        shape_vert_sampling_factor_m u(5)
+                    }
+                }
+            }
+            else {
+                if(video_object_layer_verid != 1) {
+                    scalability u(1)
+                    if(scalability) {
+                        ref_layer_id u(4)
+                        shape_hor_sampling_factor_n u(5)
+                        shape_hor_sampling_factor_m u(5)
+                        shape_vert_sampling_factor_n u(5)
+                        shape_vert_sampling_factor_m u(5)
+                    }
+                }
+                resync_marker_disable u(1)
+            }
+            next_start_code()
+        }
+    }"; } }
+
          public VideoObjectLayer()
          { 
 
@@ -1010,7 +1264,7 @@ next_start_code()
 				size += stream.ReadUnsignedInt(size, 2, out this.video_object_layer_shape, "video_object_layer_shape"); 
 
 				if (ituContext.VideoObjectLayer.VideoObjectLayerShape == 3
-&& ituContext.VideoObjectLayerVerid != 1)
+                && ituContext.VideoObjectLayerVerid != 1)
 				{
 					size += stream.ReadUnsignedInt(size, 4, out this.video_object_layer_shape_extension, "video_object_layer_shape_extension"); 
 				}
@@ -1072,7 +1326,7 @@ next_start_code()
 					}
 
 					if (ituContext.VideoObjectLayerVerid != 1 &&
-ituContext.VideoObjectLayer.VideoObjectLayerShape != 0)
+                    ituContext.VideoObjectLayer.VideoObjectLayerShape != 0)
 					{
 						size += stream.ReadUnsignedInt(size, 1, out this.sadct_disable, "sadct_disable"); 
 					}
@@ -1348,7 +1602,7 @@ ituContext.VideoObjectLayer.VideoObjectLayerShape != 0)
 				size += stream.WriteUnsignedInt(2, this.video_object_layer_shape, "video_object_layer_shape"); 
 
 				if (ituContext.VideoObjectLayer.VideoObjectLayerShape == 3
-&& ituContext.VideoObjectLayerVerid != 1)
+                && ituContext.VideoObjectLayerVerid != 1)
 				{
 					size += stream.WriteUnsignedInt(4, this.video_object_layer_shape_extension, "video_object_layer_shape_extension"); 
 				}
@@ -1410,7 +1664,7 @@ ituContext.VideoObjectLayer.VideoObjectLayerShape != 0)
 					}
 
 					if (ituContext.VideoObjectLayerVerid != 1 &&
-ituContext.VideoObjectLayer.VideoObjectLayerShape != 0)
+                    ituContext.VideoObjectLayer.VideoObjectLayerShape != 0)
 					{
 						size += stream.WriteUnsignedInt(1, this.sadct_disable, "sadct_disable"); 
 					}
@@ -1546,13 +1800,11 @@ ituContext.VideoObjectLayer.VideoObjectLayerShape != 0)
     }
 
     /*
-
-
 Stuffing() {
-stuffing_start_code u(32)
-while ( before_start_code( stuffing_byte ) )
-stuffing_byte u(8)
-}
+        stuffing_start_code u(32)
+        while ( before_start_code( stuffing_byte ) )
+            stuffing_byte u(8)
+    }
     */
     public class Stuffing : IItuSerializable
     {
@@ -1563,6 +1815,13 @@ stuffing_byte u(8)
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"Stuffing() {
+        stuffing_start_code u(32)
+        while ( before_start_code( stuffing_byte ) )
+            stuffing_byte u(8)
+    }"; } }
 
          public Stuffing()
          { 
@@ -1613,53 +1872,51 @@ stuffing_byte u(8)
     }
 
     /*
-
-
 define_vop_complexity_estimation_header() {
-estimation_method u(2)
+    estimation_method u(2)
     if (estimation_method == 0 || estimation_method == 1) {
-shape_complexity_estimation_disable u(1)
-if (!shape_complexity_estimation_disable) {
-opaque u(1)
-transparent u(1)
-intra_cae u(1)
-inter_cae u(1)
-no_update u(1)
-upsampling u(1)
-}
-texture_complexity_estimation_set_1_disable u(1)
-if (!texture_complexity_estimation_set_1_disable) {
-intra_blocks u(1)
-inter_blocks u(1)
-inter4v_blocks u(1)
-not_coded_blocks u(1)
-}
-marker_bit u(1)
-texture_complexity_estimation_set_2_disable u(1)
-if (!texture_complexity_estimation_set_2_disable) {
-dct_coefs u(1)
-dct_lines u(1)
-vlc_symbols u(1)
-vlc_bits u(1)
-}
-motion_compensation_complexity_disable u(1)
-if (!motion_compensation_complexity_disable) {
-apm u(1)
-npm u(1)
-interpolate_mc_q u(1)
-forw_back_mc_q u(1)
-halfpel2 u(1)
-halfpel4 u(1)
-}
-marker_bit_2 u(1)
+        shape_complexity_estimation_disable u(1)
+        if (!shape_complexity_estimation_disable) {
+            opaque u(1)
+            transparent u(1)
+            intra_cae u(1)
+            inter_cae u(1)
+            no_update u(1)
+            upsampling u(1)
+        }
+        texture_complexity_estimation_set_1_disable u(1)
+        if (!texture_complexity_estimation_set_1_disable) {
+            intra_blocks u(1)
+            inter_blocks u(1)
+            inter4v_blocks u(1)
+            not_coded_blocks u(1)
+        }
+        marker_bit u(1)
+        texture_complexity_estimation_set_2_disable u(1)
+        if (!texture_complexity_estimation_set_2_disable) {
+            dct_coefs u(1)
+            dct_lines u(1)
+            vlc_symbols u(1)
+            vlc_bits u(1)
+        }
+        motion_compensation_complexity_disable u(1)
+        if (!motion_compensation_complexity_disable) {
+            apm u(1)
+            npm u(1)
+            interpolate_mc_q u(1)
+            forw_back_mc_q u(1)
+            halfpel2 u(1)
+            halfpel4 u(1)
+        }
+        marker_bit_2 u(1)
         if (estimation_method == 1) {
-version2_complexity_estimation_disable u(1)
-if (!version2_complexity_estimation_disable) {
-sadct u(1)
-quarterpel u(1)
-}
-}
-}
+            version2_complexity_estimation_disable u(1)
+            if (!version2_complexity_estimation_disable) {
+                sadct u(1)
+                quarterpel u(1)
+            }
+        }
+    }
 }
     */
     public class DefineVopComplexityEstimationHeader : IItuSerializable
@@ -1727,6 +1984,54 @@ quarterpel u(1)
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"define_vop_complexity_estimation_header() {
+    estimation_method u(2)
+    if (estimation_method == 0 || estimation_method == 1) {
+        shape_complexity_estimation_disable u(1)
+        if (!shape_complexity_estimation_disable) {
+            opaque u(1)
+            transparent u(1)
+            intra_cae u(1)
+            inter_cae u(1)
+            no_update u(1)
+            upsampling u(1)
+        }
+        texture_complexity_estimation_set_1_disable u(1)
+        if (!texture_complexity_estimation_set_1_disable) {
+            intra_blocks u(1)
+            inter_blocks u(1)
+            inter4v_blocks u(1)
+            not_coded_blocks u(1)
+        }
+        marker_bit u(1)
+        texture_complexity_estimation_set_2_disable u(1)
+        if (!texture_complexity_estimation_set_2_disable) {
+            dct_coefs u(1)
+            dct_lines u(1)
+            vlc_symbols u(1)
+            vlc_bits u(1)
+        }
+        motion_compensation_complexity_disable u(1)
+        if (!motion_compensation_complexity_disable) {
+            apm u(1)
+            npm u(1)
+            interpolate_mc_q u(1)
+            forw_back_mc_q u(1)
+            halfpel2 u(1)
+            halfpel4 u(1)
+        }
+        marker_bit_2 u(1)
+        if (estimation_method == 1) {
+            version2_complexity_estimation_disable u(1)
+            if (!version2_complexity_estimation_disable) {
+                sadct u(1)
+                quarterpel u(1)
+            }
+        }
+    }
+}"; } }
 
          public DefineVopComplexityEstimationHeader()
          { 
@@ -1877,14 +2182,12 @@ quarterpel u(1)
     }
 
     /*
-
-
 Group_of_VideoObjectPlane() {
-group_of_vop_start_code u(32)
-time_code u(18)
-closed_gov u(1)
-broken_link u(1)
-next_start_code()
+    group_of_vop_start_code u(32)
+    time_code u(18)
+    closed_gov u(1)
+    broken_link u(1)
+    next_start_code()
 }
     */
     public class GroupOfVideoObjectPlane : IItuSerializable
@@ -1902,6 +2205,15 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"Group_of_VideoObjectPlane() {
+    group_of_vop_start_code u(32)
+    time_code u(18)
+    closed_gov u(1)
+    broken_link u(1)
+    next_start_code()
+}"; } }
 
          public GroupOfVideoObjectPlane()
          { 
@@ -1945,122 +2257,120 @@ next_start_code()
     }
 
     /*
-
-
 VideoObjectPlane() {
-vop_start_code u(32)
-vop_coding_type u(2)
-do {
-modulo_time_base u(1)
-} while (more_modulo_time_base)
-marker_bit u(1)
-vop_time_increment u(v)
-marker_bit_2 u(1)
-vop_coded u(1)
-if (vop_coded == 0) {
-next_start_code()
-}
-else {
-if (newpred_enable) {
-vop_id u(v)
-vop_id_for_prediction_indication u(1)
-if (vop_id_for_prediction_indication)
-vop_id_for_prediction u(v)
-marker_bit_3 u(1)
-}
-if ((video_object_layer_shape != 2) &&
-(vop_coding_type == 1 ||
-(vop_coding_type == 3 && sprite_enable == 2)))
-vop_rounding_type u(1)
-if ((reduced_resolution_vop_enable) &&
-(video_object_layer_shape == 0) &&
-((vop_coding_type == 1) || (vop_coding_type == 0)))
-vop_reduced_resolution u(1)
-if (video_object_layer_shape != 0) {
-if(!(sprite_enable == 1 && vop_coding_type == 0)) {
-vop_width u(13)
-marker_bit u(1)
-vop_height u(13)
-marker_bit_2 u(1)
-vop_horizontal_mc_spatial_ref i(13)
-marker_bit_3 u(1)
-vop_vertical_mc_spatial_ref i(13)
-marker_bit_4 u(1)
-}
-if ((video_object_layer_shape != 2) &&
-scalability && enhancement_type)
-background_composition u(1)
-change_conv_ratio_disable u(1)
-vop_constant_alpha u(1)
-if (vop_constant_alpha)
-vop_constant_alpha_value u(8)
-}
-if (video_object_layer_shape != 2)
-if (!complexity_estimation_disable)
-read_vop_complexity_estimation_header()
-if (video_object_layer_shape != 2) {
-intra_dc_vlc_thr u(3)
-if (interlaced) {
-top_field_first u(1)
-alternate_vertical_scan_flag u(1)
-}
-}
-if ((sprite_enable == 1 || sprite_enable == 2) &&
-vop_coding_type == 3) {
-if (no_of_sprite_warping_points > 0)
-sprite_trajectory()
-if (sprite_brightness_change)
-brightness_change_factor()
-if(sprite_enable == 1) {
-static_sprite_vop()
-}
-}
-if (video_object_layer_shape != 2) {
-vop_quant u(v)
-if(video_object_layer_shape == 3)
-for(i=0; i<aux_comp_count; i++)
-vop_alpha_quant[i] u(6)
-if (vop_coding_type != 0)
-vop_fcode_forward u(3)
-if (vop_coding_type == 2)
-vop_fcode_backward u(3)
-if (!scalability) {
-if (video_object_layer_shape != 0
-&& vop_coding_type != 0)
-vop_shape_coding_type u(1)
-vop_data()
-}
-else {
-if (enhancement_type) {
-load_backward_shape u(1)
-if (load_backward_shape) {
-backward_shape_width u(13)
-marker_bit u(1)
-backward_shape_height u(13)
-marker_bit_2 u(1)
-backward_shape_horizontal_mc_spatial_ref i(13)
-marker_bit_3 u(1)
-backward_shape_vertical_mc_spatial_ref i(13)
-backward_shape()
-load_forward_shape u(1)
-if (load_forward_shape) {
-forward_shape_width u(13)
-marker_bit_4 u(1)
-forward_shape_height u(13)
-marker_bit_5 u(1)
-forward_shape_horizontal_mc_spatial_ref i(13)
-marker_bit_6 u(1)
-forward_shape_vertical_mc_spatial_ref i(13)
-forward_shape()
-}
-}
-}
-ref_select_code u(2)
-vop_data()
-}
-}
-else {
-vop_data()
+    vop_start_code u(32)
+    vop_coding_type u(2)
+    do {
+        modulo_time_base u(1)
+    } while (more_modulo_time_base)
+    marker_bit u(1)
+    vop_time_increment u(v)
+    marker_bit_2 u(1)
+    vop_coded u(1)
+    if (vop_coded == 0) {
+        next_start_code()
+    }
+    else {
+    if (newpred_enable) {
+        vop_id u(v)
+        vop_id_for_prediction_indication u(1)
+        if (vop_id_for_prediction_indication)
+            vop_id_for_prediction u(v)
+        marker_bit_3 u(1)
+    }
+    if ((video_object_layer_shape != 2) &&
+        (vop_coding_type == 1 ||
+        (vop_coding_type == 3 && sprite_enable == 2)))
+        vop_rounding_type u(1)
+    if ((reduced_resolution_vop_enable) &&
+        (video_object_layer_shape == 0) &&
+        ((vop_coding_type == 1) || (vop_coding_type == 0)))
+        vop_reduced_resolution u(1)
+    if (video_object_layer_shape != 0) {
+        if(!(sprite_enable == 1 && vop_coding_type == 0)) {
+            vop_width u(13)
+            marker_bit u(1)
+            vop_height u(13)
+            marker_bit_2 u(1)
+            vop_horizontal_mc_spatial_ref i(13)
+            marker_bit_3 u(1)
+            vop_vertical_mc_spatial_ref i(13)
+            marker_bit_4 u(1)
+        }
+        if ((video_object_layer_shape != 2) &&
+            scalability && enhancement_type)
+            background_composition u(1)
+        change_conv_ratio_disable u(1)
+        vop_constant_alpha u(1)
+        if (vop_constant_alpha)
+            vop_constant_alpha_value u(8)
+    }
+    if (video_object_layer_shape != 2)
+        if (!complexity_estimation_disable)
+            read_vop_complexity_estimation_header()
+    if (video_object_layer_shape != 2) {
+        intra_dc_vlc_thr u(3)
+        if (interlaced) {
+            top_field_first u(1)
+            alternate_vertical_scan_flag u(1)
+        }
+    }
+    if ((sprite_enable == 1 || sprite_enable == 2) &&
+        vop_coding_type == 3) {
+        if (no_of_sprite_warping_points > 0)
+            sprite_trajectory()
+        if (sprite_brightness_change)
+            brightness_change_factor()
+        if(sprite_enable == 1) {
+            static_sprite_vop()
+        }
+    }
+    if (video_object_layer_shape != 2) {
+        vop_quant u(v)
+        if(video_object_layer_shape == 3)
+            for(i=0; i<aux_comp_count; i++)
+                vop_alpha_quant[i] u(6)
+        if (vop_coding_type != 0)
+            vop_fcode_forward u(3)
+        if (vop_coding_type == 2)
+            vop_fcode_backward u(3)
+        if (!scalability) {
+            if (video_object_layer_shape != 0
+                && vop_coding_type != 0)
+                vop_shape_coding_type u(1)
+            vop_data()
+        }
+        else {
+            if (enhancement_type) {
+                load_backward_shape u(1)
+                if (load_backward_shape) {
+                    backward_shape_width u(13)
+                    marker_bit u(1)
+                    backward_shape_height u(13)
+                    marker_bit_2 u(1)
+                    backward_shape_horizontal_mc_spatial_ref i(13)
+                    marker_bit_3 u(1)
+                    backward_shape_vertical_mc_spatial_ref i(13)
+                    backward_shape()
+                    load_forward_shape u(1)
+                    if (load_forward_shape) {
+                        forward_shape_width u(13)
+                        marker_bit_4 u(1)
+                        forward_shape_height u(13)
+                        marker_bit_5 u(1)
+                        forward_shape_horizontal_mc_spatial_ref i(13)
+                        marker_bit_6 u(1)
+                        forward_shape_vertical_mc_spatial_ref i(13)
+                        forward_shape()
+                    }
+                }
+            }
+            ref_select_code u(2)
+            vop_data()
+        }
+    }
+    else {
+        vop_data()
 }
 }
 }
@@ -2173,6 +2483,125 @@ vop_data()
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
 
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"VideoObjectPlane() {
+    vop_start_code u(32)
+    vop_coding_type u(2)
+    do {
+        modulo_time_base u(1)
+    } while (more_modulo_time_base)
+    marker_bit u(1)
+    vop_time_increment u(v)
+    marker_bit_2 u(1)
+    vop_coded u(1)
+    if (vop_coded == 0) {
+        next_start_code()
+    }
+    else {
+    if (newpred_enable) {
+        vop_id u(v)
+        vop_id_for_prediction_indication u(1)
+        if (vop_id_for_prediction_indication)
+            vop_id_for_prediction u(v)
+        marker_bit_3 u(1)
+    }
+    if ((video_object_layer_shape != 2) &&
+        (vop_coding_type == 1 ||
+        (vop_coding_type == 3 && sprite_enable == 2)))
+        vop_rounding_type u(1)
+    if ((reduced_resolution_vop_enable) &&
+        (video_object_layer_shape == 0) &&
+        ((vop_coding_type == 1) || (vop_coding_type == 0)))
+        vop_reduced_resolution u(1)
+    if (video_object_layer_shape != 0) {
+        if(!(sprite_enable == 1 && vop_coding_type == 0)) {
+            vop_width u(13)
+            marker_bit u(1)
+            vop_height u(13)
+            marker_bit_2 u(1)
+            vop_horizontal_mc_spatial_ref i(13)
+            marker_bit_3 u(1)
+            vop_vertical_mc_spatial_ref i(13)
+            marker_bit_4 u(1)
+        }
+        if ((video_object_layer_shape != 2) &&
+            scalability && enhancement_type)
+            background_composition u(1)
+        change_conv_ratio_disable u(1)
+        vop_constant_alpha u(1)
+        if (vop_constant_alpha)
+            vop_constant_alpha_value u(8)
+    }
+    if (video_object_layer_shape != 2)
+        if (!complexity_estimation_disable)
+            read_vop_complexity_estimation_header()
+    if (video_object_layer_shape != 2) {
+        intra_dc_vlc_thr u(3)
+        if (interlaced) {
+            top_field_first u(1)
+            alternate_vertical_scan_flag u(1)
+        }
+    }
+    if ((sprite_enable == 1 || sprite_enable == 2) &&
+        vop_coding_type == 3) {
+        if (no_of_sprite_warping_points > 0)
+            sprite_trajectory()
+        if (sprite_brightness_change)
+            brightness_change_factor()
+        if(sprite_enable == 1) {
+            static_sprite_vop()
+        }
+    }
+    if (video_object_layer_shape != 2) {
+        vop_quant u(v)
+        if(video_object_layer_shape == 3)
+            for(i=0; i<aux_comp_count; i++)
+                vop_alpha_quant[i] u(6)
+        if (vop_coding_type != 0)
+            vop_fcode_forward u(3)
+        if (vop_coding_type == 2)
+            vop_fcode_backward u(3)
+        if (!scalability) {
+            if (video_object_layer_shape != 0
+                && vop_coding_type != 0)
+                vop_shape_coding_type u(1)
+            vop_data()
+        }
+        else {
+            if (enhancement_type) {
+                load_backward_shape u(1)
+                if (load_backward_shape) {
+                    backward_shape_width u(13)
+                    marker_bit u(1)
+                    backward_shape_height u(13)
+                    marker_bit_2 u(1)
+                    backward_shape_horizontal_mc_spatial_ref i(13)
+                    marker_bit_3 u(1)
+                    backward_shape_vertical_mc_spatial_ref i(13)
+                    backward_shape()
+                    load_forward_shape u(1)
+                    if (load_forward_shape) {
+                        forward_shape_width u(13)
+                        marker_bit_4 u(1)
+                        forward_shape_height u(13)
+                        marker_bit_5 u(1)
+                        forward_shape_horizontal_mc_spatial_ref i(13)
+                        marker_bit_6 u(1)
+                        forward_shape_vertical_mc_spatial_ref i(13)
+                        forward_shape()
+                    }
+                }
+            }
+            ref_select_code u(2)
+            vop_data()
+        }
+    }
+    else {
+        vop_data()
+}
+}
+}"; } }
+
          public VideoObjectPlane()
          { 
 
@@ -2224,15 +2653,15 @@ vop_data()
 				}
 
 				if ((ituContext.VideoObjectLayer.VideoObjectLayerShape != 2) &&
-(ituContext.VopCodingType == 1 ||
-(ituContext.VopCodingType == 3 && ituContext.VideoObjectLayer.SpriteEnable == 2)))
+        (ituContext.VopCodingType == 1 ||
+        (ituContext.VopCodingType == 3 && ituContext.VideoObjectLayer.SpriteEnable == 2)))
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.vop_rounding_type, "vop_rounding_type"); 
 				}
 
 				if ((ituContext.VideoObjectLayer.ReducedResolutionVopEnable != 0) &&
-(ituContext.VideoObjectLayer.VideoObjectLayerShape == 0) &&
-((ituContext.VopCodingType == 1) || (ituContext.VopCodingType == 0)))
+        (ituContext.VideoObjectLayer.VideoObjectLayerShape == 0) &&
+        ((ituContext.VopCodingType == 1) || (ituContext.VopCodingType == 0)))
 				{
 					size += stream.ReadUnsignedInt(size, 1, out this.vop_reduced_resolution, "vop_reduced_resolution"); 
 				}
@@ -2253,7 +2682,7 @@ vop_data()
 					}
 
 					if ((ituContext.VideoObjectLayer.VideoObjectLayerShape != 2) &&
-ituContext.VideoObjectLayer.Scalability != 0 && ituContext.VideoObjectLayer.EnhancementType != 0)
+            ituContext.VideoObjectLayer.Scalability != 0 && ituContext.VideoObjectLayer.EnhancementType != 0)
 					{
 						size += stream.ReadUnsignedInt(size, 1, out this.background_composition, "background_composition"); 
 					}
@@ -2288,7 +2717,7 @@ ituContext.VideoObjectLayer.Scalability != 0 && ituContext.VideoObjectLayer.Enha
 				}
 
 				if ((ituContext.VideoObjectLayer.SpriteEnable == 1 || ituContext.VideoObjectLayer.SpriteEnable == 2) &&
-ituContext.VopCodingType == 3)
+        ituContext.VopCodingType == 3)
 				{
 
 					if (ituContext.VideoObjectLayer.NoOfSpriteWarpingPoints > 0)
@@ -2339,7 +2768,7 @@ ituContext.VopCodingType == 3)
 					{
 
 						if (ituContext.VideoObjectLayer.VideoObjectLayerShape != 0
-&& ituContext.VopCodingType != 0)
+                && ituContext.VopCodingType != 0)
 						{
 							size += stream.ReadUnsignedInt(size, 1, out this.vop_shape_coding_type, "vop_shape_coding_type"); 
 						}
@@ -2439,15 +2868,15 @@ ituContext.VopCodingType == 3)
 				}
 
 				if ((ituContext.VideoObjectLayer.VideoObjectLayerShape != 2) &&
-(ituContext.VopCodingType == 1 ||
-(ituContext.VopCodingType == 3 && ituContext.VideoObjectLayer.SpriteEnable == 2)))
+        (ituContext.VopCodingType == 1 ||
+        (ituContext.VopCodingType == 3 && ituContext.VideoObjectLayer.SpriteEnable == 2)))
 				{
 					size += stream.WriteUnsignedInt(1, this.vop_rounding_type, "vop_rounding_type"); 
 				}
 
 				if ((ituContext.VideoObjectLayer.ReducedResolutionVopEnable != 0) &&
-(ituContext.VideoObjectLayer.VideoObjectLayerShape == 0) &&
-((ituContext.VopCodingType == 1) || (ituContext.VopCodingType == 0)))
+        (ituContext.VideoObjectLayer.VideoObjectLayerShape == 0) &&
+        ((ituContext.VopCodingType == 1) || (ituContext.VopCodingType == 0)))
 				{
 					size += stream.WriteUnsignedInt(1, this.vop_reduced_resolution, "vop_reduced_resolution"); 
 				}
@@ -2468,7 +2897,7 @@ ituContext.VopCodingType == 3)
 					}
 
 					if ((ituContext.VideoObjectLayer.VideoObjectLayerShape != 2) &&
-ituContext.VideoObjectLayer.Scalability != 0 && ituContext.VideoObjectLayer.EnhancementType != 0)
+            ituContext.VideoObjectLayer.Scalability != 0 && ituContext.VideoObjectLayer.EnhancementType != 0)
 					{
 						size += stream.WriteUnsignedInt(1, this.background_composition, "background_composition"); 
 					}
@@ -2502,7 +2931,7 @@ ituContext.VideoObjectLayer.Scalability != 0 && ituContext.VideoObjectLayer.Enha
 				}
 
 				if ((ituContext.VideoObjectLayer.SpriteEnable == 1 || ituContext.VideoObjectLayer.SpriteEnable == 2) &&
-ituContext.VopCodingType == 3)
+        ituContext.VopCodingType == 3)
 				{
 
 					if (ituContext.VideoObjectLayer.NoOfSpriteWarpingPoints > 0)
@@ -2548,7 +2977,7 @@ ituContext.VopCodingType == 3)
 					{
 
 						if (ituContext.VideoObjectLayer.VideoObjectLayerShape != 0
-&& ituContext.VopCodingType != 0)
+                && ituContext.VopCodingType != 0)
 						{
 							size += stream.WriteUnsignedInt(1, this.vop_shape_coding_type, "vop_shape_coding_type"); 
 						}
@@ -2602,89 +3031,87 @@ ituContext.VopCodingType == 3)
     }
 
     /*
-
-
 read_vop_complexity_estimation_header() {
-if (estimation_method == 0 || estimation_method == 1) {
-if (vop_coding_type == 0) {
-if (opaque) dcecs_opaque u(8)
-if (transparent) dcecs_transparent u(8)
-if (intra_cae) dcecs_intra_cae u(8)
-if (inter_cae) dcecs_inter_cae u(8)
-if (no_update) dcecs_no_update u(8)
-if (upsampling) dcecs_upsampling u(8)
-if (intra_blocks) dcecs_intra_blocks u(8)
-if (not_coded_blocks) dcecs_not_coded_blocks u(8)
-if (dct_coefs) dcecs_dct_coefs u(8)
-if (dct_lines) dcecs_dct_lines u(8)
-if (vlc_symbols) dcecs_vlc_symbols u(8)
-if (vlc_bits) dcecs_vlc_bits u(4)
-if (sadct) dcecs_sadct u(8)
-}
-if (vop_coding_type == 1) {
-if (opaque) dcecs_opaque u(8)
-if (transparent) dcecs_transparent u(8)
-if (intra_cae) dcecs_intra_cae u(8)
-if (inter_cae) dcecs_inter_cae u(8)
-if (no_update) dcecs_no_update u(8)
-if (upsampling) dcecs_upsampling u(8)
-if (intra_blocks) dcecs_intra_blocks u(8)
-if (not_coded) dcecs_not_coded_blocks u(8)
-if (dct_coefs) dcecs_dct_coefs u(8)
-if (dct_lines) dcecs_dct_lines u(8)
-if (vlc_symbols) dcecs_vlc_symbols u(8)
-if (vlc_bits) dcecs_vlc_bits u(4)
-if (inter_blocks) dcecs_inter_blocks u(8)
-if (inter4v_blocks) dcecs_inter4v_blocks u(8)
-if (apm) dcecs_apm u(8)
-if (npm) dcecs_npm u(8)
-if (forw_back_mc_q) dcecs_forw_back_mc_q u(8)
-if (halfpel2) dcecs_halfpel2 u(8)
-if (halfpel4) dcecs_halfpel4 u(8)
-if (sadct) dcecs_sadct u(8)
-if (quarterpel) dcecs_quarterpel u(8)
-}
-if (vop_coding_type == 2) {
-if (opaque) dcecs_opaque u(8)
-if (transparent) dcecs_transparent u(8)
-if (intra_cae) dcecs_intra_cae u(8)
-if (inter_cae) dcecs_inter_cae u(8)
-if (no_update) dcecs_no_update u(8)
-if (upsampling) dcecs_upsampling u(8)
-if (intra_blocks) dcecs_intra_blocks u(8)
-if (not_coded_blocks) dcecs_not_coded_blocks u(8)
-if (dct_coefs) dcecs_dct_coefs u(8)
-if (dct_lines) dcecs_dct_lines u(8)
-if (vlc_symbols) dcecs_vlc_symbols u(8)
-if (vlc_bits) dcecs_vlc_bits u(4)
-if (inter_blocks) dcecs_inter_blocks u(8)
-if (inter4v_blocks) dcecs_inter4v_blocks u(8)
-if (apm) dcecs_apm u(8)
-if (npm) dcecs_npm u(8)
-if (forw_back_mc_q) dcecs_forw_back_mc_q u(8)
-if (halfpel2) dcecs_halfpel2 u(8)
-if (halfpel4) dcecs_halfpel4 u(8)
-if (interpolate_mc_q) dcecs_interpolate_mc_q u(8)
-if (sadct) dcecs_sadct u(8)
-if (quarterpel) dcecs_quarterpel u(8)
-}
-    if (vop_coding_type == 3&& sprite_enable == 1) {
-if (intra_blocks) dcecs_intra_blocks u(8)
-if (not_coded_blocks) dcecs_not_coded_blocks u(8)
-if (dct_coefs) dcecs_dct_coefs u(8)
-if (dct_lines) dcecs_dct_lines u(8)
-if (vlc_symbols) dcecs_vlc_symbols u(8)
-if (vlc_bits) dcecs_vlc_bits u(4)
-if (inter_blocks) dcecs_inter_blocks u(8)
-if (inter4v_blocks) dcecs_inter4v_blocks u(8)
-if (apm) dcecs_apm u(8)
-if (npm) dcecs_npm u(8)
-if (forw_back_mc_q) dcecs_forw_back_mc_q u(8)
-if (halfpel2) dcecs_halfpel2 u(8)
-if (halfpel4) dcecs_halfpel4 u(8)
-if (interpolate_mc_q) dcecs_interpolate_mc_q u(8)
-}
-}
+    if (estimation_method == 0 || estimation_method == 1) {
+        if (vop_coding_type == 0) {
+            if (opaque) dcecs_opaque u(8)
+            if (transparent) dcecs_transparent u(8)
+            if (intra_cae) dcecs_intra_cae u(8)
+            if (inter_cae) dcecs_inter_cae u(8)
+            if (no_update) dcecs_no_update u(8)
+            if (upsampling) dcecs_upsampling u(8)
+            if (intra_blocks) dcecs_intra_blocks u(8)
+            if (not_coded_blocks) dcecs_not_coded_blocks u(8)
+            if (dct_coefs) dcecs_dct_coefs u(8)
+            if (dct_lines) dcecs_dct_lines u(8)
+            if (vlc_symbols) dcecs_vlc_symbols u(8)
+            if (vlc_bits) dcecs_vlc_bits u(4)
+            if (sadct) dcecs_sadct u(8)
+        }
+        if (vop_coding_type == 1) {
+            if (opaque) dcecs_opaque u(8)
+            if (transparent) dcecs_transparent u(8)
+            if (intra_cae) dcecs_intra_cae u(8)
+            if (inter_cae) dcecs_inter_cae u(8)
+            if (no_update) dcecs_no_update u(8)
+            if (upsampling) dcecs_upsampling u(8)
+            if (intra_blocks) dcecs_intra_blocks u(8)
+            if (not_coded) dcecs_not_coded_blocks u(8)
+            if (dct_coefs) dcecs_dct_coefs u(8)
+            if (dct_lines) dcecs_dct_lines u(8)
+            if (vlc_symbols) dcecs_vlc_symbols u(8)
+            if (vlc_bits) dcecs_vlc_bits u(4)
+            if (inter_blocks) dcecs_inter_blocks u(8)
+            if (inter4v_blocks) dcecs_inter4v_blocks u(8)
+            if (apm) dcecs_apm u(8)
+            if (npm) dcecs_npm u(8)
+            if (forw_back_mc_q) dcecs_forw_back_mc_q u(8)
+            if (halfpel2) dcecs_halfpel2 u(8)
+            if (halfpel4) dcecs_halfpel4 u(8)
+            if (sadct) dcecs_sadct u(8)
+            if (quarterpel) dcecs_quarterpel u(8)
+        }
+        if (vop_coding_type == 2) {
+            if (opaque) dcecs_opaque u(8)
+            if (transparent) dcecs_transparent u(8)
+            if (intra_cae) dcecs_intra_cae u(8)
+            if (inter_cae) dcecs_inter_cae u(8)
+            if (no_update) dcecs_no_update u(8)
+            if (upsampling) dcecs_upsampling u(8)
+            if (intra_blocks) dcecs_intra_blocks u(8)
+            if (not_coded_blocks) dcecs_not_coded_blocks u(8)
+            if (dct_coefs) dcecs_dct_coefs u(8)
+            if (dct_lines) dcecs_dct_lines u(8)
+            if (vlc_symbols) dcecs_vlc_symbols u(8)
+            if (vlc_bits) dcecs_vlc_bits u(4)
+            if (inter_blocks) dcecs_inter_blocks u(8)
+            if (inter4v_blocks) dcecs_inter4v_blocks u(8)
+            if (apm) dcecs_apm u(8)
+            if (npm) dcecs_npm u(8)
+            if (forw_back_mc_q) dcecs_forw_back_mc_q u(8)
+            if (halfpel2) dcecs_halfpel2 u(8)
+            if (halfpel4) dcecs_halfpel4 u(8)
+            if (interpolate_mc_q) dcecs_interpolate_mc_q u(8)
+            if (sadct) dcecs_sadct u(8)
+            if (quarterpel) dcecs_quarterpel u(8)
+        }
+        if (vop_coding_type == 3&& sprite_enable == 1) {
+            if (intra_blocks) dcecs_intra_blocks u(8)
+            if (not_coded_blocks) dcecs_not_coded_blocks u(8)
+            if (dct_coefs) dcecs_dct_coefs u(8)
+            if (dct_lines) dcecs_dct_lines u(8)
+            if (vlc_symbols) dcecs_vlc_symbols u(8)
+            if (vlc_bits) dcecs_vlc_bits u(4)
+            if (inter_blocks) dcecs_inter_blocks u(8)
+            if (inter4v_blocks) dcecs_inter4v_blocks u(8)
+            if (apm) dcecs_apm u(8)
+            if (npm) dcecs_npm u(8)
+            if (forw_back_mc_q) dcecs_forw_back_mc_q u(8)
+            if (halfpel2) dcecs_halfpel2 u(8)
+            if (halfpel4) dcecs_halfpel4 u(8)
+            if (interpolate_mc_q) dcecs_interpolate_mc_q u(8)
+        }
+    }
 }
     */
     public class ReadVopComplexityEstimationHeader : IItuSerializable
@@ -2736,6 +3163,90 @@ if (interpolate_mc_q) dcecs_interpolate_mc_q u(8)
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"read_vop_complexity_estimation_header() {
+    if (estimation_method == 0 || estimation_method == 1) {
+        if (vop_coding_type == 0) {
+            if (opaque) dcecs_opaque u(8)
+            if (transparent) dcecs_transparent u(8)
+            if (intra_cae) dcecs_intra_cae u(8)
+            if (inter_cae) dcecs_inter_cae u(8)
+            if (no_update) dcecs_no_update u(8)
+            if (upsampling) dcecs_upsampling u(8)
+            if (intra_blocks) dcecs_intra_blocks u(8)
+            if (not_coded_blocks) dcecs_not_coded_blocks u(8)
+            if (dct_coefs) dcecs_dct_coefs u(8)
+            if (dct_lines) dcecs_dct_lines u(8)
+            if (vlc_symbols) dcecs_vlc_symbols u(8)
+            if (vlc_bits) dcecs_vlc_bits u(4)
+            if (sadct) dcecs_sadct u(8)
+        }
+        if (vop_coding_type == 1) {
+            if (opaque) dcecs_opaque u(8)
+            if (transparent) dcecs_transparent u(8)
+            if (intra_cae) dcecs_intra_cae u(8)
+            if (inter_cae) dcecs_inter_cae u(8)
+            if (no_update) dcecs_no_update u(8)
+            if (upsampling) dcecs_upsampling u(8)
+            if (intra_blocks) dcecs_intra_blocks u(8)
+            if (not_coded) dcecs_not_coded_blocks u(8)
+            if (dct_coefs) dcecs_dct_coefs u(8)
+            if (dct_lines) dcecs_dct_lines u(8)
+            if (vlc_symbols) dcecs_vlc_symbols u(8)
+            if (vlc_bits) dcecs_vlc_bits u(4)
+            if (inter_blocks) dcecs_inter_blocks u(8)
+            if (inter4v_blocks) dcecs_inter4v_blocks u(8)
+            if (apm) dcecs_apm u(8)
+            if (npm) dcecs_npm u(8)
+            if (forw_back_mc_q) dcecs_forw_back_mc_q u(8)
+            if (halfpel2) dcecs_halfpel2 u(8)
+            if (halfpel4) dcecs_halfpel4 u(8)
+            if (sadct) dcecs_sadct u(8)
+            if (quarterpel) dcecs_quarterpel u(8)
+        }
+        if (vop_coding_type == 2) {
+            if (opaque) dcecs_opaque u(8)
+            if (transparent) dcecs_transparent u(8)
+            if (intra_cae) dcecs_intra_cae u(8)
+            if (inter_cae) dcecs_inter_cae u(8)
+            if (no_update) dcecs_no_update u(8)
+            if (upsampling) dcecs_upsampling u(8)
+            if (intra_blocks) dcecs_intra_blocks u(8)
+            if (not_coded_blocks) dcecs_not_coded_blocks u(8)
+            if (dct_coefs) dcecs_dct_coefs u(8)
+            if (dct_lines) dcecs_dct_lines u(8)
+            if (vlc_symbols) dcecs_vlc_symbols u(8)
+            if (vlc_bits) dcecs_vlc_bits u(4)
+            if (inter_blocks) dcecs_inter_blocks u(8)
+            if (inter4v_blocks) dcecs_inter4v_blocks u(8)
+            if (apm) dcecs_apm u(8)
+            if (npm) dcecs_npm u(8)
+            if (forw_back_mc_q) dcecs_forw_back_mc_q u(8)
+            if (halfpel2) dcecs_halfpel2 u(8)
+            if (halfpel4) dcecs_halfpel4 u(8)
+            if (interpolate_mc_q) dcecs_interpolate_mc_q u(8)
+            if (sadct) dcecs_sadct u(8)
+            if (quarterpel) dcecs_quarterpel u(8)
+        }
+        if (vop_coding_type == 3&& sprite_enable == 1) {
+            if (intra_blocks) dcecs_intra_blocks u(8)
+            if (not_coded_blocks) dcecs_not_coded_blocks u(8)
+            if (dct_coefs) dcecs_dct_coefs u(8)
+            if (dct_lines) dcecs_dct_lines u(8)
+            if (vlc_symbols) dcecs_vlc_symbols u(8)
+            if (vlc_bits) dcecs_vlc_bits u(4)
+            if (inter_blocks) dcecs_inter_blocks u(8)
+            if (inter4v_blocks) dcecs_inter4v_blocks u(8)
+            if (apm) dcecs_apm u(8)
+            if (npm) dcecs_npm u(8)
+            if (forw_back_mc_q) dcecs_forw_back_mc_q u(8)
+            if (halfpel2) dcecs_halfpel2 u(8)
+            if (halfpel4) dcecs_halfpel4 u(8)
+            if (interpolate_mc_q) dcecs_interpolate_mc_q u(8)
+        }
+    }
+}"; } }
 
          public ReadVopComplexityEstimationHeader()
          { 
@@ -3508,27 +4019,25 @@ if (interpolate_mc_q) dcecs_interpolate_mc_q u(8)
     }
 
     /*
-
-
 video_plane_with_short_header() {
-short_video_start_marker u(22)
-temporal_reference u(8)
-marker_bit u(1)
-zero_bit u(1)
-split_screen_indicator u(1)
-document_camera_indicator u(1)
-full_picture_freeze_release u(1)
-source_format u(3)
-picture_coding_type u(1)
-four_reserved_zero_bits u(4)
-vop_quant u(5)
-zero_bit u(1)
-do{
-pei u(1)
-if (pei_set)
-psupp u(8)
-} while (pei_set)
-vop_data()
+    short_video_start_marker u(22)
+    temporal_reference u(8)
+    marker_bit u(1)
+    zero_bit u(1)
+    split_screen_indicator u(1)
+    document_camera_indicator u(1)
+    full_picture_freeze_release u(1)
+    source_format u(3)
+    picture_coding_type u(1)
+    four_reserved_zero_bits u(4)
+    vop_quant u(5)
+    zero_bit u(1)
+    do{
+        pei u(1)
+        if (pei_set)
+            psupp u(8)
+    } while (pei_set)
+    vop_data()
 }
     */
     public class VideoPlaneWithShortHeader : IItuSerializable
@@ -3564,6 +4073,28 @@ vop_data()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"video_plane_with_short_header() {
+    short_video_start_marker u(22)
+    temporal_reference u(8)
+    marker_bit u(1)
+    zero_bit u(1)
+    split_screen_indicator u(1)
+    document_camera_indicator u(1)
+    full_picture_freeze_release u(1)
+    source_format u(3)
+    picture_coding_type u(1)
+    four_reserved_zero_bits u(4)
+    vop_quant u(5)
+    zero_bit u(1)
+    do{
+        pei u(1)
+        if (pei_set)
+            psupp u(8)
+    } while (pei_set)
+    vop_data()
+}"; } }
 
          public VideoPlaneWithShortHeader()
          { 

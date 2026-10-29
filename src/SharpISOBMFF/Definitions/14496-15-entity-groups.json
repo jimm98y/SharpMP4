@@ -9,7 +9,7 @@
       "flags": [],
       "containers": [ "grpl" ],
       "type": "EntityToGroupBox",
-      "syntax": "aligned(8) class SubpicCommonGroupBox extends EntityToGroupBox('acgl',0,0)\r\n{\tunsigned int(1) level_is_present_flag;\r\n\tunsigned int(1) level_is_static_flag;\r\n\tbit(6) reserved = 0;\r\n\tif( level_is_present_flag )\r\n\t\tunsigned int(8) level_idc;\r\n\tif( level_is_static_flag == 0 )\r\n\t\tunsigned_int(32) level_info_entity_idx;\r\n\tunsigned int(16) num_active_tracks;\r\n}"
+      "syntax": "aligned(8) class SubpicCommonGroupBox extends EntityToGroupBox('acgl',0,0)\r\n{\r\n\tunsigned int(1) level_is_present_flag;\r\n\tunsigned int(1) level_is_static_flag;\r\n\tbit(6) reserved = 0;\r\n\tif( level_is_present_flag )\r\n\t\tunsigned int(8) level_idc;\r\n\tif( level_is_static_flag == 0 )\r\n\t\tunsigned_int(32) level_info_entity_idx;\r\n\tunsigned int(16) num_active_tracks;\r\n}"
     },
     {
       "fourcc": "amgl",
@@ -45,7 +45,7 @@
       "flags": [],
       "containers": [ "grpl" ],
       "type": "EntityToGroupBox",
-      "syntax": "aligned(8) class EntityToGroupBox('vvcb', version, flags)\r\nextends FullBox('vvcb', version, flags) {\r\n\tunsigned int(32) group_id;\r\n\tunsigned int(32) num_entities_in_group;\r\n\tfor(i=0; i<num_entities_in_group; i++)\r\n\t\tunsigned int(32) entity_id;\r\n// the remaining data may be specified for a particular grouping_type\r\n}"
+      "syntax": "aligned(8) class EntityToGroupBox('vvcb', version, flags)\r\n\textends FullBox('vvcb', version, flags) {\r\n\tunsigned int(32) group_id;\r\n\tunsigned int(32) num_entities_in_group;\r\n\tfor(i=0; i<num_entities_in_group; i++)\r\n\t\tunsigned int(32) entity_id;\r\n\t// the remaining data may be specified for a particular grouping_type\r\n}"
     }
   ]
 }

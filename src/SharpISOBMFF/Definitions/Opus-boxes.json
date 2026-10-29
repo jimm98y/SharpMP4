@@ -6,13 +6,13 @@
       "fourcc": "Opus",
       "containers": [ "stsd" ],
       "type": "Box",
-      "syntax": "class OpusSampleEntry() extends AudioSampleEntry ('Opus'){\r\n OpusSpecificBox();\r\n }"
+      "syntax": "class OpusSampleEntry() extends AudioSampleEntry ('Opus'){\r\n\tOpusSpecificBox();\r\n}"
     },
     {
       "fourcc": "dOps",
       "containers": [ {"AudioSampleEntry": ["Opus", "enca"]} ],
       "type": "Box",
-      "syntax": "class ChannelMappingTable (unsigned int(8) OutputChannelCount){\r\n unsigned int(8) StreamCount;\r\n unsigned int(8) CoupledCount;\r\n unsigned int(8 * OutputChannelCount) ChannelMapping;\r\n }\r\n\r\n aligned(8) class OpusSpecificBox extends Box('dOps'){\r\n unsigned int(8) Version;\r\n unsigned int(8) OutputChannelCount;\r\n unsigned int(16) PreSkip;\r\n unsigned int(32) InputSampleRate;\r\n signed int(16) OutputGain;\r\n unsigned int(8) ChannelMappingFamily;\r\n if (ChannelMappingFamily != 0) {\r\n ChannelMappingTable(OutputChannelCount);\r\n }\r\n }"
+      "syntax": "class ChannelMappingTable (unsigned int(8) OutputChannelCount){\r\n\tunsigned int(8) StreamCount;\r\n\tunsigned int(8) CoupledCount;\r\n\tunsigned int(8 * OutputChannelCount) ChannelMapping;\r\n}\r\n\r\naligned(8) class OpusSpecificBox extends Box('dOps'){\r\n\tunsigned int(8) Version;\r\n\tunsigned int(8) OutputChannelCount;\r\n\tunsigned int(16) PreSkip;\r\n\tunsigned int(32) InputSampleRate;\r\n\tsigned int(16) OutputGain;\r\n\tunsigned int(8) ChannelMappingFamily;\r\n\tif (ChannelMappingFamily != 0) {\r\n\t\tChannelMappingTable(OutputChannelCount);\r\n\t}\r\n}"
     }    
   ]
 }

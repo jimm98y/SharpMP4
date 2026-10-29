@@ -13,9 +13,9 @@ class ColourInformationBox extends Box('colr'){
 		unsigned int(16) colour_primaries;
 		unsigned int(16) transfer_characteristics;
 		unsigned int(16) matrix_coefficients;
- 		if(colour_type == 'nclx') {
- 			unsigned int(1)  full_range_flag;
-		unsigned int(7)  reserved = 0;
+		if(colour_type == 'nclx') {
+			unsigned int(1)  full_range_flag;
+			unsigned int(7)  reserved = 0;
 		}
 	}
 	else if (colour_type == 'rICC')
@@ -30,6 +30,28 @@ class ColourInformationBox extends Box('colr'){
 */
 public partial class ColourInformationBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ColourInformationBox extends Box('colr'){
+	unsigned int(32) colour_type;
+	if (colour_type == 'nclx' || colour_type == 'nclc')	/* on-screen colours */
+	{
+		unsigned int(16) colour_primaries;
+		unsigned int(16) transfer_characteristics;
+		unsigned int(16) matrix_coefficients;
+		if(colour_type == 'nclx') {
+			unsigned int(1)  full_range_flag;
+			unsigned int(7)  reserved = 0;
+		}
+	}
+	else if (colour_type == 'rICC')
+	{
+		ICC_profile;	// restricted ICC profile
+	}
+	else if (colour_type == 'prof')
+	{
+		ICC_profile;	// unrestricted ICC profile
+	}
+}"; } }
 	public const string TYPE = "colr";
 	public override string DisplayName { get { return "ColourInformationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -154,33 +176,33 @@ public partial class ColourInformationBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("colour_type", 32, this.colour_type); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("colour_type", 32, this.colour_type); 
 
 		if (colour_type == IsoStream.FromFourCC("nclx") || colour_type == IsoStream.FromFourCC("nclc"))
 		{
-			boxSize += builder.Field("colour_primaries", 16, this.colour_primaries); 
-			boxSize += builder.Field("transfer_characteristics", 16, this.transfer_characteristics); 
-			boxSize += builder.Field("matrix_coefficients", 16, this.matrix_coefficients); 
+			boxSize += tracer.Field("colour_primaries", 16, this.colour_primaries); 
+			boxSize += tracer.Field("transfer_characteristics", 16, this.transfer_characteristics); 
+			boxSize += tracer.Field("matrix_coefficients", 16, this.matrix_coefficients); 
 
 			if (colour_type == IsoStream.FromFourCC("nclx"))
 			{
-				boxSize += builder.Field("full_range_flag", 1, this.full_range_flag); 
-				boxSize += builder.Field("reserved", 7, this.reserved); 
+				boxSize += tracer.Field("full_range_flag", 1, this.full_range_flag); 
+				boxSize += tracer.Field("reserved", 7, this.reserved); 
 			}
 		}
 
 		else if (colour_type == IsoStream.FromFourCC("rICC"))
 		{
-			boxSize += builder.Field("ICC_profile", IsoStream.CalculateClassSize(ICC_profile), this.ICC_profile); // restricted ICC profile
+			boxSize += tracer.Field("ICC_profile", IsoStream.CalculateClassSize(ICC_profile), this.ICC_profile); // restricted ICC profile
 		}
 
 		else if (colour_type == IsoStream.FromFourCC("prof"))
 		{
-			boxSize += builder.Field("ICC_profile", IsoStream.CalculateClassSize(ICC_profile), this.ICC_profile); // unrestricted ICC profile
+			boxSize += tracer.Field("ICC_profile", IsoStream.CalculateClassSize(ICC_profile), this.ICC_profile); // unrestricted ICC profile
 		}
 		return boxSize;
 	}

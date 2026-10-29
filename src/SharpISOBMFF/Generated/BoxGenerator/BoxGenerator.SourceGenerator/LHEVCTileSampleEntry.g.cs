@@ -11,6 +11,9 @@ class LHEVCTileSampleEntry() extends VisualSampleEntry ('lht1'){
 */
 public partial class LHEVCTileSampleEntry : VisualSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class LHEVCTileSampleEntry() extends VisualSampleEntry ('lht1'){
+}"; } }
 	public const string TYPE = "lht1";
 	public override string DisplayName { get { return "LHEVCTileSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -42,10 +45,10 @@ public partial class LHEVCTileSampleEntry : VisualSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

@@ -7,13 +7,12 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class XtraTag() {
- unsigned int(32) inputSize;
- unsigned int(32) tagLength;
- char tagName[tagLength];
- unsigned int(32) count;
- XtraValue values[count];
- }
- 
+	unsigned int(32) inputSize;
+	unsigned int(32) tagLength;
+	char tagName[tagLength];
+	unsigned int(32) count;
+	XtraValue values[count];
+}
 */
 public partial class XtraTag : IMp4Serializable
 {
@@ -22,6 +21,14 @@ public partial class XtraTag : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class XtraTag() {
+	unsigned int(32) inputSize;
+	unsigned int(32) tagLength;
+	char tagName[tagLength];
+	unsigned int(32) count;
+	XtraValue values[count];
+}"; } }
 	public virtual string DisplayName { get { return "XtraTag"; } }
 
 	protected uint inputSize; 
@@ -30,13 +37,13 @@ public partial class XtraTag : IMp4Serializable
 	protected uint tagLength; 
 	public uint TagLength { get { return this.tagLength; } set { this.tagLength = value; } }
 
-	protected byte[] tagName; 
+	protected byte[] tagName = []; 
 	public byte[] TagName { get { return this.tagName; } set { this.tagName = value; } }
 
 	protected uint count; 
 	public uint Count { get { return this.count; } set { this.count = value; } }
 
-	protected XtraValue[] values; 
+	protected XtraValue[] values = []; 
 	public XtraValue[] Values { get { return this.values; } set { this.values = value; } }
 
 	public XtraTag(): base()
@@ -76,14 +83,14 @@ public partial class XtraTag : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("inputSize", 32, this.inputSize); 
-		boxSize += builder.Field("tagLength", 32, this.tagLength); 
-		boxSize += builder.Field("tagName", ((ulong)(tagLength) * 8), this.tagName); 
-		boxSize += builder.Field("count", 32, this.count); 
-		boxSize += builder.Field("values", IsoStream.CalculateClassSize(values), this.values); 
+		boxSize += tracer.Field("inputSize", 32, this.inputSize); 
+		boxSize += tracer.Field("tagLength", 32, this.tagLength); 
+		boxSize += tracer.Field("tagName", ((ulong)(tagLength) * 8), this.tagName); 
+		boxSize += tracer.Field("count", 32, this.count); 
+		boxSize += tracer.Field("values", IsoStream.CalculateClassSize(values), this.values); 
 		return boxSize;
 	}
 }

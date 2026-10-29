@@ -7,18 +7,29 @@ namespace SharpISOBMFF
 {
 /*
 class AV1LayeredImageIndexingProperty extends ItemProperty('a1lx') {
-    unsigned int(7) reserved = 0;
-    unsigned int(1) large_size;
-    if(large_size) {
-       unsigned int(32) layer_size[3];
-    }
-    else {
-       unsigned int(16) layer_size[3];
-    }
+	unsigned int(7) reserved = 0;
+	unsigned int(1) large_size;
+	if(large_size) {
+		unsigned int(32) layer_size[3];
+	}
+	else {
+		unsigned int(16) layer_size[3];
+	}
 }
 */
 public partial class AV1LayeredImageIndexingProperty : ItemProperty
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AV1LayeredImageIndexingProperty extends ItemProperty('a1lx') {
+	unsigned int(7) reserved = 0;
+	unsigned int(1) large_size;
+	if(large_size) {
+		unsigned int(32) layer_size[3];
+	}
+	else {
+		unsigned int(16) layer_size[3];
+	}
+}"; } }
 	public const string TYPE = "a1lx";
 	public override string DisplayName { get { return "AV1LayeredImageIndexingProperty"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -31,7 +42,7 @@ public partial class AV1LayeredImageIndexingProperty : ItemProperty
 	protected bool large_size; 
 	public bool LargeSize { get { return this.large_size; } set { this.large_size = value; } }
 
-	protected uint[] layer_size; 
+	protected uint[] layer_size = new uint[3]; 
 	public uint[] LayerSize { get { return this.layer_size; } set { this.layer_size = value; } }
 
 	public AV1LayeredImageIndexingProperty(): base(IsoStream.FromFourCC("a1lx"))
@@ -95,21 +106,21 @@ public partial class AV1LayeredImageIndexingProperty : ItemProperty
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 7, this.reserved); 
-		boxSize += builder.Field("large_size", 1, this.large_size); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 7, this.reserved); 
+		boxSize += tracer.Field("large_size", 1, this.large_size); 
 
 		if (large_size)
 		{
-			boxSize += builder.Field("layer_size", 3 * 32, this.layer_size); 
+			boxSize += tracer.Field("layer_size", 3 * 32, this.layer_size); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("layer_size", 3 * 16, this.layer_size); 
+			boxSize += tracer.Field("layer_size", 3 * 16, this.layer_size); 
 		}
 		return boxSize;
 	}

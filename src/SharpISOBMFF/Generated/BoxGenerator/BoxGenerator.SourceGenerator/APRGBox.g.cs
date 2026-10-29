@@ -16,6 +16,14 @@ aligned(8) class APRGBox() extends Box('APRG') {
 */
 public partial class APRGBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// Avid's scan, as FFmpeg's mov_write_avid_tag writes it: 1 progressive, 2 interlaced
+aligned(8) class APRGBox() extends Box('APRG') {
+	unsigned int(32) tag;
+	unsigned int(32) version;
+	unsigned int(32) interlace;
+	unsigned int(32) reserved;
+}"; } }
 	public const string TYPE = "APRG";
 	public override string DisplayName { get { return "APRGBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -71,14 +79,14 @@ public partial class APRGBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("tag", 32, this.tag); 
-		boxSize += builder.Field("version", 32, this.version); 
-		boxSize += builder.Field("interlace", 32, this.interlace); 
-		boxSize += builder.Field("reserved", 32, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("tag", 32, this.tag); 
+		boxSize += tracer.Field("version", 32, this.version); 
+		boxSize += tracer.Field("interlace", 32, this.interlace); 
+		boxSize += tracer.Field("reserved", 32, this.reserved); 
 		return boxSize;
 	}
 }

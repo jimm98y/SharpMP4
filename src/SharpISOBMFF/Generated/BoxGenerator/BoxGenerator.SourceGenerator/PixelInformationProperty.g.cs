@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class PixelInformationProperty
-extends ItemFullProperty('pixi', version = 0, flags){
+	extends ItemFullProperty('pixi', version = 0, flags){
 	unsigned int(8) num_channels;
 	for (i=0; i<num_channels; i++) {
 		unsigned int(8) bits_per_channel;
@@ -32,6 +32,30 @@ extends ItemFullProperty('pixi', version = 0, flags){
 */
 public partial class PixelInformationProperty : ItemFullProperty
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class PixelInformationProperty
+	extends ItemFullProperty('pixi', version = 0, flags){
+	unsigned int(8) num_channels;
+	for (i=0; i<num_channels; i++) {
+		unsigned int(8) bits_per_channel;
+	}
+	if (flags & 1) {
+		for (i=0; i<num_channels; i++) {
+			unsigned int(3) channel_idc;
+			unsigned int(1) reserved = 0;
+			unsigned int(2) component_format;
+			unsigned int(1) subsampling_flag;
+			unsigned int(1) channel_label_flag;
+			if (subsampling_flag) {
+				unsigned int(4) subsampling_type;
+				unsigned int(4) subsampling_location;
+			}
+			if (channel_label_flag) {
+				utf8string channel_label;
+			}
+		}
+	}
+}"; } }
 	public const string TYPE = "pixi";
 	public override string DisplayName { get { return "PixelInformationProperty"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -192,15 +216,15 @@ public partial class PixelInformationProperty : ItemFullProperty
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("num_channels", 8, this.num_channels); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("num_channels", 8, this.num_channels); 
 
 		for (int i=0; i<num_channels; i++)
 		{
-			boxSize += builder.Field($"bits_per_channel[{i}]", 8, this.bits_per_channel[i]); 
+			boxSize += tracer.Field($"bits_per_channel[{i}]", 8, this.bits_per_channel[i]); 
 		}
 
 		if ((flags  &  1) ==  1)
@@ -208,21 +232,21 @@ public partial class PixelInformationProperty : ItemFullProperty
 
 			for (int i=0; i<num_channels; i++)
 			{
-				boxSize += builder.Field($"channel_idc[{i}]", 3, this.channel_idc[i]); 
-				boxSize += builder.Field($"reserved[{i}]", 1, this.reserved[i]); 
-				boxSize += builder.Field($"component_format[{i}]", 2, this.component_format[i]); 
-				boxSize += builder.Field($"subsampling_flag[{i}]", 1, this.subsampling_flag[i]); 
-				boxSize += builder.Field($"channel_label_flag[{i}]", 1, this.channel_label_flag[i]); 
+				boxSize += tracer.Field($"channel_idc[{i}]", 3, this.channel_idc[i]); 
+				boxSize += tracer.Field($"reserved[{i}]", 1, this.reserved[i]); 
+				boxSize += tracer.Field($"component_format[{i}]", 2, this.component_format[i]); 
+				boxSize += tracer.Field($"subsampling_flag[{i}]", 1, this.subsampling_flag[i]); 
+				boxSize += tracer.Field($"channel_label_flag[{i}]", 1, this.channel_label_flag[i]); 
 
 				if (subsampling_flag[i])
 				{
-					boxSize += builder.Field($"subsampling_type[{i}]", 4, this.subsampling_type[i]); 
-					boxSize += builder.Field($"subsampling_location[{i}]", 4, this.subsampling_location[i]); 
+					boxSize += tracer.Field($"subsampling_type[{i}]", 4, this.subsampling_type[i]); 
+					boxSize += tracer.Field($"subsampling_location[{i}]", 4, this.subsampling_location[i]); 
 				}
 
 				if (channel_label_flag[i])
 				{
-					boxSize += builder.Field($"channel_label[{i}]", IsoStream.CalculateStringSize(channel_label[i]), this.channel_label[i]); 
+					boxSize += tracer.Field($"channel_label[{i}]", IsoStream.CalculateStringSize(channel_label[i]), this.channel_label[i]); 
 				}
 			}
 		}

@@ -14,6 +14,12 @@ aligned(8) class ItemAuxiliaryInformationBox extends ItemFullProperty('iaux', ve
 */
 public partial class ItemAuxiliaryInformationBox : ItemFullProperty
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// ISO/IEC 23001-7:2016/Amd 1:2019, 8.4: the type of an item's auxiliary information, as a sample's in 14496-12
+aligned(8) class ItemAuxiliaryInformationBox extends ItemFullProperty('iaux', version=0, flags=0) {
+	unsigned int(32) aux_info_type;
+	unsigned int(32) aux_info_type_parameter;
+}"; } }
 	public const string TYPE = "iaux";
 	public override string DisplayName { get { return "ItemAuxiliaryInformationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -57,12 +63,12 @@ public partial class ItemAuxiliaryInformationBox : ItemFullProperty
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("aux_info_type", 32, this.aux_info_type); 
-		boxSize += builder.Field("aux_info_type_parameter", 32, this.aux_info_type_parameter); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("aux_info_type", 32, this.aux_info_type); 
+		boxSize += tracer.Field("aux_info_type_parameter", 32, this.aux_info_type_parameter); 
 		return boxSize;
 	}
 }

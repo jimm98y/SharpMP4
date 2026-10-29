@@ -8,17 +8,28 @@ namespace SharpISOBMFF
 /*
 // ISO/IEC 23001-17 component definition: what each component is - of a type of 0x8000 or more, of a URI
 aligned(8) class ComponentDefinitionBox() extends Box('cmpd') {
-	 unsigned int(32) component_count;
- for (i = 0; i < component_count; i++) {
- unsigned int(16) component_type;
- if (component_type >= 0x8000) {
- utf8string component_type_uri;
- }
- }
- } 
+	unsigned int(32) component_count;
+	for (i = 0; i < component_count; i++) {
+		unsigned int(16) component_type;
+		if (component_type >= 0x8000) {
+			utf8string component_type_uri;
+		}
+	}
+}
 */
 public partial class ComponentDefinitionBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// ISO/IEC 23001-17 component definition: what each component is - of a type of 0x8000 or more, of a URI
+aligned(8) class ComponentDefinitionBox() extends Box('cmpd') {
+	unsigned int(32) component_count;
+	for (i = 0; i < component_count; i++) {
+		unsigned int(16) component_type;
+		if (component_type >= 0x8000) {
+			utf8string component_type_uri;
+		}
+	}
+}"; } }
 	public const string TYPE = "cmpd";
 	public override string DisplayName { get { return "ComponentDefinitionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -94,19 +105,19 @@ public partial class ComponentDefinitionBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("component_count", 32, this.component_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("component_count", 32, this.component_count); 
 
 		for (int i = 0; i < component_count; i++)
 		{
-			boxSize += builder.Field($"component_type[{i}]", 16, this.component_type[i]); 
+			boxSize += tracer.Field($"component_type[{i}]", 16, this.component_type[i]); 
 
 			if (component_type[i] >= 0x8000)
 			{
-				boxSize += builder.Field($"component_type_uri[{i}]", IsoStream.CalculateStringSize(component_type_uri[i]), this.component_type_uri[i]); 
+				boxSize += tracer.Field($"component_type_uri[{i}]", IsoStream.CalculateStringSize(component_type_uri[i]), this.component_type_uri[i]); 
 			}
 		}
 		return boxSize;

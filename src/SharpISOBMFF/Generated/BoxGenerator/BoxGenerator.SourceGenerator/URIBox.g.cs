@@ -12,6 +12,10 @@ class URIBox extends FullBox('uri ', version = 0, 0) {
 */
 public partial class URIBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class URIBox extends FullBox('uri ', version = 0, 0) {
+	utf8string theURI;
+}"; } }
 	public const string TYPE = "uri ";
 	public override string DisplayName { get { return "URIBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class URIBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("theURI", IsoStream.CalculateStringSize(theURI), this.theURI); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("theURI", IsoStream.CalculateStringSize(theURI), this.theURI); 
 		return boxSize;
 	}
 }

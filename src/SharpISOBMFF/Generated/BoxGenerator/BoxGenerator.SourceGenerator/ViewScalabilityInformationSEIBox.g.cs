@@ -8,18 +8,23 @@ namespace SharpISOBMFF
 /*
 class ViewScalabilityInformationSEIBox extends Box('vsib', size)
 {
-	unsigned int(8*size-64)	mvcscalinfosei; 
+	unsigned int(8*size-64)	mvcscalinfosei;
 }
 */
 public partial class ViewScalabilityInformationSEIBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ViewScalabilityInformationSEIBox extends Box('vsib', size)
+{
+	unsigned int(8*size-64)	mvcscalinfosei;
+}"; } }
 	public const string TYPE = "vsib";
 	public override string DisplayName { get { return "ViewScalabilityInformationSEIBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("AVCMVCSampleEntry(avc1,avc3)", "AVC2MVCSampleEntry(avc2,avc4)", "MVCSampleEntry(mvc1,mvc2,mvc3,mvc4)"); }
 
 
-	protected byte[] mvcscalinfosei; 
+	protected byte[] mvcscalinfosei = []; 
 	public byte[] Mvcscalinfosei { get { return this.mvcscalinfosei; } set { this.mvcscalinfosei = value; } }
 
 	public ViewScalabilityInformationSEIBox(ulong size = 0): base(IsoStream.FromFourCC("vsib"), size)
@@ -50,11 +55,11 @@ public partial class ViewScalabilityInformationSEIBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("mvcscalinfosei", (ulong)(8*size-64 ), this.mvcscalinfosei); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("mvcscalinfosei", (ulong)(8*size-64 ), this.mvcscalinfosei); 
 		return boxSize;
 	}
 }

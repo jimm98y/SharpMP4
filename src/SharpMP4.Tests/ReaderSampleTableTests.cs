@@ -393,7 +393,7 @@ public class ReaderSampleTableTests
             return bytes;
         }).ToArray();
 
-    private static (byte[] File, byte[][] Data) BuildFile(int count, Func<int, int> size, Func<int, int> compositionOffset, Func<int, bool> rap)
+    internal static (byte[] File, byte[][] Data) BuildFile(int count, Func<int, int> size, Func<int, int> compositionOffset, Func<int, bool> rap)
     {
         var data = Samples(count, size);
         using var output = new MemoryStream();

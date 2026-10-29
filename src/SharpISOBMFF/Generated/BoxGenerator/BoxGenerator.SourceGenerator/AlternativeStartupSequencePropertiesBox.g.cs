@@ -21,6 +21,19 @@ class AlternativeStartupSequencePropertiesBox extends FullBox('assp', version, 0
 */
 public partial class AlternativeStartupSequencePropertiesBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AlternativeStartupSequencePropertiesBox extends FullBox('assp', version, 0) {
+	if (version == 0) {
+		signed int(32)		min_initial_alt_startup_offset;
+	}
+	else if (version == 1) {
+		unsigned int(32)	num_entries;
+		for (j=1; j <= num_entries; j++) {
+			unsigned int(32)	grouping_type_parameter;
+			signed int(32)		min_initial_alt_startup_offset;
+		}
+	}
+}"; } }
 	public const string TYPE = "assp";
 	public override string DisplayName { get { return "AlternativeStartupSequencePropertiesBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -114,24 +127,24 @@ public partial class AlternativeStartupSequencePropertiesBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if (version == 0)
 		{
-			boxSize += builder.Field("min_initial_alt_startup_offset", 32, this.min_initial_alt_startup_offset); 
+			boxSize += tracer.Field("min_initial_alt_startup_offset", 32, this.min_initial_alt_startup_offset); 
 		}
 
 		else if (version == 1)
 		{
-			boxSize += builder.Field("num_entries", 32, this.num_entries); 
+			boxSize += tracer.Field("num_entries", 32, this.num_entries); 
 
 			for (int j=0; j < num_entries; j++)
 			{
-				boxSize += builder.Field($"grouping_type_parameter[{j}]", 32, this.grouping_type_parameter[j]); 
-				boxSize += builder.Field($"min_initial_alt_startup_offset0[{j}]", 32, this.min_initial_alt_startup_offset0[j]); 
+				boxSize += tracer.Field($"grouping_type_parameter[{j}]", 32, this.grouping_type_parameter[j]); 
+				boxSize += tracer.Field($"min_initial_alt_startup_offset0[{j}]", 32, this.min_initial_alt_startup_offset0[j]); 
 			}
 		}
 		return boxSize;

@@ -6,7 +6,7 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class TierBitRateBox extends Box('tibr'){ 
+class TierBitRateBox extends Box('tibr'){
 	unsigned int(32) baseBitRate;
 	unsigned int(32) maxBitRate;
 	unsigned int(32) avgBitRate;
@@ -18,6 +18,16 @@ class TierBitRateBox extends Box('tibr'){
 */
 public partial class TierBitRateBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class TierBitRateBox extends Box('tibr'){
+	unsigned int(32) baseBitRate;
+	unsigned int(32) maxBitRate;
+	unsigned int(32) avgBitRate;
+
+	unsigned int(32) tierBaseBitRate;
+	unsigned int(32) tierMaxBitRate;
+	unsigned int(32) tierAvgBitRate;
+}"; } }
 	public const string TYPE = "tibr";
 	public override string DisplayName { get { return "TierBitRateBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -85,16 +95,16 @@ public partial class TierBitRateBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("baseBitRate", 32, this.baseBitRate); 
-		boxSize += builder.Field("maxBitRate", 32, this.maxBitRate); 
-		boxSize += builder.Field("avgBitRate", 32, this.avgBitRate); 
-		boxSize += builder.Field("tierBaseBitRate", 32, this.tierBaseBitRate); 
-		boxSize += builder.Field("tierMaxBitRate", 32, this.tierMaxBitRate); 
-		boxSize += builder.Field("tierAvgBitRate", 32, this.tierAvgBitRate); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("baseBitRate", 32, this.baseBitRate); 
+		boxSize += tracer.Field("maxBitRate", 32, this.maxBitRate); 
+		boxSize += tracer.Field("avgBitRate", 32, this.avgBitRate); 
+		boxSize += tracer.Field("tierBaseBitRate", 32, this.tierBaseBitRate); 
+		boxSize += tracer.Field("tierMaxBitRate", 32, this.tierMaxBitRate); 
+		boxSize += tracer.Field("tierAvgBitRate", 32, this.tierAvgBitRate); 
 		return boxSize;
 	}
 }

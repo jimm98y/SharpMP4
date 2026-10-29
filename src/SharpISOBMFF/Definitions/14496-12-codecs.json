@@ -14,21 +14,21 @@
       "description": "MP4 Audio",
       "type": "AudioSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class AudioSampleEntry(codingname) extends SampleEntry (codingname) {\r\n    unsigned int(16) soundversion = 0;\r\n    unsigned int(16) reserved1 = 0;\r\n    unsigned int(32) reserved2 = 0;\r\n    unsigned int(16) channelcount;\r\n    template unsigned int(16) samplesize = 16;\r\n\r\n    unsigned int(16) pre_defined = 0;\r\n    const unsigned int(16) reserved = 0;\r\n    template unsigned int(32) samplerate;\r\n\r\n    if(codingname != 'mlpa') {\r\n        samplerate = samplerate >> 16;\r\n    }\r\n\r\n    if(soundversion == 1 || soundversion == 2) {\r\n       unsigned int(32) samplesPerPacket;\r\n       unsigned int(32) bytesPerPacket;\r\n       unsigned int(32) bytesPerFrame;\r\n       unsigned int(32) bytesPerSample;\r\n    }\r\n\r\n    if(soundversion == 2) {\r\n       unsigned int(8)[20] soundVersion2Data;\r\n    }\r\n\r\n    ChannelLayout();\r\n    // we permit any number of DownMix or DRC boxes: \r\n    DownMixInstructions() [];\r\n    DRCCoefficientsBasic() [];\r\n    DRCInstructionsBasic() [];\r\n    DRCCoefficientsUniDRC() [];\r\n    DRCInstructionsUniDRC() [];\r\n    // we permit only one DRC Extension box:\r\n    UniDrcConfigExtension();\r\n    // optional boxes follow\r\n    SamplingRateBox();\r\n    Box (); // further boxes as needed\r\n}"
+      "syntax": "class AudioSampleEntry(codingname) extends SampleEntry (codingname) {\r\n\tunsigned int(16) soundversion = 0;\r\n\tunsigned int(16) reserved1 = 0;\r\n\tunsigned int(32) reserved2 = 0;\r\n\tunsigned int(16) channelcount;\r\n\ttemplate unsigned int(16) samplesize = 16;\r\n\r\n\tunsigned int(16) pre_defined = 0;\r\n\tconst unsigned int(16) reserved = 0;\r\n\ttemplate unsigned int(32) samplerate;\r\n\r\n\tif(codingname != 'mlpa') {\r\n\t\tsamplerate = samplerate >> 16;\r\n\t}\r\n\r\n\tif(soundversion == 1 || soundversion == 2) {\r\n\t\tunsigned int(32) samplesPerPacket;\r\n\t\tunsigned int(32) bytesPerPacket;\r\n\t\tunsigned int(32) bytesPerFrame;\r\n\t\tunsigned int(32) bytesPerSample;\r\n\t}\r\n\r\n\tif(soundversion == 2) {\r\n\t\tunsigned int(8)[20] soundVersion2Data;\r\n\t}\r\n\r\n\tChannelLayout();\r\n\t// we permit any number of DownMix or DRC boxes:\r\n\tDownMixInstructions() [];\r\n\tDRCCoefficientsBasic() [];\r\n\tDRCInstructionsBasic() [];\r\n\tDRCCoefficientsUniDRC() [];\r\n\tDRCInstructionsUniDRC() [];\r\n\t// we permit only one DRC Extension box:\r\n\tUniDrcConfigExtension();\r\n\t// optional boxes follow\r\n\tSamplingRateBox();\r\n\tBox (); // further boxes as needed\r\n}"
     },
     {
       "fourcc": "enca",
       "description": "Encrypted/Protected audio",
       "type": "AudioSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class AudioSampleEntry(codingname) extends SampleEntry (codingname){\r\n\tconst unsigned int(32)[2] reserved = 0;\r\n\tunsigned int(16) channelcount;\r\n\ttemplate unsigned int(16) samplesize = 16;\r\n\tunsigned int(16) pre_defined = 0;\r\n\tconst unsigned int(16) reserved = 0 ;\r\n\ttemplate unsigned int(32) samplerate = { default samplerate of media}<<16;\r\n\t// optional boxes follow\r\n\tBox ();\t\t// further boxes as needed\r\n\tChannelLayout();\r\n\tDownMixInstructions() [];\r\n\tDRCCoefficientsBasic() [];\r\n\tDRCInstructionsBasic() [];\r\n\tDRCCoefficientsUniDRC() [];\r\n\tDRCInstructionsUniDRC() [];\r\n\t// we permit only one DRC Extension box:\r\n\tUniDrcConfigExtension();\r\n\t// optional boxes follow\r\n\tSamplingRateBox();\r\n\tChannelLayout();\r\n}\r\n\r\nclass AudioSampleEntryV1(codingname) extends SampleEntry (codingname){\r\n\tunsigned int(16) entry_version;\t// shall be 1, \r\n\t// and shall be in an stsd with version ==1\r\n\tconst unsigned int(16)[3] reserved = 0;\r\n\ttemplate unsigned int(16) channelcount;\t// shall be correct\r\n\ttemplate unsigned int(16) samplesize = 16;\r\n\tunsigned int(16) pre_defined = 0;\r\n\tconst unsigned int(16) reserved = 0 ;\r\n\ttemplate unsigned int(32) samplerate = 1<<16;\r\n\t// optional boxes follow\r\n\tSamplingRateBox();\r\n\tBox ();\t\t// further boxes as needed\r\n\tChannelLayout();\r\n\tDownMixInstructions() [];\r\n\tDRCCoefficientsBasic() [];\r\n\tDRCInstructionsBasic() [];\r\n\tDRCCoefficientsUniDRC() [];\r\n\tDRCInstructionsUniDRC() [];\r\n\t// we permit only one DRC Extension box:\r\n\tUniDrcConfigExtension();\r\n\t// optional boxes follow\r\n\tChannelLayout();\r\n}"
+      "syntax": "class AudioSampleEntry(codingname) extends SampleEntry (codingname){\r\n\tconst unsigned int(32)[2] reserved = 0;\r\n\tunsigned int(16) channelcount;\r\n\ttemplate unsigned int(16) samplesize = 16;\r\n\tunsigned int(16) pre_defined = 0;\r\n\tconst unsigned int(16) reserved = 0 ;\r\n\ttemplate unsigned int(32) samplerate = { default samplerate of media}<<16;\r\n\t// optional boxes follow\r\n\tBox ();\t\t// further boxes as needed\r\n\tChannelLayout();\r\n\tDownMixInstructions() [];\r\n\tDRCCoefficientsBasic() [];\r\n\tDRCInstructionsBasic() [];\r\n\tDRCCoefficientsUniDRC() [];\r\n\tDRCInstructionsUniDRC() [];\r\n\t// we permit only one DRC Extension box:\r\n\tUniDrcConfigExtension();\r\n\t// optional boxes follow\r\n\tSamplingRateBox();\r\n\tChannelLayout();\r\n}\r\n\r\nclass AudioSampleEntryV1(codingname) extends SampleEntry (codingname){\r\n\tunsigned int(16) entry_version;\t// shall be 1,\r\n\t// and shall be in an stsd with version ==1\r\n\tconst unsigned int(16)[3] reserved = 0;\r\n\ttemplate unsigned int(16) channelcount;\t// shall be correct\r\n\ttemplate unsigned int(16) samplesize = 16;\r\n\tunsigned int(16) pre_defined = 0;\r\n\tconst unsigned int(16) reserved = 0 ;\r\n\ttemplate unsigned int(32) samplerate = 1<<16;\r\n\t// optional boxes follow\r\n\tSamplingRateBox();\r\n\tBox ();\t\t// further boxes as needed\r\n\tChannelLayout();\r\n\tDownMixInstructions() [];\r\n\tDRCCoefficientsBasic() [];\r\n\tDRCInstructionsBasic() [];\r\n\tDRCCoefficientsUniDRC() [];\r\n\tDRCInstructionsUniDRC() [];\r\n\t// we permit only one DRC Extension box:\r\n\tUniDrcConfigExtension();\r\n\t// optional boxes follow\r\n\tChannelLayout();\r\n}"
     },
     {
       "fourcc": "enca",
       "description": "Encrypted/Protected audio",
       "type": "AudioSampleEntryV1",
       "containers": [ "stsd" ],
-      "syntax": "class AudioSampleEntryV1(codingname) extends SampleEntry (codingname){\r\n\tunsigned int(16) entry_version;\t// shall be 1, \r\n\t\t\t\t\t\t\t// and shall be in an stsd with version ==1\r\n\tconst unsigned int(16)[3] reserved = 0;\r\n\ttemplate unsigned int(16) channelcount;\t// shall be correct\r\n\ttemplate unsigned int(16) samplesize = 16;\r\n\tunsigned int(16) pre_defined = 0;\r\n\tconst unsigned int(16) reserved = 0 ;\r\n\ttemplate unsigned int(32) samplerate = 1<<16;\r\n\t// optional boxes follow\r\n\tSamplingRateBox();\r\n\tBox ();\t\t// further boxes as needed\r\n\tChannelLayout();\r\n\tDownMixInstructions() [];\r\n\tDRCCoefficientsBasic() [];\r\n\tDRCInstructionsBasic() [];\r\n\tDRCCoefficientsUniDRC() [];\r\n\tDRCInstructionsUniDRC() [];\r\n\t// we permit only one DRC Extension box:\r\n\tUniDrcConfigExtension();\r\n\t// optional boxes follow\r\n\tChannelLayout();\r\n}"
+      "syntax": "class AudioSampleEntryV1(codingname) extends SampleEntry (codingname){\r\n\tunsigned int(16) entry_version;\t// shall be 1,\r\n\t// and shall be in an stsd with version ==1\r\n\tconst unsigned int(16)[3] reserved = 0;\r\n\ttemplate unsigned int(16) channelcount;\t// shall be correct\r\n\ttemplate unsigned int(16) samplesize = 16;\r\n\tunsigned int(16) pre_defined = 0;\r\n\tconst unsigned int(16) reserved = 0 ;\r\n\ttemplate unsigned int(32) samplerate = 1<<16;\r\n\t// optional boxes follow\r\n\tSamplingRateBox();\r\n\tBox ();\t\t// further boxes as needed\r\n\tChannelLayout();\r\n\tDownMixInstructions() [];\r\n\tDRCCoefficientsBasic() [];\r\n\tDRCInstructionsBasic() [];\r\n\tDRCCoefficientsUniDRC() [];\r\n\tDRCInstructionsUniDRC() [];\r\n\t// we permit only one DRC Extension box:\r\n\tUniDrcConfigExtension();\r\n\t// optional boxes follow\r\n\tChannelLayout();\r\n}"
     },
     {
       "fourcc": "encf",
@@ -56,7 +56,7 @@
       "description": "Encrypted/protected video",
       "type": "VisualSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class GenericSampleEntry extends Box('encv') {\r\n\t// ProtectionSchemeInfoBox {\r\n\t\t// OriginalFormatBox;\t// data_format is 'resv'\r\n\t\t// SchemeTypeBox;\r\n\t\t// SchemeInformationBox;\r\n\t// }\r\n\// tRestrictedSchemeInfoBox {\r\n\t\t// OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1'\r\n\t\t// SchemeTypeBox;\r\n\t\t// SchemeInformationBox;\r\n\t// }\r\n\t// Boxes specific to the untransformed sample entry type\r\n\t// For 'avc1', these would include AVCConfigurationBox\r\n}"
+      "syntax": "class GenericSampleEntry extends Box('encv') {\r\n\t// ProtectionSchemeInfoBox {\r\n\t// OriginalFormatBox;\t// data_format is 'resv'\r\n\t// SchemeTypeBox;\r\n\t// SchemeInformationBox;\r\n\t// }\r\n\t// tRestrictedSchemeInfoBox {\r\n\t// OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1'\r\n\t// SchemeTypeBox;\r\n\t// SchemeInformationBox;\r\n\t// }\r\n\t// Boxes specific to the untransformed sample entry type\r\n\t// For 'avc1', these would include AVCConfigurationBox\r\n}"
     },
     {
       "fourcc": "metx",
@@ -84,7 +84,7 @@
       "description": "Timed metadata multiplex",
       "type": "BoxedMetaDataSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "aligned(8) class BoxedMetaDataSampleEntry \r\n\textends MetaDataSampleEntry ('mebx') {\r\n\tMetaDataKeyTableBox();\t\t\t\t// mandatory\r\n\tBitRateBox ();\t\t\t\t\t\t\t// optional\r\n}"
+      "syntax": "aligned(8) class BoxedMetaDataSampleEntry\r\n\textends MetaDataSampleEntry ('mebx') {\r\n\tMetaDataKeyTableBox();\t\t\t\t// mandatory\r\n\tBitRateBox ();\t\t\t\t\t\t\t// optional\r\n}"
     },
     {
       "fourcc": "fdp ",
@@ -182,14 +182,14 @@
       "description": "Subtitles (Timed Text)",
       "type": "XMLSubtitleSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class XMLSubtitleSampleEntry() extends SubtitleSampleEntry ('stpp') {\r\n\tutf8list namespace;\r\n\tutf8list schema_location; // optional\r\n\tutf8list auxiliary_mime_types;\r\n\t\t\t\t// optional, required if auxiliary resources are present\r\n}"
+      "syntax": "class XMLSubtitleSampleEntry() extends SubtitleSampleEntry ('stpp') {\r\n\tutf8list namespace;\r\n\tutf8list schema_location; // optional\r\n\tutf8list auxiliary_mime_types;\r\n\t// optional, required if auxiliary resources are present\r\n}"
     },
     {
       "fourcc": "stxt",
       "description": "Simple timed text",
       "type": "SimpleTextSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class SimpleTextSampleEntry extends PlainTextSampleEntry ('stxt') {\r\n\tutf8string\tcontent_encoding;\t// optional\r\n\tutf8string\tmime_format; \r\n\tTextConfigBox ();\t\t\t\t\t// optional\r\n}"
+      "syntax": "class SimpleTextSampleEntry extends PlainTextSampleEntry ('stxt') {\r\n\tutf8string\tcontent_encoding;\t// optional\r\n\tutf8string\tmime_format;\r\n\tTextConfigBox ();\t\t\t\t\t// optional\r\n}"
     },
     {
       "fourcc": "encu",
@@ -210,7 +210,7 @@
       "description": "Encrypted/Protected volumetric visual",
       "type": "VolumetricVisualSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class VolumetricVisualSampleEntry(codingname) \r\n\textends SampleEntry (codingname){\r\n\tunsigned int(8)[32] compressorname;\r\n\t// other boxes from derived specifications\r\n}"
+      "syntax": "class VolumetricVisualSampleEntry(codingname)\r\n\textends SampleEntry (codingname){\r\n\tunsigned int(8)[32] compressorname;\r\n\t// other boxes from derived specifications\r\n}"
     },
     {
       "fourcc": "resv",
@@ -218,7 +218,7 @@
       "type": "RestrictedSampleEntry",
       "containers": [ "stsd" ],
       "originalSyntax": "class VisualSampleEntry(codingname) extends SampleEntry (codingname){\r\n\tunsigned int(16) pre_defined = 0;\r\n\tconst unsigned int(16) reserved = 0;\r\n\tunsigned int(32)[3]\tpre_defined = 0;\r\n\tunsigned int(16)\twidth;\r\n\tunsigned int(16)\theight;\r\n\ttemplate unsigned int(32)\thorizresolution = 0x00480000;\t// 72 dpi\r\n\ttemplate unsigned int(32)\tvertresolution  = 0x00480000;\t// 72 dpi\r\n\tconst unsigned int(32)\treserved = 0;\r\n\ttemplate unsigned int(16)\tframe_count = 1;\r\n\tuint(8)[32]\tcompressorname;\r\n\ttemplate unsigned int(16)\tdepth = 0x0018;\r\n\tint(16)\tpre_defined = -1;\r\n\t// other boxes from derived specifications\r\n\tCleanApertureBox\t\t\tclap;\t\t// optional\r\n\tPixelAspectRatioBox\t\tpasp;\t\t// optional\r\n}\r\n",
-      "syntax": "class VisualSampleEntry(codingname) extends SampleEntry (codingname){\r\n\tunsigned int(16) pre_defined = 0;\r\n\tconst unsigned int(16) reserved = 0;\r\n\tunsigned int(32)[3]\tpre_defined = 0;\r\n\tunsigned int(16)\twidth;\r\n\tunsigned int(16)\theight;\r\n\ttemplate unsigned int(32)\thorizresolution = 0x00480000;\t// 72 dpi\r\n\ttemplate unsigned int(32)\tvertresolution  = 0x00480000;\t// 72 dpi\r\n\tconst unsigned int(32)\treserved = 0;\r\n\ttemplate unsigned int(16)\tframe_count = 1;\r\n\tuint(8)[32]\tcompressorname;\r\n\ttemplate unsigned int(16)\tdepth = 0x0018;\r\n\tint(16)\tcolor_table_id = -1; // pre_defined in ISOBMFF; QuickTime's color table ID\r\n\t// QuickTime: an ID of 0 puts the color table of a depth of 8 bits or less right here\r\n\tif (color_table_id == 0 && depth <= 8) {\r\n\t\tQuickTimeColorTable() colorTable;\r\n\t}\r\n\t// other boxes from derived specifications\r\n\tCleanApertureBox\t\t\tclap;\t\t// optional\r\n\tPixelAspectRatioBox\t\tpasp;\t\t// optional\r\n}\r\n"
+      "syntax": "class VisualSampleEntry(codingname) extends SampleEntry (codingname){\r\n\tunsigned int(16) pre_defined = 0;\r\n\tconst unsigned int(16) reserved = 0;\r\n\tunsigned int(32)[3]\tpre_defined = 0;\r\n\tunsigned int(16)\twidth;\r\n\tunsigned int(16)\theight;\r\n\ttemplate unsigned int(32)\thorizresolution = 0x00480000;\t// 72 dpi\r\n\ttemplate unsigned int(32)\tvertresolution  = 0x00480000;\t// 72 dpi\r\n\tconst unsigned int(32)\treserved = 0;\r\n\ttemplate unsigned int(16)\tframe_count = 1;\r\n\tuint(8)[32]\tcompressorname;\r\n\ttemplate unsigned int(16)\tdepth = 0x0018;\r\n\tint(16)\tcolor_table_id = -1; // pre_defined in ISOBMFF; QuickTime's color table ID\r\n\t// QuickTime: an ID of 0 puts the color table of a depth of 8 bits or less right here\r\n\tif (color_table_id == 0 && depth <= 8) {\r\n\t\tQuickTimeColorTable() colorTable;\r\n\t}\r\n\t// other boxes from derived specifications\r\n\tCleanApertureBox\t\t\tclap;\t\t// optional\r\n\tPixelAspectRatioBox\t\tpasp;\t\t// optional\r\n}"
     },
     {
       "fourcc": "resa",
@@ -232,7 +232,7 @@
       "description": "Restricted audio",
       "type": "AudioSampleEntryV1",
       "containers": [ "stsd" ],
-      "syntax": "class AudioSampleEntryV1(codingname) extends SampleEntry (codingname){\r\n\tunsigned int(16) entry_version;\t// shall be 1, \r\n\t\t\t\t\t\t\t// and shall be in an stsd with version ==1\r\n\tconst unsigned int(16)[3] reserved = 0;\r\n\ttemplate unsigned int(16) channelcount;\t// shall be correct\r\n\ttemplate unsigned int(16) samplesize = 16;\r\n\tunsigned int(16) pre_defined = 0;\r\n\tconst unsigned int(16) reserved = 0 ;\r\n\ttemplate unsigned int(32) samplerate = 1<<16;\r\n\t// optional boxes follow\r\n\tSamplingRateBox();\r\n\tBox ();\t\t// further boxes as needed\r\n\tChannelLayout();\r\n\tDownMixInstructions() [];\r\n\tDRCCoefficientsBasic() [];\r\n\tDRCInstructionsBasic() [];\r\n\tDRCCoefficientsUniDRC() [];\r\n\tDRCInstructionsUniDRC() [];\r\n\t// we permit only one DRC Extension box:\r\n\tUniDrcConfigExtension();\r\n\t// optional boxes follow\r\n\tChannelLayout();\r\n}"
+      "syntax": "class AudioSampleEntryV1(codingname) extends SampleEntry (codingname){\r\n\tunsigned int(16) entry_version;\t// shall be 1,\r\n\t// and shall be in an stsd with version ==1\r\n\tconst unsigned int(16)[3] reserved = 0;\r\n\ttemplate unsigned int(16) channelcount;\t// shall be correct\r\n\ttemplate unsigned int(16) samplesize = 16;\r\n\tunsigned int(16) pre_defined = 0;\r\n\tconst unsigned int(16) reserved = 0 ;\r\n\ttemplate unsigned int(32) samplerate = 1<<16;\r\n\t// optional boxes follow\r\n\tSamplingRateBox();\r\n\tBox ();\t\t// further boxes as needed\r\n\tChannelLayout();\r\n\tDownMixInstructions() [];\r\n\tDRCCoefficientsBasic() [];\r\n\tDRCInstructionsBasic() [];\r\n\tDRCCoefficientsUniDRC() [];\r\n\tDRCInstructionsUniDRC() [];\r\n\t// we permit only one DRC Extension box:\r\n\tUniDrcConfigExtension();\r\n\t// optional boxes follow\r\n\tChannelLayout();\r\n}"
     },
     {
       "fourcc": "resm",
@@ -281,7 +281,7 @@
       "description": "Restricted volumteric visual",
       "type": "VolumetricVisualSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "class VolumetricVisualSampleEntry(codingname) \r\n\textends SampleEntry (codingname){\r\n\tunsigned int(8)[32] compressorname;\r\n\t// other boxes from derived specifications\r\n}"
+      "syntax": "class VolumetricVisualSampleEntry(codingname)\r\n\textends SampleEntry (codingname){\r\n\tunsigned int(8)[32] compressorname;\r\n\t// other boxes from derived specifications\r\n}"
     },
     {
       "fourcc": "rtp ",

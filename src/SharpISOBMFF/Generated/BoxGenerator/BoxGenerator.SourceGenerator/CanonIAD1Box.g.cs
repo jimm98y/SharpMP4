@@ -8,19 +8,30 @@ namespace SharpISOBMFF
 /*
 // A CR3's image area dimensions (lclevy/canon_cr3, IAD1, reverse engineered): the image's size, then rectangles to the end
 aligned(8) class CanonIAD1Box() extends FullBox('IAD1') {
- unsigned int(16) image_width;
- unsigned int(16) image_height;
- unsigned int(16) unknown1; // 1
- unsigned int(16) image_kind; // 0 small, 2 big (sliced?)
- unsigned int(16) unknown2; // 1
- unsigned int(16) unknown3; // 0
- CanonImageArea areas[]; // small: the crop, the whole; big: the crop, left and top optical black, the active area
+	unsigned int(16) image_width;
+	unsigned int(16) image_height;
+	unsigned int(16) unknown1; // 1
+	unsigned int(16) image_kind; // 0 small, 2 big (sliced?)
+	unsigned int(16) unknown2; // 1
+	unsigned int(16) unknown3; // 0
+	CanonImageArea areas[]; // small: the crop, the whole; big: the crop, left and top optical black, the active area
 }
 // a rectangle of IAD1: its left, top, right and bottom, as offsets from 0
-
 */
 public partial class CanonIAD1Box : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// A CR3's image area dimensions (lclevy/canon_cr3, IAD1, reverse engineered): the image's size, then rectangles to the end
+aligned(8) class CanonIAD1Box() extends FullBox('IAD1') {
+	unsigned int(16) image_width;
+	unsigned int(16) image_height;
+	unsigned int(16) unknown1; // 1
+	unsigned int(16) image_kind; // 0 small, 2 big (sliced?)
+	unsigned int(16) unknown2; // 1
+	unsigned int(16) unknown3; // 0
+	CanonImageArea areas[]; // small: the crop, the whole; big: the crop, left and top optical black, the active area
+}
+// a rectangle of IAD1: its left, top, right and bottom, as offsets from 0"; } }
 	public const string TYPE = "IAD1";
 	public override string DisplayName { get { return "CanonIAD1Box"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -45,7 +56,7 @@ public partial class CanonIAD1Box : FullBox
 	protected ushort unknown3;  //  0
 	public ushort Unknown3 { get { return this.unknown3; } set { this.unknown3 = value; } }
 
-	protected CanonImageArea[] areas;  //  small: the crop, the whole; big: the crop, left and top optical black, the active area
+	protected CanonImageArea[] areas = [];  //  small: the crop, the whole; big: the crop, left and top optical black, the active area
 	public CanonImageArea[] Areas { get { return this.areas; } set { this.areas = value; } }
 
 	public CanonIAD1Box(): base(IsoStream.FromFourCC("IAD1"))
@@ -94,17 +105,17 @@ public partial class CanonIAD1Box : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("image_width", 16, this.image_width); 
-		boxSize += builder.Field("image_height", 16, this.image_height); 
-		boxSize += builder.Field("unknown1", 16, this.unknown1); // 1
-		boxSize += builder.Field("image_kind", 16, this.image_kind); // 0 small, 2 big (sliced?)
-		boxSize += builder.Field("unknown2", 16, this.unknown2); // 1
-		boxSize += builder.Field("unknown3", 16, this.unknown3); // 0
-		boxSize += builder.Field("areas", IsoStream.CalculateClassSize(areas), this.areas); // small: the crop, the whole; big: the crop, left and top optical black, the active area
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("image_width", 16, this.image_width); 
+		boxSize += tracer.Field("image_height", 16, this.image_height); 
+		boxSize += tracer.Field("unknown1", 16, this.unknown1); // 1
+		boxSize += tracer.Field("image_kind", 16, this.image_kind); // 0 small, 2 big (sliced?)
+		boxSize += tracer.Field("unknown2", 16, this.unknown2); // 1
+		boxSize += tracer.Field("unknown3", 16, this.unknown3); // 0
+		boxSize += tracer.Field("areas", IsoStream.CalculateClassSize(areas), this.areas); // small: the crop, the whole; big: the crop, left and top optical black, the active area
 		return boxSize;
 	}
 }

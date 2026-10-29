@@ -29,6 +29,27 @@ aligned(8) class SampleGroupDescriptionBox ()
 */
 public partial class SampleGroupDescriptionBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SampleGroupDescriptionBox ()
+	extends FullBox('sgpd', version, flags){
+	unsigned int(32) grouping_type;
+	if (version>=1) { unsigned int(32) default_length; }
+	if (version>=2) {
+		unsigned int(32) default_group_description_index;
+	}
+	unsigned int(32) entry_count;
+	int i;
+	for (i = 1 ; i <= entry_count ; i++){
+		if (version>=1) {
+			if (default_length==0) {
+				unsigned int(32) description_length;
+			}
+		}
+		SampleGroupDescriptionEntry (grouping_type);
+		// an instance of a class derived from SampleGroupDescriptionEntry
+		//  that is appropriate and permitted for the media type
+	}
+}"; } }
 	public const string TYPE = "sgpd";
 	public override string DisplayName { get { return "SampleGroupDescriptionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -164,22 +185,22 @@ public partial class SampleGroupDescriptionBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("grouping_type", 32, this.grouping_type); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("grouping_type", 32, this.grouping_type); 
 
 		if (version>=1)
 		{
-			boxSize += builder.Field("default_length", 32, this.default_length); 
+			boxSize += tracer.Field("default_length", 32, this.default_length); 
 		}
 
 		if (version>=2)
 		{
-			boxSize += builder.Field("default_group_description_index", 32, this.default_group_description_index); 
+			boxSize += tracer.Field("default_group_description_index", 32, this.default_group_description_index); 
 		}
-		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		boxSize += tracer.Field("entry_count", 32, this.entry_count); 
 		
 
 		for (int i = 0 ; i < entry_count ; i++)
@@ -190,10 +211,10 @@ public partial class SampleGroupDescriptionBox : FullBox
 
 				if (default_length==0)
 				{
-					boxSize += builder.Field($"description_length[{i}]", 32, this.description_length[i]); 
+					boxSize += tracer.Field($"description_length[{i}]", 32, this.description_length[i]); 
 				}
 			}
-			boxSize += builder.Field($"SampleGroupDescriptionEntry[{i}]", IsoStream.CalculateClassSize(SampleGroupDescriptionEntry[i]), this.SampleGroupDescriptionEntry[i]); // an instance of a class derived from SampleGroupDescriptionEntry
+			boxSize += tracer.Field($"SampleGroupDescriptionEntry[{i}]", IsoStream.CalculateClassSize(SampleGroupDescriptionEntry[i]), this.SampleGroupDescriptionEntry[i]); // an instance of a class derived from SampleGroupDescriptionEntry
 			/*   that is appropriate and permitted for the media type */
 		}
 		return boxSize;

@@ -8,15 +8,24 @@ namespace SharpISOBMFF
 /*
 // 3GPP TS 26.244 6.7, Table 6.6: AMRDecSpecStruc
 aligned(8) class AmrSpecificBox() extends Box('damr') {
- unsigned int(32) vendor;
- unsigned int(8) decoder_version;
- unsigned int(16) mode_set;
- unsigned int(8) mode_change_period;
- unsigned int(8) frames_per_sample;
- } 
+	unsigned int(32) vendor;
+	unsigned int(8) decoder_version;
+	unsigned int(16) mode_set;
+	unsigned int(8) mode_change_period;
+	unsigned int(8) frames_per_sample;
+}
 */
 public partial class AmrSpecificBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// 3GPP TS 26.244 6.7, Table 6.6: AMRDecSpecStruc
+aligned(8) class AmrSpecificBox() extends Box('damr') {
+	unsigned int(32) vendor;
+	unsigned int(8) decoder_version;
+	unsigned int(16) mode_set;
+	unsigned int(8) mode_change_period;
+	unsigned int(8) frames_per_sample;
+}"; } }
 	public const string TYPE = "damr";
 	public override string DisplayName { get { return "AmrSpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -78,15 +87,15 @@ public partial class AmrSpecificBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("vendor", 32, this.vendor); 
-		boxSize += builder.Field("decoder_version", 8, this.decoder_version); 
-		boxSize += builder.Field("mode_set", 16, this.mode_set); 
-		boxSize += builder.Field("mode_change_period", 8, this.mode_change_period); 
-		boxSize += builder.Field("frames_per_sample", 8, this.frames_per_sample); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("vendor", 32, this.vendor); 
+		boxSize += tracer.Field("decoder_version", 8, this.decoder_version); 
+		boxSize += tracer.Field("mode_set", 16, this.mode_set); 
+		boxSize += tracer.Field("mode_change_period", 8, this.mode_change_period); 
+		boxSize += tracer.Field("frames_per_sample", 8, this.frames_per_sample); 
 		return boxSize;
 	}
 }

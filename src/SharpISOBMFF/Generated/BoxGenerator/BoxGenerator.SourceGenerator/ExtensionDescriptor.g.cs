@@ -7,11 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 abstract class ExtensionDescriptor extends BaseDescriptor : bit(8) tag=ExtDescrTagStartRange..ExtDescrTagEndRange {
- // empty. To be filled by classes extending this class.
- }
+	// empty. To be filled by classes extending this class.
+}
 */
 public abstract partial class ExtensionDescriptor : BaseDescriptor
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"abstract class ExtensionDescriptor extends BaseDescriptor : bit(8) tag=ExtDescrTagStartRange..ExtDescrTagEndRange {
+	// empty. To be filled by classes extending this class.
+}"; } }
 	public byte TagMin { get; set; } = DescriptorTags.ExtDescrTagStartRange;
 	public byte TagMax { get; set; } = DescriptorTags.ExtDescrTagEndRange;	public override string DisplayName { get { return "ExtensionDescriptor"; } }
 
@@ -43,10 +47,10 @@ public abstract partial class ExtensionDescriptor : BaseDescriptor
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		/*  empty. To be filled by classes extending this class. */
 		return boxSize;
 	}

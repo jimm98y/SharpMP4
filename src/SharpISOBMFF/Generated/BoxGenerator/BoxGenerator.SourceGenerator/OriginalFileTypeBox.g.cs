@@ -11,6 +11,9 @@ aligned(8) class OriginalFileTypeBox extends Box('otyp') {
 */
 public partial class OriginalFileTypeBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class OriginalFileTypeBox extends Box('otyp') {
+}"; } }
 	public const string TYPE = "otyp";
 	public override string DisplayName { get { return "OriginalFileTypeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -45,11 +48,11 @@ public partial class OriginalFileTypeBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

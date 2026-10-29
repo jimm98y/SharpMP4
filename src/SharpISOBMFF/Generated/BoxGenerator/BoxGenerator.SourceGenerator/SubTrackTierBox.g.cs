@@ -16,6 +16,14 @@ aligned(8) class SubTrackTierBox
 */
 public partial class SubTrackTierBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SubTrackTierBox
+	extends FullBox('stti', 0, 0) {
+	unsigned int(16) item_count;
+	for(i = 0; i< item_count; i++) {
+		unsigned int(16)	tierID;
+	}
+}"; } }
 	public const string TYPE = "stti";
 	public override string DisplayName { get { return "SubTrackTierBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -72,15 +80,15 @@ public partial class SubTrackTierBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("item_count", 16, this.item_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("item_count", 16, this.item_count); 
 
 		for (int i = 0; i< item_count; i++)
 		{
-			boxSize += builder.Field($"tierID[{i}]", 16, this.tierID[i]); 
+			boxSize += tracer.Field($"tierID[{i}]", 16, this.tierID[i]); 
 		}
 		return boxSize;
 	}

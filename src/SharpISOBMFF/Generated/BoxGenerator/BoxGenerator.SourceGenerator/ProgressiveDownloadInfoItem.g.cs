@@ -7,10 +7,9 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ProgressiveDownloadInfoItem {
- 		unsigned int(32)  rate;
-		unsigned int(32)  initial_delay;
- }
-
+	unsigned int(32)  rate;
+	unsigned int(32)  initial_delay;
+}
 */
 public partial class ProgressiveDownloadInfoItem : IMp4Serializable
 {
@@ -19,6 +18,11 @@ public partial class ProgressiveDownloadInfoItem : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class ProgressiveDownloadInfoItem {
+	unsigned int(32)  rate;
+	unsigned int(32)  initial_delay;
+}"; } }
 	public virtual string DisplayName { get { return "ProgressiveDownloadInfoItem"; } }
 
 	protected uint rate; 
@@ -55,11 +59,11 @@ public partial class ProgressiveDownloadInfoItem : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("rate", 32, this.rate); 
-		boxSize += builder.Field("initial_delay", 32, this.initial_delay); 
+		boxSize += tracer.Field("rate", 32, this.rate); 
+		boxSize += tracer.Field("initial_delay", 32, this.initial_delay); 
 		return boxSize;
 	}
 }

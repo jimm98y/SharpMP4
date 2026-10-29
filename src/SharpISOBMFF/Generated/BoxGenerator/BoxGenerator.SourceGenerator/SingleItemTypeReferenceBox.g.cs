@@ -13,12 +13,17 @@ aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(reference
 		unsigned int(16) to_item_ID;
 	}
 }
-
-
-
 */
 public partial class SingleItemTypeReferenceBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(referenceType) {
+	unsigned int(16) from_item_ID;
+	unsigned int(16) reference_count;
+	for (j=0; j<reference_count; j++) {
+		unsigned int(16) to_item_ID;
+	}
+}"; } }
 	public override string DisplayName { get { return "SingleItemTypeReferenceBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "iref" }); }
@@ -80,16 +85,16 @@ public partial class SingleItemTypeReferenceBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("from_item_ID", 16, this.from_item_ID); 
-		boxSize += builder.Field("reference_count", 16, this.reference_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("from_item_ID", 16, this.from_item_ID); 
+		boxSize += tracer.Field("reference_count", 16, this.reference_count); 
 
 		for (int j=0; j<reference_count; j++)
 		{
-			boxSize += builder.Field($"to_item_ID[{j}]", 16, this.to_item_ID[j]); 
+			boxSize += tracer.Field($"to_item_ID[{j}]", 16, this.to_item_ID[j]); 
 		}
 		return boxSize;
 	}

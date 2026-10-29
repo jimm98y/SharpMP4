@@ -8,20 +8,19 @@ namespace SharpISOBMFF
 /*
 // is ac4_presentation_v1_dsi() (E.10); version 0's (ETSI TS 103 190-1, not at hand) and any other's are bytes
 aligned(8) class AC4PresentationDsi() {
- bit(8) presentation_version;
- bit(8) pres_bytes;
- if (pres_bytes == 255) {
-  bit(16) add_pres_bytes;
- }
- if (presentation_version == 1) {
-  AC4PresentationV1Dsi(pres_bytes + add_pres_bytes) presentation_v1;
- }
- else {
-  bit(8) presentation_data[pres_bytes + add_pres_bytes];
- }
+	bit(8) presentation_version;
+	bit(8) pres_bytes;
+	if (pres_bytes == 255) {
+		bit(16) add_pres_bytes;
+	}
+	if (presentation_version == 1) {
+		AC4PresentationV1Dsi(pres_bytes + add_pres_bytes) presentation_v1;
+	}
+	else {
+		bit(8) presentation_data[pres_bytes + add_pres_bytes];
+	}
 }
 // E.10.1: in [a, b] written out, the loops over sg counted by i, b_add_emdf_substreams = 1 of config 0x06 in the condition; the spec's dsi_presentation_channel_mode is its dsi_presentation_ch_mode.
-
 */
 public partial class AC4PresentationDsi : IMp4Serializable
 {
@@ -30,6 +29,22 @@ public partial class AC4PresentationDsi : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"// is ac4_presentation_v1_dsi() (E.10); version 0's (ETSI TS 103 190-1, not at hand) and any other's are bytes
+aligned(8) class AC4PresentationDsi() {
+	bit(8) presentation_version;
+	bit(8) pres_bytes;
+	if (pres_bytes == 255) {
+		bit(16) add_pres_bytes;
+	}
+	if (presentation_version == 1) {
+		AC4PresentationV1Dsi(pres_bytes + add_pres_bytes) presentation_v1;
+	}
+	else {
+		bit(8) presentation_data[pres_bytes + add_pres_bytes];
+	}
+}
+// E.10.1: in [a, b] written out, the loops over sg counted by i, b_add_emdf_substreams = 1 of config 0x06 in the condition; the spec's dsi_presentation_channel_mode is its dsi_presentation_ch_mode."; } }
 	public virtual string DisplayName { get { return "AC4PresentationDsi"; } }
 
 	protected byte presentation_version; 
@@ -44,7 +59,7 @@ public partial class AC4PresentationDsi : IMp4Serializable
 	protected AC4PresentationV1Dsi presentation_v1; 
 	public AC4PresentationV1Dsi PresentationV1 { get { return this.presentation_v1; } set { this.presentation_v1 = value; } }
 
-	protected byte[] presentation_data; 
+	protected byte[] presentation_data = []; 
 	public byte[] PresentationData { get { return this.presentation_data; } set { this.presentation_data = value; } }
 
 	public AC4PresentationDsi(): base()
@@ -120,25 +135,25 @@ public partial class AC4PresentationDsi : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("presentation_version", 8, this.presentation_version); 
-		boxSize += builder.Field("pres_bytes", 8, this.pres_bytes); 
+		boxSize += tracer.Field("presentation_version", 8, this.presentation_version); 
+		boxSize += tracer.Field("pres_bytes", 8, this.pres_bytes); 
 
 		if (pres_bytes == 255)
 		{
-			boxSize += builder.Field("add_pres_bytes", 16, this.add_pres_bytes); 
+			boxSize += tracer.Field("add_pres_bytes", 16, this.add_pres_bytes); 
 		}
 
 		if (presentation_version == 1)
 		{
-			boxSize += builder.Field("presentation_v1", IsoStream.CalculateClassSize(presentation_v1), this.presentation_v1); 
+			boxSize += tracer.Field("presentation_v1", IsoStream.CalculateClassSize(presentation_v1), this.presentation_v1); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("presentation_data", ((ulong)(pres_bytes + add_pres_bytes) * 8), this.presentation_data); 
+			boxSize += tracer.Field("presentation_data", ((ulong)(pres_bytes + add_pres_bytes) * 8), this.presentation_data); 
 		}
 		return boxSize;
 	}

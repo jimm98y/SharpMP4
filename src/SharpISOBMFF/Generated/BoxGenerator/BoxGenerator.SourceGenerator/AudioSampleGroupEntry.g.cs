@@ -6,15 +6,18 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-abstract class AudioSampleGroupEntry (unsigned int(32) grouping_type) extends 
-SampleGroupDescriptionEntry (grouping_type) 
-{ 
-} 
-
-
+abstract class AudioSampleGroupEntry (unsigned int(32) grouping_type) extends
+	SampleGroupDescriptionEntry (grouping_type)
+{
+}
 */
 public abstract partial class AudioSampleGroupEntry : SampleGroupDescriptionEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"abstract class AudioSampleGroupEntry (unsigned int(32) grouping_type) extends
+	SampleGroupDescriptionEntry (grouping_type)
+{
+}"; } }
 	public override string DisplayName { get { return "AudioSampleGroupEntry"; } }
 
 	public AudioSampleGroupEntry(uint grouping_type): base(grouping_type)
@@ -42,10 +45,10 @@ public abstract partial class AudioSampleGroupEntry : SampleGroupDescriptionEntr
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

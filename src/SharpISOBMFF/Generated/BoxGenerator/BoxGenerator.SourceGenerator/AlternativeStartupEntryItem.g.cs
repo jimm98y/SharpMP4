@@ -7,10 +7,9 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AlternativeStartupEntryItem() {
-		unsigned int(16) num_output_samples;
-		unsigned int(16) num_total_samples;
+	unsigned int(16) num_output_samples;
+	unsigned int(16) num_total_samples;
 }
-
 */
 public partial class AlternativeStartupEntryItem : IMp4Serializable
 {
@@ -19,6 +18,11 @@ public partial class AlternativeStartupEntryItem : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class AlternativeStartupEntryItem() {
+	unsigned int(16) num_output_samples;
+	unsigned int(16) num_total_samples;
+}"; } }
 	public virtual string DisplayName { get { return "AlternativeStartupEntryItem"; } }
 
 	protected ushort num_output_samples; 
@@ -55,11 +59,11 @@ public partial class AlternativeStartupEntryItem : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("num_output_samples", 16, this.num_output_samples); 
-		boxSize += builder.Field("num_total_samples", 16, this.num_total_samples); 
+		boxSize += tracer.Field("num_output_samples", 16, this.num_output_samples); 
+		boxSize += tracer.Field("num_total_samples", 16, this.num_total_samples); 
 		return boxSize;
 	}
 }

@@ -7,17 +7,27 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class CameraIntrinsicMatrixBox() extends FullBox('cmin') {
-	 signed int(32) matrix_focal_length_x;
- signed int(32) matrix_principal_point_x;
- signed int(32) matrix_principal_point_y;
- if( flags & 0x1 ) { 
- signed int(32) matrix_focal_length_y;
- signed int(32) matrix_skew;
- }
- } 
+	signed int(32) matrix_focal_length_x;
+	signed int(32) matrix_principal_point_x;
+	signed int(32) matrix_principal_point_y;
+	if( flags & 0x1 ) {
+		signed int(32) matrix_focal_length_y;
+		signed int(32) matrix_skew;
+	}
+}
 */
 public partial class CameraIntrinsicMatrixBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class CameraIntrinsicMatrixBox() extends FullBox('cmin') {
+	signed int(32) matrix_focal_length_x;
+	signed int(32) matrix_principal_point_x;
+	signed int(32) matrix_principal_point_y;
+	if( flags & 0x1 ) {
+		signed int(32) matrix_focal_length_y;
+		signed int(32) matrix_skew;
+	}
+}"; } }
 	public const string TYPE = "cmin";
 	public override string DisplayName { get { return "CameraIntrinsicMatrixBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -91,18 +101,18 @@ public partial class CameraIntrinsicMatrixBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("matrix_focal_length_x", 32, this.matrix_focal_length_x); 
-		boxSize += builder.Field("matrix_principal_point_x", 32, this.matrix_principal_point_x); 
-		boxSize += builder.Field("matrix_principal_point_y", 32, this.matrix_principal_point_y); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("matrix_focal_length_x", 32, this.matrix_focal_length_x); 
+		boxSize += tracer.Field("matrix_principal_point_x", 32, this.matrix_principal_point_x); 
+		boxSize += tracer.Field("matrix_principal_point_y", 32, this.matrix_principal_point_y); 
 
 		if (( flags  &  0x1 ) ==  0x1 )
 		{
-			boxSize += builder.Field("matrix_focal_length_y", 32, this.matrix_focal_length_y); 
-			boxSize += builder.Field("matrix_skew", 32, this.matrix_skew); 
+			boxSize += tracer.Field("matrix_focal_length_y", 32, this.matrix_focal_length_y); 
+			boxSize += tracer.Field("matrix_skew", 32, this.matrix_skew); 
 		}
 		return boxSize;
 	}

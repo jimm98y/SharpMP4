@@ -7,19 +7,24 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AssetInformationBox() extends FullBox('ainf') {
- unsigned int(8) profileVersion[4];
- string apid;
- } 
+	unsigned int(8) profileVersion[4];
+	string apid;
+}
 */
 public partial class AssetInformationBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AssetInformationBox() extends FullBox('ainf') {
+	unsigned int(8) profileVersion[4];
+	string apid;
+}"; } }
 	public const string TYPE = "ainf";
 	public override string DisplayName { get { return "AssetInformationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("moov"); }
 
 
-	protected byte[] profileVersion; 
+	protected byte[] profileVersion = new byte[4]; 
 	public byte[] ProfileVersion { get { return this.profileVersion; } set { this.profileVersion = value; } }
 
 	protected BinaryUTF8String apid; 
@@ -56,12 +61,12 @@ public partial class AssetInformationBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("profileVersion", 4 * 8, this.profileVersion); 
-		boxSize += builder.Field("apid", IsoStream.CalculateStringSize(apid), this.apid); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("profileVersion", 4 * 8, this.profileVersion); 
+		boxSize += tracer.Field("apid", IsoStream.CalculateStringSize(apid), this.apid); 
 		return boxSize;
 	}
 }

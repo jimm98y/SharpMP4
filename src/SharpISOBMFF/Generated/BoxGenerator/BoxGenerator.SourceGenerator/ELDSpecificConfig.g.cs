@@ -8,44 +8,42 @@ namespace SharpISOBMFF
 /*
 class ELDSpecificConfig(channelConfiguration)
 {
-  bslbf(1) frameLengthFlag;
-  bslbf(1) aacSectionDataResilienceFlag;
-  bslbf(1) aacScalefactorDataResilienceFlag;
-  bslbf(1) aacSpectralDataResilienceFlag;
+	bslbf(1) frameLengthFlag;
+	bslbf(1) aacSectionDataResilienceFlag;
+	bslbf(1) aacScalefactorDataResilienceFlag;
+	bslbf(1) aacSpectralDataResilienceFlag;
 
-  bslbf(1) ldSbrPresentFlag;
-  if (ldSbrPresentFlag) {
-    bslbf(1) ldSbrSamplingRate;
-    bslbf(1) ldSbrCrcFlag;
-    ld_sbr_header(channelConfiguration);
-  }
+	bslbf(1) ldSbrPresentFlag;
+	if (ldSbrPresentFlag) {
+		bslbf(1) ldSbrSamplingRate;
+		bslbf(1) ldSbrCrcFlag;
+		ld_sbr_header(channelConfiguration);
+	}
 
-  bslbf(4) eldExtType;
-while (eldExtType != ELDEXT_TERM) {
-    uimsbf(4) eldExtLen;
-    len = eldExtLen;
-    if (eldExtLen == 15) {
-      uimsbf(8) eldExtLenAdd;
-      len += eldExtLenAdd;
-    }
-    if (eldExtLenAdd == 255) {
-      uimsbf(16) eldExtLenAddAdd;
-      len += eldExtLenAddAdd;
-    }
-    switch (eldExtType) {
-      /* add future eld extension configs here *//*
-      default:
-        int cntt;
-        for (cnt = 0; cnt < len; cnt++) {
-           uimsbf(8) other_byte;
-        }
-        break;
-    }
-bslbf(4) eldExtType;
-  }
+	bslbf(4) eldExtType;
+	while (eldExtType != ELDEXT_TERM) {
+		uimsbf(4) eldExtLen;
+		len = eldExtLen;
+		if (eldExtLen == 15) {
+			uimsbf(8) eldExtLenAdd;
+			len += eldExtLenAdd;
+		}
+		if (eldExtLenAdd == 255) {
+			uimsbf(16) eldExtLenAddAdd;
+			len += eldExtLenAddAdd;
+		}
+		switch (eldExtType) {
+			/* add future eld extension configs here *//*
+			default:
+				int cntt;
+				for (cnt = 0; cnt < len; cnt++) {
+					uimsbf(8) other_byte;
+				}
+				break;
+		}
+		bslbf(4) eldExtType;
+	}
 }
-
-
 */
 public partial class ELDSpecificConfig : IMp4Serializable
 {
@@ -54,6 +52,45 @@ public partial class ELDSpecificConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class ELDSpecificConfig(channelConfiguration)
+{
+	bslbf(1) frameLengthFlag;
+	bslbf(1) aacSectionDataResilienceFlag;
+	bslbf(1) aacScalefactorDataResilienceFlag;
+	bslbf(1) aacSpectralDataResilienceFlag;
+
+	bslbf(1) ldSbrPresentFlag;
+	if (ldSbrPresentFlag) {
+		bslbf(1) ldSbrSamplingRate;
+		bslbf(1) ldSbrCrcFlag;
+		ld_sbr_header(channelConfiguration);
+	}
+
+	bslbf(4) eldExtType;
+	while (eldExtType != ELDEXT_TERM) {
+		uimsbf(4) eldExtLen;
+		len = eldExtLen;
+		if (eldExtLen == 15) {
+			uimsbf(8) eldExtLenAdd;
+			len += eldExtLenAdd;
+		}
+		if (eldExtLenAdd == 255) {
+			uimsbf(16) eldExtLenAddAdd;
+			len += eldExtLenAddAdd;
+		}
+		switch (eldExtType) {
+			/* add future eld extension configs here */
+			default:
+				int cntt;
+				for (cnt = 0; cnt < len; cnt++) {
+					uimsbf(8) other_byte;
+				}
+				break;
+		}
+		bslbf(4) eldExtType;
+	}
+}"; } }
 	public virtual string DisplayName { get { return "ELDSpecificConfig"; } }
 
 	protected bool frameLengthFlag; 
@@ -278,41 +315,41 @@ public partial class ELDSpecificConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
 		int len = 0;
 
 		const byte ELDEXT_TERM = 0;
 
-		boxSize += builder.Field("frameLengthFlag", 1, this.frameLengthFlag); 
-		boxSize += builder.Field("aacSectionDataResilienceFlag", 1, this.aacSectionDataResilienceFlag); 
-		boxSize += builder.Field("aacScalefactorDataResilienceFlag", 1, this.aacScalefactorDataResilienceFlag); 
-		boxSize += builder.Field("aacSpectralDataResilienceFlag", 1, this.aacSpectralDataResilienceFlag); 
-		boxSize += builder.Field("ldSbrPresentFlag", 1, this.ldSbrPresentFlag); 
+		boxSize += tracer.Field("frameLengthFlag", 1, this.frameLengthFlag); 
+		boxSize += tracer.Field("aacSectionDataResilienceFlag", 1, this.aacSectionDataResilienceFlag); 
+		boxSize += tracer.Field("aacScalefactorDataResilienceFlag", 1, this.aacScalefactorDataResilienceFlag); 
+		boxSize += tracer.Field("aacSpectralDataResilienceFlag", 1, this.aacSpectralDataResilienceFlag); 
+		boxSize += tracer.Field("ldSbrPresentFlag", 1, this.ldSbrPresentFlag); 
 
 		if (ldSbrPresentFlag)
 		{
-			boxSize += builder.Field("ldSbrSamplingRate", 1, this.ldSbrSamplingRate); 
-			boxSize += builder.Field("ldSbrCrcFlag", 1, this.ldSbrCrcFlag); 
-			boxSize += builder.Field("ld_sbr_header", IsoStream.CalculateClassSize(ld_sbr_header), this.ld_sbr_header); 
+			boxSize += tracer.Field("ldSbrSamplingRate", 1, this.ldSbrSamplingRate); 
+			boxSize += tracer.Field("ldSbrCrcFlag", 1, this.ldSbrCrcFlag); 
+			boxSize += tracer.Field("ld_sbr_header", IsoStream.CalculateClassSize(ld_sbr_header), this.ld_sbr_header); 
 		}
-		boxSize += builder.Field("eldExtType", 4, this.eldExtType); 
+		boxSize += tracer.Field("eldExtType", 4, this.eldExtType); 
 
 		while (eldExtType != ELDEXT_TERM)
 		{
-			boxSize += builder.Field("eldExtLen", 4, this.eldExtLen); 
+			boxSize += tracer.Field("eldExtLen", 4, this.eldExtLen); 
 			len = eldExtLen;
 
 			if (eldExtLen == 15)
 			{
-				boxSize += builder.Field("eldExtLenAdd", 8, this.eldExtLenAdd); 
+				boxSize += tracer.Field("eldExtLenAdd", 8, this.eldExtLenAdd); 
 				len += eldExtLenAdd;
 			}
 
 			if (eldExtLenAdd == 255)
 			{
-				boxSize += builder.Field("eldExtLenAddAdd", 16, this.eldExtLenAddAdd); 
+				boxSize += tracer.Field("eldExtLenAddAdd", 16, this.eldExtLenAddAdd); 
 				len += eldExtLenAddAdd;
 			}
 
@@ -321,16 +358,16 @@ public partial class ELDSpecificConfig : IMp4Serializable
 				/*  add future eld extension configs here  */
 				default:
 
-				boxSize += builder.Field("cntt", 32, this.cntt); 
+				boxSize += tracer.Field("cntt", 32, this.cntt); 
 
 				for (int cnt = 0; cnt < len; cnt++)
 				{
-					boxSize += builder.Field($"other_byte[{cnt}]", 8, this.other_byte[cnt]); 
+					boxSize += tracer.Field($"other_byte[{cnt}]", 8, this.other_byte[cnt]); 
 				}
 				break;
 
 			}
-			boxSize += builder.Field("eldExtType", 4, this.eldExtType); 
+			boxSize += tracer.Field("eldExtType", 4, this.eldExtType); 
 		}
 		return boxSize;
 	}

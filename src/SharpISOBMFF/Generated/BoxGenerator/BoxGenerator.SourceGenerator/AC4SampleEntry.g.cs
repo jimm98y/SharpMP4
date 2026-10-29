@@ -8,14 +8,22 @@ namespace SharpISOBMFF
 /*
 // E.4, Pseudocode E.1
 aligned(8) class AC4SampleEntry extends AudioSampleEntry('ac-4') {
- AC4SpecificBox();
- // we permit any number of AC4PresentationLabel boxes:
- AC4PresentationLabelBox() [];
- Box () [];
+	AC4SpecificBox();
+	// we permit any number of AC4PresentationLabel boxes:
+	AC4PresentationLabelBox() [];
+	Box () [];
 }
 */
 public partial class AC4SampleEntry : AudioSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// E.4, Pseudocode E.1
+aligned(8) class AC4SampleEntry extends AudioSampleEntry('ac-4') {
+	AC4SpecificBox();
+	// we permit any number of AC4PresentationLabel boxes:
+	AC4PresentationLabelBox() [];
+	Box () [];
+}"; } }
 	public const string TYPE = "ac-4";
 	public override string DisplayName { get { return "AC4SampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -61,14 +69,14 @@ public partial class AC4SampleEntry : AudioSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("AC4SpecificBox", IsoStream.CalculateBoxSize(AC4SpecificBox), this.AC4SpecificBox); // we permit any number of AC4PresentationLabel boxes:
-		// boxSize += builder.Field("AC4PresentationLabelBox", IsoStream.CalculateBoxSize(AC4PresentationLabelBox), this.AC4PresentationLabelBox); 
-		// boxSize += builder.Field("Box", IsoStream.CalculateBoxSize(Box), this.Box); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("AC4SpecificBox", IsoStream.CalculateBoxSize(AC4SpecificBox), this.AC4SpecificBox); // we permit any number of AC4PresentationLabel boxes:
+		// boxSize += tracer.Field("AC4PresentationLabelBox", IsoStream.CalculateBoxSize(AC4PresentationLabelBox), this.AC4PresentationLabelBox); 
+		// boxSize += tracer.Field("Box", IsoStream.CalculateBoxSize(Box), this.Box); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

@@ -29,10 +29,10 @@ aligned(8) class VvcDecoderConfigurationRecord {
 		unsigned int(5) NAL_unit_type;
 		if (NAL_unit_type != DCI_NUT  &&  NAL_unit_type != OPI_NUT) {
 			unsigned int(16) num_nalus;
-		for (i=0; i< num_nalus; i++) {
-			unsigned int(16) nal_unit_length;
-			bit(8*nal_unit_length) nal_unit;
-		}
+			for (i=0; i< num_nalus; i++) {
+				unsigned int(16) nal_unit_length;
+				bit(8*nal_unit_length) nal_unit;
+			}
 		}
 	}
 }
@@ -44,6 +44,37 @@ public partial class VvcDecoderConfigurationRecord : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class VvcDecoderConfigurationRecord {
+	bit(5) reserved = '11111'b;
+	unsigned int(2) LengthSizeMinusOne;
+	unsigned int(1) ptl_present_flag;
+	if (ptl_present_flag) {
+		unsigned int(9) ols_idx;
+		unsigned int(3) num_sublayers;
+		unsigned int(2) constant_frame_rate;
+		unsigned int(2) chroma_format_idc;
+		unsigned int(3) bit_depth_minus8;
+		bit(5) reserved = '11111'b;
+		VvcPTLRecord(num_sublayers) native_ptl;
+		unsigned_int(16) max_picture_width;
+		unsigned_int(16) max_picture_height;
+		unsigned int(16) avg_frame_rate;
+	}
+	unsigned int(8) num_of_arrays;
+	for (j=0; j < num_of_arrays; j++) {
+		unsigned int(1) array_completeness;
+		bit(2) reserved = 0;
+		unsigned int(5) NAL_unit_type;
+		if (NAL_unit_type != DCI_NUT  &&  NAL_unit_type != OPI_NUT) {
+			unsigned int(16) num_nalus;
+			for (i=0; i< num_nalus; i++) {
+				unsigned int(16) nal_unit_length;
+				bit(8*nal_unit_length) nal_unit;
+			}
+		}
+	}
+}"; } }
 	public virtual string DisplayName { get { return "VvcDecoderConfigurationRecord"; } }
 
 	protected byte reserved = 0b11111; 
@@ -253,45 +284,45 @@ public partial class VvcDecoderConfigurationRecord : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
 		const int OPI_NUT = 12;
 		const int DCI_NUT = 13;
 
-		boxSize += builder.Field("reserved", 5, this.reserved); 
-		boxSize += builder.Field("LengthSizeMinusOne", 2, this.LengthSizeMinusOne); 
-		boxSize += builder.Field("ptl_present_flag", 1, this.ptl_present_flag); 
+		boxSize += tracer.Field("reserved", 5, this.reserved); 
+		boxSize += tracer.Field("LengthSizeMinusOne", 2, this.LengthSizeMinusOne); 
+		boxSize += tracer.Field("ptl_present_flag", 1, this.ptl_present_flag); 
 
 		if (ptl_present_flag)
 		{
-			boxSize += builder.Field("ols_idx", 9, this.ols_idx); 
-			boxSize += builder.Field("num_sublayers", 3, this.num_sublayers); 
-			boxSize += builder.Field("constant_frame_rate", 2, this.constant_frame_rate); 
-			boxSize += builder.Field("chroma_format_idc", 2, this.chroma_format_idc); 
-			boxSize += builder.Field("bit_depth_minus8", 3, this.bit_depth_minus8); 
-			boxSize += builder.Field("reserved0", 5, this.reserved0); 
-			boxSize += builder.Field("native_ptl", IsoStream.CalculateClassSize(native_ptl), this.native_ptl); 
-			boxSize += builder.Field("max_picture_width", 16, this.max_picture_width); 
-			boxSize += builder.Field("max_picture_height", 16, this.max_picture_height); 
-			boxSize += builder.Field("avg_frame_rate", 16, this.avg_frame_rate); 
+			boxSize += tracer.Field("ols_idx", 9, this.ols_idx); 
+			boxSize += tracer.Field("num_sublayers", 3, this.num_sublayers); 
+			boxSize += tracer.Field("constant_frame_rate", 2, this.constant_frame_rate); 
+			boxSize += tracer.Field("chroma_format_idc", 2, this.chroma_format_idc); 
+			boxSize += tracer.Field("bit_depth_minus8", 3, this.bit_depth_minus8); 
+			boxSize += tracer.Field("reserved0", 5, this.reserved0); 
+			boxSize += tracer.Field("native_ptl", IsoStream.CalculateClassSize(native_ptl), this.native_ptl); 
+			boxSize += tracer.Field("max_picture_width", 16, this.max_picture_width); 
+			boxSize += tracer.Field("max_picture_height", 16, this.max_picture_height); 
+			boxSize += tracer.Field("avg_frame_rate", 16, this.avg_frame_rate); 
 		}
-		boxSize += builder.Field("num_of_arrays", 8, this.num_of_arrays); 
+		boxSize += tracer.Field("num_of_arrays", 8, this.num_of_arrays); 
 
 		for (int j=0; j < num_of_arrays; j++)
 		{
-			boxSize += builder.Field($"array_completeness[{j}]", 1, this.array_completeness[j]); 
-			boxSize += builder.Field($"reserved1[{j}]", 2, this.reserved1[j]); 
-			boxSize += builder.Field($"NAL_unit_type[{j}]", 5, this.NAL_unit_type[j]); 
+			boxSize += tracer.Field($"array_completeness[{j}]", 1, this.array_completeness[j]); 
+			boxSize += tracer.Field($"reserved1[{j}]", 2, this.reserved1[j]); 
+			boxSize += tracer.Field($"NAL_unit_type[{j}]", 5, this.NAL_unit_type[j]); 
 
 			if (NAL_unit_type[j] != DCI_NUT  &&  NAL_unit_type[j] != OPI_NUT)
 			{
-				boxSize += builder.Field($"num_nalus[{j}]", 16, this.num_nalus[j]); 
+				boxSize += tracer.Field($"num_nalus[{j}]", 16, this.num_nalus[j]); 
 
 				for (int i=0; i< num_nalus[j]; i++)
 				{
-					boxSize += builder.Field($"nal_unit_length[{j}][{i}]", 16, this.nal_unit_length[j][i]); 
-					boxSize += builder.Field($"nal_unit[{j}][{i}]", (ulong)(8*nal_unit_length[j][i] ), this.nal_unit[j][i]); 
+					boxSize += tracer.Field($"nal_unit_length[{j}][{i}]", 16, this.nal_unit_length[j][i]); 
+					boxSize += tracer.Field($"nal_unit[{j}][{i}]", (ulong)(8*nal_unit_length[j][i] ), this.nal_unit[j][i]); 
 				}
 			}
 		}

@@ -8,12 +8,22 @@ namespace SharpISOBMFF
 /*
 aligned(8) class SampleScaleBox() extends FullBox('stsl', version = 0, 0) {
 	bit(7)	reserved;
-	bit(1) constrained; unsigned int(8) scaleMethod; signed int(16) displayCenterX; signed int(16) displayCenterY;
-	}
-
+	bit(1) constrained;
+	unsigned int(8) scaleMethod;
+	signed int(16) displayCenterX;
+	signed int(16) displayCenterY;
+}
 */
 public partial class SampleScaleBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SampleScaleBox() extends FullBox('stsl', version = 0, 0) {
+	bit(7)	reserved;
+	bit(1) constrained;
+	unsigned int(8) scaleMethod;
+	signed int(16) displayCenterX;
+	signed int(16) displayCenterY;
+}"; } }
 	public const string TYPE = "stsl";
 	public override string DisplayName { get { return "SampleScaleBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -75,15 +85,15 @@ public partial class SampleScaleBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 7, this.reserved); 
-		boxSize += builder.Field("constrained", 1, this.constrained); 
-		boxSize += builder.Field("scaleMethod", 8, this.scaleMethod); 
-		boxSize += builder.Field("displayCenterX", 16, this.displayCenterX); 
-		boxSize += builder.Field("displayCenterY", 16, this.displayCenterY); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 7, this.reserved); 
+		boxSize += tracer.Field("constrained", 1, this.constrained); 
+		boxSize += tracer.Field("scaleMethod", 8, this.scaleMethod); 
+		boxSize += tracer.Field("displayCenterX", 16, this.displayCenterX); 
+		boxSize += tracer.Field("displayCenterY", 16, this.displayCenterY); 
 		return boxSize;
 	}
 }

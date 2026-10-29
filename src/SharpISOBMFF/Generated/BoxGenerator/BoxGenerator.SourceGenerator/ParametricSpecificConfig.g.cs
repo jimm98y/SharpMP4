@@ -8,16 +8,14 @@ namespace SharpISOBMFF
 /*
 class ParametricSpecificConfig()
 {
-  uimsbf(1) isBaseLayer;
-  if (isBaseLayer) {
-    PARAconfig();
-  }
-  else {
-    HILNenexConfig();
-  }
+	uimsbf(1) isBaseLayer;
+	if (isBaseLayer) {
+		PARAconfig();
+	}
+	else {
+		HILNenexConfig();
+	}
 }
-
-
 */
 public partial class ParametricSpecificConfig : IMp4Serializable
 {
@@ -26,6 +24,17 @@ public partial class ParametricSpecificConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class ParametricSpecificConfig()
+{
+	uimsbf(1) isBaseLayer;
+	if (isBaseLayer) {
+		PARAconfig();
+	}
+	else {
+		HILNenexConfig();
+	}
+}"; } }
 	public virtual string DisplayName { get { return "ParametricSpecificConfig"; } }
 
 	protected bool isBaseLayer; 
@@ -92,19 +101,19 @@ public partial class ParametricSpecificConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("isBaseLayer", 1, this.isBaseLayer); 
+		boxSize += tracer.Field("isBaseLayer", 1, this.isBaseLayer); 
 
 		if (isBaseLayer)
 		{
-			boxSize += builder.Field("PARAconfig", IsoStream.CalculateClassSize(PARAconfig), this.PARAconfig); 
+			boxSize += tracer.Field("PARAconfig", IsoStream.CalculateClassSize(PARAconfig), this.PARAconfig); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("HILNenexConfig", IsoStream.CalculateClassSize(HILNenexConfig), this.HILNenexConfig); 
+			boxSize += tracer.Field("HILNenexConfig", IsoStream.CalculateClassSize(HILNenexConfig), this.HILNenexConfig); 
 		}
 		return boxSize;
 	}

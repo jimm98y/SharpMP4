@@ -17,6 +17,15 @@ class InitialParameterSetBox extends Box ('svip') {
 */
 public partial class InitialParameterSetBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class InitialParameterSetBox extends Box ('svip') {
+	unsigned int(8) sps_id_count;
+	for (i=0; i< sps_id_count; i++)
+		unsigned int(8) SPS_index;
+	unsigned int(8) pps_id_count;
+	for (i=0; i< pps_id_count; i++)
+		unsigned int(8) PPS_index;
+}"; } }
 	public const string TYPE = "svip";
 	public override string DisplayName { get { return "InitialParameterSetBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -98,21 +107,21 @@ public partial class InitialParameterSetBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("sps_id_count", 8, this.sps_id_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("sps_id_count", 8, this.sps_id_count); 
 
 		for (int i=0; i< sps_id_count; i++)
 		{
-			boxSize += builder.Field($"SPS_index[{i}]", 8, this.SPS_index[i]); 
+			boxSize += tracer.Field($"SPS_index[{i}]", 8, this.SPS_index[i]); 
 		}
-		boxSize += builder.Field("pps_id_count", 8, this.pps_id_count); 
+		boxSize += tracer.Field("pps_id_count", 8, this.pps_id_count); 
 
 		for (int i=0; i< pps_id_count; i++)
 		{
-			boxSize += builder.Field($"PPS_index[{i}]", 8, this.PPS_index[i]); 
+			boxSize += tracer.Field($"PPS_index[{i}]", 8, this.PPS_index[i]); 
 		}
 		return boxSize;
 	}

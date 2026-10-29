@@ -7,16 +7,25 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class BaseMediaInfoAtom() extends FullBox('gmin', version = 0, 0) {
- unsigned int(16) graphicsMode;
- unsigned int(16) opColorR;
- unsigned int(16) opColorG;
- unsigned int(16) opColorB;
- unsigned int(16) balance;
- unsigned int(16) reserved;
- } 
+	unsigned int(16) graphicsMode;
+	unsigned int(16) opColorR;
+	unsigned int(16) opColorG;
+	unsigned int(16) opColorB;
+	unsigned int(16) balance;
+	unsigned int(16) reserved;
+}
 */
 public partial class BaseMediaInfoAtom : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class BaseMediaInfoAtom() extends FullBox('gmin', version = 0, 0) {
+	unsigned int(16) graphicsMode;
+	unsigned int(16) opColorR;
+	unsigned int(16) opColorG;
+	unsigned int(16) opColorB;
+	unsigned int(16) balance;
+	unsigned int(16) reserved;
+}"; } }
 	public const string TYPE = "gmin";
 	public override string DisplayName { get { return "BaseMediaInfoAtom"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -84,16 +93,16 @@ public partial class BaseMediaInfoAtom : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("graphicsMode", 16, this.graphicsMode); 
-		boxSize += builder.Field("opColorR", 16, this.opColorR); 
-		boxSize += builder.Field("opColorG", 16, this.opColorG); 
-		boxSize += builder.Field("opColorB", 16, this.opColorB); 
-		boxSize += builder.Field("balance", 16, this.balance); 
-		boxSize += builder.Field("reserved", 16, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("graphicsMode", 16, this.graphicsMode); 
+		boxSize += tracer.Field("opColorR", 16, this.opColorR); 
+		boxSize += tracer.Field("opColorG", 16, this.opColorG); 
+		boxSize += tracer.Field("opColorB", 16, this.opColorB); 
+		boxSize += tracer.Field("balance", 16, this.balance); 
+		boxSize += tracer.Field("reserved", 16, this.reserved); 
 		return boxSize;
 	}
 }

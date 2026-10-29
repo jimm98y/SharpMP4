@@ -12,13 +12,17 @@ class JPEGConfigurationBox extends Box('jpgC') {
 */
 public partial class JPEGConfigurationBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class JPEGConfigurationBox extends Box('jpgC') {
+	unsigned int(8) JPEGprefix[];
+}"; } }
 	public const string TYPE = "jpgC";
 	public override string DisplayName { get { return "JPEGConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("ipco"); }
 
 
-	protected byte[] JPEGprefix; 
+	protected byte[] JPEGprefix = []; 
 	public byte[] _JPEGprefix { get { return this.JPEGprefix; } set { this.JPEGprefix = value; } }
 
 	public JPEGConfigurationBox(): base(IsoStream.FromFourCC("jpgC"))
@@ -49,11 +53,11 @@ public partial class JPEGConfigurationBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("JPEGprefix", ((ulong)JPEGprefix.Length * 8), this.JPEGprefix); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("JPEGprefix", ((ulong)JPEGprefix.Length * 8), this.JPEGprefix); 
 		return boxSize;
 	}
 }

@@ -7,13 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class DepthOfFieldBracketingEntry
-extends VisualSampleGroupEntry('dobr') {
+	extends VisualSampleGroupEntry('dobr') {
 	int(8) f_stop_numerator;
 	int(8) f_stop_denominator;
 }
 */
 public partial class DepthOfFieldBracketingEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class DepthOfFieldBracketingEntry
+	extends VisualSampleGroupEntry('dobr') {
+	int(8) f_stop_numerator;
+	int(8) f_stop_denominator;
+}"; } }
 	public const string TYPE = "dobr";
 	public override string DisplayName { get { return "DepthOfFieldBracketingEntry"; } }
 
@@ -54,12 +60,12 @@ public partial class DepthOfFieldBracketingEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("f_stop_numerator", 8, this.f_stop_numerator); 
-		boxSize += builder.Field("f_stop_denominator", 8, this.f_stop_denominator); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("f_stop_numerator", 8, this.f_stop_numerator); 
+		boxSize += tracer.Field("f_stop_denominator", 8, this.f_stop_denominator); 
 		return boxSize;
 	}
 }

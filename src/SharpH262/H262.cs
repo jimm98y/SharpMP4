@@ -37,6 +37,9 @@ namespace SharpH262
     /// <summary>A unit of the stream the syntax does not describe, from its start code to the next, kept as it is.</summary>
     public sealed class UnknownUnit : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         public byte[] Data { get; set; } = Array.Empty<byte>();
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -63,6 +66,9 @@ namespace SharpH262
     /// </summary>
     public sealed class SequenceEnd : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         private uint sequence_end_code;
         public uint SequenceEndCode { get { return sequence_end_code; } set { sequence_end_code = value; } }
         public NextStartCode NextStartCode { get; set; }
@@ -89,6 +95,9 @@ namespace SharpH262
     /// </summary>
     public sealed class NextStartCode : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         /// <summary>The bits read to the next byte, and how many.</summary>
         public int AlignmentBits { get; set; }
         public int AlignmentBitCount { get; set; }
@@ -137,6 +146,9 @@ namespace SharpH262
     /// </summary>
     public sealed class SliceData : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         public int LeadingBits { get; set; }
         public int LeadingBitCount { get; set; }
         public byte[] Data { get; set; } = Array.Empty<byte>();

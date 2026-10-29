@@ -6,17 +6,17 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class ScalableGroupEntry() extends VisualSampleGroupEntry ('scif') { 
+class ScalableGroupEntry() extends VisualSampleGroupEntry ('scif') {
 	unsigned int(8) groupID;
 	unsigned int(8) primary_groupID;
 	unsigned int(1) is_tier_IDR;
-	unsigned int(1) noInterLayerPredFlag; 
+	unsigned int(1) noInterLayerPredFlag;
 	unsigned int(1) useRefBasePicFlag;
-	unsigned int(1) storeBaseRepFlag; 
+	unsigned int(1) storeBaseRepFlag;
 	unsigned int(1) is_tl_switching_point;
 	bit(3) reserved = 0;
 	unsigned int(8) tl_switching_distance;
-	
+
 	if (groupID == primary_groupID)	// primary definition of tier
 	{
 		TierInfoBox(); 				// Mandatory
@@ -37,6 +37,35 @@ class ScalableGroupEntry() extends VisualSampleGroupEntry ('scif') {
 */
 public partial class ScalableGroupEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ScalableGroupEntry() extends VisualSampleGroupEntry ('scif') {
+	unsigned int(8) groupID;
+	unsigned int(8) primary_groupID;
+	unsigned int(1) is_tier_IDR;
+	unsigned int(1) noInterLayerPredFlag;
+	unsigned int(1) useRefBasePicFlag;
+	unsigned int(1) storeBaseRepFlag;
+	unsigned int(1) is_tl_switching_point;
+	bit(3) reserved = 0;
+	unsigned int(8) tl_switching_distance;
+
+	if (groupID == primary_groupID)	// primary definition of tier
+	{
+		TierInfoBox(); 				// Mandatory
+		SVCDependencyRangeBox();	// Mandatory
+		PriorityRangeBox();			// Mandatory
+
+		//Optional Boxes or fields may follow when defined later
+		TierBitRateBox();						// optional
+		RectRegionBox();						// optional
+		BufferingBox();						// optional
+		TierDependencyBox(); 				// optional
+		InitialParameterSetBox();			// optional
+		IroiInfoBox();							// optional
+		ProtectionSchemeInfoBox();			// optional
+		TranscodingInfoBox();				// optional
+	}
+}"; } }
 	public const string TYPE = "scif";
 	public override string DisplayName { get { return "ScalableGroupEntry"; } }
 
@@ -181,36 +210,36 @@ public partial class ScalableGroupEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("groupID", 8, this.groupID); 
-		boxSize += builder.Field("primary_groupID", 8, this.primary_groupID); 
-		boxSize += builder.Field("is_tier_IDR", 1, this.is_tier_IDR); 
-		boxSize += builder.Field("noInterLayerPredFlag", 1, this.noInterLayerPredFlag); 
-		boxSize += builder.Field("useRefBasePicFlag", 1, this.useRefBasePicFlag); 
-		boxSize += builder.Field("storeBaseRepFlag", 1, this.storeBaseRepFlag); 
-		boxSize += builder.Field("is_tl_switching_point", 1, this.is_tl_switching_point); 
-		boxSize += builder.Field("reserved", 3, this.reserved); 
-		boxSize += builder.Field("tl_switching_distance", 8, this.tl_switching_distance); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("groupID", 8, this.groupID); 
+		boxSize += tracer.Field("primary_groupID", 8, this.primary_groupID); 
+		boxSize += tracer.Field("is_tier_IDR", 1, this.is_tier_IDR); 
+		boxSize += tracer.Field("noInterLayerPredFlag", 1, this.noInterLayerPredFlag); 
+		boxSize += tracer.Field("useRefBasePicFlag", 1, this.useRefBasePicFlag); 
+		boxSize += tracer.Field("storeBaseRepFlag", 1, this.storeBaseRepFlag); 
+		boxSize += tracer.Field("is_tl_switching_point", 1, this.is_tl_switching_point); 
+		boxSize += tracer.Field("reserved", 3, this.reserved); 
+		boxSize += tracer.Field("tl_switching_distance", 8, this.tl_switching_distance); 
 
 		if (groupID == primary_groupID)
 		{
-			// boxSize += builder.Field("TierInfoBox", IsoStream.CalculateBoxSize(TierInfoBox), this.TierInfoBox); // Mandatory
-			// boxSize += builder.Field("SVCDependencyRangeBox", IsoStream.CalculateBoxSize(SVCDependencyRangeBox), this.SVCDependencyRangeBox); // Mandatory
-			// boxSize += builder.Field("PriorityRangeBox", IsoStream.CalculateBoxSize(PriorityRangeBox), this.PriorityRangeBox); // Mandatory
+			// boxSize += tracer.Field("TierInfoBox", IsoStream.CalculateBoxSize(TierInfoBox), this.TierInfoBox); // Mandatory
+			// boxSize += tracer.Field("SVCDependencyRangeBox", IsoStream.CalculateBoxSize(SVCDependencyRangeBox), this.SVCDependencyRangeBox); // Mandatory
+			// boxSize += tracer.Field("PriorityRangeBox", IsoStream.CalculateBoxSize(PriorityRangeBox), this.PriorityRangeBox); // Mandatory
 			/* Optional Boxes or fields may follow when defined later */
-			// boxSize += builder.Field("TierBitRateBox", IsoStream.CalculateBoxSize(TierBitRateBox), this.TierBitRateBox); // optional
-			// boxSize += builder.Field("RectRegionBox", IsoStream.CalculateBoxSize(RectRegionBox), this.RectRegionBox); // optional
-			// boxSize += builder.Field("BufferingBox", IsoStream.CalculateBoxSize(BufferingBox), this.BufferingBox); // optional
-			// boxSize += builder.Field("TierDependencyBox", IsoStream.CalculateBoxSize(TierDependencyBox), this.TierDependencyBox); // optional
-			// boxSize += builder.Field("InitialParameterSetBox", IsoStream.CalculateBoxSize(InitialParameterSetBox), this.InitialParameterSetBox); // optional
-			// boxSize += builder.Field("IroiInfoBox", IsoStream.CalculateBoxSize(IroiInfoBox), this.IroiInfoBox); // optional
-			// boxSize += builder.Field("ProtectionSchemeInfoBox", IsoStream.CalculateBoxSize(ProtectionSchemeInfoBox), this.ProtectionSchemeInfoBox); // optional
-			// boxSize += builder.Field("TranscodingInfoBox", IsoStream.CalculateBoxSize(TranscodingInfoBox), this.TranscodingInfoBox); // optional
+			// boxSize += tracer.Field("TierBitRateBox", IsoStream.CalculateBoxSize(TierBitRateBox), this.TierBitRateBox); // optional
+			// boxSize += tracer.Field("RectRegionBox", IsoStream.CalculateBoxSize(RectRegionBox), this.RectRegionBox); // optional
+			// boxSize += tracer.Field("BufferingBox", IsoStream.CalculateBoxSize(BufferingBox), this.BufferingBox); // optional
+			// boxSize += tracer.Field("TierDependencyBox", IsoStream.CalculateBoxSize(TierDependencyBox), this.TierDependencyBox); // optional
+			// boxSize += tracer.Field("InitialParameterSetBox", IsoStream.CalculateBoxSize(InitialParameterSetBox), this.InitialParameterSetBox); // optional
+			// boxSize += tracer.Field("IroiInfoBox", IsoStream.CalculateBoxSize(IroiInfoBox), this.IroiInfoBox); // optional
+			// boxSize += tracer.Field("ProtectionSchemeInfoBox", IsoStream.CalculateBoxSize(ProtectionSchemeInfoBox), this.ProtectionSchemeInfoBox); // optional
+			// boxSize += tracer.Field("TranscodingInfoBox", IsoStream.CalculateBoxSize(TranscodingInfoBox), this.TranscodingInfoBox); // optional
 		}
-		boxSize += builder.Children(this);
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

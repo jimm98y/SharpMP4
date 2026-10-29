@@ -9,7 +9,7 @@ namespace SharpISOBMFF
 aligned(8) class TimeToSampleBox
 	extends FullBox('stts', version = 0, 0) {
 	unsigned int(32)	entry_count;
-		int i;
+	int i;
 	for (i=0; i < entry_count; i++) {
 		unsigned int(32)	sample_count;
 		unsigned int(32)	sample_delta;
@@ -18,6 +18,16 @@ aligned(8) class TimeToSampleBox
 */
 public partial class TimeToSampleBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TimeToSampleBox
+	extends FullBox('stts', version = 0, 0) {
+	unsigned int(32)	entry_count;
+	int i;
+	for (i=0; i < entry_count; i++) {
+		unsigned int(32)	sample_count;
+		unsigned int(32)	sample_delta;
+	}
+}"; } }
 	public const string TYPE = "stts";
 	public override string DisplayName { get { return "TimeToSampleBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -84,17 +94,17 @@ public partial class TimeToSampleBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entry_count", 32, this.entry_count); 
 		
 
 		for (int i=0; i < entry_count; i++)
 		{
-			boxSize += builder.Field($"sample_count[{i}]", 32, this.sample_count[i]); 
-			boxSize += builder.Field($"sample_delta[{i}]", 32, this.sample_delta[i]); 
+			boxSize += tracer.Field($"sample_count[{i}]", 32, this.sample_count[i]); 
+			boxSize += tracer.Field($"sample_delta[{i}]", 32, this.sample_delta[i]); 
 		}
 		return boxSize;
 	}

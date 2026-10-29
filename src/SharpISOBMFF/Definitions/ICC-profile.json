@@ -1,0 +1,118 @@
+﻿{
+  "name": "ICC profile",
+  "description": "The classes of an ICC profile (ISO 15076-1, ICC.1:2010) of a 'colr' box of the colour type 'prof' or 'rICC'",
+  "entries": [
+    {
+      "description": "ICC profile header (ISO 15076-1 7.2): what the profile is, of what device and colour space, and when it was made",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "aligned(8) class ICCProfileHeader {\r\n\tunsigned int(32) profile_size;\r\n\tunsigned int(32) preferred_cmm_type;\r\n\tunsigned int(8) profile_version_major;\r\n\tunsigned int(4) profile_version_minor;\r\n\tunsigned int(4) profile_version_bugfix;\r\n\tunsigned int(16) reserved = 0;\r\n\tunsigned int(32) profile_device_class;\t// 'scnr', 'mntr', 'prtr', 'link', 'spac', 'abst', 'nmcl'\r\n\tunsigned int(32) colour_space;\t// 'XYZ ', 'Lab ', 'RGB ', 'GRAY', 'CMYK'...\r\n\tunsigned int(32) profile_connection_space;\t// 'XYZ ', 'Lab '\r\n\tunsigned int(16) year;\r\n\tunsigned int(16) month;\r\n\tunsigned int(16) day;\r\n\tunsigned int(16) hours;\r\n\tunsigned int(16) minutes;\r\n\tunsigned int(16) seconds;\r\n\tunsigned int(32) profile_file_signature;\t// 'acsp'\r\n\tunsigned int(32) primary_platform;\t// 'APPL', 'MSFT', 'SGI ', 'SUNW'\r\n\tunsigned int(32) profile_flags;\r\n\tunsigned int(32) device_manufacturer;\r\n\tunsigned int(32) device_model;\r\n\tunsigned int(64) device_attributes;\r\n\tunsigned int(32) rendering_intent;\r\n\tsigned int(32) pcs_illuminant_x;\t// s15Fixed16Number\r\n\tsigned int(32) pcs_illuminant_y;\r\n\tsigned int(32) pcs_illuminant_z;\r\n\tunsigned int(32) profile_creator;\r\n\tunsigned int(8) profile_id[16];\t// MD5\r\n\tunsigned int(8) reserved[28];\r\n}"
+    },
+    {
+      "description": "ICC tag table entry (ISO 15076-1 7.3): a tag's signature, and where its element is in the profile and how large",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "aligned(8) class ICCTagEntry {\r\n\tunsigned int(32) tag_signature;\t// 'desc', 'cprt', 'wtpt', 'rXYZ', 'rTRC'...\r\n\tunsigned int(32) offset;\t// of the tag's element, from the start of the profile\r\n\tunsigned int(32) size;\t// of the tag's element\r\n}"
+    },
+    {
+      "description": "ICC XYZType (ISO 15076-1 10.31)",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "aligned(8) class ICCXYZType {\r\n\tunsigned int(32) type_signature;\r\n\tunsigned int(32) reserved = 0;\r\n\tICCXYZNumber values[];\t// to the end of the element\r\n}\r\naligned(8) class ICCXYZNumber() {\r\n\tsigned int(32) x;\t// s15Fixed16Number\r\n\tsigned int(32) y;\r\n\tsigned int(32) z;\r\n}"
+    },
+    {
+      "description": "ICC curveType (ISO 15076-1 10.6)",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "aligned(8) class ICCCurveType {\r\n\tunsigned int(32) type_signature;\r\n\tunsigned int(32) reserved = 0;\r\n\tunsigned int(32) entry_count;\r\n\tif (entry_count == 1) {\r\n\t\tunsigned int(16) gamma;\t// u8Fixed8Number\r\n\t} else {\r\n\t\tunsigned int(16) curve[entry_count];\r\n\t}\r\n}"
+    },
+    {
+      "description": "ICC parametricCurveType (ISO 15076-1 10.18)",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "aligned(8) class ICCParametricCurveType {\r\n\tunsigned int(32) type_signature;\r\n\tunsigned int(32) reserved = 0;\r\n\tunsigned int(16) function_type;\r\n\tunsigned int(16) reserved = 0;\r\n\tsigned int(32) parameters[];\t// s15Fixed16Number: g; g a b; g a b c; g a b c d; g a b c d e f\r\n}"
+    },
+    {
+      "description": "ICC s15Fixed16ArrayType (ISO 15076-1 10.22)",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "aligned(8) class ICCS15Fixed16ArrayType {\r\n\tunsigned int(32) type_signature;\r\n\tunsigned int(32) reserved = 0;\r\n\tsigned int(32) values[];\t// s15Fixed16Number, to the end of the element\r\n}"
+    },
+    {
+      "description": "ICC textType (ISO 15076-1 10.24)",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "aligned(8) class ICCTextType {\r\n\tunsigned int(32) type_signature;\r\n\tunsigned int(32) reserved = 0;\r\n\tunsigned int(8) text[];\t// 7-bit ASCII, of a terminating null\r\n}"
+    },
+    {
+      "description": "ICC textDescriptionType (ICC.1:2001-04 6.5.17), of profiles of version 2",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "aligned(8) class ICCTextDescriptionType {\r\n\tunsigned int(32) type_signature;\r\n\tunsigned int(32) reserved = 0;\r\n\tunsigned int(32) ascii_count;\r\n\tunsigned int(8) ascii[ascii_count];\t// of a terminating null\r\n\tunsigned int(32) unicode_language;\r\n\tunsigned int(32) unicode_count;\r\n\tunsigned int(16) unicode[unicode_count];\t// UTF-16BE\r\n\tunsigned int(16) scriptcode_code;\r\n\tunsigned int(8) scriptcode_count;\r\n\tunsigned int(8) scriptcode[67];\r\n}"
+    },
+    {
+      "description": "ICC multiLocalizedUnicodeType (ISO 15076-1 10.15)",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "aligned(8) class ICCMultiLocalizedUnicodeType {\r\n\tunsigned int(32) type_signature;\r\n\tunsigned int(32) reserved = 0;\r\n\tunsigned int(32) record_count;\r\n\tunsigned int(32) record_size;\t// 12\r\n\tfor (i = 0; i < record_count; i++) {\r\n\t\tunsigned int(16) language;\t// ISO 639-1\r\n\t\tunsigned int(16) country;\t// ISO 3166-1\r\n\t\tunsigned int(32) length;\r\n\t\tunsigned int(32) offset;\t// of its string, from the start of the element\r\n\t}\r\n\tunsigned int(8) strings[];\t// UTF-16BE, each record's at its offset\r\n}"
+    },
+    {
+      "description": "ICC signatureType (ISO 15076-1 10.23)",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "aligned(8) class ICCSignatureType {\r\n\tunsigned int(32) type_signature;\r\n\tunsigned int(32) reserved = 0;\r\n\tunsigned int(32) signature;\r\n}"
+    },
+    {
+      "description": "ICC cicpType (ICC.1:2022 10.3)",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "aligned(8) class ICCCicpType {\r\n\tunsigned int(32) type_signature;\r\n\tunsigned int(32) reserved = 0;\r\n\tunsigned int(8) colour_primaries;\r\n\tunsigned int(8) transfer_characteristics;\r\n\tunsigned int(8) matrix_coefficients;\r\n\tunsigned int(8) video_full_range_flag;\r\n}"
+    },
+    {
+      "description": "ICC chromaticityType (ISO 15076-1 10.2)",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "aligned(8) class ICCChromaticityType {\r\n\tunsigned int(32) type_signature;\r\n\tunsigned int(32) reserved = 0;\r\n\tunsigned int(16) channel_count;\r\n\tunsigned int(16) phosphor_or_colorant_type;\r\n\tfor (i = 0; i < channel_count; i++) {\r\n\t\tunsigned int(32) x;\t// u16Fixed16Number\r\n\t\tunsigned int(32) y;\r\n\t}\r\n}"
+    },
+    {
+      "description": "ICC measurementType (ISO 15076-1 10.14)",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "aligned(8) class ICCMeasurementType {\r\n\tunsigned int(32) type_signature;\r\n\tunsigned int(32) reserved = 0;\r\n\tunsigned int(32) standard_observer;\t// 1: CIE 1931, 2: CIE 1964\r\n\tICCXYZNumber backing;\t// the tristimulus values of the measurement backing\r\n\tunsigned int(32) geometry;\r\n\tunsigned int(32) flare;\t// u16Fixed16Number\r\n\tunsigned int(32) illuminant;\t// 1: D50, 2: D65, 3: D93, 4: F2, 5: D55, 6: A, 7: E, 8: F8\r\n}"
+    },
+    {
+      "description": "ICC viewingConditionsType (ISO 15076-1 10.30)",
+      "containers": [
+        "*"
+      ],
+      "type": "Box",
+      "syntax": "aligned(8) class ICCViewingConditionsType {\r\n\tunsigned int(32) type_signature;\r\n\tunsigned int(32) reserved = 0;\r\n\tICCXYZNumber illuminant;\t// in cd/m2\r\n\tICCXYZNumber surround;\t// in cd/m2\r\n\tunsigned int(32) illuminant_type;\r\n}"
+    }
+  ]
+}

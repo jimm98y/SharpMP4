@@ -68,6 +68,6 @@ public static class ItuGenerator
 
     private static string GetSampleCode(string sample, long startOffset, long endOffset)
     {
-        return sample.Substring((int)startOffset, (int)(endOffset - startOffset));
+        return sample.Substring((int)startOffset, (int)(endOffset - startOffset)).Trim();
     }
 }

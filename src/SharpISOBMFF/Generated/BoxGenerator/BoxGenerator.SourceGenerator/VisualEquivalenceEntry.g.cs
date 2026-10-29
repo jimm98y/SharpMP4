@@ -14,6 +14,12 @@ class VisualEquivalenceEntry() extends VisualSampleGroupEntry ('eqiv')
 */
 public partial class VisualEquivalenceEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class VisualEquivalenceEntry() extends VisualSampleGroupEntry ('eqiv')
+{
+	signed int(16)   time_offset;
+	unsigned int(16) timescale_multiplier;
+}"; } }
 	public const string TYPE = "eqiv";
 	public override string DisplayName { get { return "VisualEquivalenceEntry"; } }
 
@@ -54,12 +60,12 @@ public partial class VisualEquivalenceEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("time_offset", 16, this.time_offset); 
-		boxSize += builder.Field("timescale_multiplier", 16, this.timescale_multiplier); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("time_offset", 16, this.time_offset); 
+		boxSize += tracer.Field("timescale_multiplier", 16, this.timescale_multiplier); 
 		return boxSize;
 	}
 }

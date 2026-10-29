@@ -6,19 +6,19 @@
       "fourcc": "iKMS",
       "containers": [ "schi" ],
       "type": "Box",
-      "syntax": "// The URI of the key management system, to the end of the box\r\naligned(8) class ISMAKMSBox extends FullBox('iKMS', 0, 0) {\r\n string kms_URI;\r\n }"
+      "syntax": "// The URI of the key management system, to the end of the box\r\naligned(8) class ISMAKMSBox extends FullBox('iKMS', 0, 0) {\r\n\tstring kms_URI;\r\n}"
     },
     {
       "fourcc": "iSFM",
       "containers": [ "schi" ],
       "type": "Box",
-      "syntax": "// How the samples are encrypted: selectively or not, and how long their key indicators and IVs are\r\naligned(8) class ISMASampleFormatBox extends FullBox('iSFM', 0, 0) {\r\n bit(1) selective_encryption;\r\n bit(7) reserved;\r\n unsigned int(8) key_indicator_length;\r\n unsigned int(8) IV_length;\r\n }"
+      "syntax": "// How the samples are encrypted: selectively or not, and how long their key indicators and IVs are\r\naligned(8) class ISMASampleFormatBox extends FullBox('iSFM', 0, 0) {\r\n\tbit(1) selective_encryption;\r\n\tbit(7) reserved;\r\n\tunsigned int(8) key_indicator_length;\r\n\tunsigned int(8) IV_length;\r\n}"
     },
     {
       "fourcc": "iSLT",
       "containers": [ "schi" ],
       "type": "Box",
-      "syntax": "// The salt of the key, a box and not a full box, as GPAC reads it\r\naligned(8) class ISMACrypSaltBox extends Box('iSLT') {\r\n unsigned int(64) salt;\r\n }"
+      "syntax": "// The salt of the key, a box and not a full box, as GPAC reads it\r\naligned(8) class ISMACrypSaltBox extends Box('iSLT') {\r\n\tunsigned int(64) salt;\r\n}"
     }
   ]
 }

@@ -12,6 +12,10 @@ class FontSampleEntry(codingname) extends SampleEntry (codingname){
 */
 public partial class FontSampleEntry : SampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class FontSampleEntry(codingname) extends SampleEntry (codingname){
+	//other boxes from derived specifications
+}"; } }
 	public override string DisplayName { get { return "FontSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "stsd" }); }
@@ -48,12 +52,12 @@ public partial class FontSampleEntry : SampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		/* other boxes from derived specifications */
-		boxSize += builder.Children(this);
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

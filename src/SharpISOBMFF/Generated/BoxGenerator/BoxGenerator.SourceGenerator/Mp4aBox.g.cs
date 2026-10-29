@@ -7,18 +7,22 @@ namespace SharpISOBMFF
 {
 /*
 class Mp4aBox() extends Box ('mp4a') {
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class Mp4aBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class Mp4aBox() extends Box ('mp4a') {
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "mp4a";
 	public override string DisplayName { get { return "Mp4aBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("wave"); }
 
 
-	protected byte[] data; 
+	protected byte[] data = []; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public Mp4aBox(): base(IsoStream.FromFourCC("mp4a"))
@@ -52,12 +56,12 @@ public partial class Mp4aBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

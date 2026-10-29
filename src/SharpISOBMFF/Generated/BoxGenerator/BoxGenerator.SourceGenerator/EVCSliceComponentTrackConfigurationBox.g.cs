@@ -12,6 +12,10 @@ class EVCSliceComponentTrackConfigurationBox extends Box('evsC') {
 */
 public partial class EVCSliceComponentTrackConfigurationBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class EVCSliceComponentTrackConfigurationBox extends Box('evsC') {
+	EVCSliceComponentTrackConfigurationRecord() config;
+}"; } }
 	public const string TYPE = "evsC";
 	public override string DisplayName { get { return "EVCSliceComponentTrackConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class EVCSliceComponentTrackConfigurationBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("config", IsoStream.CalculateClassSize(config), this.config); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("config", IsoStream.CalculateClassSize(config), this.config); 
 		return boxSize;
 	}
 }

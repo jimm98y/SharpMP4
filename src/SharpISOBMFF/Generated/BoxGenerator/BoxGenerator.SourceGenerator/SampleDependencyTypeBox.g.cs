@@ -18,6 +18,16 @@ aligned(8) class SampleDependencyTypeBox
 */
 public partial class SampleDependencyTypeBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SampleDependencyTypeBox
+	extends FullBox('sdtp', version = 0, 0) {
+	for (i=0; i < sample_count; i++){
+		unsigned int(2) is_leading;
+		unsigned int(2) sample_depends_on;
+		unsigned int(2) sample_is_depended_on;
+		unsigned int(2) sample_has_redundancy;
+	}
+}"; } }
 	public const string TYPE = "sdtp";
 	public override string DisplayName { get { return "SampleDependencyTypeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -95,19 +105,19 @@ public partial class SampleDependencyTypeBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		int sample_count = is_leading.Length;
 
 
 		for (int i=0; i < sample_count; i++)
 		{
-			boxSize += builder.Field($"is_leading[{i}]", 2, this.is_leading[i]); 
-			boxSize += builder.Field($"sample_depends_on[{i}]", 2, this.sample_depends_on[i]); 
-			boxSize += builder.Field($"sample_is_depended_on[{i}]", 2, this.sample_is_depended_on[i]); 
-			boxSize += builder.Field($"sample_has_redundancy[{i}]", 2, this.sample_has_redundancy[i]); 
+			boxSize += tracer.Field($"is_leading[{i}]", 2, this.is_leading[i]); 
+			boxSize += tracer.Field($"sample_depends_on[{i}]", 2, this.sample_depends_on[i]); 
+			boxSize += tracer.Field($"sample_is_depended_on[{i}]", 2, this.sample_is_depended_on[i]); 
+			boxSize += tracer.Field($"sample_has_redundancy[{i}]", 2, this.sample_has_redundancy[i]); 
 		}
 		return boxSize;
 	}

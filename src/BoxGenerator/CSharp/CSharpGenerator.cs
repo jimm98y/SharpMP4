@@ -125,7 +125,7 @@ namespace BoxGenerator.CSharp
                 if (methodType == MethodType.Write)
                     return "\r\n\t\tboxSize += stream.WriteRemainingBits(this.remainder, \"remainder\");";
                 if (methodType == MethodType.Describe)
-                    return "\r\n\t\tif (this.remainder.Count > 0) boxSize += builder.Field(\"remainder\", this.remainder.Count, this.remainder);";
+                    return "\r\n\t\tif (this.remainder.Count > 0) boxSize += tracer.Field(\"remainder\", this.remainder.Count, this.remainder);";
                 return "\r\n\t\tboxSize += this.remainder.Count;";
             }
             return "";
@@ -198,7 +198,11 @@ namespace BoxGenerator.CSharp
                 { "unsigned int(32) proj_type, unsigned int(8) version, unsigned int(24) flags",                "uint proj_type, byte version = 0, uint flags = 0" },
             };
 
-            return map[par];            
+            if (map.TryGetValue(par, out var ctorParams))
+                return ctorParams;
+            // of parameters over more lines, however indented
+            string normalized = Regex.Replace(par.Trim(), @"\s+", " ");
+            return map.First(x => Regex.Replace(x.Key.Trim(), @"\s+", " ") == normalized).Value;
         }
 
         public Dictionary<string, string> GenerateParser()
@@ -647,6 +651,11 @@ namespace SharpISOBMFF
                 }
             }
 
+            // the syntax the class is defined of, as its definition gives it, as DisplayName gives its name
+            bool overridesSyntax = b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) || b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier";
+            cls.Append("\t/// <summary>The syntax the class is defined of, as its definition gives it.</summary>\r\n");
+            cls.Append($"\tpublic {(overridesSyntax ? "override" : "virtual")} string Syntax {{ get {{ return @\"{b.Syntax.Replace("\"", "\"\"")}\"; }} }}\r\n");
+
             if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) && !string.IsNullOrWhiteSpace(b.Extended.BoxType))
             {
                 // UUID in case the box is a UserBox
@@ -915,16 +924,16 @@ namespace SharpISOBMFF
             cls.Append("\r\n\t\treturn boxSize;\r\n\t}\r\n");
 
             // its fields as they are now, read or set, as CalculateSize counts them - of the fields its syntax has of the
-            // values it has - each of its position, size and value, for ToString
-            cls.Append("\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong ToString(BoxStringBuilder builder)\r\n\t{\r\n\t\tulong boxSize = 0;");
+            // values it has - each of its position, size and value, to a BoxTracer
+            cls.Append("\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong Trace(BoxTracer tracer)\r\n\t{\r\n\t\tulong boxSize = 0;");
 
             if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
             {
-                string baseDescribe = "\r\n\t\tboxSize += base.ToString(builder);";
+                string baseDescribe = "\r\n\t\tboxSize += base.Trace(tracer);";
                 if (b.BoxName == "MetaBox")
                 {
                     // of no version and flags, its header alone
-                    baseDescribe = "\r\n\t\tboxSize += IsQuickTime ? base.ToString(builder) : HeaderToString(builder);";
+                    baseDescribe = "\r\n\t\tboxSize += IsQuickTime ? base.Trace(tracer) : TraceHeader(tracer);";
                 }
                 cls.Append(baseDescribe);
             }
@@ -938,11 +947,11 @@ namespace SharpISOBMFF
 
             if (b.IsContainer)
             {
-                cls.Append("\r\n" + "\t\tboxSize += builder.Children(this);");
+                cls.Append("\r\n" + "\t\tboxSize += tracer.Children(this);");
             }
             else if (hasDescriptors)
             {
-                cls.Append("\r\n" + "\t\tboxSize += builder.Descriptors(this);");
+                cls.Append("\r\n" + "\t\tboxSize += tracer.Descriptors(this);");
             }
 
             cls.Append(AddMethodEndCode(b, MethodType.Describe));
@@ -1024,9 +1033,26 @@ namespace SharpISOBMFF
                     value = "= []";
                 }
 
+                // Defaults a box made rather than read is written with: an array of as many entries as the syntax says it
+                // has, each 0, where it says so, else an empty one; "und" of a language. Reading sets every one of them.
+                if (fieldType.EndsWith("[]") && !fieldType.EndsWith("[][]") && (string.IsNullOrEmpty(value) || value == "= []"))
+                {
+                    string length = (field as PseudoField).FieldArray?.Trim().TrimStart('[').TrimEnd(']').Trim();
+                    string element = fieldType.Substring(0, fieldType.Length - 2);
+                    value = !string.IsNullOrEmpty(length) && int.TryParse(length, out int count) && count > 0
+                        ? $"= new {element}[{count}]"
+                        : "= []";
+                }
+                else if (fieldType == "string" && string.IsNullOrEmpty(value) && parserDocument.GetTypeInfo(field as PseudoField).FieldType == ParsedBoxType.Iso639)
+                {
+                    value = "= \"und\"";
+                }
+
                 if (fieldType == "byte[]" && (b.BoxName == "MediaDataBox" || b.BoxName == "ItemDataBox" || b.BoxName.StartsWith("FreeSpaceBox") || b.BoxName == "ZeroBox"))
                 {
                     fieldType = "StreamMarker";
+                    // of no bytes, until it is read
+                    value = "= new StreamMarker(0, 0, null)";
                 }
 
                 if (!string.IsNullOrEmpty(value))
@@ -1295,7 +1321,7 @@ namespace SharpISOBMFF
 
             // described: its name, of the element of a loop with its indices - "nalUnitLength[0][1]" - its size, its value
             if (methodType == MethodType.Describe)
-                return $"{spacing}{boxSize}builder.Field({DescribedName(name, typedef)}, {m}, this.{name}{typedef}); {fieldComment}";
+                return $"{spacing}{boxSize}tracer.Field({DescribedName(name, typedef)}, {m}, this.{name}{typedef}); {fieldComment}";
 
             return $"{spacing}{boxSize}{m}; // {name}";
         }

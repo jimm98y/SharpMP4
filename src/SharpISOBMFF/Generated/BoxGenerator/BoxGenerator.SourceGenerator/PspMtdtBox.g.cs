@@ -7,13 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class PspMtdtBox() extends Box('MTDT') {
-	 unsigned int(16) entry_count;
- MtdtEntry entries[ entry_count ];
- }
- 
+	unsigned int(16) entry_count;
+	MtdtEntry entries[ entry_count ];
+}
 */
 public partial class PspMtdtBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class PspMtdtBox() extends Box('MTDT') {
+	unsigned int(16) entry_count;
+	MtdtEntry entries[ entry_count ];
+}"; } }
 	public const string TYPE = "MTDT";
 	public override string DisplayName { get { return "PspMtdtBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -23,7 +27,7 @@ public partial class PspMtdtBox : Box
 	protected ushort entry_count; 
 	public ushort EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
-	protected MtdtEntry[] entries; 
+	protected MtdtEntry[] entries = []; 
 	public MtdtEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
 
 	public PspMtdtBox(): base(IsoStream.FromFourCC("MTDT"))
@@ -57,12 +61,12 @@ public partial class PspMtdtBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entry_count", 16, this.entry_count); 
-		boxSize += builder.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entry_count", 16, this.entry_count); 
+		boxSize += tracer.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
 		return boxSize;
 	}
 }

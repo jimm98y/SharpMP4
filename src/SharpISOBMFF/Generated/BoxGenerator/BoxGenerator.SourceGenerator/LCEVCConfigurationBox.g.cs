@@ -13,6 +13,11 @@ class LCEVCConfigurationBox extends Box('lvcC') {
 */
 public partial class LCEVCConfigurationBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// as FFmpeg's ff_isom_write_lvcc writes it
+class LCEVCConfigurationBox extends Box('lvcC') {
+	LCEVCDecoderConfigurationRecord() LCEVCConfig;
+}"; } }
 	public const string TYPE = "lvcC";
 	public override string DisplayName { get { return "LCEVCConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +55,11 @@ public partial class LCEVCConfigurationBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("LCEVCConfig", IsoStream.CalculateClassSize(LCEVCConfig), this.LCEVCConfig); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("LCEVCConfig", IsoStream.CalculateClassSize(LCEVCConfig), this.LCEVCConfig); 
 		return boxSize;
 	}
 }

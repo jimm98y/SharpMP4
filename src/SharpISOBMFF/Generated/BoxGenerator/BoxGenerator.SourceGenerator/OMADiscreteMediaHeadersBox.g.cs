@@ -7,13 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class OMADiscreteMediaHeadersBox () extends FullBox('odhe') {
-	 unsigned int(8) contentTypeLength;
- unsigned int(8) contentType[contentTypeLength];
- Box boxes[]; 
- } 
+	unsigned int(8) contentTypeLength;
+	unsigned int(8) contentType[contentTypeLength];
+	Box boxes[];
+}
 */
 public partial class OMADiscreteMediaHeadersBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class OMADiscreteMediaHeadersBox () extends FullBox('odhe') {
+	unsigned int(8) contentTypeLength;
+	unsigned int(8) contentType[contentTypeLength];
+	Box boxes[];
+}"; } }
 	public const string TYPE = "odhe";
 	public override string DisplayName { get { return "OMADiscreteMediaHeadersBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -23,7 +29,7 @@ public partial class OMADiscreteMediaHeadersBox : FullBox
 	protected byte contentTypeLength; 
 	public byte ContentTypeLength { get { return this.contentTypeLength; } set { this.contentTypeLength = value; } }
 
-	protected byte[] contentType; 
+	protected byte[] contentType = []; 
 	public byte[] ContentType { get { return this.contentType; } set { this.contentType = value; } }
 
 	public OMADiscreteMediaHeadersBox(): base(IsoStream.FromFourCC("odhe"))
@@ -63,14 +69,14 @@ public partial class OMADiscreteMediaHeadersBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("contentTypeLength", 8, this.contentTypeLength); 
-		boxSize += builder.Field("contentType", ((ulong)(contentTypeLength) * 8), this.contentType); 
-		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("contentTypeLength", 8, this.contentTypeLength); 
+		boxSize += tracer.Field("contentType", ((ulong)(contentTypeLength) * 8), this.contentType); 
+		// boxSize += tracer.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

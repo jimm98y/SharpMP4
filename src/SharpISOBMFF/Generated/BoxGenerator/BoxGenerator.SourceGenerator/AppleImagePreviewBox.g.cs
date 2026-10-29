@@ -7,14 +7,21 @@ namespace SharpISOBMFF
 {
 /*
 class AppleImagePreviewBox() extends Box ('pnot'){
- unsigned int(32) modificationDate;
- signed int(16) version;
- signed int(32) atomType;
- signed int(16) atomIndex;
- }
+	unsigned int(32) modificationDate;
+	signed int(16) version;
+	signed int(32) atomType;
+	signed int(16) atomIndex;
+}
 */
 public partial class AppleImagePreviewBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AppleImagePreviewBox() extends Box ('pnot'){
+	unsigned int(32) modificationDate;
+	signed int(16) version;
+	signed int(32) atomType;
+	signed int(16) atomIndex;
+}"; } }
 	public const string TYPE = "pnot";
 	public override string DisplayName { get { return "AppleImagePreviewBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -70,14 +77,14 @@ public partial class AppleImagePreviewBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("modificationDate", 32, this.modificationDate); 
-		boxSize += builder.Field("version", 16, this.version); 
-		boxSize += builder.Field("atomType", 32, this.atomType); 
-		boxSize += builder.Field("atomIndex", 16, this.atomIndex); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("modificationDate", 32, this.modificationDate); 
+		boxSize += tracer.Field("version", 16, this.version); 
+		boxSize += tracer.Field("atomType", 32, this.atomType); 
+		boxSize += tracer.Field("atomIndex", 16, this.atomIndex); 
 		return boxSize;
 	}
 }

@@ -7,12 +7,11 @@ namespace SharpISOBMFF
 {
 /*
 class QuickTimeColorTable() {
- signed int(32) color_table_seed;
- signed int(16) flags;
- signed int(16) color_table_size;
- AppleColor colors[color_table_size + 1];
- }
- 
+	signed int(32) color_table_seed;
+	signed int(16) flags;
+	signed int(16) color_table_size;
+	AppleColor colors[color_table_size + 1];
+}
 */
 public partial class QuickTimeColorTable : IMp4Serializable
 {
@@ -21,6 +20,13 @@ public partial class QuickTimeColorTable : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class QuickTimeColorTable() {
+	signed int(32) color_table_seed;
+	signed int(16) flags;
+	signed int(16) color_table_size;
+	AppleColor colors[color_table_size + 1];
+}"; } }
 	public virtual string DisplayName { get { return "QuickTimeColorTable"; } }
 
 	protected int color_table_seed; 
@@ -32,7 +38,7 @@ public partial class QuickTimeColorTable : IMp4Serializable
 	protected short color_table_size; 
 	public short ColorTableSize { get { return this.color_table_size; } set { this.color_table_size = value; } }
 
-	protected AppleColor[] colors; 
+	protected AppleColor[] colors = []; 
 	public AppleColor[] Colors { get { return this.colors; } set { this.colors = value; } }
 
 	public QuickTimeColorTable(): base()
@@ -69,13 +75,13 @@ public partial class QuickTimeColorTable : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("color_table_seed", 32, this.color_table_seed); 
-		boxSize += builder.Field("flags", 16, this.flags); 
-		boxSize += builder.Field("color_table_size", 16, this.color_table_size); 
-		boxSize += builder.Field("colors", IsoStream.CalculateClassSize(colors), this.colors); 
+		boxSize += tracer.Field("color_table_seed", 32, this.color_table_seed); 
+		boxSize += tracer.Field("flags", 16, this.flags); 
+		boxSize += tracer.Field("color_table_size", 16, this.color_table_size); 
+		boxSize += tracer.Field("colors", IsoStream.CalculateClassSize(colors), this.colors); 
 		return boxSize;
 	}
 }

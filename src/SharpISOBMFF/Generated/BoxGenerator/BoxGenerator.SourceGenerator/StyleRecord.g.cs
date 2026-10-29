@@ -7,12 +7,12 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class StyleRecord() {
- unsigned int(16) startChar;
- unsigned int(16) endChar;
- unsigned int(16) fontId;
- unsigned int(8) faceStyleFlags;
- unsigned int(8) fontSize;
- unsigned int(8) textColor[4]; }
+	unsigned int(16) startChar;
+	unsigned int(16) endChar;
+	unsigned int(16) fontId;
+	unsigned int(8) faceStyleFlags;
+	unsigned int(8) fontSize;
+	unsigned int(8) textColor[4]; }
 */
 public partial class StyleRecord : IMp4Serializable
 {
@@ -21,6 +21,14 @@ public partial class StyleRecord : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class StyleRecord() {
+	unsigned int(16) startChar;
+	unsigned int(16) endChar;
+	unsigned int(16) fontId;
+	unsigned int(8) faceStyleFlags;
+	unsigned int(8) fontSize;
+	unsigned int(8) textColor[4]; }"; } }
 	public virtual string DisplayName { get { return "StyleRecord"; } }
 
 	protected ushort startChar; 
@@ -38,7 +46,7 @@ public partial class StyleRecord : IMp4Serializable
 	protected byte fontSize; 
 	public byte FontSize { get { return this.fontSize; } set { this.fontSize = value; } }
 
-	protected byte[] textColor; 
+	protected byte[] textColor = new byte[4]; 
 	public byte[] TextColor { get { return this.textColor; } set { this.textColor = value; } }
 
 	public StyleRecord(): base()
@@ -81,15 +89,15 @@ public partial class StyleRecord : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("startChar", 16, this.startChar); 
-		boxSize += builder.Field("endChar", 16, this.endChar); 
-		boxSize += builder.Field("fontId", 16, this.fontId); 
-		boxSize += builder.Field("faceStyleFlags", 8, this.faceStyleFlags); 
-		boxSize += builder.Field("fontSize", 8, this.fontSize); 
-		boxSize += builder.Field("textColor", 4 * 8, this.textColor); 
+		boxSize += tracer.Field("startChar", 16, this.startChar); 
+		boxSize += tracer.Field("endChar", 16, this.endChar); 
+		boxSize += tracer.Field("fontId", 16, this.fontId); 
+		boxSize += tracer.Field("faceStyleFlags", 8, this.faceStyleFlags); 
+		boxSize += tracer.Field("fontSize", 8, this.fontSize); 
+		boxSize += tracer.Field("textColor", 4 * 8, this.textColor); 
 		return boxSize;
 	}
 }

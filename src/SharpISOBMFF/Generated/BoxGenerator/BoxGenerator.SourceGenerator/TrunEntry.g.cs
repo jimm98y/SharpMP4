@@ -7,26 +7,26 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class TrunEntry(version, flags) {
-   if(flags & 0x100) {
-      unsigned int(32) sample_duration;
-   }
-   if(flags & 0x200) {
-      unsigned int(32) sample_size;
-   }
-   if(flags & 0x400) {
-      unsigned int(32) sample_flags;
-   }
-   if(flags & 0x800) 
-   {
-      if (version == 0)
-      { 
-          unsigned int(32) sample_composition_time_offset; 
-      }
-      else
-      {
-          signed int(32) sample_composition_time_offset; 
-      }
-   }
+	if(flags & 0x100) {
+		unsigned int(32) sample_duration;
+	}
+	if(flags & 0x200) {
+		unsigned int(32) sample_size;
+	}
+	if(flags & 0x400) {
+		unsigned int(32) sample_flags;
+	}
+	if(flags & 0x800)
+	{
+		if (version == 0)
+		{
+			unsigned int(32) sample_composition_time_offset;
+		}
+		else
+		{
+			signed int(32) sample_composition_time_offset;
+		}
+	}
 }
 */
 public partial class TrunEntry : IMp4Serializable
@@ -36,6 +36,29 @@ public partial class TrunEntry : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class TrunEntry(version, flags) {
+	if(flags & 0x100) {
+		unsigned int(32) sample_duration;
+	}
+	if(flags & 0x200) {
+		unsigned int(32) sample_size;
+	}
+	if(flags & 0x400) {
+		unsigned int(32) sample_flags;
+	}
+	if(flags & 0x800)
+	{
+		if (version == 0)
+		{
+			unsigned int(32) sample_composition_time_offset;
+		}
+		else
+		{
+			signed int(32) sample_composition_time_offset;
+		}
+	}
+}"; } }
 	public virtual string DisplayName { get { return "TrunEntry"; } }
 
 	protected uint sample_duration; 
@@ -169,23 +192,23 @@ public partial class TrunEntry : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
 
 		if ((flags  &  0x100) ==  0x100)
 		{
-			boxSize += builder.Field("sample_duration", 32, this.sample_duration); 
+			boxSize += tracer.Field("sample_duration", 32, this.sample_duration); 
 		}
 
 		if ((flags  &  0x200) ==  0x200)
 		{
-			boxSize += builder.Field("sample_size", 32, this.sample_size); 
+			boxSize += tracer.Field("sample_size", 32, this.sample_size); 
 		}
 
 		if ((flags  &  0x400) ==  0x400)
 		{
-			boxSize += builder.Field("sample_flags", 32, this.sample_flags); 
+			boxSize += tracer.Field("sample_flags", 32, this.sample_flags); 
 		}
 
 		if ((flags  &  0x800) ==  0x800)
@@ -193,12 +216,12 @@ public partial class TrunEntry : IMp4Serializable
 
 			if (version == 0)
 			{
-				boxSize += builder.Field("sample_composition_time_offset", 32, this.sample_composition_time_offset); 
+				boxSize += tracer.Field("sample_composition_time_offset", 32, this.sample_composition_time_offset); 
 			}
 
 			else 
 			{
-				boxSize += builder.Field("sample_composition_time_offset0", 32, this.sample_composition_time_offset0); 
+				boxSize += tracer.Field("sample_composition_time_offset0", 32, this.sample_composition_time_offset0); 
 			}
 		}
 		return boxSize;

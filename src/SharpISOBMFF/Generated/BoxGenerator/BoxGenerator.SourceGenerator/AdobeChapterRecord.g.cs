@@ -7,9 +7,10 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AdobeChapterRecord() {
- unsigned int(64) timestamp;
- unsigned int(8) count; char title[count];
- }
+	unsigned int(64) timestamp;
+	unsigned int(8) count;
+	char title[count];
+}
 */
 public partial class AdobeChapterRecord : IMp4Serializable
 {
@@ -18,6 +19,12 @@ public partial class AdobeChapterRecord : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class AdobeChapterRecord() {
+	unsigned int(64) timestamp;
+	unsigned int(8) count;
+	char title[count];
+}"; } }
 	public virtual string DisplayName { get { return "AdobeChapterRecord"; } }
 
 	protected ulong timestamp; 
@@ -26,7 +33,7 @@ public partial class AdobeChapterRecord : IMp4Serializable
 	protected byte count; 
 	public byte Count { get { return this.count; } set { this.count = value; } }
 
-	protected byte[] title; 
+	protected byte[] title = []; 
 	public byte[] Title { get { return this.title; } set { this.title = value; } }
 
 	public AdobeChapterRecord(): base()
@@ -60,12 +67,12 @@ public partial class AdobeChapterRecord : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("timestamp", 64, this.timestamp); 
-		boxSize += builder.Field("count", 8, this.count); 
-		boxSize += builder.Field("title", ((ulong)(count) * 8), this.title); 
+		boxSize += tracer.Field("timestamp", 64, this.timestamp); 
+		boxSize += tracer.Field("count", 8, this.count); 
+		boxSize += tracer.Field("title", ((ulong)(count) * 8), this.title); 
 		return boxSize;
 	}
 }

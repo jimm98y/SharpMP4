@@ -7,26 +7,32 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class BaseLocationBox() extends FullBox('bloc') {
- unsigned int(8) baseLocation[256];
- unsigned int(8) purchaseLocation[256];
- unsigned int(8) reserved[512];
- } 
+	unsigned int(8) baseLocation[256];
+	unsigned int(8) purchaseLocation[256];
+	unsigned int(8) reserved[512];
+}
 */
 public partial class BaseLocationBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class BaseLocationBox() extends FullBox('bloc') {
+	unsigned int(8) baseLocation[256];
+	unsigned int(8) purchaseLocation[256];
+	unsigned int(8) reserved[512];
+}"; } }
 	public const string TYPE = "bloc";
 	public override string DisplayName { get { return "BaseLocationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
 
 
-	protected byte[] baseLocation; 
+	protected byte[] baseLocation = new byte[256]; 
 	public byte[] BaseLocation { get { return this.baseLocation; } set { this.baseLocation = value; } }
 
-	protected byte[] purchaseLocation; 
+	protected byte[] purchaseLocation = new byte[256]; 
 	public byte[] PurchaseLocation { get { return this.purchaseLocation; } set { this.purchaseLocation = value; } }
 
-	protected byte[] reserved; 
+	protected byte[] reserved = new byte[512]; 
 	public byte[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
 	public BaseLocationBox(): base(IsoStream.FromFourCC("bloc"))
@@ -63,13 +69,13 @@ public partial class BaseLocationBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("baseLocation", 256 * 8, this.baseLocation); 
-		boxSize += builder.Field("purchaseLocation", 256 * 8, this.purchaseLocation); 
-		boxSize += builder.Field("reserved", 512 * 8, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("baseLocation", 256 * 8, this.baseLocation); 
+		boxSize += tracer.Field("purchaseLocation", 256 * 8, this.purchaseLocation); 
+		boxSize += tracer.Field("reserved", 512 * 8, this.reserved); 
 		return boxSize;
 	}
 }

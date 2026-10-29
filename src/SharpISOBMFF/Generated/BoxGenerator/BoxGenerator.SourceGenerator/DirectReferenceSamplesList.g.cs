@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 class DirectReferenceSamplesList()
-extends VisualSampleGroupEntry ('refs') {
+	extends VisualSampleGroupEntry ('refs') {
 	unsigned int(32) sample_id;
 	unsigned int(8) num_direct_reference_samples;
 	for(i = 0; i < num_direct_reference_samples; i++) {
@@ -17,6 +17,15 @@ extends VisualSampleGroupEntry ('refs') {
 */
 public partial class DirectReferenceSamplesList : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class DirectReferenceSamplesList()
+	extends VisualSampleGroupEntry ('refs') {
+	unsigned int(32) sample_id;
+	unsigned int(8) num_direct_reference_samples;
+	for(i = 0; i < num_direct_reference_samples; i++) {
+		unsigned int(32)direct_reference_sample_id;
+	}
+}"; } }
 	public const string TYPE = "refs";
 	public override string DisplayName { get { return "DirectReferenceSamplesList"; } }
 
@@ -76,16 +85,16 @@ public partial class DirectReferenceSamplesList : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("sample_id", 32, this.sample_id); 
-		boxSize += builder.Field("num_direct_reference_samples", 8, this.num_direct_reference_samples); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("sample_id", 32, this.sample_id); 
+		boxSize += tracer.Field("num_direct_reference_samples", 8, this.num_direct_reference_samples); 
 
 		for (int i = 0; i < num_direct_reference_samples; i++)
 		{
-			boxSize += builder.Field($"direct_reference_sample_id[{i}]", 32, this.direct_reference_sample_id[i]); 
+			boxSize += tracer.Field($"direct_reference_sample_id[{i}]", 32, this.direct_reference_sample_id[i]); 
 		}
 		return boxSize;
 	}

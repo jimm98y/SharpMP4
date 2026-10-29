@@ -8,19 +8,23 @@ namespace SharpISOBMFF
 /*
 // 3.3.2 FLAC Specific Box: the metadata blocks of the stream, to the end of the box
 aligned(8) class FLACSpecificBox extends FullBox('dfLa', version = 0, 0){
- FLACMetadataBlock blocks[];
- }
- 
+	FLACMetadataBlock blocks[];
+}
 */
 public partial class FLACSpecificBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// 3.3.2 FLAC Specific Box: the metadata blocks of the stream, to the end of the box
+aligned(8) class FLACSpecificBox extends FullBox('dfLa', version = 0, 0){
+	FLACMetadataBlock blocks[];
+}"; } }
 	public const string TYPE = "dfLa";
 	public override string DisplayName { get { return "FLACSpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("AudioSampleEntry(fLaC,enca)"); }
 
 
-	protected FLACMetadataBlock[] blocks; 
+	protected FLACMetadataBlock[] blocks = []; 
 	public FLACMetadataBlock[] Blocks { get { return this.blocks; } set { this.blocks = value; } }
 
 	public FLACSpecificBox(): base(IsoStream.FromFourCC("dfLa"), 0, 0)
@@ -51,11 +55,11 @@ public partial class FLACSpecificBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("blocks", IsoStream.CalculateClassSize(blocks), this.blocks); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("blocks", IsoStream.CalculateClassSize(blocks), this.blocks); 
 		return boxSize;
 	}
 }

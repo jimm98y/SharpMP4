@@ -8,16 +8,26 @@ namespace SharpISOBMFF
 /*
 // E.5a, Pseudocode E.2a
 aligned(8) class AC4PresentationLabelBox extends FullBox('lac4', version = 0, 0) {
- unsigned int(16) num_presentation_labels;
- utf8string language_tag;
- for (i=0; i < num_presentation_labels; i++) {
-  unsigned int(16) presentation_id;
-  utf8string presentation_label;
- }
+	unsigned int(16) num_presentation_labels;
+	utf8string language_tag;
+	for (i=0; i < num_presentation_labels; i++) {
+		unsigned int(16) presentation_id;
+		utf8string presentation_label;
+	}
 }
 */
 public partial class AC4PresentationLabelBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// E.5a, Pseudocode E.2a
+aligned(8) class AC4PresentationLabelBox extends FullBox('lac4', version = 0, 0) {
+	unsigned int(16) num_presentation_labels;
+	utf8string language_tag;
+	for (i=0; i < num_presentation_labels; i++) {
+		unsigned int(16) presentation_id;
+		utf8string presentation_label;
+	}
+}"; } }
 	public const string TYPE = "lac4";
 	public override string DisplayName { get { return "AC4PresentationLabelBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -87,17 +97,17 @@ public partial class AC4PresentationLabelBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("num_presentation_labels", 16, this.num_presentation_labels); 
-		boxSize += builder.Field("language_tag", IsoStream.CalculateStringSize(language_tag), this.language_tag); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("num_presentation_labels", 16, this.num_presentation_labels); 
+		boxSize += tracer.Field("language_tag", IsoStream.CalculateStringSize(language_tag), this.language_tag); 
 
 		for (int i=0; i < num_presentation_labels; i++)
 		{
-			boxSize += builder.Field($"presentation_id[{i}]", 16, this.presentation_id[i]); 
-			boxSize += builder.Field($"presentation_label[{i}]", IsoStream.CalculateStringSize(presentation_label[i]), this.presentation_label[i]); 
+			boxSize += tracer.Field($"presentation_id[{i}]", 16, this.presentation_id[i]); 
+			boxSize += tracer.Field($"presentation_label[{i}]", IsoStream.CalculateStringSize(presentation_label[i]), this.presentation_label[i]); 
 		}
 		return boxSize;
 	}

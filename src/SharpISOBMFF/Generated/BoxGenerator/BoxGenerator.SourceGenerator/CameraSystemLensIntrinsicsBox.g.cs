@@ -6,23 +6,38 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class CameraSystemLensIntrinsicsBox extends FullBox('lnin', version = 0, flags) { 
-signed int(16) denominator_shift_operand; 
-signed int(16) skew_denominator_shift_operand; 
-signed int(32) focal_length_x; 
-signed int(32) principal_point_x; 
-signed int(32) principal_point_y; 
-if (flags & 1) { 
-signed int(32) focal_length_y; 
-signed int(32) skew_factor; 
-} 
-if (flags & 2) { 
-BEFloat32 projection_offset; 
-} 
+aligned(8) class CameraSystemLensIntrinsicsBox extends FullBox('lnin', version = 0, flags) {
+	signed int(16) denominator_shift_operand;
+	signed int(16) skew_denominator_shift_operand;
+	signed int(32) focal_length_x;
+	signed int(32) principal_point_x;
+	signed int(32) principal_point_y;
+	if (flags & 1) {
+		signed int(32) focal_length_y;
+		signed int(32) skew_factor;
+	}
+	if (flags & 2) {
+		BEFloat32 projection_offset;
+	}
 }
 */
 public partial class CameraSystemLensIntrinsicsBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class CameraSystemLensIntrinsicsBox extends FullBox('lnin', version = 0, flags) {
+	signed int(16) denominator_shift_operand;
+	signed int(16) skew_denominator_shift_operand;
+	signed int(32) focal_length_x;
+	signed int(32) principal_point_x;
+	signed int(32) principal_point_y;
+	if (flags & 1) {
+		signed int(32) focal_length_y;
+		signed int(32) skew_factor;
+	}
+	if (flags & 2) {
+		BEFloat32 projection_offset;
+	}
+}"; } }
 	public const string TYPE = "lnin";
 	public override string DisplayName { get { return "CameraSystemLensIntrinsicsBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -126,25 +141,25 @@ public partial class CameraSystemLensIntrinsicsBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("denominator_shift_operand", 16, this.denominator_shift_operand); 
-		boxSize += builder.Field("skew_denominator_shift_operand", 16, this.skew_denominator_shift_operand); 
-		boxSize += builder.Field("focal_length_x", 32, this.focal_length_x); 
-		boxSize += builder.Field("principal_point_x", 32, this.principal_point_x); 
-		boxSize += builder.Field("principal_point_y", 32, this.principal_point_y); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("denominator_shift_operand", 16, this.denominator_shift_operand); 
+		boxSize += tracer.Field("skew_denominator_shift_operand", 16, this.skew_denominator_shift_operand); 
+		boxSize += tracer.Field("focal_length_x", 32, this.focal_length_x); 
+		boxSize += tracer.Field("principal_point_x", 32, this.principal_point_x); 
+		boxSize += tracer.Field("principal_point_y", 32, this.principal_point_y); 
 
 		if ((flags  &  1) ==  1)
 		{
-			boxSize += builder.Field("focal_length_y", 32, this.focal_length_y); 
-			boxSize += builder.Field("skew_factor", 32, this.skew_factor); 
+			boxSize += tracer.Field("focal_length_y", 32, this.focal_length_y); 
+			boxSize += tracer.Field("skew_factor", 32, this.skew_factor); 
 		}
 
 		if ((flags  &  2) ==  2)
 		{
-			boxSize += builder.Field("projection_offset", 32, this.projection_offset); 
+			boxSize += tracer.Field("projection_offset", 32, this.projection_offset); 
 		}
 		return boxSize;
 	}

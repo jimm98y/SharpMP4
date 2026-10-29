@@ -7,10 +7,10 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AudioChannelDescription() {
- unsigned int(32) channelLabel;
- unsigned int(32) channelFlags;
- unsigned int(32) coordinates[3];
- } 
+	unsigned int(32) channelLabel;
+	unsigned int(32) channelFlags;
+	unsigned int(32) coordinates[3];
+}
 */
 public partial class AudioChannelDescription : IMp4Serializable
 {
@@ -19,6 +19,12 @@ public partial class AudioChannelDescription : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class AudioChannelDescription() {
+	unsigned int(32) channelLabel;
+	unsigned int(32) channelFlags;
+	unsigned int(32) coordinates[3];
+}"; } }
 	public virtual string DisplayName { get { return "AudioChannelDescription"; } }
 
 	protected uint channelLabel; 
@@ -27,7 +33,7 @@ public partial class AudioChannelDescription : IMp4Serializable
 	protected uint channelFlags; 
 	public uint ChannelFlags { get { return this.channelFlags; } set { this.channelFlags = value; } }
 
-	protected uint[] coordinates; 
+	protected uint[] coordinates = new uint[3]; 
 	public uint[] Coordinates { get { return this.coordinates; } set { this.coordinates = value; } }
 
 	public AudioChannelDescription(): base()
@@ -61,12 +67,12 @@ public partial class AudioChannelDescription : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("channelLabel", 32, this.channelLabel); 
-		boxSize += builder.Field("channelFlags", 32, this.channelFlags); 
-		boxSize += builder.Field("coordinates", 3 * 32, this.coordinates); 
+		boxSize += tracer.Field("channelLabel", 32, this.channelLabel); 
+		boxSize += tracer.Field("channelFlags", 32, this.channelFlags); 
+		boxSize += tracer.Field("coordinates", 3 * 32, this.coordinates); 
 		return boxSize;
 	}
 }

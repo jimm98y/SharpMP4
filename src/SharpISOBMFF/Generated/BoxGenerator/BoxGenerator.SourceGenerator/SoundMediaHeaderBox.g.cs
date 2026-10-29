@@ -14,6 +14,12 @@ aligned(8) class SoundMediaHeaderBox
 */
 public partial class SoundMediaHeaderBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SoundMediaHeaderBox
+	extends FullBox('smhd', version = 0, 0) {
+	template int(16) balance = 0;
+	const unsigned int(16)	reserved = 0;
+}"; } }
 	public const string TYPE = "smhd";
 	public override string DisplayName { get { return "SoundMediaHeaderBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -57,12 +63,12 @@ public partial class SoundMediaHeaderBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("balance", 16, this.balance); 
-		boxSize += builder.Field("reserved", 16, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("balance", 16, this.balance); 
+		boxSize += tracer.Field("reserved", 16, this.reserved); 
 		return boxSize;
 	}
 }

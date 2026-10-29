@@ -8,13 +8,18 @@ namespace SharpISOBMFF
 /*
 // Canon.pm, CTBO: int32u entry count N, N x (int32u index, int64u offset, int64u size); index 1 XMP, 2 PRVW, 3 mdat
 aligned(8) class CanonCTBOBox() extends Box('CTBO') {
- unsigned int(32) entryCount;
- CanonCTBOEntry entries[entryCount];
+	unsigned int(32) entryCount;
+	CanonCTBOEntry entries[entryCount];
 }
-
 */
 public partial class CanonCTBOBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// Canon.pm, CTBO: int32u entry count N, N x (int32u index, int64u offset, int64u size); index 1 XMP, 2 PRVW, 3 mdat
+aligned(8) class CanonCTBOBox() extends Box('CTBO') {
+	unsigned int(32) entryCount;
+	CanonCTBOEntry entries[entryCount];
+}"; } }
 	public const string TYPE = "CTBO";
 	public override string DisplayName { get { return "CanonCTBOBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -24,7 +29,7 @@ public partial class CanonCTBOBox : Box
 	protected uint entryCount; 
 	public uint EntryCount { get { return this.entryCount; } set { this.entryCount = value; } }
 
-	protected CanonCTBOEntry[] entries; 
+	protected CanonCTBOEntry[] entries = []; 
 	public CanonCTBOEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
 
 	public CanonCTBOBox(): base(IsoStream.FromFourCC("CTBO"))
@@ -58,12 +63,12 @@ public partial class CanonCTBOBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entryCount", 32, this.entryCount); 
-		boxSize += builder.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entryCount", 32, this.entryCount); 
+		boxSize += tracer.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
 		return boxSize;
 	}
 }

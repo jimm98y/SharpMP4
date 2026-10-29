@@ -8,32 +8,58 @@ namespace SharpISOBMFF
 /*
 // B.2.2.3.1, Table B-2; NumPresentations = NumPresentationsCode + 1, as m_ucNumAudioPres is
 class DTSUHDSpecificBox extends Box('udts') {
- bit(6) DecoderProfileCode;
- bit(2) FrameDurationCode;
- bit(3) MaxPayloadCode;
- bit(5) NumPresentationsCode;
- unsigned int(32) ChannelMask;
- bit(1) BaseSamplingFrequencyCode;
- bit(2) SampleRateMod;
- bit(3) RepresentationType;
- bit(3) StreamIndex;
- bit(1) ExpansionBoxPresent;
- for (i = 0; i < NumPresentationsCode + 1; i++) {
-  bit(1) IDTagPresent; // bit(NumPresentations) IDTagPresent[NumPresentations]
- }
- bit((8 - ((59 + NumPresentationsCode) % 8)) % 8) ByteAlign; // [0..7] to a byte: 58 bits and one a presentation are before it
- for (i = 0; i < NumPresentationsCode + 1; i++) {
-  if (IDTagPresent[i]) {
-   unsigned int(8) PresentationIDTag[16];
-  }
- }
- if (ExpansionBoxPresent) {
-  Box DTSExpansionBox[];
- }
+	bit(6) DecoderProfileCode;
+	bit(2) FrameDurationCode;
+	bit(3) MaxPayloadCode;
+	bit(5) NumPresentationsCode;
+	unsigned int(32) ChannelMask;
+	bit(1) BaseSamplingFrequencyCode;
+	bit(2) SampleRateMod;
+	bit(3) RepresentationType;
+	bit(3) StreamIndex;
+	bit(1) ExpansionBoxPresent;
+	for (i = 0; i < NumPresentationsCode + 1; i++) {
+		bit(1) IDTagPresent; // bit(NumPresentations) IDTagPresent[NumPresentations]
+	}
+	bit((8 - ((59 + NumPresentationsCode) % 8)) % 8) ByteAlign; // [0..7] to a byte: 58 bits and one a presentation are before it
+	for (i = 0; i < NumPresentationsCode + 1; i++) {
+		if (IDTagPresent[i]) {
+			unsigned int(8) PresentationIDTag[16];
+		}
+	}
+	if (ExpansionBoxPresent) {
+		Box DTSExpansionBox[];
+	}
 }
 */
 public partial class DTSUHDSpecificBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// B.2.2.3.1, Table B-2; NumPresentations = NumPresentationsCode + 1, as m_ucNumAudioPres is
+class DTSUHDSpecificBox extends Box('udts') {
+	bit(6) DecoderProfileCode;
+	bit(2) FrameDurationCode;
+	bit(3) MaxPayloadCode;
+	bit(5) NumPresentationsCode;
+	unsigned int(32) ChannelMask;
+	bit(1) BaseSamplingFrequencyCode;
+	bit(2) SampleRateMod;
+	bit(3) RepresentationType;
+	bit(3) StreamIndex;
+	bit(1) ExpansionBoxPresent;
+	for (i = 0; i < NumPresentationsCode + 1; i++) {
+		bit(1) IDTagPresent; // bit(NumPresentations) IDTagPresent[NumPresentations]
+	}
+	bit((8 - ((59 + NumPresentationsCode) % 8)) % 8) ByteAlign; // [0..7] to a byte: 58 bits and one a presentation are before it
+	for (i = 0; i < NumPresentationsCode + 1; i++) {
+		if (IDTagPresent[i]) {
+			unsigned int(8) PresentationIDTag[16];
+		}
+	}
+	if (ExpansionBoxPresent) {
+		Box DTSExpansionBox[];
+	}
+}"; } }
 	public const string TYPE = "udts";
 	public override string DisplayName { get { return "DTSUHDSpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -73,7 +99,7 @@ public partial class DTSUHDSpecificBox : Box
 	protected bool[] IDTagPresent;  //  bit(NumPresentations) IDTagPresent[NumPresentations]
 	public bool[] _IDTagPresent { get { return this.IDTagPresent; } set { this.IDTagPresent = value; } }
 
-	protected byte[] ByteAlign;  //  [0..7] to a byte: 58 bits and one a presentation are before it
+	protected byte[] ByteAlign = [];  //  [0..7] to a byte: 58 bits and one a presentation are before it
 	public byte[] _ByteAlign { get { return this.ByteAlign; } set { this.ByteAlign = value; } }
 
 	protected byte[][] PresentationIDTag; 
@@ -199,41 +225,41 @@ public partial class DTSUHDSpecificBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("DecoderProfileCode", 6, this.DecoderProfileCode); 
-		boxSize += builder.Field("FrameDurationCode", 2, this.FrameDurationCode); 
-		boxSize += builder.Field("MaxPayloadCode", 3, this.MaxPayloadCode); 
-		boxSize += builder.Field("NumPresentationsCode", 5, this.NumPresentationsCode); 
-		boxSize += builder.Field("ChannelMask", 32, this.ChannelMask); 
-		boxSize += builder.Field("BaseSamplingFrequencyCode", 1, this.BaseSamplingFrequencyCode); 
-		boxSize += builder.Field("SampleRateMod", 2, this.SampleRateMod); 
-		boxSize += builder.Field("RepresentationType", 3, this.RepresentationType); 
-		boxSize += builder.Field("StreamIndex", 3, this.StreamIndex); 
-		boxSize += builder.Field("ExpansionBoxPresent", 1, this.ExpansionBoxPresent); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("DecoderProfileCode", 6, this.DecoderProfileCode); 
+		boxSize += tracer.Field("FrameDurationCode", 2, this.FrameDurationCode); 
+		boxSize += tracer.Field("MaxPayloadCode", 3, this.MaxPayloadCode); 
+		boxSize += tracer.Field("NumPresentationsCode", 5, this.NumPresentationsCode); 
+		boxSize += tracer.Field("ChannelMask", 32, this.ChannelMask); 
+		boxSize += tracer.Field("BaseSamplingFrequencyCode", 1, this.BaseSamplingFrequencyCode); 
+		boxSize += tracer.Field("SampleRateMod", 2, this.SampleRateMod); 
+		boxSize += tracer.Field("RepresentationType", 3, this.RepresentationType); 
+		boxSize += tracer.Field("StreamIndex", 3, this.StreamIndex); 
+		boxSize += tracer.Field("ExpansionBoxPresent", 1, this.ExpansionBoxPresent); 
 
 		for (int i = 0; i < NumPresentationsCode + 1; i++)
 		{
-			boxSize += builder.Field($"IDTagPresent[{i}]", 1, this.IDTagPresent[i]); // bit(NumPresentations) IDTagPresent[NumPresentations]
+			boxSize += tracer.Field($"IDTagPresent[{i}]", 1, this.IDTagPresent[i]); // bit(NumPresentations) IDTagPresent[NumPresentations]
 		}
-		boxSize += builder.Field("ByteAlign", (ulong)((8 - ((59 + NumPresentationsCode) % 8)) % 8 ), this.ByteAlign); // [0..7] to a byte: 58 bits and one a presentation are before it
+		boxSize += tracer.Field("ByteAlign", (ulong)((8 - ((59 + NumPresentationsCode) % 8)) % 8 ), this.ByteAlign); // [0..7] to a byte: 58 bits and one a presentation are before it
 
 		for (int i = 0; i < NumPresentationsCode + 1; i++)
 		{
 
 			if (IDTagPresent[i])
 			{
-				boxSize += builder.Field($"PresentationIDTag[{i}]", 16 * 8, this.PresentationIDTag[i]); 
+				boxSize += tracer.Field($"PresentationIDTag[{i}]", 16 * 8, this.PresentationIDTag[i]); 
 			}
 		}
 
 		if (ExpansionBoxPresent)
 		{
-			// boxSize += builder.Field("DTSExpansionBox", IsoStream.CalculateBoxSize(DTSExpansionBox), this.DTSExpansionBox); 
+			// boxSize += tracer.Field("DTSExpansionBox", IsoStream.CalculateBoxSize(DTSExpansionBox), this.DTSExpansionBox); 
 		}
-		boxSize += builder.Children(this);
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

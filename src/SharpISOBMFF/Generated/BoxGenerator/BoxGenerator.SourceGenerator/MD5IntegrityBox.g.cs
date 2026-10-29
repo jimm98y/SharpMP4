@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class MD5IntegrityBox()
-extends FullBox('md5i', version = 0, flags) {
+	extends FullBox('md5i', version = 0, flags) {
 	unsigned int(8)[16] input_MD5;
 	unsigned int(32) input_4cc;
 	if (input_4cc == 'sgpd') {
@@ -23,13 +23,28 @@ extends FullBox('md5i', version = 0, flags) {
 */
 public partial class MD5IntegrityBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MD5IntegrityBox()
+	extends FullBox('md5i', version = 0, flags) {
+	unsigned int(8)[16] input_MD5;
+	unsigned int(32) input_4cc;
+	if (input_4cc == 'sgpd') {
+		unsigned int(32) grouping_type;
+		if (flags&1)
+			unsigned int(32) grouping_type_parameter;
+		unsigned int(32) num_entries;
+		for(i=0; i<num_entries; i++) {
+			unsigned int(32) group_description_index[i];
+		}
+	}
+}"; } }
 	public const string TYPE = "md5i";
 	public override string DisplayName { get { return "MD5IntegrityBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
 
 
-	protected byte[] input_MD5; 
+	protected byte[] input_MD5 = new byte[16]; 
 	public byte[] InputMD5 { get { return this.input_MD5; } set { this.input_MD5 = value; } }
 
 	protected uint input_4cc; 
@@ -127,26 +142,26 @@ public partial class MD5IntegrityBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("input_MD5", 16 * 8, this.input_MD5); 
-		boxSize += builder.Field("input_4cc", 32, this.input_4cc); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("input_MD5", 16 * 8, this.input_MD5); 
+		boxSize += tracer.Field("input_4cc", 32, this.input_4cc); 
 
 		if (input_4cc == IsoStream.FromFourCC("sgpd"))
 		{
-			boxSize += builder.Field("grouping_type", 32, this.grouping_type); 
+			boxSize += tracer.Field("grouping_type", 32, this.grouping_type); 
 
 			if ((flags & 1) == 1)
 			{
-				boxSize += builder.Field("grouping_type_parameter", 32, this.grouping_type_parameter); 
+				boxSize += tracer.Field("grouping_type_parameter", 32, this.grouping_type_parameter); 
 			}
-			boxSize += builder.Field("num_entries", 32, this.num_entries); 
+			boxSize += tracer.Field("num_entries", 32, this.num_entries); 
 
 			for (int i=0; i<num_entries; i++)
 			{
-				boxSize += builder.Field($"group_description_index[{i}]", 32, this.group_description_index[i]); 
+				boxSize += tracer.Field($"group_description_index[{i}]", 32, this.group_description_index[i]); 
 			}
 		}
 		return boxSize;

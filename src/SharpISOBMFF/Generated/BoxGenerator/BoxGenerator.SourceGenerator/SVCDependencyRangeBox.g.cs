@@ -19,6 +19,17 @@ class SVCDependencyRangeBox extends Box('svdr') {
 */
 public partial class SVCDependencyRangeBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class SVCDependencyRangeBox extends Box('svdr') {
+	unsigned int(3) min_dependency_id;
+	unsigned int(3) min_temporal_id;
+	bit(6) reserved = 0;
+	unsigned int(4) min_quality_id;
+	unsigned int(3) max_dependency_id;
+	unsigned int(3) max_temporal_id;
+	bit(6) reserved = 0;
+	unsigned int(4) max_quality_id;
+}"; } }
 	public const string TYPE = "svdr";
 	public override string DisplayName { get { return "SVCDependencyRangeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -98,18 +109,18 @@ public partial class SVCDependencyRangeBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("min_dependency_id", 3, this.min_dependency_id); 
-		boxSize += builder.Field("min_temporal_id", 3, this.min_temporal_id); 
-		boxSize += builder.Field("reserved", 6, this.reserved); 
-		boxSize += builder.Field("min_quality_id", 4, this.min_quality_id); 
-		boxSize += builder.Field("max_dependency_id", 3, this.max_dependency_id); 
-		boxSize += builder.Field("max_temporal_id", 3, this.max_temporal_id); 
-		boxSize += builder.Field("reserved0", 6, this.reserved0); 
-		boxSize += builder.Field("max_quality_id", 4, this.max_quality_id); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("min_dependency_id", 3, this.min_dependency_id); 
+		boxSize += tracer.Field("min_temporal_id", 3, this.min_temporal_id); 
+		boxSize += tracer.Field("reserved", 6, this.reserved); 
+		boxSize += tracer.Field("min_quality_id", 4, this.min_quality_id); 
+		boxSize += tracer.Field("max_dependency_id", 3, this.max_dependency_id); 
+		boxSize += tracer.Field("max_temporal_id", 3, this.max_temporal_id); 
+		boxSize += tracer.Field("reserved0", 6, this.reserved0); 
+		boxSize += tracer.Field("max_quality_id", 4, this.max_quality_id); 
 		return boxSize;
 	}
 }

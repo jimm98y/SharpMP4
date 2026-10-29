@@ -7,6 +7,9 @@ namespace SharpISOBMFF
     /// </summary>
     public class EscapedValue : IMp4Serializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public virtual string Syntax { get { return null; } }
+
         public virtual string DisplayName { get { return nameof(EscapedValue); } }
         protected IMp4Serializable parent = null;
         public IMp4Serializable GetParent() { return parent; }
@@ -66,13 +69,13 @@ namespace SharpISOBMFF
             return (ulong)NBits1 + (Value2 != null ? (ulong)NBits2 : 0) + (Value3 != null ? (ulong)NBits3 : 0);
         }
 
-        public virtual ulong ToString(BoxStringBuilder builder)
+        public virtual ulong Trace(BoxTracer tracer)
         {
-            ulong boxSize = builder.Field("value1", (ulong)NBits1, Value1);
+            ulong boxSize = tracer.Field("value1", (ulong)NBits1, Value1);
             if (Value2 != null)
-                boxSize += builder.Field("value2", (ulong)NBits2, Value2.Value);
+                boxSize += tracer.Field("value2", (ulong)NBits2, Value2.Value);
             if (Value3 != null)
-                boxSize += builder.Field("value3", (ulong)NBits3, Value3.Value);
+                boxSize += tracer.Field("value3", (ulong)NBits3, Value3.Value);
             return boxSize;
         }
 

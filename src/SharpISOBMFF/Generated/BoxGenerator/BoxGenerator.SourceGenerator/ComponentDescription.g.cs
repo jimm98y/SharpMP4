@@ -6,13 +6,13 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class ComponentDescription() { 
- unsigned int(32) componentType;
- unsigned int(32) componentSubType;
- unsigned int(32) componentManufacturer;
- unsigned int(32) componentFlags;
- unsigned int(32) componentFlagsMask;
- }
+class ComponentDescription() {
+	unsigned int(32) componentType;
+	unsigned int(32) componentSubType;
+	unsigned int(32) componentManufacturer;
+	unsigned int(32) componentFlags;
+	unsigned int(32) componentFlagsMask;
+}
 */
 public partial class ComponentDescription : IMp4Serializable
 {
@@ -21,6 +21,14 @@ public partial class ComponentDescription : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class ComponentDescription() {
+	unsigned int(32) componentType;
+	unsigned int(32) componentSubType;
+	unsigned int(32) componentManufacturer;
+	unsigned int(32) componentFlags;
+	unsigned int(32) componentFlagsMask;
+}"; } }
 	public virtual string DisplayName { get { return "ComponentDescription"; } }
 
 	protected uint componentType; 
@@ -75,14 +83,14 @@ public partial class ComponentDescription : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("componentType", 32, this.componentType); 
-		boxSize += builder.Field("componentSubType", 32, this.componentSubType); 
-		boxSize += builder.Field("componentManufacturer", 32, this.componentManufacturer); 
-		boxSize += builder.Field("componentFlags", 32, this.componentFlags); 
-		boxSize += builder.Field("componentFlagsMask", 32, this.componentFlagsMask); 
+		boxSize += tracer.Field("componentType", 32, this.componentType); 
+		boxSize += tracer.Field("componentSubType", 32, this.componentSubType); 
+		boxSize += tracer.Field("componentManufacturer", 32, this.componentManufacturer); 
+		boxSize += tracer.Field("componentFlags", 32, this.componentFlags); 
+		boxSize += tracer.Field("componentFlagsMask", 32, this.componentFlagsMask); 
 		return boxSize;
 	}
 }

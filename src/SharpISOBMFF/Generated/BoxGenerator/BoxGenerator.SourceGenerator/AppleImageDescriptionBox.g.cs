@@ -8,29 +8,52 @@ namespace SharpISOBMFF
 /*
 // A QuickTime image file's (QTIF) image description, as QuickTime's ImageDescription record has it: its own size and compressor type, a visual sample description's fields, then its extensions' atoms
 class AppleImageDescriptionBox() extends Box ('idsc'){
- unsigned int(32) descriptionSize;
- unsigned int(32) compressorType;
- unsigned int(8) reserved[6];
- unsigned int(16) dataReferenceIndex;
- unsigned int(16) version;
- unsigned int(16) revisionLevel;
- unsigned int(32) vendor;
- unsigned int(32) temporalQuality;
- unsigned int(32) spatialQuality;
- unsigned int(16) width;
- unsigned int(16) height;
- unsigned int(32) horizontalResolution;
- unsigned int(32) verticalResolution;
- unsigned int(32) dataSize;
- unsigned int(16) frameCount;
- unsigned int(8) compressorName[32];
- unsigned int(16) depth;
- signed int(16) colorTableId;
- Box boxes[];
+	unsigned int(32) descriptionSize;
+	unsigned int(32) compressorType;
+	unsigned int(8) reserved[6];
+	unsigned int(16) dataReferenceIndex;
+	unsigned int(16) version;
+	unsigned int(16) revisionLevel;
+	unsigned int(32) vendor;
+	unsigned int(32) temporalQuality;
+	unsigned int(32) spatialQuality;
+	unsigned int(16) width;
+	unsigned int(16) height;
+	unsigned int(32) horizontalResolution;
+	unsigned int(32) verticalResolution;
+	unsigned int(32) dataSize;
+	unsigned int(16) frameCount;
+	unsigned int(8) compressorName[32];
+	unsigned int(16) depth;
+	signed int(16) colorTableId;
+	Box boxes[];
 }
 */
 public partial class AppleImageDescriptionBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// A QuickTime image file's (QTIF) image description, as QuickTime's ImageDescription record has it: its own size and compressor type, a visual sample description's fields, then its extensions' atoms
+class AppleImageDescriptionBox() extends Box ('idsc'){
+	unsigned int(32) descriptionSize;
+	unsigned int(32) compressorType;
+	unsigned int(8) reserved[6];
+	unsigned int(16) dataReferenceIndex;
+	unsigned int(16) version;
+	unsigned int(16) revisionLevel;
+	unsigned int(32) vendor;
+	unsigned int(32) temporalQuality;
+	unsigned int(32) spatialQuality;
+	unsigned int(16) width;
+	unsigned int(16) height;
+	unsigned int(32) horizontalResolution;
+	unsigned int(32) verticalResolution;
+	unsigned int(32) dataSize;
+	unsigned int(16) frameCount;
+	unsigned int(8) compressorName[32];
+	unsigned int(16) depth;
+	signed int(16) colorTableId;
+	Box boxes[];
+}"; } }
 	public const string TYPE = "idsc";
 	public override string DisplayName { get { return "AppleImageDescriptionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -43,7 +66,7 @@ public partial class AppleImageDescriptionBox : Box
 	protected uint compressorType; 
 	public uint CompressorType { get { return this.compressorType; } set { this.compressorType = value; } }
 
-	protected byte[] reserved; 
+	protected byte[] reserved = new byte[6]; 
 	public byte[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
 	protected ushort dataReferenceIndex; 
@@ -82,7 +105,7 @@ public partial class AppleImageDescriptionBox : Box
 	protected ushort frameCount; 
 	public ushort FrameCount { get { return this.frameCount; } set { this.frameCount = value; } }
 
-	protected byte[] compressorName; 
+	protected byte[] compressorName = new byte[32]; 
 	public byte[] CompressorName { get { return this.compressorName; } set { this.compressorName = value; } }
 
 	protected ushort depth; 
@@ -176,30 +199,30 @@ public partial class AppleImageDescriptionBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("descriptionSize", 32, this.descriptionSize); 
-		boxSize += builder.Field("compressorType", 32, this.compressorType); 
-		boxSize += builder.Field("reserved", 6 * 8, this.reserved); 
-		boxSize += builder.Field("dataReferenceIndex", 16, this.dataReferenceIndex); 
-		boxSize += builder.Field("version", 16, this.version); 
-		boxSize += builder.Field("revisionLevel", 16, this.revisionLevel); 
-		boxSize += builder.Field("vendor", 32, this.vendor); 
-		boxSize += builder.Field("temporalQuality", 32, this.temporalQuality); 
-		boxSize += builder.Field("spatialQuality", 32, this.spatialQuality); 
-		boxSize += builder.Field("width", 16, this.width); 
-		boxSize += builder.Field("height", 16, this.height); 
-		boxSize += builder.Field("horizontalResolution", 32, this.horizontalResolution); 
-		boxSize += builder.Field("verticalResolution", 32, this.verticalResolution); 
-		boxSize += builder.Field("dataSize", 32, this.dataSize); 
-		boxSize += builder.Field("frameCount", 16, this.frameCount); 
-		boxSize += builder.Field("compressorName", 32 * 8, this.compressorName); 
-		boxSize += builder.Field("depth", 16, this.depth); 
-		boxSize += builder.Field("colorTableId", 16, this.colorTableId); 
-		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("descriptionSize", 32, this.descriptionSize); 
+		boxSize += tracer.Field("compressorType", 32, this.compressorType); 
+		boxSize += tracer.Field("reserved", 6 * 8, this.reserved); 
+		boxSize += tracer.Field("dataReferenceIndex", 16, this.dataReferenceIndex); 
+		boxSize += tracer.Field("version", 16, this.version); 
+		boxSize += tracer.Field("revisionLevel", 16, this.revisionLevel); 
+		boxSize += tracer.Field("vendor", 32, this.vendor); 
+		boxSize += tracer.Field("temporalQuality", 32, this.temporalQuality); 
+		boxSize += tracer.Field("spatialQuality", 32, this.spatialQuality); 
+		boxSize += tracer.Field("width", 16, this.width); 
+		boxSize += tracer.Field("height", 16, this.height); 
+		boxSize += tracer.Field("horizontalResolution", 32, this.horizontalResolution); 
+		boxSize += tracer.Field("verticalResolution", 32, this.verticalResolution); 
+		boxSize += tracer.Field("dataSize", 32, this.dataSize); 
+		boxSize += tracer.Field("frameCount", 16, this.frameCount); 
+		boxSize += tracer.Field("compressorName", 32 * 8, this.compressorName); 
+		boxSize += tracer.Field("depth", 16, this.depth); 
+		boxSize += tracer.Field("colorTableId", 16, this.colorTableId); 
+		// boxSize += tracer.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

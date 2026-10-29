@@ -27,10 +27,31 @@ class VisualSampleEntry(codingname) extends SampleEntry (codingname){
 	CleanApertureBox			clap;		// optional
 	PixelAspectRatioBox		pasp;		// optional
 }
-
 */
 public partial class VisualSampleEntry : SampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class VisualSampleEntry(codingname) extends SampleEntry (codingname){
+	unsigned int(16) pre_defined = 0;
+	const unsigned int(16) reserved = 0;
+	unsigned int(32)[3]	pre_defined = 0;
+	unsigned int(16)	width;
+	unsigned int(16)	height;
+	template unsigned int(32)	horizresolution = 0x00480000;	// 72 dpi
+	template unsigned int(32)	vertresolution  = 0x00480000;	// 72 dpi
+	const unsigned int(32)	reserved = 0;
+	template unsigned int(16)	frame_count = 1;
+	uint(8)[32]	compressorname;
+	template unsigned int(16)	depth = 0x0018;
+	int(16)	color_table_id = -1; // pre_defined in ISOBMFF; QuickTime's color table ID
+	// QuickTime: an ID of 0 puts the color table of a depth of 8 bits or less right here
+	if (color_table_id == 0 && depth <= 8) {
+		QuickTimeColorTable() colorTable;
+	}
+	// other boxes from derived specifications
+	CleanApertureBox			clap;		// optional
+	PixelAspectRatioBox		pasp;		// optional
+}"; } }
 	public override string DisplayName { get { return "VisualSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "stsd" }); }
@@ -42,7 +63,7 @@ public partial class VisualSampleEntry : SampleEntry
 	protected ushort reserved = 0; 
 	public ushort Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-	protected uint[] pre_defined0 = []; 
+	protected uint[] pre_defined0 = new uint[3]; 
 	public uint[] PreDefined0 { get { return this.pre_defined0; } set { this.pre_defined0 = value; } }
 
 	protected ushort width; 
@@ -63,7 +84,7 @@ public partial class VisualSampleEntry : SampleEntry
 	protected ushort frame_count = 1; 
 	public ushort FrameCount { get { return this.frame_count; } set { this.frame_count = value; } }
 
-	protected byte[] compressorname; 
+	protected byte[] compressorname = new byte[32]; 
 	public byte[] Compressorname { get { return this.compressorname; } set { this.compressorname = value; } }
 
 	protected ushort depth = 0x0018; 
@@ -168,32 +189,32 @@ public partial class VisualSampleEntry : SampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("pre_defined", 16, this.pre_defined); 
-		boxSize += builder.Field("reserved", 16, this.reserved); 
-		boxSize += builder.Field("pre_defined0", 3 * 32, this.pre_defined0); 
-		boxSize += builder.Field("width", 16, this.width); 
-		boxSize += builder.Field("height", 16, this.height); 
-		boxSize += builder.Field("horizresolution", 32, this.horizresolution); // 72 dpi
-		boxSize += builder.Field("vertresolution", 32, this.vertresolution); // 72 dpi
-		boxSize += builder.Field("reserved0", 32, this.reserved0); 
-		boxSize += builder.Field("frame_count", 16, this.frame_count); 
-		boxSize += builder.Field("compressorname", 32 * 8, this.compressorname); 
-		boxSize += builder.Field("depth", 16, this.depth); 
-		boxSize += builder.Field("color_table_id", 16, this.color_table_id); // pre_defined in ISOBMFF; QuickTime's color table ID
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("pre_defined", 16, this.pre_defined); 
+		boxSize += tracer.Field("reserved", 16, this.reserved); 
+		boxSize += tracer.Field("pre_defined0", 3 * 32, this.pre_defined0); 
+		boxSize += tracer.Field("width", 16, this.width); 
+		boxSize += tracer.Field("height", 16, this.height); 
+		boxSize += tracer.Field("horizresolution", 32, this.horizresolution); // 72 dpi
+		boxSize += tracer.Field("vertresolution", 32, this.vertresolution); // 72 dpi
+		boxSize += tracer.Field("reserved0", 32, this.reserved0); 
+		boxSize += tracer.Field("frame_count", 16, this.frame_count); 
+		boxSize += tracer.Field("compressorname", 32 * 8, this.compressorname); 
+		boxSize += tracer.Field("depth", 16, this.depth); 
+		boxSize += tracer.Field("color_table_id", 16, this.color_table_id); // pre_defined in ISOBMFF; QuickTime's color table ID
 		/*  QuickTime: an ID of 0 puts the color table of a depth of 8 bits or less right here */
 
 		if (color_table_id == 0 && depth <= 8)
 		{
-			boxSize += builder.Field("colorTable", IsoStream.CalculateClassSize(colorTable), this.colorTable); 
+			boxSize += tracer.Field("colorTable", IsoStream.CalculateClassSize(colorTable), this.colorTable); 
 		}
 		/*  other boxes from derived specifications */
-		// boxSize += builder.Field("clap", IsoStream.CalculateBoxSize(clap), this.clap); // optional
-		// boxSize += builder.Field("pasp", IsoStream.CalculateBoxSize(pasp), this.pasp); // optional
-		boxSize += builder.Children(this);
+		// boxSize += tracer.Field("clap", IsoStream.CalculateBoxSize(clap), this.clap); // optional
+		// boxSize += tracer.Field("pasp", IsoStream.CalculateBoxSize(pasp), this.pasp); // optional
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

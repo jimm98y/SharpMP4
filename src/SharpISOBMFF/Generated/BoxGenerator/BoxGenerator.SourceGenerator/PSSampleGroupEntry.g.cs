@@ -16,6 +16,14 @@ class PSSampleGroupEntry() extends VisualSampleGroupEntry ('pss1')
 */
 public partial class PSSampleGroupEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class PSSampleGroupEntry() extends VisualSampleGroupEntry ('pss1')
+{
+	unsigned int(1) sps_present;
+	unsigned int(1) pps_present;
+	unsigned int(1) aps_present;
+	bit(5) reserved = 0;
+}"; } }
 	public const string TYPE = "pss1";
 	public override string DisplayName { get { return "PSSampleGroupEntry"; } }
 
@@ -68,14 +76,14 @@ public partial class PSSampleGroupEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("sps_present", 1, this.sps_present); 
-		boxSize += builder.Field("pps_present", 1, this.pps_present); 
-		boxSize += builder.Field("aps_present", 1, this.aps_present); 
-		boxSize += builder.Field("reserved", 5, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("sps_present", 1, this.sps_present); 
+		boxSize += tracer.Field("pps_present", 1, this.pps_present); 
+		boxSize += tracer.Field("aps_present", 1, this.aps_present); 
+		boxSize += tracer.Field("reserved", 5, this.reserved); 
 		return boxSize;
 	}
 }

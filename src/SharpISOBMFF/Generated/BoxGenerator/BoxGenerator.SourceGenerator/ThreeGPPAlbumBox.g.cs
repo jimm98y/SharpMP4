@@ -11,10 +11,17 @@ aligned(8) class ThreeGPPAlbumBox() extends FullBox('albm', version = 0, 0) {
 	unsigned int(5)[3] language;
 	string value;
 	unsigned int(8) trackNumber; // optional
-} 
+}
 */
 public partial class ThreeGPPAlbumBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ThreeGPPAlbumBox() extends FullBox('albm', version = 0, 0) {
+	bit(1) reserved = 0;
+	unsigned int(5)[3] language;
+	string value;
+	unsigned int(8) trackNumber; // optional
+}"; } }
 	public const string TYPE = "albm";
 	public override string DisplayName { get { return "ThreeGPPAlbumBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -24,7 +31,7 @@ public partial class ThreeGPPAlbumBox : FullBox
 	protected bool reserved = false; 
 	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-	protected string language; 
+	protected string language = "und"; 
 	public string Language { get { return this.language; } set { this.language = value; } }
 
 	protected BinaryUTF8String value; 
@@ -72,14 +79,14 @@ public partial class ThreeGPPAlbumBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 1, this.reserved); 
-		boxSize += builder.Field("language", 15, this.language); 
-		boxSize += builder.Field("value", IsoStream.CalculateStringSize(value), this.value); 
-		if (this.trackNumberPresent) boxSize += builder.Field("trackNumber", 8, this.trackNumber); // optional
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 1, this.reserved); 
+		boxSize += tracer.Field("language", 15, this.language); 
+		boxSize += tracer.Field("value", IsoStream.CalculateStringSize(value), this.value); 
+		if (this.trackNumberPresent) boxSize += tracer.Field("trackNumber", 8, this.trackNumber); // optional
 		return boxSize;
 	}
 }

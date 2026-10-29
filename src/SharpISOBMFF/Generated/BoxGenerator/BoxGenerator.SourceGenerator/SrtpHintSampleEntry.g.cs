@@ -14,6 +14,12 @@ class SrtpHintSampleEntry() extends HintSampleEntry ('srtp') {
 */
 public partial class SrtpHintSampleEntry : HintSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class SrtpHintSampleEntry() extends HintSampleEntry ('srtp') {
+	uint(16)		hinttrackversion = 1;
+	uint(16)		highestcompatibleversion = 1;
+	uint(32)		maxpacketsize;
+}"; } }
 	public const string TYPE = "srtp";
 	public override string DisplayName { get { return "SrtpHintSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -66,14 +72,14 @@ public partial class SrtpHintSampleEntry : HintSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("hinttrackversion", 16, this.hinttrackversion); 
-		boxSize += builder.Field("highestcompatibleversion", 16, this.highestcompatibleversion); 
-		boxSize += builder.Field("maxpacketsize", 32, this.maxpacketsize); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("hinttrackversion", 16, this.hinttrackversion); 
+		boxSize += tracer.Field("highestcompatibleversion", 16, this.highestcompatibleversion); 
+		boxSize += tracer.Field("maxpacketsize", 32, this.maxpacketsize); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

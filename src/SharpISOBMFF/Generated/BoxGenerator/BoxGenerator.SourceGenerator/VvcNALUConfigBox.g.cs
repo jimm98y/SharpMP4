@@ -13,6 +13,11 @@ class VvcNALUConfigBox extends FullBox('vvnC',version=0,flags) {
 */
 public partial class VvcNALUConfigBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class VvcNALUConfigBox extends FullBox('vvnC',version=0,flags) {
+	unsigned int(6) reserved=0;
+	unsigned int(2) LengthSizeMinusOne;
+}"; } }
 	public const string TYPE = "vvnC";
 	public override string DisplayName { get { return "VvcNALUConfigBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -56,12 +61,12 @@ public partial class VvcNALUConfigBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 6, this.reserved); 
-		boxSize += builder.Field("LengthSizeMinusOne", 2, this.LengthSizeMinusOne); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 6, this.reserved); 
+		boxSize += tracer.Field("LengthSizeMinusOne", 2, this.LengthSizeMinusOne); 
 		return boxSize;
 	}
 }

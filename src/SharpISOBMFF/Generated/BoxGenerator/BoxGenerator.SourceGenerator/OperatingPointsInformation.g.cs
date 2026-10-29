@@ -12,6 +12,10 @@ class OperatingPointsInformation extends VisualSampleGroupEntry ('oinf') {
 */
 public partial class OperatingPointsInformation : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class OperatingPointsInformation extends VisualSampleGroupEntry ('oinf') {
+	OperatingPointsRecord oinf;
+}"; } }
 	public const string TYPE = "oinf";
 	public override string DisplayName { get { return "OperatingPointsInformation"; } }
 
@@ -46,11 +50,11 @@ public partial class OperatingPointsInformation : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("oinf", IsoStream.CalculateClassSize(oinf), this.oinf); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("oinf", IsoStream.CalculateClassSize(oinf), this.oinf); 
 		return boxSize;
 	}
 }

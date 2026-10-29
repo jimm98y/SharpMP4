@@ -21,6 +21,19 @@ aligned(8) class ARESBox() extends Box('ARES') {
 */
 public partial class ARESBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// Avid's resolution, as FFmpeg's mov_write_avid_tag writes it and mov_read_ares reads it, then padding
+aligned(8) class ARESBox() extends Box('ARES') {
+	unsigned int(32) tag;
+	unsigned int(32) version;
+	unsigned int(32) compressionId;
+	unsigned int(32) fieldWidth;
+	unsigned int(32) fieldHeight;
+	unsigned int(32) numFields;
+	unsigned int(32) numBlackLines;
+	unsigned int(32) videoFormat;
+	bit(8) reserved[];
+}"; } }
 	public const string TYPE = "ARES";
 	public override string DisplayName { get { return "ARESBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -51,7 +64,7 @@ public partial class ARESBox : Box
 	protected uint videoFormat; 
 	public uint VideoFormat { get { return this.videoFormat; } set { this.videoFormat = value; } }
 
-	protected byte[] reserved; 
+	protected byte[] reserved = []; 
 	public byte[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
 	public ARESBox(): base(IsoStream.FromFourCC("ARES"))
@@ -106,19 +119,19 @@ public partial class ARESBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("tag", 32, this.tag); 
-		boxSize += builder.Field("version", 32, this.version); 
-		boxSize += builder.Field("compressionId", 32, this.compressionId); 
-		boxSize += builder.Field("fieldWidth", 32, this.fieldWidth); 
-		boxSize += builder.Field("fieldHeight", 32, this.fieldHeight); 
-		boxSize += builder.Field("numFields", 32, this.numFields); 
-		boxSize += builder.Field("numBlackLines", 32, this.numBlackLines); 
-		boxSize += builder.Field("videoFormat", 32, this.videoFormat); 
-		boxSize += builder.Field("reserved", ((ulong)reserved.Length * 8), this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("tag", 32, this.tag); 
+		boxSize += tracer.Field("version", 32, this.version); 
+		boxSize += tracer.Field("compressionId", 32, this.compressionId); 
+		boxSize += tracer.Field("fieldWidth", 32, this.fieldWidth); 
+		boxSize += tracer.Field("fieldHeight", 32, this.fieldHeight); 
+		boxSize += tracer.Field("numFields", 32, this.numFields); 
+		boxSize += tracer.Field("numBlackLines", 32, this.numBlackLines); 
+		boxSize += tracer.Field("videoFormat", 32, this.videoFormat); 
+		boxSize += tracer.Field("reserved", ((ulong)reserved.Length * 8), this.reserved); 
 		return boxSize;
 	}
 }

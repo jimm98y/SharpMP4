@@ -7,13 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AppleDataReferenceBox() extends FullBox('rdrf') {
- unsigned int(32) dataReferenceType;
- unsigned int(32) count;
- unsigned int(8) dataReference[count];
- } 
+	unsigned int(32) dataReferenceType;
+	unsigned int(32) count;
+	unsigned int(8) dataReference[count];
+}
 */
 public partial class AppleDataReferenceBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AppleDataReferenceBox() extends FullBox('rdrf') {
+	unsigned int(32) dataReferenceType;
+	unsigned int(32) count;
+	unsigned int(8) dataReference[count];
+}"; } }
 	public const string TYPE = "rdrf";
 	public override string DisplayName { get { return "AppleDataReferenceBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -26,7 +32,7 @@ public partial class AppleDataReferenceBox : FullBox
 	protected uint count; 
 	public uint Count { get { return this.count; } set { this.count = value; } }
 
-	protected byte[] dataReference; 
+	protected byte[] dataReference = []; 
 	public byte[] DataReference { get { return this.dataReference; } set { this.dataReference = value; } }
 
 	public AppleDataReferenceBox(): base(IsoStream.FromFourCC("rdrf"))
@@ -63,13 +69,13 @@ public partial class AppleDataReferenceBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("dataReferenceType", 32, this.dataReferenceType); 
-		boxSize += builder.Field("count", 32, this.count); 
-		boxSize += builder.Field("dataReference", ((ulong)(count) * 8), this.dataReference); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("dataReferenceType", 32, this.dataReferenceType); 
+		boxSize += tracer.Field("count", 32, this.count); 
+		boxSize += tracer.Field("dataReference", ((ulong)(count) * 8), this.dataReference); 
 		return boxSize;
 	}
 }

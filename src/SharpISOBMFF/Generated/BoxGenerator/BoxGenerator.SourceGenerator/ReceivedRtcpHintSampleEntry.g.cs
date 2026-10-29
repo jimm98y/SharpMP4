@@ -14,6 +14,12 @@ class ReceivedRtcpHintSampleEntry() extends HintSampleEntry ('rtcp') {
 */
 public partial class ReceivedRtcpHintSampleEntry : HintSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ReceivedRtcpHintSampleEntry() extends HintSampleEntry ('rtcp') {
+	uint(16)		hinttrackversion = 1;
+	uint(16)		highestcompatibleversion = 1;
+	uint(32)		maxpacketsize;
+}"; } }
 	public const string TYPE = "rtcp";
 	public override string DisplayName { get { return "ReceivedRtcpHintSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -63,13 +69,13 @@ public partial class ReceivedRtcpHintSampleEntry : HintSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("hinttrackversion", 16, this.hinttrackversion); 
-		boxSize += builder.Field("highestcompatibleversion", 16, this.highestcompatibleversion); 
-		boxSize += builder.Field("maxpacketsize", 32, this.maxpacketsize); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("hinttrackversion", 16, this.hinttrackversion); 
+		boxSize += tracer.Field("highestcompatibleversion", 16, this.highestcompatibleversion); 
+		boxSize += tracer.Field("maxpacketsize", 32, this.maxpacketsize); 
 		return boxSize;
 	}
 }

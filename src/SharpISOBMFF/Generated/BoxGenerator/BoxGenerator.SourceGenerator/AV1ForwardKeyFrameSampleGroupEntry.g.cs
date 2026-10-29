@@ -7,14 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 class AV1ForwardKeyFrameSampleGroupEntry
-extends VisualSampleGroupEntry('av1f')
+	extends VisualSampleGroupEntry('av1f')
 {
-  unsigned int(8) fwd_distance;
+	unsigned int(8) fwd_distance;
 }
-
 */
 public partial class AV1ForwardKeyFrameSampleGroupEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AV1ForwardKeyFrameSampleGroupEntry
+	extends VisualSampleGroupEntry('av1f')
+{
+	unsigned int(8) fwd_distance;
+}"; } }
 	public const string TYPE = "av1f";
 	public override string DisplayName { get { return "AV1ForwardKeyFrameSampleGroupEntry"; } }
 
@@ -49,11 +54,11 @@ public partial class AV1ForwardKeyFrameSampleGroupEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("fwd_distance", 8, this.fwd_distance); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("fwd_distance", 8, this.fwd_distance); 
 		return boxSize;
 	}
 }

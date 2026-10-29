@@ -24,6 +24,22 @@ class CompositionToDecodeBox extends FullBox('cslg', version, 0) {
 */
 public partial class CompositionToDecodeBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class CompositionToDecodeBox extends FullBox('cslg', version, 0) {
+	if (version==0) {
+		signed int(32)	compositionToDTSShift;
+		signed int(32)	leastDecodeToDisplayDelta;
+		signed int(32)	greatestDecodeToDisplayDelta;
+		signed int(32)	compositionStartTime;
+		signed int(32)	compositionEndTime;
+	} else {
+		signed int(64)	compositionToDTSShift;
+		signed int(64)	leastDecodeToDisplayDelta;
+		signed int(64)	greatestDecodeToDisplayDelta;
+		signed int(64)	compositionStartTime;
+		signed int(64)	compositionEndTime;
+	}
+}"; } }
 	public const string TYPE = "cslg";
 	public override string DisplayName { get { return "CompositionToDecodeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -124,27 +140,27 @@ public partial class CompositionToDecodeBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if (version==0)
 		{
-			boxSize += builder.Field("compositionToDTSShift", 32, this.compositionToDTSShift); 
-			boxSize += builder.Field("leastDecodeToDisplayDelta", 32, this.leastDecodeToDisplayDelta); 
-			boxSize += builder.Field("greatestDecodeToDisplayDelta", 32, this.greatestDecodeToDisplayDelta); 
-			boxSize += builder.Field("compositionStartTime", 32, this.compositionStartTime); 
-			boxSize += builder.Field("compositionEndTime", 32, this.compositionEndTime); 
+			boxSize += tracer.Field("compositionToDTSShift", 32, this.compositionToDTSShift); 
+			boxSize += tracer.Field("leastDecodeToDisplayDelta", 32, this.leastDecodeToDisplayDelta); 
+			boxSize += tracer.Field("greatestDecodeToDisplayDelta", 32, this.greatestDecodeToDisplayDelta); 
+			boxSize += tracer.Field("compositionStartTime", 32, this.compositionStartTime); 
+			boxSize += tracer.Field("compositionEndTime", 32, this.compositionEndTime); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("compositionToDTSShift", 64, this.compositionToDTSShift); 
-			boxSize += builder.Field("leastDecodeToDisplayDelta", 64, this.leastDecodeToDisplayDelta); 
-			boxSize += builder.Field("greatestDecodeToDisplayDelta", 64, this.greatestDecodeToDisplayDelta); 
-			boxSize += builder.Field("compositionStartTime", 64, this.compositionStartTime); 
-			boxSize += builder.Field("compositionEndTime", 64, this.compositionEndTime); 
+			boxSize += tracer.Field("compositionToDTSShift", 64, this.compositionToDTSShift); 
+			boxSize += tracer.Field("leastDecodeToDisplayDelta", 64, this.leastDecodeToDisplayDelta); 
+			boxSize += tracer.Field("greatestDecodeToDisplayDelta", 64, this.greatestDecodeToDisplayDelta); 
+			boxSize += tracer.Field("compositionStartTime", 64, this.compositionStartTime); 
+			boxSize += tracer.Field("compositionEndTime", 64, this.compositionEndTime); 
 		}
 		return boxSize;
 	}

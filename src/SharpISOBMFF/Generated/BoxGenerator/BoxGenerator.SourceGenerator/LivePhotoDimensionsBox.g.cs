@@ -7,13 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class LivePhotoDimensionsBox() extends Box('dims') {
- unsigned int(32) width;
- unsigned int(32) height;
+	unsigned int(32) width;
+	unsigned int(32) height;
 }
-
 */
 public partial class LivePhotoDimensionsBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class LivePhotoDimensionsBox() extends Box('dims') {
+	unsigned int(32) width;
+	unsigned int(32) height;
+}"; } }
 	public const string TYPE = "dims";
 	public override string DisplayName { get { return "LivePhotoDimensionsBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -57,12 +61,12 @@ public partial class LivePhotoDimensionsBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("width", 32, this.width); 
-		boxSize += builder.Field("height", 32, this.height); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("width", 32, this.width); 
+		boxSize += tracer.Field("height", 32, this.height); 
 		return boxSize;
 	}
 }

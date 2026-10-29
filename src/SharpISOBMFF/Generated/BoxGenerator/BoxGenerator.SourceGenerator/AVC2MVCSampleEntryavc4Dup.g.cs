@@ -20,6 +20,18 @@ class AVC2MVCSampleEntry() extends AVC2SampleEntry ('avc4') {
 */
 public partial class AVC2MVCSampleEntryavc4Dup : AVC2SampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AVC2MVCSampleEntry() extends AVC2SampleEntry ('avc4') {
+	ViewScalabilityInformationSEIBox	scalability;	// optional
+	ViewIdentifierBox		view_identifiers;	// optional
+	MVCConfigurationBox	mvcconfig;		// optional
+	MVCViewPriorityAssignmentBox	view_priority_method;	// optional
+	IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
+	ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
+	MVCDConfigurationBox	mvcdconfig;	// optional
+	MVDScalabilityInformationSEIBox	mvdscalinfosei;	// optional
+	A3DConfigurationBox	a3dconfig;	// optional
+}"; } }
 	public const string TYPE = "avc4";
 	public override string DisplayName { get { return "AVC2MVCSampleEntryavc4Dup"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -90,20 +102,20 @@ public partial class AVC2MVCSampleEntryavc4Dup : AVC2SampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("scalability", IsoStream.CalculateBoxSize(scalability), this.scalability); // optional
-		// boxSize += builder.Field("view_identifiers", IsoStream.CalculateBoxSize(view_identifiers), this.view_identifiers); // optional
-		// boxSize += builder.Field("mvcconfig", IsoStream.CalculateBoxSize(mvcconfig), this.mvcconfig); // optional
-		// boxSize += builder.Field("view_priority_method", IsoStream.CalculateBoxSize(view_priority_method), this.view_priority_method); // optional
-		// boxSize += builder.Field("intrinsic_camera_params", IsoStream.CalculateBoxSize(intrinsic_camera_params), this.intrinsic_camera_params); // optional
-		// boxSize += builder.Field("extrinsic_camera_params", IsoStream.CalculateBoxSize(extrinsic_camera_params), this.extrinsic_camera_params); // optional
-		// boxSize += builder.Field("mvcdconfig", IsoStream.CalculateBoxSize(mvcdconfig), this.mvcdconfig); // optional
-		// boxSize += builder.Field("mvdscalinfosei", IsoStream.CalculateBoxSize(mvdscalinfosei), this.mvdscalinfosei); // optional
-		// boxSize += builder.Field("a3dconfig", IsoStream.CalculateBoxSize(a3dconfig), this.a3dconfig); // optional
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("scalability", IsoStream.CalculateBoxSize(scalability), this.scalability); // optional
+		// boxSize += tracer.Field("view_identifiers", IsoStream.CalculateBoxSize(view_identifiers), this.view_identifiers); // optional
+		// boxSize += tracer.Field("mvcconfig", IsoStream.CalculateBoxSize(mvcconfig), this.mvcconfig); // optional
+		// boxSize += tracer.Field("view_priority_method", IsoStream.CalculateBoxSize(view_priority_method), this.view_priority_method); // optional
+		// boxSize += tracer.Field("intrinsic_camera_params", IsoStream.CalculateBoxSize(intrinsic_camera_params), this.intrinsic_camera_params); // optional
+		// boxSize += tracer.Field("extrinsic_camera_params", IsoStream.CalculateBoxSize(extrinsic_camera_params), this.extrinsic_camera_params); // optional
+		// boxSize += tracer.Field("mvcdconfig", IsoStream.CalculateBoxSize(mvcdconfig), this.mvcdconfig); // optional
+		// boxSize += tracer.Field("mvdscalinfosei", IsoStream.CalculateBoxSize(mvdscalinfosei), this.mvdscalinfosei); // optional
+		// boxSize += tracer.Field("a3dconfig", IsoStream.CalculateBoxSize(a3dconfig), this.a3dconfig); // optional
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

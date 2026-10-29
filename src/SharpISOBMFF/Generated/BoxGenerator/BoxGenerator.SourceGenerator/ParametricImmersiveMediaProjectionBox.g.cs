@@ -6,13 +6,18 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class ParametricImmersiveMediaProjectionBox extends 
-FullBox('prim', 0, 0) { 
-// fields reserved for future use 
-} 
+aligned(8) class ParametricImmersiveMediaProjectionBox extends
+	FullBox('prim', 0, 0) {
+	// fields reserved for future use
+}
 */
 public partial class ParametricImmersiveMediaProjectionBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ParametricImmersiveMediaProjectionBox extends
+	FullBox('prim', 0, 0) {
+	// fields reserved for future use
+}"; } }
 	public const string TYPE = "prim";
 	public override string DisplayName { get { return "ParametricImmersiveMediaProjectionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -27,7 +32,7 @@ public partial class ParametricImmersiveMediaProjectionBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		/*  fields reserved for future use  */
+		/*  fields reserved for future use */
 		return boxSize;
 	}
 
@@ -35,7 +40,7 @@ public partial class ParametricImmersiveMediaProjectionBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		/*  fields reserved for future use  */
+		/*  fields reserved for future use */
 		return boxSize;
 	}
 
@@ -43,15 +48,15 @@ public partial class ParametricImmersiveMediaProjectionBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		/*  fields reserved for future use  */
+		/*  fields reserved for future use */
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		/*  fields reserved for future use  */
+		boxSize += base.Trace(tracer);
+		/*  fields reserved for future use */
 		return boxSize;
 	}
 }

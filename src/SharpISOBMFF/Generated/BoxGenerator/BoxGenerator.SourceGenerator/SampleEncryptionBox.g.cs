@@ -8,12 +8,18 @@ namespace SharpISOBMFF
 /*
 aligned(8) class SampleEncryptionBox extends FullBox('senc', version, flags)
 {
-   unsigned int(32)  sample_count;
-   unsigned int(8) sample_data[]; // each sample's IV and subsamples (23001-7 7.2), whose IV size is the track's - its 'tenc', or the sample's 'seig' group - and not in the box: SharpMP4's SampleEncryptionReader reads them
+	unsigned int(32)  sample_count;
+	unsigned int(8) sample_data[]; // each sample's IV and subsamples (23001-7 7.2), whose IV size is the track's - its 'tenc', or the sample's 'seig' group - and not in the box: SharpMP4's SampleEncryptionReader reads them
 }
 */
 public partial class SampleEncryptionBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SampleEncryptionBox extends FullBox('senc', version, flags)
+{
+	unsigned int(32)  sample_count;
+	unsigned int(8) sample_data[]; // each sample's IV and subsamples (23001-7 7.2), whose IV size is the track's - its 'tenc', or the sample's 'seig' group - and not in the box: SharpMP4's SampleEncryptionReader reads them
+}"; } }
 	public const string TYPE = "senc";
 	public override string DisplayName { get { return "SampleEncryptionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -23,7 +29,7 @@ public partial class SampleEncryptionBox : FullBox
 	protected uint sample_count; 
 	public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
 
-	protected byte[] sample_data;  //  each sample's IV and subsamples (23001-7 7.2), whose IV size is the track's - its 'tenc', or the sample's 'seig' group - and not in the box: SharpMP4's SampleEncryptionReader reads them
+	protected byte[] sample_data = [];  //  each sample's IV and subsamples (23001-7 7.2), whose IV size is the track's - its 'tenc', or the sample's 'seig' group - and not in the box: SharpMP4's SampleEncryptionReader reads them
 	public byte[] SampleData { get { return this.sample_data; } set { this.sample_data = value; } }
 
 	public SampleEncryptionBox(byte version = 0, uint flags = 0): base(IsoStream.FromFourCC("senc"), version, flags)
@@ -57,12 +63,12 @@ public partial class SampleEncryptionBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("sample_count", 32, this.sample_count); 
-		boxSize += builder.Field("sample_data", ((ulong)sample_data.Length * 8), this.sample_data); // each sample's IV and subsamples (23001-7 7.2), whose IV size is the track's - its 'tenc', or the sample's 'seig' group - and not in the box: SharpMP4's SampleEncryptionReader reads them
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("sample_count", 32, this.sample_count); 
+		boxSize += tracer.Field("sample_data", ((ulong)sample_data.Length * 8), this.sample_data); // each sample's IV and subsamples (23001-7 7.2), whose IV size is the track's - its 'tenc', or the sample's 'seig' group - and not in the box: SharpMP4's SampleEncryptionReader reads them
 		return boxSize;
 	}
 }

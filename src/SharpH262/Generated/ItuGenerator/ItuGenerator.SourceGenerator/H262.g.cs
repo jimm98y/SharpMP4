@@ -13,24 +13,24 @@ namespace SharpH262
 
     /*
 sequence_header() {
-sequence_header_code u(32)
-horizontal_size_value u(12)
-vertical_size_value u(12)
-aspect_ratio_information u(4)
-frame_rate_code u(4)
-bit_rate_value u(18)
-marker_bit u(1)
-vbv_buffer_size_value u(10)
-constrained_parameters_flag u(1)
-load_intra_quantiser_matrix u(1)
-if ( load_intra_quantiser_matrix )
-for ( i = 0; i < 64; i++ )
-intra_quantiser_matrix[ i ] u(8)
-load_non_intra_quantiser_matrix u(1)
-if ( load_non_intra_quantiser_matrix )
-for ( i = 0; i < 64; i++ )
-non_intra_quantiser_matrix[ i ] u(8)
-next_start_code()
+    sequence_header_code u(32)
+    horizontal_size_value u(12)
+    vertical_size_value u(12)
+    aspect_ratio_information u(4)
+    frame_rate_code u(4)
+    bit_rate_value u(18)
+    marker_bit u(1)
+    vbv_buffer_size_value u(10)
+    constrained_parameters_flag u(1)
+    load_intra_quantiser_matrix u(1)
+    if ( load_intra_quantiser_matrix )
+        for ( i = 0; i < 64; i++ )
+        intra_quantiser_matrix[ i ] u(8)
+    load_non_intra_quantiser_matrix u(1)
+    if ( load_non_intra_quantiser_matrix )
+        for ( i = 0; i < 64; i++ )
+        non_intra_quantiser_matrix[ i ] u(8)
+    next_start_code()
 }
     */
     public class SequenceHeader : IItuSerializable
@@ -66,6 +66,28 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"sequence_header() {
+    sequence_header_code u(32)
+    horizontal_size_value u(12)
+    vertical_size_value u(12)
+    aspect_ratio_information u(4)
+    frame_rate_code u(4)
+    bit_rate_value u(18)
+    marker_bit u(1)
+    vbv_buffer_size_value u(10)
+    constrained_parameters_flag u(1)
+    load_intra_quantiser_matrix u(1)
+    if ( load_intra_quantiser_matrix )
+        for ( i = 0; i < 64; i++ )
+        intra_quantiser_matrix[ i ] u(8)
+    load_non_intra_quantiser_matrix u(1)
+    if ( load_non_intra_quantiser_matrix )
+        for ( i = 0; i < 64; i++ )
+        non_intra_quantiser_matrix[ i ] u(8)
+    next_start_code()
+}"; } }
 
          public SequenceHeader()
          { 
@@ -165,42 +187,40 @@ next_start_code()
     }
 
     /*
-
-
 extension_data( after ) {
-if ( one_extension ) {
-extension_start_code u(32)
-if (after == 0) { /* follows sequence_extension() *//*
-if ( extension_follows( sequence_display_extension ) )
-sequence_display_extension()
-else if ( extension_follows( sequence_scalable_extension ) )
-sequence_scalable_extension()
-else
-while ( before_start_code( reserved_extension_data_byte ) )
-reserved_extension_data_byte u(8)
-}
-/* NOTE – i never takes the value 1 because extension_data()
-never follows a group_of_pictures_header() *//*
-if (after == 2) { /* follows picture_coding_extension() *//*
-if ( extension_follows( quant_matrix_extension ) )
-quant_matrix_extension()
-else if ( extension_follows( copyright_extension ) )
-copyright_extension()
-else if ( extension_follows( picture_display_extension ) )
-picture_display_extension()
-else if ( extension_follows( picture_spatial_scalable_extension ) )
-picture_spatial_scalable_extension()
-else if ( extension_follows( picture_temporal_scalable_extension ) )
-picture_temporal_scalable_extension()
-else if ( extension_follows( camera_parameters_extension ) )
-camera_parameters_extension()
-else if ( extension_follows( itu_t_extension ) )
-itu_t_extension()
-else
-while ( before_start_code( reserved_extension_data_byte ) )
-reserved_extension_data_byte u(8)
-}
-}
+    if ( one_extension ) {
+        extension_start_code u(32)
+        if (after == 0) { /* follows sequence_extension() *//*
+            if ( extension_follows( sequence_display_extension ) )
+                sequence_display_extension()
+            else if ( extension_follows( sequence_scalable_extension ) )
+                sequence_scalable_extension()
+            else
+                while ( before_start_code( reserved_extension_data_byte ) )
+                    reserved_extension_data_byte u(8)
+        }
+        /* NOTE – i never takes the value 1 because extension_data()
+        never follows a group_of_pictures_header() *//*
+        if (after == 2) { /* follows picture_coding_extension() *//*
+            if ( extension_follows( quant_matrix_extension ) )
+                quant_matrix_extension()
+            else if ( extension_follows( copyright_extension ) )
+                copyright_extension()
+            else if ( extension_follows( picture_display_extension ) )
+                picture_display_extension()
+            else if ( extension_follows( picture_spatial_scalable_extension ) )
+                picture_spatial_scalable_extension()
+            else if ( extension_follows( picture_temporal_scalable_extension ) )
+                picture_temporal_scalable_extension()
+            else if ( extension_follows( camera_parameters_extension ) )
+                camera_parameters_extension()
+            else if ( extension_follows( itu_t_extension ) )
+                itu_t_extension()
+            else
+                while ( before_start_code( reserved_extension_data_byte ) )
+                    reserved_extension_data_byte u(8)
+        }
+    }
 }
     */
     public class ExtensionData : IItuSerializable
@@ -232,6 +252,43 @@ reserved_extension_data_byte u(8)
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"extension_data( after ) {
+    if ( one_extension ) {
+        extension_start_code u(32)
+        if (after == 0) { /* follows sequence_extension() */
+            if ( extension_follows( sequence_display_extension ) )
+                sequence_display_extension()
+            else if ( extension_follows( sequence_scalable_extension ) )
+                sequence_scalable_extension()
+            else
+                while ( before_start_code( reserved_extension_data_byte ) )
+                    reserved_extension_data_byte u(8)
+        }
+        /* NOTE – i never takes the value 1 because extension_data()
+        never follows a group_of_pictures_header() */
+        if (after == 2) { /* follows picture_coding_extension() */
+            if ( extension_follows( quant_matrix_extension ) )
+                quant_matrix_extension()
+            else if ( extension_follows( copyright_extension ) )
+                copyright_extension()
+            else if ( extension_follows( picture_display_extension ) )
+                picture_display_extension()
+            else if ( extension_follows( picture_spatial_scalable_extension ) )
+                picture_spatial_scalable_extension()
+            else if ( extension_follows( picture_temporal_scalable_extension ) )
+                picture_temporal_scalable_extension()
+            else if ( extension_follows( camera_parameters_extension ) )
+                camera_parameters_extension()
+            else if ( extension_follows( itu_t_extension ) )
+                itu_t_extension()
+            else
+                while ( before_start_code( reserved_extension_data_byte ) )
+                    reserved_extension_data_byte u(8)
+        }
+    }
+}"; } }
 
          public ExtensionData(uint after)
          { 
@@ -279,7 +336,7 @@ reserved_extension_data_byte u(8)
 					}
 				}
 /*  NOTE – i never takes the value 1 because extension_data()
-never follows a group_of_pictures_header()  */
+        never follows a group_of_pictures_header()  */
 
 
 				if (after == 2)
@@ -376,7 +433,7 @@ never follows a group_of_pictures_header()  */
 					}
 				}
 /*  NOTE – i never takes the value 1 because extension_data()
-never follows a group_of_pictures_header()  */
+        never follows a group_of_pictures_header()  */
 
 
 				if (after == 2)
@@ -431,14 +488,12 @@ never follows a group_of_pictures_header()  */
     }
 
     /*
-
-
 user_data() {
-user_data_start_code u(32)
-while ( before_start_code( user_data ) ) {
-user_data u(8)
-}
-next_start_code()
+    user_data_start_code u(32)
+    while ( before_start_code( user_data ) ) {
+        user_data u(8)
+    }
+    next_start_code()
 }
     */
     public class UserData : IItuSerializable
@@ -452,6 +507,15 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"user_data() {
+    user_data_start_code u(32)
+    while ( before_start_code( user_data ) ) {
+        user_data u(8)
+    }
+    next_start_code()
+}"; } }
 
          public UserData()
          { 
@@ -505,23 +569,21 @@ next_start_code()
     }
 
     /*
-
-
 sequence_extension() {
-extension_start_code u(32)
-extension_start_code_identifier u(4)
-profile_and_level_indication u(8)
-progressive_sequence u(1)
-chroma_format u(2)
-horizontal_size_extension u(2)
-vertical_size_extension u(2)
-bit_rate_extension u(12)
-marker_bit u(1)
-vbv_buffer_size_extension u(8)
-low_delay u(1)
-frame_rate_extension_n u(2)
-frame_rate_extension_d u(5)
-next_start_code()
+    extension_start_code u(32)
+    extension_start_code_identifier u(4)
+    profile_and_level_indication u(8)
+    progressive_sequence u(1)
+    chroma_format u(2)
+    horizontal_size_extension u(2)
+    vertical_size_extension u(2)
+    bit_rate_extension u(12)
+    marker_bit u(1)
+    vbv_buffer_size_extension u(8)
+    low_delay u(1)
+    frame_rate_extension_n u(2)
+    frame_rate_extension_d u(5)
+    next_start_code()
 }
     */
     public class SequenceExtension : IItuSerializable
@@ -557,6 +619,24 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"sequence_extension() {
+    extension_start_code u(32)
+    extension_start_code_identifier u(4)
+    profile_and_level_indication u(8)
+    progressive_sequence u(1)
+    chroma_format u(2)
+    horizontal_size_extension u(2)
+    vertical_size_extension u(2)
+    bit_rate_extension u(12)
+    marker_bit u(1)
+    vbv_buffer_size_extension u(8)
+    low_delay u(1)
+    frame_rate_extension_n u(2)
+    frame_rate_extension_d u(5)
+    next_start_code()
+}"; } }
 
          public SequenceExtension()
          { 
@@ -618,21 +698,19 @@ next_start_code()
     }
 
     /*
-
-
 sequence_display_extension() {
-extension_start_code_identifier u(4)
-video_format u(3)
-colour_description u(1)
-if ( colour_description ) {
-colour_primaries u(8)
-transfer_characteristics u(8)
-matrix_coefficients u(8)
-}
-display_horizontal_size u(14)
-marker_bit u(1)
-display_vertical_size u(14)
-next_start_code()
+    extension_start_code_identifier u(4)
+    video_format u(3)
+    colour_description u(1)
+    if ( colour_description ) {
+        colour_primaries u(8)
+        transfer_characteristics u(8)
+        matrix_coefficients u(8)
+    }
+    display_horizontal_size u(14)
+    marker_bit u(1)
+    display_vertical_size u(14)
+    next_start_code()
 }
     */
     public class SequenceDisplayExtension : IItuSerializable
@@ -660,6 +738,22 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"sequence_display_extension() {
+    extension_start_code_identifier u(4)
+    video_format u(3)
+    colour_description u(1)
+    if ( colour_description ) {
+        colour_primaries u(8)
+        transfer_characteristics u(8)
+        matrix_coefficients u(8)
+    }
+    display_horizontal_size u(14)
+    marker_bit u(1)
+    display_vertical_size u(14)
+    next_start_code()
+}"; } }
 
          public SequenceDisplayExtension()
          { 
@@ -721,29 +815,27 @@ next_start_code()
     }
 
     /*
-
-
 sequence_scalable_extension() {
-extension_start_code_identifier u(4)
-scalable_mode u(2)
-layer_id u(4)
-if (scalable_mode == 1) {
-lower_layer_prediction_horizontal_size u(14)
-marker_bit u(1)
-lower_layer_prediction_vertical_size u(14)
-horizontal_subsampling_factor_m u(5)
-horizontal_subsampling_factor_n u(5)
-vertical_subsampling_factor_m u(5)
-vertical_subsampling_factor_n u(5)
-}
-if ( scalable_mode == 3 ) {
-picture_mux_enable u(1)
-if ( picture_mux_enable )
-mux_to_progressive_sequence u(1)
-picture_mux_order u(3)
-picture_mux_factor u(3)
-}
-next_start_code()
+    extension_start_code_identifier u(4)
+    scalable_mode u(2)
+    layer_id u(4)
+    if (scalable_mode == 1) {
+        lower_layer_prediction_horizontal_size u(14)
+        marker_bit u(1)
+        lower_layer_prediction_vertical_size u(14)
+        horizontal_subsampling_factor_m u(5)
+        horizontal_subsampling_factor_n u(5)
+        vertical_subsampling_factor_m u(5)
+        vertical_subsampling_factor_n u(5)
+    }
+    if ( scalable_mode == 3 ) {
+        picture_mux_enable u(1)
+        if ( picture_mux_enable )
+            mux_to_progressive_sequence u(1)
+        picture_mux_order u(3)
+        picture_mux_factor u(3)
+    }
+    next_start_code()
 }
     */
     public class SequenceScalableExtension : IItuSerializable
@@ -781,6 +873,30 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"sequence_scalable_extension() {
+    extension_start_code_identifier u(4)
+    scalable_mode u(2)
+    layer_id u(4)
+    if (scalable_mode == 1) {
+        lower_layer_prediction_horizontal_size u(14)
+        marker_bit u(1)
+        lower_layer_prediction_vertical_size u(14)
+        horizontal_subsampling_factor_m u(5)
+        horizontal_subsampling_factor_n u(5)
+        vertical_subsampling_factor_m u(5)
+        vertical_subsampling_factor_n u(5)
+    }
+    if ( scalable_mode == 3 ) {
+        picture_mux_enable u(1)
+        if ( picture_mux_enable )
+            mux_to_progressive_sequence u(1)
+        picture_mux_order u(3)
+        picture_mux_factor u(3)
+    }
+    next_start_code()
+}"; } }
 
          public SequenceScalableExtension()
          { 
@@ -868,14 +984,12 @@ next_start_code()
     }
 
     /*
-
-
 group_of_pictures_header() {
-group_start_code u(32)
-time_code u(25)
-closed_gop u(1)
-broken_link u(1)
-next_start_code()
+    group_start_code u(32)
+    time_code u(25)
+    closed_gop u(1)
+    broken_link u(1)
+    next_start_code()
 }
     */
     public class GroupOfPicturesHeader : IItuSerializable
@@ -893,6 +1007,15 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"group_of_pictures_header() {
+    group_start_code u(32)
+    time_code u(25)
+    closed_gop u(1)
+    broken_link u(1)
+    next_start_code()
+}"; } }
 
          public GroupOfPicturesHeader()
          { 
@@ -936,27 +1059,25 @@ next_start_code()
     }
 
     /*
-
-
 picture_header() {
-picture_start_code u(32)
-temporal_reference u(10)
-picture_coding_type u(3)
-vbv_delay u(16)
-if ( picture_coding_type == 2 || picture_coding_type == 3) {
-full_pel_forward_vector u(1)
-forward_f_code u(3)
-}
-if ( picture_coding_type == 3 ) {
-full_pel_backward_vector u(1)
-backward_f_code u(3)
-}
-while ( next_bit_one( extra_bit_picture ) ) {
-extra_bit_picture /* with the value '1' *//* u(1)
-content_description_data() /* with every 9th bit having the value '1' *//*
-}
-last_extra_bit_picture /* with the value '0' *//* u(1)
-next_start_code()
+    picture_start_code u(32)
+    temporal_reference u(10)
+    picture_coding_type u(3)
+    vbv_delay u(16)
+    if ( picture_coding_type == 2 || picture_coding_type == 3) {
+        full_pel_forward_vector u(1)
+        forward_f_code u(3)
+    }
+    if ( picture_coding_type == 3 ) {
+        full_pel_backward_vector u(1)
+        backward_f_code u(3)
+    }
+    while ( next_bit_one( extra_bit_picture ) ) {
+        extra_bit_picture /* with the value '1' *//* u(1)
+        content_description_data() /* with every 9th bit having the value '1' *//*
+    }
+    last_extra_bit_picture /* with the value '0' *//* u(1)
+    next_start_code()
 }
     */
     public class PictureHeader : IItuSerializable
@@ -988,6 +1109,28 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"picture_header() {
+    picture_start_code u(32)
+    temporal_reference u(10)
+    picture_coding_type u(3)
+    vbv_delay u(16)
+    if ( picture_coding_type == 2 || picture_coding_type == 3) {
+        full_pel_forward_vector u(1)
+        forward_f_code u(3)
+    }
+    if ( picture_coding_type == 3 ) {
+        full_pel_backward_vector u(1)
+        backward_f_code u(3)
+    }
+    while ( next_bit_one( extra_bit_picture ) ) {
+        extra_bit_picture /* with the value '1' */ u(1)
+        content_description_data() /* with every 9th bit having the value '1' */
+    }
+    last_extra_bit_picture /* with the value '0' */ u(1)
+    next_start_code()
+}"; } }
 
          public PictureHeader()
          { 
@@ -1076,35 +1219,33 @@ next_start_code()
     }
 
     /*
-
-
 picture_coding_extension() {
-extension_start_code u(32)
-extension_start_code_identifier u(4)
-f_code[0][0] /* forward horizontal *//* u(4)
-f_code[0][1] /* forward vertical *//* u(4)
-f_code[1][0] /* backward horizontal *//* u(4)
-f_code[1][1] /* backward vertical *//* u(4)
-intra_dc_precision u(2)
-picture_structure u(2)
-top_field_first u(1)
-frame_pred_frame_dct u(1)
-concealment_motion_vectors u(1)
-q_scale_type u(1)
-intra_vlc_format u(1)
-alternate_scan u(1)
-repeat_first_field u(1)
-chroma_420_type u(1)
-progressive_frame u(1)
-composite_display_flag u(1)
-if ( composite_display_flag ) {
-v_axis u(1)
-field_sequence u(3)
-sub_carrier u(1)
-burst_amplitude u(7)
-sub_carrier_phase u(8)
-}
-next_start_code()
+    extension_start_code u(32)
+    extension_start_code_identifier u(4)
+    f_code[0][0] /* forward horizontal *//* u(4)
+    f_code[0][1] /* forward vertical *//* u(4)
+    f_code[1][0] /* backward horizontal *//* u(4)
+    f_code[1][1] /* backward vertical *//* u(4)
+    intra_dc_precision u(2)
+    picture_structure u(2)
+    top_field_first u(1)
+    frame_pred_frame_dct u(1)
+    concealment_motion_vectors u(1)
+    q_scale_type u(1)
+    intra_vlc_format u(1)
+    alternate_scan u(1)
+    repeat_first_field u(1)
+    chroma_420_type u(1)
+    progressive_frame u(1)
+    composite_display_flag u(1)
+    if ( composite_display_flag ) {
+        v_axis u(1)
+        field_sequence u(3)
+        sub_carrier u(1)
+        burst_amplitude u(7)
+        sub_carrier_phase u(8)
+    }
+    next_start_code()
 }
     */
     public class PictureCodingExtension : IItuSerializable
@@ -1154,6 +1295,36 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"picture_coding_extension() {
+    extension_start_code u(32)
+    extension_start_code_identifier u(4)
+    f_code[0][0] /* forward horizontal */ u(4)
+    f_code[0][1] /* forward vertical */ u(4)
+    f_code[1][0] /* backward horizontal */ u(4)
+    f_code[1][1] /* backward vertical */ u(4)
+    intra_dc_precision u(2)
+    picture_structure u(2)
+    top_field_first u(1)
+    frame_pred_frame_dct u(1)
+    concealment_motion_vectors u(1)
+    q_scale_type u(1)
+    intra_vlc_format u(1)
+    alternate_scan u(1)
+    repeat_first_field u(1)
+    chroma_420_type u(1)
+    progressive_frame u(1)
+    composite_display_flag u(1)
+    if ( composite_display_flag ) {
+        v_axis u(1)
+        field_sequence u(3)
+        sub_carrier u(1)
+        burst_amplitude u(7)
+        sub_carrier_phase u(8)
+    }
+    next_start_code()
+}"; } }
 
          public PictureCodingExtension()
          { 
@@ -1243,27 +1414,25 @@ next_start_code()
     }
 
     /*
-
-
 quant_matrix_extension() {
-extension_start_code_identifier u(4)
-load_intra_quantiser_matrix u(1)
-if ( load_intra_quantiser_matrix )
-for ( i = 0; i < 64; i++ )
-intra_quantiser_matrix[ i ] u(8)
-load_non_intra_quantiser_matrix u(1)
-if ( load_non_intra_quantiser_matrix )
-for ( i = 0; i < 64; i++ )
-non_intra_quantiser_matrix[ i ] u(8)
-load_chroma_intra_quantiser_matrix u(1)
-if ( load_chroma_intra_quantiser_matrix )
-for ( i = 0; i < 64; i++ )
-chroma_intra_quantiser_matrix[ i ] u(8)
-load_chroma_non_intra_quantiser_matrix u(1)
-if ( load_chroma_non_intra_quantiser_matrix )
-for ( i = 0; i < 64; i++ )
-chroma_non_intra_quantiser_matrix[ i ] u(8)
-next_start_code()
+    extension_start_code_identifier u(4)
+    load_intra_quantiser_matrix u(1)
+    if ( load_intra_quantiser_matrix )
+        for ( i = 0; i < 64; i++ )
+        intra_quantiser_matrix[ i ] u(8)
+    load_non_intra_quantiser_matrix u(1)
+    if ( load_non_intra_quantiser_matrix )
+        for ( i = 0; i < 64; i++ )
+        non_intra_quantiser_matrix[ i ] u(8)
+    load_chroma_intra_quantiser_matrix u(1)
+    if ( load_chroma_intra_quantiser_matrix )
+        for ( i = 0; i < 64; i++ )
+        chroma_intra_quantiser_matrix[ i ] u(8)
+    load_chroma_non_intra_quantiser_matrix u(1)
+    if ( load_chroma_non_intra_quantiser_matrix )
+        for ( i = 0; i < 64; i++ )
+        chroma_non_intra_quantiser_matrix[ i ] u(8)
+    next_start_code()
 }
     */
     public class QuantMatrixExtension : IItuSerializable
@@ -1291,6 +1460,28 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"quant_matrix_extension() {
+    extension_start_code_identifier u(4)
+    load_intra_quantiser_matrix u(1)
+    if ( load_intra_quantiser_matrix )
+        for ( i = 0; i < 64; i++ )
+        intra_quantiser_matrix[ i ] u(8)
+    load_non_intra_quantiser_matrix u(1)
+    if ( load_non_intra_quantiser_matrix )
+        for ( i = 0; i < 64; i++ )
+        non_intra_quantiser_matrix[ i ] u(8)
+    load_chroma_intra_quantiser_matrix u(1)
+    if ( load_chroma_intra_quantiser_matrix )
+        for ( i = 0; i < 64; i++ )
+        chroma_intra_quantiser_matrix[ i ] u(8)
+    load_chroma_non_intra_quantiser_matrix u(1)
+    if ( load_chroma_non_intra_quantiser_matrix )
+        for ( i = 0; i < 64; i++ )
+        chroma_non_intra_quantiser_matrix[ i ] u(8)
+    next_start_code()
+}"; } }
 
          public QuantMatrixExtension()
          { 
@@ -1418,17 +1609,15 @@ next_start_code()
     }
 
     /*
-
-
 picture_display_extension() {
-extension_start_code_identifier u(4)
-for ( i = 0; i < number_of_frame_centre_offsets; i ++ ) {
-frame_centre_horizontal_offset i(16)
-loop_marker_bit u(1)
-frame_centre_vertical_offset i(16)
-loop_marker_bit u(1)
-}
-next_start_code()
+    extension_start_code_identifier u(4)
+    for ( i = 0; i < number_of_frame_centre_offsets; i ++ ) {
+        frame_centre_horizontal_offset i(16)
+        loop_marker_bit u(1)
+        frame_centre_vertical_offset i(16)
+        loop_marker_bit u(1)
+    }
+    next_start_code()
 }
     */
     public class PictureDisplayExtension : IItuSerializable
@@ -1446,6 +1635,18 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"picture_display_extension() {
+    extension_start_code_identifier u(4)
+    for ( i = 0; i < number_of_frame_centre_offsets; i ++ ) {
+        frame_centre_horizontal_offset i(16)
+        loop_marker_bit u(1)
+        frame_centre_vertical_offset i(16)
+        loop_marker_bit u(1)
+    }
+    next_start_code()
+}"; } }
 
          public PictureDisplayExtension()
          { 
@@ -1507,15 +1708,13 @@ next_start_code()
     }
 
     /*
-
-
 picture_temporal_scalable_extension() {
-extension_start_code_identifier u(4)
-reference_select_code u(2)
-forward_temporal_reference u(10)
-marker_bit u(1)
-backward_temporal_reference u(10)
-next_start_code()
+    extension_start_code_identifier u(4)
+    reference_select_code u(2)
+    forward_temporal_reference u(10)
+    marker_bit u(1)
+    backward_temporal_reference u(10)
+    next_start_code()
 }
     */
     public class PictureTemporalScalableExtension : IItuSerializable
@@ -1535,6 +1734,16 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"picture_temporal_scalable_extension() {
+    extension_start_code_identifier u(4)
+    reference_select_code u(2)
+    forward_temporal_reference u(10)
+    marker_bit u(1)
+    backward_temporal_reference u(10)
+    next_start_code()
+}"; } }
 
          public PictureTemporalScalableExtension()
          { 
@@ -1580,19 +1789,17 @@ next_start_code()
     }
 
     /*
-
-
 picture_spatial_scalable_extension() {
-extension_start_code_identifier u(4)
-lower_layer_temporal_reference u(10)
-marker_bit u(1)
-lower_layer_horizontal_offset i(15)
-marker_bit u(1)
-lower_layer_vertical_offset i(15)
-spatial_temporal_weight_code_table_index u(2)
-lower_layer_progressive_frame u(1)
-lower_layer_deinterlaced_field_select u(1)
-next_start_code()
+    extension_start_code_identifier u(4)
+    lower_layer_temporal_reference u(10)
+    marker_bit u(1)
+    lower_layer_horizontal_offset i(15)
+    marker_bit u(1)
+    lower_layer_vertical_offset i(15)
+    spatial_temporal_weight_code_table_index u(2)
+    lower_layer_progressive_frame u(1)
+    lower_layer_deinterlaced_field_select u(1)
+    next_start_code()
 }
     */
     public class PictureSpatialScalableExtension : IItuSerializable
@@ -1618,6 +1825,20 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"picture_spatial_scalable_extension() {
+    extension_start_code_identifier u(4)
+    lower_layer_temporal_reference u(10)
+    marker_bit u(1)
+    lower_layer_horizontal_offset i(15)
+    marker_bit u(1)
+    lower_layer_vertical_offset i(15)
+    spatial_temporal_weight_code_table_index u(2)
+    lower_layer_progressive_frame u(1)
+    lower_layer_deinterlaced_field_select u(1)
+    next_start_code()
+}"; } }
 
          public PictureSpatialScalableExtension()
          { 
@@ -1671,21 +1892,19 @@ next_start_code()
     }
 
     /*
-
-
 copyright_extension() {
-extension_start_code_identifier u(4)
-copyright_flag u(1)
-copyright_identifier u(8)
-original_or_copy u(1)
-reserved u(7)
-marker_bit u(1)
-copyright_number_1 u(20)
-marker_bit u(1)
-copyright_number_2 u(22)
-marker_bit u(1)
-copyright_number_3 u(22)
-next_start_code()
+    extension_start_code_identifier u(4)
+    copyright_flag u(1)
+    copyright_identifier u(8)
+    original_or_copy u(1)
+    reserved u(7)
+    marker_bit u(1)
+    copyright_number_1 u(20)
+    marker_bit u(1)
+    copyright_number_2 u(22)
+    marker_bit u(1)
+    copyright_number_3 u(22)
+    next_start_code()
 }
     */
     public class CopyrightExtension : IItuSerializable
@@ -1713,6 +1932,22 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"copyright_extension() {
+    extension_start_code_identifier u(4)
+    copyright_flag u(1)
+    copyright_identifier u(8)
+    original_or_copy u(1)
+    reserved u(7)
+    marker_bit u(1)
+    copyright_number_1 u(20)
+    marker_bit u(1)
+    copyright_number_2 u(22)
+    marker_bit u(1)
+    copyright_number_3 u(22)
+    next_start_code()
+}"; } }
 
          public CopyrightExtension()
          { 
@@ -1770,47 +2005,45 @@ next_start_code()
     }
 
     /*
-
-
 camera_parameters_extension() {
-extension_start_code_identifier u(4)
-reserved u(1)
-camera_id i(7)
-marker_bit u(1)
-height_of_image_device u(22)
-marker_bit u(1)
-focal_length u(22)
-marker_bit u(1)
-f_number u(22)
-marker_bit u(1)
-vertical_angle_of_view u(22)
-marker_bit u(1)
-camera_position_x_upper i(16)
-marker_bit u(1)
-camera_position_x_lower u(16)
-marker_bit u(1)
-camera_position_y_upper i(16)
-marker_bit u(1)
-camera_position_y_lower u(16)
-marker_bit u(1)
-camera_position_z_upper i(16)
-marker_bit u(1)
-camera_position_z_lower u(16)
-marker_bit u(1)
-camera_direction_x i(22)
-marker_bit u(1)
-camera_direction_y i(22)
-marker_bit u(1)
-camera_direction_z i(22)
-marker_bit u(1)
-image_plane_vertical_x i(22)
-marker_bit u(1)
-image_plane_vertical_y i(22)
-marker_bit u(1)
-image_plane_vertical_z i(22)
-marker_bit u(1)
-reserved u(32)
-next_start_code()
+    extension_start_code_identifier u(4)
+    reserved u(1)
+    camera_id i(7)
+    marker_bit u(1)
+    height_of_image_device u(22)
+    marker_bit u(1)
+    focal_length u(22)
+    marker_bit u(1)
+    f_number u(22)
+    marker_bit u(1)
+    vertical_angle_of_view u(22)
+    marker_bit u(1)
+    camera_position_x_upper i(16)
+    marker_bit u(1)
+    camera_position_x_lower u(16)
+    marker_bit u(1)
+    camera_position_y_upper i(16)
+    marker_bit u(1)
+    camera_position_y_lower u(16)
+    marker_bit u(1)
+    camera_position_z_upper i(16)
+    marker_bit u(1)
+    camera_position_z_lower u(16)
+    marker_bit u(1)
+    camera_direction_x i(22)
+    marker_bit u(1)
+    camera_direction_y i(22)
+    marker_bit u(1)
+    camera_direction_z i(22)
+    marker_bit u(1)
+    image_plane_vertical_x i(22)
+    marker_bit u(1)
+    image_plane_vertical_y i(22)
+    marker_bit u(1)
+    image_plane_vertical_z i(22)
+    marker_bit u(1)
+    reserved u(32)
+    next_start_code()
 }
     */
     public class CameraParametersExtension : IItuSerializable
@@ -1860,6 +2093,48 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"camera_parameters_extension() {
+    extension_start_code_identifier u(4)
+    reserved u(1)
+    camera_id i(7)
+    marker_bit u(1)
+    height_of_image_device u(22)
+    marker_bit u(1)
+    focal_length u(22)
+    marker_bit u(1)
+    f_number u(22)
+    marker_bit u(1)
+    vertical_angle_of_view u(22)
+    marker_bit u(1)
+    camera_position_x_upper i(16)
+    marker_bit u(1)
+    camera_position_x_lower u(16)
+    marker_bit u(1)
+    camera_position_y_upper i(16)
+    marker_bit u(1)
+    camera_position_y_lower u(16)
+    marker_bit u(1)
+    camera_position_z_upper i(16)
+    marker_bit u(1)
+    camera_position_z_lower u(16)
+    marker_bit u(1)
+    camera_direction_x i(22)
+    marker_bit u(1)
+    camera_direction_y i(22)
+    marker_bit u(1)
+    camera_direction_z i(22)
+    marker_bit u(1)
+    image_plane_vertical_x i(22)
+    marker_bit u(1)
+    image_plane_vertical_y i(22)
+    marker_bit u(1)
+    image_plane_vertical_z i(22)
+    marker_bit u(1)
+    reserved u(32)
+    next_start_code()
+}"; } }
 
          public CameraParametersExtension()
          { 
@@ -1969,14 +2244,12 @@ next_start_code()
     }
 
     /*
-
-
 itu_t_extension() {
-extension_start_code_identifier u(4)
-while ( before_start_code( itu_t_data ) ) {
-itu_t_data u(1)
-}
-next_start_code()
+    extension_start_code_identifier u(4)
+    while ( before_start_code( itu_t_data ) ) {
+        itu_t_data u(1)
+    }
+    next_start_code()
 }
     */
     public class ItutExtension : IItuSerializable
@@ -1990,6 +2263,15 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"itu_t_extension() {
+    extension_start_code_identifier u(4)
+    while ( before_start_code( itu_t_data ) ) {
+        itu_t_data u(1)
+    }
+    next_start_code()
+}"; } }
 
          public ItutExtension()
          { 
@@ -2043,29 +2325,27 @@ next_start_code()
     }
 
     /*
-
-
 content_description_data() {
-data_type_upper u(8)
-marker_bit u(1)
-data_type_lower u(8)
-marker_bit u(1)
-data_length u(8)
-if ( data_type == 1 )
-padding_bytes()
-else if ( data_type == 2 )
-capture_timecode()
-else if ( data_type == 3 )
-additional_pan_scan_parameters()
-else if ( data_type == 4 )
-active_region_window()
-else if ( data_type == 5 )
-coded_picture_length()
-else
-for ( i = 0; i < data_length; i ++ ) {
-loop_marker_bit u(1)
-reserved_content_description_data u(8)
-}
+    data_type_upper u(8)
+    marker_bit u(1)
+    data_type_lower u(8)
+    marker_bit u(1)
+    data_length u(8)
+    if ( data_type == 1 )
+        padding_bytes()
+    else if ( data_type == 2 )
+        capture_timecode()
+    else if ( data_type == 3 )
+        additional_pan_scan_parameters()
+    else if ( data_type == 4 )
+        active_region_window()
+    else if ( data_type == 5 )
+        coded_picture_length()
+    else
+        for ( i = 0; i < data_length; i ++ ) {
+            loop_marker_bit u(1)
+            reserved_content_description_data u(8)
+        }
 }
     */
     public class ContentDescriptionData : IItuSerializable
@@ -2095,6 +2375,30 @@ reserved_content_description_data u(8)
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"content_description_data() {
+    data_type_upper u(8)
+    marker_bit u(1)
+    data_type_lower u(8)
+    marker_bit u(1)
+    data_length u(8)
+    if ( data_type == 1 )
+        padding_bytes()
+    else if ( data_type == 2 )
+        capture_timecode()
+    else if ( data_type == 3 )
+        additional_pan_scan_parameters()
+    else if ( data_type == 4 )
+        active_region_window()
+    else if ( data_type == 5 )
+        coded_picture_length()
+    else
+        for ( i = 0; i < data_length; i ++ ) {
+            loop_marker_bit u(1)
+            reserved_content_description_data u(8)
+        }
+}"; } }
 
          public ContentDescriptionData()
          { 
@@ -2212,13 +2516,11 @@ reserved_content_description_data u(8)
     }
 
     /*
-
-
 padding_bytes() {
-for ( i = 0; i < data_length; i ++ ) {
-loop_marker_bit u(1)
-padding_byte u(8)
-}
+    for ( i = 0; i < data_length; i ++ ) {
+        loop_marker_bit u(1)
+        padding_byte u(8)
+    }
 }
     */
     public class PaddingBytes : IItuSerializable
@@ -2230,6 +2532,14 @@ padding_byte u(8)
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"padding_bytes() {
+    for ( i = 0; i < data_length; i ++ ) {
+        loop_marker_bit u(1)
+        padding_byte u(8)
+    }
+}"; } }
 
          public PaddingBytes()
          { 
@@ -2280,27 +2590,25 @@ padding_byte u(8)
     }
 
     /*
-
-
 capture_timecode() {
-marker_bit u(1)
-timecode_type u(2)
-counting_type u(3)
-reserved_bit u(1)
-reserved_bit u(1)
-reserved_bit u(1)
-if ( counting_type != 0 ) {
-marker_bit u(1)
-nframes_conversion_code u(1)
-clock_divisor u(7)
-marker_bit u(1)
-nframes_multiplier_upper u(8)
-marker_bit u(1)
-nframes_multiplier_lower u(8)
-}
-frame_or_field_capture_timestamp()
-if ( timecode_type == 3 )
-frame_or_field_capture_timestamp()
+    marker_bit u(1)
+    timecode_type u(2)
+    counting_type u(3)
+    reserved_bit u(1)
+    reserved_bit u(1)
+    reserved_bit u(1)
+    if ( counting_type != 0 ) {
+        marker_bit u(1)
+        nframes_conversion_code u(1)
+        clock_divisor u(7)
+        marker_bit u(1)
+        nframes_multiplier_upper u(8)
+        marker_bit u(1)
+        nframes_multiplier_lower u(8)
+    }
+    frame_or_field_capture_timestamp()
+    if ( timecode_type == 3 )
+        frame_or_field_capture_timestamp()
 }
     */
     public class CaptureTimecode : IItuSerializable
@@ -2326,6 +2634,28 @@ frame_or_field_capture_timestamp()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"capture_timecode() {
+    marker_bit u(1)
+    timecode_type u(2)
+    counting_type u(3)
+    reserved_bit u(1)
+    reserved_bit u(1)
+    reserved_bit u(1)
+    if ( counting_type != 0 ) {
+        marker_bit u(1)
+        nframes_conversion_code u(1)
+        clock_divisor u(7)
+        marker_bit u(1)
+        nframes_multiplier_upper u(8)
+        marker_bit u(1)
+        nframes_multiplier_lower u(8)
+    }
+    frame_or_field_capture_timestamp()
+    if ( timecode_type == 3 )
+        frame_or_field_capture_timestamp()
+}"; } }
 
          public CaptureTimecode()
          { 
@@ -2408,32 +2738,30 @@ frame_or_field_capture_timestamp()
     }
 
     /*
-
-
 frame_or_field_capture_timestamp() {
-if ( counting_type != 0 ) {
-marker_bit u(1)
-nframes u(8)
-}
-marker_bit u(1)
-time_discontinuity u(1)
-prior_count_dropped u(1)
-time_offset_part_a i(6)
-marker_bit u(1)
-time_offset_part_b u(8)
-marker_bit u(1)
-time_offset_part_c u(8)
-marker_bit u(1)
-time_offset_part_d u(8)
-marker_bit u(1)
-units_of_seconds u(4)
-tens_of_seconds u(4)
-marker_bit u(1)
-units_of_minutes u(4)
-tens_of_minutes u(4)
-marker_bit u(1)
-units_of_hours u(4)
-tens_of_hours u(4)
+    if ( counting_type != 0 ) {
+        marker_bit u(1)
+        nframes u(8)
+    }
+    marker_bit u(1)
+    time_discontinuity u(1)
+    prior_count_dropped u(1)
+    time_offset_part_a i(6)
+    marker_bit u(1)
+    time_offset_part_b u(8)
+    marker_bit u(1)
+    time_offset_part_c u(8)
+    marker_bit u(1)
+    time_offset_part_d u(8)
+    marker_bit u(1)
+    units_of_seconds u(4)
+    tens_of_seconds u(4)
+    marker_bit u(1)
+    units_of_minutes u(4)
+    tens_of_minutes u(4)
+    marker_bit u(1)
+    units_of_hours u(4)
+    tens_of_hours u(4)
 }
     */
     public class FrameOrFieldCaptureTimestamp : IItuSerializable
@@ -2469,6 +2797,33 @@ tens_of_hours u(4)
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"frame_or_field_capture_timestamp() {
+    if ( counting_type != 0 ) {
+        marker_bit u(1)
+        nframes u(8)
+    }
+    marker_bit u(1)
+    time_discontinuity u(1)
+    prior_count_dropped u(1)
+    time_offset_part_a i(6)
+    marker_bit u(1)
+    time_offset_part_b u(8)
+    marker_bit u(1)
+    time_offset_part_c u(8)
+    marker_bit u(1)
+    time_offset_part_d u(8)
+    marker_bit u(1)
+    units_of_seconds u(4)
+    tens_of_seconds u(4)
+    marker_bit u(1)
+    units_of_minutes u(4)
+    tens_of_minutes u(4)
+    marker_bit u(1)
+    units_of_hours u(4)
+    tens_of_hours u(4)
+}"; } }
 
          public FrameOrFieldCaptureTimestamp()
          { 
@@ -2551,39 +2906,37 @@ tens_of_hours u(4)
     }
 
     /*
-
-
 additional_pan_scan_parameters() {
-marker_bit u(1)
-aspect_ratio_information u(4)
-reserved_bit u(1)
-reserved_bit u(1)
-reserved_bit u(1)
-display_size_present u(1)
-if (display_size_present == 1 ) {
-marker_bit u(1)
-reserved_bit u(1)
-reserved_bit u(1)
-display_horizontal_size_upper u(6)
-marker_bit u(1)
-display_horizontal_size_lower u(8)
-marker_bit u(1)
-reserved_bit u(1)
-reserved_bit u(1)
-display_vertical_size_upper u(6)
-marker_bit u(1)
-display_vertical_size_lower u(8)
-}
-for ( i = 0; i < number_of_frame_centre_offsets; i ++ ) {
-loop_marker_bit u(1)
-frame_centre_horizontal_offset_upper i(8)
-loop_marker_bit u(1)
-frame_centre_horizontal_offset_lower u(8)
-loop_marker_bit u(1)
-frame_centre_vertical_offset_upper i(8)
-loop_marker_bit u(1)
-frame_centre_vertical_offset_lower u(8)
-}
+    marker_bit u(1)
+    aspect_ratio_information u(4)
+    reserved_bit u(1)
+    reserved_bit u(1)
+    reserved_bit u(1)
+    display_size_present u(1)
+    if (display_size_present == 1 ) {
+        marker_bit u(1)
+        reserved_bit u(1)
+        reserved_bit u(1)
+        display_horizontal_size_upper u(6)
+        marker_bit u(1)
+        display_horizontal_size_lower u(8)
+        marker_bit u(1)
+        reserved_bit u(1)
+        reserved_bit u(1)
+        display_vertical_size_upper u(6)
+        marker_bit u(1)
+        display_vertical_size_lower u(8)
+    }
+    for ( i = 0; i < number_of_frame_centre_offsets; i ++ ) {
+        loop_marker_bit u(1)
+        frame_centre_horizontal_offset_upper i(8)
+        loop_marker_bit u(1)
+        frame_centre_horizontal_offset_lower u(8)
+        loop_marker_bit u(1)
+        frame_centre_vertical_offset_upper i(8)
+        loop_marker_bit u(1)
+        frame_centre_vertical_offset_lower u(8)
+    }
 }
     */
     public class AdditionalPanScanParameters : IItuSerializable
@@ -2617,6 +2970,40 @@ frame_centre_vertical_offset_lower u(8)
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"additional_pan_scan_parameters() {
+    marker_bit u(1)
+    aspect_ratio_information u(4)
+    reserved_bit u(1)
+    reserved_bit u(1)
+    reserved_bit u(1)
+    display_size_present u(1)
+    if (display_size_present == 1 ) {
+        marker_bit u(1)
+        reserved_bit u(1)
+        reserved_bit u(1)
+        display_horizontal_size_upper u(6)
+        marker_bit u(1)
+        display_horizontal_size_lower u(8)
+        marker_bit u(1)
+        reserved_bit u(1)
+        reserved_bit u(1)
+        display_vertical_size_upper u(6)
+        marker_bit u(1)
+        display_vertical_size_lower u(8)
+    }
+    for ( i = 0; i < number_of_frame_centre_offsets; i ++ ) {
+        loop_marker_bit u(1)
+        frame_centre_horizontal_offset_upper i(8)
+        loop_marker_bit u(1)
+        frame_centre_horizontal_offset_lower u(8)
+        loop_marker_bit u(1)
+        frame_centre_vertical_offset_upper i(8)
+        loop_marker_bit u(1)
+        frame_centre_vertical_offset_lower u(8)
+    }
+}"; } }
 
          public AdditionalPanScanParameters()
          { 
@@ -2729,25 +3116,23 @@ frame_centre_vertical_offset_lower u(8)
     }
 
     /*
-
-
 active_region_window() {
-marker_bit u(1)
-top_left_x_upper u(8)
-marker_bit u(1)
-top_left_x_lower u(8)
-marker_bit u(1)
-top_left_y_upper u(8)
-marker_bit u(1)
-top_left_y_lower u(8)
-marker_bit u(1)
-active_horizontal_size_upper u(8)
-marker_bit u(1)
-active_horizontal_size_lower u(8)
-marker_bit u(1)
-active_vertical_size_upper u(8)
-marker_bit u(1)
-active_vertical_size_lower u(8)
+    marker_bit u(1)
+    top_left_x_upper u(8)
+    marker_bit u(1)
+    top_left_x_lower u(8)
+    marker_bit u(1)
+    top_left_y_upper u(8)
+    marker_bit u(1)
+    top_left_y_lower u(8)
+    marker_bit u(1)
+    active_horizontal_size_upper u(8)
+    marker_bit u(1)
+    active_horizontal_size_lower u(8)
+    marker_bit u(1)
+    active_vertical_size_upper u(8)
+    marker_bit u(1)
+    active_vertical_size_lower u(8)
 }
     */
     public class ActiveRegionWindow : IItuSerializable
@@ -2773,6 +3158,26 @@ active_vertical_size_lower u(8)
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"active_region_window() {
+    marker_bit u(1)
+    top_left_x_upper u(8)
+    marker_bit u(1)
+    top_left_x_lower u(8)
+    marker_bit u(1)
+    top_left_y_upper u(8)
+    marker_bit u(1)
+    top_left_y_lower u(8)
+    marker_bit u(1)
+    active_horizontal_size_upper u(8)
+    marker_bit u(1)
+    active_horizontal_size_lower u(8)
+    marker_bit u(1)
+    active_vertical_size_upper u(8)
+    marker_bit u(1)
+    active_vertical_size_lower u(8)
+}"; } }
 
          public ActiveRegionWindow()
          { 
@@ -2837,17 +3242,15 @@ active_vertical_size_lower u(8)
     }
 
     /*
-
-
 coded_picture_length() {
-marker_bit u(1)
-picture_byte_count_part_a u(8)
-marker_bit u(1)
-picture_byte_count_part_b u(8)
-marker_bit u(1)
-picture_byte_count_part_c u(8)
-marker_bit u(1)
-picture_byte_count_part_d u(8)
+    marker_bit u(1)
+    picture_byte_count_part_a u(8)
+    marker_bit u(1)
+    picture_byte_count_part_b u(8)
+    marker_bit u(1)
+    picture_byte_count_part_c u(8)
+    marker_bit u(1)
+    picture_byte_count_part_d u(8)
 }
     */
     public class CodedPictureLength : IItuSerializable
@@ -2865,6 +3268,18 @@ picture_byte_count_part_d u(8)
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"coded_picture_length() {
+    marker_bit u(1)
+    picture_byte_count_part_a u(8)
+    marker_bit u(1)
+    picture_byte_count_part_b u(8)
+    marker_bit u(1)
+    picture_byte_count_part_c u(8)
+    marker_bit u(1)
+    picture_byte_count_part_d u(8)
+}"; } }
 
          public CodedPictureLength()
          { 
@@ -2913,30 +3328,28 @@ picture_byte_count_part_d u(8)
     }
 
     /*
-
-
 slice() {
-slice_start_code u(32)
-if (vertical_size > 2800)
-slice_vertical_position_extension u(3)
-if (sequence_scalable_extension_present) {
-if (scalable_mode == 0)
-priority_breakpoint u(7)
-}
-quantiser_scale_code u(5)
-if ( next_bit_one( slice_extension_flag ) ) {
-slice_extension_flag u(1)
-intra_slice u(1)
-slice_picture_id_enable u(1)
-slice_picture_id u(6)
-while ( next_bit_one( extra_bit_slice ) ) {
-extra_bit_slice /* with the value '1' *//* u(1)
-extra_information_slice u(8)
-}
-}
-last_extra_bit_slice /* with the value '0' *//* u(1)
-slice_data()
-next_start_code()
+    slice_start_code u(32)
+    if (vertical_size > 2800)
+        slice_vertical_position_extension u(3)
+    if (sequence_scalable_extension_present) {
+        if (scalable_mode == 0)
+            priority_breakpoint u(7)
+    }
+    quantiser_scale_code u(5)
+    if ( next_bit_one( slice_extension_flag ) ) {
+        slice_extension_flag u(1)
+        intra_slice u(1)
+        slice_picture_id_enable u(1)
+        slice_picture_id u(6)
+        while ( next_bit_one( extra_bit_slice ) ) {
+            extra_bit_slice /* with the value '1' *//* u(1)
+            extra_information_slice u(8)
+        }
+    }
+    last_extra_bit_slice /* with the value '0' *//* u(1)
+    slice_data()
+    next_start_code()
 }
     */
     public class Slice : IItuSerializable
@@ -2970,6 +3383,31 @@ next_start_code()
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
+
+         /// <summary>The syntax the class is defined of, as the specification gives it.</summary>
+         public string Syntax { get { return @"slice() {
+    slice_start_code u(32)
+    if (vertical_size > 2800)
+        slice_vertical_position_extension u(3)
+    if (sequence_scalable_extension_present) {
+        if (scalable_mode == 0)
+            priority_breakpoint u(7)
+    }
+    quantiser_scale_code u(5)
+    if ( next_bit_one( slice_extension_flag ) ) {
+        slice_extension_flag u(1)
+        intra_slice u(1)
+        slice_picture_id_enable u(1)
+        slice_picture_id u(6)
+        while ( next_bit_one( extra_bit_slice ) ) {
+            extra_bit_slice /* with the value '1' */ u(1)
+            extra_information_slice u(8)
+        }
+    }
+    last_extra_bit_slice /* with the value '0' */ u(1)
+    slice_data()
+    next_start_code()
+}"; } }
 
          public Slice()
          { 

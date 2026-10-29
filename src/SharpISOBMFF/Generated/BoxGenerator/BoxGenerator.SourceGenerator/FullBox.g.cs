@@ -7,13 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FullBox(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)
-extends Box(boxtype) { 
-unsigned int(8) version = v;
-bit(24) flags = f;
- }
+	extends Box(boxtype) {
+	unsigned int(8) version = v;
+	bit(24) flags = f;
+}
 */
 public partial class FullBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class FullBox(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)
+	extends Box(boxtype) {
+	unsigned int(8) version = v;
+	bit(24) flags = f;
+}"; } }
 	public override string DisplayName { get { return "FullBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
@@ -59,12 +65,12 @@ public FullBox(uint boxtype, byte[] uuid) : base(boxtype, uuid) { }
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("version", 8, this.version); 
-		boxSize += builder.Field("flags", 24, this.flags); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("version", 8, this.version); 
+		boxSize += tracer.Field("flags", 24, this.flags); 
 		return boxSize;
 	}
 }

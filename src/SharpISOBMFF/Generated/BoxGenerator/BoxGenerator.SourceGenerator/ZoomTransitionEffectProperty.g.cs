@@ -7,13 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 class ZoomTransitionEffectProperty
-extends ItemFullProperty('zoom', version=0, flags=0) {
-	unsigned int(1) transition_direction; 
+	extends ItemFullProperty('zoom', version=0, flags=0) {
+	unsigned int(1) transition_direction;
 	unsigned int(7) transition_shape;
 }
 */
 public partial class ZoomTransitionEffectProperty : ItemFullProperty
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ZoomTransitionEffectProperty
+	extends ItemFullProperty('zoom', version=0, flags=0) {
+	unsigned int(1) transition_direction;
+	unsigned int(7) transition_shape;
+}"; } }
 	public const string TYPE = "zoom";
 	public override string DisplayName { get { return "ZoomTransitionEffectProperty"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -57,12 +63,12 @@ public partial class ZoomTransitionEffectProperty : ItemFullProperty
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("transition_direction", 1, this.transition_direction); 
-		boxSize += builder.Field("transition_shape", 7, this.transition_shape); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("transition_direction", 1, this.transition_direction); 
+		boxSize += tracer.Field("transition_shape", 7, this.transition_shape); 
 		return boxSize;
 	}
 }

@@ -13,6 +13,11 @@ aligned(8) class MIMEBox() extends FullBox('mime', version = 0, 0) {
 */
 public partial class MIMEBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// the MIME type of a subtitle sample entry's samples; GPAC reads it as its TextConfigBox
+aligned(8) class MIMEBox() extends FullBox('mime', version = 0, 0) {
+	utf8string content_type;
+}"; } }
 	public const string TYPE = "mime";
 	public override string DisplayName { get { return "MIMEBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +55,11 @@ public partial class MIMEBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("content_type", IsoStream.CalculateStringSize(content_type), this.content_type); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("content_type", IsoStream.CalculateStringSize(content_type), this.content_type); 
 		return boxSize;
 	}
 }

@@ -7,13 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 class AppleComponentDetectBox() extends Box ('rmcd'){
- unsigned int(32) flags;
- ComponentDescription description;
- unsigned int(32) minimumVersion;
- } 
+	unsigned int(32) flags;
+	ComponentDescription description;
+	unsigned int(32) minimumVersion;
+}
 */
 public partial class AppleComponentDetectBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AppleComponentDetectBox() extends Box ('rmcd'){
+	unsigned int(32) flags;
+	ComponentDescription description;
+	unsigned int(32) minimumVersion;
+}"; } }
 	public const string TYPE = "rmcd";
 	public override string DisplayName { get { return "AppleComponentDetectBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -63,13 +69,13 @@ public partial class AppleComponentDetectBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("flags", 32, this.flags); 
-		boxSize += builder.Field("description", IsoStream.CalculateClassSize(description), this.description); 
-		boxSize += builder.Field("minimumVersion", 32, this.minimumVersion); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("flags", 32, this.flags); 
+		boxSize += tracer.Field("description", IsoStream.CalculateClassSize(description), this.description); 
+		boxSize += tracer.Field("minimumVersion", 32, this.minimumVersion); 
 		return boxSize;
 	}
 }

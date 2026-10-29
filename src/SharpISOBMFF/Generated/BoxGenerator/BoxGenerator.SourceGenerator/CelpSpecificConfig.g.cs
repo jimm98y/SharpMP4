@@ -8,22 +8,20 @@ namespace SharpISOBMFF
 /*
 class CelpSpecificConfig(samplingFrequencyIndex)
 {
-  uimsbf(1) isBaseLayer;
-  if (isBaseLayer) {
-    CelpHeader(samplingFrequencyIndex);
-  }
-  else {
-    uimsbf(1) isBWSLayer;
-    if (isBWSLayer) {
-      CelpBWSenhHeader();
-    }
-    else {
-      uimsbf(2) CELPBRSid;
-    }
-  }
+	uimsbf(1) isBaseLayer;
+	if (isBaseLayer) {
+		CelpHeader(samplingFrequencyIndex);
+	}
+	else {
+		uimsbf(1) isBWSLayer;
+		if (isBWSLayer) {
+			CelpBWSenhHeader();
+		}
+		else {
+			uimsbf(2) CELPBRSid;
+		}
+	}
 }
-
-
 */
 public partial class CelpSpecificConfig : IMp4Serializable
 {
@@ -32,6 +30,23 @@ public partial class CelpSpecificConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class CelpSpecificConfig(samplingFrequencyIndex)
+{
+	uimsbf(1) isBaseLayer;
+	if (isBaseLayer) {
+		CelpHeader(samplingFrequencyIndex);
+	}
+	else {
+		uimsbf(1) isBWSLayer;
+		if (isBWSLayer) {
+			CelpBWSenhHeader();
+		}
+		else {
+			uimsbf(2) CELPBRSid;
+		}
+	}
+}"; } }
 	public virtual string DisplayName { get { return "CelpSpecificConfig"; } }
 
 	protected bool isBaseLayer; 
@@ -138,28 +153,28 @@ public partial class CelpSpecificConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("isBaseLayer", 1, this.isBaseLayer); 
+		boxSize += tracer.Field("isBaseLayer", 1, this.isBaseLayer); 
 
 		if (isBaseLayer)
 		{
-			boxSize += builder.Field("CelpHeader", IsoStream.CalculateClassSize(CelpHeader), this.CelpHeader); 
+			boxSize += tracer.Field("CelpHeader", IsoStream.CalculateClassSize(CelpHeader), this.CelpHeader); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("isBWSLayer", 1, this.isBWSLayer); 
+			boxSize += tracer.Field("isBWSLayer", 1, this.isBWSLayer); 
 
 			if (isBWSLayer)
 			{
-				boxSize += builder.Field("CelpBWSenhHeader", IsoStream.CalculateClassSize(CelpBWSenhHeader), this.CelpBWSenhHeader); 
+				boxSize += tracer.Field("CelpBWSenhHeader", IsoStream.CalculateClassSize(CelpBWSenhHeader), this.CelpBWSenhHeader); 
 			}
 
 			else 
 			{
-				boxSize += builder.Field("CELPBRSid", 2, this.CELPBRSid); 
+				boxSize += tracer.Field("CELPBRSid", 2, this.CELPBRSid); 
 			}
 		}
 		return boxSize;

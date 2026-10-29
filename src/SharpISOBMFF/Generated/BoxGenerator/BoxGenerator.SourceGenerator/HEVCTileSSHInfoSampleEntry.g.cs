@@ -7,11 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class HEVCTileSSHInfoSampleEntry() extends VisualSampleEntry ('hvt3'){
-	HEVCTileConfigurationBox config(); // optional 
+	HEVCTileConfigurationBox config(); // optional
 }
 */
 public partial class HEVCTileSSHInfoSampleEntry : VisualSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class HEVCTileSSHInfoSampleEntry() extends VisualSampleEntry ('hvt3'){
+	HEVCTileConfigurationBox config(); // optional
+}"; } }
 	public const string TYPE = "hvt3";
 	public override string DisplayName { get { return "HEVCTileSSHInfoSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -27,7 +31,7 @@ public partial class HEVCTileSSHInfoSampleEntry : VisualSampleEntry
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		// if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config, "config"); // optional 
+		// if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config, "config"); // optional
 		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
 		return boxSize;
 	}
@@ -36,7 +40,7 @@ public partial class HEVCTileSSHInfoSampleEntry : VisualSampleEntry
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		// boxSize += stream.WriteBox( this.config, "config"); // optional 
+		// boxSize += stream.WriteBox( this.config, "config"); // optional
 		boxSize += stream.WriteBoxArrayTillEnd(this);
 		return boxSize;
 	}
@@ -50,12 +54,12 @@ public partial class HEVCTileSSHInfoSampleEntry : VisualSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("config", IsoStream.CalculateBoxSize(config), this.config); // optional 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("config", IsoStream.CalculateBoxSize(config), this.config); // optional
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }
