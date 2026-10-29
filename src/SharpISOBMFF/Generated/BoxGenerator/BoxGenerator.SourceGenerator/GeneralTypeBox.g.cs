@@ -7,19 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class GeneralTypeBox(code) extends Box(code) {
-      unsigned int(32)    major_brand;
-      unsigned int(32)    minor_version;
-      unsigned int(32)    compatible_brands[];    // to end of the box
-    }
+	unsigned int(32)    major_brand;
+	unsigned int(32)    minor_version;
+	unsigned int(32)    compatible_brands[];    // to end of the box
+}
 */
 public partial class GeneralTypeBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class GeneralTypeBox(code) extends Box(code) {
-      unsigned int(32)    major_brand;
-      unsigned int(32)    minor_version;
-      unsigned int(32)    compatible_brands[];    // to end of the box
-    }"; } }
+	unsigned int(32)    major_brand;
+	unsigned int(32)    minor_version;
+	unsigned int(32)    compatible_brands[];    // to end of the box
+}"; } }
 	public override string DisplayName { get { return "GeneralTypeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }

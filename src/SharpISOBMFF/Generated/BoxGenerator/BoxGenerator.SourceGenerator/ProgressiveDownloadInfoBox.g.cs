@@ -7,21 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ProgressiveDownloadInfoBox
-		extends FullBox('pdin', version = 0, 0) {
+	extends FullBox('pdin', version = 0, 0) {
 	// to end of box
 	ProgressiveDownloadInfoItem items[];
- }
- 
+}
 */
 public partial class ProgressiveDownloadInfoBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class ProgressiveDownloadInfoBox
-		extends FullBox('pdin', version = 0, 0) {
+	extends FullBox('pdin', version = 0, 0) {
 	// to end of box
 	ProgressiveDownloadInfoItem items[];
- }
- "; } }
+}"; } }
 	public const string TYPE = "pdin";
 	public override string DisplayName { get { return "ProgressiveDownloadInfoBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

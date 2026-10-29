@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class DateTimeOriginalBox() extends Box ('date'){
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class DateTimeOriginalBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class DateTimeOriginalBox() extends Box ('date'){
- bit(8) data[];
- }"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "date";
 	public override string DisplayName { get { return "DateTimeOriginalBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class CueIDBox() extends Box ('iden') {
- boxstring cueID; 
- }
+	boxstring cueID;
+}
 */
 public partial class CueIDBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class CueIDBox() extends Box ('iden') {
- boxstring cueID; 
- }"; } }
+	boxstring cueID;
+}"; } }
 	public const string TYPE = "iden";
 	public override string DisplayName { get { return "CueIDBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class AV2SampleEntry extends VisualSampleEntry('av02') {
-  AV2CodecConfigurationBox config;
+	AV2CodecConfigurationBox config;
 }
-
 */
 public partial class AV2SampleEntry : VisualSampleEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AV2SampleEntry extends VisualSampleEntry('av02') {
-  AV2CodecConfigurationBox config;
-}
-"; } }
+	AV2CodecConfigurationBox config;
+}"; } }
 	public const string TYPE = "av02";
 	public override string DisplayName { get { return "AV2SampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

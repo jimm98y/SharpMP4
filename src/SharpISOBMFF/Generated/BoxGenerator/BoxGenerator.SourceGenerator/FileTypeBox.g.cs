@@ -7,22 +7,22 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FileTypeBox
-extends Box('ftyp')
+	extends Box('ftyp')
 {
-unsigned int(32) major_brand;
-unsigned int(32) minor_version;
-unsigned int(32) compatible_brands[];// to end of the box
+	unsigned int(32) major_brand;
+	unsigned int(32) minor_version;
+	unsigned int(32) compatible_brands[];// to end of the box
 }
 */
 public partial class FileTypeBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class FileTypeBox
-extends Box('ftyp')
+	extends Box('ftyp')
 {
-unsigned int(32) major_brand;
-unsigned int(32) minor_version;
-unsigned int(32) compatible_brands[];// to end of the box
+	unsigned int(32) major_brand;
+	unsigned int(32) minor_version;
+	unsigned int(32) compatible_brands[];// to end of the box
 }"; } }
 	public const string TYPE = "ftyp";
 	public override string DisplayName { get { return "FileTypeBox"; } }

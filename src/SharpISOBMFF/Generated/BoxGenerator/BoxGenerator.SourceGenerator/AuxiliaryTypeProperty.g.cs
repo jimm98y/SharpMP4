@@ -7,20 +7,20 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AuxiliaryTypeProperty
-extends ItemFullProperty('auxC', version = 0, flags) {
+	extends ItemFullProperty('auxC', version = 0, flags) {
 	string aux_type;
 	template unsigned int(8) aux_subtype[];
-		// until the end of the box, the semantics depend on the aux_type value
+	// until the end of the box, the semantics depend on the aux_type value
 }
 */
 public partial class AuxiliaryTypeProperty : ItemFullProperty
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AuxiliaryTypeProperty
-extends ItemFullProperty('auxC', version = 0, flags) {
+	extends ItemFullProperty('auxC', version = 0, flags) {
 	string aux_type;
 	template unsigned int(8) aux_subtype[];
-		// until the end of the box, the semantics depend on the aux_type value
+	// until the end of the box, the semantics depend on the aux_type value
 }"; } }
 	public const string TYPE = "auxC";
 	public override string DisplayName { get { return "AuxiliaryTypeProperty"; } }

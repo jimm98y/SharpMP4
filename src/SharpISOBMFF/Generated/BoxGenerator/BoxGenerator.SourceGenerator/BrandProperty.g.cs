@@ -6,13 +6,13 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class BrandProperty extends GeneralTypeBox ('brnd') 
+aligned(8) class BrandProperty extends GeneralTypeBox ('brnd')
 { }
 */
 public partial class BrandProperty : GeneralTypeBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class BrandProperty extends GeneralTypeBox ('brnd') 
+	public override string Syntax { get { return @"aligned(8) class BrandProperty extends GeneralTypeBox ('brnd')
 { }"; } }
 	public const string TYPE = "brnd";
 	public override string DisplayName { get { return "BrandProperty"; } }

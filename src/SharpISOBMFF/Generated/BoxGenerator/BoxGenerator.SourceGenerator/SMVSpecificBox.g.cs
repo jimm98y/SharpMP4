@@ -7,19 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class SMVSpecificBox() extends Box('dsmv') {
-	 unsigned int(32) vendor;
-	 unsigned int(8) decoderVersion;
- unsigned int(8) framesPerSample;
- } 
+	unsigned int(32) vendor;
+	unsigned int(8) decoderVersion;
+	unsigned int(8) framesPerSample;
+}
 */
 public partial class SMVSpecificBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class SMVSpecificBox() extends Box('dsmv') {
-	 unsigned int(32) vendor;
-	 unsigned int(8) decoderVersion;
- unsigned int(8) framesPerSample;
- } "; } }
+	unsigned int(32) vendor;
+	unsigned int(8) decoderVersion;
+	unsigned int(8) framesPerSample;
+}"; } }
 	public const string TYPE = "dsmv";
 	public override string DisplayName { get { return "SMVSpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

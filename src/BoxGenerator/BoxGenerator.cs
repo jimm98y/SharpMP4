@@ -244,7 +244,7 @@ public static class BoxGenerator
     private static string GetSampleCode(string sample, long startOffset, long endOffset)
     {
         // parse the syntax of this particular class as there can be multiple boxes/classes in a single JSON record
-        return sample.Substring((int)startOffset, (int)(endOffset - startOffset));
+        return sample.Substring((int)startOffset, (int)(endOffset - startOffset)).Trim();
     }
 
     private static void LogConsole(string v)

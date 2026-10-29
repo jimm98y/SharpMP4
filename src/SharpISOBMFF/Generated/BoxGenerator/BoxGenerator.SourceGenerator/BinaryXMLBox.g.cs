@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class BinaryXMLBox
-		extends FullBox('bxml', version = 0, 0) {
+	extends FullBox('bxml', version = 0, 0) {
 	unsigned int(8) data[];		// to end of box
 }
 */
@@ -15,7 +15,7 @@ public partial class BinaryXMLBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class BinaryXMLBox
-		extends FullBox('bxml', version = 0, 0) {
+	extends FullBox('bxml', version = 0, 0) {
 	unsigned int(8) data[];		// to end of box
 }"; } }
 	public const string TYPE = "bxml";

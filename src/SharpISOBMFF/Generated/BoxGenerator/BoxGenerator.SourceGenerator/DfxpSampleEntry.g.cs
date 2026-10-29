@@ -7,13 +7,13 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class DfxpSampleEntry() extends SampleEntry('dfxp') {
- } 
+}
 */
 public partial class DfxpSampleEntry : SampleEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class DfxpSampleEntry() extends SampleEntry('dfxp') {
- } "; } }
+}"; } }
 	public const string TYPE = "dfxp";
 	public override string DisplayName { get { return "DfxpSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

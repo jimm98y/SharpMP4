@@ -7,12 +7,11 @@ namespace SharpISOBMFF
 {
 /*
 class QuickTimeColorTable() {
- signed int(32) color_table_seed;
- signed int(16) flags;
- signed int(16) color_table_size;
- AppleColor colors[color_table_size + 1];
- }
- 
+	signed int(32) color_table_seed;
+	signed int(16) flags;
+	signed int(16) color_table_size;
+	AppleColor colors[color_table_size + 1];
+}
 */
 public partial class QuickTimeColorTable : IMp4Serializable
 {
@@ -23,12 +22,11 @@ public partial class QuickTimeColorTable : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class QuickTimeColorTable() {
- signed int(32) color_table_seed;
- signed int(16) flags;
- signed int(16) color_table_size;
- AppleColor colors[color_table_size + 1];
- }
- "; } }
+	signed int(32) color_table_seed;
+	signed int(16) flags;
+	signed int(16) color_table_size;
+	AppleColor colors[color_table_size + 1];
+}"; } }
 	public virtual string DisplayName { get { return "QuickTimeColorTable"; } }
 
 	protected int color_table_seed; 

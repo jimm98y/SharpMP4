@@ -7,51 +7,51 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class TrackFragmentHeaderBox
-                extends FullBox('tfhd', 0, tf_flags){
-        unsigned int(32)	track_ID;
-        // all the following are optional fields
-        // their presence is indicated by bits in the tf_flags
-        if (flags & 0x1) {
-           unsigned int(64)	base_data_offset;
-        }
-        if (flags & 0x2) {
-           unsigned int(32)	sample_description_index;
-        }
-        if (flags & 0x8) {
-           unsigned int(32)	default_sample_duration;
-        }
-        if (flags & 0x10) {
-           unsigned int(32)	default_sample_size;
-        }
-        if (flags & 0x20) {
-           unsigned int(32)	default_sample_flags;
-        }
-    }
+	extends FullBox('tfhd', 0, tf_flags){
+	unsigned int(32)	track_ID;
+	// all the following are optional fields
+	// their presence is indicated by bits in the tf_flags
+	if (flags & 0x1) {
+		unsigned int(64)	base_data_offset;
+	}
+	if (flags & 0x2) {
+		unsigned int(32)	sample_description_index;
+	}
+	if (flags & 0x8) {
+		unsigned int(32)	default_sample_duration;
+	}
+	if (flags & 0x10) {
+		unsigned int(32)	default_sample_size;
+	}
+	if (flags & 0x20) {
+		unsigned int(32)	default_sample_flags;
+	}
+}
 */
 public partial class TrackFragmentHeaderBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class TrackFragmentHeaderBox
-                extends FullBox('tfhd', 0, tf_flags){
-        unsigned int(32)	track_ID;
-        // all the following are optional fields
-        // their presence is indicated by bits in the tf_flags
-        if (flags & 0x1) {
-           unsigned int(64)	base_data_offset;
-        }
-        if (flags & 0x2) {
-           unsigned int(32)	sample_description_index;
-        }
-        if (flags & 0x8) {
-           unsigned int(32)	default_sample_duration;
-        }
-        if (flags & 0x10) {
-           unsigned int(32)	default_sample_size;
-        }
-        if (flags & 0x20) {
-           unsigned int(32)	default_sample_flags;
-        }
-    }"; } }
+	extends FullBox('tfhd', 0, tf_flags){
+	unsigned int(32)	track_ID;
+	// all the following are optional fields
+	// their presence is indicated by bits in the tf_flags
+	if (flags & 0x1) {
+		unsigned int(64)	base_data_offset;
+	}
+	if (flags & 0x2) {
+		unsigned int(32)	sample_description_index;
+	}
+	if (flags & 0x8) {
+		unsigned int(32)	default_sample_duration;
+	}
+	if (flags & 0x10) {
+		unsigned int(32)	default_sample_size;
+	}
+	if (flags & 0x20) {
+		unsigned int(32)	default_sample_flags;
+	}
+}"; } }
 	public const string TYPE = "tfhd";
 	public override string DisplayName { get { return "TrackFragmentHeaderBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

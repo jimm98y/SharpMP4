@@ -7,47 +7,49 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class VPCodecConfigurationBox() extends FullBox('vpcC') {
- unsigned int(8) profile;
- unsigned int(8) level;
- if (version == 0) {
- bit(4) bitDepth;
- bit(4) colorSpace;
- bit(4) chromaSubsampling;
- bit(3) transferFunction;
- bit(1) videoFullRangeFlag;
- } else {
- bit(4) bitDepth;
- bit(3) chromaSubsampling;
- bit(1) videoFullRangeFlag;
- unsigned int(8) colourPrimaries; unsigned int(8) transferCharacteristics;
- unsigned int(8) matrixCoefficients;
- }
- unsigned int(16) codecInitializationDataSize;
- unsigned int(8) codecInitializationData[codecInitializationDataSize];
- } 
+	unsigned int(8) profile;
+	unsigned int(8) level;
+	if (version == 0) {
+		bit(4) bitDepth;
+		bit(4) colorSpace;
+		bit(4) chromaSubsampling;
+		bit(3) transferFunction;
+		bit(1) videoFullRangeFlag;
+	} else {
+		bit(4) bitDepth;
+		bit(3) chromaSubsampling;
+		bit(1) videoFullRangeFlag;
+		unsigned int(8) colourPrimaries;
+		unsigned int(8) transferCharacteristics;
+		unsigned int(8) matrixCoefficients;
+	}
+	unsigned int(16) codecInitializationDataSize;
+	unsigned int(8) codecInitializationData[codecInitializationDataSize];
+}
 */
 public partial class VPCodecConfigurationBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class VPCodecConfigurationBox() extends FullBox('vpcC') {
- unsigned int(8) profile;
- unsigned int(8) level;
- if (version == 0) {
- bit(4) bitDepth;
- bit(4) colorSpace;
- bit(4) chromaSubsampling;
- bit(3) transferFunction;
- bit(1) videoFullRangeFlag;
- } else {
- bit(4) bitDepth;
- bit(3) chromaSubsampling;
- bit(1) videoFullRangeFlag;
- unsigned int(8) colourPrimaries; unsigned int(8) transferCharacteristics;
- unsigned int(8) matrixCoefficients;
- }
- unsigned int(16) codecInitializationDataSize;
- unsigned int(8) codecInitializationData[codecInitializationDataSize];
- } "; } }
+	unsigned int(8) profile;
+	unsigned int(8) level;
+	if (version == 0) {
+		bit(4) bitDepth;
+		bit(4) colorSpace;
+		bit(4) chromaSubsampling;
+		bit(3) transferFunction;
+		bit(1) videoFullRangeFlag;
+	} else {
+		bit(4) bitDepth;
+		bit(3) chromaSubsampling;
+		bit(1) videoFullRangeFlag;
+		unsigned int(8) colourPrimaries;
+		unsigned int(8) transferCharacteristics;
+		unsigned int(8) matrixCoefficients;
+	}
+	unsigned int(16) codecInitializationDataSize;
+	unsigned int(8) codecInitializationData[codecInitializationDataSize];
+}"; } }
 	public const string TYPE = "vpcC";
 	public override string DisplayName { get { return "VPCodecConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

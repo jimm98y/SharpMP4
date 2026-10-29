@@ -7,17 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class J2kChannelDefinitionBox() extends Box('cdef') {
-	 unsigned int(16) channel_count;
- Channel channels[];
- } 
+	unsigned int(16) channel_count;
+	Channel channels[];
+}
 */
 public partial class J2kChannelDefinitionBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class J2kChannelDefinitionBox() extends Box('cdef') {
-	 unsigned int(16) channel_count;
- Channel channels[];
- } "; } }
+	unsigned int(16) channel_count;
+	Channel channels[];
+}"; } }
 	public const string TYPE = "cdef";
 	public override string DisplayName { get { return "J2kChannelDefinitionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

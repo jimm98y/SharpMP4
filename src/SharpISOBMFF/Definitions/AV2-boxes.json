@@ -6,13 +6,13 @@
       "fourcc": "av02",
       "containers": [ "stsd" ],
       "type": "Box",
-      "syntax": "class AV2SampleEntry extends VisualSampleEntry('av02') {\r\n  AV2CodecConfigurationBox config;\r\n}\r\n"
+      "syntax": "class AV2SampleEntry extends VisualSampleEntry('av02') {\r\n\tAV2CodecConfigurationBox config;\r\n}"
     },
     {
       "fourcc": "av2C",
       "containers": [ "av02" ],
       "type": "Box",
-      "syntax": "aligned(8) class AV2CodecConfigurationBox extends Box('av2C')\r\n{\r\n  unsigned int(8) reserved1 = 0;\r\n  unsigned int(8) config_obus_count_minus1;\r\n  for (i = 0; i < config_obus_count_minus1 + 1; ++i) {\r\n    unsigned int(8) config_obu[];\r\n  }\r\n}\r\n"
+      "syntax": "aligned(8) class AV2CodecConfigurationBox extends Box('av2C')\r\n{\r\n\tunsigned int(8) reserved1 = 0;\r\n\tunsigned int(8) config_obus_count_minus1;\r\n\tfor (i = 0; i < config_obus_count_minus1 + 1; ++i) {\r\n\t\tunsigned int(8) config_obu[];\r\n\t}\r\n}"
     }
   ]
 }

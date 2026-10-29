@@ -8,18 +8,16 @@ namespace SharpISOBMFF
 /*
 // Canon.pm, CMT1 to CMT4: TIFF structures - IFD0, the Exif IFD, the maker notes and the GPS IFD
 aligned(8) class CanonCMT1Box() extends Box('CMT1') {
- bit(8) tiff[];
+	bit(8) tiff[];
 }
-
 */
 public partial class CanonCMT1Box : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// Canon.pm, CMT1 to CMT4: TIFF structures - IFD0, the Exif IFD, the maker notes and the GPS IFD
 aligned(8) class CanonCMT1Box() extends Box('CMT1') {
- bit(8) tiff[];
-}
-"; } }
+	bit(8) tiff[];
+}"; } }
 	public const string TYPE = "CMT1";
 	public override string DisplayName { get { return "CanonCMT1Box"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,23 +7,21 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class EquirectangularProjection extends ProjectionDataBox('equi', 0, 0) {
-    unsigned int(32) projection_bounds_top;
-    unsigned int(32) projection_bounds_bottom;
-    unsigned int(32) projection_bounds_left;
-    unsigned int(32) projection_bounds_right;
- }
-
+	unsigned int(32) projection_bounds_top;
+	unsigned int(32) projection_bounds_bottom;
+	unsigned int(32) projection_bounds_left;
+	unsigned int(32) projection_bounds_right;
+}
 */
 public partial class EquirectangularProjection : ProjectionDataBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class EquirectangularProjection extends ProjectionDataBox('equi', 0, 0) {
-    unsigned int(32) projection_bounds_top;
-    unsigned int(32) projection_bounds_bottom;
-    unsigned int(32) projection_bounds_left;
-    unsigned int(32) projection_bounds_right;
- }
-"; } }
+	unsigned int(32) projection_bounds_top;
+	unsigned int(32) projection_bounds_bottom;
+	unsigned int(32) projection_bounds_left;
+	unsigned int(32) projection_bounds_right;
+}"; } }
 	public const string TYPE = "equi";
 	public override string DisplayName { get { return "EquirectangularProjection"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

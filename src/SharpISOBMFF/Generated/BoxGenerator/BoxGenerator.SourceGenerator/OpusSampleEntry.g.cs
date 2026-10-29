@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class OpusSampleEntry() extends AudioSampleEntry ('Opus'){
- OpusSpecificBox();
- }
+	OpusSpecificBox();
+}
 */
 public partial class OpusSampleEntry : AudioSampleEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class OpusSampleEntry() extends AudioSampleEntry ('Opus'){
- OpusSpecificBox();
- }"; } }
+	OpusSpecificBox();
+}"; } }
 	public const string TYPE = "Opus";
 	public override string DisplayName { get { return "OpusSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

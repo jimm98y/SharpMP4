@@ -8,14 +8,12 @@ namespace SharpISOBMFF
 /*
 class UsacSingleChannelElementConfig(coreSbrFrameLengthIndex)
 {
-  bslbf(1) tw_mdct;
-  bslbf(1) noiseFilling;
-  if (coreSbrFrameLengthIndex >= 2 && coreSbrFrameLengthIndex <= 4) {
-    SbrConfig() sbrConfig;
-  }
+	bslbf(1) tw_mdct;
+	bslbf(1) noiseFilling;
+	if (coreSbrFrameLengthIndex >= 2 && coreSbrFrameLengthIndex <= 4) {
+		SbrConfig() sbrConfig;
+	}
 }
-
-
 */
 public partial class UsacSingleChannelElementConfig : IMp4Serializable
 {
@@ -27,14 +25,12 @@ public partial class UsacSingleChannelElementConfig : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class UsacSingleChannelElementConfig(coreSbrFrameLengthIndex)
 {
-  bslbf(1) tw_mdct;
-  bslbf(1) noiseFilling;
-  if (coreSbrFrameLengthIndex >= 2 && coreSbrFrameLengthIndex <= 4) {
-    SbrConfig() sbrConfig;
-  }
-}
-
-"; } }
+	bslbf(1) tw_mdct;
+	bslbf(1) noiseFilling;
+	if (coreSbrFrameLengthIndex >= 2 && coreSbrFrameLengthIndex <= 4) {
+		SbrConfig() sbrConfig;
+	}
+}"; } }
 	public virtual string DisplayName { get { return "UsacSingleChannelElementConfig"; } }
 
 	protected bool tw_mdct; 

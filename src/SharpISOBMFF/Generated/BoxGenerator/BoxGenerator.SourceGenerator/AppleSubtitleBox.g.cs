@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AppleSubtitleBox() extends Box('©st3') {
- Box boxes[];
- } 
+	Box boxes[];
+}
 */
 public partial class AppleSubtitleBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AppleSubtitleBox() extends Box('©st3') {
- Box boxes[];
- } "; } }
+	Box boxes[];
+}"; } }
 	public const string TYPE = "©st3";
 	public override string DisplayName { get { return "AppleSubtitleBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

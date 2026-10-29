@@ -6,7 +6,7 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class VolumetricVisualSampleEntry(codingname) 
+class VolumetricVisualSampleEntry(codingname)
 	extends SampleEntry (codingname){
 	unsigned int(8)[32] compressorname;
 	// other boxes from derived specifications
@@ -15,7 +15,7 @@ class VolumetricVisualSampleEntry(codingname)
 public partial class VolumetricVisualSampleEntry : SampleEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"class VolumetricVisualSampleEntry(codingname) 
+	public override string Syntax { get { return @"class VolumetricVisualSampleEntry(codingname)
 	extends SampleEntry (codingname){
 	unsigned int(8)[32] compressorname;
 	// other boxes from derived specifications

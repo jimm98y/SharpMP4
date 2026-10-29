@@ -7,10 +7,9 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class CanonCTMDRecordType() {
- unsigned int(32) recordType;
- unsigned int(32) recordSize;
+	unsigned int(32) recordType;
+	unsigned int(32) recordSize;
 }
-
 */
 public partial class CanonCTMDRecordType : IMp4Serializable
 {
@@ -21,10 +20,9 @@ public partial class CanonCTMDRecordType : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class CanonCTMDRecordType() {
- unsigned int(32) recordType;
- unsigned int(32) recordSize;
-}
-"; } }
+	unsigned int(32) recordType;
+	unsigned int(32) recordSize;
+}"; } }
 	public virtual string DisplayName { get { return "CanonCTMDRecordType"; } }
 
 	protected uint recordType; 

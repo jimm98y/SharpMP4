@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class GenericDecoderSpecificInfo extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class GenericDecoderSpecificInfo : DecoderSpecificInfo
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class GenericDecoderSpecificInfo extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
- bit(8) data[];
- }"; } }
+	bit(8) data[];
+}"; } }
 	public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
 	public override string DisplayName { get { return "GenericDecoderSpecificInfo"; } }
 

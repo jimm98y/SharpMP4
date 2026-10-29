@@ -21,9 +21,9 @@ aligned(8) class LevelAssignmentBox extends FullBox('leva', 0, 0)
 			unsigned int(32)	grouping_type_parameter;
 		}
 		else if (assignment_type == 2) {}
-			// no further syntax elements needed
+		// no further syntax elements needed
 		else if (assignment_type == 3) {}
-			// no further syntax elements needed
+		// no further syntax elements needed
 		else if (assignment_type == 4) {
 			unsigned int(32) sub_track_ID;
 		}
@@ -49,9 +49,9 @@ public partial class LevelAssignmentBox : FullBox
 			unsigned int(32)	grouping_type_parameter;
 		}
 		else if (assignment_type == 2) {}
-			// no further syntax elements needed
+		// no further syntax elements needed
 		else if (assignment_type == 3) {}
-			// no further syntax elements needed
+		// no further syntax elements needed
 		else if (assignment_type == 4) {
 			unsigned int(32) sub_track_ID;
 		}

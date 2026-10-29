@@ -7,12 +7,11 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AC4BitrateDsi() {
- bit(2) bit_rate_mode;
- bit(32) bit_rate;
- bit(32) bit_rate_precision;
+	bit(2) bit_rate_mode;
+	bit(32) bit_rate;
+	bit(32) bit_rate_precision;
 }
 // a presentation of ac4_dsi_v1(): its version, and its pres_bytes (pres_bytes += add_pres_bytes). Version 1's content
-
 */
 public partial class AC4BitrateDsi : IMp4Serializable
 {
@@ -23,12 +22,11 @@ public partial class AC4BitrateDsi : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class AC4BitrateDsi() {
- bit(2) bit_rate_mode;
- bit(32) bit_rate;
- bit(32) bit_rate_precision;
+	bit(2) bit_rate_mode;
+	bit(32) bit_rate;
+	bit(32) bit_rate_precision;
 }
-// a presentation of ac4_dsi_v1(): its version, and its pres_bytes (pres_bytes += add_pres_bytes). Version 1's content
-"; } }
+// a presentation of ac4_dsi_v1(): its version, and its pres_bytes (pres_bytes += add_pres_bytes). Version 1's content"; } }
 	public virtual string DisplayName { get { return "AC4BitrateDsi"; } }
 
 	protected byte bit_rate_mode; 

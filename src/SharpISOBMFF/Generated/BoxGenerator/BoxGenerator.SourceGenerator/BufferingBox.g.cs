@@ -7,8 +7,8 @@ namespace SharpISOBMFF
 {
 /*
 class BufferingBox extends Box('buff'){
-	unsigned int(16) 		operating_point_count
-;	for (i = 0; i < operating_point_count; i++){
+	unsigned int(16) 		operating_point_count;
+	for (i = 0; i < operating_point_count; i++){
 		unsigned int (32) 	byte_rate;
 		unsigned int (32) 	cpb_size;
 		unsigned int (32) 	dpb_size;
@@ -21,8 +21,8 @@ public partial class BufferingBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class BufferingBox extends Box('buff'){
-	unsigned int(16) 		operating_point_count
-;	for (i = 0; i < operating_point_count; i++){
+	unsigned int(16) 		operating_point_count;
+	for (i = 0; i < operating_point_count; i++){
 		unsigned int (32) 	byte_rate;
 		unsigned int (32) 	cpb_size;
 		unsigned int (32) 	dpb_size;

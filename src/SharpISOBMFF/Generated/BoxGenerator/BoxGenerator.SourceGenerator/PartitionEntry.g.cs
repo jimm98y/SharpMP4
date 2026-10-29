@@ -11,8 +11,6 @@ aligned(8) class PartitionEntry extends Box('paen') {
 	FECReservoirBox	FEC_symbol_locations; //optional
 	FileReservoirBox	File_symbol_locations; //optional
 }
-
-
 */
 public partial class PartitionEntry : Box
 {
@@ -21,9 +19,7 @@ public partial class PartitionEntry : Box
 	FilePartitionBox	blocks_and_symbols;
 	FECReservoirBox	FEC_symbol_locations; //optional
 	FileReservoirBox	File_symbol_locations; //optional
-}
-
-"; } }
+}"; } }
 	public const string TYPE = "paen";
 	public override string DisplayName { get { return "PartitionEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 class VvcSubpicOrderProperty
-extends ItemFullProperty('spor', version = 0, flags = 0){
+	extends ItemFullProperty('spor', version = 0, flags = 0){
 	VvcSubpicOrderEntry sor_info; // specified in ISO/IEC 14496-15
 }
 */
@@ -15,7 +15,7 @@ public partial class VvcSubpicOrderProperty : ItemFullProperty
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class VvcSubpicOrderProperty
-extends ItemFullProperty('spor', version = 0, flags = 0){
+	extends ItemFullProperty('spor', version = 0, flags = 0){
 	VvcSubpicOrderEntry sor_info; // specified in ISO/IEC 14496-15
 }"; } }
 	public const string TYPE = "spor";

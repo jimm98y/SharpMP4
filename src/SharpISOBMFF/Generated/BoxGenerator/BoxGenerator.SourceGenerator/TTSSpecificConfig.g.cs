@@ -7,10 +7,8 @@ namespace SharpISOBMFF
 {
 /*
 class TTSSpecificConfig() {
-    TTS_Sequence();
+	TTS_Sequence();
 }
-
-
 */
 public partial class TTSSpecificConfig : IMp4Serializable
 {
@@ -21,10 +19,8 @@ public partial class TTSSpecificConfig : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class TTSSpecificConfig() {
-    TTS_Sequence();
-}
-
-"; } }
+	TTS_Sequence();
+}"; } }
 	public virtual string DisplayName { get { return "TTSSpecificConfig"; } }
 
 	protected TTS_Sequence TTS_Sequence; 

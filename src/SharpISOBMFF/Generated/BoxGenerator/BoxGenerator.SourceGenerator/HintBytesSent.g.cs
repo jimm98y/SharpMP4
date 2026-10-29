@@ -8,14 +8,12 @@ namespace SharpISOBMFF
 /*
 aligned(8) class HintBytesSent extends Box('trpy') {
 	uint(64)	bytessent; }	// total bytes sent, including 12-byte RTP headers
-
 */
 public partial class HintBytesSent : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class HintBytesSent extends Box('trpy') {
-	uint(64)	bytessent; }	// total bytes sent, including 12-byte RTP headers
-"; } }
+	uint(64)	bytessent; }	// total bytes sent, including 12-byte RTP headers"; } }
 	public const string TYPE = "trpy";
 	public override string DisplayName { get { return "HintBytesSent"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

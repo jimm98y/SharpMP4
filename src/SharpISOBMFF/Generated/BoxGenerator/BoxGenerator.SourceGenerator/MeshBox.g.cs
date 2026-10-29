@@ -7,68 +7,68 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class MeshBox extends Box('mesh') {
-    const unsigned int(1) reserved = 0;
-    unsigned int(31) coordinate_count;
-     for (i = 0; i < coordinate_count; i++) {
-      float(32) coordinate;
-    }
-    const unsigned int(1) reserved = 0;
-    unsigned int(31) vertex_count;
-    for (i = 0; i < vertex_count; i++) {
-      unsigned int(ceil(log2(coordinate_count * 2))) x_index_delta;
-      unsigned int(ceil(log2(coordinate_count * 2))) y_index_delta;
-      unsigned int(ceil(log2(coordinate_count * 2))) z_index_delta;
-      unsigned int(ceil(log2(coordinate_count * 2))) u_index_delta;
-      unsigned int(ceil(log2(coordinate_count * 2))) v_index_delta;
-    }
-    const unsigned int(1) mesh_padding;
+	const unsigned int(1) reserved = 0;
+	unsigned int(31) coordinate_count;
+	for (i = 0; i < coordinate_count; i++) {
+		float(32) coordinate;
+	}
+	const unsigned int(1) reserved = 0;
+	unsigned int(31) vertex_count;
+	for (i = 0; i < vertex_count; i++) {
+		unsigned int(ceil(log2(coordinate_count * 2))) x_index_delta;
+		unsigned int(ceil(log2(coordinate_count * 2))) y_index_delta;
+		unsigned int(ceil(log2(coordinate_count * 2))) z_index_delta;
+		unsigned int(ceil(log2(coordinate_count * 2))) u_index_delta;
+		unsigned int(ceil(log2(coordinate_count * 2))) v_index_delta;
+	}
+	const unsigned int(1) mesh_padding;
 
-    const unsigned int(1) reserved = 0;
-    unsigned int(31) vertex_list_count;
-    for (i = 0; i < vertex_list_count; i++) {
-      unsigned int(8) texture_id;
-      unsigned int(8) index_type;
-      const unsigned int(1) reserved = 0;
-      unsigned int(31) index_count;
-      for (j = 0; j < index_count; j++) {
-        unsigned int(ceil(log2(vertex_count * 2))) index_as_delta;
-      }
-      const unsigned int(1) mesh_padding2;
-    }
+	const unsigned int(1) reserved = 0;
+	unsigned int(31) vertex_list_count;
+	for (i = 0; i < vertex_list_count; i++) {
+		unsigned int(8) texture_id;
+		unsigned int(8) index_type;
+		const unsigned int(1) reserved = 0;
+		unsigned int(31) index_count;
+		for (j = 0; j < index_count; j++) {
+			unsigned int(ceil(log2(vertex_count * 2))) index_as_delta;
+		}
+		const unsigned int(1) mesh_padding2;
+	}
 }
 */
 public partial class MeshBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class MeshBox extends Box('mesh') {
-    const unsigned int(1) reserved = 0;
-    unsigned int(31) coordinate_count;
-     for (i = 0; i < coordinate_count; i++) {
-      float(32) coordinate;
-    }
-    const unsigned int(1) reserved = 0;
-    unsigned int(31) vertex_count;
-    for (i = 0; i < vertex_count; i++) {
-      unsigned int(ceil(log2(coordinate_count * 2))) x_index_delta;
-      unsigned int(ceil(log2(coordinate_count * 2))) y_index_delta;
-      unsigned int(ceil(log2(coordinate_count * 2))) z_index_delta;
-      unsigned int(ceil(log2(coordinate_count * 2))) u_index_delta;
-      unsigned int(ceil(log2(coordinate_count * 2))) v_index_delta;
-    }
-    const unsigned int(1) mesh_padding;
+	const unsigned int(1) reserved = 0;
+	unsigned int(31) coordinate_count;
+	for (i = 0; i < coordinate_count; i++) {
+		float(32) coordinate;
+	}
+	const unsigned int(1) reserved = 0;
+	unsigned int(31) vertex_count;
+	for (i = 0; i < vertex_count; i++) {
+		unsigned int(ceil(log2(coordinate_count * 2))) x_index_delta;
+		unsigned int(ceil(log2(coordinate_count * 2))) y_index_delta;
+		unsigned int(ceil(log2(coordinate_count * 2))) z_index_delta;
+		unsigned int(ceil(log2(coordinate_count * 2))) u_index_delta;
+		unsigned int(ceil(log2(coordinate_count * 2))) v_index_delta;
+	}
+	const unsigned int(1) mesh_padding;
 
-    const unsigned int(1) reserved = 0;
-    unsigned int(31) vertex_list_count;
-    for (i = 0; i < vertex_list_count; i++) {
-      unsigned int(8) texture_id;
-      unsigned int(8) index_type;
-      const unsigned int(1) reserved = 0;
-      unsigned int(31) index_count;
-      for (j = 0; j < index_count; j++) {
-        unsigned int(ceil(log2(vertex_count * 2))) index_as_delta;
-      }
-      const unsigned int(1) mesh_padding2;
-    }
+	const unsigned int(1) reserved = 0;
+	unsigned int(31) vertex_list_count;
+	for (i = 0; i < vertex_list_count; i++) {
+		unsigned int(8) texture_id;
+		unsigned int(8) index_type;
+		const unsigned int(1) reserved = 0;
+		unsigned int(31) index_count;
+		for (j = 0; j < index_count; j++) {
+			unsigned int(ceil(log2(vertex_count * 2))) index_as_delta;
+		}
+		const unsigned int(1) mesh_padding2;
+	}
 }"; } }
 	public const string TYPE = "mesh";
 	public override string DisplayName { get { return "MeshBox"; } }

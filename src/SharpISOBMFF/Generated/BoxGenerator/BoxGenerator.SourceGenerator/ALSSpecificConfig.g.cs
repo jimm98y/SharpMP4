@@ -8,64 +8,63 @@ namespace SharpISOBMFF
 /*
 class ALSSpecificConfig()
 {
-  uimsbf(32) als_id;
-  uimsbf(32) samp_freq;
-  uimsbf(32) samples;
-  uimsbf(16) channels;
-  uimsbf(3) file_type;
-  uimsbf(3) resolution;
-  uimsbf(1) floating;
-  uimsbf(1) msb_first;
-  uimsbf(16) frame_length;
-  uimsbf(8) random_access;
-  uimsbf(2) ra_flag;
-  uimsbf(1) adapt_order;
-  uimsbf(2) coef_table;
-  uimsbf(1) long_term_prediction;
-  uimsbf(10) max_order;
-  uimsbf(2) block_switching;
-  uimsbf(1) bgmc_mode;
-  uimsbf(1) sb_part;
-  uimsbf(1) joint_stereo;
-  uimsbf(1) mc_coding;
-  uimsbf(1) chan_config;
-  uimsbf(1) chan_sort;
-  uimsbf(1) crc_enabled;
-  uimsbf(1) RLSLMS;
-  uimsbf(5) reserved;
-  uimsbf(1) aux_data_enabled;
-  if (chan_config) {
-    uimsbf(16) chan_config_info;
-  }
-  if (chan_sort) {
-    for (c = 0; c <= channels; c++)
-      uimsbf(ChBits(channels)) chan_pos[c]; // ChBits = ceil[log2(channels+1)] = 1..16
-  }
-  byte_alignment(); // byte_align, 0..7 bits: relative to the start of ALSSpecificConfig
-  uimsbf(32) header_size;
-  uimsbf(32) trailer_size;
-  if (header_size != 0xFFFFFFFF) {
-    bslbf(8) orig_header[header_size];
-  }
-  if (trailer_size != 0xFFFFFFFF) {
-    bslbf(8) orig_trailer[trailer_size];
-  }
-  if (crc_enabled) {
-    uimsbf(32) crc;
-  }
-  if ((ra_flag == 2) && (random_access > 0)) {
-    for (f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++) {
-      uimsbf(32) ra_unit_size[f];
-    }
-  }
-  if (aux_data_enabled) {
-    uimsbf(32) aux_size;
-    bslbf(8) aux_data[aux_size];
-  }
+	uimsbf(32) als_id;
+	uimsbf(32) samp_freq;
+	uimsbf(32) samples;
+	uimsbf(16) channels;
+	uimsbf(3) file_type;
+	uimsbf(3) resolution;
+	uimsbf(1) floating;
+	uimsbf(1) msb_first;
+	uimsbf(16) frame_length;
+	uimsbf(8) random_access;
+	uimsbf(2) ra_flag;
+	uimsbf(1) adapt_order;
+	uimsbf(2) coef_table;
+	uimsbf(1) long_term_prediction;
+	uimsbf(10) max_order;
+	uimsbf(2) block_switching;
+	uimsbf(1) bgmc_mode;
+	uimsbf(1) sb_part;
+	uimsbf(1) joint_stereo;
+	uimsbf(1) mc_coding;
+	uimsbf(1) chan_config;
+	uimsbf(1) chan_sort;
+	uimsbf(1) crc_enabled;
+	uimsbf(1) RLSLMS;
+	uimsbf(5) reserved;
+	uimsbf(1) aux_data_enabled;
+	if (chan_config) {
+		uimsbf(16) chan_config_info;
+	}
+	if (chan_sort) {
+		for (c = 0; c <= channels; c++)
+			uimsbf(ChBits(channels)) chan_pos[c]; // ChBits = ceil[log2(channels+1)] = 1..16
+	}
+	byte_alignment(); // byte_align, 0..7 bits: relative to the start of ALSSpecificConfig
+	uimsbf(32) header_size;
+	uimsbf(32) trailer_size;
+	if (header_size != 0xFFFFFFFF) {
+		bslbf(8) orig_header[header_size];
+	}
+	if (trailer_size != 0xFFFFFFFF) {
+		bslbf(8) orig_trailer[trailer_size];
+	}
+	if (crc_enabled) {
+		uimsbf(32) crc;
+	}
+	if ((ra_flag == 2) && (random_access > 0)) {
+		for (f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++) {
+			uimsbf(32) ra_unit_size[f];
+		}
+	}
+	if (aux_data_enabled) {
+		uimsbf(32) aux_size;
+		bslbf(8) aux_data[aux_size];
+	}
 }
 
 // ISO/IEC 23003-3 (not at hand) as FFmpeg's USAC decoder reads it (libavcodec/aac/aacdec_usac.c, ff_aac_usac_config_decode), by the spec's names it gives: the element configs; extension element configs and config extensions to their lengths, as bytes; UsacDecoderConfig, UsacCoreConfig, SbrDfltHeader and Mps212Config written out in place
-
 */
 public partial class ALSSpecificConfig : IMp4Serializable
 {
@@ -77,64 +76,63 @@ public partial class ALSSpecificConfig : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class ALSSpecificConfig()
 {
-  uimsbf(32) als_id;
-  uimsbf(32) samp_freq;
-  uimsbf(32) samples;
-  uimsbf(16) channels;
-  uimsbf(3) file_type;
-  uimsbf(3) resolution;
-  uimsbf(1) floating;
-  uimsbf(1) msb_first;
-  uimsbf(16) frame_length;
-  uimsbf(8) random_access;
-  uimsbf(2) ra_flag;
-  uimsbf(1) adapt_order;
-  uimsbf(2) coef_table;
-  uimsbf(1) long_term_prediction;
-  uimsbf(10) max_order;
-  uimsbf(2) block_switching;
-  uimsbf(1) bgmc_mode;
-  uimsbf(1) sb_part;
-  uimsbf(1) joint_stereo;
-  uimsbf(1) mc_coding;
-  uimsbf(1) chan_config;
-  uimsbf(1) chan_sort;
-  uimsbf(1) crc_enabled;
-  uimsbf(1) RLSLMS;
-  uimsbf(5) reserved;
-  uimsbf(1) aux_data_enabled;
-  if (chan_config) {
-    uimsbf(16) chan_config_info;
-  }
-  if (chan_sort) {
-    for (c = 0; c <= channels; c++)
-      uimsbf(ChBits(channels)) chan_pos[c]; // ChBits = ceil[log2(channels+1)] = 1..16
-  }
-  byte_alignment(); // byte_align, 0..7 bits: relative to the start of ALSSpecificConfig
-  uimsbf(32) header_size;
-  uimsbf(32) trailer_size;
-  if (header_size != 0xFFFFFFFF) {
-    bslbf(8) orig_header[header_size];
-  }
-  if (trailer_size != 0xFFFFFFFF) {
-    bslbf(8) orig_trailer[trailer_size];
-  }
-  if (crc_enabled) {
-    uimsbf(32) crc;
-  }
-  if ((ra_flag == 2) && (random_access > 0)) {
-    for (f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++) {
-      uimsbf(32) ra_unit_size[f];
-    }
-  }
-  if (aux_data_enabled) {
-    uimsbf(32) aux_size;
-    bslbf(8) aux_data[aux_size];
-  }
+	uimsbf(32) als_id;
+	uimsbf(32) samp_freq;
+	uimsbf(32) samples;
+	uimsbf(16) channels;
+	uimsbf(3) file_type;
+	uimsbf(3) resolution;
+	uimsbf(1) floating;
+	uimsbf(1) msb_first;
+	uimsbf(16) frame_length;
+	uimsbf(8) random_access;
+	uimsbf(2) ra_flag;
+	uimsbf(1) adapt_order;
+	uimsbf(2) coef_table;
+	uimsbf(1) long_term_prediction;
+	uimsbf(10) max_order;
+	uimsbf(2) block_switching;
+	uimsbf(1) bgmc_mode;
+	uimsbf(1) sb_part;
+	uimsbf(1) joint_stereo;
+	uimsbf(1) mc_coding;
+	uimsbf(1) chan_config;
+	uimsbf(1) chan_sort;
+	uimsbf(1) crc_enabled;
+	uimsbf(1) RLSLMS;
+	uimsbf(5) reserved;
+	uimsbf(1) aux_data_enabled;
+	if (chan_config) {
+		uimsbf(16) chan_config_info;
+	}
+	if (chan_sort) {
+		for (c = 0; c <= channels; c++)
+			uimsbf(ChBits(channels)) chan_pos[c]; // ChBits = ceil[log2(channels+1)] = 1..16
+	}
+	byte_alignment(); // byte_align, 0..7 bits: relative to the start of ALSSpecificConfig
+	uimsbf(32) header_size;
+	uimsbf(32) trailer_size;
+	if (header_size != 0xFFFFFFFF) {
+		bslbf(8) orig_header[header_size];
+	}
+	if (trailer_size != 0xFFFFFFFF) {
+		bslbf(8) orig_trailer[trailer_size];
+	}
+	if (crc_enabled) {
+		uimsbf(32) crc;
+	}
+	if ((ra_flag == 2) && (random_access > 0)) {
+		for (f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++) {
+			uimsbf(32) ra_unit_size[f];
+		}
+	}
+	if (aux_data_enabled) {
+		uimsbf(32) aux_size;
+		bslbf(8) aux_data[aux_size];
+	}
 }
 
-// ISO/IEC 23003-3 (not at hand) as FFmpeg's USAC decoder reads it (libavcodec/aac/aacdec_usac.c, ff_aac_usac_config_decode), by the spec's names it gives: the element configs; extension element configs and config extensions to their lengths, as bytes; UsacDecoderConfig, UsacCoreConfig, SbrDfltHeader and Mps212Config written out in place
-"; } }
+// ISO/IEC 23003-3 (not at hand) as FFmpeg's USAC decoder reads it (libavcodec/aac/aacdec_usac.c, ff_aac_usac_config_decode), by the spec's names it gives: the element configs; extension element configs and config extensions to their lengths, as bytes; UsacDecoderConfig, UsacCoreConfig, SbrDfltHeader and Mps212Config written out in place"; } }
 	public virtual string DisplayName { get { return "ALSSpecificConfig"; } }
 
 	protected uint als_id; 

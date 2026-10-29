@@ -28,7 +28,7 @@ aligned(8) class TrackHeaderBox
 	const unsigned int(16)	reserved = 0;
 	template int(32)[9]	matrix=
 		{ 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };
-		// unity matrix
+	// unity matrix
 	unsigned int(32) width;
 	unsigned int(32) height;
 }
@@ -58,7 +58,7 @@ public partial class TrackHeaderBox : FullBox
 	const unsigned int(16)	reserved = 0;
 	template int(32)[9]	matrix=
 		{ 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };
-		// unity matrix
+	// unity matrix
 	unsigned int(32) width;
 	unsigned int(32) height;
 }"; } }

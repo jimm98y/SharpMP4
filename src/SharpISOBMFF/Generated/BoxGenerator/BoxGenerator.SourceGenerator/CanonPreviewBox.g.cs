@@ -8,30 +8,28 @@ namespace SharpISOBMFF
 /*
 // QuickTime.pm, PreviewImage: 0, 1, width, height, 1, the length of the preview, the preview
 aligned(8) class CanonPreviewBox() extends Box('PRVW') {
- unsigned int(32) unknown1;
- unsigned int(16) unknown2;
- unsigned int(16) width;
- unsigned int(16) height;
- unsigned int(16) unknown3;
- unsigned int(32) previewSize;
- bit(8) data[];
+	unsigned int(32) unknown1;
+	unsigned int(16) unknown2;
+	unsigned int(16) width;
+	unsigned int(16) height;
+	unsigned int(16) unknown3;
+	unsigned int(32) previewSize;
+	bit(8) data[];
 }
-
 */
 public partial class CanonPreviewBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// QuickTime.pm, PreviewImage: 0, 1, width, height, 1, the length of the preview, the preview
 aligned(8) class CanonPreviewBox() extends Box('PRVW') {
- unsigned int(32) unknown1;
- unsigned int(16) unknown2;
- unsigned int(16) width;
- unsigned int(16) height;
- unsigned int(16) unknown3;
- unsigned int(32) previewSize;
- bit(8) data[];
-}
-"; } }
+	unsigned int(32) unknown1;
+	unsigned int(16) unknown2;
+	unsigned int(16) width;
+	unsigned int(16) height;
+	unsigned int(16) unknown3;
+	unsigned int(32) previewSize;
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "PRVW";
 	public override string DisplayName { get { return "CanonPreviewBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

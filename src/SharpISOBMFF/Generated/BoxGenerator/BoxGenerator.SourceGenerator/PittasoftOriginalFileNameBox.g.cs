@@ -8,20 +8,18 @@ namespace SharpISOBMFF
 /*
 // ExifTool: substr($val, 4, -1) - 4 bytes, then the name and its terminator
 aligned(8) class PittasoftOriginalFileNameBox() extends Box('ptnm') {
- unsigned int(32) unknown;
- string name;
+	unsigned int(32) unknown;
+	string name;
 }
-
 */
 public partial class PittasoftOriginalFileNameBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// ExifTool: substr($val, 4, -1) - 4 bytes, then the name and its terminator
 aligned(8) class PittasoftOriginalFileNameBox() extends Box('ptnm') {
- unsigned int(32) unknown;
- string name;
-}
-"; } }
+	unsigned int(32) unknown;
+	string name;
+}"; } }
 	public const string TYPE = "ptnm";
 	public override string DisplayName { get { return "PittasoftOriginalFileNameBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

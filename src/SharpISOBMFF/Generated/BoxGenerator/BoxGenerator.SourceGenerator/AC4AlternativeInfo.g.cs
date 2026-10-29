@@ -7,13 +7,13 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AC4AlternativeInfo() {
- bit(16) name_len;
- bit(8) presentation_name[name_len];
- bit(5) n_targets;
- for (i = 0; i < n_targets; i++) {
-  bit(3) target_md_compat;
-  bit(8) target_device_category;
- }
+	bit(16) name_len;
+	bit(8) presentation_name[name_len];
+	bit(5) n_targets;
+	for (i = 0; i < n_targets; i++) {
+		bit(3) target_md_compat;
+		bit(8) target_device_category;
+	}
 }
 */
 public partial class AC4AlternativeInfo : IMp4Serializable
@@ -25,13 +25,13 @@ public partial class AC4AlternativeInfo : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class AC4AlternativeInfo() {
- bit(16) name_len;
- bit(8) presentation_name[name_len];
- bit(5) n_targets;
- for (i = 0; i < n_targets; i++) {
-  bit(3) target_md_compat;
-  bit(8) target_device_category;
- }
+	bit(16) name_len;
+	bit(8) presentation_name[name_len];
+	bit(5) n_targets;
+	for (i = 0; i < n_targets; i++) {
+		bit(3) target_md_compat;
+		bit(8) target_device_category;
+	}
 }"; } }
 	public virtual string DisplayName { get { return "AC4AlternativeInfo"; } }
 

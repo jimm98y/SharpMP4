@@ -8,25 +8,25 @@ namespace SharpISOBMFF
 /*
 // A QuickTime image file's (QTIF) image description, as QuickTime's ImageDescription record has it: its own size and compressor type, a visual sample description's fields, then its extensions' atoms
 class AppleImageDescriptionBox() extends Box ('idsc'){
- unsigned int(32) descriptionSize;
- unsigned int(32) compressorType;
- unsigned int(8) reserved[6];
- unsigned int(16) dataReferenceIndex;
- unsigned int(16) version;
- unsigned int(16) revisionLevel;
- unsigned int(32) vendor;
- unsigned int(32) temporalQuality;
- unsigned int(32) spatialQuality;
- unsigned int(16) width;
- unsigned int(16) height;
- unsigned int(32) horizontalResolution;
- unsigned int(32) verticalResolution;
- unsigned int(32) dataSize;
- unsigned int(16) frameCount;
- unsigned int(8) compressorName[32];
- unsigned int(16) depth;
- signed int(16) colorTableId;
- Box boxes[];
+	unsigned int(32) descriptionSize;
+	unsigned int(32) compressorType;
+	unsigned int(8) reserved[6];
+	unsigned int(16) dataReferenceIndex;
+	unsigned int(16) version;
+	unsigned int(16) revisionLevel;
+	unsigned int(32) vendor;
+	unsigned int(32) temporalQuality;
+	unsigned int(32) spatialQuality;
+	unsigned int(16) width;
+	unsigned int(16) height;
+	unsigned int(32) horizontalResolution;
+	unsigned int(32) verticalResolution;
+	unsigned int(32) dataSize;
+	unsigned int(16) frameCount;
+	unsigned int(8) compressorName[32];
+	unsigned int(16) depth;
+	signed int(16) colorTableId;
+	Box boxes[];
 }
 */
 public partial class AppleImageDescriptionBox : Box
@@ -34,25 +34,25 @@ public partial class AppleImageDescriptionBox : Box
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// A QuickTime image file's (QTIF) image description, as QuickTime's ImageDescription record has it: its own size and compressor type, a visual sample description's fields, then its extensions' atoms
 class AppleImageDescriptionBox() extends Box ('idsc'){
- unsigned int(32) descriptionSize;
- unsigned int(32) compressorType;
- unsigned int(8) reserved[6];
- unsigned int(16) dataReferenceIndex;
- unsigned int(16) version;
- unsigned int(16) revisionLevel;
- unsigned int(32) vendor;
- unsigned int(32) temporalQuality;
- unsigned int(32) spatialQuality;
- unsigned int(16) width;
- unsigned int(16) height;
- unsigned int(32) horizontalResolution;
- unsigned int(32) verticalResolution;
- unsigned int(32) dataSize;
- unsigned int(16) frameCount;
- unsigned int(8) compressorName[32];
- unsigned int(16) depth;
- signed int(16) colorTableId;
- Box boxes[];
+	unsigned int(32) descriptionSize;
+	unsigned int(32) compressorType;
+	unsigned int(8) reserved[6];
+	unsigned int(16) dataReferenceIndex;
+	unsigned int(16) version;
+	unsigned int(16) revisionLevel;
+	unsigned int(32) vendor;
+	unsigned int(32) temporalQuality;
+	unsigned int(32) spatialQuality;
+	unsigned int(16) width;
+	unsigned int(16) height;
+	unsigned int(32) horizontalResolution;
+	unsigned int(32) verticalResolution;
+	unsigned int(32) dataSize;
+	unsigned int(16) frameCount;
+	unsigned int(8) compressorName[32];
+	unsigned int(16) depth;
+	signed int(16) colorTableId;
+	Box boxes[];
 }"; } }
 	public const string TYPE = "idsc";
 	public override string DisplayName { get { return "AppleImageDescriptionBox"; } }

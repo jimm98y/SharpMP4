@@ -7,19 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class DataBox() extends Box('data') {
-unsigned int(32) dataType;
- unsigned int(32) dataLang;
- bit(8) data[];
- } 
+	unsigned int(32) dataType;
+	unsigned int(32) dataLang;
+	bit(8) data[];
+}
 */
 public partial class DataBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class DataBox() extends Box('data') {
-unsigned int(32) dataType;
- unsigned int(32) dataLang;
- bit(8) data[];
- } "; } }
+	unsigned int(32) dataType;
+	unsigned int(32) dataLang;
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "data";
 	public override string DisplayName { get { return "DataBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

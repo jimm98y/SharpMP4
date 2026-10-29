@@ -7,19 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 class AppleCountryListBox() extends Box ('ctry') {
- unsigned int(16) entry_count;
- CountryListEntry entries[];
- }
- 
+	unsigned int(16) entry_count;
+	CountryListEntry entries[];
+}
 */
 public partial class AppleCountryListBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AppleCountryListBox() extends Box ('ctry') {
- unsigned int(16) entry_count;
- CountryListEntry entries[];
- }
- "; } }
+	unsigned int(16) entry_count;
+	CountryListEntry entries[];
+}"; } }
 	public const string TYPE = "ctry";
 	public override string DisplayName { get { return "AppleCountryListBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

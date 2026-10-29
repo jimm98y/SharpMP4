@@ -11,7 +11,7 @@ aligned(8) class ThreeGPPAlbumBox() extends FullBox('albm', version = 0, 0) {
 	unsigned int(5)[3] language;
 	string value;
 	unsigned int(8) trackNumber; // optional
-} 
+}
 */
 public partial class ThreeGPPAlbumBox : FullBox
 {
@@ -21,7 +21,7 @@ public partial class ThreeGPPAlbumBox : FullBox
 	unsigned int(5)[3] language;
 	string value;
 	unsigned int(8) trackNumber; // optional
-} "; } }
+}"; } }
 	public const string TYPE = "albm";
 	public override string DisplayName { get { return "ThreeGPPAlbumBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

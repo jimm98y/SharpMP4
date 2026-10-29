@@ -8,18 +8,16 @@ namespace SharpISOBMFF
 /*
 // ms since 1970, local time (ExifTool)
 aligned(8) class PittasoftStartTimeBox() extends Box('sttm') {
- unsigned int(64) startTime;
+	unsigned int(64) startTime;
 }
-
 */
 public partial class PittasoftStartTimeBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// ms since 1970, local time (ExifTool)
 aligned(8) class PittasoftStartTimeBox() extends Box('sttm') {
- unsigned int(64) startTime;
-}
-"; } }
+	unsigned int(64) startTime;
+}"; } }
 	public const string TYPE = "sttm";
 	public override string DisplayName { get { return "PittasoftStartTimeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

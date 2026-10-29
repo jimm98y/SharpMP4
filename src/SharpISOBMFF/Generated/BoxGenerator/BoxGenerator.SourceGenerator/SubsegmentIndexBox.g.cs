@@ -6,32 +6,32 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class SubsegmentIndexBox extends FullBox('ssix', 0, 0) { 
- unsigned int(32) subsegment_count; 
- for( i=1; i <= subsegment_count; i++) 
- { 
-  unsigned int(32) range_count; 
-  for ( j=1; j <= range_count; j++) { 
-   unsigned int(8) level; 
-   unsigned int(24) range_size; 
-  }  
- } 
-} 
+aligned(8) class SubsegmentIndexBox extends FullBox('ssix', 0, 0) {
+	unsigned int(32) subsegment_count;
+	for( i=1; i <= subsegment_count; i++)
+	{
+		unsigned int(32) range_count;
+		for ( j=1; j <= range_count; j++) {
+			unsigned int(8) level;
+			unsigned int(24) range_size;
+		}
+	}
+}
 */
 public partial class SubsegmentIndexBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class SubsegmentIndexBox extends FullBox('ssix', 0, 0) { 
- unsigned int(32) subsegment_count; 
- for( i=1; i <= subsegment_count; i++) 
- { 
-  unsigned int(32) range_count; 
-  for ( j=1; j <= range_count; j++) { 
-   unsigned int(8) level; 
-   unsigned int(24) range_size; 
-  }  
- } 
-} "; } }
+	public override string Syntax { get { return @"aligned(8) class SubsegmentIndexBox extends FullBox('ssix', 0, 0) {
+	unsigned int(32) subsegment_count;
+	for( i=1; i <= subsegment_count; i++)
+	{
+		unsigned int(32) range_count;
+		for ( j=1; j <= range_count; j++) {
+			unsigned int(8) level;
+			unsigned int(24) range_size;
+		}
+	}
+}"; } }
 	public const string TYPE = "ssix";
 	public override string DisplayName { get { return "SubsegmentIndexBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

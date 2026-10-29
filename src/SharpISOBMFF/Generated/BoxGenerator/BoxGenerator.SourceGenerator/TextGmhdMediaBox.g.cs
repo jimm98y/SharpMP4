@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class TextGmhdMediaBox() extends Box('text') {
- unsigned int(8) textData[36];
- } 
+	unsigned int(8) textData[36];
+}
 */
 public partial class TextGmhdMediaBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class TextGmhdMediaBox() extends Box('text') {
- unsigned int(8) textData[36];
- } "; } }
+	unsigned int(8) textData[36];
+}"; } }
 	public const string TYPE = "text";
 	public override string DisplayName { get { return "TextGmhdMediaBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

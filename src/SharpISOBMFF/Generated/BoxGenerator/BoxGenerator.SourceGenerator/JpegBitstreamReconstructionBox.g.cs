@@ -8,16 +8,16 @@ namespace SharpISOBMFF
 /*
 // What it takes to make the JPEG file a JPEG XL codestream was made of again, byte for byte
 aligned(8) class JpegBitstreamReconstructionBox extends Box('jbrd') {
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class JpegBitstreamReconstructionBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// What it takes to make the JPEG file a JPEG XL codestream was made of again, byte for byte
 aligned(8) class JpegBitstreamReconstructionBox extends Box('jbrd') {
- bit(8) data[];
- }"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "jbrd";
 	public override string DisplayName { get { return "JpegBitstreamReconstructionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class RelativeLocationProperty
-extends ItemFullProperty('rloc', version = 0, flags = 0)
+	extends ItemFullProperty('rloc', version = 0, flags = 0)
 {
 	unsigned int(32) horizontal_offset;
 	unsigned int(32) vertical_offset;
@@ -17,7 +17,7 @@ public partial class RelativeLocationProperty : ItemFullProperty
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class RelativeLocationProperty
-extends ItemFullProperty('rloc', version = 0, flags = 0)
+	extends ItemFullProperty('rloc', version = 0, flags = 0)
 {
 	unsigned int(32) horizontal_offset;
 	unsigned int(32) vertical_offset;

@@ -9,15 +9,13 @@ namespace SharpISOBMFF
 aligned(8) class CompressedMovieFragmentBox
 	extends CompressedBox('!mof', 'moof') {
 }
-
 */
 public partial class CompressedMovieFragmentBox : CompressedBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class CompressedMovieFragmentBox
 	extends CompressedBox('!mof', 'moof') {
-}
-"; } }
+}"; } }
 	public const string TYPE = "!mof";
 	public override string DisplayName { get { return "CompressedMovieFragmentBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

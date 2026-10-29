@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AppleAutoPlayBox() extends Box('play') {
-	 unsigned int(8) autoplay;
- } 
+	unsigned int(8) autoplay;
+}
 */
 public partial class AppleAutoPlayBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AppleAutoPlayBox() extends Box('play') {
-	 unsigned int(8) autoplay;
- } "; } }
+	unsigned int(8) autoplay;
+}"; } }
 	public const string TYPE = "play";
 	public override string DisplayName { get { return "AppleAutoPlayBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

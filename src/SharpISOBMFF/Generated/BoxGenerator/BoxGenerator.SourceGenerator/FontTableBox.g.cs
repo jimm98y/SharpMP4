@@ -7,19 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FontTableBox() extends Box('ftab') {
- unsigned int(16) entryCount;
- FontRecord fontEntries[entryCount];
- }
- 
+	unsigned int(16) entryCount;
+	FontRecord fontEntries[entryCount];
+}
 */
 public partial class FontTableBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class FontTableBox() extends Box('ftab') {
- unsigned int(16) entryCount;
- FontRecord fontEntries[entryCount];
- }
- "; } }
+	unsigned int(16) entryCount;
+	FontRecord fontEntries[entryCount];
+}"; } }
 	public const string TYPE = "ftab";
 	public override string DisplayName { get { return "FontTableBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

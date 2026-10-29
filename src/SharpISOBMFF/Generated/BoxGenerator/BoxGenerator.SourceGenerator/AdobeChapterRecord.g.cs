@@ -7,9 +7,10 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AdobeChapterRecord() {
- unsigned int(64) timestamp;
- unsigned int(8) count; char title[count];
- }
+	unsigned int(64) timestamp;
+	unsigned int(8) count;
+	char title[count];
+}
 */
 public partial class AdobeChapterRecord : IMp4Serializable
 {
@@ -20,9 +21,10 @@ public partial class AdobeChapterRecord : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class AdobeChapterRecord() {
- unsigned int(64) timestamp;
- unsigned int(8) count; char title[count];
- }"; } }
+	unsigned int(64) timestamp;
+	unsigned int(8) count;
+	char title[count];
+}"; } }
 	public virtual string DisplayName { get { return "AdobeChapterRecord"; } }
 
 	protected ulong timestamp; 

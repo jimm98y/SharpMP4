@@ -8,20 +8,18 @@ namespace SharpISOBMFF
 /*
 class PARAconfig()
 {
-  uimsbf(2) PARAmode;
-  if (PARAmode != 1) {
-    ErHVXCconfig();
-  }
-  if (PARAmode != 0) {
-    HILNconfig();
-  }
-  uimsbf(1) PARAextensionFlag;
-  if (PARAextensionFlag) {
-    /* to be defined in MPEG-4 Phase 3 *//*
-  }
+	uimsbf(2) PARAmode;
+	if (PARAmode != 1) {
+		ErHVXCconfig();
+	}
+	if (PARAmode != 0) {
+		HILNconfig();
+	}
+	uimsbf(1) PARAextensionFlag;
+	if (PARAextensionFlag) {
+		/* to be defined in MPEG-4 Phase 3 *//*
+	}
 }
-
-
 */
 public partial class PARAconfig : IMp4Serializable
 {
@@ -33,20 +31,18 @@ public partial class PARAconfig : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class PARAconfig()
 {
-  uimsbf(2) PARAmode;
-  if (PARAmode != 1) {
-    ErHVXCconfig();
-  }
-  if (PARAmode != 0) {
-    HILNconfig();
-  }
-  uimsbf(1) PARAextensionFlag;
-  if (PARAextensionFlag) {
-    /* to be defined in MPEG-4 Phase 3 */
-  }
-}
-
-"; } }
+	uimsbf(2) PARAmode;
+	if (PARAmode != 1) {
+		ErHVXCconfig();
+	}
+	if (PARAmode != 0) {
+		HILNconfig();
+	}
+	uimsbf(1) PARAextensionFlag;
+	if (PARAextensionFlag) {
+		/* to be defined in MPEG-4 Phase 3 */
+	}
+}"; } }
 	public virtual string DisplayName { get { return "PARAconfig"; } }
 
 	protected byte PARAmode; 

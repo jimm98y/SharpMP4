@@ -7,22 +7,21 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class EC3SpecificEntry() {
- bit(2) fscod;
- bit(5) bsid;
- bit(5) bsmod;
- bit(3) acmod;
- bit(1) lfeon;
- bit(3) reserved;
- bit(4) numDepSub;
- if(numDepSub > 0) {
- bit(9) chanLoc;
- }
- else 
- {
- bit(1) reserved2;
- }
- }
- 
+	bit(2) fscod;
+	bit(5) bsid;
+	bit(5) bsmod;
+	bit(3) acmod;
+	bit(1) lfeon;
+	bit(3) reserved;
+	bit(4) numDepSub;
+	if(numDepSub > 0) {
+		bit(9) chanLoc;
+	}
+	else
+	{
+		bit(1) reserved2;
+	}
+}
 */
 public partial class EC3SpecificEntry : IMp4Serializable
 {
@@ -33,22 +32,21 @@ public partial class EC3SpecificEntry : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class EC3SpecificEntry() {
- bit(2) fscod;
- bit(5) bsid;
- bit(5) bsmod;
- bit(3) acmod;
- bit(1) lfeon;
- bit(3) reserved;
- bit(4) numDepSub;
- if(numDepSub > 0) {
- bit(9) chanLoc;
- }
- else 
- {
- bit(1) reserved2;
- }
- }
- "; } }
+	bit(2) fscod;
+	bit(5) bsid;
+	bit(5) bsmod;
+	bit(3) acmod;
+	bit(1) lfeon;
+	bit(3) reserved;
+	bit(4) numDepSub;
+	if(numDepSub > 0) {
+		bit(9) chanLoc;
+	}
+	else
+	{
+		bit(1) reserved2;
+	}
+}"; } }
 	public virtual string DisplayName { get { return "EC3SpecificEntry"; } }
 
 	protected byte fscod; 

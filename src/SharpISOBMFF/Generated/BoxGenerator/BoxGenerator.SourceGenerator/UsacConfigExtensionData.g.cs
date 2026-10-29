@@ -8,10 +8,8 @@ namespace SharpISOBMFF
 /*
 class UsacConfigExtensionData(usacConfigExtLength)
 {
-  bslbf(8) usacConfigExt[usacConfigExtLength];
+	bslbf(8) usacConfigExt[usacConfigExtLength];
 }
-
-
 */
 public partial class UsacConfigExtensionData : IMp4Serializable
 {
@@ -23,10 +21,8 @@ public partial class UsacConfigExtensionData : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class UsacConfigExtensionData(usacConfigExtLength)
 {
-  bslbf(8) usacConfigExt[usacConfigExtLength];
-}
-
-"; } }
+	bslbf(8) usacConfigExt[usacConfigExtLength];
+}"; } }
 	public virtual string DisplayName { get { return "UsacConfigExtensionData"; } }
 
 	protected byte[] usacConfigExt = []; 

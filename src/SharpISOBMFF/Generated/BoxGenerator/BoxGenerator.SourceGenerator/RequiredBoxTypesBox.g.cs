@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class RequiredBoxTypesBox() extends FullBox ('must', 0, 0) {
- unsigned int(32) required_box_types[];
- }
+	unsigned int(32) required_box_types[];
+}
 */
 public partial class RequiredBoxTypesBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class RequiredBoxTypesBox() extends FullBox ('must', 0, 0) {
- unsigned int(32) required_box_types[];
- }"; } }
+	unsigned int(32) required_box_types[];
+}"; } }
 	public const string TYPE = "must";
 	public override string DisplayName { get { return "RequiredBoxTypesBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

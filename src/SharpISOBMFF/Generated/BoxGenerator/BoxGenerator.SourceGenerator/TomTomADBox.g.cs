@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class TomTomADBox() extends Box ('TTAD') {
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class TomTomADBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class TomTomADBox() extends Box ('TTAD') {
- bit(8) data[];
- }"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "TTAD";
 	public override string DisplayName { get { return "TomTomADBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

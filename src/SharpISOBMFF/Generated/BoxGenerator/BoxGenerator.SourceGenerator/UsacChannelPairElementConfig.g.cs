@@ -8,34 +8,32 @@ namespace SharpISOBMFF
 /*
 class UsacChannelPairElementConfig(coreSbrFrameLengthIndex)
 {
-  bslbf(1) tw_mdct;
-  bslbf(1) noiseFilling;
-  if (coreSbrFrameLengthIndex >= 2 && coreSbrFrameLengthIndex <= 4) {
-    SbrConfig() sbrConfig;
-    uimsbf(2) stereoConfigIndex;
-  }
-  if (stereoConfigIndex > 0) {
-    uimsbf(3) bsFreqRes;
-    uimsbf(3) bsFixedGainDMX;
-    uimsbf(2) bsTempShapeConfig;
-    uimsbf(2) bsDecorrConfig;
-    bslbf(1) bsHighRateMode;
-    bslbf(1) bsPhaseCoding;
-    bslbf(1) bsOttBandsPhasePresent;
-    if (bsOttBandsPhasePresent) {
-      uimsbf(5) bsOttBandsPhase;
-    }
-    if (stereoConfigIndex > 1) {
-      uimsbf(5) bsResidualBands;
-      bslbf(1) bsPseudoLr;
-    }
-    if (bsTempShapeConfig == 2) {
-      bslbf(1) bsEnvQuantMode;
-    }
-  }
+	bslbf(1) tw_mdct;
+	bslbf(1) noiseFilling;
+	if (coreSbrFrameLengthIndex >= 2 && coreSbrFrameLengthIndex <= 4) {
+		SbrConfig() sbrConfig;
+		uimsbf(2) stereoConfigIndex;
+	}
+	if (stereoConfigIndex > 0) {
+		uimsbf(3) bsFreqRes;
+		uimsbf(3) bsFixedGainDMX;
+		uimsbf(2) bsTempShapeConfig;
+		uimsbf(2) bsDecorrConfig;
+		bslbf(1) bsHighRateMode;
+		bslbf(1) bsPhaseCoding;
+		bslbf(1) bsOttBandsPhasePresent;
+		if (bsOttBandsPhasePresent) {
+			uimsbf(5) bsOttBandsPhase;
+		}
+		if (stereoConfigIndex > 1) {
+			uimsbf(5) bsResidualBands;
+			bslbf(1) bsPseudoLr;
+		}
+		if (bsTempShapeConfig == 2) {
+			bslbf(1) bsEnvQuantMode;
+		}
+	}
 }
-
-
 */
 public partial class UsacChannelPairElementConfig : IMp4Serializable
 {
@@ -47,34 +45,32 @@ public partial class UsacChannelPairElementConfig : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class UsacChannelPairElementConfig(coreSbrFrameLengthIndex)
 {
-  bslbf(1) tw_mdct;
-  bslbf(1) noiseFilling;
-  if (coreSbrFrameLengthIndex >= 2 && coreSbrFrameLengthIndex <= 4) {
-    SbrConfig() sbrConfig;
-    uimsbf(2) stereoConfigIndex;
-  }
-  if (stereoConfigIndex > 0) {
-    uimsbf(3) bsFreqRes;
-    uimsbf(3) bsFixedGainDMX;
-    uimsbf(2) bsTempShapeConfig;
-    uimsbf(2) bsDecorrConfig;
-    bslbf(1) bsHighRateMode;
-    bslbf(1) bsPhaseCoding;
-    bslbf(1) bsOttBandsPhasePresent;
-    if (bsOttBandsPhasePresent) {
-      uimsbf(5) bsOttBandsPhase;
-    }
-    if (stereoConfigIndex > 1) {
-      uimsbf(5) bsResidualBands;
-      bslbf(1) bsPseudoLr;
-    }
-    if (bsTempShapeConfig == 2) {
-      bslbf(1) bsEnvQuantMode;
-    }
-  }
-}
-
-"; } }
+	bslbf(1) tw_mdct;
+	bslbf(1) noiseFilling;
+	if (coreSbrFrameLengthIndex >= 2 && coreSbrFrameLengthIndex <= 4) {
+		SbrConfig() sbrConfig;
+		uimsbf(2) stereoConfigIndex;
+	}
+	if (stereoConfigIndex > 0) {
+		uimsbf(3) bsFreqRes;
+		uimsbf(3) bsFixedGainDMX;
+		uimsbf(2) bsTempShapeConfig;
+		uimsbf(2) bsDecorrConfig;
+		bslbf(1) bsHighRateMode;
+		bslbf(1) bsPhaseCoding;
+		bslbf(1) bsOttBandsPhasePresent;
+		if (bsOttBandsPhasePresent) {
+			uimsbf(5) bsOttBandsPhase;
+		}
+		if (stereoConfigIndex > 1) {
+			uimsbf(5) bsResidualBands;
+			bslbf(1) bsPseudoLr;
+		}
+		if (bsTempShapeConfig == 2) {
+			bslbf(1) bsEnvQuantMode;
+		}
+	}
+}"; } }
 	public virtual string DisplayName { get { return "UsacChannelPairElementConfig"; } }
 
 	protected bool tw_mdct; 

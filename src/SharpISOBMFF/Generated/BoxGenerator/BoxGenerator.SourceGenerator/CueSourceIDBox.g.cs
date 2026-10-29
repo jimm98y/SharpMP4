@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class CueSourceIDBox() extends Box ('vsid') {
- unsigned int(32) sourceID; 
- }
+	unsigned int(32) sourceID;
+}
 */
 public partial class CueSourceIDBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class CueSourceIDBox() extends Box ('vsid') {
- unsigned int(32) sourceID; 
- }"; } }
+	unsigned int(32) sourceID;
+}"; } }
 	public const string TYPE = "vsid";
 	public override string DisplayName { get { return "CueSourceIDBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

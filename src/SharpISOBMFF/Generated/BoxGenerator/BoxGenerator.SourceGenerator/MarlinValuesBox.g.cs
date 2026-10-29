@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class MarlinValuesBox() extends Box ('mrlv'){
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class MarlinValuesBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class MarlinValuesBox() extends Box ('mrlv'){
- bit(8) data[];
- }"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "mrlv";
 	public override string DisplayName { get { return "MarlinValuesBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

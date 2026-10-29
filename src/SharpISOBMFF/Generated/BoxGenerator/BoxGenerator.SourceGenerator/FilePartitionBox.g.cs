@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FilePartitionBox
-		extends FullBox('fpar', version, 0) {
+	extends FullBox('fpar', version, 0) {
 	if (version == 0) {
 		unsigned int(16)	item_ID;
 	} else {
@@ -36,7 +36,7 @@ public partial class FilePartitionBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class FilePartitionBox
-		extends FullBox('fpar', version, 0) {
+	extends FullBox('fpar', version, 0) {
 	if (version == 0) {
 		unsigned int(16)	item_ID;
 	} else {

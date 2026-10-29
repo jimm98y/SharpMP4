@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AppleYawBox() extends Box('©fyw') {
- Box boxes[];
- } 
+	Box boxes[];
+}
 */
 public partial class AppleYawBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AppleYawBox() extends Box('©fyw') {
- Box boxes[];
- } "; } }
+	Box boxes[];
+}"; } }
 	public const string TYPE = "©fyw";
 	public override string DisplayName { get { return "AppleYawBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

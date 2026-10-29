@@ -7,20 +7,18 @@ namespace SharpISOBMFF
 {
 /*
 class SLSSpecificConfig(samplingFrequencyIndex,
-  channelConfiguration,
-  audioObjectType)
+	channelConfiguration,
+	audioObjectType)
 {
-  uimsbf(3) pcmWordLength;
-  uimsbf(1) aac_core_present;
-  uimsbf(1) lle_main_stream;
-  uimsbf(1) reserved_bit;
-  uimsbf(3) frameLength;
-  if (!channelConfiguration) {
-    program_config_element();
-  }
+	uimsbf(3) pcmWordLength;
+	uimsbf(1) aac_core_present;
+	uimsbf(1) lle_main_stream;
+	uimsbf(1) reserved_bit;
+	uimsbf(3) frameLength;
+	if (!channelConfiguration) {
+		program_config_element();
+	}
 }
-
-
 */
 public partial class SLSSpecificConfig : IMp4Serializable
 {
@@ -31,20 +29,18 @@ public partial class SLSSpecificConfig : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class SLSSpecificConfig(samplingFrequencyIndex,
-  channelConfiguration,
-  audioObjectType)
+	channelConfiguration,
+	audioObjectType)
 {
-  uimsbf(3) pcmWordLength;
-  uimsbf(1) aac_core_present;
-  uimsbf(1) lle_main_stream;
-  uimsbf(1) reserved_bit;
-  uimsbf(3) frameLength;
-  if (!channelConfiguration) {
-    program_config_element();
-  }
-}
-
-"; } }
+	uimsbf(3) pcmWordLength;
+	uimsbf(1) aac_core_present;
+	uimsbf(1) lle_main_stream;
+	uimsbf(1) reserved_bit;
+	uimsbf(3) frameLength;
+	if (!channelConfiguration) {
+		program_config_element();
+	}
+}"; } }
 	public virtual string DisplayName { get { return "SLSSpecificConfig"; } }
 
 	protected byte pcmWordLength; 

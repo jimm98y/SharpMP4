@@ -10,7 +10,7 @@ class RectRegionBox extends Box('rrgn'){
 	unsigned int(16) base_region_tierID;
 	unsigned int(1) dynamic_rect;
 	bit(7) reserved = 0;
-	if(dynamic_rect == 0) { 
+	if(dynamic_rect == 0) {
 		unsigned int(16) horizontal_offset;
 		unsigned int(16) vertical_offset;
 		unsigned int(16) region_width;
@@ -25,7 +25,7 @@ public partial class RectRegionBox : Box
 	unsigned int(16) base_region_tierID;
 	unsigned int(1) dynamic_rect;
 	bit(7) reserved = 0;
-	if(dynamic_rect == 0) { 
+	if(dynamic_rect == 0) {
 		unsigned int(16) horizontal_offset;
 		unsigned int(16) vertical_offset;
 		unsigned int(16) region_width;

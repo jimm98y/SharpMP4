@@ -13,10 +13,8 @@ class CleanApertureBox extends Box('clap'){
 	unsigned int(32) cleanApertureHeightN;
 	unsigned int(32) cleanApertureHeightD;
 
-
 	unsigned int(32) horizOffN;
 	unsigned int(32) horizOffD;
-
 
 	unsigned int(32) vertOffN;
 	unsigned int(32) vertOffD;
@@ -33,10 +31,8 @@ public partial class CleanApertureBox : Box
 	unsigned int(32) cleanApertureHeightN;
 	unsigned int(32) cleanApertureHeightD;
 
-
 	unsigned int(32) horizOffN;
 	unsigned int(32) horizOffD;
-
 
 	unsigned int(32) vertOffN;
 	unsigned int(32) vertOffD;

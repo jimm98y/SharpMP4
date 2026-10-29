@@ -7,23 +7,21 @@ namespace SharpISOBMFF
 {
 /*
 class AppleColorTableBox() extends Box ('ctab'){
- signed int(32) color_table_seed;
- signed int(16) flags;
- signed int(16) color_table_size;
- AppleColor colors[];
- }
- 
+	signed int(32) color_table_seed;
+	signed int(16) flags;
+	signed int(16) color_table_size;
+	AppleColor colors[];
+}
 */
 public partial class AppleColorTableBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AppleColorTableBox() extends Box ('ctab'){
- signed int(32) color_table_seed;
- signed int(16) flags;
- signed int(16) color_table_size;
- AppleColor colors[];
- }
- "; } }
+	signed int(32) color_table_seed;
+	signed int(16) flags;
+	signed int(16) color_table_size;
+	AppleColor colors[];
+}"; } }
 	public const string TYPE = "ctab";
 	public override string DisplayName { get { return "AppleColorTableBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

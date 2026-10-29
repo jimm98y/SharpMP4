@@ -7,19 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class MetaBoxRelationBox() extends FullBox('mere') {
- unsigned int(32) firstMetaBoxHandlerType;
- unsigned int(32) secondMetaBoxHandlerType;
- bit(8) metaboxRelation; 
- }
+	unsigned int(32) firstMetaBoxHandlerType;
+	unsigned int(32) secondMetaBoxHandlerType;
+	bit(8) metaboxRelation;
+}
 */
 public partial class MetaBoxRelationBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class MetaBoxRelationBox() extends FullBox('mere') {
- unsigned int(32) firstMetaBoxHandlerType;
- unsigned int(32) secondMetaBoxHandlerType;
- bit(8) metaboxRelation; 
- }"; } }
+	unsigned int(32) firstMetaBoxHandlerType;
+	unsigned int(32) secondMetaBoxHandlerType;
+	bit(8) metaboxRelation;
+}"; } }
 	public const string TYPE = "mere";
 	public override string DisplayName { get { return "MetaBoxRelationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,17 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class C608Box() extends Box('c608') {
-	 unsigned int(8) reserved1[4]; unsigned int(16) reserved2;
- unsigned int(16) dataReferenceIndex;
- } 
+	unsigned int(8) reserved1[4];
+	unsigned int(16) reserved2;
+	unsigned int(16) dataReferenceIndex;
+}
 */
 public partial class C608Box : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class C608Box() extends Box('c608') {
-	 unsigned int(8) reserved1[4]; unsigned int(16) reserved2;
- unsigned int(16) dataReferenceIndex;
- } "; } }
+	unsigned int(8) reserved1[4];
+	unsigned int(16) reserved2;
+	unsigned int(16) dataReferenceIndex;
+}"; } }
 	public const string TYPE = "c608";
 	public override string DisplayName { get { return "C608Box"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

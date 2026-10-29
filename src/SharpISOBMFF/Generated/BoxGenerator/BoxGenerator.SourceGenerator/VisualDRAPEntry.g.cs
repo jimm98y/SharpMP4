@@ -6,8 +6,8 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class VisualDRAPEntry() 
-extends VisualSampleGroupEntry('drap') {
+class VisualDRAPEntry()
+	extends VisualSampleGroupEntry('drap') {
 	unsigned int(3) DRAP_type;
 	unsigned int(29) reserved = 0;
 }
@@ -15,8 +15,8 @@ extends VisualSampleGroupEntry('drap') {
 public partial class VisualDRAPEntry : VisualSampleGroupEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"class VisualDRAPEntry() 
-extends VisualSampleGroupEntry('drap') {
+	public override string Syntax { get { return @"class VisualDRAPEntry()
+	extends VisualSampleGroupEntry('drap') {
 	unsigned int(3) DRAP_type;
 	unsigned int(29) reserved = 0;
 }"; } }

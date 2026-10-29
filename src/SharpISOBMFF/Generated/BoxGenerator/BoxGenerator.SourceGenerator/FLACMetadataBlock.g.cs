@@ -7,11 +7,11 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FLACMetadataBlock {
- unsigned int(1) LastMetadataBlockFlag;
- unsigned int(7) BlockType;
- unsigned int(24) Length;
- unsigned int(8) BlockData[Length];
- }
+	unsigned int(1) LastMetadataBlockFlag;
+	unsigned int(7) BlockType;
+	unsigned int(24) Length;
+	unsigned int(8) BlockData[Length];
+}
 */
 public partial class FLACMetadataBlock : IMp4Serializable
 {
@@ -22,11 +22,11 @@ public partial class FLACMetadataBlock : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class FLACMetadataBlock {
- unsigned int(1) LastMetadataBlockFlag;
- unsigned int(7) BlockType;
- unsigned int(24) Length;
- unsigned int(8) BlockData[Length];
- }"; } }
+	unsigned int(1) LastMetadataBlockFlag;
+	unsigned int(7) BlockType;
+	unsigned int(24) Length;
+	unsigned int(8) BlockData[Length];
+}"; } }
 	public virtual string DisplayName { get { return "FLACMetadataBlock"; } }
 
 	protected bool LastMetadataBlockFlag; 

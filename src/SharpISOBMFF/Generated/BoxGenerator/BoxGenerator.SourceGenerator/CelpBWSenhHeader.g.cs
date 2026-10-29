@@ -8,10 +8,8 @@ namespace SharpISOBMFF
 /*
 class CelpBWSenhHeader()
 {
-  uimsbf(2) BWS_configuration;
+	uimsbf(2) BWS_configuration;
 }
-
-
 */
 public partial class CelpBWSenhHeader : IMp4Serializable
 {
@@ -23,10 +21,8 @@ public partial class CelpBWSenhHeader : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class CelpBWSenhHeader()
 {
-  uimsbf(2) BWS_configuration;
-}
-
-"; } }
+	uimsbf(2) BWS_configuration;
+}"; } }
 	public virtual string DisplayName { get { return "CelpBWSenhHeader"; } }
 
 	protected byte BWS_configuration; 

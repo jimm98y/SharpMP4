@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class Mp4aBox() extends Box ('mp4a') {
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class Mp4aBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class Mp4aBox() extends Box ('mp4a') {
- bit(8) data[];
- }"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "mp4a";
 	public override string DisplayName { get { return "Mp4aBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

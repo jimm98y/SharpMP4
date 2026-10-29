@@ -7,21 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 class OperatingPointDecodeTimeHint()
-extends VisualSampleGroupEntry ('opth')
+	extends VisualSampleGroupEntry ('opth')
 {
 	signed int(32) delta_time;
 }
-
 */
 public partial class OperatingPointDecodeTimeHint : VisualSampleGroupEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class OperatingPointDecodeTimeHint()
-extends VisualSampleGroupEntry ('opth')
+	extends VisualSampleGroupEntry ('opth')
 {
 	signed int(32) delta_time;
-}
-"; } }
+}"; } }
 	public const string TYPE = "opth";
 	public override string DisplayName { get { return "OperatingPointDecodeTimeHint"; } }
 

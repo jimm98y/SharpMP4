@@ -8,12 +8,12 @@ namespace SharpISOBMFF
 /*
 // 3GPP TS 26.245 5.17.3.13, HyperTextBox: a modifier of a timed text sample - after its text, not in the box tree - making a run of its characters a link
 aligned(8) class HrefBox() extends Box('href') {
- unsigned int(16) startcharoffset;
- unsigned int(16) endcharoffset;
- unsigned int(8) urlLength;
- unsigned int(8) url[urlLength];
- unsigned int(8) altLength;
- unsigned int(8) altstring[altLength];
+	unsigned int(16) startcharoffset;
+	unsigned int(16) endcharoffset;
+	unsigned int(8) urlLength;
+	unsigned int(8) url[urlLength];
+	unsigned int(8) altLength;
+	unsigned int(8) altstring[altLength];
 }
 */
 public partial class HrefBox : Box
@@ -21,12 +21,12 @@ public partial class HrefBox : Box
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// 3GPP TS 26.245 5.17.3.13, HyperTextBox: a modifier of a timed text sample - after its text, not in the box tree - making a run of its characters a link
 aligned(8) class HrefBox() extends Box('href') {
- unsigned int(16) startcharoffset;
- unsigned int(16) endcharoffset;
- unsigned int(8) urlLength;
- unsigned int(8) url[urlLength];
- unsigned int(8) altLength;
- unsigned int(8) altstring[altLength];
+	unsigned int(16) startcharoffset;
+	unsigned int(16) endcharoffset;
+	unsigned int(8) urlLength;
+	unsigned int(8) url[urlLength];
+	unsigned int(8) altLength;
+	unsigned int(8) altstring[altLength];
 }"; } }
 	public const string TYPE = "href";
 	public override string DisplayName { get { return "HrefBox"; } }

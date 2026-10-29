@@ -8,18 +8,22 @@ namespace SharpISOBMFF
 /*
 aligned(8) class SampleScaleBox() extends FullBox('stsl', version = 0, 0) {
 	bit(7)	reserved;
-	bit(1) constrained; unsigned int(8) scaleMethod; signed int(16) displayCenterX; signed int(16) displayCenterY;
-	}
-
+	bit(1) constrained;
+	unsigned int(8) scaleMethod;
+	signed int(16) displayCenterX;
+	signed int(16) displayCenterY;
+}
 */
 public partial class SampleScaleBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class SampleScaleBox() extends FullBox('stsl', version = 0, 0) {
 	bit(7)	reserved;
-	bit(1) constrained; unsigned int(8) scaleMethod; signed int(16) displayCenterX; signed int(16) displayCenterY;
-	}
-"; } }
+	bit(1) constrained;
+	unsigned int(8) scaleMethod;
+	signed int(16) displayCenterX;
+	signed int(16) displayCenterY;
+}"; } }
 	public const string TYPE = "stsl";
 	public override string DisplayName { get { return "SampleScaleBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

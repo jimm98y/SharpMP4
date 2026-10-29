@@ -8,10 +8,10 @@ namespace SharpISOBMFF
 /*
 // E.4, Pseudocode E.1
 aligned(8) class AC4SampleEntry extends AudioSampleEntry('ac-4') {
- AC4SpecificBox();
- // we permit any number of AC4PresentationLabel boxes:
- AC4PresentationLabelBox() [];
- Box () [];
+	AC4SpecificBox();
+	// we permit any number of AC4PresentationLabel boxes:
+	AC4PresentationLabelBox() [];
+	Box () [];
 }
 */
 public partial class AC4SampleEntry : AudioSampleEntry
@@ -19,10 +19,10 @@ public partial class AC4SampleEntry : AudioSampleEntry
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// E.4, Pseudocode E.1
 aligned(8) class AC4SampleEntry extends AudioSampleEntry('ac-4') {
- AC4SpecificBox();
- // we permit any number of AC4PresentationLabel boxes:
- AC4PresentationLabelBox() [];
- Box () [];
+	AC4SpecificBox();
+	// we permit any number of AC4PresentationLabel boxes:
+	AC4PresentationLabelBox() [];
+	Box () [];
 }"; } }
 	public const string TYPE = "ac-4";
 	public override string DisplayName { get { return "AC4SampleEntry"; } }

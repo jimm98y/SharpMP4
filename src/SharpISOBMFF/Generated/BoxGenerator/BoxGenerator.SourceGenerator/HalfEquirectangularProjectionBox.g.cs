@@ -6,15 +6,15 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class HalfEquirectangularProjectionBox extends FullBox('hequ', 0, 0) { 
-// fields reserved for future use 
+aligned(8) class HalfEquirectangularProjectionBox extends FullBox('hequ', 0, 0) {
+	// fields reserved for future use
 }
 */
 public partial class HalfEquirectangularProjectionBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class HalfEquirectangularProjectionBox extends FullBox('hequ', 0, 0) { 
-// fields reserved for future use 
+	public override string Syntax { get { return @"aligned(8) class HalfEquirectangularProjectionBox extends FullBox('hequ', 0, 0) {
+	// fields reserved for future use
 }"; } }
 	public const string TYPE = "hequ";
 	public override string DisplayName { get { return "HalfEquirectangularProjectionBox"; } }
@@ -30,7 +30,7 @@ public partial class HalfEquirectangularProjectionBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		/*  fields reserved for future use  */
+		/*  fields reserved for future use */
 		return boxSize;
 	}
 
@@ -38,7 +38,7 @@ public partial class HalfEquirectangularProjectionBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		/*  fields reserved for future use  */
+		/*  fields reserved for future use */
 		return boxSize;
 	}
 
@@ -46,7 +46,7 @@ public partial class HalfEquirectangularProjectionBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
-		/*  fields reserved for future use  */
+		/*  fields reserved for future use */
 		return boxSize;
 	}
 
@@ -54,7 +54,7 @@ public partial class HalfEquirectangularProjectionBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Trace(tracer);
-		/*  fields reserved for future use  */
+		/*  fields reserved for future use */
 		return boxSize;
 	}
 }

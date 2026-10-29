@@ -8,16 +8,12 @@ namespace SharpISOBMFF
 /*
 aligned(8) class MetaDataAUBox extends Box(local_key_id) {
 }
-
-
 */
 public partial class MetaDataAUBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class MetaDataAUBox extends Box(local_key_id) {
-}
-
-"; } }
+}"; } }
 	public override string DisplayName { get { return "MetaDataAUBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? BoxPlacements.OfType(FourCC)); }

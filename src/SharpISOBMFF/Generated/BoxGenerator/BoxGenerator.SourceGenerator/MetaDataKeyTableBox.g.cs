@@ -6,18 +6,18 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class MetaDataKeyTableBox extends FullBox('keys') { 
-        unsigned int(32) entry_count;
-        MetaDataKeyBox[];
-    }
+class MetaDataKeyTableBox extends FullBox('keys') {
+	unsigned int(32) entry_count;
+	MetaDataKeyBox[];
+}
 */
 public partial class MetaDataKeyTableBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"class MetaDataKeyTableBox extends FullBox('keys') { 
-        unsigned int(32) entry_count;
-        MetaDataKeyBox[];
-    }"; } }
+	public override string Syntax { get { return @"class MetaDataKeyTableBox extends FullBox('keys') {
+	unsigned int(32) entry_count;
+	MetaDataKeyBox[];
+}"; } }
 	public const string TYPE = "keys";
 	public override string DisplayName { get { return "MetaDataKeyTableBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

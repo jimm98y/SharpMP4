@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AppleGeIDBox() extends Box('geID') {
- Box boxes[];
- } 
+	Box boxes[];
+}
 */
 public partial class AppleGeIDBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AppleGeIDBox() extends Box('geID') {
- Box boxes[];
- } "; } }
+	Box boxes[];
+}"; } }
 	public const string TYPE = "geID";
 	public override string DisplayName { get { return "AppleGeIDBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

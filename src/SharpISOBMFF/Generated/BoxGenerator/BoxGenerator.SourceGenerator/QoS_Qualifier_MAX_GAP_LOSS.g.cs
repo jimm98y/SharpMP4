@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class QoS_Qualifier_MAX_GAP_LOSS extends QoS_Qualifier : bit(8) tag=0x04 {
- unsigned int(32) MAX_GAP_LOSS;
- }
- 
+	unsigned int(32) MAX_GAP_LOSS;
+}
 */
 public partial class QoS_Qualifier_MAX_GAP_LOSS : QoS_Qualifier
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class QoS_Qualifier_MAX_GAP_LOSS extends QoS_Qualifier : bit(8) tag=0x04 {
- unsigned int(32) MAX_GAP_LOSS;
- }
- "; } }
+	unsigned int(32) MAX_GAP_LOSS;
+}"; } }
 	public const byte TYPE = 0x04;
 	public override string DisplayName { get { return "QoS_Qualifier_MAX_GAP_LOSS"; } }
 

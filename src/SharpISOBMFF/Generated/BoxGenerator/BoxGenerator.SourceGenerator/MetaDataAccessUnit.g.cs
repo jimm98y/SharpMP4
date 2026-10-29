@@ -7,10 +7,8 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class MetaDataAccessUnit {
-Box boxes[];
+	Box boxes[];
 }
-
-
 */
 public partial class MetaDataAccessUnit : IMp4Serializable
 {
@@ -21,10 +19,8 @@ public partial class MetaDataAccessUnit : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class MetaDataAccessUnit {
-Box boxes[];
-}
-
-"; } }
+	Box boxes[];
+}"; } }
 	public virtual string DisplayName { get { return "MetaDataAccessUnit"; } }
 
 	protected Box[] boxes = []; 

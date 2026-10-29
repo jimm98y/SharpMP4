@@ -8,17 +8,15 @@ namespace SharpISOBMFF
 /*
 class UsacExtElementConfig()
 {
-  EscapedValue(4, 8, 16) usacExtElementType;
-  EscapedValue(4, 8, 16) usacExtElementConfigLength;
-  bslbf(1) usacExtElementDefaultLengthPresent;
-  if (usacExtElementDefaultLengthPresent) {
-    EscapedValue(8, 16, 0) usacExtElementDefaultLength;
-  }
-  bslbf(1) usacExtElementPayloadFrag;
-  bslbf(8) usacExtElementConfigData[usacExtElementConfigLength];
+	EscapedValue(4, 8, 16) usacExtElementType;
+	EscapedValue(4, 8, 16) usacExtElementConfigLength;
+	bslbf(1) usacExtElementDefaultLengthPresent;
+	if (usacExtElementDefaultLengthPresent) {
+		EscapedValue(8, 16, 0) usacExtElementDefaultLength;
+	}
+	bslbf(1) usacExtElementPayloadFrag;
+	bslbf(8) usacExtElementConfigData[usacExtElementConfigLength];
 }
-
-
 */
 public partial class UsacExtElementConfig : IMp4Serializable
 {
@@ -30,17 +28,15 @@ public partial class UsacExtElementConfig : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class UsacExtElementConfig()
 {
-  EscapedValue(4, 8, 16) usacExtElementType;
-  EscapedValue(4, 8, 16) usacExtElementConfigLength;
-  bslbf(1) usacExtElementDefaultLengthPresent;
-  if (usacExtElementDefaultLengthPresent) {
-    EscapedValue(8, 16, 0) usacExtElementDefaultLength;
-  }
-  bslbf(1) usacExtElementPayloadFrag;
-  bslbf(8) usacExtElementConfigData[usacExtElementConfigLength];
-}
-
-"; } }
+	EscapedValue(4, 8, 16) usacExtElementType;
+	EscapedValue(4, 8, 16) usacExtElementConfigLength;
+	bslbf(1) usacExtElementDefaultLengthPresent;
+	if (usacExtElementDefaultLengthPresent) {
+		EscapedValue(8, 16, 0) usacExtElementDefaultLength;
+	}
+	bslbf(1) usacExtElementPayloadFrag;
+	bslbf(8) usacExtElementConfigData[usacExtElementConfigLength];
+}"; } }
 	public virtual string DisplayName { get { return "UsacExtElementConfig"; } }
 
 	protected EscapedValue usacExtElementType; 

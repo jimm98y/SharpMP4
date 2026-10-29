@@ -6,7 +6,7 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class StereoVideoGroupBox extends TrackGroupTypeBox('ster') 
+aligned(8) class StereoVideoGroupBox extends TrackGroupTypeBox('ster')
 {
 	unsigned int(1) left_view_flag;
 	bit(31) reserved;
@@ -15,7 +15,7 @@ aligned(8) class StereoVideoGroupBox extends TrackGroupTypeBox('ster')
 public partial class StereoVideoGroupBox : TrackGroupTypeBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class StereoVideoGroupBox extends TrackGroupTypeBox('ster') 
+	public override string Syntax { get { return @"aligned(8) class StereoVideoGroupBox extends TrackGroupTypeBox('ster')
 {
 	unsigned int(1) left_view_flag;
 	bit(31) reserved;

@@ -6,8 +6,8 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class CompactSampleSizeBox 
-		extends FullBox('stz2', version = 0, 0) {
+aligned(8) class CompactSampleSizeBox
+	extends FullBox('stz2', version = 0, 0) {
 	unsigned int(24)	reserved = 0;
 	unsigned int(8)	field_size;
 	unsigned int(32)	sample_count;
@@ -19,8 +19,8 @@ aligned(8) class CompactSampleSizeBox
 public partial class CompactSampleSizeBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class CompactSampleSizeBox 
-		extends FullBox('stz2', version = 0, 0) {
+	public override string Syntax { get { return @"aligned(8) class CompactSampleSizeBox
+	extends FullBox('stz2', version = 0, 0) {
 	unsigned int(24)	reserved = 0;
 	unsigned int(8)	field_size;
 	unsigned int(32)	sample_count;

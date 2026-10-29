@@ -7,19 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class MicrosoftWindowsVersionBox() extends Box('uuid 5ca708fb328e4205a861650eca0a9596') {
-	 unsigned int(16) unknown1;
- unsigned int(16) count;
- char version[count];
- }
+	unsigned int(16) unknown1;
+	unsigned int(16) count;
+	char version[count];
+}
 */
 public partial class MicrosoftWindowsVersionBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class MicrosoftWindowsVersionBox() extends Box('uuid 5ca708fb328e4205a861650eca0a9596') {
-	 unsigned int(16) unknown1;
- unsigned int(16) count;
- char version[count];
- }"; } }
+	unsigned int(16) unknown1;
+	unsigned int(16) count;
+	char version[count];
+}"; } }
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "MicrosoftWindowsVersionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

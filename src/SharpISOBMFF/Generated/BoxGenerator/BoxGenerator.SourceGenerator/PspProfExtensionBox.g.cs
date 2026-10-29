@@ -7,19 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class PspProfExtensionBox() extends Box('uuid 50524f4621d24fcebb88695cfac9c740') {
-	 unsigned int(32) unknown1;
- unsigned int(32) entry_count;
- Box boxes[];
- }
+	unsigned int(32) unknown1;
+	unsigned int(32) entry_count;
+	Box boxes[];
+}
 */
 public partial class PspProfExtensionBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class PspProfExtensionBox() extends Box('uuid 50524f4621d24fcebb88695cfac9c740') {
-	 unsigned int(32) unknown1;
- unsigned int(32) entry_count;
- Box boxes[];
- }"; } }
+	unsigned int(32) unknown1;
+	unsigned int(32) entry_count;
+	Box boxes[];
+}"; } }
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "PspProfExtensionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

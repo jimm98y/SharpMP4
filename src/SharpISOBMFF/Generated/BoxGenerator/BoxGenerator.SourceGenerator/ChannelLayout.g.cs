@@ -6,11 +6,12 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class ChannelLayout extends FullBox('chnl', version, flags=0) {	if (version==0) {
+aligned(8) class ChannelLayout extends FullBox('chnl', version, flags=0) {
+	if (version==0) {
 		unsigned int(8) stream_structure;
 		if (stream_structure & channelStructured) {
 			unsigned int(8) definedLayout;
- 			if (definedLayout==0) {
+			if (definedLayout==0) {
 				for (i = 1 ; i <= layout_channel_count ; i++) {
 					//  layout_channel_count comes from the sample entry
 					unsigned int(8) speaker_position;
@@ -20,8 +21,8 @@ aligned(8) class ChannelLayout extends FullBox('chnl', version, flags=0) {	if (v
 					}
 				}
 			} else {
-				unsigned int(64)	omittedChannelsMap; 
-						// a ‘1’ bit indicates ‘not in this track’
+				unsigned int(64)	omittedChannelsMap;
+				// a ‘1’ bit indicates ‘not in this track’
 			}
 		}
 		if (stream_structure & objectStructured) {
@@ -47,26 +48,26 @@ aligned(8) class ChannelLayout extends FullBox('chnl', version, flags=0) {	if (v
 				unsigned int(3) channel_order_definition;
 				unsigned int(1) omitted_channels_present;
 				if (omitted_channels_present == 1) {
-					unsigned int(64)	omittedChannelsMap; 
-							// a ‘1’ bit indicates ‘not in this track’
+					unsigned int(64)	omittedChannelsMap;
+					// a ‘1’ bit indicates ‘not in this track’
 				}
 			}
 		}
 		if (stream_structure & objectStructured) {
-							// object_count is derived from baseChannelCount
+			// object_count is derived from baseChannelCount
 		}
 	}
 }
-
 */
 public partial class ChannelLayout : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class ChannelLayout extends FullBox('chnl', version, flags=0) {	if (version==0) {
+	public override string Syntax { get { return @"aligned(8) class ChannelLayout extends FullBox('chnl', version, flags=0) {
+	if (version==0) {
 		unsigned int(8) stream_structure;
 		if (stream_structure & channelStructured) {
 			unsigned int(8) definedLayout;
- 			if (definedLayout==0) {
+			if (definedLayout==0) {
 				for (i = 1 ; i <= layout_channel_count ; i++) {
 					//  layout_channel_count comes from the sample entry
 					unsigned int(8) speaker_position;
@@ -76,8 +77,8 @@ public partial class ChannelLayout : FullBox
 					}
 				}
 			} else {
-				unsigned int(64)	omittedChannelsMap; 
-						// a ‘1’ bit indicates ‘not in this track’
+				unsigned int(64)	omittedChannelsMap;
+				// a ‘1’ bit indicates ‘not in this track’
 			}
 		}
 		if (stream_structure & objectStructured) {
@@ -103,17 +104,16 @@ public partial class ChannelLayout : FullBox
 				unsigned int(3) channel_order_definition;
 				unsigned int(1) omitted_channels_present;
 				if (omitted_channels_present == 1) {
-					unsigned int(64)	omittedChannelsMap; 
-							// a ‘1’ bit indicates ‘not in this track’
+					unsigned int(64)	omittedChannelsMap;
+					// a ‘1’ bit indicates ‘not in this track’
 				}
 			}
 		}
 		if (stream_structure & objectStructured) {
-							// object_count is derived from baseChannelCount
+			// object_count is derived from baseChannelCount
 		}
 	}
-}
-"; } }
+}"; } }
 	public const string TYPE = "chnl";
 	public override string DisplayName { get { return "ChannelLayout"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -10,7 +10,7 @@ class MVDDepthResolutionBox extends Box('3dpr')
 {
 	unsigned int(16) depth_width;
 	unsigned int(16) depth_height;
-/* The following 5 fields are collectively optional; they are either all present or all absent. When grid_pos_num_views is not present, the for loop is not present, equivalent to grid_pos_num_views equal to 0. These fields may be present or absent whenever the box is present (e.g., in MVCDConfigurationBox or A3DConfigurationBox). *//*
+	/* The following 5 fields are collectively optional; they are either all present or all absent. When grid_pos_num_views is not present, the for loop is not present, equivalent to grid_pos_num_views equal to 0. These fields may be present or absent whenever the box is present (e.g., in MVCDConfigurationBox or A3DConfigurationBox). *//*
 	unsigned int(16) depth_hor_mult_minus1; // optional
 	unsigned int(16) depth_ver_mult_minus1; // optional
 	unsigned int(4) depth_hor_rsh; // optional
@@ -31,7 +31,7 @@ public partial class MVDDepthResolutionBox : Box
 {
 	unsigned int(16) depth_width;
 	unsigned int(16) depth_height;
-/* The following 5 fields are collectively optional; they are either all present or all absent. When grid_pos_num_views is not present, the for loop is not present, equivalent to grid_pos_num_views equal to 0. These fields may be present or absent whenever the box is present (e.g., in MVCDConfigurationBox or A3DConfigurationBox). */
+	/* The following 5 fields are collectively optional; they are either all present or all absent. When grid_pos_num_views is not present, the for loop is not present, equivalent to grid_pos_num_views equal to 0. These fields may be present or absent whenever the box is present (e.g., in MVCDConfigurationBox or A3DConfigurationBox). */
 	unsigned int(16) depth_hor_mult_minus1; // optional
 	unsigned int(16) depth_ver_mult_minus1; // optional
 	unsigned int(4) depth_hor_rsh; // optional

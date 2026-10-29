@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class TrackFragmentRandomAccessBox
- extends FullBox('tfra', version, 0) {
+	extends FullBox('tfra', version, 0) {
 	unsigned int(32)	track_ID;
 	const unsigned int(26)	reserved = 0;
 	unsigned int(2)	length_size_of_traf_num;
@@ -32,7 +32,7 @@ public partial class TrackFragmentRandomAccessBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class TrackFragmentRandomAccessBox
- extends FullBox('tfra', version, 0) {
+	extends FullBox('tfra', version, 0) {
 	unsigned int(32)	track_ID;
 	const unsigned int(26)	reserved = 0;
 	unsigned int(2)	length_size_of_traf_num;

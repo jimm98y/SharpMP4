@@ -7,19 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AppleDataReferenceBox() extends FullBox('rdrf') {
- unsigned int(32) dataReferenceType;
- unsigned int(32) count;
- unsigned int(8) dataReference[count];
- } 
+	unsigned int(32) dataReferenceType;
+	unsigned int(32) count;
+	unsigned int(8) dataReference[count];
+}
 */
 public partial class AppleDataReferenceBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AppleDataReferenceBox() extends FullBox('rdrf') {
- unsigned int(32) dataReferenceType;
- unsigned int(32) count;
- unsigned int(8) dataReference[count];
- } "; } }
+	unsigned int(32) dataReferenceType;
+	unsigned int(32) count;
+	unsigned int(8) dataReference[count];
+}"; } }
 	public const string TYPE = "rdrf";
 	public override string DisplayName { get { return "AppleDataReferenceBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

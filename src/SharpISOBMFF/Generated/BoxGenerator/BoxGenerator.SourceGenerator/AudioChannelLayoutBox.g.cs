@@ -7,23 +7,21 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AudioChannelLayoutBox() extends FullBox('chan') {
- unsigned int(32) channelLayoutTag;
- unsigned int(32) channelBitmap;
- unsigned int(32) numberChannelDescriptions;
- AudioChannelDescription channelDescriptions[numberChannelDescriptions];
- }
- 
+	unsigned int(32) channelLayoutTag;
+	unsigned int(32) channelBitmap;
+	unsigned int(32) numberChannelDescriptions;
+	AudioChannelDescription channelDescriptions[numberChannelDescriptions];
+}
 */
 public partial class AudioChannelLayoutBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AudioChannelLayoutBox() extends FullBox('chan') {
- unsigned int(32) channelLayoutTag;
- unsigned int(32) channelBitmap;
- unsigned int(32) numberChannelDescriptions;
- AudioChannelDescription channelDescriptions[numberChannelDescriptions];
- }
- "; } }
+	unsigned int(32) channelLayoutTag;
+	unsigned int(32) channelBitmap;
+	unsigned int(32) numberChannelDescriptions;
+	AudioChannelDescription channelDescriptions[numberChannelDescriptions];
+}"; } }
 	public const string TYPE = "chan";
 	public override string DisplayName { get { return "AudioChannelLayoutBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

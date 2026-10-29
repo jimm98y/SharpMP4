@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 class TierDependencyBox extends Box('ldep'){
-	unsigned int(16) entry_count; 
+	unsigned int(16) entry_count;
 	for (i=0; i < entry_count; i++)
 		unsigned int(16) dependencyTierId;
 }
@@ -16,7 +16,7 @@ public partial class TierDependencyBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class TierDependencyBox extends Box('ldep'){
-	unsigned int(16) entry_count; 
+	unsigned int(16) entry_count;
 	for (i=0; i < entry_count; i++)
 		unsigned int(16) dependencyTierId;
 }"; } }

@@ -7,11 +7,10 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ViprEntry() {
- unsigned int(6) reserved = 0; 
-  unsigned int(10) view_id; 
-  unsigned int(32) content_priority_id;
- }
-
+	unsigned int(6) reserved = 0;
+	unsigned int(10) view_id;
+	unsigned int(32) content_priority_id;
+}
 */
 public partial class ViprEntry : IMp4Serializable
 {
@@ -22,11 +21,10 @@ public partial class ViprEntry : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class ViprEntry() {
- unsigned int(6) reserved = 0; 
-  unsigned int(10) view_id; 
-  unsigned int(32) content_priority_id;
- }
-"; } }
+	unsigned int(6) reserved = 0;
+	unsigned int(10) view_id;
+	unsigned int(32) content_priority_id;
+}"; } }
 	public virtual string DisplayName { get { return "ViprEntry"; } }
 
 	protected byte reserved = 0; 

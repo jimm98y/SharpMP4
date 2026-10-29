@@ -8,13 +8,11 @@ namespace SharpISOBMFF
 /*
 class HILNenexConfig()
 {
-  uimsbf(1) HILNenhaLayer;
-  if (HILNenhaLayer) {
-    uimsbf(2) HILNenhaQuantMode;
-  }
+	uimsbf(1) HILNenhaLayer;
+	if (HILNenhaLayer) {
+		uimsbf(2) HILNenhaQuantMode;
+	}
 }
-
-
 */
 public partial class HILNenexConfig : IMp4Serializable
 {
@@ -26,13 +24,11 @@ public partial class HILNenexConfig : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class HILNenexConfig()
 {
-  uimsbf(1) HILNenhaLayer;
-  if (HILNenhaLayer) {
-    uimsbf(2) HILNenhaQuantMode;
-  }
-}
-
-"; } }
+	uimsbf(1) HILNenhaLayer;
+	if (HILNenhaLayer) {
+		uimsbf(2) HILNenhaQuantMode;
+	}
+}"; } }
 	public virtual string DisplayName { get { return "HILNenexConfig"; } }
 
 	protected bool HILNenhaLayer; 

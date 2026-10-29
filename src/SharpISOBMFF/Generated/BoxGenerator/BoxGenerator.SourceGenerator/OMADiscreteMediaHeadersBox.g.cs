@@ -7,19 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class OMADiscreteMediaHeadersBox () extends FullBox('odhe') {
-	 unsigned int(8) contentTypeLength;
- unsigned int(8) contentType[contentTypeLength];
- Box boxes[]; 
- } 
+	unsigned int(8) contentTypeLength;
+	unsigned int(8) contentType[contentTypeLength];
+	Box boxes[];
+}
 */
 public partial class OMADiscreteMediaHeadersBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class OMADiscreteMediaHeadersBox () extends FullBox('odhe') {
-	 unsigned int(8) contentTypeLength;
- unsigned int(8) contentType[contentTypeLength];
- Box boxes[]; 
- } "; } }
+	unsigned int(8) contentTypeLength;
+	unsigned int(8) contentType[contentTypeLength];
+	Box boxes[];
+}"; } }
 	public const string TYPE = "odhe";
 	public override string DisplayName { get { return "OMADiscreteMediaHeadersBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

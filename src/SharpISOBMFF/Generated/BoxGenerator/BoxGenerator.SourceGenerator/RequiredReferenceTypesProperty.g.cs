@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class RequiredReferenceTypesProperty
-extends ItemFullProperty('rref', version = 0, flags = 0){
+	extends ItemFullProperty('rref', version = 0, flags = 0){
 	unsigned int(8) reference_type_count;
 	for (i=0; i< reference_type_count; i++) {
 		unsigned int(32) reference_type[i];
@@ -18,7 +18,7 @@ public partial class RequiredReferenceTypesProperty : ItemFullProperty
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class RequiredReferenceTypesProperty
-extends ItemFullProperty('rref', version = 0, flags = 0){
+	extends ItemFullProperty('rref', version = 0, flags = 0){
 	unsigned int(8) reference_type_count;
 	for (i=0; i< reference_type_count; i++) {
 		unsigned int(32) reference_type[i];

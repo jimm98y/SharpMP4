@@ -8,9 +8,9 @@ namespace SharpISOBMFF
 /*
 // 6.2.4: unsigned int (8 x configOBUs_size) configOBUs, as bytes; what a later version puts after them is left
 class IAConfigurationBox extends Box('iacb') {
- unsigned int(8) configurationVersion = 1;
- leb128() configOBUs_size;
- unsigned int(8) configOBUs[configOBUs_size];
+	unsigned int(8) configurationVersion = 1;
+	leb128() configOBUs_size;
+	unsigned int(8) configOBUs[configOBUs_size];
 }
 */
 public partial class IAConfigurationBox : Box
@@ -18,9 +18,9 @@ public partial class IAConfigurationBox : Box
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// 6.2.4: unsigned int (8 x configOBUs_size) configOBUs, as bytes; what a later version puts after them is left
 class IAConfigurationBox extends Box('iacb') {
- unsigned int(8) configurationVersion = 1;
- leb128() configOBUs_size;
- unsigned int(8) configOBUs[configOBUs_size];
+	unsigned int(8) configurationVersion = 1;
+	leb128() configOBUs_size;
+	unsigned int(8) configOBUs[configOBUs_size];
 }"; } }
 	public const string TYPE = "iacb";
 	public override string DisplayName { get { return "IAConfigurationBox"; } }

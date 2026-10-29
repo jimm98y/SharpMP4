@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class J2kLayersBox() extends Box('j2kL') {
-	 bit(8) data[];
- } 
+	bit(8) data[];
+}
 */
 public partial class J2kLayersBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class J2kLayersBox() extends Box('j2kL') {
-	 bit(8) data[];
- } "; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "j2kL";
 	public override string DisplayName { get { return "J2kLayersBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

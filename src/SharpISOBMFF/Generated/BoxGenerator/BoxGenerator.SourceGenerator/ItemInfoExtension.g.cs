@@ -7,9 +7,8 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ItemInfoExtension(unsigned int(32) extension_type)
-{ 
-} 
-
+{
+}
 */
 public partial class ItemInfoExtension : IMp4Serializable
 {
@@ -20,9 +19,8 @@ public partial class ItemInfoExtension : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class ItemInfoExtension(unsigned int(32) extension_type)
-{ 
-} 
-"; } }
+{
+}"; } }
 	public virtual string DisplayName { get { return "ItemInfoExtension"; } }
 
 	public ItemInfoExtension(uint extension_type): base()

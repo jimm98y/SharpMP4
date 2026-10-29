@@ -7,19 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class PanoramaEntry
-extends VisualSampleGroupEntry('pano') {
+	extends VisualSampleGroupEntry('pano') {
 	unsigned int(16) frame_number;
 }
-
 */
 public partial class PanoramaEntry : VisualSampleGroupEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class PanoramaEntry
-extends VisualSampleGroupEntry('pano') {
+	extends VisualSampleGroupEntry('pano') {
 	unsigned int(16) frame_number;
-}
-"; } }
+}"; } }
 	public const string TYPE = "pano";
 	public override string DisplayName { get { return "PanoramaEntry"; } }
 

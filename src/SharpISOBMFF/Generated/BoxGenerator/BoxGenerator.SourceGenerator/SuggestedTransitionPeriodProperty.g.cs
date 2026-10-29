@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 class SuggestedTransitionPeriodProperty
-extends ItemFullProperty('stpe', version=0, flags=0) {
+	extends ItemFullProperty('stpe', version=0, flags=0) {
 	unsigned int(8) transition_period;
 }
 */
@@ -15,7 +15,7 @@ public partial class SuggestedTransitionPeriodProperty : ItemFullProperty
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class SuggestedTransitionPeriodProperty
-extends ItemFullProperty('stpe', version=0, flags=0) {
+	extends ItemFullProperty('stpe', version=0, flags=0) {
 	unsigned int(8) transition_period;
 }"; } }
 	public const string TYPE = "stpe";

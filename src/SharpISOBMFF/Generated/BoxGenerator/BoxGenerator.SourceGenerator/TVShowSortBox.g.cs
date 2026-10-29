@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class TVShowSortBox() extends Box('sosn') {
- Box boxes[]; 
- }
+	Box boxes[];
+}
 */
 public partial class TVShowSortBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class TVShowSortBox() extends Box('sosn') {
- Box boxes[]; 
- }"; } }
+	Box boxes[];
+}"; } }
 	public const string TYPE = "sosn";
 	public override string DisplayName { get { return "TVShowSortBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

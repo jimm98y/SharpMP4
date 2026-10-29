@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FlashExposureBracketingEntry
-extends VisualSampleGroupEntry('afbr') {
+	extends VisualSampleGroupEntry('afbr') {
 	int(8) flash_exposure_numerator;
 	int(8) flash_exposure_denominator;
 }
@@ -16,7 +16,7 @@ public partial class FlashExposureBracketingEntry : VisualSampleGroupEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class FlashExposureBracketingEntry
-extends VisualSampleGroupEntry('afbr') {
+	extends VisualSampleGroupEntry('afbr') {
 	int(8) flash_exposure_numerator;
 	int(8) flash_exposure_denominator;
 }"; } }

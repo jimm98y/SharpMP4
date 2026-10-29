@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class MinoltaMMA1Box() extends Box ('MMA1') {
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class MinoltaMMA1Box : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class MinoltaMMA1Box() extends Box ('MMA1') {
- bit(8) data[];
- }"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "MMA1";
 	public override string DisplayName { get { return "MinoltaMMA1Box"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

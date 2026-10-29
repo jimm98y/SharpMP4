@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AdditionalMetadataContainerBox() extends Box('meco') {
-	 Box boxes[];
- } 
+	Box boxes[];
+}
 */
 public partial class AdditionalMetadataContainerBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AdditionalMetadataContainerBox() extends Box('meco') {
-	 Box boxes[];
- } "; } }
+	Box boxes[];
+}"; } }
 	public const string TYPE = "meco";
 	public override string DisplayName { get { return "AdditionalMetadataContainerBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

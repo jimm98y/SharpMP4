@@ -10,7 +10,7 @@ aligned(8) class ThreeGPPDescriptionBox() extends FullBox('dscp', version = 0, 0
 	bit(1) reserved = 0;
 	unsigned int(5)[3] language;
 	string value;
-} 
+}
 */
 public partial class ThreeGPPDescriptionBox : FullBox
 {
@@ -19,7 +19,7 @@ public partial class ThreeGPPDescriptionBox : FullBox
 	bit(1) reserved = 0;
 	unsigned int(5)[3] language;
 	string value;
-} "; } }
+}"; } }
 	public const string TYPE = "dscp";
 	public override string DisplayName { get { return "ThreeGPPDescriptionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

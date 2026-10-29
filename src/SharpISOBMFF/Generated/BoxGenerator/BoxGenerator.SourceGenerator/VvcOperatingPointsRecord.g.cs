@@ -6,54 +6,53 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class VvcOperatingPointsRecord { 
-unsigned int(8) num_profile_tier_level_minus1;
-for (i=0; i<=num_profile_tier_level_minus1; i++) { 
- unsigned int(8) ptl_max_temporal_id[i]; 
- VvcPTLRecord(ptl_max_temporal_id[i]+1) ptl[i];
-} 
-unsigned int(1) all_independent_layers_flag; 
-bit(7) reserved = 0; 
-if (all_independent_layers_flag){ 
- unsigned int(1) each_layer_is_an_ols_flag; 
- bit(7) reserved = 0; 
-} 
-else 
- unsigned int(8) ols_mode_idc; 
-unsigned int(16) num_operating_points; 
-for (i=0; i<num_operating_points; i++) { 
- unsigned int(16) output_layer_set_idx; 
- unsigned int(8) ptl_idx; 
- unsigned int(8) max_temporal_id; 
- unsigned int(8) layer_count; 
- for (j=0; j<layer_count; j++) { 
-  unsigned int(6) layer_id; 
-  unsigned int(1) is_outputlayer;
-  bit(1) reserved = 0;
- }
- bit(6) reserved = 0; 
- unsigned int(1) frame_rate_info_flag;
- unsigned int(1) bit_rate_info_flag;
- if (frame_rate_info_flag) { 
-  unsigned int(16) avgFrameRate; 
-  bit(6) reserved = 0; 
-  unsigned int(2) constantFrameRate;
- } 
- if (bit_rate_info_flag) { 
-  unsigned int(32) maxBitRate; 
-  unsigned int(32) avgBitRate;
- }
+class VvcOperatingPointsRecord {
+	unsigned int(8) num_profile_tier_level_minus1;
+	for (i=0; i<=num_profile_tier_level_minus1; i++) {
+		unsigned int(8) ptl_max_temporal_id[i];
+		VvcPTLRecord(ptl_max_temporal_id[i]+1) ptl[i];
+	}
+	unsigned int(1) all_independent_layers_flag;
+	bit(7) reserved = 0;
+	if (all_independent_layers_flag){
+		unsigned int(1) each_layer_is_an_ols_flag;
+		bit(7) reserved = 0;
+	}
+	else
+		unsigned int(8) ols_mode_idc;
+	unsigned int(16) num_operating_points;
+	for (i=0; i<num_operating_points; i++) {
+		unsigned int(16) output_layer_set_idx;
+		unsigned int(8) ptl_idx;
+		unsigned int(8) max_temporal_id;
+		unsigned int(8) layer_count;
+		for (j=0; j<layer_count; j++) {
+			unsigned int(6) layer_id;
+			unsigned int(1) is_outputlayer;
+			bit(1) reserved = 0;
+		}
+		bit(6) reserved = 0;
+		unsigned int(1) frame_rate_info_flag;
+		unsigned int(1) bit_rate_info_flag;
+		if (frame_rate_info_flag) {
+			unsigned int(16) avgFrameRate;
+			bit(6) reserved = 0;
+			unsigned int(2) constantFrameRate;
+		}
+		if (bit_rate_info_flag) {
+			unsigned int(32) maxBitRate;
+			unsigned int(32) avgBitRate;
+		}
+	}
+	unsigned int(8) max_layer_count;
+	for (i=0; i<max_layer_count; i++) {
+		unsigned int(8) layerID;
+		unsigned int(8) num_direct_ref_layers;
+		for (j=0; j<num_direct_ref_layers; j++)
+			unsigned int(8) direct_ref_layerID;
+		unsigned int(8) max_tid_il_ref_pics_plus1;
+	}
 }
-unsigned int(8) max_layer_count; 
-for (i=0; i<max_layer_count; i++) { 
- unsigned int(8) layerID; 
- unsigned int(8) num_direct_ref_layers; 
- for (j=0; j<num_direct_ref_layers; j++) 
-  unsigned int(8) direct_ref_layerID; 
- unsigned int(8) max_tid_il_ref_pics_plus1; 
- }
-}
-
 */
 public partial class VvcOperatingPointsRecord : IMp4Serializable
 {
@@ -63,54 +62,53 @@ public partial class VvcOperatingPointsRecord : IMp4Serializable
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public virtual string Syntax { get { return @"class VvcOperatingPointsRecord { 
-unsigned int(8) num_profile_tier_level_minus1;
-for (i=0; i<=num_profile_tier_level_minus1; i++) { 
- unsigned int(8) ptl_max_temporal_id[i]; 
- VvcPTLRecord(ptl_max_temporal_id[i]+1) ptl[i];
-} 
-unsigned int(1) all_independent_layers_flag; 
-bit(7) reserved = 0; 
-if (all_independent_layers_flag){ 
- unsigned int(1) each_layer_is_an_ols_flag; 
- bit(7) reserved = 0; 
-} 
-else 
- unsigned int(8) ols_mode_idc; 
-unsigned int(16) num_operating_points; 
-for (i=0; i<num_operating_points; i++) { 
- unsigned int(16) output_layer_set_idx; 
- unsigned int(8) ptl_idx; 
- unsigned int(8) max_temporal_id; 
- unsigned int(8) layer_count; 
- for (j=0; j<layer_count; j++) { 
-  unsigned int(6) layer_id; 
-  unsigned int(1) is_outputlayer;
-  bit(1) reserved = 0;
- }
- bit(6) reserved = 0; 
- unsigned int(1) frame_rate_info_flag;
- unsigned int(1) bit_rate_info_flag;
- if (frame_rate_info_flag) { 
-  unsigned int(16) avgFrameRate; 
-  bit(6) reserved = 0; 
-  unsigned int(2) constantFrameRate;
- } 
- if (bit_rate_info_flag) { 
-  unsigned int(32) maxBitRate; 
-  unsigned int(32) avgBitRate;
- }
-}
-unsigned int(8) max_layer_count; 
-for (i=0; i<max_layer_count; i++) { 
- unsigned int(8) layerID; 
- unsigned int(8) num_direct_ref_layers; 
- for (j=0; j<num_direct_ref_layers; j++) 
-  unsigned int(8) direct_ref_layerID; 
- unsigned int(8) max_tid_il_ref_pics_plus1; 
- }
-}
-"; } }
+	public virtual string Syntax { get { return @"class VvcOperatingPointsRecord {
+	unsigned int(8) num_profile_tier_level_minus1;
+	for (i=0; i<=num_profile_tier_level_minus1; i++) {
+		unsigned int(8) ptl_max_temporal_id[i];
+		VvcPTLRecord(ptl_max_temporal_id[i]+1) ptl[i];
+	}
+	unsigned int(1) all_independent_layers_flag;
+	bit(7) reserved = 0;
+	if (all_independent_layers_flag){
+		unsigned int(1) each_layer_is_an_ols_flag;
+		bit(7) reserved = 0;
+	}
+	else
+		unsigned int(8) ols_mode_idc;
+	unsigned int(16) num_operating_points;
+	for (i=0; i<num_operating_points; i++) {
+		unsigned int(16) output_layer_set_idx;
+		unsigned int(8) ptl_idx;
+		unsigned int(8) max_temporal_id;
+		unsigned int(8) layer_count;
+		for (j=0; j<layer_count; j++) {
+			unsigned int(6) layer_id;
+			unsigned int(1) is_outputlayer;
+			bit(1) reserved = 0;
+		}
+		bit(6) reserved = 0;
+		unsigned int(1) frame_rate_info_flag;
+		unsigned int(1) bit_rate_info_flag;
+		if (frame_rate_info_flag) {
+			unsigned int(16) avgFrameRate;
+			bit(6) reserved = 0;
+			unsigned int(2) constantFrameRate;
+		}
+		if (bit_rate_info_flag) {
+			unsigned int(32) maxBitRate;
+			unsigned int(32) avgBitRate;
+		}
+	}
+	unsigned int(8) max_layer_count;
+	for (i=0; i<max_layer_count; i++) {
+		unsigned int(8) layerID;
+		unsigned int(8) num_direct_ref_layers;
+		for (j=0; j<num_direct_ref_layers; j++)
+			unsigned int(8) direct_ref_layerID;
+		unsigned int(8) max_tid_il_ref_pics_plus1;
+	}
+}"; } }
 	public virtual string DisplayName { get { return "VvcOperatingPointsRecord"; } }
 
 	protected byte num_profile_tier_level_minus1; 

@@ -12,10 +12,9 @@ class AlternativeStartupEntry() extends VisualSampleGroupEntry ('alst')
 	unsigned int(16) first_output_sample;
 	for (i=1; i <= roll_count; i++)
 		unsigned int(32) sample_offset[i];
-	 // optional, until the end of the structure
-AlternativeStartupEntryItem items[];
+	// optional, until the end of the structure
+	AlternativeStartupEntryItem items[];
 }
- 
 */
 public partial class AlternativeStartupEntry : VisualSampleGroupEntry
 {
@@ -26,10 +25,9 @@ public partial class AlternativeStartupEntry : VisualSampleGroupEntry
 	unsigned int(16) first_output_sample;
 	for (i=1; i <= roll_count; i++)
 		unsigned int(32) sample_offset[i];
-	 // optional, until the end of the structure
-AlternativeStartupEntryItem items[];
-}
- "; } }
+	// optional, until the end of the structure
+	AlternativeStartupEntryItem items[];
+}"; } }
 	public const string TYPE = "alst";
 	public override string DisplayName { get { return "AlternativeStartupEntry"; } }
 

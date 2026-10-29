@@ -7,19 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class BaseLocationBox() extends FullBox('bloc') {
- unsigned int(8) baseLocation[256];
- unsigned int(8) purchaseLocation[256];
- unsigned int(8) reserved[512];
- } 
+	unsigned int(8) baseLocation[256];
+	unsigned int(8) purchaseLocation[256];
+	unsigned int(8) reserved[512];
+}
 */
 public partial class BaseLocationBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class BaseLocationBox() extends FullBox('bloc') {
- unsigned int(8) baseLocation[256];
- unsigned int(8) purchaseLocation[256];
- unsigned int(8) reserved[512];
- } "; } }
+	unsigned int(8) baseLocation[256];
+	unsigned int(8) purchaseLocation[256];
+	unsigned int(8) reserved[512];
+}"; } }
 	public const string TYPE = "bloc";
 	public override string DisplayName { get { return "BaseLocationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

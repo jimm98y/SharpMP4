@@ -8,28 +8,28 @@ namespace SharpISOBMFF
 /*
 // B.2.2.3.1, Table B-2; NumPresentations = NumPresentationsCode + 1, as m_ucNumAudioPres is
 class DTSUHDSpecificBox extends Box('udts') {
- bit(6) DecoderProfileCode;
- bit(2) FrameDurationCode;
- bit(3) MaxPayloadCode;
- bit(5) NumPresentationsCode;
- unsigned int(32) ChannelMask;
- bit(1) BaseSamplingFrequencyCode;
- bit(2) SampleRateMod;
- bit(3) RepresentationType;
- bit(3) StreamIndex;
- bit(1) ExpansionBoxPresent;
- for (i = 0; i < NumPresentationsCode + 1; i++) {
-  bit(1) IDTagPresent; // bit(NumPresentations) IDTagPresent[NumPresentations]
- }
- bit((8 - ((59 + NumPresentationsCode) % 8)) % 8) ByteAlign; // [0..7] to a byte: 58 bits and one a presentation are before it
- for (i = 0; i < NumPresentationsCode + 1; i++) {
-  if (IDTagPresent[i]) {
-   unsigned int(8) PresentationIDTag[16];
-  }
- }
- if (ExpansionBoxPresent) {
-  Box DTSExpansionBox[];
- }
+	bit(6) DecoderProfileCode;
+	bit(2) FrameDurationCode;
+	bit(3) MaxPayloadCode;
+	bit(5) NumPresentationsCode;
+	unsigned int(32) ChannelMask;
+	bit(1) BaseSamplingFrequencyCode;
+	bit(2) SampleRateMod;
+	bit(3) RepresentationType;
+	bit(3) StreamIndex;
+	bit(1) ExpansionBoxPresent;
+	for (i = 0; i < NumPresentationsCode + 1; i++) {
+		bit(1) IDTagPresent; // bit(NumPresentations) IDTagPresent[NumPresentations]
+	}
+	bit((8 - ((59 + NumPresentationsCode) % 8)) % 8) ByteAlign; // [0..7] to a byte: 58 bits and one a presentation are before it
+	for (i = 0; i < NumPresentationsCode + 1; i++) {
+		if (IDTagPresent[i]) {
+			unsigned int(8) PresentationIDTag[16];
+		}
+	}
+	if (ExpansionBoxPresent) {
+		Box DTSExpansionBox[];
+	}
 }
 */
 public partial class DTSUHDSpecificBox : Box
@@ -37,28 +37,28 @@ public partial class DTSUHDSpecificBox : Box
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// B.2.2.3.1, Table B-2; NumPresentations = NumPresentationsCode + 1, as m_ucNumAudioPres is
 class DTSUHDSpecificBox extends Box('udts') {
- bit(6) DecoderProfileCode;
- bit(2) FrameDurationCode;
- bit(3) MaxPayloadCode;
- bit(5) NumPresentationsCode;
- unsigned int(32) ChannelMask;
- bit(1) BaseSamplingFrequencyCode;
- bit(2) SampleRateMod;
- bit(3) RepresentationType;
- bit(3) StreamIndex;
- bit(1) ExpansionBoxPresent;
- for (i = 0; i < NumPresentationsCode + 1; i++) {
-  bit(1) IDTagPresent; // bit(NumPresentations) IDTagPresent[NumPresentations]
- }
- bit((8 - ((59 + NumPresentationsCode) % 8)) % 8) ByteAlign; // [0..7] to a byte: 58 bits and one a presentation are before it
- for (i = 0; i < NumPresentationsCode + 1; i++) {
-  if (IDTagPresent[i]) {
-   unsigned int(8) PresentationIDTag[16];
-  }
- }
- if (ExpansionBoxPresent) {
-  Box DTSExpansionBox[];
- }
+	bit(6) DecoderProfileCode;
+	bit(2) FrameDurationCode;
+	bit(3) MaxPayloadCode;
+	bit(5) NumPresentationsCode;
+	unsigned int(32) ChannelMask;
+	bit(1) BaseSamplingFrequencyCode;
+	bit(2) SampleRateMod;
+	bit(3) RepresentationType;
+	bit(3) StreamIndex;
+	bit(1) ExpansionBoxPresent;
+	for (i = 0; i < NumPresentationsCode + 1; i++) {
+		bit(1) IDTagPresent; // bit(NumPresentations) IDTagPresent[NumPresentations]
+	}
+	bit((8 - ((59 + NumPresentationsCode) % 8)) % 8) ByteAlign; // [0..7] to a byte: 58 bits and one a presentation are before it
+	for (i = 0; i < NumPresentationsCode + 1; i++) {
+		if (IDTagPresent[i]) {
+			unsigned int(8) PresentationIDTag[16];
+		}
+	}
+	if (ExpansionBoxPresent) {
+		Box DTSExpansionBox[];
+	}
 }"; } }
 	public const string TYPE = "udts";
 	public override string DisplayName { get { return "DTSUHDSpecificBox"; } }

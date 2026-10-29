@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class GroupIdToNameBox
-		extends FullBox('gitn', version = 0, 0) {
+	extends FullBox('gitn', version = 0, 0) {
 	unsigned int(16)	entry_count;
 	for (i=1; i <= entry_count; i++) {
 		unsigned int(32)	group_ID;
@@ -19,7 +19,7 @@ public partial class GroupIdToNameBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class GroupIdToNameBox
-		extends FullBox('gitn', version = 0, 0) {
+	extends FullBox('gitn', version = 0, 0) {
 	unsigned int(16)	entry_count;
 	for (i=1; i <= entry_count; i++) {
 		unsigned int(32)	group_ID;

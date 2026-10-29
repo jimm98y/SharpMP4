@@ -8,9 +8,9 @@ namespace SharpISOBMFF
 /*
 aligned(8) class OriginalFormatBox(codingname) extends Box ('frma') {
 	unsigned int(32)	data_format = codingname;
-			// format of decrypted, encoded data (in case of protection)
-			// or un-transformed sample entry (in case of restriction
-			// and complete track information)
+	// format of decrypted, encoded data (in case of protection)
+	// or un-transformed sample entry (in case of restriction
+	// and complete track information)
 }
 */
 public partial class OriginalFormatBox : Box
@@ -18,9 +18,9 @@ public partial class OriginalFormatBox : Box
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class OriginalFormatBox(codingname) extends Box ('frma') {
 	unsigned int(32)	data_format = codingname;
-			// format of decrypted, encoded data (in case of protection)
-			// or un-transformed sample entry (in case of restriction
-			// and complete track information)
+	// format of decrypted, encoded data (in case of protection)
+	// or un-transformed sample entry (in case of restriction
+	// and complete track information)
 }"; } }
 	public const string TYPE = "frma";
 	public override string DisplayName { get { return "OriginalFormatBox"; } }

@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class PreviewImageBox() extends Box ('mcvr'){
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class PreviewImageBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class PreviewImageBox() extends Box ('mcvr'){
- bit(8) data[];
- }"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "mcvr";
 	public override string DisplayName { get { return "PreviewImageBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

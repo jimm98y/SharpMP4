@@ -6,13 +6,13 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class ComponentDescription() { 
- unsigned int(32) componentType;
- unsigned int(32) componentSubType;
- unsigned int(32) componentManufacturer;
- unsigned int(32) componentFlags;
- unsigned int(32) componentFlagsMask;
- }
+class ComponentDescription() {
+	unsigned int(32) componentType;
+	unsigned int(32) componentSubType;
+	unsigned int(32) componentManufacturer;
+	unsigned int(32) componentFlags;
+	unsigned int(32) componentFlagsMask;
+}
 */
 public partial class ComponentDescription : IMp4Serializable
 {
@@ -22,13 +22,13 @@ public partial class ComponentDescription : IMp4Serializable
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public virtual string Syntax { get { return @"class ComponentDescription() { 
- unsigned int(32) componentType;
- unsigned int(32) componentSubType;
- unsigned int(32) componentManufacturer;
- unsigned int(32) componentFlags;
- unsigned int(32) componentFlagsMask;
- }"; } }
+	public virtual string Syntax { get { return @"class ComponentDescription() {
+	unsigned int(32) componentType;
+	unsigned int(32) componentSubType;
+	unsigned int(32) componentManufacturer;
+	unsigned int(32) componentFlags;
+	unsigned int(32) componentFlagsMask;
+}"; } }
 	public virtual string DisplayName { get { return "ComponentDescription"; } }
 
 	protected uint componentType; 

@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class QoS_Qualifier_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x01 {
- unsigned int(32) MAX_DELAY;
- }
- 
+	unsigned int(32) MAX_DELAY;
+}
 */
 public partial class QoS_Qualifier_MAX_DELAY : QoS_Qualifier
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class QoS_Qualifier_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x01 {
- unsigned int(32) MAX_DELAY;
- }
- "; } }
+	unsigned int(32) MAX_DELAY;
+}"; } }
 	public const byte TYPE = 0x01;
 	public override string DisplayName { get { return "QoS_Qualifier_MAX_DELAY"; } }
 

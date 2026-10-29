@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class WindowsMediaXtraBox() extends Box('Xtra') {
- XtraTag tags[]; 
- }
- 
+	XtraTag tags[];
+}
 */
 public partial class WindowsMediaXtraBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class WindowsMediaXtraBox() extends Box('Xtra') {
- XtraTag tags[]; 
- }
- "; } }
+	XtraTag tags[];
+}"; } }
 	public const string TYPE = "Xtra";
 	public override string DisplayName { get { return "WindowsMediaXtraBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,25 +7,25 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class EventMessageBox() extends Box('emsg') {
- string schemeIdUri;
- string value;
- unsigned int(32) timescale;
- unsigned int(32) presentationTimeDelta;
- unsigned int(32) eventDuration;
- unsigned int(32) id;
- unsigned int(8) messageData[]; } 
+	string schemeIdUri;
+	string value;
+	unsigned int(32) timescale;
+	unsigned int(32) presentationTimeDelta;
+	unsigned int(32) eventDuration;
+	unsigned int(32) id;
+	unsigned int(8) messageData[]; }
 */
 public partial class EventMessageBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class EventMessageBox() extends Box('emsg') {
- string schemeIdUri;
- string value;
- unsigned int(32) timescale;
- unsigned int(32) presentationTimeDelta;
- unsigned int(32) eventDuration;
- unsigned int(32) id;
- unsigned int(8) messageData[]; } "; } }
+	string schemeIdUri;
+	string value;
+	unsigned int(32) timescale;
+	unsigned int(32) presentationTimeDelta;
+	unsigned int(32) eventDuration;
+	unsigned int(32) id;
+	unsigned int(8) messageData[]; }"; } }
 	public const string TYPE = "emsg";
 	public override string DisplayName { get { return "EventMessageBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

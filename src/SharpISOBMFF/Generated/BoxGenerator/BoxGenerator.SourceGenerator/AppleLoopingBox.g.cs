@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AppleLoopingBox() extends Box('LOOP') {
-	 unsigned int(32) data; // 0 normal, 1 palindromic
- } 
+	unsigned int(32) data; // 0 normal, 1 palindromic
+}
 */
 public partial class AppleLoopingBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AppleLoopingBox() extends Box('LOOP') {
-	 unsigned int(32) data; // 0 normal, 1 palindromic
- } "; } }
+	unsigned int(32) data; // 0 normal, 1 palindromic
+}"; } }
 	public const string TYPE = "LOOP";
 	public override string DisplayName { get { return "AppleLoopingBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

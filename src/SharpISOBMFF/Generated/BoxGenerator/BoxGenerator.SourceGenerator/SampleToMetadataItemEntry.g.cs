@@ -6,8 +6,8 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class SampleToMetadataItemEntry() 
-extends SampleGroupDescriptionEntry('stmi') {
+class SampleToMetadataItemEntry()
+	extends SampleGroupDescriptionEntry('stmi') {
 	unsigned int(32) meta_box_handler_type;
 	unsigned int(32) num_items;
 	for(i = 0; i < num_items; i++) {
@@ -18,8 +18,8 @@ extends SampleGroupDescriptionEntry('stmi') {
 public partial class SampleToMetadataItemEntry : SampleGroupDescriptionEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"class SampleToMetadataItemEntry() 
-extends SampleGroupDescriptionEntry('stmi') {
+	public override string Syntax { get { return @"class SampleToMetadataItemEntry()
+	extends SampleGroupDescriptionEntry('stmi') {
 	unsigned int(32) meta_box_handler_type;
 	unsigned int(32) num_items;
 	for(i = 0; i < num_items; i++) {

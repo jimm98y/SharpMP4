@@ -13,9 +13,6 @@ aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(reference
 		unsigned int(16) to_item_ID;
 	}
 }
-
-
-
 */
 public partial class SingleItemTypeReferenceBox : Box
 {
@@ -26,10 +23,7 @@ public partial class SingleItemTypeReferenceBox : Box
 	for (j=0; j<reference_count; j++) {
 		unsigned int(16) to_item_ID;
 	}
-}
-
-
-"; } }
+}"; } }
 	public override string DisplayName { get { return "SingleItemTypeReferenceBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "iref" }); }

@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class LanguageDescriptor extends OCI_Descriptor : bit(8) tag=LanguageDescrTag {
- bit(24) languageCode;
- }
+	bit(24) languageCode;
+}
 */
 public partial class LanguageDescriptor : OCI_Descriptor
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class LanguageDescriptor extends OCI_Descriptor : bit(8) tag=LanguageDescrTag {
- bit(24) languageCode;
- }"; } }
+	bit(24) languageCode;
+}"; } }
 	public const byte TYPE = DescriptorTags.LanguageDescrTag;
 	public override string DisplayName { get { return "LanguageDescriptor"; } }
 

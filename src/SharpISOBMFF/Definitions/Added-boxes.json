@@ -5,368 +5,368 @@
     {
       "containers": [ "meta" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleItemListBox() extends Box('ilst') { \r\n Box boxes[]; \r\n}\r\n aligned(8) class IlstKey(unsigned int(32) format) extends Box(format) {\r\n Box boxes[]; }"
+      "syntax": "aligned(8) class AppleItemListBox() extends Box('ilst') {\r\n\tBox boxes[];\r\n}\r\naligned(8) class IlstKey(unsigned int(32) format) extends Box(format) {\r\n\tBox boxes[]; }"
     },
     {
       "containers": [ "SampleEntry", "wave" ],
       "type": "Box",
-      "syntax": "aligned(8) class CodecConfigurationBox(unsigned int(32) format) extends Box(format) {\r\n bit(8) data[];\r\n }"
+      "syntax": "aligned(8) class CodecConfigurationBox(unsigned int(32) format) extends Box(format) {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "udta", "tmcd" ],
       "type": "Box",
-      "syntax": "aligned(8) class QuickTimeTextBox(unsigned int(32) format) extends Box(format) {\r\n MultiLanguageString value[];\r\n }"
+      "syntax": "aligned(8) class QuickTimeTextBox(unsigned int(32) format) extends Box(format) {\r\n\tMultiLanguageString value[];\r\n}"
     },
     {
       "containers": [ "mebx", "meta" ],
       "type": "Box",
-      "syntax": "aligned(8) class BoxedMetaDataKeyTableBox() extends Box('keys') {\r\n Box boxes[];\r\n }"
+      "syntax": "aligned(8) class BoxedMetaDataKeyTableBox() extends Box('keys') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleCameraModelBox() extends Box('©mod') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleCameraModelBox() extends Box('©mod') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class SamsungSecBox() extends Box('@sec') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class SamsungSecBox() extends Box('@sec') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class RicohAppleCameraModelBox() extends Box('@mod') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class RicohAppleCameraModelBox() extends Box('@mod') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class ApplePitchBox() extends Box('©fpt') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class ApplePitchBox() extends Box('©fpt') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleRollBox() extends Box('©frl') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleRollBox() extends Box('©frl') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleYawBox() extends Box('©fyw') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleYawBox() extends Box('©fyw') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleCameraPitchBox() extends Box('©gpt') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleCameraPitchBox() extends Box('©gpt') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleCameraRollBox() extends Box('©grl') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleCameraRollBox() extends Box('©grl') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleMakerUrlBox() extends Box('©mal') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleMakerUrlBox() extends Box('©mal') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleModelBox() extends Box('©mdl') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleModelBox() extends Box('©mdl') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleCameraYawBox() extends Box('©gyw') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleCameraYawBox() extends Box('©gyw') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSpeedXBox() extends Box('©xsp') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleSpeedXBox() extends Box('©xsp') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSpeedYBox() extends Box('©ysp') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleSpeedYBox() extends Box('©ysp') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSpeedZBox() extends Box('©zsp') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleSpeedZBox() extends Box('©zsp') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleArtDirectorBox() extends Box('©ard') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleArtDirectorBox() extends Box('©ard') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleConductorBox() extends Box('©con') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleConductorBox() extends Box('©con') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleDescriptionBox() extends Box('©des') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleDescriptionBox() extends Box('©des') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleMovementCountBox() extends Box('©mvc') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleMovementCountBox() extends Box('©mvc') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleMovementNumberBox() extends Box('©mvi') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleMovementNumberBox() extends Box('©mvi') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleNarratorBox() extends Box('©nrt') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleNarratorBox() extends Box('©nrt') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class ApplePublisherBox() extends Box('©pub') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class ApplePublisherBox() extends Box('©pub') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSoundEngineerBox() extends Box('©sne') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleSoundEngineerBox() extends Box('©sne') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSoloistBox() extends Box('©sol') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleSoloistBox() extends Box('©sol') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSubtitleBox() extends Box('©st3') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleSubtitleBox() extends Box('©st3') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleWorkBox() extends Box('©wrk') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleWorkBox() extends Box('©wrk') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleExecutiveProducerBox() extends Box('©xpd') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleExecutiveProducerBox() extends Box('©xpd') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleMovementNameBox() extends Box('©mvn') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleMovementNameBox() extends Box('©mvn') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEncoderToolBox() extends Box('©too') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleEncoderToolBox() extends Box('©too') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleComposersBox() extends Box('©wrt') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleComposersBox() extends Box('©wrt') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSoftwareBox() extends Box('©swr') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleSoftwareBox() extends Box('©swr') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class RicohAppleSoftwareBox() extends Box('@swr') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class RicohAppleSoftwareBox() extends Box('@swr') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleCreatorBox() extends Box('©swf') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleCreatorBox() extends Box('©swf') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleCommentBox() extends Box('©cmt') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleCommentBox() extends Box('©cmt') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleStartTimecode() extends Box('©TIM') {\r\n MultiLanguageString value[]; \r\n } "
+      "syntax": "aligned(8) class AppleStartTimecode() extends Box('©TIM') {\r\n\tMultiLanguageString value[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleStartTimeScale() extends Box('©TSC') {\r\n MultiLanguageString value[]; \r\n } "
+      "syntax": "aligned(8) class AppleStartTimeScale() extends Box('©TSC') {\r\n\tMultiLanguageString value[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleStartTimeSampleSize() extends Box('©TSZ') {\r\n MultiLanguageString value[]; \r\n } "
+      "syntax": "aligned(8) class AppleStartTimeSampleSize() extends Box('©TSZ') {\r\n\tMultiLanguageString value[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleNameBox() extends Box('©nam') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleNameBox() extends Box('©nam') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleRequirementsBox() extends FullBox('©req', version = 0, 0) {\r\nstring requirement;\r\n } "
+      "syntax": "aligned(8) class AppleRequirementsBox() extends FullBox('©req', version = 0, 0) {\r\n\tstring requirement;\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleLyricsBox() extends Box('©lyr') {\r\nBox boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleLyricsBox() extends Box('©lyr') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleGroupingBox() extends Box('©grp') {\r\nBox boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleGroupingBox() extends Box('©grp') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleAlbumBox() extends Box('©alb') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleAlbumBox() extends Box('©alb') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
 
       "type": "Box",
-      "syntax": "aligned(8) class AppleArtistBox() extends Box('©ART') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleArtistBox() extends Box('©ART') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleArtist3Box() extends Box('©art') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleArtist3Box() extends Box('©art') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleArtist2Box() extends Box('aART') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleArtist2Box() extends Box('aART') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleAuthorBox() extends Box('©aut') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleAuthorBox() extends Box('©aut') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleCopyrightBox() extends Box('cprt') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleCopyrightBox() extends Box('cprt') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleCopyright2Box() extends Box('©cpy') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleCopyright2Box() extends Box('©cpy') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleRecordingYear2Box() extends Box('©day') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleRecordingYear2Box() extends Box('©day') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class RicohAppleRecordingYear2Box() extends Box('@day') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class RicohAppleRecordingYear2Box() extends Box('@day') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleHostComputerBox() extends Box('©hst') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleHostComputerBox() extends Box('©hst') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleGenreBox() extends Box('©gen') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleGenreBox() extends Box('©gen') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleComposerBox() extends Box('©ope') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleComposerBox() extends Box('©ope') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleTrackBox() extends Box('©trk') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleTrackBox() extends Box('©trk') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleUrlBox() extends Box('©url') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleUrlBox() extends Box('©url') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleProductBox() extends Box('©PRD') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleProductBox() extends Box('©PRD') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleWarningBox() extends Box('©wrn') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleWarningBox() extends Box('©wrn') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleGPSCoordinatesBox() extends Box('©xyz') {\r\n MultiLanguageString value[]; \r\n } "
+      "syntax": "aligned(8) class AppleGPSCoordinatesBox() extends Box('©xyz') {\r\n\tMultiLanguageString value[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class RicohAppleGPSCoordinatesBox() extends Box('@xyz') {\r\n MultiLanguageString value[]; \r\n } "
+      "syntax": "aligned(8) class RicohAppleGPSCoordinatesBox() extends Box('@xyz') {\r\n\tMultiLanguageString value[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleCompilationBox() extends Box('cpil') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleCompilationBox() extends Box('cpil') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "----", "udta", "tmcd", "schi" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleName2Box() extends Box('name') {\r\n string name;\r\n } "
+      "syntax": "aligned(8) class AppleName2Box() extends Box('name') {\r\n\tstring name;\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleDescriptionBox() extends Box('desc') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleDescriptionBox() extends Box('desc') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleLongDescriptionBox() extends Box('ldes') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleLongDescriptionBox() extends Box('ldes') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class UserBox(uuid) extends Box('uuid') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class UserBox(uuid) extends Box('uuid') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "moov" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleInitialObjectDescriptorBox() extends FullBox('iods') {\r\n Descriptor descriptor[0 .. 255];\r\n } "
+      "syntax": "aligned(8) class AppleInitialObjectDescriptorBox() extends FullBox('iods') {\r\n\tDescriptor descriptor[0 .. 255];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPTitleBox() extends FullBox('titl', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
+      "syntax": "aligned(8) class ThreeGPPTitleBox() extends FullBox('titl', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPAuthorBox() extends FullBox('auth', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
+      "syntax": "aligned(8) class ThreeGPPAuthorBox() extends FullBox('auth', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n}"
     },
     {
       "containers": [ "stsd", "gmhd" ],
       "type": "Box",
-      "syntax": "aligned(8) class TextMediaBox() extends Box('text') {\r\n unsigned int(8) reserved1[6];\r\n unsigned int(16) dataReferenceIndex;\r\n unsigned int(32) displayFlags;\r\n unsigned int(32) textJustification;\r\n unsigned int(16) bgColorRed;\r\n unsigned int(16) bgColorGreen;\r\n unsigned int(16) bgColorBlue;\r\n unsigned int(16) defTextBoxTop;\r\n unsigned int(16) defTextBoxLeft;\r\n unsigned int(16) defTextBoxBotton;\r\n unsigned int(16) defTextBoxRight;\r\n unsigned int(64) reserved2;\r\n unsigned int(16) fontNumber;\r\n unsigned int(16) fontFace;\r\n unsigned int(8) reserved3;\r\n unsigned int(16) reserved4;\r\n unsigned int(16) foreColorRed;\r\n unsigned int(16) foreColorGreen;\r\n unsigned int(16) foreColorBlue;\r\n string name;\r\n } "
+      "syntax": "aligned(8) class TextMediaBox() extends Box('text') {\r\n\tunsigned int(8) reserved1[6];\r\n\tunsigned int(16) dataReferenceIndex;\r\n\tunsigned int(32) displayFlags;\r\n\tunsigned int(32) textJustification;\r\n\tunsigned int(16) bgColorRed;\r\n\tunsigned int(16) bgColorGreen;\r\n\tunsigned int(16) bgColorBlue;\r\n\tunsigned int(16) defTextBoxTop;\r\n\tunsigned int(16) defTextBoxLeft;\r\n\tunsigned int(16) defTextBoxBotton;\r\n\tunsigned int(16) defTextBoxRight;\r\n\tunsigned int(64) reserved2;\r\n\tunsigned int(16) fontNumber;\r\n\tunsigned int(16) fontFace;\r\n\tunsigned int(8) reserved3;\r\n\tunsigned int(16) reserved4;\r\n\tunsigned int(16) foreColorRed;\r\n\tunsigned int(16) foreColorGreen;\r\n\tunsigned int(16) foreColorBlue;\r\n\tstring name;\r\n}"
     },
     {
       "containers": [ "stsd", "gmhd" ],
       "type": "Box",
-      "syntax": "aligned(8) class TextGmhdMediaBox() extends Box('text') {\r\n unsigned int(8) textData[36];\r\n } "
+      "syntax": "aligned(8) class TextGmhdMediaBox() extends Box('text') {\r\n\tunsigned int(8) textData[36];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class WindowsMediaXtraBox() extends Box('Xtra') {\r\n XtraTag tags[]; \r\n }\r\n aligned(8) class XtraTag() {\r\n unsigned int(32) inputSize;\r\n unsigned int(32) tagLength;\r\n char tagName[tagLength];\r\n unsigned int(32) count;\r\n XtraValue values[count];\r\n }\r\n aligned(8) class XtraValue() {\r\n unsigned int(32) length;\r\n unsigned int(16) type;\r\n unsigned int(8) value[length-6];\r\n }"
+      "syntax": "aligned(8) class WindowsMediaXtraBox() extends Box('Xtra') {\r\n\tXtraTag tags[];\r\n}\r\naligned(8) class XtraTag() {\r\n\tunsigned int(32) inputSize;\r\n\tunsigned int(32) tagLength;\r\n\tchar tagName[tagLength];\r\n\tunsigned int(32) count;\r\n\tXtraValue values[count];\r\n}\r\naligned(8) class XtraValue() {\r\n\tunsigned int(32) length;\r\n\tunsigned int(16) type;\r\n\tunsigned int(8) value[length-6];\r\n}"
     },
     {
       "containers": [ {"AudioSampleEntry": ["ac-3", "enca"]}, "wave" ],
@@ -376,12 +376,12 @@
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPDescriptionBox() extends FullBox('dscp', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
+      "syntax": "aligned(8) class ThreeGPPDescriptionBox() extends FullBox('dscp', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n}"
     },
     {
       "containers": [ "minf" ],
       "type": "Box",
-      "syntax": "aligned(8) class GenericMediaHeaderAtom() extends Box('gmhd') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class GenericMediaHeaderAtom() extends Box('gmhd') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta" ],
@@ -391,187 +391,187 @@
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleMediaTypeBox() extends Box('stik') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleMediaTypeBox() extends Box('stik') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleRatingBox() extends Box('rtng') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleRatingBox() extends Box('rtng') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPRatingBox() extends FullBox('rtng', version = 0, 0) {\r\n\tunsigned int(32) rating_entity;\r\n\tunsigned int(32) rating_criteria;\r\n\tbit(1) pad = 0;\r\n unsigned int(5)[3] language;\r\n\tstring rating_info;\r\n} "
+      "syntax": "aligned(8) class ThreeGPPRatingBox() extends FullBox('rtng', version = 0, 0) {\r\n\tunsigned int(32) rating_entity;\r\n\tunsigned int(32) rating_criteria;\r\n\tbit(1) pad = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring rating_info;\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleRating2Box() extends Box('rati') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleRating2Box() extends Box('rati') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class ApplePlayGapBox() extends Box('pgap') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class ApplePlayGapBox() extends Box('pgap') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleStoreCatalogIDBox() extends Box('cnID') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleStoreCatalogIDBox() extends Box('cnID') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "stsd", "gmhd" ],
       "type": "Box",
-      "syntax": "aligned(8) class TimeCodeTrackBox() extends Box('tmcd') {\r\n Box boxes[];\r\n } \r\n aligned(8) class TimeCodeSampleEntry() extends SampleEntry('tmcd') {\r\n unsigned int(32) reserved;\r\n unsigned int(32) timecodeFlags;\r\n unsigned int(32) timeScale;\r\n unsigned int(32) frameDuration;\r\n unsigned int(8) numberOfFrames;\r\n unsigned int(8) reserved2;\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class TimeCodeTrackBox() extends Box('tmcd') {\r\n\tBox boxes[];\r\n}\r\naligned(8) class TimeCodeSampleEntry() extends SampleEntry('tmcd') {\r\n\tunsigned int(32) reserved;\r\n\tunsigned int(32) timecodeFlags;\r\n\tunsigned int(32) timeScale;\r\n\tunsigned int(32) frameDuration;\r\n\tunsigned int(8) numberOfFrames;\r\n\tunsigned int(8) reserved2;\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleBeatsPerMinuteBox() extends Box('tmpo') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleBeatsPerMinuteBox() extends Box('tmpo') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleTVEpisodeBox() extends Box('tves') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleTVEpisodeBox() extends Box('tves') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleTVSeasonBox() extends Box('tvsn') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleTVSeasonBox() extends Box('tvsn') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class HdvdBox() extends Box('hdvd') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class HdvdBox() extends Box('hdvd') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class DiskNumberBox() extends Box('disk') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class DiskNumberBox() extends Box('disk') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "tref" ],
       "type": "Box",
-      "syntax": "aligned(8) class HintBox() extends Box('hint') {\r\n // a track reference (ISO/IEC 14496-12 8.3.3): the IDs of the tracks a hint track hints, one or more\r\n unsigned int(32) track_IDs[];\r\n } "
+      "syntax": "aligned(8) class HintBox() extends Box('hint') {\r\n\t// a track reference (ISO/IEC 14496-12 8.3.3): the IDs of the tracks a hint track hints, one or more\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class FreeSpaceBox() extends Box('wide') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class FreeSpaceBox() extends Box('wide') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": []} ],
       "type": "Box",
-      "syntax": "aligned(8) class FielBox() extends Box('fiel') {\r\n unsigned int(8) total;\r\n unsigned int(8) order;\r\n } "
+      "syntax": "aligned(8) class FielBox() extends Box('fiel') {\r\n\tunsigned int(8) total;\r\n\tunsigned int(8) order;\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "// of no layout known: its bytes\r\naligned(8) class Amf0Box() extends Box('amf0') {\r\n bit(8) data[];\r\n }"
+      "syntax": "// of no layout known: its bytes\r\naligned(8) class Amf0Box() extends Box('amf0') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "tref" ],
       "type": "Box",
-      "syntax": "// ISO/IEC 14496-14 3.1.2: the track reference of an MPEG-4 Systems OD track to the tracks its object descriptors are of\r\naligned(8) class MpodBox() extends Box('mpod') {\r\n unsigned int(32) track_IDs[];\r\n }"
+      "syntax": "// ISO/IEC 14496-14 3.1.2: the track reference of an MPEG-4 Systems OD track to the tracks its object descriptors are of\r\naligned(8) class MpodBox() extends Box('mpod') {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class GoogleStartTimeBox() extends Box('gsst') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class GoogleStartTimeBox() extends Box('gsst') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class GoogleSourceDataBox() extends Box('gssd') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class GoogleSourceDataBox() extends Box('gssd') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class GoogleTrackDurationBox() extends Box('gstd') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class GoogleTrackDurationBox() extends Box('gstd') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class TrackNumberBox() extends Box('trkn') {\r\n Box boxes[]; \r\n } "
+      "syntax": "aligned(8) class TrackNumberBox() extends Box('trkn') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ZeroBox() extends Box('0000') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class ZeroBox() extends Box('0000') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "tref" ],
       "type": "Box",
-      "syntax": "aligned(8) class DpndBox() extends Box('dpnd') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class DpndBox() extends Box('dpnd') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class GooglePingUrlBox() extends Box('gspu') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class GooglePingUrlBox() extends Box('gspu') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class GooglePingMessageBox() extends Box('gspm') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class GooglePingMessageBox() extends Box('gspm') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class GooglesHostHeaderBox() extends Box('gshh') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class GooglesHostHeaderBox() extends Box('gshh') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class TVEpisodeIDBox() extends Box('tven') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class TVEpisodeIDBox() extends Box('tven') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleCoverArtBox() extends Box('covr') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleCoverArtBox() extends Box('covr') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "trak" ],
       "type": "Box",
-      "syntax": "aligned(8) class LoadBox() extends Box('load') {\r\n signed int(32) preloadStartTime;\r\n signed int(32) preloadDuration;\r\n unsigned int(32) preloadFlags;\r\n unsigned int(32) defaultHints;\r\n } "
+      "syntax": "aligned(8) class LoadBox() extends Box('load') {\r\n\tsigned int(32) preloadStartTime;\r\n\tsigned int(32) preloadDuration;\r\n\tunsigned int(32) preloadFlags;\r\n\tunsigned int(32) defaultHints;\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleHintVersionBox() extends Box('hinv') {\r\n string version;\r\n } "
+      "syntax": "aligned(8) class AppleHintVersionBox() extends Box('hinv') {\r\n\tstring version;\r\n}"
     },
     {
       "containers": [ "trak" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleTrackApertureBox() extends Box('tapt') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleTrackApertureBox() extends Box('tapt') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "tapt" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleCleanApertureDimensionsBox() extends FullBox('clef') {\r\n unsigned int(32) width;\r\n unsigned int(32) height;\r\n } "
+      "syntax": "aligned(8) class AppleCleanApertureDimensionsBox() extends FullBox('clef') {\r\n\tunsigned int(32) width;\r\n\tunsigned int(32) height;\r\n}"
     },
     {
       "containers": [ "tapt" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEncodedPixelsDimensionsBox() extends FullBox('enof') {\r\n unsigned int(32) width;\r\n unsigned int(32) height;\r\n } "
+      "syntax": "aligned(8) class AppleEncodedPixelsDimensionsBox() extends FullBox('enof') {\r\n\tunsigned int(32) width;\r\n\tunsigned int(32) height;\r\n}"
     },
     {
       "containers": [ "tapt" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleProductionApertureDimensionsBox() extends FullBox('prof') {\r\n unsigned int(32) width;\r\n unsigned int(32) height;\r\n } "
+      "syntax": "aligned(8) class AppleProductionApertureDimensionsBox() extends FullBox('prof') {\r\n\tunsigned int(32) width;\r\n\tunsigned int(32) height;\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleApertureModeBox() extends Box('apmd') {\r\n string mode;\r\n } "
+      "syntax": "aligned(8) class AppleApertureModeBox() extends Box('apmd') {\r\n\tstring mode;\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleHintVersionBox() extends Box('hinv') {\r\n string hint;\r\n } "
+      "syntax": "aligned(8) class AppleHintVersionBox() extends Box('hinv') {\r\n\tstring hint;\r\n}"
     },
     {
       "containers": [ {"AudioSampleEntry": []} ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleWaveBox() extends Box('wave') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleWaveBox() extends Box('wave') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "wave" ],
@@ -581,72 +581,72 @@
     {
       "containers": [ "dref" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleDataReferenceAliasBox() extends FullBox('alis') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleDataReferenceAliasBox() extends FullBox('alis') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ {"AudioSampleEntry": []} ],
       "type": "Box",
-      "syntax": "aligned(8) class AudioChannelLayoutBox() extends FullBox('chan') {\r\n unsigned int(32) channelLayoutTag;\r\n unsigned int(32) channelBitmap;\r\n unsigned int(32) numberChannelDescriptions;\r\n AudioChannelDescription channelDescriptions[numberChannelDescriptions];\r\n }\r\n aligned(8) class AudioChannelDescription() {\r\n unsigned int(32) channelLabel;\r\n unsigned int(32) channelFlags;\r\n unsigned int(32) coordinates[3];\r\n } "
+      "syntax": "aligned(8) class AudioChannelLayoutBox() extends FullBox('chan') {\r\n\tunsigned int(32) channelLayoutTag;\r\n\tunsigned int(32) channelBitmap;\r\n\tunsigned int(32) numberChannelDescriptions;\r\n\tAudioChannelDescription channelDescriptions[numberChannelDescriptions];\r\n}\r\naligned(8) class AudioChannelDescription() {\r\n\tunsigned int(32) channelLabel;\r\n\tunsigned int(32) channelFlags;\r\n\tunsigned int(32) coordinates[3];\r\n}"
     },
     {
       "containers": [ "keys" ],
       "type": "Box",
-      "syntax": "aligned(8) class MdtaBox() extends Box('mdta') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class MdtaBox() extends Box('mdta') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "tref" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleChapterListBox() extends Box('chap') {\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n } "
+      "syntax": "aligned(8) class AppleChapterListBox() extends Box('chap') {\r\n\t// a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class AdobeChapterBox() extends FullBox('chpl', version = 0, 0) {\r\n unsigned int(32) unknown; unsigned int(8) count;\r\n AdobeChapterRecord chapters[]; \r\n }\r\n aligned(8) class AdobeChapterRecord() {\r\n unsigned int(64) timestamp;\r\n unsigned int(8) count; char title[count];\r\n }"
+      "syntax": "aligned(8) class AdobeChapterBox() extends FullBox('chpl', version = 0, 0) {\r\n\tunsigned int(32) unknown;\r\n\tunsigned int(8) count;\r\n\tAdobeChapterRecord chapters[];\r\n}\r\naligned(8) class AdobeChapterRecord() {\r\n\tunsigned int(64) timestamp;\r\n\tunsigned int(8) count;\r\n\tchar title[count];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleKeywordBox() extends Box('keyw') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleKeywordBox() extends Box('keyw') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class ClfnBox() extends Box('clfn') {\r\n string value;\r\n}"
+      "syntax": "aligned(8) class ClfnBox() extends Box('clfn') {\r\n\tstring value;\r\n}"
     },
     {
       "containers": [ "tref" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleThumbnailReferenceBox() extends Box('thmb') {\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n } "
+      "syntax": "aligned(8) class AppleThumbnailReferenceBox() extends Box('thmb') {\r\n\t// a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "containers": [ "tref" ],
       "type": "Box",
-      "syntax": "aligned(8) class AlternateFormatTrackBox() extends Box('fall') {\r\n // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n unsigned int(32) track_IDs[];\r\n } "
+      "syntax": "aligned(8) class AlternateFormatTrackBox() extends Box('fall') {\r\n\t// a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class TVShowBox() extends Box('tvsh') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class TVShowBox() extends Box('tvsh') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEncoderNameBox() extends Box('©enc') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleEncoderNameBox() extends Box('©enc') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ {"AudioSampleEntry": ["dtsc", "dtsh", "dtsl", "dtse", "enca"]} ],
       "type": "Box",
-      "syntax": "aligned(8) class DTSSpecificBox() extends Box('ddts') {\r\n unsigned int(32) dtsSamplingFrequency;\r\n unsigned int(32) maxBitRate;\r\n unsigned int(32) avgBitRate;\r\n unsigned int(8) pcmSampleDepth;\r\n bit(2) frameDuration;\r\n bit(5) streamConstruction;\r\n bit(1) coreLFEPresent;\r\n bit(6) coreLayout;\r\n bit(14) coreSize;\r\n bit(1) stereoDownmix;\r\n bit(3) representationType;\r\n bit(16) channelLayout;\r\n bit(1) multiAssetFlag;\r\n bit(1) lbrDurationMod;\r\n bit(1) reservedBoxPresent;\r\n bit(5) reserved;\r\n } "
+      "syntax": "aligned(8) class DTSSpecificBox() extends Box('ddts') {\r\n\tunsigned int(32) dtsSamplingFrequency;\r\n\tunsigned int(32) maxBitRate;\r\n\tunsigned int(32) avgBitRate;\r\n\tunsigned int(8) pcmSampleDepth;\r\n\tbit(2) frameDuration;\r\n\tbit(5) streamConstruction;\r\n\tbit(1) coreLFEPresent;\r\n\tbit(6) coreLayout;\r\n\tbit(14) coreSize;\r\n\tbit(1) stereoDownmix;\r\n\tbit(3) representationType;\r\n\tbit(16) channelLayout;\r\n\tbit(1) multiAssetFlag;\r\n\tbit(1) lbrDurationMod;\r\n\tbit(1) reservedBoxPresent;\r\n\tbit(5) reserved;\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class DataBox() extends Box('data') {\r\nunsigned int(32) dataType;\r\n unsigned int(32) dataLang;\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class DataBox() extends Box('data') {\r\n\tunsigned int(32) dataType;\r\n\tunsigned int(32) dataLang;\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class CustomBox() extends Box('----') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class CustomBox() extends Box('----') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "stbl" ],
@@ -656,174 +656,174 @@
     {
       "containers": [ {"VisualSampleEntry": []} ],
       "type": "Box",
-      "syntax": "aligned(8) class SampleScaleBox() extends FullBox('stsl', version = 0, 0) {\r\n\tbit(7)\treserved;\r\n\tbit(1) constrained; unsigned int(8) scaleMethod; signed int(16) displayCenterX; signed int(16) displayCenterY;\r\n\t}\r\n}"
+      "syntax": "aligned(8) class SampleScaleBox() extends FullBox('stsl', version = 0, 0) {\r\n\tbit(7)\treserved;\r\n\tbit(1) constrained;\r\n\tunsigned int(8) scaleMethod;\r\n\tsigned int(16) displayCenterX;\r\n\tsigned int(16) displayCenterY;\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Descriptor",
-      "syntax": "// ISO/IEC 14496-1:2010's InitialObjectDescriptor, as an MP4 file has it (ISO/IEC 14496-14): ES_ID_Inc for its ES_Descriptors\r\naligned(8) class IOD_Descriptor extends BaseDescriptor : bit(8) tag=MP4_IOD_Tag {\r\n bit(10) ObjectDescriptorID;\r\n bit(1) URL_Flag;\r\n bit(1) includeInlineProfileLevelFlag;\r\n bit(4) reserved;\r\n if (URL_Flag) {\r\n  bit(8) URLlength;\r\n  bit(8) URLstring[URLlength];\r\n }\r\n else {\r\n  bit(8) ODProfileLevelIndication;\r\n  bit(8) sceneProfileLevelIndication;\r\n  bit(8) audioProfileLevelIndication;\r\n  bit(8) visualProfileLevelIndication;\r\n  bit(8) graphicsProfileLevelIndication;\r\n }\r\n ES_ID_Inc esIdInc[1 .. 255];\r\n }\r\n class ES_ID_Inc extends BaseDescriptor : bit(8) tag=ES_ID_IncTag {\r\n bit(32) Track_ID;\r\n }\r\n class ES_ID_Ref extends BaseDescriptor : bit(8) tag=ES_ID_RefTag {\r\n bit(16) ref_index;\r\n }"
+      "syntax": "// ISO/IEC 14496-1:2010's InitialObjectDescriptor, as an MP4 file has it (ISO/IEC 14496-14): ES_ID_Inc for its ES_Descriptors\r\naligned(8) class IOD_Descriptor extends BaseDescriptor : bit(8) tag=MP4_IOD_Tag {\r\n\tbit(10) ObjectDescriptorID;\r\n\tbit(1) URL_Flag;\r\n\tbit(1) includeInlineProfileLevelFlag;\r\n\tbit(4) reserved;\r\n\tif (URL_Flag) {\r\n\t\tbit(8) URLlength;\r\n\t\tbit(8) URLstring[URLlength];\r\n\t}\r\n\telse {\r\n\t\tbit(8) ODProfileLevelIndication;\r\n\t\tbit(8) sceneProfileLevelIndication;\r\n\t\tbit(8) audioProfileLevelIndication;\r\n\t\tbit(8) visualProfileLevelIndication;\r\n\t\tbit(8) graphicsProfileLevelIndication;\r\n\t}\r\n\tES_ID_Inc esIdInc[1 .. 255];\r\n}\r\nclass ES_ID_Inc extends BaseDescriptor : bit(8) tag=ES_ID_IncTag {\r\n\tbit(32) Track_ID;\r\n}\r\nclass ES_ID_Ref extends BaseDescriptor : bit(8) tag=ES_ID_RefTag {\r\n\tbit(16) ref_index;\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class IPMP_Descriptor() extends BaseDescriptor : bit(8) tag=IPMP_DescrTag {\r\n bit(8) IPMP_DescriptorID;\r\n unsigned int(16)\r\n IPMPS_Type;\r\n if (IPMPS_Type == 0) {\r\n bit(8) URLString[sizeOfInstance-3];\r\n } else {\r\n bit(8) IPMP_data[sizeOfInstance-3];\r\n }\r\n }"
+      "syntax": "class IPMP_Descriptor() extends BaseDescriptor : bit(8) tag=IPMP_DescrTag {\r\n\tbit(8) IPMP_DescriptorID;\r\n\tunsigned int(16)\r\n\tIPMPS_Type;\r\n\tif (IPMPS_Type == 0) {\r\n\t\tbit(8) URLString[sizeOfInstance-3];\r\n\t} else {\r\n\t\tbit(8) IPMP_data[sizeOfInstance-3];\r\n\t}\r\n}"
     },
     {
       "containers": [ "moov", "meta" ],
       "type": "Box",
-      "syntax": "aligned(8) class IPMPControlBox() extends FullBox('ipmc') {\r\n Descriptor toollist;\r\n unsigned int(8) count; Descriptor descriptor[count];\r\n }"
+      "syntax": "aligned(8) class IPMPControlBox() extends FullBox('ipmc') {\r\n\tDescriptor toollist;\r\n\tunsigned int(8) count;\r\n\tDescriptor descriptor[count];\r\n}"
     },
     {
       "containers": [ "sinf" ],
       "type": "Box",
-      "syntax": "aligned(8) class IPMPInfoBox() extends FullBox('imif') {\r\n Descriptor descriptor[0 .. 255];\r\n }"
+      "syntax": "aligned(8) class IPMPInfoBox() extends FullBox('imif') {\r\n\tDescriptor descriptor[0 .. 255];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class GenreBox() extends Box('gnre') {\r\n Box boxes[]; \r\n}"
+      "syntax": "aligned(8) class GenreBox() extends Box('gnre') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPGenreBox() extends FullBox('gnre', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
+      "syntax": "aligned(8) class ThreeGPPGenreBox() extends FullBox('gnre', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n}"
     },
     {
       "containers": [ "schi" ],
       "type": "Box",
-      "syntax": "aligned(8) class FairPlayUserIDBox() extends Box('user') {\r\n bit(8) data[]; \r\n }"
+      "syntax": "aligned(8) class FairPlayUserIDBox() extends Box('user') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "----", "udta", "tmcd", "schi" ],
       "type": "Box",
-      "syntax": "aligned(8) class FairPlayUserNameBox() extends Box('name') {\r\n bit(8) data[]; \r\n }\r\n aligned(8) class ITunesMetadataNameBox() extends FullBox('name') {\r\n string name; \r\n }"
+      "syntax": "aligned(8) class FairPlayUserNameBox() extends Box('name') {\r\n\tbit(8) data[];\r\n}\r\naligned(8) class ITunesMetadataNameBox() extends FullBox('name') {\r\n\tstring name;\r\n}"
     },
     {
       "containers": [ "schi" ],
 
       "type": "Box",
-      "syntax": "aligned(8) class FairPlayUserKeyBox() extends Box('key ') {\r\n bit(8) data[]; \r\n }"
+      "syntax": "aligned(8) class FairPlayUserKeyBox() extends Box('key ') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "schi" ],
 
       "type": "Box",
-      "syntax": "aligned(8) class FairPlayIvBox() extends Box('iviv') {\r\n bit(8) data[]; \r\n }"
+      "syntax": "aligned(8) class FairPlayIvBox() extends Box('iviv') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "schi" ],
       "type": "Box",
-      "syntax": "aligned(8) class FairPlayPrivateKeyBox() extends Box('priv') {\r\n bit(8) data[]; \r\n }"
+      "syntax": "aligned(8) class FairPlayPrivateKeyBox() extends Box('priv') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "meco" ],
       "type": "Box",
-      "syntax": "aligned(8) class MetaBoxRelationBox() extends FullBox('mere') {\r\n unsigned int(32) firstMetaBoxHandlerType;\r\n unsigned int(32) secondMetaBoxHandlerType;\r\n bit(8) metaboxRelation; \r\n }"
+      "syntax": "aligned(8) class MetaBoxRelationBox() extends FullBox('mere') {\r\n\tunsigned int(32) firstMetaBoxHandlerType;\r\n\tunsigned int(32) secondMetaBoxHandlerType;\r\n\tbit(8) metaboxRelation;\r\n}"
     },
     {
       "containers": [ "meta" ],
       "type": "Box",
-      "syntax": "aligned(8) class ID3TagBox() extends FullBox('ID32') {\r\n bit(1) pad;\r\n unsigned int(5)[3] language;\r\n bit(8) data[]; \r\n }"
+      "syntax": "aligned(8) class ID3TagBox() extends FullBox('ID32') {\r\n\tbit(1) pad;\r\n\tunsigned int(5)[3] language;\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "----" ],
       "type": "Box",
-      "syntax": "aligned(8) class ITunesMetadataMeanBox() extends FullBox('mean') {\r\n string domain; \r\n }"
+      "syntax": "aligned(8) class ITunesMetadataMeanBox() extends FullBox('mean') {\r\n\tstring domain;\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AlbumArtistSortBox() extends Box('soaa') {\r\n Box boxes[]; \r\n }"
+      "syntax": "aligned(8) class AlbumArtistSortBox() extends Box('soaa') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AlbumSortBox() extends Box('soal') {\r\n Box boxes[]; \r\n }"
+      "syntax": "aligned(8) class AlbumSortBox() extends Box('soal') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class ArtistSortBox() extends Box('soar') {\r\n Box boxes[]; \r\n }"
+      "syntax": "aligned(8) class ArtistSortBox() extends Box('soar') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class CategoryBox() extends Box('catg') {\r\n Box boxes[]; \r\n }"
+      "syntax": "aligned(8) class CategoryBox() extends Box('catg') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class ComposerSortBox() extends Box('soco') {\r\n Box boxes[]; \r\n }"
+      "syntax": "aligned(8) class ComposerSortBox() extends Box('soco') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class EpisodeGlobalUniqueIdBox() extends Box('egid') {\r\n Box boxes[]; \r\n }"
+      "syntax": "aligned(8) class EpisodeGlobalUniqueIdBox() extends Box('egid') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class ITunesPurchaseAccountBox() extends Box('apID') {\r\n Box boxes[]; \r\n }"
+      "syntax": "aligned(8) class ITunesPurchaseAccountBox() extends Box('apID') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class ITunesAccountTypeBox() extends Box('akID') {\r\n Box boxes[]; \r\n }"
+      "syntax": "aligned(8) class ITunesAccountTypeBox() extends Box('akID') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class ITunesCountryCodeBox() extends Box('sfID') {\r\n Box boxes[]; \r\n }"
+      "syntax": "aligned(8) class ITunesCountryCodeBox() extends Box('sfID') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class CmIDBox() extends Box('cmID') {\r\n\t Box boxes[];\r\n } "
+      "syntax": "aligned(8) class CmIDBox() extends Box('cmID') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class PlIDBox() extends Box('plID') {\r\n\t Box boxes[];\r\n } "
+      "syntax": "aligned(8) class PlIDBox() extends Box('plID') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class PodcastBox() extends Box('pcst') {\r\n Box boxes[]; \r\n }"
+      "syntax": "aligned(8) class PodcastBox() extends Box('pcst') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class PodcastUrlBox() extends Box('purl') {\r\n Box boxes[]; \r\n }"
+      "syntax": "aligned(8) class PodcastUrlBox() extends Box('purl') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class PurchaseDateBox() extends Box('purd') {\r\n Box boxes[]; \r\n }"
+      "syntax": "aligned(8) class PurchaseDateBox() extends Box('purd') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class TrackSortBox() extends Box('sonm') {\r\n Box boxes[]; \r\n }"
+      "syntax": "aligned(8) class TrackSortBox() extends Box('sonm') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class TVNetworkNameBox() extends Box('tvnn') {\r\n Box boxes[]; \r\n }"
+      "syntax": "aligned(8) class TVNetworkNameBox() extends Box('tvnn') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class TVShowSortBox() extends Box('sosn') {\r\n Box boxes[]; \r\n }"
+      "syntax": "aligned(8) class TVShowSortBox() extends Box('sosn') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPAlbumBox() extends FullBox('albm', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n\tunsigned int(8) trackNumber; // optional\r\n} "
+      "syntax": "aligned(8) class ThreeGPPAlbumBox() extends FullBox('albm', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n\tunsigned int(8) trackNumber; // optional\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPClassificationBox() extends FullBox('clsf', version = 0, 0) {\r\n\tunsigned int(32) classificationEntity;\r\n\tunsigned int(16) classificationTable;\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
+      "syntax": "aligned(8) class ThreeGPPClassificationBox() extends FullBox('clsf', version = 0, 0) {\r\n\tunsigned int(32) classificationEntity;\r\n\tunsigned int(16) classificationTable;\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n}"
     },
     {
       "containers": [ "udta" ],
@@ -833,393 +833,393 @@
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPPerformerBox() extends FullBox('perf', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n} "
+      "syntax": "aligned(8) class ThreeGPPPerformerBox() extends FullBox('perf', version = 0, 0) {\r\n\tbit(1) reserved = 0;\r\n\tunsigned int(5)[3] language;\r\n\tstring value;\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThreeGPPRecordingYearBox() extends FullBox('yrrc', version = 0, 0) {\r\n\tunsigned int(16) year;\r\n} "
+      "syntax": "aligned(8) class ThreeGPPRecordingYearBox() extends FullBox('yrrc', version = 0, 0) {\r\n\tunsigned int(16) year;\r\n}"
     },
     {
       "containers": [ "odkm" ],
       "type": "Box",
-      "syntax": "aligned(8) class OMAAccessUnitFormatBox() extends FullBox('odaf') {\r\n\t bit(7) reserved;\r\n bit(1) selectiveEncrypted;\r\n unsigned int(8) keyIndicatorLength;\r\n unsigned int(8) initialVectorLength;\r\n } "
+      "syntax": "aligned(8) class OMAAccessUnitFormatBox() extends FullBox('odaf') {\r\n\tbit(7) reserved;\r\n\tbit(1) selectiveEncrypted;\r\n\tunsigned int(8) keyIndicatorLength;\r\n\tunsigned int(8) initialVectorLength;\r\n}"
     },
     {
       "containers": [ "odhe", "odkm" ],
       "type": "Box",
-      "syntax": "aligned(8) class OMACommonHeadersBox() extends FullBox('ohdr') {\r\n\t unsigned int(8) encryptionMethod;\r\n unsigned int(8) paddingScheme;\r\n unsigned int(64) plaintextLength;\r\n unsigned int(16) contentIDLength;\r\n unsigned int(16) rightsIssuerLength;\r\n unsigned int(16) textualHeadersLength;\r\n unsigned int(8) contentID[contentIDLength];\r\n unsigned int(8) rightsIssuerURL[rightsIssuerLength];\r\n unsigned int(8) textualHeaders[textualHeadersLength];\r\n } "
+      "syntax": "aligned(8) class OMACommonHeadersBox() extends FullBox('ohdr') {\r\n\tunsigned int(8) encryptionMethod;\r\n\tunsigned int(8) paddingScheme;\r\n\tunsigned int(64) plaintextLength;\r\n\tunsigned int(16) contentIDLength;\r\n\tunsigned int(16) rightsIssuerLength;\r\n\tunsigned int(16) textualHeadersLength;\r\n\tunsigned int(8) contentID[contentIDLength];\r\n\tunsigned int(8) rightsIssuerURL[rightsIssuerLength];\r\n\tunsigned int(8) textualHeaders[textualHeadersLength];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class OMAContentIDBox() extends FullBox('ccid') {\r\n\t unsigned int(16) contentIDLength;\r\n unsigned int(8) contentID[contentIDLength];\r\n } "
+      "syntax": "aligned(8) class OMAContentIDBox() extends FullBox('ccid') {\r\n\tunsigned int(16) contentIDLength;\r\n\tunsigned int(8) contentID[contentIDLength];\r\n}"
     },
     {
       "containers": [ "odrm" ],
       "type": "Box",
-      "syntax": "aligned(8) class OMAContentObjectBox() extends FullBox('odda') {\r\n\t unsigned int(32) count;\r\n unsigned int(8) data[count];\r\n } "
+      "syntax": "aligned(8) class OMAContentObjectBox() extends FullBox('odda') {\r\n\tunsigned int(32) count;\r\n\tunsigned int(8) data[count];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class OMACoverURLBox() extends FullBox('cvru') {\r\n\t string content;\r\n } "
+      "syntax": "aligned(8) class OMACoverURLBox() extends FullBox('cvru') {\r\n\tstring content;\r\n}"
     },
     {
       "containers": [ "odrm" ],
       "type": "Box",
-      "syntax": "aligned(8) class OMADiscreteMediaHeadersBox () extends FullBox('odhe') {\r\n\t unsigned int(8) contentTypeLength;\r\n unsigned int(8) contentType[contentTypeLength];\r\n Box boxes[]; \r\n } "
+      "syntax": "aligned(8) class OMADiscreteMediaHeadersBox () extends FullBox('odhe') {\r\n\tunsigned int(8) contentTypeLength;\r\n\tunsigned int(8) contentType[contentTypeLength];\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "aligned(8) class OMADrmContainerBox() extends FullBox('odrm') {\r\n\t Box boxes[]; \r\n } "
+      "syntax": "aligned(8) class OMADrmContainerBox() extends FullBox('odrm') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class OMAIconURLBox() extends FullBox('icnu') {\r\n\t string content;\r\n } "
+      "syntax": "aligned(8) class OMAIconURLBox() extends FullBox('icnu') {\r\n\tstring content;\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class OMAInfoURLBox() extends FullBox('infu') {\r\n\t string content;\r\n } "
+      "syntax": "aligned(8) class OMAInfoURLBox() extends FullBox('infu') {\r\n\tstring content;\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class OMALyricsURLBox() extends FullBox('lrcu') {\r\n\t string content;\r\n } "
+      "syntax": "aligned(8) class OMALyricsURLBox() extends FullBox('lrcu') {\r\n\tstring content;\r\n}"
     },
     {
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "aligned(8) class OMAMutableDRMBox() extends Box('mdri') {\r\n\t Box boxes[];\r\n } "
+      "syntax": "aligned(8) class OMAMutableDRMBox() extends Box('mdri') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "schi" ],
 
       "type": "Box",
-      "syntax": "aligned(8) class OMAKeyManagementBox() extends FullBox('odkm') {\r\n\t Box boxes[];\r\n } "
+      "syntax": "aligned(8) class OMAKeyManagementBox() extends FullBox('odkm') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "mdri" ],
       "type": "Box",
-      "syntax": "aligned(8) class OMARightsObjectBox() extends FullBox('odrb') {\r\n\t unsigned int(8) data[];\r\n } "
+      "syntax": "aligned(8) class OMARightsObjectBox() extends FullBox('odrb') {\r\n\tunsigned int(8) data[];\r\n}"
     },
     {
       "containers": [ "mdri" ],
       "type": "Box",
-      "syntax": "aligned(8) class OMATransactionTrackingBox() extends FullBox('odtt') {\r\n\t unsigned int(8) transactionID[16];\r\n } "
+      "syntax": "aligned(8) class OMATransactionTrackingBox() extends FullBox('odtt') {\r\n\tunsigned int(8) transactionID[16];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class NeroMetadataTagsBox() extends Box('tags') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class NeroMetadataTagsBox() extends Box('tags') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleWindowLocationBox() extends Box('WLOC') {\r\n\t signed int(16) locationX;\r\n signed int(16) locationY;\r\n } "
+      "syntax": "aligned(8) class AppleWindowLocationBox() extends Box('WLOC') {\r\n\tsigned int(16) locationX;\r\n\tsigned int(16) locationY;\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class PlayAllFramesBox() extends Box('AllF') {\r\n\t unsigned int(8) data;\r\n } "
+      "syntax": "aligned(8) class PlayAllFramesBox() extends Box('AllF') {\r\n\tunsigned int(8) data;\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleLoopingBox() extends Box('LOOP') {\r\n\t unsigned int(32) data; // 0 normal, 1 palindromic\r\n } "
+      "syntax": "aligned(8) class AppleLoopingBox() extends Box('LOOP') {\r\n\tunsigned int(32) data; // 0 normal, 1 palindromic\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSelectionOnlyBox() extends Box('SelO') {\r\n\t unsigned int(8) data;\r\n } "
+      "syntax": "aligned(8) class AppleSelectionOnlyBox() extends Box('SelO') {\r\n\tunsigned int(8) data;\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleAutoPlayBox() extends Box('play') {\r\n\t unsigned int(8) autoplay;\r\n } "
+      "syntax": "aligned(8) class AppleAutoPlayBox() extends Box('play') {\r\n\tunsigned int(8) autoplay;\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class ApplePtvBox() extends Box('ptv ') {\r\n\t unsigned int(16) displaySize;\r\n unsigned int(16) reserved1;\r\n unsigned int(16) reserved2;\r\n unsigned int(8) slideShow;\r\n unsigned int(8) playOnOpen;\r\n } "
+      "syntax": "aligned(8) class ApplePtvBox() extends Box('ptv ') {\r\n\tunsigned int(16) displaySize;\r\n\tunsigned int(16) reserved1;\r\n\tunsigned int(16) reserved2;\r\n\tunsigned int(8) slideShow;\r\n\tunsigned int(8) playOnOpen;\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleArgBox() extends Box('©arg') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleArgBox() extends Box('©arg') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleArkBox() extends Box('©ark') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleArkBox() extends Box('©ark') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleCokBox() extends Box('©cok') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleCokBox() extends Box('©cok') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleComBox() extends Box('©com') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleComBox() extends Box('©com') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleDirBox() extends Box('©dir') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleDirBox() extends Box('©dir') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd1Box() extends Box('©ed1') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleEd1Box() extends Box('©ed1') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd2Box() extends Box('©ed2') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleEd2Box() extends Box('©ed2') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd3Box() extends Box('©ed3') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleEd3Box() extends Box('©ed3') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd4Box() extends Box('©ed4') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleEd4Box() extends Box('©ed4') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd5Box() extends Box('©ed5') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleEd5Box() extends Box('©ed5') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd6Box() extends Box('©ed6') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleEd6Box() extends Box('©ed6') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd7Box() extends Box('©ed7') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleEd7Box() extends Box('©ed7') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd8Box() extends Box('©ed8') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleEd8Box() extends Box('©ed8') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleEd9Box() extends Box('©ed9') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleEd9Box() extends Box('©ed9') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleFmtBox() extends Box('©fmt') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleFmtBox() extends Box('©fmt') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleInfBox() extends Box('©inf') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleInfBox() extends Box('©inf') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleIsrBox() extends Box('©isr') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleIsrBox() extends Box('©isr') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleLabBox() extends Box('©lab') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleLabBox() extends Box('©lab') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleLalBox() extends Box('©lal') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleLalBox() extends Box('©lal') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleMakBox() extends Box('©mak') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleMakBox() extends Box('©mak') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class RicohAppleMakBox() extends Box('@mak') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class RicohAppleMakBox() extends Box('@mak') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleNakBox() extends Box('©nak') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleNakBox() extends Box('©nak') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class ApplePdkBox() extends Box('©pdk') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class ApplePdkBox() extends Box('©pdk') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class ApplePhgBox() extends Box('©phg') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class ApplePhgBox() extends Box('©phg') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleProducerBox() extends Box('©prd') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleProducerBox() extends Box('©prd') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class ApplePrfBox() extends Box('©prf') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class ApplePrfBox() extends Box('©prf') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class ApplePrkBox() extends Box('©prk') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class ApplePrkBox() extends Box('©prk') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class ApplePrlBox() extends Box('©prl') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class ApplePrlBox() extends Box('©prl') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSnkBox() extends Box('©snk') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleSnkBox() extends Box('©snk') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSnmBox() extends Box('©snm') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleSnmBox() extends Box('©snm') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSrcBox() extends Box('©src') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleSrcBox() extends Box('©src') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "udta", "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSwkBox() extends Box('©swk') {\r\n Box boxes[];\r\n}"
+      "syntax": "aligned(8) class AppleSwkBox() extends Box('©swk') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "file", "moov", "trak" ],
       "type": "Box",
-      "syntax": "aligned(8) class AdditionalMetadataContainerBox() extends Box('meco') {\r\n\t Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AdditionalMetadataContainerBox() extends Box('meco') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": ["s263", "encv"]} ],
       "type": "Box",
-      "syntax": "aligned(8) class H263SpecificBox() extends Box('d263') {\r\n\t unsigned int(32) vendor;\r\n\t unsigned int(8) decoderVersion;\r\n unsigned int(8) level;\r\n unsigned int(8) profile;\r\n } "
+      "syntax": "aligned(8) class H263SpecificBox() extends Box('d263') {\r\n\tunsigned int(32) vendor;\r\n\tunsigned int(8) decoderVersion;\r\n\tunsigned int(8) level;\r\n\tunsigned int(8) profile;\r\n}"
     },
     {
       "containers": [ {"AudioSampleEntry": ["sevc", "enca"]} ],
       "type": "Box",
-      "syntax": "aligned(8) class EVRCSpecificBox() extends Box('devc') {\r\n\t unsigned int(32) vendor;\r\n\t unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
+      "syntax": "aligned(8) class EVRCSpecificBox() extends Box('devc') {\r\n\tunsigned int(32) vendor;\r\n\tunsigned int(8) decoderVersion;\r\n\tunsigned int(8) framesPerSample;\r\n}"
     },
     {
       "containers": [ {"AudioSampleEntry": ["sqcp", "enca"]} ],
       "type": "Box",
-      "syntax": "aligned(8) class QCELPSpecificBox() extends Box('dqcp') {\r\n\t unsigned int(32) vendor;\r\n\t unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
+      "syntax": "aligned(8) class QCELPSpecificBox() extends Box('dqcp') {\r\n\tunsigned int(32) vendor;\r\n\tunsigned int(8) decoderVersion;\r\n\tunsigned int(8) framesPerSample;\r\n}"
     },
     {
       "containers": [ {"AudioSampleEntry": ["ssmv", "enca"]} ],
       "type": "Box",
-      "syntax": "aligned(8) class SMVSpecificBox() extends Box('dsmv') {\r\n\t unsigned int(32) vendor;\r\n\t unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
+      "syntax": "aligned(8) class SMVSpecificBox() extends Box('dsmv') {\r\n\tunsigned int(32) vendor;\r\n\tunsigned int(8) decoderVersion;\r\n\tunsigned int(8) framesPerSample;\r\n}"
     },
     {
       "containers": [ "moov" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleReferenceMovieBox() extends Box('rmra') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleReferenceMovieBox() extends Box('rmra') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "rmra" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleReferenceMovieDescriptorBox() extends Box('rmda') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleReferenceMovieDescriptorBox() extends Box('rmda') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "rmda" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleDataRateBox() extends Box('rmdr') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleDataRateBox() extends Box('rmdr') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "rmda" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleDataReferenceBox() extends FullBox('rdrf') {\r\n unsigned int(32) dataReferenceType;\r\n unsigned int(32) count;\r\n unsigned int(8) dataReference[count];\r\n } "
+      "syntax": "aligned(8) class AppleDataReferenceBox() extends FullBox('rdrf') {\r\n\tunsigned int(32) dataReferenceType;\r\n\tunsigned int(32) count;\r\n\tunsigned int(8) dataReference[count];\r\n}"
     },
     {
       "containers": [ "stsd" ],
       "type": "Box",
-      "syntax": "aligned(8) class TextSampleEntry() extends SampleEntry('enct') {\r\n unsigned int(32) displayFlags;\r\n unsigned int(8) horizontalJustification;\r\n unsigned int(8) verticalJustification;\r\n unsigned int(8) backgroundColorRgba[4];\r\n RectRecord rectRecord;\r\n StyleRecord styleRecord; Box boxes[];\r\n }\r\n aligned(8) class TextSampleEntry() extends SampleEntry('tx3g') {\r\n unsigned int(32) displayFlags;\r\n unsigned int(8) horizontalJustification;\r\n unsigned int(8) verticalJustification;\r\n unsigned int(8) backgroundColorRgba[4];\r\n RectRecord rectRecord;\r\n StyleRecord styleRecord; Box boxes[];\r\n }\r\n aligned(8) class RectRecord() {\r\n unsigned int(16) top;\r\n unsigned int(16) left;\r\n unsigned int(16) bottom;\r\n unsigned int(16) right;\r\n }\r\n aligned(8) class StyleRecord() {\r\n unsigned int(16) startChar;\r\n unsigned int(16) endChar;\r\n unsigned int(16) fontId;\r\n unsigned int(8) faceStyleFlags;\r\n unsigned int(8) fontSize;\r\n unsigned int(8) textColor[4]; }"
+      "syntax": "aligned(8) class TextSampleEntry() extends SampleEntry('enct') {\r\n\tunsigned int(32) displayFlags;\r\n\tunsigned int(8) horizontalJustification;\r\n\tunsigned int(8) verticalJustification;\r\n\tunsigned int(8) backgroundColorRgba[4];\r\n\tRectRecord rectRecord;\r\n\tStyleRecord styleRecord;\r\n\tBox boxes[];\r\n}\r\naligned(8) class TextSampleEntry() extends SampleEntry('tx3g') {\r\n\tunsigned int(32) displayFlags;\r\n\tunsigned int(8) horizontalJustification;\r\n\tunsigned int(8) verticalJustification;\r\n\tunsigned int(8) backgroundColorRgba[4];\r\n\tRectRecord rectRecord;\r\n\tStyleRecord styleRecord;\r\n\tBox boxes[];\r\n}\r\naligned(8) class RectRecord() {\r\n\tunsigned int(16) top;\r\n\tunsigned int(16) left;\r\n\tunsigned int(16) bottom;\r\n\tunsigned int(16) right;\r\n}\r\naligned(8) class StyleRecord() {\r\n\tunsigned int(16) startChar;\r\n\tunsigned int(16) endChar;\r\n\tunsigned int(16) fontId;\r\n\tunsigned int(8) faceStyleFlags;\r\n\tunsigned int(8) fontSize;\r\n\tunsigned int(8) textColor[4]; }"
     },
     {
       "containers": [ {"AudioSampleEntry": ["ec-3", "enca"]}, "wave" ],
       "type": "Box",
-      "syntax": "aligned(8) class EC3SpecificBox() extends Box('dec3') {\r\n bit(13) dataRate;\r\n bit(3) numIndSub;\r\n EC3SpecificEntry entries[numIndSub + 1];\r\n }\r\n aligned(8) class EC3SpecificEntry() {\r\n bit(2) fscod;\r\n bit(5) bsid;\r\n bit(5) bsmod;\r\n bit(3) acmod;\r\n bit(1) lfeon;\r\n bit(3) reserved;\r\n bit(4) numDepSub;\r\n if(numDepSub > 0) {\r\n bit(9) chanLoc;\r\n }\r\n else \r\n {\r\n bit(1) reserved2;\r\n }\r\n }\r\n "
+      "syntax": "aligned(8) class EC3SpecificBox() extends Box('dec3') {\r\n\tbit(13) dataRate;\r\n\tbit(3) numIndSub;\r\n\tEC3SpecificEntry entries[numIndSub + 1];\r\n}\r\naligned(8) class EC3SpecificEntry() {\r\n\tbit(2) fscod;\r\n\tbit(5) bsid;\r\n\tbit(5) bsmod;\r\n\tbit(3) acmod;\r\n\tbit(1) lfeon;\r\n\tbit(3) reserved;\r\n\tbit(4) numDepSub;\r\n\tif(numDepSub > 0) {\r\n\t\tbit(9) chanLoc;\r\n\t}\r\n\telse\r\n\t{\r\n\t\tbit(1) reserved2;\r\n\t}\r\n}"
     },
     {
       "containers": [ {"AudioSampleEntry": ["mlpa", "enca"]} ],
       "type": "Box",
-      "syntax": "aligned(8) class MLPSpecificBox() extends Box('dmlp') {\r\n unsigned int(32) formatInfo;\r\n bit(15) peakDataRate;\r\n bit(1) reserved;\r\n unsigned int(32) reserved2; \r\n } "
+      "syntax": "aligned(8) class MLPSpecificBox() extends Box('dmlp') {\r\n\tunsigned int(32) formatInfo;\r\n\tbit(15) peakDataRate;\r\n\tbit(1) reserved;\r\n\tunsigned int(32) reserved2;\r\n}"
     },
     {
       "containers": [ "stsd" ],
       "type": "Box",
-      "syntax": "aligned(8) class Ovc1VisualSampleEntryImpl() extends Box('ovc1') {\r\n unsigned int(48) reserved;\r\n unsigned int(16) dataReferenceIndex;\r\n bit(8) vc1Content[];\r\n } "
+      "syntax": "aligned(8) class Ovc1VisualSampleEntryImpl() extends Box('ovc1') {\r\n\tunsigned int(48) reserved;\r\n\tunsigned int(16) dataReferenceIndex;\r\n\tbit(8) vc1Content[];\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": ["vp08", "vp09", "vp10", "encv", "resv"]} ],
       "type": "Box",
-      "syntax": "aligned(8) class VPCodecConfigurationBox() extends FullBox('vpcC') {\r\n unsigned int(8) profile;\r\n unsigned int(8) level;\r\n if (version == 0) {\r\n bit(4) bitDepth;\r\n bit(4) colorSpace;\r\n bit(4) chromaSubsampling;\r\n bit(3) transferFunction;\r\n bit(1) videoFullRangeFlag;\r\n } else {\r\n bit(4) bitDepth;\r\n bit(3) chromaSubsampling;\r\n bit(1) videoFullRangeFlag;\r\n unsigned int(8) colourPrimaries; unsigned int(8) transferCharacteristics;\r\n unsigned int(8) matrixCoefficients;\r\n }\r\n unsigned int(16) codecInitializationDataSize;\r\n unsigned int(8) codecInitializationData[codecInitializationDataSize];\r\n } "
+      "syntax": "aligned(8) class VPCodecConfigurationBox() extends FullBox('vpcC') {\r\n\tunsigned int(8) profile;\r\n\tunsigned int(8) level;\r\n\tif (version == 0) {\r\n\t\tbit(4) bitDepth;\r\n\t\tbit(4) colorSpace;\r\n\t\tbit(4) chromaSubsampling;\r\n\t\tbit(3) transferFunction;\r\n\t\tbit(1) videoFullRangeFlag;\r\n\t} else {\r\n\t\tbit(4) bitDepth;\r\n\t\tbit(3) chromaSubsampling;\r\n\t\tbit(1) videoFullRangeFlag;\r\n\t\tunsigned int(8) colourPrimaries;\r\n\t\tunsigned int(8) transferCharacteristics;\r\n\t\tunsigned int(8) matrixCoefficients;\r\n\t}\r\n\tunsigned int(16) codecInitializationDataSize;\r\n\tunsigned int(8) codecInitializationData[codecInitializationDataSize];\r\n}"
     },
     {
       "containers": [ {"AudioSampleEntry": ["samr", "sawb", "enca"]} ],
       "type": "Box",
-      "syntax": "// 3GPP TS 26.244 6.7, Table 6.6: AMRDecSpecStruc\r\naligned(8) class AmrSpecificBox() extends Box('damr') {\r\n unsigned int(32) vendor;\r\n unsigned int(8) decoder_version;\r\n unsigned int(16) mode_set;\r\n unsigned int(8) mode_change_period;\r\n unsigned int(8) frames_per_sample;\r\n } "
+      "syntax": "// 3GPP TS 26.244 6.7, Table 6.6: AMRDecSpecStruc\r\naligned(8) class AmrSpecificBox() extends Box('damr') {\r\n\tunsigned int(32) vendor;\r\n\tunsigned int(8) decoder_version;\r\n\tunsigned int(16) mode_set;\r\n\tunsigned int(8) mode_change_period;\r\n\tunsigned int(8) frames_per_sample;\r\n}"
     },
     {
       "containers": [ "gmhd" ],
       "type": "Box",
-      "syntax": "aligned(8) class BaseMediaInfoAtom() extends FullBox('gmin', version = 0, 0) {\r\n unsigned int(16) graphicsMode;\r\n unsigned int(16) opColorR;\r\n unsigned int(16) opColorG;\r\n unsigned int(16) opColorB;\r\n unsigned int(16) balance;\r\n unsigned int(16) reserved;\r\n } "
+      "syntax": "aligned(8) class BaseMediaInfoAtom() extends FullBox('gmin', version = 0, 0) {\r\n\tunsigned int(16) graphicsMode;\r\n\tunsigned int(16) opColorR;\r\n\tunsigned int(16) opColorG;\r\n\tunsigned int(16) opColorB;\r\n\tunsigned int(16) balance;\r\n\tunsigned int(16) reserved;\r\n}"
     },
     {
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "aligned(8) class BaseLocationBox() extends FullBox('bloc') {\r\n unsigned int(8) baseLocation[256];\r\n unsigned int(8) purchaseLocation[256];\r\n unsigned int(8) reserved[512];\r\n } "
+      "syntax": "aligned(8) class BaseLocationBox() extends FullBox('bloc') {\r\n\tunsigned int(8) baseLocation[256];\r\n\tunsigned int(8) purchaseLocation[256];\r\n\tunsigned int(8) reserved[512];\r\n}"
     },
     {
       "containers": [ {"SampleEntry": ["tx3g", "enct"]} ],
       "type": "Box",
-      "syntax": "aligned(8) class FontTableBox() extends Box('ftab') {\r\n unsigned int(16) entryCount;\r\n FontRecord fontEntries[entryCount];\r\n }\r\n aligned(8) class FontRecord() {\r\n unsigned int(16) fontId;\r\n unsigned int(8) count;\r\n unsigned int(8) fontName[count];\r\n }"
+      "syntax": "aligned(8) class FontTableBox() extends Box('ftab') {\r\n\tunsigned int(16) entryCount;\r\n\tFontRecord fontEntries[entryCount];\r\n}\r\naligned(8) class FontRecord() {\r\n\tunsigned int(16) fontId;\r\n\tunsigned int(8) count;\r\n\tunsigned int(8) fontName[count];\r\n}"
     },
     {
       "containers": [ "traf" ],
       "type": "Box",
-      "syntax": "aligned(8) class AvcNalUnitStorageBox() extends Box('avcn') {\r\n AVCDecoderConfigurationRecord() AVCConfig;\r\n } "
+      "syntax": "aligned(8) class AvcNalUnitStorageBox() extends Box('avcn') {\r\n\tAVCDecoderConfigurationRecord() AVCConfig;\r\n}"
     },
     {
       "containers": [ "moov" ],
       "type": "Box",
-      "syntax": "aligned(8) class AssetInformationBox() extends FullBox('ainf') {\r\n unsigned int(8) profileVersion[4];\r\n string apid;\r\n } "
+      "syntax": "aligned(8) class AssetInformationBox() extends FullBox('ainf') {\r\n\tunsigned int(8) profileVersion[4];\r\n\tstring apid;\r\n}"
     },
     {
       "containers": [ "moov", "moof", "meta" ],
       "type": "Box",
-      "syntax": "aligned(8) class ProtectionSystemSpecificHeaderBox() extends FullBox('pssh', version, flags = 0) {\r\n unsigned int(8) systemId[16];\r\n if (version > 0) {\r\n  unsigned int(32) count;\r\n  ProtectionSystemSpecificKeyID keyIDs[count];\r\n }\r\n unsigned int(32) dataSize;\r\n unsigned int(8) data[dataSize];\r\n }\r\n aligned(8) class ProtectionSystemSpecificKeyID() {\r\n unsigned int(8) key[16];\r\n } "
+      "syntax": "aligned(8) class ProtectionSystemSpecificHeaderBox() extends FullBox('pssh', version, flags = 0) {\r\n\tunsigned int(8) systemId[16];\r\n\tif (version > 0) {\r\n\t\tunsigned int(32) count;\r\n\t\tProtectionSystemSpecificKeyID keyIDs[count];\r\n\t}\r\n\tunsigned int(32) dataSize;\r\n\tunsigned int(8) data[dataSize];\r\n}\r\naligned(8) class ProtectionSystemSpecificKeyID() {\r\n\tunsigned int(8) key[16];\r\n}"
     },
     {
       "containers": [ "traf" ],
       "type": "Box",
-      "syntax": "aligned(8) class TrickPlayBox() extends FullBox('trik') {\r\n TrickPlayEntry entries[];\r\n }\r\n aligned(8) class TrickPlayEntry() {\r\n unsigned int(2) picType; unsigned int(6) dependencyLevel;\r\n } "
+      "syntax": "aligned(8) class TrickPlayBox() extends FullBox('trik') {\r\n\tTrickPlayEntry entries[];\r\n}\r\naligned(8) class TrickPlayEntry() {\r\n\tunsigned int(2) picType;\r\n\tunsigned int(6) dependencyLevel;\r\n}"
     },
     {
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "aligned(8) class ItemEncryptionBox extends ItemFullProperty('ienc', version, flags=0)\r\n{\r\n      unsigned int(8) reserved = 0;\r\n      if (version==0) { \r\n            unsigned int(8) reserved = 0;\r\n      } else { // version is 1 or greater\r\n            unsigned int(4) crypt_byte_block;\r\n            unsigned int(4) skip_byte_block;\r\n      }\r\n      unsigned int(8) num_keys;\r\n      for (i=1; i<= num_keys; i++) {\r\n         unsigned int(8) Per_Sample_IV_Size;\r\n         unsigned int(8)[16] KID;\r\n         if (Per_Sample_IV_Size == 0) { \r\n            unsigned int(8) constant_IV_size; \r\n            unsigned int(8)[constant_IV_size] constant_IV;\r\n         }\r\n      }\r\n}\r\n"
+      "syntax": "aligned(8) class ItemEncryptionBox extends ItemFullProperty('ienc', version, flags=0)\r\n{\r\n\tunsigned int(8) reserved = 0;\r\n\tif (version==0) {\r\n\t\tunsigned int(8) reserved = 0;\r\n\t} else { // version is 1 or greater\r\n\t\tunsigned int(4) crypt_byte_block;\r\n\t\tunsigned int(4) skip_byte_block;\r\n\t}\r\n\tunsigned int(8) num_keys;\r\n\tfor (i=1; i<= num_keys; i++) {\r\n\t\tunsigned int(8) Per_Sample_IV_Size;\r\n\t\tunsigned int(8)[16] KID;\r\n\t\tif (Per_Sample_IV_Size == 0) {\r\n\t\t\tunsigned int(8) constant_IV_size;\r\n\t\t\tunsigned int(8)[constant_IV_size] constant_IV;\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "containers": [ "ipco" ],
@@ -1229,173 +1229,173 @@
     {
       "containers": [ "schi" ],
       "type": "Box",
-      "syntax": "// ISO/IEC 23001-7:2023 DAM 1 (MPEG w25903, 2026-01, a draft): version 2's use_AES_256, whether the key is of 256 bits\r\naligned(8) class TrackEncryptionBox() extends FullBox('tenc', version, flags = 0) {\r\n unsigned int(8) reserved = 0;\r\n if (version == 0) {\r\n  unsigned int(8) reserved = 0;\r\n }\r\n else {\r\n  unsigned int(4) default_crypt_byte_block;\r\n  unsigned int(4) default_skip_byte_block;\r\n  if (version >= 2) {\r\n   unsigned int(1) use_AES_256;\r\n   unsigned int(7) reserved1 = 0;\r\n  }\r\n }\r\n unsigned int(8) default_isProtected;\r\n unsigned int(8) default_Per_Sample_IV_Size;\r\n unsigned int(8) default_KID[16];\r\n if (default_isProtected == 1 && default_Per_Sample_IV_Size == 0) {\r\n  unsigned int(8) defaultConstantIVSize;\r\n  unsigned int(8) defaultConstantIV[defaultConstantIVSize];\r\n }\r\n } "
+      "syntax": "// ISO/IEC 23001-7:2023 DAM 1 (MPEG w25903, 2026-01, a draft): version 2's use_AES_256, whether the key is of 256 bits\r\naligned(8) class TrackEncryptionBox() extends FullBox('tenc', version, flags = 0) {\r\n\tunsigned int(8) reserved = 0;\r\n\tif (version == 0) {\r\n\t\tunsigned int(8) reserved = 0;\r\n\t}\r\n\telse {\r\n\t\tunsigned int(4) default_crypt_byte_block;\r\n\t\tunsigned int(4) default_skip_byte_block;\r\n\t\tif (version >= 2) {\r\n\t\t\tunsigned int(1) use_AES_256;\r\n\t\t\tunsigned int(7) reserved1 = 0;\r\n\t\t}\r\n\t}\r\n\tunsigned int(8) default_isProtected;\r\n\tunsigned int(8) default_Per_Sample_IV_Size;\r\n\tunsigned int(8) default_KID[16];\r\n\tif (default_isProtected == 1 && default_Per_Sample_IV_Size == 0) {\r\n\t\tunsigned int(8) defaultConstantIVSize;\r\n\t\tunsigned int(8) defaultConstantIV[defaultConstantIVSize];\r\n\t}\r\n}"
     },
     {
       "containers": [ "traf", "trak" ],
       "type": "Box",
       "originalSyntax": "aligned(8) class SampleEncryptionBox extends FullBox('senc', version, flags)\r\n{\r\n   unsigned int(32)  sample_count;\r\n   {\r\n      if (version==0) {\r\n         unsigned int(Per_Sample_IV_Size*8) InitializationVector;\r\n         if (flags & 0x000002) {\r\n            unsigned int(16) subsample_count;\r\n            {\r\n               unsigned int(16) BytesOfClearData;\r\n               unsigned int(32) BytesOfProtectedData;\r\n            } [subsample_count ]\r\n         }\r\n  } else if (version==1) {\r\n         unsigned int(16) multi_IV_count;\r\n         for (i=1; i <= multi _IV_count; i++) {\r\n            unsigned int(8) multi_subindex_IV;\r\n            unsigned int(Per_Sample_IV_Size*8) IV;\r\n         }\r\n         unsigned int(32) subsample_count;\r\n         {\r\n            unsigned int(16) multi_subindex;\r\n            unsigned int(16) BytesOfClearData;\r\n            unsigned int(32) BytesOfProtectedData;\r\n         } [subsample_count]\r\n      }\r\n   }[ sample_count ]\r\n}",
-      "syntax": "aligned(8) class SampleEncryptionBox extends FullBox('senc', version, flags)\r\n{\r\n   unsigned int(32)  sample_count;\r\n   unsigned int(8) sample_data[]; // each sample's IV and subsamples (23001-7 7.2), whose IV size is the track's - its 'tenc', or the sample's 'seig' group - and not in the box: SharpMP4's SampleEncryptionReader reads them\r\n}"
+      "syntax": "aligned(8) class SampleEncryptionBox extends FullBox('senc', version, flags)\r\n{\r\n\tunsigned int(32)  sample_count;\r\n\tunsigned int(8) sample_data[]; // each sample's IV and subsamples (23001-7 7.2), whose IV size is the track's - its 'tenc', or the sample's 'seig' group - and not in the box: SharpMP4's SampleEncryptionReader reads them\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleAtIDBox() extends Box('atID') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleAtIDBox() extends Box('atID') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleGeIDBox() extends Box('geID') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleGeIDBox() extends Box('geID') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleXidBox() extends Box('xid ') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleXidBox() extends Box('xid ') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleFlvrBox() extends Box('flvr') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleFlvrBox() extends Box('flvr') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "ilst" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleShortDescriptionBox() extends Box('sdes') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class AppleShortDescriptionBox() extends Box('sdes') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "aligned(8) class EventMessageBox() extends Box('emsg') {\r\n string schemeIdUri;\r\n string value;\r\n unsigned int(32) timescale;\r\n unsigned int(32) presentationTimeDelta;\r\n unsigned int(32) eventDuration;\r\n unsigned int(32) id;\r\n unsigned int(8) messageData[]; } "
+      "syntax": "aligned(8) class EventMessageBox() extends Box('emsg') {\r\n\tstring schemeIdUri;\r\n\tstring value;\r\n\tunsigned int(32) timescale;\r\n\tunsigned int(32) presentationTimeDelta;\r\n\tunsigned int(32) eventDuration;\r\n\tunsigned int(32) id;\r\n\tunsigned int(8) messageData[]; }"
     },
     {
       "containers": [ "tref" ],
       "type": "Box",
-      "syntax": "aligned(8) class TrackReferenceTypeBox() extends Box('hind') {\r\n unsigned int(32) trackIds[];\r\n } "
+      "syntax": "aligned(8) class TrackReferenceTypeBox() extends Box('hind') {\r\n\tunsigned int(32) trackIds[];\r\n}"
     },
     {
       "containers": [ "tref" ],
       "type": "Box",
-      "syntax": "aligned(8) class TrackReferenceTypeBox() extends Box('vdep') {\r\n unsigned int(32) trackIds[];\r\n } "
+      "syntax": "aligned(8) class TrackReferenceTypeBox() extends Box('vdep') {\r\n\tunsigned int(32) trackIds[];\r\n}"
     },
     {
       "containers": [ "tref" ],
       "type": "Box",
-      "syntax": "aligned(8) class TrackReferenceTypeBox() extends Box('vplx') {\r\n unsigned int(32) trackIds[];\r\n } "
+      "syntax": "aligned(8) class TrackReferenceTypeBox() extends Box('vplx') {\r\n\tunsigned int(32) trackIds[];\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": ["dvav", "dva1", "dvhe", "dvh1", "dav1", "avc1", "avc2", "avc3", "avc4", "hev1", "hvc1", "av01", "encv", "resv"]} ],
       "type": "Box",
-      "syntax": "aligned(8) class DoViConfigurationBox() extends Box('dvcC') {\r\n unsigned int(8) dv_version_major;\r\n unsigned int(8) dv_version_minor;\r\n unsigned int(7) dv_profile;\r\n unsigned int(6) dv_level;\r\n bit(1) rpu_present_flag;\r\n bit(1) el_present_flag;\r\n bit(1) bl_present_flag;\r\n unsigned int(4) dv_bl_signal_compatibility_id;\r\n const unsigned int(28) reserved = 0;\r\n const unsigned int(32)[4] reserved = 0;\r\n } "
+      "syntax": "aligned(8) class DoViConfigurationBox() extends Box('dvcC') {\r\n\tunsigned int(8) dv_version_major;\r\n\tunsigned int(8) dv_version_minor;\r\n\tunsigned int(7) dv_profile;\r\n\tunsigned int(6) dv_level;\r\n\tbit(1) rpu_present_flag;\r\n\tbit(1) el_present_flag;\r\n\tbit(1) bl_present_flag;\r\n\tunsigned int(4) dv_bl_signal_compatibility_id;\r\n\tconst unsigned int(28) reserved = 0;\r\n\tconst unsigned int(32)[4] reserved = 0;\r\n}"
     },
     {
       "containers": [ "stsd" ],
       "type": "Box",
-      "syntax": "aligned(8) class DfxpSampleEntry() extends SampleEntry('dfxp') {\r\n } "
+      "syntax": "aligned(8) class DfxpSampleEntry() extends SampleEntry('dfxp') {\r\n}"
     },
     {
       "containers": [ "stsd" ],
       "type": "Box",
-      "syntax": "aligned(8) class VcmMSampleEntry() extends SampleEntry('vcmM') {\r\n Box boxes[];\r\n } "
+      "syntax": "aligned(8) class VcmMSampleEntry() extends SampleEntry('vcmM') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "vcmM" ],
       "type": "Box",
-      "syntax": "aligned(8) class VcmCBox() extends Box('vcmC') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class VcmCBox() extends Box('vcmC') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": ["vp08", "vp09", "vp10", "encv", "resv"]} ],
       "type": "Box",
-      "syntax": "aligned(8) class ContentLightLevelBox() extends FullBox('CoLL') {\r\n unsigned int(16) maxCLL;\r\n unsigned int(16) maxFALL;\r\n } "
+      "syntax": "aligned(8) class ContentLightLevelBox() extends FullBox('CoLL') {\r\n\tunsigned int(16) maxCLL;\r\n\tunsigned int(16) maxFALL;\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": ["vp08", "vp09", "vp10", "encv", "resv"]} ],
       "type": "Box",
-      "syntax": "aligned(8) class SMPTE2086MasteringDisplayMetadataBox() extends FullBox('SmDm') {\r\n unsigned int(16) primaryRChromaticityX;\r\nunsigned int(16) primaryRChromaticityY;\r\nunsigned int(16) primaryGChromaticityX;\r\nunsigned int(16) primaryGChromaticityY;\r\nunsigned int(16) primaryBChromaticityX;\r\nunsigned int(16) primaryBChromaticityY;\r\nunsigned int(16) whitePointChromaticityX;\r\nunsigned int(16) whitePointChromaticityY;\r\n unsigned int(32) luminanceMax;\r\n unsigned int(32) luminanceMin;\r\n } "
+      "syntax": "aligned(8) class SMPTE2086MasteringDisplayMetadataBox() extends FullBox('SmDm') {\r\n\tunsigned int(16) primaryRChromaticityX;\r\n\tunsigned int(16) primaryRChromaticityY;\r\n\tunsigned int(16) primaryGChromaticityX;\r\n\tunsigned int(16) primaryGChromaticityY;\r\n\tunsigned int(16) primaryBChromaticityX;\r\n\tunsigned int(16) primaryBChromaticityY;\r\n\tunsigned int(16) whitePointChromaticityX;\r\n\tunsigned int(16) whitePointChromaticityY;\r\n\tunsigned int(32) luminanceMax;\r\n\tunsigned int(32) luminanceMin;\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": ["SVQ3"]} ],
       "type": "Box",
-      "syntax": "aligned(8) class SMIBox() extends Box('SMI ') {\r\n\t bit(8) metadata[];\r\n } "
+      "syntax": "aligned(8) class SMIBox() extends Box('SMI ') {\r\n\tbit(8) metadata[];\r\n}"
     },
     {
       "containers": [ "stsd" ],
       "type": "Box",
-      "syntax": "aligned(8) class C608Box() extends Box('c608') {\r\n\t unsigned int(8) reserved1[4]; unsigned int(16) reserved2;\r\n unsigned int(16) dataReferenceIndex;\r\n } "
+      "syntax": "aligned(8) class C608Box() extends Box('c608') {\r\n\tunsigned int(8) reserved1[4];\r\n\tunsigned int(16) reserved2;\r\n\tunsigned int(16) dataReferenceIndex;\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "// 3GPP TS 26.245 5.17.3.13, HyperTextBox: a modifier of a timed text sample - after its text, not in the box tree - making a run of its characters a link\r\naligned(8) class HrefBox() extends Box('href') {\r\n unsigned int(16) startcharoffset;\r\n unsigned int(16) endcharoffset;\r\n unsigned int(8) urlLength;\r\n unsigned int(8) url[urlLength];\r\n unsigned int(8) altLength;\r\n unsigned int(8) altstring[altLength];\r\n}"
+      "syntax": "// 3GPP TS 26.245 5.17.3.13, HyperTextBox: a modifier of a timed text sample - after its text, not in the box tree - making a run of its characters a link\r\naligned(8) class HrefBox() extends Box('href') {\r\n\tunsigned int(16) startcharoffset;\r\n\tunsigned int(16) endcharoffset;\r\n\tunsigned int(8) urlLength;\r\n\tunsigned int(8) url[urlLength];\r\n\tunsigned int(8) altLength;\r\n\tunsigned int(8) altstring[altLength];\r\n}"
     },
     {
       "containers": [ "tref" ],
       "type": "Box",
-      "syntax": "aligned(8) class IpirBox() extends Box('ipir') {\r\n\t unsigned int(32) entry_count;\r\n unsigned int(32) trackIDs[ entry_count ];\r\n } "
+      "syntax": "aligned(8) class IpirBox() extends Box('ipir') {\r\n\tunsigned int(32) entry_count;\r\n\tunsigned int(32) trackIDs[ entry_count ];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class XMPCustomBox() extends Box('uuid be7acfcb97a942e89c71999491e3afac') {\r\n\t string data;\r\n }"
+      "syntax": "aligned(8) class XMPCustomBox() extends Box('uuid be7acfcb97a942e89c71999491e3afac') {\r\n\tstring data;\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class PspUsmtExtensionBox() extends Box('uuid 55534d5421d24fcebb88695cfac9c740') {\r\n\t Box boxes[];\r\n }"
+      "syntax": "aligned(8) class PspUsmtExtensionBox() extends Box('uuid 55534d5421d24fcebb88695cfac9c740') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class PspProfExtensionBox() extends Box('uuid 50524f4621d24fcebb88695cfac9c740') {\r\n\t unsigned int(32) unknown1;\r\n unsigned int(32) entry_count;\r\n Box boxes[];\r\n }"
+      "syntax": "aligned(8) class PspProfExtensionBox() extends Box('uuid 50524f4621d24fcebb88695cfac9c740') {\r\n\tunsigned int(32) unknown1;\r\n\tunsigned int(32) entry_count;\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "uuid" ],
       "type": "Box",
-      "syntax": "aligned(8) class PspMtdtBox() extends Box('MTDT') {\r\n\t unsigned int(16) entry_count;\r\n MtdtEntry entries[ entry_count ];\r\n }\r\n aligned(8) class MtdtEntry() {\r\n unsigned int(16) size;\r\n unsigned int(32) type;\r\n bit(1) reserved;\r\nunsigned int(5)[3] language;\r\n unsigned int(16) dataType;\r\n bit(8) data[size-10];\r\n }\r\n"
+      "syntax": "aligned(8) class PspMtdtBox() extends Box('MTDT') {\r\n\tunsigned int(16) entry_count;\r\n\tMtdtEntry entries[ entry_count ];\r\n}\r\naligned(8) class MtdtEntry() {\r\n\tunsigned int(16) size;\r\n\tunsigned int(32) type;\r\n\tbit(1) reserved;\r\n\tunsigned int(5)[3] language;\r\n\tunsigned int(16) dataType;\r\n\tbit(8) data[size-10];\r\n}"
     },
     {
       "containers": [ "uuid" ],
       "type": "Box",
-      "syntax": "aligned(8) class PspFprfBox() extends Box('FPRF') {\r\n\t unsigned int(32) unknown1;\r\n unsigned int(32) unknown2;\r\n unsigned int(32) unknown3;\r\n }"
+      "syntax": "aligned(8) class PspFprfBox() extends Box('FPRF') {\r\n\tunsigned int(32) unknown1;\r\n\tunsigned int(32) unknown2;\r\n\tunsigned int(32) unknown3;\r\n}"
     },
     {
       "containers": [ "uuid" ],
       "type": "Box",
-      "syntax": "aligned(8) class PspAprfBox() extends Box('APRF') {\r\n\t unsigned int(32) unknown1;\r\n unsigned int(32) unknown2;\r\n unsigned int(32) codec;\r\n unsigned int(32) unknown3;\r\n unsigned int(32) unknown4;\r\n unsigned int(32) maxBitrate;\r\n unsigned int(32) avgBitrate;\r\n unsigned int(32) frameRate;\r\n unsigned int(32) channels;\r\n }"
+      "syntax": "aligned(8) class PspAprfBox() extends Box('APRF') {\r\n\tunsigned int(32) unknown1;\r\n\tunsigned int(32) unknown2;\r\n\tunsigned int(32) codec;\r\n\tunsigned int(32) unknown3;\r\n\tunsigned int(32) unknown4;\r\n\tunsigned int(32) maxBitrate;\r\n\tunsigned int(32) avgBitrate;\r\n\tunsigned int(32) frameRate;\r\n\tunsigned int(32) channels;\r\n}"
     },
     {
       "containers": [ "uuid" ],
       "type": "Box",
-      "syntax": "aligned(8) class PspVprfBox() extends Box('VPRF') {\r\n\t unsigned int(32) unknown1;\r\n unsigned int(32) unknown2;\r\n unsigned int(32) codec;\r\n unsigned int(32) unknown3;\r\n unsigned int(32) unknown4;\r\n unsigned int(32) maxBitrate;\r\n unsigned int(32) avgBitrate;\r\n unsigned int(32) frameRate1;\r\n unsigned int(32) frameRate2;\r\n unsigned int(16) width;\r\n unsigned int(16) height;\r\n unsigned int(32) unknown5;\r\n }"
+      "syntax": "aligned(8) class PspVprfBox() extends Box('VPRF') {\r\n\tunsigned int(32) unknown1;\r\n\tunsigned int(32) unknown2;\r\n\tunsigned int(32) codec;\r\n\tunsigned int(32) unknown3;\r\n\tunsigned int(32) unknown4;\r\n\tunsigned int(32) maxBitrate;\r\n\tunsigned int(32) avgBitrate;\r\n\tunsigned int(32) frameRate1;\r\n\tunsigned int(32) frameRate2;\r\n\tunsigned int(16) width;\r\n\tunsigned int(16) height;\r\n\tunsigned int(32) unknown5;\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class PiffSampleEncryptionBox() extends FullBox('uuid a2394f525a9b4f14a2446c427c648df4', version, flags) \r\n{\r\n if(flags & 0x1) {\r\n unsigned int(24) algorithmID;\r\n unsigned int(8) Per_Sample_IV_Size;\r\n unsigned int(8) kid[16];\r\n }\r\n  unsigned int(32)  sample_count;\r\n   unsigned int(8) sample_data[]; // each sample's IV and subsamples, the IV of the size above where the flags give one, else of the track's\r\n}"
+      "syntax": "aligned(8) class PiffSampleEncryptionBox() extends FullBox('uuid a2394f525a9b4f14a2446c427c648df4', version, flags)\r\n{\r\n\tif(flags & 0x1) {\r\n\t\tunsigned int(24) algorithmID;\r\n\t\tunsigned int(8) Per_Sample_IV_Size;\r\n\t\tunsigned int(8) kid[16];\r\n\t}\r\n\tunsigned int(32)  sample_count;\r\n\tunsigned int(8) sample_data[]; // each sample's IV and subsamples, the IV of the size above where the flags give one, else of the track's\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class PiffTrackEncryptionBox() extends FullBox('uuid 8974dbce7be74c5184f97148f9882554', version, flags) \r\n{\r\n unsigned int(24) algorithmID;\r\n unsigned int(8) Per_Sample_IV_Size;\r\n unsigned int(8) kid[16];\r\n }\r\n"
+      "syntax": "aligned(8) class PiffTrackEncryptionBox() extends FullBox('uuid 8974dbce7be74c5184f97148f9882554', version, flags)\r\n{\r\n\tunsigned int(24) algorithmID;\r\n\tunsigned int(8) Per_Sample_IV_Size;\r\n\tunsigned int(8) kid[16];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class TfrfBox() extends FullBox('uuid d4807ef2ca3946958e5426cb9e46a79f') {\r\n\t unsigned int(8) fragmentCount;\r\n for(i = 0; i < fragmentCount; i++) {\r\n if(version == 0x1) {\r\n unsigned int(64) fragmentAbsoluteTime;\r\n unsigned int(64) fragmentAbsoluteDuration;\r\n } else {\r\n unsigned int(32) fragmentAbsoluteTime;\r\n unsigned int(32) fragmentAbsoluteDuration;\r\n }\r\n } }"
+      "syntax": "aligned(8) class TfrfBox() extends FullBox('uuid d4807ef2ca3946958e5426cb9e46a79f') {\r\n\tunsigned int(8) fragmentCount;\r\n\tfor(i = 0; i < fragmentCount; i++) {\r\n\t\tif(version == 0x1) {\r\n\t\t\tunsigned int(64) fragmentAbsoluteTime;\r\n\t\t\tunsigned int(64) fragmentAbsoluteDuration;\r\n\t\t} else {\r\n\t\t\tunsigned int(32) fragmentAbsoluteTime;\r\n\t\t\tunsigned int(32) fragmentAbsoluteDuration;\r\n\t\t}\r\n} }"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class TfxdBox() extends FullBox('uuid 6d1d9b0542d544e680e2141daff757b2') {\r\n\t if(version == 0x1) {\r\n unsigned int(64) fragmentAbsoluteTime;\r\n unsigned int(64) fragmentAbsoluteDuration;\r\n } else {\r\n unsigned int(32) fragmentAbsoluteTime;\r\n unsigned int(32) fragmentAbsoluteDuration;\r\n } }"
+      "syntax": "aligned(8) class TfxdBox() extends FullBox('uuid 6d1d9b0542d544e680e2141daff757b2') {\r\n\tif(version == 0x1) {\r\n\t\tunsigned int(64) fragmentAbsoluteTime;\r\n\t\tunsigned int(64) fragmentAbsoluteDuration;\r\n\t} else {\r\n\t\tunsigned int(32) fragmentAbsoluteTime;\r\n\t\tunsigned int(32) fragmentAbsoluteDuration;\r\n} }"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class UuidBasedProtectionSystemSpecificHeaderBox() extends FullBox('uuid d08a4f1810f34a82b6c832d8aba183d3') {\r\n\t unsigned int(8) systemID[16];\r\n unsigned int(32) count;\r\n unsigned int(8) data[count];\r\n }"
+      "syntax": "aligned(8) class UuidBasedProtectionSystemSpecificHeaderBox() extends FullBox('uuid d08a4f1810f34a82b6c832d8aba183d3') {\r\n\tunsigned int(8) systemID[16];\r\n\tunsigned int(32) count;\r\n\tunsigned int(8) data[count];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class PadsBox() extends Box('pads') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class PadsBox() extends Box('pads') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "grpl" ],
@@ -1420,294 +1420,294 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class MicrosoftWindowsVersionBox() extends Box('uuid 5ca708fb328e4205a861650eca0a9596') {\r\n\t unsigned int(16) unknown1;\r\n unsigned int(16) count;\r\n char version[count];\r\n }"
+      "syntax": "aligned(8) class MicrosoftWindowsVersionBox() extends Box('uuid 5ca708fb328e4205a861650eca0a9596') {\r\n\tunsigned int(16) unknown1;\r\n\tunsigned int(16) count;\r\n\tchar version[count];\r\n}"
     },
     {
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "aligned(8) class CameraIntrinsicMatrixBox() extends FullBox('cmin') {\r\n\t signed int(32) matrix_focal_length_x;\r\n signed int(32) matrix_principal_point_x;\r\n signed int(32) matrix_principal_point_y;\r\n if( flags & 0x1 ) { \r\n signed int(32) matrix_focal_length_y;\r\n signed int(32) matrix_skew;\r\n }\r\n } "
+      "syntax": "aligned(8) class CameraIntrinsicMatrixBox() extends FullBox('cmin') {\r\n\tsigned int(32) matrix_focal_length_x;\r\n\tsigned int(32) matrix_principal_point_x;\r\n\tsigned int(32) matrix_principal_point_y;\r\n\tif( flags & 0x1 ) {\r\n\t\tsigned int(32) matrix_focal_length_y;\r\n\t\tsigned int(32) matrix_skew;\r\n\t}\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class UuidCameraIntrinsicMatrixBox() extends FullBox('uuid 22cc04c7d6d94e079d904eb6ecbaf3a3') {\r\n\t signed int(32) matrix_focal_length_x;\r\n signed int(32) matrix_principal_point_x;\r\n signed int(32) matrix_principal_point_y;\r\n if( flags & 0x1 ) { \r\n signed int(32) matrix_focal_length_y;\r\n signed int(32) matrix_skew;\r\n }\r\n } "
+      "syntax": "aligned(8) class UuidCameraIntrinsicMatrixBox() extends FullBox('uuid 22cc04c7d6d94e079d904eb6ecbaf3a3') {\r\n\tsigned int(32) matrix_focal_length_x;\r\n\tsigned int(32) matrix_principal_point_x;\r\n\tsigned int(32) matrix_principal_point_y;\r\n\tif( flags & 0x1 ) {\r\n\t\tsigned int(32) matrix_focal_length_y;\r\n\t\tsigned int(32) matrix_skew;\r\n\t}\r\n}"
     },
     {
       "containers": [ "schi", "ipco" ],
       "type": "Box",
-      "syntax": "aligned(8) class GenericCompressionConfigurationBox() extends FullBox('cmpC') {\r\n\t unsigned int(32) compression_type;\r\n unsigned int(8) unit_type;\r\n } "
+      "syntax": "aligned(8) class GenericCompressionConfigurationBox() extends FullBox('cmpC') {\r\n\tunsigned int(32) compression_type;\r\n\tunsigned int(8) unit_type;\r\n}"
     },
     {
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "aligned(8) class J2kHBox() extends Box('j2kH') {\r\n\t Box boxes[];\r\n } "
+      "syntax": "aligned(8) class J2kHBox() extends Box('j2kH') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "j2kH" ],
       "type": "Box",
-      "syntax": "aligned(8) class J2kChannelDefinitionBox() extends Box('cdef') {\r\n\t unsigned int(16) channel_count;\r\n Channel channels[];\r\n } aligned(8) class Channel() {\r\n unsigned int(16) channel_index;\r\n unsigned int(16) channel_type;\r\n unsigned int(16) channel_association;\r\n } "
+      "syntax": "aligned(8) class J2kChannelDefinitionBox() extends Box('cdef') {\r\n\tunsigned int(16) channel_count;\r\n\tChannel channels[];\r\n} aligned(8) class Channel() {\r\n\tunsigned int(16) channel_index;\r\n\tunsigned int(16) channel_type;\r\n\tunsigned int(16) channel_association;\r\n}"
     },
     {
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "aligned(8) class ItaiBox() extends FullBox('itai') {\r\n\t unsigned int(64) tai_timestamp;\r\n unsigned int(8) status_bits;\r\n } "
+      "syntax": "aligned(8) class ItaiBox() extends FullBox('itai') {\r\n\tunsigned int(64) tai_timestamp;\r\n\tunsigned int(8) status_bits;\r\n}"
     },
     {
       "containers": [ {"SampleEntry": []}, "ipco" ],
       "type": "Box",
-      "syntax": "aligned(8) class TaicBox() extends FullBox('taic') {\r\n\t unsigned int(64) time_uncertainty;\r\n unsigned int(32) clock_resolution;\r\n signed int(32) clock_drift_rate;\r\n unsigned int(8) clock_type;\r\n } "
+      "syntax": "aligned(8) class TaicBox() extends FullBox('taic') {\r\n\tunsigned int(64) time_uncertainty;\r\n\tunsigned int(32) clock_resolution;\r\n\tsigned int(32) clock_drift_rate;\r\n\tunsigned int(8) clock_type;\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": ["uncv"]}, "ipco" ],
       "type": "Box",
-      "syntax": "// ISO/IEC 23001-17 uncompressed frame configuration: of version 1 a profile alone, of version 0 the components, how they are sampled, interleaved, laid in blocks and aligned, and the tiles\r\naligned(8) class UncompressedFrameConfigurationBox() extends FullBox('uncC') {\r\n\t unsigned int(32) profile;\r\n if (version == 0) {\r\n unsigned int(32) component_count;\r\n for (i = 0; i < component_count; i++) {\r\n unsigned int(16) component_index;\r\n unsigned int(8) component_bit_depth_minus_one;\r\n unsigned int(8) component_format;\r\n unsigned int(8) component_align_size;\r\n }\r\n unsigned int(8) sampling_type;\r\n unsigned int(8) interleave_type;\r\n unsigned int(8) block_size;\r\n unsigned int(1) components_little_endian;\r\n unsigned int(1) block_pad_lsb;\r\n unsigned int(1) block_little_endian;\r\n unsigned int(1) block_reversed;\r\n unsigned int(1) pad_unknown;\r\n unsigned int(3) reserved;\r\n unsigned int(32) pixel_size;\r\n unsigned int(32) row_align_size;\r\n unsigned int(32) tile_align_size;\r\n unsigned int(32) num_tile_cols_minus_one;\r\n unsigned int(32) num_tile_rows_minus_one;\r\n }\r\n } "
+      "syntax": "// ISO/IEC 23001-17 uncompressed frame configuration: of version 1 a profile alone, of version 0 the components, how they are sampled, interleaved, laid in blocks and aligned, and the tiles\r\naligned(8) class UncompressedFrameConfigurationBox() extends FullBox('uncC') {\r\n\tunsigned int(32) profile;\r\n\tif (version == 0) {\r\n\t\tunsigned int(32) component_count;\r\n\t\tfor (i = 0; i < component_count; i++) {\r\n\t\t\tunsigned int(16) component_index;\r\n\t\t\tunsigned int(8) component_bit_depth_minus_one;\r\n\t\t\tunsigned int(8) component_format;\r\n\t\t\tunsigned int(8) component_align_size;\r\n\t\t}\r\n\t\tunsigned int(8) sampling_type;\r\n\t\tunsigned int(8) interleave_type;\r\n\t\tunsigned int(8) block_size;\r\n\t\tunsigned int(1) components_little_endian;\r\n\t\tunsigned int(1) block_pad_lsb;\r\n\t\tunsigned int(1) block_little_endian;\r\n\t\tunsigned int(1) block_reversed;\r\n\t\tunsigned int(1) pad_unknown;\r\n\t\tunsigned int(3) reserved;\r\n\t\tunsigned int(32) pixel_size;\r\n\t\tunsigned int(32) row_align_size;\r\n\t\tunsigned int(32) tile_align_size;\r\n\t\tunsigned int(32) num_tile_cols_minus_one;\r\n\t\tunsigned int(32) num_tile_rows_minus_one;\r\n\t}\r\n}"
     },
     {
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "// ISO/IEC 23001-17 generic compressed units: of each unit compressed alone, where it is and its size - of fields sized by the codes it starts with, which CompressedUnitsInfo reads\r\naligned(8) class GenericCompressedUnitsItemInfoBox() extends FullBox('icef') {\r\n\t CompressedUnitsInfo units;\r\n } "
+      "syntax": "// ISO/IEC 23001-17 generic compressed units: of each unit compressed alone, where it is and its size - of fields sized by the codes it starts with, which CompressedUnitsInfo reads\r\naligned(8) class GenericCompressedUnitsItemInfoBox() extends FullBox('icef') {\r\n\tCompressedUnitsInfo units;\r\n}"
     },
     {
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "// ISO/IEC 23008-12 camera extrinsic matrix: the camera's position, in micrometres, and its orientation, a unit quaternion of its x, y and z - of 2^-30 in 32 bits, of 2^-14 in 16 - each where its flag says it is there: 0x1, 0x2 and 0x4 the position, 0x8 the orientation, 0x10 of 32 bits, 0x20 the world coordinate system\r\naligned(8) class CameraExtrinsicMatrixBox() extends FullBox('cmex') {\r\n\t if( flags & 0x1 ) { \r\n signed int(32) pos_x;\r\n }\r\n if( flags & 0x2 ) { \r\n signed int(32) pos_y;\r\n }\r\n if( flags & 0x4 ) { \r\n signed int(32) pos_z;\r\n }\r\n if( flags & 0x8 ) { \r\n if( flags & 0x10 ) { \r\n signed int(32) quat_x;\r\n signed int(32) quat_y;\r\n signed int(32) quat_z;\r\n }\r\n else { \r\n signed int(16) quat_x_short;\r\n signed int(16) quat_y_short;\r\n signed int(16) quat_z_short;\r\n }\r\n }\r\n if( flags & 0x20 ) { \r\n unsigned int(32) world_coordinate_system_id;\r\n }\r\n } "
+      "syntax": "// ISO/IEC 23008-12 camera extrinsic matrix: the camera's position, in micrometres, and its orientation, a unit quaternion of its x, y and z - of 2^-30 in 32 bits, of 2^-14 in 16 - each where its flag says it is there: 0x1, 0x2 and 0x4 the position, 0x8 the orientation, 0x10 of 32 bits, 0x20 the world coordinate system\r\naligned(8) class CameraExtrinsicMatrixBox() extends FullBox('cmex') {\r\n\tif( flags & 0x1 ) {\r\n\t\tsigned int(32) pos_x;\r\n\t}\r\n\tif( flags & 0x2 ) {\r\n\t\tsigned int(32) pos_y;\r\n\t}\r\n\tif( flags & 0x4 ) {\r\n\t\tsigned int(32) pos_z;\r\n\t}\r\n\tif( flags & 0x8 ) {\r\n\t\tif( flags & 0x10 ) {\r\n\t\t\tsigned int(32) quat_x;\r\n\t\t\tsigned int(32) quat_y;\r\n\t\t\tsigned int(32) quat_z;\r\n\t\t}\r\n\t\telse {\r\n\t\t\tsigned int(16) quat_x_short;\r\n\t\t\tsigned int(16) quat_y_short;\r\n\t\t\tsigned int(16) quat_z_short;\r\n\t\t}\r\n\t}\r\n\tif( flags & 0x20 ) {\r\n\t\tunsigned int(32) world_coordinate_system_id;\r\n\t}\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "// Apple's camera extrinsic matrix, of the layout of 'cmex', as an iPhone's spatial photo has it of each eye\r\naligned(8) class UuidCameraExtrinsicMatrixBox() extends FullBox('uuid 4363e9145b7d4aab97aebea69803b434') {\r\n\t if( flags & 0x1 ) { \r\n signed int(32) pos_x;\r\n }\r\n if( flags & 0x2 ) { \r\n signed int(32) pos_y;\r\n }\r\n if( flags & 0x4 ) { \r\n signed int(32) pos_z;\r\n }\r\n if( flags & 0x8 ) { \r\n if( flags & 0x10 ) { \r\n signed int(32) quat_x;\r\n signed int(32) quat_y;\r\n signed int(32) quat_z;\r\n }\r\n else { \r\n signed int(16) quat_x_short;\r\n signed int(16) quat_y_short;\r\n signed int(16) quat_z_short;\r\n }\r\n }\r\n if( flags & 0x20 ) { \r\n unsigned int(32) world_coordinate_system_id;\r\n }\r\n } "
+      "syntax": "// Apple's camera extrinsic matrix, of the layout of 'cmex', as an iPhone's spatial photo has it of each eye\r\naligned(8) class UuidCameraExtrinsicMatrixBox() extends FullBox('uuid 4363e9145b7d4aab97aebea69803b434') {\r\n\tif( flags & 0x1 ) {\r\n\t\tsigned int(32) pos_x;\r\n\t}\r\n\tif( flags & 0x2 ) {\r\n\t\tsigned int(32) pos_y;\r\n\t}\r\n\tif( flags & 0x4 ) {\r\n\t\tsigned int(32) pos_z;\r\n\t}\r\n\tif( flags & 0x8 ) {\r\n\t\tif( flags & 0x10 ) {\r\n\t\t\tsigned int(32) quat_x;\r\n\t\t\tsigned int(32) quat_y;\r\n\t\t\tsigned int(32) quat_z;\r\n\t\t}\r\n\t\telse {\r\n\t\t\tsigned int(16) quat_x_short;\r\n\t\t\tsigned int(16) quat_y_short;\r\n\t\t\tsigned int(16) quat_z_short;\r\n\t\t}\r\n\t}\r\n\tif( flags & 0x20 ) {\r\n\t\tunsigned int(32) world_coordinate_system_id;\r\n\t}\r\n}"
     },
     {
       "containers": [ "grpl" ],
       "type": "Box",
-      "syntax": "// An entity group of Apple's, of the layout of EntityToGroupBox, as an iPhone's spatial photo has it of its two eyes and its primary image; what it says of them is not known\r\naligned(8) class UuidEntityToGroupBox() extends FullBox('uuid 524a52f437b347d09637933d05ac9b68') {\r\n\t unsigned int(32) group_id;\r\n unsigned int(32) num_entities_in_group;\r\n for(i=0; i<num_entities_in_group; i++)\r\n unsigned int(32) entity_id;\r\n } "
+      "syntax": "// An entity group of Apple's, of the layout of EntityToGroupBox, as an iPhone's spatial photo has it of its two eyes and its primary image; what it says of them is not known\r\naligned(8) class UuidEntityToGroupBox() extends FullBox('uuid 524a52f437b347d09637933d05ac9b68') {\r\n\tunsigned int(32) group_id;\r\n\tunsigned int(32) num_entities_in_group;\r\n\tfor(i=0; i<num_entities_in_group; i++)\r\n\t\tunsigned int(32) entity_id;\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": ["uncv"]}, "ipco" ],
       "type": "Box",
-      "syntax": "// ISO/IEC 23001-17 component definition: what each component is - of a type of 0x8000 or more, of a URI\r\naligned(8) class ComponentDefinitionBox() extends Box('cmpd') {\r\n\t unsigned int(32) component_count;\r\n for (i = 0; i < component_count; i++) {\r\n unsigned int(16) component_type;\r\n if (component_type >= 0x8000) {\r\n utf8string component_type_uri;\r\n }\r\n }\r\n } "
+      "syntax": "// ISO/IEC 23001-17 component definition: what each component is - of a type of 0x8000 or more, of a URI\r\naligned(8) class ComponentDefinitionBox() extends Box('cmpd') {\r\n\tunsigned int(32) component_count;\r\n\tfor (i = 0; i < component_count; i++) {\r\n\t\tunsigned int(16) component_type;\r\n\t\tif (component_type >= 0x8000) {\r\n\t\t\tutf8string component_type_uri;\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": ["uncv"]}, "ipco" ],
       "type": "Box",
-      "syntax": "// ISO/IEC 23001-17 component pattern, as of a Bayer filter: of each cell of the pattern, its component and gain\r\naligned(8) class ComponentPatternDefinitionBox() extends FullBox('cpat') {\r\n\t unsigned int(16) pattern_width;\r\n unsigned int(16) pattern_height;\r\n for (i = 0; i < pattern_width * pattern_height; i++) {\r\n unsigned int(32) component_index;\r\n float(32) component_gain;\r\n }\r\n } "
+      "syntax": "// ISO/IEC 23001-17 component pattern, as of a Bayer filter: of each cell of the pattern, its component and gain\r\naligned(8) class ComponentPatternDefinitionBox() extends FullBox('cpat') {\r\n\tunsigned int(16) pattern_width;\r\n\tunsigned int(16) pattern_height;\r\n\tfor (i = 0; i < pattern_width * pattern_height; i++) {\r\n\t\tunsigned int(32) component_index;\r\n\t\tfloat(32) component_gain;\r\n\t}\r\n}"
     },
     {
       "containers": [ "j2kH" ],
       "type": "Box",
-      "syntax": "// JPEG 2000 component mapping (ISO/IEC 15444-1 I.5.3.5): of each channel, its component, and whether it is mapped directly or through the palette's column\r\naligned(8) class J2kComponentMappingBox() extends Box('cmap') {\r\n\t J2kComponentMapping mappings[];\r\n } \r\n aligned(8) class J2kComponentMapping() {\r\n unsigned int(16) component;\r\n unsigned int(8) mapping_type;\r\n unsigned int(8) palette_column;\r\n } "
+      "syntax": "// JPEG 2000 component mapping (ISO/IEC 15444-1 I.5.3.5): of each channel, its component, and whether it is mapped directly or through the palette's column\r\naligned(8) class J2kComponentMappingBox() extends Box('cmap') {\r\n\tJ2kComponentMapping mappings[];\r\n}\r\naligned(8) class J2kComponentMapping() {\r\n\tunsigned int(16) component;\r\n\tunsigned int(8) mapping_type;\r\n\tunsigned int(8) palette_column;\r\n}"
     },
     {
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "aligned(8) class TiledImageBox() extends FullBox('tilC') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class TiledImageBox() extends FullBox('tilC') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "j2kH" ],
       "type": "Box",
-      "syntax": "aligned(8) class J2kPaletteBox() extends Box('pclr') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class J2kPaletteBox() extends Box('pclr') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "aligned(8) class J2kLayersBox() extends Box('j2kL') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class J2kLayersBox() extends Box('j2kL') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "aligned(8) class MiniBox() extends Box('mini') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class MiniBox() extends Box('mini') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "stsd" ],
       "type": "Box",
-      "syntax": "aligned(8) class IpcmBox() extends Box('ipcm') {\r\n\t Box boxes[];\r\n } "
+      "syntax": "aligned(8) class IpcmBox() extends Box('ipcm') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ "stsd" ],
       "type": "Box",
-      "syntax": "aligned(8) class FpcmBox() extends Box('fpcm') {\r\n\t Box boxes[];\r\n } "
+      "syntax": "aligned(8) class FpcmBox() extends Box('fpcm') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "containers": [ {"AudioSampleEntry": ["ipcm", "fpcm"]} ],
       "type": "Box",
-      "syntax": "aligned(8) class PcmCBox() extends FullBox('pcmC') {\r\n\t unsigned int(8) formatFlags;\r\n\t unsigned int(8) pcmSampleSize;\r\n } "
+      "syntax": "aligned(8) class PcmCBox() extends FullBox('pcmC') {\r\n\tunsigned int(8) formatFlags;\r\n\tunsigned int(8) pcmSampleSize;\r\n}"
     },
 
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class SmrdBox() extends Box('smrd') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class SmrdBox() extends Box('smrd') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class SmtaBox() extends Box('smta') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class SmtaBox() extends Box('smta') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class MoatBox() extends Box('moat') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class MoatBox() extends Box('moat') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "fourcc": "seig",
       "containers": [ "sgpd" ],
       "type": "SampleGroupDescriptionEntry",
-      "syntax": "// ISO/IEC 23001-7:2016/Amd 1:2019, clause 6: a single key, or with multi_key_flag several, each with its IV size and KID (its constant IV's size multi_constant_IV_length here, for the generator's rewriting of constant_IV_size); the single key's fields as they were, its constant IV only where it is protected, as GPAC reads it\r\naligned(8) class CencSampleEncryptionInformationGroupEntry() extends SampleGroupDescriptionEntry('seig') {\r\n unsigned int(1) multi_key_flag;\r\n unsigned int(7) reserved = 0;\r\n unsigned int(4) crypt_byte_block;\r\n unsigned int(4) skip_byte_block;\r\n unsigned int(8) isProtected;\r\n if (multi_key_flag) {\r\n  unsigned int(16) key_count;\r\n  for (i=1; i <= key_count; i++) {\r\n   unsigned int(8) multi_Per_Sample_IV_Size;\r\n   unsigned int(8)[16] multi_KID;\r\n   if (multi_Per_Sample_IV_Size == 0) {\r\n    unsigned int(8) multi_constant_IV_length;\r\n    unsigned int(8)[multi_constant_IV_length] multi_constant_IV;\r\n   }\r\n  }\r\n }\r\n else {\r\n  unsigned int(8) Per_Sample_IV_Size;\r\n  unsigned int(8) KID[16];\r\n  if (isProtected == 1 && Per_Sample_IV_Size == 0) {\r\n   unsigned int(8) constant_IV_size;\r\n   unsigned int(8) constant_IV[constant_IV_size];\r\n  }\r\n }\r\n}"
+      "syntax": "// ISO/IEC 23001-7:2016/Amd 1:2019, clause 6: a single key, or with multi_key_flag several, each with its IV size and KID (its constant IV's size multi_constant_IV_length here, for the generator's rewriting of constant_IV_size); the single key's fields as they were, its constant IV only where it is protected, as GPAC reads it\r\naligned(8) class CencSampleEncryptionInformationGroupEntry() extends SampleGroupDescriptionEntry('seig') {\r\n\tunsigned int(1) multi_key_flag;\r\n\tunsigned int(7) reserved = 0;\r\n\tunsigned int(4) crypt_byte_block;\r\n\tunsigned int(4) skip_byte_block;\r\n\tunsigned int(8) isProtected;\r\n\tif (multi_key_flag) {\r\n\t\tunsigned int(16) key_count;\r\n\t\tfor (i=1; i <= key_count; i++) {\r\n\t\t\tunsigned int(8) multi_Per_Sample_IV_Size;\r\n\t\t\tunsigned int(8)[16] multi_KID;\r\n\t\t\tif (multi_Per_Sample_IV_Size == 0) {\r\n\t\t\t\tunsigned int(8) multi_constant_IV_length;\r\n\t\t\t\tunsigned int(8)[multi_constant_IV_length] multi_constant_IV;\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\telse {\r\n\t\tunsigned int(8) Per_Sample_IV_Size;\r\n\t\tunsigned int(8) KID[16];\r\n\t\tif (isProtected == 1 && Per_Sample_IV_Size == 0) {\r\n\t\t\tunsigned int(8) constant_IV_size;\r\n\t\t\tunsigned int(8) constant_IV[constant_IV_size];\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class UserRatingBox() extends Box('urat') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class UserRatingBox() extends Box('urat') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class OrieBox() extends Box('orie') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class OrieBox() extends Box('orie') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "fourcc": "frea",
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "class KodakFreaBox() extends Box ('frea'){\r\n Box boxes[];\r\n }\r\n"
+      "syntax": "class KodakFreaBox() extends Box ('frea'){\r\n\tBox boxes[];\r\n}"
     },
     {
       "fourcc": "thma",
       "containers": [ "frea", "skip" ],
       "type": "Box",
-      "syntax": "class KodakThumbnailImageBox() extends Box ('thma'){\r\n bit(8) data[];\r\n }\r\n"
+      "syntax": "class KodakThumbnailImageBox() extends Box ('thma'){\r\n\tbit(8) data[];\r\n}"
     },
     {
       "fourcc": "scra",
       "containers": [ "frea" ],
       "type": "Box",
-      "syntax": "class KodakPreviewImageBox() extends Box ('scra'){\r\n bit(8) data[];\r\n }\r\n"
+      "syntax": "class KodakPreviewImageBox() extends Box ('scra'){\r\n\tbit(8) data[];\r\n}"
     },
     {
       "fourcc": "tima",
       "containers": [ "frea" ],
       "type": "Box",
-      "syntax": "class KodakDurationBox() extends Box ('tima'){\r\n unsigned int(32) duration;\r\n }\r\n"
+      "syntax": "class KodakDurationBox() extends Box ('tima'){\r\n\tunsigned int(32) duration;\r\n}"
     },
     {
       "fourcc": "ver ",
       "containers": [ "frea", "skip" ],
       "type": "Box",
-      "syntax": "class KodakVersionBox() extends Box ('ver '){\r\n bit(8) data[];\r\n }\r\n"
+      "syntax": "class KodakVersionBox() extends Box ('ver '){\r\n\tbit(8) data[];\r\n}"
     },
     {
       "fourcc": "st3d",
       "containers": [ "VisualSampleEntry" ],
       "type": "Box",
-      "syntax": "aligned(8) class Stereoscopic3D extends FullBox('st3d', 0, 0) {\r\n    unsigned int(8) stereo_mode;\r\n }\r\n"
+      "syntax": "aligned(8) class Stereoscopic3D extends FullBox('st3d', 0, 0) {\r\n\tunsigned int(8) stereo_mode;\r\n}"
     },
     {
       "fourcc": "sv3d",
       "containers": [ "VisualSampleEntry" ],
       "type": "Box",
-      "syntax": "aligned(8) class SphericalVideoBox extends Box('sv3d') {\r\n Box boxes[];\r\n }\r\n"
+      "syntax": "aligned(8) class SphericalVideoBox extends Box('sv3d') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "fourcc": "svhd",
       "containers": [ "sv3d" ],
       "type": "Box",
-      "syntax": "aligned(8) class SphericalVideoHeader extends FullBox('svhd', 0, 0) {\r\n string metadata_source;\r\n }\r\n"
+      "syntax": "aligned(8) class SphericalVideoHeader extends FullBox('svhd', 0, 0) {\r\n\tstring metadata_source;\r\n}"
     },
     {
       "fourcc": "proj",
       "containers": [ "sv3d", "vexu" ],
       "type": "Box",
-      "syntax": "aligned(8) class ProjectionBox extends Box('proj') {\r\n Box boxes[];\r\n}\r\n"
+      "syntax": "aligned(8) class ProjectionBox extends Box('proj') {\r\n\tBox boxes[];\r\n}"
     },
     {
       "fourcc": "prhd",
       "containers": [ "proj" ],
       "type": "Box",
-      "syntax": "aligned(8) class ProjectionHeader extends FullBox('prhd', 0, 0) {\r\n    int(32) pose_yaw_degrees;\r\n    int(32) pose_pitch_degrees;\r\n    int(32) pose_roll_degrees;\r\n }\r\n"
+      "syntax": "aligned(8) class ProjectionHeader extends FullBox('prhd', 0, 0) {\r\n\tint(32) pose_yaw_degrees;\r\n\tint(32) pose_pitch_degrees;\r\n\tint(32) pose_roll_degrees;\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ProjectionDataBox(unsigned int(32) proj_type, unsigned int(8) version, unsigned int(24) flags) extends FullBox(proj_type, version, flags) {\r\n }\r\n"
+      "syntax": "aligned(8) class ProjectionDataBox(unsigned int(32) proj_type, unsigned int(8) version, unsigned int(24) flags) extends FullBox(proj_type, version, flags) {\r\n}"
     },
     {
       "fourcc": "cbmp",
       "containers": [ "proj" ],
       "type": "Box",
-      "syntax": "aligned(8) class CubemapProjection extends ProjectionDataBox('cbmp', 0, 0) {\r\n    unsigned int(32) layout;\r\n    unsigned int(32) projection_padding;\r\n }\r\n"
+      "syntax": "aligned(8) class CubemapProjection extends ProjectionDataBox('cbmp', 0, 0) {\r\n\tunsigned int(32) layout;\r\n\tunsigned int(32) projection_padding;\r\n}"
     },
     {
       "fourcc": "equi",
       "containers": [ "proj" ],
       "type": "Box",
-      "syntax": "aligned(8) class EquirectangularProjection extends ProjectionDataBox('equi', 0, 0) {\r\n    unsigned int(32) projection_bounds_top;\r\n    unsigned int(32) projection_bounds_bottom;\r\n    unsigned int(32) projection_bounds_left;\r\n    unsigned int(32) projection_bounds_right;\r\n }\r\n"
+      "syntax": "aligned(8) class EquirectangularProjection extends ProjectionDataBox('equi', 0, 0) {\r\n\tunsigned int(32) projection_bounds_top;\r\n\tunsigned int(32) projection_bounds_bottom;\r\n\tunsigned int(32) projection_bounds_left;\r\n\tunsigned int(32) projection_bounds_right;\r\n}"
     },
     {
       "fourcc": "mshp",
       "containers": [ "proj" ],
       "type": "Box",
-      "syntax": "aligned(8) class MeshProjection extends ProjectionDataBox('mshp', 0, 0) {\r\n    unsigned int(32) crc;\r\n    unsigned int(32) encoding_four_cc;\r\n\r\n    // All bytes below this point are compressed according to\r\n    // the algorithm specified by the encoding_four_cc field.\r\n    // MeshBox() meshes[]; // At least 1 mesh box must be present.\r\n    Box boxes[]; // further boxes as needed\r\n}"
+      "syntax": "aligned(8) class MeshProjection extends ProjectionDataBox('mshp', 0, 0) {\r\n\tunsigned int(32) crc;\r\n\tunsigned int(32) encoding_four_cc;\r\n\r\n\t// All bytes below this point are compressed according to\r\n\t// the algorithm specified by the encoding_four_cc field.\r\n\t// MeshBox() meshes[]; // At least 1 mesh box must be present.\r\n\tBox boxes[]; // further boxes as needed\r\n}"
     },
     {
       "fourcc": "mesh",
       "containers": [ "mshp" ],
       "type": "Box",
-      "syntax": "aligned(8) class MeshBox extends Box('mesh') {\r\n    const unsigned int(1) reserved = 0;\r\n    unsigned int(31) coordinate_count;\r\n     for (i = 0; i < coordinate_count; i++) {\r\n      float(32) coordinate;\r\n    }\r\n    const unsigned int(1) reserved = 0;\r\n    unsigned int(31) vertex_count;\r\n    for (i = 0; i < vertex_count; i++) {\r\n      unsigned int(ceil(log2(coordinate_count * 2))) x_index_delta;\r\n      unsigned int(ceil(log2(coordinate_count * 2))) y_index_delta;\r\n      unsigned int(ceil(log2(coordinate_count * 2))) z_index_delta;\r\n      unsigned int(ceil(log2(coordinate_count * 2))) u_index_delta;\r\n      unsigned int(ceil(log2(coordinate_count * 2))) v_index_delta;\r\n    }\r\n    const unsigned int(1) mesh_padding;\r\n\r\n    const unsigned int(1) reserved = 0;\r\n    unsigned int(31) vertex_list_count;\r\n    for (i = 0; i < vertex_list_count; i++) {\r\n      unsigned int(8) texture_id;\r\n      unsigned int(8) index_type;\r\n      const unsigned int(1) reserved = 0;\r\n      unsigned int(31) index_count;\r\n      for (j = 0; j < index_count; j++) {\r\n        unsigned int(ceil(log2(vertex_count * 2))) index_as_delta;\r\n      }\r\n      const unsigned int(1) mesh_padding2;\r\n    }\r\n}"
+      "syntax": "aligned(8) class MeshBox extends Box('mesh') {\r\n\tconst unsigned int(1) reserved = 0;\r\n\tunsigned int(31) coordinate_count;\r\n\tfor (i = 0; i < coordinate_count; i++) {\r\n\t\tfloat(32) coordinate;\r\n\t}\r\n\tconst unsigned int(1) reserved = 0;\r\n\tunsigned int(31) vertex_count;\r\n\tfor (i = 0; i < vertex_count; i++) {\r\n\t\tunsigned int(ceil(log2(coordinate_count * 2))) x_index_delta;\r\n\t\tunsigned int(ceil(log2(coordinate_count * 2))) y_index_delta;\r\n\t\tunsigned int(ceil(log2(coordinate_count * 2))) z_index_delta;\r\n\t\tunsigned int(ceil(log2(coordinate_count * 2))) u_index_delta;\r\n\t\tunsigned int(ceil(log2(coordinate_count * 2))) v_index_delta;\r\n\t}\r\n\tconst unsigned int(1) mesh_padding;\r\n\r\n\tconst unsigned int(1) reserved = 0;\r\n\tunsigned int(31) vertex_list_count;\r\n\tfor (i = 0; i < vertex_list_count; i++) {\r\n\t\tunsigned int(8) texture_id;\r\n\t\tunsigned int(8) index_type;\r\n\t\tconst unsigned int(1) reserved = 0;\r\n\t\tunsigned int(31) index_count;\r\n\t\tfor (j = 0; j < index_count; j++) {\r\n\t\t\tunsigned int(ceil(log2(vertex_count * 2))) index_as_delta;\r\n\t\t}\r\n\t\tconst unsigned int(1) mesh_padding2;\r\n\t}\r\n}"
     },
     {
       "fourcc": "SA3D",
       "containers": [ {"AudioSampleEntry": []} ],
       "type": "Box",
-      "syntax": "aligned(8) class SpatialAudioBox extends Box('SA3D') {\r\n    unsigned int(8)  version;\r\n    unsigned int(8)  ambisonic_type;\r\n    unsigned int(32) ambisonic_order;\r\n    unsigned int(8)  ambisonic_channel_ordering;\r\n    unsigned int(8)  ambisonic_normalization;\r\n    unsigned int(32) num_channels;\r\n    for (i = 0; i < num_channels; i++) {\r\n        unsigned int(32) channel_map;\r\n    }\r\n}"
+      "syntax": "aligned(8) class SpatialAudioBox extends Box('SA3D') {\r\n\tunsigned int(8)  version;\r\n\tunsigned int(8)  ambisonic_type;\r\n\tunsigned int(32) ambisonic_order;\r\n\tunsigned int(8)  ambisonic_channel_ordering;\r\n\tunsigned int(8)  ambisonic_normalization;\r\n\tunsigned int(32) num_channels;\r\n\tfor (i = 0; i < num_channels; i++) {\r\n\t\tunsigned int(32) channel_map;\r\n\t}\r\n}"
     },
     {
       "containers": [ {"AudioSampleEntry": ["mp4a"]} ],
       "type": "Box",
-      "syntax": "aligned(8) class SbtdBox() extends Box('sbtd') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class SbtdBox() extends Box('sbtd') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class Cr8rBox() extends Box('Cr8r') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class Cr8rBox() extends Box('Cr8r') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class VendorFIELBox() extends Box('FIEL') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class VendorFIELBox() extends Box('FIEL') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class ALFABox() extends Box('ALFA') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class ALFABox() extends Box('ALFA') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class AMBABox() extends Box('AMBA') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AMBABox() extends Box('AMBA') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class PrmABox() extends Box('PrmA') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class PrmABox() extends Box('PrmA') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": ["AVdh", "SVQ3"]} ],
       "type": "Box",
-      "syntax": "aligned(8) class RowbBox() extends Box('rowb') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class RowbBox() extends Box('rowb') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": []}, {"AudioSampleEntry": []} ],
       "type": "Box",
-      "syntax": "aligned(8) class GlblBox() extends Box('glbl') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class GlblBox() extends Box('glbl') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": []} ],
       "type": "Box",
-      "syntax": "aligned(8) class BmdcBox() extends Box('bmdc') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class BmdcBox() extends Box('bmdc') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": ["dvav", "dva1", "dvhe", "dvh1", "dav1", "avc1", "avc2", "avc3", "avc4", "hev1", "hvc1", "av01", "encv", "resv"]} ],
       "type": "Box",
-      "syntax": "aligned(8) class DvvCBox() extends Box('dvvC') {\r\n unsigned int(8) dv_version_major;\r\n unsigned int(8) dv_version_minor;\r\n unsigned int(7) dv_profile;\r\n unsigned int(6) dv_level;\r\n bit(1) rpu_present_flag;\r\n bit(1) el_present_flag;\r\n bit(1) bl_present_flag;\r\n unsigned int(4) dv_bl_signal_compatibility_id;\r\n const unsigned int(28) reserved = 0;\r\n const unsigned int(32)[4] reserved = 0;\r\n } "
+      "syntax": "aligned(8) class DvvCBox() extends Box('dvvC') {\r\n\tunsigned int(8) dv_version_major;\r\n\tunsigned int(8) dv_version_minor;\r\n\tunsigned int(7) dv_profile;\r\n\tunsigned int(6) dv_level;\r\n\tbit(1) rpu_present_flag;\r\n\tbit(1) el_present_flag;\r\n\tbit(1) bl_present_flag;\r\n\tunsigned int(4) dv_bl_signal_compatibility_id;\r\n\tconst unsigned int(28) reserved = 0;\r\n\tconst unsigned int(32)[4] reserved = 0;\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": ["dvhe", "dvh1", "hvc1", "hev1", "hvc2", "hev2", "encv", "resv"]} ],
@@ -1722,7 +1722,7 @@
     {
       "containers": [ "wave" ],
       "type": "Box",
-      "syntax": "aligned(8) class QDCABox() extends Box('QDCA') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class QDCABox() extends Box('QDCA') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "stsd" ],
@@ -1732,7 +1732,7 @@
     {
       "containers": [ "stsd", "gmhd" ],
       "type": "Box",
-      "syntax": "aligned(8) class GpmdBox() extends Box('gpmd') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class GpmdBox() extends Box('gpmd') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ {"AudioSampleEntry": ["mha1", "mha2", "mhm1", "mhm2"]}, "wave" ],
@@ -1767,12 +1767,12 @@
     {
       "containers": [ {"VisualSampleEntry": []} ],
       "type": "Box",
-      "syntax": "aligned(8) class AlmoBox() extends Box('almo') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AlmoBox() extends Box('almo') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": ["icod"]} ],
       "type": "Box",
-      "syntax": "aligned(8) class HpreBox() extends Box('hpre') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class HpreBox() extends Box('hpre') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": ["vc-1"]} ],
@@ -1782,12 +1782,12 @@
     {
       "containers": [ "mebx" ],
       "type": "Box",
-      "syntax": "aligned(8) class LidlBox() extends Box('lidl') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class LidlBox() extends Box('lidl') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ "mebx" ],
       "type": "Box",
-      "syntax": "aligned(8) class LidpBox() extends Box('lidp') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class LidpBox() extends Box('lidp') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "containers": [ {"VisualSampleEntry": ["lvc1"]} ],

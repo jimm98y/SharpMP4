@@ -6,26 +6,26 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class CameraSystemLensFrameAdjustmentBox extends FullBox('lfad', version = 0, 0) { 
-BEFloat32 polynomialParametersX0;
- BEFloat32 polynomialParametersX1;
- BEFloat32 polynomialParametersX2; // parameters for X axis 
-BEFloat32 polynomialParametersY0;
- BEFloat32 polynomialParametersY1;
- BEFloat32 polynomialParametersY2; // parameters for Y axis 
-} 
+aligned(8) class CameraSystemLensFrameAdjustmentBox extends FullBox('lfad', version = 0, 0) {
+	BEFloat32 polynomialParametersX0;
+	BEFloat32 polynomialParametersX1;
+	BEFloat32 polynomialParametersX2; // parameters for X axis
+	BEFloat32 polynomialParametersY0;
+	BEFloat32 polynomialParametersY1;
+	BEFloat32 polynomialParametersY2; // parameters for Y axis
+}
 */
 public partial class CameraSystemLensFrameAdjustmentBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class CameraSystemLensFrameAdjustmentBox extends FullBox('lfad', version = 0, 0) { 
-BEFloat32 polynomialParametersX0;
- BEFloat32 polynomialParametersX1;
- BEFloat32 polynomialParametersX2; // parameters for X axis 
-BEFloat32 polynomialParametersY0;
- BEFloat32 polynomialParametersY1;
- BEFloat32 polynomialParametersY2; // parameters for Y axis 
-} "; } }
+	public override string Syntax { get { return @"aligned(8) class CameraSystemLensFrameAdjustmentBox extends FullBox('lfad', version = 0, 0) {
+	BEFloat32 polynomialParametersX0;
+	BEFloat32 polynomialParametersX1;
+	BEFloat32 polynomialParametersX2; // parameters for X axis
+	BEFloat32 polynomialParametersY0;
+	BEFloat32 polynomialParametersY1;
+	BEFloat32 polynomialParametersY2; // parameters for Y axis
+}"; } }
 	public const string TYPE = "lfad";
 	public override string DisplayName { get { return "CameraSystemLensFrameAdjustmentBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -38,7 +38,7 @@ BEFloat32 polynomialParametersY0;
 	protected double polynomialParametersX1; 
 	public double PolynomialParametersX1 { get { return this.polynomialParametersX1; } set { this.polynomialParametersX1 = value; } }
 
-	protected double polynomialParametersX2;  //  parameters for X axis 
+	protected double polynomialParametersX2;  //  parameters for X axis
 	public double PolynomialParametersX2 { get { return this.polynomialParametersX2; } set { this.polynomialParametersX2 = value; } }
 
 	protected double polynomialParametersY0; 
@@ -47,7 +47,7 @@ BEFloat32 polynomialParametersY0;
 	protected double polynomialParametersY1; 
 	public double PolynomialParametersY1 { get { return this.polynomialParametersY1; } set { this.polynomialParametersY1 = value; } }
 
-	protected double polynomialParametersY2;  //  parameters for Y axis 
+	protected double polynomialParametersY2;  //  parameters for Y axis
 	public double PolynomialParametersY2 { get { return this.polynomialParametersY2; } set { this.polynomialParametersY2 = value; } }
 
 	public CameraSystemLensFrameAdjustmentBox(): base(IsoStream.FromFourCC("lfad"), 0, 0)
@@ -60,10 +60,10 @@ BEFloat32 polynomialParametersY0;
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.polynomialParametersX0, "polynomialParametersX0"); 
 		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.polynomialParametersX1, "polynomialParametersX1"); 
-		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.polynomialParametersX2, "polynomialParametersX2"); // parameters for X axis 
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.polynomialParametersX2, "polynomialParametersX2"); // parameters for X axis
 		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.polynomialParametersY0, "polynomialParametersY0"); 
 		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.polynomialParametersY1, "polynomialParametersY1"); 
-		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.polynomialParametersY2, "polynomialParametersY2"); // parameters for Y axis 
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.polynomialParametersY2, "polynomialParametersY2"); // parameters for Y axis
 		return boxSize;
 	}
 
@@ -73,10 +73,10 @@ BEFloat32 polynomialParametersY0;
 		boxSize += base.Write(stream);
 		boxSize += stream.WriteFloat32( this.polynomialParametersX0, "polynomialParametersX0"); 
 		boxSize += stream.WriteFloat32( this.polynomialParametersX1, "polynomialParametersX1"); 
-		boxSize += stream.WriteFloat32( this.polynomialParametersX2, "polynomialParametersX2"); // parameters for X axis 
+		boxSize += stream.WriteFloat32( this.polynomialParametersX2, "polynomialParametersX2"); // parameters for X axis
 		boxSize += stream.WriteFloat32( this.polynomialParametersY0, "polynomialParametersY0"); 
 		boxSize += stream.WriteFloat32( this.polynomialParametersY1, "polynomialParametersY1"); 
-		boxSize += stream.WriteFloat32( this.polynomialParametersY2, "polynomialParametersY2"); // parameters for Y axis 
+		boxSize += stream.WriteFloat32( this.polynomialParametersY2, "polynomialParametersY2"); // parameters for Y axis
 		return boxSize;
 	}
 
@@ -99,10 +99,10 @@ BEFloat32 polynomialParametersY0;
 		boxSize += base.Trace(tracer);
 		boxSize += tracer.Field("polynomialParametersX0", 32, this.polynomialParametersX0); 
 		boxSize += tracer.Field("polynomialParametersX1", 32, this.polynomialParametersX1); 
-		boxSize += tracer.Field("polynomialParametersX2", 32, this.polynomialParametersX2); // parameters for X axis 
+		boxSize += tracer.Field("polynomialParametersX2", 32, this.polynomialParametersX2); // parameters for X axis
 		boxSize += tracer.Field("polynomialParametersY0", 32, this.polynomialParametersY0); 
 		boxSize += tracer.Field("polynomialParametersY1", 32, this.polynomialParametersY1); 
-		boxSize += tracer.Field("polynomialParametersY2", 32, this.polynomialParametersY2); // parameters for Y axis 
+		boxSize += tracer.Field("polynomialParametersY2", 32, this.polynomialParametersY2); // parameters for Y axis
 		return boxSize;
 	}
 }

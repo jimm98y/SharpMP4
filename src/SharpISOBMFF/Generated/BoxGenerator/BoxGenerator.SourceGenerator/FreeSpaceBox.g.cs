@@ -7,14 +7,14 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FreeSpaceBox extends Box('free') {
-unsigned int(8) data[];
+	unsigned int(8) data[];
 }
 */
 public partial class FreeSpaceBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class FreeSpaceBox extends Box('free') {
-unsigned int(8) data[];
+	unsigned int(8) data[];
 }"; } }
 	public const string TYPE = "free";
 	public override string DisplayName { get { return "FreeSpaceBox"; } }

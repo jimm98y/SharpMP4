@@ -8,102 +8,101 @@ namespace SharpISOBMFF
 /*
 // skip_area: what is left of pres_bytes (E.6.1), which the presentation ends with
 aligned(8) class AC4PresentationV1Dsi(pres_bytes) {
- bit(5) presentation_config_v1;
- if (presentation_config_v1 != 0x06) {
-  bit(3) md_compat;
-  bit(1) b_presentation_id;
-  if (b_presentation_id) {
-   bit(5) presentation_id;
-  }
-  bit(2) dsi_frame_rate_multiply_info;
-  bit(2) dsi_frame_rate_fraction_info;
-  bit(5) presentation_emdf_version;
-  bit(10) presentation_key_id;
-  bit(1) b_presentation_channel_coded;
-  if (b_presentation_channel_coded) {
-   bit(5) dsi_presentation_ch_mode;
-   if (dsi_presentation_ch_mode >= 11 && dsi_presentation_ch_mode <= 14) {
-    bit(1) pres_b_4_back_channels_present;
-    bit(2) pres_top_channel_pairs;
-   }
-   bit(6) reserved_zero;
-   bit(18) presentation_v1_channel_groups;
-  }
-  bit(1) b_presentation_core_differs;
-  if (b_presentation_core_differs) {
-   bit(1) b_presentation_core_channel_coded;
-   if (b_presentation_core_channel_coded) {
-    bit(2) dsi_presentation_channel_mode_core;
-   }
-  }
-  bit(1) b_presentation_filter;
-  if (b_presentation_filter) {
-   bit(1) b_enable_presentation;
-   bit(8) n_filter_bytes;
-   bit(8) filter_data[n_filter_bytes];
-  }
-  if (presentation_config_v1 == 0x1f) {
-   AC4SubstreamGroupDsi substream_group;
-  }
-  else {
-   bit(1) b_multi_pid;
-   if (presentation_config_v1 <= 2) {
-    for (i = 0; i < 2; i++) {
-     AC4SubstreamGroupDsi substream_groups;
-    }
-   }
-   if (presentation_config_v1 == 3 || presentation_config_v1 == 4) {
-    for (i = 0; i < 3; i++) {
-     AC4SubstreamGroupDsi substream_groups;
-    }
-   }
-   if (presentation_config_v1 == 5) {
-    bit(3) n_substream_groups_minus2;
-    for (i = 0; i < n_substream_groups_minus2 + 2; i++) {
-     AC4SubstreamGroupDsi substream_groups;
-    }
-   }
-   if (presentation_config_v1 > 5) {
-    bit(7) n_skip_bytes;
-    bit(8) skip_data[n_skip_bytes];
-   }
-  }
-  bit(1) b_pre_virtualized;
-  bit(1) b_add_emdf_substreams;
- }
- if (presentation_config_v1 == 0x06 || b_add_emdf_substreams) {
-  bit(7) n_add_emdf_substreams;
-  for (j = 0; j < n_add_emdf_substreams; j++) {
-   bit(5) substream_emdf_version;
-   bit(10) substream_key_id;
-  }
- }
- bit(1) b_presentation_bitrate_info;
- if (b_presentation_bitrate_info) {
-  AC4BitrateDsi ac4_bitrate_dsi;
- }
- bit(1) b_alternative;
- if (b_alternative) {
-  byte_alignment();
-  AC4AlternativeInfo alternative_info;
- }
- byte_alignment();
- if (bits_read() <= (pres_bytes - 1) * 8) {
-  bit(1) de_indicator;
-  bit(1) immersive_audio_indicator;
-  bit(4) reserved;
-  bit(1) b_extended_presentation_id;
-  if (b_extended_presentation_id) {
-   bit(9) extended_presentation_id;
-  }
-  else {
-   bit(1) reserved1;
-  }
- }
- bit(8) skip_area[pres_bytes - bits_read() / 8];
+	bit(5) presentation_config_v1;
+	if (presentation_config_v1 != 0x06) {
+		bit(3) md_compat;
+		bit(1) b_presentation_id;
+		if (b_presentation_id) {
+			bit(5) presentation_id;
+		}
+		bit(2) dsi_frame_rate_multiply_info;
+		bit(2) dsi_frame_rate_fraction_info;
+		bit(5) presentation_emdf_version;
+		bit(10) presentation_key_id;
+		bit(1) b_presentation_channel_coded;
+		if (b_presentation_channel_coded) {
+			bit(5) dsi_presentation_ch_mode;
+			if (dsi_presentation_ch_mode >= 11 && dsi_presentation_ch_mode <= 14) {
+				bit(1) pres_b_4_back_channels_present;
+				bit(2) pres_top_channel_pairs;
+			}
+			bit(6) reserved_zero;
+			bit(18) presentation_v1_channel_groups;
+		}
+		bit(1) b_presentation_core_differs;
+		if (b_presentation_core_differs) {
+			bit(1) b_presentation_core_channel_coded;
+			if (b_presentation_core_channel_coded) {
+				bit(2) dsi_presentation_channel_mode_core;
+			}
+		}
+		bit(1) b_presentation_filter;
+		if (b_presentation_filter) {
+			bit(1) b_enable_presentation;
+			bit(8) n_filter_bytes;
+			bit(8) filter_data[n_filter_bytes];
+		}
+		if (presentation_config_v1 == 0x1f) {
+			AC4SubstreamGroupDsi substream_group;
+		}
+		else {
+			bit(1) b_multi_pid;
+			if (presentation_config_v1 <= 2) {
+				for (i = 0; i < 2; i++) {
+					AC4SubstreamGroupDsi substream_groups;
+				}
+			}
+			if (presentation_config_v1 == 3 || presentation_config_v1 == 4) {
+				for (i = 0; i < 3; i++) {
+					AC4SubstreamGroupDsi substream_groups;
+				}
+			}
+			if (presentation_config_v1 == 5) {
+				bit(3) n_substream_groups_minus2;
+				for (i = 0; i < n_substream_groups_minus2 + 2; i++) {
+					AC4SubstreamGroupDsi substream_groups;
+				}
+			}
+			if (presentation_config_v1 > 5) {
+				bit(7) n_skip_bytes;
+				bit(8) skip_data[n_skip_bytes];
+			}
+		}
+		bit(1) b_pre_virtualized;
+		bit(1) b_add_emdf_substreams;
+	}
+	if (presentation_config_v1 == 0x06 || b_add_emdf_substreams) {
+		bit(7) n_add_emdf_substreams;
+		for (j = 0; j < n_add_emdf_substreams; j++) {
+			bit(5) substream_emdf_version;
+			bit(10) substream_key_id;
+		}
+	}
+	bit(1) b_presentation_bitrate_info;
+	if (b_presentation_bitrate_info) {
+		AC4BitrateDsi ac4_bitrate_dsi;
+	}
+	bit(1) b_alternative;
+	if (b_alternative) {
+		byte_alignment();
+		AC4AlternativeInfo alternative_info;
+	}
+	byte_alignment();
+	if (bits_read() <= (pres_bytes - 1) * 8) {
+		bit(1) de_indicator;
+		bit(1) immersive_audio_indicator;
+		bit(4) reserved;
+		bit(1) b_extended_presentation_id;
+		if (b_extended_presentation_id) {
+			bit(9) extended_presentation_id;
+		}
+		else {
+			bit(1) reserved1;
+		}
+	}
+	bit(8) skip_area[pres_bytes - bits_read() / 8];
 }
 // E.11.1
-
 */
 public partial class AC4PresentationV1Dsi : IMp4Serializable
 {
@@ -115,102 +114,101 @@ public partial class AC4PresentationV1Dsi : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"// skip_area: what is left of pres_bytes (E.6.1), which the presentation ends with
 aligned(8) class AC4PresentationV1Dsi(pres_bytes) {
- bit(5) presentation_config_v1;
- if (presentation_config_v1 != 0x06) {
-  bit(3) md_compat;
-  bit(1) b_presentation_id;
-  if (b_presentation_id) {
-   bit(5) presentation_id;
-  }
-  bit(2) dsi_frame_rate_multiply_info;
-  bit(2) dsi_frame_rate_fraction_info;
-  bit(5) presentation_emdf_version;
-  bit(10) presentation_key_id;
-  bit(1) b_presentation_channel_coded;
-  if (b_presentation_channel_coded) {
-   bit(5) dsi_presentation_ch_mode;
-   if (dsi_presentation_ch_mode >= 11 && dsi_presentation_ch_mode <= 14) {
-    bit(1) pres_b_4_back_channels_present;
-    bit(2) pres_top_channel_pairs;
-   }
-   bit(6) reserved_zero;
-   bit(18) presentation_v1_channel_groups;
-  }
-  bit(1) b_presentation_core_differs;
-  if (b_presentation_core_differs) {
-   bit(1) b_presentation_core_channel_coded;
-   if (b_presentation_core_channel_coded) {
-    bit(2) dsi_presentation_channel_mode_core;
-   }
-  }
-  bit(1) b_presentation_filter;
-  if (b_presentation_filter) {
-   bit(1) b_enable_presentation;
-   bit(8) n_filter_bytes;
-   bit(8) filter_data[n_filter_bytes];
-  }
-  if (presentation_config_v1 == 0x1f) {
-   AC4SubstreamGroupDsi substream_group;
-  }
-  else {
-   bit(1) b_multi_pid;
-   if (presentation_config_v1 <= 2) {
-    for (i = 0; i < 2; i++) {
-     AC4SubstreamGroupDsi substream_groups;
-    }
-   }
-   if (presentation_config_v1 == 3 || presentation_config_v1 == 4) {
-    for (i = 0; i < 3; i++) {
-     AC4SubstreamGroupDsi substream_groups;
-    }
-   }
-   if (presentation_config_v1 == 5) {
-    bit(3) n_substream_groups_minus2;
-    for (i = 0; i < n_substream_groups_minus2 + 2; i++) {
-     AC4SubstreamGroupDsi substream_groups;
-    }
-   }
-   if (presentation_config_v1 > 5) {
-    bit(7) n_skip_bytes;
-    bit(8) skip_data[n_skip_bytes];
-   }
-  }
-  bit(1) b_pre_virtualized;
-  bit(1) b_add_emdf_substreams;
- }
- if (presentation_config_v1 == 0x06 || b_add_emdf_substreams) {
-  bit(7) n_add_emdf_substreams;
-  for (j = 0; j < n_add_emdf_substreams; j++) {
-   bit(5) substream_emdf_version;
-   bit(10) substream_key_id;
-  }
- }
- bit(1) b_presentation_bitrate_info;
- if (b_presentation_bitrate_info) {
-  AC4BitrateDsi ac4_bitrate_dsi;
- }
- bit(1) b_alternative;
- if (b_alternative) {
-  byte_alignment();
-  AC4AlternativeInfo alternative_info;
- }
- byte_alignment();
- if (bits_read() <= (pres_bytes - 1) * 8) {
-  bit(1) de_indicator;
-  bit(1) immersive_audio_indicator;
-  bit(4) reserved;
-  bit(1) b_extended_presentation_id;
-  if (b_extended_presentation_id) {
-   bit(9) extended_presentation_id;
-  }
-  else {
-   bit(1) reserved1;
-  }
- }
- bit(8) skip_area[pres_bytes - bits_read() / 8];
+	bit(5) presentation_config_v1;
+	if (presentation_config_v1 != 0x06) {
+		bit(3) md_compat;
+		bit(1) b_presentation_id;
+		if (b_presentation_id) {
+			bit(5) presentation_id;
+		}
+		bit(2) dsi_frame_rate_multiply_info;
+		bit(2) dsi_frame_rate_fraction_info;
+		bit(5) presentation_emdf_version;
+		bit(10) presentation_key_id;
+		bit(1) b_presentation_channel_coded;
+		if (b_presentation_channel_coded) {
+			bit(5) dsi_presentation_ch_mode;
+			if (dsi_presentation_ch_mode >= 11 && dsi_presentation_ch_mode <= 14) {
+				bit(1) pres_b_4_back_channels_present;
+				bit(2) pres_top_channel_pairs;
+			}
+			bit(6) reserved_zero;
+			bit(18) presentation_v1_channel_groups;
+		}
+		bit(1) b_presentation_core_differs;
+		if (b_presentation_core_differs) {
+			bit(1) b_presentation_core_channel_coded;
+			if (b_presentation_core_channel_coded) {
+				bit(2) dsi_presentation_channel_mode_core;
+			}
+		}
+		bit(1) b_presentation_filter;
+		if (b_presentation_filter) {
+			bit(1) b_enable_presentation;
+			bit(8) n_filter_bytes;
+			bit(8) filter_data[n_filter_bytes];
+		}
+		if (presentation_config_v1 == 0x1f) {
+			AC4SubstreamGroupDsi substream_group;
+		}
+		else {
+			bit(1) b_multi_pid;
+			if (presentation_config_v1 <= 2) {
+				for (i = 0; i < 2; i++) {
+					AC4SubstreamGroupDsi substream_groups;
+				}
+			}
+			if (presentation_config_v1 == 3 || presentation_config_v1 == 4) {
+				for (i = 0; i < 3; i++) {
+					AC4SubstreamGroupDsi substream_groups;
+				}
+			}
+			if (presentation_config_v1 == 5) {
+				bit(3) n_substream_groups_minus2;
+				for (i = 0; i < n_substream_groups_minus2 + 2; i++) {
+					AC4SubstreamGroupDsi substream_groups;
+				}
+			}
+			if (presentation_config_v1 > 5) {
+				bit(7) n_skip_bytes;
+				bit(8) skip_data[n_skip_bytes];
+			}
+		}
+		bit(1) b_pre_virtualized;
+		bit(1) b_add_emdf_substreams;
+	}
+	if (presentation_config_v1 == 0x06 || b_add_emdf_substreams) {
+		bit(7) n_add_emdf_substreams;
+		for (j = 0; j < n_add_emdf_substreams; j++) {
+			bit(5) substream_emdf_version;
+			bit(10) substream_key_id;
+		}
+	}
+	bit(1) b_presentation_bitrate_info;
+	if (b_presentation_bitrate_info) {
+		AC4BitrateDsi ac4_bitrate_dsi;
+	}
+	bit(1) b_alternative;
+	if (b_alternative) {
+		byte_alignment();
+		AC4AlternativeInfo alternative_info;
+	}
+	byte_alignment();
+	if (bits_read() <= (pres_bytes - 1) * 8) {
+		bit(1) de_indicator;
+		bit(1) immersive_audio_indicator;
+		bit(4) reserved;
+		bit(1) b_extended_presentation_id;
+		if (b_extended_presentation_id) {
+			bit(9) extended_presentation_id;
+		}
+		else {
+			bit(1) reserved1;
+		}
+	}
+	bit(8) skip_area[pres_bytes - bits_read() / 8];
 }
-// E.11.1
-"; } }
+// E.11.1"; } }
 	public virtual string DisplayName { get { return "AC4PresentationV1Dsi"; } }
 
 	protected byte presentation_config_v1; 

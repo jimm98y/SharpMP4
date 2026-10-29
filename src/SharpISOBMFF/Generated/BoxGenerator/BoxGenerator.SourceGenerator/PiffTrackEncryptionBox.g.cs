@@ -6,24 +6,22 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class PiffTrackEncryptionBox() extends FullBox('uuid 8974dbce7be74c5184f97148f9882554', version, flags) 
+aligned(8) class PiffTrackEncryptionBox() extends FullBox('uuid 8974dbce7be74c5184f97148f9882554', version, flags)
 {
- unsigned int(24) algorithmID;
- unsigned int(8) Per_Sample_IV_Size;
- unsigned int(8) kid[16];
- }
-
+	unsigned int(24) algorithmID;
+	unsigned int(8) Per_Sample_IV_Size;
+	unsigned int(8) kid[16];
+}
 */
 public partial class PiffTrackEncryptionBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class PiffTrackEncryptionBox() extends FullBox('uuid 8974dbce7be74c5184f97148f9882554', version, flags) 
+	public override string Syntax { get { return @"aligned(8) class PiffTrackEncryptionBox() extends FullBox('uuid 8974dbce7be74c5184f97148f9882554', version, flags)
 {
- unsigned int(24) algorithmID;
- unsigned int(8) Per_Sample_IV_Size;
- unsigned int(8) kid[16];
- }
-"; } }
+	unsigned int(24) algorithmID;
+	unsigned int(8) Per_Sample_IV_Size;
+	unsigned int(8) kid[16];
+}"; } }
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "PiffTrackEncryptionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

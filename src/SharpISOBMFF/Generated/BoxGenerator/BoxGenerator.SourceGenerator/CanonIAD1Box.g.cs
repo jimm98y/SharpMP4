@@ -8,32 +8,30 @@ namespace SharpISOBMFF
 /*
 // A CR3's image area dimensions (lclevy/canon_cr3, IAD1, reverse engineered): the image's size, then rectangles to the end
 aligned(8) class CanonIAD1Box() extends FullBox('IAD1') {
- unsigned int(16) image_width;
- unsigned int(16) image_height;
- unsigned int(16) unknown1; // 1
- unsigned int(16) image_kind; // 0 small, 2 big (sliced?)
- unsigned int(16) unknown2; // 1
- unsigned int(16) unknown3; // 0
- CanonImageArea areas[]; // small: the crop, the whole; big: the crop, left and top optical black, the active area
+	unsigned int(16) image_width;
+	unsigned int(16) image_height;
+	unsigned int(16) unknown1; // 1
+	unsigned int(16) image_kind; // 0 small, 2 big (sliced?)
+	unsigned int(16) unknown2; // 1
+	unsigned int(16) unknown3; // 0
+	CanonImageArea areas[]; // small: the crop, the whole; big: the crop, left and top optical black, the active area
 }
 // a rectangle of IAD1: its left, top, right and bottom, as offsets from 0
-
 */
 public partial class CanonIAD1Box : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// A CR3's image area dimensions (lclevy/canon_cr3, IAD1, reverse engineered): the image's size, then rectangles to the end
 aligned(8) class CanonIAD1Box() extends FullBox('IAD1') {
- unsigned int(16) image_width;
- unsigned int(16) image_height;
- unsigned int(16) unknown1; // 1
- unsigned int(16) image_kind; // 0 small, 2 big (sliced?)
- unsigned int(16) unknown2; // 1
- unsigned int(16) unknown3; // 0
- CanonImageArea areas[]; // small: the crop, the whole; big: the crop, left and top optical black, the active area
+	unsigned int(16) image_width;
+	unsigned int(16) image_height;
+	unsigned int(16) unknown1; // 1
+	unsigned int(16) image_kind; // 0 small, 2 big (sliced?)
+	unsigned int(16) unknown2; // 1
+	unsigned int(16) unknown3; // 0
+	CanonImageArea areas[]; // small: the crop, the whole; big: the crop, left and top optical black, the active area
 }
-// a rectangle of IAD1: its left, top, right and bottom, as offsets from 0
-"; } }
+// a rectangle of IAD1: its left, top, right and bottom, as offsets from 0"; } }
 	public const string TYPE = "IAD1";
 	public override string DisplayName { get { return "CanonIAD1Box"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

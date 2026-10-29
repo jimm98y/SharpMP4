@@ -7,19 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class PspMtdtBox() extends Box('MTDT') {
-	 unsigned int(16) entry_count;
- MtdtEntry entries[ entry_count ];
- }
- 
+	unsigned int(16) entry_count;
+	MtdtEntry entries[ entry_count ];
+}
 */
 public partial class PspMtdtBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class PspMtdtBox() extends Box('MTDT') {
-	 unsigned int(16) entry_count;
- MtdtEntry entries[ entry_count ];
- }
- "; } }
+	unsigned int(16) entry_count;
+	MtdtEntry entries[ entry_count ];
+}"; } }
 	public const string TYPE = "MTDT";
 	public override string DisplayName { get { return "PspMtdtBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

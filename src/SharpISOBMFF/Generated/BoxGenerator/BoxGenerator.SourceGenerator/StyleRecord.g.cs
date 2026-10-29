@@ -7,12 +7,12 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class StyleRecord() {
- unsigned int(16) startChar;
- unsigned int(16) endChar;
- unsigned int(16) fontId;
- unsigned int(8) faceStyleFlags;
- unsigned int(8) fontSize;
- unsigned int(8) textColor[4]; }
+	unsigned int(16) startChar;
+	unsigned int(16) endChar;
+	unsigned int(16) fontId;
+	unsigned int(8) faceStyleFlags;
+	unsigned int(8) fontSize;
+	unsigned int(8) textColor[4]; }
 */
 public partial class StyleRecord : IMp4Serializable
 {
@@ -23,12 +23,12 @@ public partial class StyleRecord : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class StyleRecord() {
- unsigned int(16) startChar;
- unsigned int(16) endChar;
- unsigned int(16) fontId;
- unsigned int(8) faceStyleFlags;
- unsigned int(8) fontSize;
- unsigned int(8) textColor[4]; }"; } }
+	unsigned int(16) startChar;
+	unsigned int(16) endChar;
+	unsigned int(16) fontId;
+	unsigned int(8) faceStyleFlags;
+	unsigned int(8) fontSize;
+	unsigned int(8) textColor[4]; }"; } }
 	public virtual string DisplayName { get { return "StyleRecord"; } }
 
 	protected ushort startChar; 

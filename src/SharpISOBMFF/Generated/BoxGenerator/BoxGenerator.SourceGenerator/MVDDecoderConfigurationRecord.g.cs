@@ -6,26 +6,26 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class MVDDecoderConfigurationRecord { 
-unsigned int(8) configurationVersion = 1; 
-unsigned int(8) AVCProfileIndication; 
-unsigned int(8) profile_compatibility; 
-unsigned int(8) AVCLevelIndication;  
- bit(1) complete_representation; 
- bit(1) explicit_au_track; 
-bit(4) reserved = '1111'b; 
-unsigned int(2) lengthSizeMinusOne;  
-bit(1) reserved = '0'b; 
-unsigned int(7) numOfSequenceParameterSets; 
-for (i=0; i< numOfSequenceParameterSets; i++) { 
-unsigned int(16) sequenceParameterSetLength ; 
-  bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; 
- } 
-unsigned int(8) numOfPictureParameterSets; 
-for (i=0; i< numOfPictureParameterSets; i++) { 
-  unsigned int(16) pictureParameterSetLength; 
-  bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; 
- } 
+aligned(8) class MVDDecoderConfigurationRecord {
+	unsigned int(8) configurationVersion = 1;
+	unsigned int(8) AVCProfileIndication;
+	unsigned int(8) profile_compatibility;
+	unsigned int(8) AVCLevelIndication;
+	bit(1) complete_representation;
+	bit(1) explicit_au_track;
+	bit(4) reserved = '1111'b;
+	unsigned int(2) lengthSizeMinusOne;
+	bit(1) reserved = '0'b;
+	unsigned int(7) numOfSequenceParameterSets;
+	for (i=0; i< numOfSequenceParameterSets; i++) {
+		unsigned int(16) sequenceParameterSetLength ;
+		bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit;
+	}
+	unsigned int(8) numOfPictureParameterSets;
+	for (i=0; i< numOfPictureParameterSets; i++) {
+		unsigned int(16) pictureParameterSetLength;
+		bit(8*pictureParameterSetLength) pictureParameterSetNALUnit;
+	}
 }
 */
 public partial class MVDDecoderConfigurationRecord : IMp4Serializable
@@ -36,26 +36,26 @@ public partial class MVDDecoderConfigurationRecord : IMp4Serializable
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public virtual string Syntax { get { return @"aligned(8) class MVDDecoderConfigurationRecord { 
-unsigned int(8) configurationVersion = 1; 
-unsigned int(8) AVCProfileIndication; 
-unsigned int(8) profile_compatibility; 
-unsigned int(8) AVCLevelIndication;  
- bit(1) complete_representation; 
- bit(1) explicit_au_track; 
-bit(4) reserved = '1111'b; 
-unsigned int(2) lengthSizeMinusOne;  
-bit(1) reserved = '0'b; 
-unsigned int(7) numOfSequenceParameterSets; 
-for (i=0; i< numOfSequenceParameterSets; i++) { 
-unsigned int(16) sequenceParameterSetLength ; 
-  bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; 
- } 
-unsigned int(8) numOfPictureParameterSets; 
-for (i=0; i< numOfPictureParameterSets; i++) { 
-  unsigned int(16) pictureParameterSetLength; 
-  bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; 
- } 
+	public virtual string Syntax { get { return @"aligned(8) class MVDDecoderConfigurationRecord {
+	unsigned int(8) configurationVersion = 1;
+	unsigned int(8) AVCProfileIndication;
+	unsigned int(8) profile_compatibility;
+	unsigned int(8) AVCLevelIndication;
+	bit(1) complete_representation;
+	bit(1) explicit_au_track;
+	bit(4) reserved = '1111'b;
+	unsigned int(2) lengthSizeMinusOne;
+	bit(1) reserved = '0'b;
+	unsigned int(7) numOfSequenceParameterSets;
+	for (i=0; i< numOfSequenceParameterSets; i++) {
+		unsigned int(16) sequenceParameterSetLength ;
+		bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit;
+	}
+	unsigned int(8) numOfPictureParameterSets;
+	for (i=0; i< numOfPictureParameterSets; i++) {
+		unsigned int(16) pictureParameterSetLength;
+		bit(8*pictureParameterSetLength) pictureParameterSetNALUnit;
+	}
 }"; } }
 	public virtual string DisplayName { get { return "MVDDecoderConfigurationRecord"; } }
 

@@ -7,17 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AlternateFormatTrackBox() extends Box('fall') {
- // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to
- unsigned int(32) track_IDs[];
- } 
+	// a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to
+	unsigned int(32) track_IDs[];
+}
 */
 public partial class AlternateFormatTrackBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AlternateFormatTrackBox() extends Box('fall') {
- // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to
- unsigned int(32) track_IDs[];
- } "; } }
+	// a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to
+	unsigned int(32) track_IDs[];
+}"; } }
 	public const string TYPE = "fall";
 	public override string DisplayName { get { return "AlternateFormatTrackBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

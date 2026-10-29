@@ -8,22 +8,20 @@ namespace SharpISOBMFF
 /*
 class CelpSpecificConfig(samplingFrequencyIndex)
 {
-  uimsbf(1) isBaseLayer;
-  if (isBaseLayer) {
-    CelpHeader(samplingFrequencyIndex);
-  }
-  else {
-    uimsbf(1) isBWSLayer;
-    if (isBWSLayer) {
-      CelpBWSenhHeader();
-    }
-    else {
-      uimsbf(2) CELPBRSid;
-    }
-  }
+	uimsbf(1) isBaseLayer;
+	if (isBaseLayer) {
+		CelpHeader(samplingFrequencyIndex);
+	}
+	else {
+		uimsbf(1) isBWSLayer;
+		if (isBWSLayer) {
+			CelpBWSenhHeader();
+		}
+		else {
+			uimsbf(2) CELPBRSid;
+		}
+	}
 }
-
-
 */
 public partial class CelpSpecificConfig : IMp4Serializable
 {
@@ -35,22 +33,20 @@ public partial class CelpSpecificConfig : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class CelpSpecificConfig(samplingFrequencyIndex)
 {
-  uimsbf(1) isBaseLayer;
-  if (isBaseLayer) {
-    CelpHeader(samplingFrequencyIndex);
-  }
-  else {
-    uimsbf(1) isBWSLayer;
-    if (isBWSLayer) {
-      CelpBWSenhHeader();
-    }
-    else {
-      uimsbf(2) CELPBRSid;
-    }
-  }
-}
-
-"; } }
+	uimsbf(1) isBaseLayer;
+	if (isBaseLayer) {
+		CelpHeader(samplingFrequencyIndex);
+	}
+	else {
+		uimsbf(1) isBWSLayer;
+		if (isBWSLayer) {
+			CelpBWSenhHeader();
+		}
+		else {
+			uimsbf(2) CELPBRSid;
+		}
+	}
+}"; } }
 	public virtual string DisplayName { get { return "CelpSpecificConfig"; } }
 
 	protected bool isBaseLayer; 

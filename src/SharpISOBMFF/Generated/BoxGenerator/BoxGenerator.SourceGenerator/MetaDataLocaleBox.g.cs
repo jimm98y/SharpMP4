@@ -7,19 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class MetaDataLocaleBox extends Box('loca') {
- string locale_string;
+	string locale_string;
 }
-
-
 */
 public partial class MetaDataLocaleBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class MetaDataLocaleBox extends Box('loca') {
- string locale_string;
-}
-
-"; } }
+	string locale_string;
+}"; } }
 	public const string TYPE = "loca";
 	public override string DisplayName { get { return "MetaDataLocaleBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class AppleOrientationBox() extends Box ('rcif'){
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class AppleOrientationBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AppleOrientationBox() extends Box ('rcif'){
- bit(8) data[];
- }"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "rcif";
 	public override string DisplayName { get { return "AppleOrientationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -9,7 +9,7 @@ namespace SharpISOBMFF
 class SVCPriorityAssignmentBox extends Box('svcP')
 {
 	unsigned int(8)	method_count;
-	string PriorityAssignmentURI[method_count]; 
+	string PriorityAssignmentURI[method_count];
 }
 */
 public partial class SVCPriorityAssignmentBox : Box
@@ -18,7 +18,7 @@ public partial class SVCPriorityAssignmentBox : Box
 	public override string Syntax { get { return @"class SVCPriorityAssignmentBox extends Box('svcP')
 {
 	unsigned int(8)	method_count;
-	string PriorityAssignmentURI[method_count]; 
+	string PriorityAssignmentURI[method_count];
 }"; } }
 	public const string TYPE = "svcP";
 	public override string DisplayName { get { return "SVCPriorityAssignmentBox"; } }

@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ItemInfoBox
-		extends FullBox('iinf', version, 0) {
+	extends FullBox('iinf', version, 0) {
 	if (version == 0) {
 		unsigned int(16)	entry_count;
 	} else {
@@ -20,7 +20,7 @@ public partial class ItemInfoBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class ItemInfoBox
-		extends FullBox('iinf', version, 0) {
+	extends FullBox('iinf', version, 0) {
 	if (version == 0) {
 		unsigned int(16)	entry_count;
 	} else {

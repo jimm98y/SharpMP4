@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class DepthOfFieldBracketingEntry
-extends VisualSampleGroupEntry('dobr') {
+	extends VisualSampleGroupEntry('dobr') {
 	int(8) f_stop_numerator;
 	int(8) f_stop_denominator;
 }
@@ -16,7 +16,7 @@ public partial class DepthOfFieldBracketingEntry : VisualSampleGroupEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class DepthOfFieldBracketingEntry
-extends VisualSampleGroupEntry('dobr') {
+	extends VisualSampleGroupEntry('dobr') {
 	int(8) f_stop_numerator;
 	int(8) f_stop_denominator;
 }"; } }

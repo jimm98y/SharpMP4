@@ -7,16 +7,16 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class CyBox() extends Box('_cy_') {
- signed int(32) numerator;
- signed int(32) denominator;
+	signed int(32) numerator;
+	signed int(32) denominator;
 }
 */
 public partial class CyBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class CyBox() extends Box('_cy_') {
- signed int(32) numerator;
- signed int(32) denominator;
+	signed int(32) numerator;
+	signed int(32) denominator;
 }"; } }
 	public const string TYPE = "_cy_";
 	public override string DisplayName { get { return "CyBox"; } }

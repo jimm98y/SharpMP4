@@ -7,21 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class MetaDataKeyDeclarationBox extends Box('keyd') {
- unsigned int(32) key_namespace;
- unsigned int(8) key_value[];
+	unsigned int(32) key_namespace;
+	unsigned int(8) key_value[];
 }
-
-
 */
 public partial class MetaDataKeyDeclarationBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class MetaDataKeyDeclarationBox extends Box('keyd') {
- unsigned int(32) key_namespace;
- unsigned int(8) key_value[];
-}
-
-"; } }
+	unsigned int(32) key_namespace;
+	unsigned int(8) key_value[];
+}"; } }
 	public const string TYPE = "keyd";
 	public override string DisplayName { get { return "MetaDataKeyDeclarationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -8,16 +8,16 @@ namespace SharpISOBMFF
 /*
 // The salt of the key, a box and not a full box, as GPAC reads it
 aligned(8) class ISMACrypSaltBox extends Box('iSLT') {
- unsigned int(64) salt;
- }
+	unsigned int(64) salt;
+}
 */
 public partial class ISMACrypSaltBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// The salt of the key, a box and not a full box, as GPAC reads it
 aligned(8) class ISMACrypSaltBox extends Box('iSLT') {
- unsigned int(64) salt;
- }"; } }
+	unsigned int(64) salt;
+}"; } }
 	public const string TYPE = "iSLT";
 	public override string DisplayName { get { return "ISMACrypSaltBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

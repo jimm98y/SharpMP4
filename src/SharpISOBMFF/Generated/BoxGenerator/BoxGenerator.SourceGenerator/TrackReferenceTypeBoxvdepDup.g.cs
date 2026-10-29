@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class TrackReferenceTypeBox() extends Box('vdep') {
- unsigned int(32) trackIds[];
- } 
+	unsigned int(32) trackIds[];
+}
 */
 public partial class TrackReferenceTypeBoxvdepDup : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class TrackReferenceTypeBox() extends Box('vdep') {
- unsigned int(32) trackIds[];
- } "; } }
+	unsigned int(32) trackIds[];
+}"; } }
 	public const string TYPE = "vdep";
 	public override string DisplayName { get { return "TrackReferenceTypeBoxvdepDup"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

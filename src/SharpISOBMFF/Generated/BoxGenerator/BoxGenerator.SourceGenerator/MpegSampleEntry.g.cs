@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class MpegSampleEntry() extends SampleEntry ('mp4s') {
- Box ES;
- }
+	Box ES;
+}
 */
 public partial class MpegSampleEntry : SampleEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class MpegSampleEntry() extends SampleEntry ('mp4s') {
- Box ES;
- }"; } }
+	Box ES;
+}"; } }
 	public const string TYPE = "mp4s";
 	public override string DisplayName { get { return "MpegSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

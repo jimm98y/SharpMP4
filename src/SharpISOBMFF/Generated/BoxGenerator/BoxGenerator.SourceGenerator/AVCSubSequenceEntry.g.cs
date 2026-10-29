@@ -6,48 +6,46 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class AVCSubSequenceEntry () extends VisualSampleGroupEntry ('avss') 
-{ 
-  unsigned int(16) subSequenceIdentifer; 
-  unsigned int(8)  layerNumber;  
-  unsigned int(1)  durationFlag; 
-  unsigned int(1)  avgRateFlag; 
-  unsigned int(6)  reserved = 0;  
-  if (durationFlag) 
-   unsigned int(32) duration; 
-  if (avgRateFlag) 
-  {
-   unsigned int(8)  accurateStatisticsFlag; 
-   unsigned int(16) avgBitRate; 
-   unsigned int(16) avgFrameRate; 
-  }
-  unsigned int(8) numReferences; 
-  DependencyInfo dependency[numReferences]; 
- } 
-
+class AVCSubSequenceEntry () extends VisualSampleGroupEntry ('avss')
+{
+	unsigned int(16) subSequenceIdentifer;
+	unsigned int(8)  layerNumber;
+	unsigned int(1)  durationFlag;
+	unsigned int(1)  avgRateFlag;
+	unsigned int(6)  reserved = 0;
+	if (durationFlag)
+		unsigned int(32) duration;
+	if (avgRateFlag)
+	{
+		unsigned int(8)  accurateStatisticsFlag;
+		unsigned int(16) avgBitRate;
+		unsigned int(16) avgFrameRate;
+	}
+	unsigned int(8) numReferences;
+	DependencyInfo dependency[numReferences];
+}
 */
 public partial class AVCSubSequenceEntry : VisualSampleGroupEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"class AVCSubSequenceEntry () extends VisualSampleGroupEntry ('avss') 
-{ 
-  unsigned int(16) subSequenceIdentifer; 
-  unsigned int(8)  layerNumber;  
-  unsigned int(1)  durationFlag; 
-  unsigned int(1)  avgRateFlag; 
-  unsigned int(6)  reserved = 0;  
-  if (durationFlag) 
-   unsigned int(32) duration; 
-  if (avgRateFlag) 
-  {
-   unsigned int(8)  accurateStatisticsFlag; 
-   unsigned int(16) avgBitRate; 
-   unsigned int(16) avgFrameRate; 
-  }
-  unsigned int(8) numReferences; 
-  DependencyInfo dependency[numReferences]; 
- } 
-"; } }
+	public override string Syntax { get { return @"class AVCSubSequenceEntry () extends VisualSampleGroupEntry ('avss')
+{
+	unsigned int(16) subSequenceIdentifer;
+	unsigned int(8)  layerNumber;
+	unsigned int(1)  durationFlag;
+	unsigned int(1)  avgRateFlag;
+	unsigned int(6)  reserved = 0;
+	if (durationFlag)
+		unsigned int(32) duration;
+	if (avgRateFlag)
+	{
+		unsigned int(8)  accurateStatisticsFlag;
+		unsigned int(16) avgBitRate;
+		unsigned int(16) avgFrameRate;
+	}
+	unsigned int(8) numReferences;
+	DependencyInfo dependency[numReferences];
+}"; } }
 	public const string TYPE = "avss";
 	public override string DisplayName { get { return "AVCSubSequenceEntry"; } }
 

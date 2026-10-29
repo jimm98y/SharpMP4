@@ -6,7 +6,7 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class BoxedMetaDataSampleEntry 
+aligned(8) class BoxedMetaDataSampleEntry
 	extends MetaDataSampleEntry ('mebx') {
 	MetaDataKeyTableBox();				// mandatory
 	BitRateBox ();							// optional
@@ -15,7 +15,7 @@ aligned(8) class BoxedMetaDataSampleEntry
 public partial class BoxedMetaDataSampleEntry : MetaDataSampleEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class BoxedMetaDataSampleEntry 
+	public override string Syntax { get { return @"aligned(8) class BoxedMetaDataSampleEntry
 	extends MetaDataSampleEntry ('mebx') {
 	MetaDataKeyTableBox();				// mandatory
 	BitRateBox ();							// optional

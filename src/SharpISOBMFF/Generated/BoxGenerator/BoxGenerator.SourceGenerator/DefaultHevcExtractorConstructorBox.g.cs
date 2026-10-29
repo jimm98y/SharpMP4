@@ -8,16 +8,16 @@ namespace SharpISOBMFF
 /*
 class DefaultHevcExtractorConstructorBox extends FullBox('dhec'){
 	unsigned int(32) num_entries;
-	for (i=1; i<= num_entries; i++) { 
+	for (i=1; i<= num_entries; i++) {
 		unsigned int(8) constructor_type;
-		unsigned int(8) constructor_flags; 
-		if( constructor_type == 0 ) 
+		unsigned int(8) constructor_flags;
+		if( constructor_type == 0 )
 			SampleConstructor();
-		else if( constructor_type == 2 ) 
+		else if( constructor_type == 2 )
 			InlineConstructor();
-		else if( constructor_type == 3 ) 
+		else if( constructor_type == 3 )
 			SampleConstructorFromTrackGroup();
-		else if( constructor_type == 6 ) 
+		else if( constructor_type == 6 )
 			NALUStartInlineConstructor ();
 	}
 }
@@ -27,16 +27,16 @@ public partial class DefaultHevcExtractorConstructorBox : FullBox
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class DefaultHevcExtractorConstructorBox extends FullBox('dhec'){
 	unsigned int(32) num_entries;
-	for (i=1; i<= num_entries; i++) { 
+	for (i=1; i<= num_entries; i++) {
 		unsigned int(8) constructor_type;
-		unsigned int(8) constructor_flags; 
-		if( constructor_type == 0 ) 
+		unsigned int(8) constructor_flags;
+		if( constructor_type == 0 )
 			SampleConstructor();
-		else if( constructor_type == 2 ) 
+		else if( constructor_type == 2 )
 			InlineConstructor();
-		else if( constructor_type == 3 ) 
+		else if( constructor_type == 3 )
 			SampleConstructorFromTrackGroup();
-		else if( constructor_type == 6 ) 
+		else if( constructor_type == 6 )
 			NALUStartInlineConstructor ();
 	}
 }"; } }

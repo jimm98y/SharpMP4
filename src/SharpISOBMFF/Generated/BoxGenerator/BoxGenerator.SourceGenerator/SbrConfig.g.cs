@@ -8,27 +8,25 @@ namespace SharpISOBMFF
 /*
 class SbrConfig()
 {
-  bslbf(1) harmonicSBR;
-  bslbf(1) bs_interTes;
-  bslbf(1) bs_pvc;
-  uimsbf(4) dflt_start_freq;
-  uimsbf(4) dflt_stop_freq;
-  bslbf(1) dflt_header_extra1;
-  bslbf(1) dflt_header_extra2;
-  if (dflt_header_extra1) {
-    uimsbf(2) dflt_freq_scale;
-    bslbf(1) dflt_alter_scale;
-    uimsbf(2) dflt_noise_bands;
-  }
-  if (dflt_header_extra2) {
-    uimsbf(2) dflt_limiter_bands;
-    uimsbf(2) dflt_limiter_gains;
-    bslbf(1) dflt_interpol_freq;
-    bslbf(1) dflt_smoothing_mode;
-  }
+	bslbf(1) harmonicSBR;
+	bslbf(1) bs_interTes;
+	bslbf(1) bs_pvc;
+	uimsbf(4) dflt_start_freq;
+	uimsbf(4) dflt_stop_freq;
+	bslbf(1) dflt_header_extra1;
+	bslbf(1) dflt_header_extra2;
+	if (dflt_header_extra1) {
+		uimsbf(2) dflt_freq_scale;
+		bslbf(1) dflt_alter_scale;
+		uimsbf(2) dflt_noise_bands;
+	}
+	if (dflt_header_extra2) {
+		uimsbf(2) dflt_limiter_bands;
+		uimsbf(2) dflt_limiter_gains;
+		bslbf(1) dflt_interpol_freq;
+		bslbf(1) dflt_smoothing_mode;
+	}
 }
-
-
 */
 public partial class SbrConfig : IMp4Serializable
 {
@@ -40,27 +38,25 @@ public partial class SbrConfig : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class SbrConfig()
 {
-  bslbf(1) harmonicSBR;
-  bslbf(1) bs_interTes;
-  bslbf(1) bs_pvc;
-  uimsbf(4) dflt_start_freq;
-  uimsbf(4) dflt_stop_freq;
-  bslbf(1) dflt_header_extra1;
-  bslbf(1) dflt_header_extra2;
-  if (dflt_header_extra1) {
-    uimsbf(2) dflt_freq_scale;
-    bslbf(1) dflt_alter_scale;
-    uimsbf(2) dflt_noise_bands;
-  }
-  if (dflt_header_extra2) {
-    uimsbf(2) dflt_limiter_bands;
-    uimsbf(2) dflt_limiter_gains;
-    bslbf(1) dflt_interpol_freq;
-    bslbf(1) dflt_smoothing_mode;
-  }
-}
-
-"; } }
+	bslbf(1) harmonicSBR;
+	bslbf(1) bs_interTes;
+	bslbf(1) bs_pvc;
+	uimsbf(4) dflt_start_freq;
+	uimsbf(4) dflt_stop_freq;
+	bslbf(1) dflt_header_extra1;
+	bslbf(1) dflt_header_extra2;
+	if (dflt_header_extra1) {
+		uimsbf(2) dflt_freq_scale;
+		bslbf(1) dflt_alter_scale;
+		uimsbf(2) dflt_noise_bands;
+	}
+	if (dflt_header_extra2) {
+		uimsbf(2) dflt_limiter_bands;
+		uimsbf(2) dflt_limiter_gains;
+		bslbf(1) dflt_interpol_freq;
+		bslbf(1) dflt_smoothing_mode;
+	}
+}"; } }
 	public virtual string DisplayName { get { return "SbrConfig"; } }
 
 	protected bool harmonicSBR; 

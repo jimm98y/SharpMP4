@@ -6,39 +6,39 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class AVCDecoderConfigurationRecord { 
- unsigned int(8) configurationVersion = 1; 
- unsigned int(8) AVCProfileIndication; 
- unsigned int(8) profile_compatibility; 
- unsigned int(8) AVCLevelIndication;  
- bit(6) reserved = '111111'b; 
- unsigned int(2) lengthSizeMinusOne;  
- bit(3) reserved = '111'b; 
- unsigned int(5) numOfSequenceParameterSets; 
- for (i=0; i< numOfSequenceParameterSets;  i++) { 
-  unsigned int(16) sequenceParameterSetLength ; 
-  bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; 
- } 
- unsigned int(8) numOfPictureParameterSets; 
- for (i=0; i< numOfPictureParameterSets;  i++) { 
-  unsigned int(16) pictureParameterSetLength; 
-  bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; 
- } 
- if( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  || 
-    AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144 ) 
- { 
-  bit(6) reserved = '111111'b; 
-  unsigned int(2) chroma_format; 
-  bit(5) reserved = '11111'b; 
-  unsigned int(3) bit_depth_luma_minus8; 
-  bit(5) reserved = '11111'b; 
-  unsigned int(3) bit_depth_chroma_minus8; 
-  unsigned int(8) numOfSequenceParameterSetExt; 
-  for (i=0; i< numOfSequenceParameterSetExt; i++) { 
-   unsigned int(16) sequenceParameterSetExtLength; 
-   bit(8*sequenceParameterSetExtLength) sequenceParameterSetExtNALUnit; 
-  }
- } 
+aligned(8) class AVCDecoderConfigurationRecord {
+	unsigned int(8) configurationVersion = 1;
+	unsigned int(8) AVCProfileIndication;
+	unsigned int(8) profile_compatibility;
+	unsigned int(8) AVCLevelIndication;
+	bit(6) reserved = '111111'b;
+	unsigned int(2) lengthSizeMinusOne;
+	bit(3) reserved = '111'b;
+	unsigned int(5) numOfSequenceParameterSets;
+	for (i=0; i< numOfSequenceParameterSets;  i++) {
+		unsigned int(16) sequenceParameterSetLength ;
+		bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit;
+	}
+	unsigned int(8) numOfPictureParameterSets;
+	for (i=0; i< numOfPictureParameterSets;  i++) {
+		unsigned int(16) pictureParameterSetLength;
+		bit(8*pictureParameterSetLength) pictureParameterSetNALUnit;
+	}
+	if( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  ||
+		AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144 )
+	{
+		bit(6) reserved = '111111'b;
+		unsigned int(2) chroma_format;
+		bit(5) reserved = '11111'b;
+		unsigned int(3) bit_depth_luma_minus8;
+		bit(5) reserved = '11111'b;
+		unsigned int(3) bit_depth_chroma_minus8;
+		unsigned int(8) numOfSequenceParameterSetExt;
+		for (i=0; i< numOfSequenceParameterSetExt; i++) {
+			unsigned int(16) sequenceParameterSetExtLength;
+			bit(8*sequenceParameterSetExtLength) sequenceParameterSetExtNALUnit;
+		}
+	}
 }
 */
 public partial class AVCDecoderConfigurationRecord : IMp4Serializable
@@ -49,39 +49,39 @@ public partial class AVCDecoderConfigurationRecord : IMp4Serializable
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public virtual string Syntax { get { return @"aligned(8) class AVCDecoderConfigurationRecord { 
- unsigned int(8) configurationVersion = 1; 
- unsigned int(8) AVCProfileIndication; 
- unsigned int(8) profile_compatibility; 
- unsigned int(8) AVCLevelIndication;  
- bit(6) reserved = '111111'b; 
- unsigned int(2) lengthSizeMinusOne;  
- bit(3) reserved = '111'b; 
- unsigned int(5) numOfSequenceParameterSets; 
- for (i=0; i< numOfSequenceParameterSets;  i++) { 
-  unsigned int(16) sequenceParameterSetLength ; 
-  bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; 
- } 
- unsigned int(8) numOfPictureParameterSets; 
- for (i=0; i< numOfPictureParameterSets;  i++) { 
-  unsigned int(16) pictureParameterSetLength; 
-  bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; 
- } 
- if( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  || 
-    AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144 ) 
- { 
-  bit(6) reserved = '111111'b; 
-  unsigned int(2) chroma_format; 
-  bit(5) reserved = '11111'b; 
-  unsigned int(3) bit_depth_luma_minus8; 
-  bit(5) reserved = '11111'b; 
-  unsigned int(3) bit_depth_chroma_minus8; 
-  unsigned int(8) numOfSequenceParameterSetExt; 
-  for (i=0; i< numOfSequenceParameterSetExt; i++) { 
-   unsigned int(16) sequenceParameterSetExtLength; 
-   bit(8*sequenceParameterSetExtLength) sequenceParameterSetExtNALUnit; 
-  }
- } 
+	public virtual string Syntax { get { return @"aligned(8) class AVCDecoderConfigurationRecord {
+	unsigned int(8) configurationVersion = 1;
+	unsigned int(8) AVCProfileIndication;
+	unsigned int(8) profile_compatibility;
+	unsigned int(8) AVCLevelIndication;
+	bit(6) reserved = '111111'b;
+	unsigned int(2) lengthSizeMinusOne;
+	bit(3) reserved = '111'b;
+	unsigned int(5) numOfSequenceParameterSets;
+	for (i=0; i< numOfSequenceParameterSets;  i++) {
+		unsigned int(16) sequenceParameterSetLength ;
+		bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit;
+	}
+	unsigned int(8) numOfPictureParameterSets;
+	for (i=0; i< numOfPictureParameterSets;  i++) {
+		unsigned int(16) pictureParameterSetLength;
+		bit(8*pictureParameterSetLength) pictureParameterSetNALUnit;
+	}
+	if( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  ||
+		AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144 )
+	{
+		bit(6) reserved = '111111'b;
+		unsigned int(2) chroma_format;
+		bit(5) reserved = '11111'b;
+		unsigned int(3) bit_depth_luma_minus8;
+		bit(5) reserved = '11111'b;
+		unsigned int(3) bit_depth_chroma_minus8;
+		unsigned int(8) numOfSequenceParameterSetExt;
+		for (i=0; i< numOfSequenceParameterSetExt; i++) {
+			unsigned int(16) sequenceParameterSetExtLength;
+			bit(8*sequenceParameterSetExtLength) sequenceParameterSetExtNALUnit;
+		}
+	}
 }"; } }
 	public virtual string DisplayName { get { return "AVCDecoderConfigurationRecord"; } }
 
@@ -186,8 +186,8 @@ public bool HasExtensions { get; set; } = false;
 		}
 
 		if (boxSize >= readSize || (readSize - boxSize) < 4) return boxSize; else HasExtensions = true;
-		if ( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  || 
-    AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144  ||  AVCProfileIndication  ==  244 )
+		if ( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  ||
+		AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144  ||  AVCProfileIndication  ==  244 )
 		{
 			boxSize += stream.ReadBits(boxSize, readSize, 6,  out this.reserved1, "reserved1"); 
 			boxSize += stream.ReadBits(boxSize, readSize, 2,  out this.chroma_format, "chroma_format"); 
@@ -234,8 +234,8 @@ public bool HasExtensions { get; set; } = false;
 		}
 
 		if (!HasExtensions) return boxSize;
-		if ( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  || 
-    AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144  ||  AVCProfileIndication  ==  244 )
+		if ( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  ||
+		AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144  ||  AVCProfileIndication  ==  244 )
 		{
 			boxSize += stream.WriteBits(6,  this.reserved1, "reserved1"); 
 			boxSize += stream.WriteBits(2,  this.chroma_format, "chroma_format"); 
@@ -280,8 +280,8 @@ public bool HasExtensions { get; set; } = false;
 		}
 
 		if (!HasExtensions) return boxSize;
-		if ( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  || 
-    AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144  ||  AVCProfileIndication  ==  244 )
+		if ( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  ||
+		AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144  ||  AVCProfileIndication  ==  244 )
 		{
 			boxSize += 6; // reserved1
 			boxSize += 2; // chroma_format
@@ -326,8 +326,8 @@ public bool HasExtensions { get; set; } = false;
 		}
 
 		if (!HasExtensions) return boxSize;
-		if ( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  || 
-    AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144  ||  AVCProfileIndication  ==  244 )
+		if ( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  ||
+		AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144  ||  AVCProfileIndication  ==  244 )
 		{
 			boxSize += tracer.Field("reserved1", 6, this.reserved1); 
 			boxSize += tracer.Field("chroma_format", 2, this.chroma_format); 

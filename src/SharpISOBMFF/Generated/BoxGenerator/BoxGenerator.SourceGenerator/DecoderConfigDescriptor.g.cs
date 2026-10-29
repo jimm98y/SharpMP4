@@ -7,31 +7,31 @@ namespace SharpISOBMFF
 {
 /*
 class DecoderConfigDescriptor extends BaseDescriptor : bit(8) tag=DecoderConfigDescrTag {
- bit(8) objectTypeIndication;
- bit(6) streamType;
- bit(1) upStream;
- const bit(1) reserved=1;
- bit(24) bufferSizeDB;
- bit(32) maxBitrate;
- bit(32) avgBitrate;
- DecoderSpecificInfo decSpecificInfo[0 .. 1];
- ProfileLevelIndicationIndexDescriptor profileLevelIndicationIndexDescr [0..255];
- }
+	bit(8) objectTypeIndication;
+	bit(6) streamType;
+	bit(1) upStream;
+	const bit(1) reserved=1;
+	bit(24) bufferSizeDB;
+	bit(32) maxBitrate;
+	bit(32) avgBitrate;
+	DecoderSpecificInfo decSpecificInfo[0 .. 1];
+	ProfileLevelIndicationIndexDescriptor profileLevelIndicationIndexDescr [0..255];
+}
 */
 public partial class DecoderConfigDescriptor : BaseDescriptor
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class DecoderConfigDescriptor extends BaseDescriptor : bit(8) tag=DecoderConfigDescrTag {
- bit(8) objectTypeIndication;
- bit(6) streamType;
- bit(1) upStream;
- const bit(1) reserved=1;
- bit(24) bufferSizeDB;
- bit(32) maxBitrate;
- bit(32) avgBitrate;
- DecoderSpecificInfo decSpecificInfo[0 .. 1];
- ProfileLevelIndicationIndexDescriptor profileLevelIndicationIndexDescr [0..255];
- }"; } }
+	bit(8) objectTypeIndication;
+	bit(6) streamType;
+	bit(1) upStream;
+	const bit(1) reserved=1;
+	bit(24) bufferSizeDB;
+	bit(32) maxBitrate;
+	bit(32) avgBitrate;
+	DecoderSpecificInfo decSpecificInfo[0 .. 1];
+	ProfileLevelIndicationIndexDescriptor profileLevelIndicationIndexDescr [0..255];
+}"; } }
 	public const byte TYPE = DescriptorTags.DecoderConfigDescrTag;
 	public override string DisplayName { get { return "DecoderConfigDescriptor"; } }
 

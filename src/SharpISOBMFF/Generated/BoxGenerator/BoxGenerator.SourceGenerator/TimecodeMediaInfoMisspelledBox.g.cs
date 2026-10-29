@@ -8,30 +8,30 @@ namespace SharpISOBMFF
 /*
 // 'tcmi' misspelled, as the writer of FFmpeg's sample mp4-with-mov-in24-ver.mp4 put it: its fields
 class TimecodeMediaInfoMisspelledBox() extends FullBox ('tmci'){
- signed int(16) text_font;
- signed int(16) text_face;
- signed int(16) text_size;
- signed int(16) reserved;
- unsigned int(48) text_color;
- unsigned int(48) background_color;
- unsigned int(8) font_name_length;
- unsigned int(8) font_name[font_name_length];
- }
+	signed int(16) text_font;
+	signed int(16) text_face;
+	signed int(16) text_size;
+	signed int(16) reserved;
+	unsigned int(48) text_color;
+	unsigned int(48) background_color;
+	unsigned int(8) font_name_length;
+	unsigned int(8) font_name[font_name_length];
+}
 */
 public partial class TimecodeMediaInfoMisspelledBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// 'tcmi' misspelled, as the writer of FFmpeg's sample mp4-with-mov-in24-ver.mp4 put it: its fields
 class TimecodeMediaInfoMisspelledBox() extends FullBox ('tmci'){
- signed int(16) text_font;
- signed int(16) text_face;
- signed int(16) text_size;
- signed int(16) reserved;
- unsigned int(48) text_color;
- unsigned int(48) background_color;
- unsigned int(8) font_name_length;
- unsigned int(8) font_name[font_name_length];
- }"; } }
+	signed int(16) text_font;
+	signed int(16) text_face;
+	signed int(16) text_size;
+	signed int(16) reserved;
+	unsigned int(48) text_color;
+	unsigned int(48) background_color;
+	unsigned int(8) font_name_length;
+	unsigned int(8) font_name[font_name_length];
+}"; } }
 	public const string TYPE = "tmci";
 	public override string DisplayName { get { return "TimecodeMediaInfoMisspelledBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

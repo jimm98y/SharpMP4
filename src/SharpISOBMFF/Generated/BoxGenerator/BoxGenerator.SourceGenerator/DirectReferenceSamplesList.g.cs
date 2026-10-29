@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 class DirectReferenceSamplesList()
-extends VisualSampleGroupEntry ('refs') {
+	extends VisualSampleGroupEntry ('refs') {
 	unsigned int(32) sample_id;
 	unsigned int(8) num_direct_reference_samples;
 	for(i = 0; i < num_direct_reference_samples; i++) {
@@ -19,7 +19,7 @@ public partial class DirectReferenceSamplesList : VisualSampleGroupEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class DirectReferenceSamplesList()
-extends VisualSampleGroupEntry ('refs') {
+	extends VisualSampleGroupEntry ('refs') {
 	unsigned int(32) sample_id;
 	unsigned int(8) num_direct_reference_samples;
 	for(i = 0; i < num_direct_reference_samples; i++) {

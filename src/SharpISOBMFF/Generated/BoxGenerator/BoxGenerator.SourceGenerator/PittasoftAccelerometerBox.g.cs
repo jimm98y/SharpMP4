@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class PittasoftAccelerometerBox() extends Box('3gf ') {
- bit(8) data[];
+	bit(8) data[];
 }
-
 */
 public partial class PittasoftAccelerometerBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class PittasoftAccelerometerBox() extends Box('3gf ') {
- bit(8) data[];
-}
-"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "3gf ";
 	public override string DisplayName { get { return "PittasoftAccelerometerBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

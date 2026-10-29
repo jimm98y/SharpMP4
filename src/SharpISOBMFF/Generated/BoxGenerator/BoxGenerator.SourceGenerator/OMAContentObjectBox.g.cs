@@ -7,17 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class OMAContentObjectBox() extends FullBox('odda') {
-	 unsigned int(32) count;
- unsigned int(8) data[count];
- } 
+	unsigned int(32) count;
+	unsigned int(8) data[count];
+}
 */
 public partial class OMAContentObjectBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class OMAContentObjectBox() extends FullBox('odda') {
-	 unsigned int(32) count;
- unsigned int(8) data[count];
- } "; } }
+	unsigned int(32) count;
+	unsigned int(8) data[count];
+}"; } }
 	public const string TYPE = "odda";
 	public override string DisplayName { get { return "OMAContentObjectBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

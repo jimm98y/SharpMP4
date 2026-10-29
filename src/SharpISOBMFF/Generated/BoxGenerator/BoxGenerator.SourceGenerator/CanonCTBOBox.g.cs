@@ -8,20 +8,18 @@ namespace SharpISOBMFF
 /*
 // Canon.pm, CTBO: int32u entry count N, N x (int32u index, int64u offset, int64u size); index 1 XMP, 2 PRVW, 3 mdat
 aligned(8) class CanonCTBOBox() extends Box('CTBO') {
- unsigned int(32) entryCount;
- CanonCTBOEntry entries[entryCount];
+	unsigned int(32) entryCount;
+	CanonCTBOEntry entries[entryCount];
 }
-
 */
 public partial class CanonCTBOBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// Canon.pm, CTBO: int32u entry count N, N x (int32u index, int64u offset, int64u size); index 1 XMP, 2 PRVW, 3 mdat
 aligned(8) class CanonCTBOBox() extends Box('CTBO') {
- unsigned int(32) entryCount;
- CanonCTBOEntry entries[entryCount];
-}
-"; } }
+	unsigned int(32) entryCount;
+	CanonCTBOEntry entries[entryCount];
+}"; } }
 	public const string TYPE = "CTBO";
 	public override string DisplayName { get { return "CanonCTBOBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AppleSoundEngineerBox() extends Box('©sne') {
- Box boxes[];
- } 
+	Box boxes[];
+}
 */
 public partial class AppleSoundEngineerBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AppleSoundEngineerBox() extends Box('©sne') {
- Box boxes[];
- } "; } }
+	Box boxes[];
+}"; } }
 	public const string TYPE = "©sne";
 	public override string DisplayName { get { return "AppleSoundEngineerBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

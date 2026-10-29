@@ -12,7 +12,6 @@ class CodingConstraintsBox extends FullBox('ccst', version = 0, flags = 0){
 	unsigned int(4) max_ref_per_pic;
 	unsigned int(26) reserved;
 }
-
 */
 public partial class CodingConstraintsBox : FullBox
 {
@@ -22,8 +21,7 @@ public partial class CodingConstraintsBox : FullBox
 	unsigned int(1) intra_pred_used;
 	unsigned int(4) max_ref_per_pic;
 	unsigned int(26) reserved;
-}
-"; } }
+}"; } }
 	public const string TYPE = "ccst";
 	public override string DisplayName { get { return "CodingConstraintsBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

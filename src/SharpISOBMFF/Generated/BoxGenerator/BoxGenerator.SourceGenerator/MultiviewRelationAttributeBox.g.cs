@@ -11,7 +11,7 @@ aligned(8) class MultiviewRelationAttributeBox
 	bit(16) reserved1 = 0;
 	unsigned int(16) num_common_attributes;
 	for (i=0; i<num_common_attributes; i++) {
-		unsigned int(32) common_attribute; 
+		unsigned int(32) common_attribute;
 		unsigned int(32) common_value;
 	}
 	bit(16) reserved2 = 0;
@@ -28,7 +28,7 @@ public partial class MultiviewRelationAttributeBox : FullBox
 	bit(16) reserved1 = 0;
 	unsigned int(16) num_common_attributes;
 	for (i=0; i<num_common_attributes; i++) {
-		unsigned int(32) common_attribute; 
+		unsigned int(32) common_attribute;
 		unsigned int(32) common_value;
 	}
 	bit(16) reserved2 = 0;

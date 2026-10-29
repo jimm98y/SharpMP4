@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class PrimaryItemBox
-		extends FullBox('pitm', version, 0) {
+	extends FullBox('pitm', version, 0) {
 	if (version == 0) {
 		unsigned int(16)	item_ID;
 	} else {
@@ -19,7 +19,7 @@ public partial class PrimaryItemBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class PrimaryItemBox
-		extends FullBox('pitm', version, 0) {
+	extends FullBox('pitm', version, 0) {
 	if (version == 0) {
 		unsigned int(16)	item_ID;
 	} else {

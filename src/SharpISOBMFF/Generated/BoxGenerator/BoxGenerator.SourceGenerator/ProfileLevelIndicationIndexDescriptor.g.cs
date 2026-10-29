@@ -7,17 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 class ProfileLevelIndicationIndexDescriptor () extends BaseDescriptor
- : bit(8) ProfileLevelIndicationIndexDescrTag {
- bit(8) profileLevelIndicationIndex;
- }
+: bit(8) ProfileLevelIndicationIndexDescrTag {
+	bit(8) profileLevelIndicationIndex;
+}
 */
 public partial class ProfileLevelIndicationIndexDescriptor : BaseDescriptor
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class ProfileLevelIndicationIndexDescriptor () extends BaseDescriptor
- : bit(8) ProfileLevelIndicationIndexDescrTag {
- bit(8) profileLevelIndicationIndex;
- }"; } }
+: bit(8) ProfileLevelIndicationIndexDescrTag {
+	bit(8) profileLevelIndicationIndex;
+}"; } }
 	public const byte TYPE = DescriptorTags.ProfileLevelIndicationIndexDescrTag;
 	public override string DisplayName { get { return "ProfileLevelIndicationIndexDescriptor"; } }
 

@@ -7,24 +7,24 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class EntityToGroupBox('vvcb', version, flags)
-extends FullBox('vvcb', version, flags) {
+	extends FullBox('vvcb', version, flags) {
 	unsigned int(32) group_id;
 	unsigned int(32) num_entities_in_group;
 	for(i=0; i<num_entities_in_group; i++)
 		unsigned int(32) entity_id;
-// the remaining data may be specified for a particular grouping_type
+	// the remaining data may be specified for a particular grouping_type
 }
 */
 public partial class EntityToGroupBoxvvcbDup : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class EntityToGroupBox('vvcb', version, flags)
-extends FullBox('vvcb', version, flags) {
+	extends FullBox('vvcb', version, flags) {
 	unsigned int(32) group_id;
 	unsigned int(32) num_entities_in_group;
 	for(i=0; i<num_entities_in_group; i++)
 		unsigned int(32) entity_id;
-// the remaining data may be specified for a particular grouping_type
+	// the remaining data may be specified for a particular grouping_type
 }"; } }
 	public const string TYPE = "vvcb";
 	public override string DisplayName { get { return "EntityToGroupBoxvvcbDup"; } }

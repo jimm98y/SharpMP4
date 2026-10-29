@@ -6,7 +6,7 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class TierBitRateBox extends Box('tibr'){ 
+class TierBitRateBox extends Box('tibr'){
 	unsigned int(32) baseBitRate;
 	unsigned int(32) maxBitRate;
 	unsigned int(32) avgBitRate;
@@ -19,7 +19,7 @@ class TierBitRateBox extends Box('tibr'){
 public partial class TierBitRateBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"class TierBitRateBox extends Box('tibr'){ 
+	public override string Syntax { get { return @"class TierBitRateBox extends Box('tibr'){
 	unsigned int(32) baseBitRate;
 	unsigned int(32) maxBitRate;
 	unsigned int(32) avgBitRate;

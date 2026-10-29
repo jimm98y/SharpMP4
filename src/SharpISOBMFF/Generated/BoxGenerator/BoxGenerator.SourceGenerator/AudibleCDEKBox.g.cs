@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AudibleCDEKBox() extends Box('CDEK') {
- Box boxes[];
+	Box boxes[];
 }
-
 */
 public partial class AudibleCDEKBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AudibleCDEKBox() extends Box('CDEK') {
- Box boxes[];
-}
-"; } }
+	Box boxes[];
+}"; } }
 	public const string TYPE = "CDEK";
 	public override string DisplayName { get { return "AudibleCDEKBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

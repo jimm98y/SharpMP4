@@ -8,22 +8,22 @@ namespace SharpISOBMFF
 /*
 // An entity group of Apple's, of the layout of EntityToGroupBox, as an iPhone's spatial photo has it of its two eyes and its primary image; what it says of them is not known
 aligned(8) class UuidEntityToGroupBox() extends FullBox('uuid 524a52f437b347d09637933d05ac9b68') {
-	 unsigned int(32) group_id;
- unsigned int(32) num_entities_in_group;
- for(i=0; i<num_entities_in_group; i++)
- unsigned int(32) entity_id;
- } 
+	unsigned int(32) group_id;
+	unsigned int(32) num_entities_in_group;
+	for(i=0; i<num_entities_in_group; i++)
+		unsigned int(32) entity_id;
+}
 */
 public partial class UuidEntityToGroupBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// An entity group of Apple's, of the layout of EntityToGroupBox, as an iPhone's spatial photo has it of its two eyes and its primary image; what it says of them is not known
 aligned(8) class UuidEntityToGroupBox() extends FullBox('uuid 524a52f437b347d09637933d05ac9b68') {
-	 unsigned int(32) group_id;
- unsigned int(32) num_entities_in_group;
- for(i=0; i<num_entities_in_group; i++)
- unsigned int(32) entity_id;
- } "; } }
+	unsigned int(32) group_id;
+	unsigned int(32) num_entities_in_group;
+	for(i=0; i<num_entities_in_group; i++)
+		unsigned int(32) entity_id;
+}"; } }
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "UuidEntityToGroupBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -8,22 +8,20 @@ namespace SharpISOBMFF
 /*
 // QuickTime.pm, PreviewImage: a CR3's preview, in a PRVW after 8 bytes
 aligned(8) class CanonPreviewUuidBox() extends Box('uuid eaf42b5e1c984b88b9fbb7dc406e4d16') {
- unsigned int(32) unknown1;
- unsigned int(32) unknown2;
- Box boxes[];
+	unsigned int(32) unknown1;
+	unsigned int(32) unknown2;
+	Box boxes[];
 }
-
 */
 public partial class CanonPreviewUuidBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// QuickTime.pm, PreviewImage: a CR3's preview, in a PRVW after 8 bytes
 aligned(8) class CanonPreviewUuidBox() extends Box('uuid eaf42b5e1c984b88b9fbb7dc406e4d16') {
- unsigned int(32) unknown1;
- unsigned int(32) unknown2;
- Box boxes[];
-}
-"; } }
+	unsigned int(32) unknown1;
+	unsigned int(32) unknown2;
+	Box boxes[];
+}"; } }
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "CanonPreviewUuidBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

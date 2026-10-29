@@ -7,17 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class HintBox() extends Box('hint') {
- // a track reference (ISO/IEC 14496-12 8.3.3): the IDs of the tracks a hint track hints, one or more
- unsigned int(32) track_IDs[];
- } 
+	// a track reference (ISO/IEC 14496-12 8.3.3): the IDs of the tracks a hint track hints, one or more
+	unsigned int(32) track_IDs[];
+}
 */
 public partial class HintBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class HintBox() extends Box('hint') {
- // a track reference (ISO/IEC 14496-12 8.3.3): the IDs of the tracks a hint track hints, one or more
- unsigned int(32) track_IDs[];
- } "; } }
+	// a track reference (ISO/IEC 14496-12 8.3.3): the IDs of the tracks a hint track hints, one or more
+	unsigned int(32) track_IDs[];
+}"; } }
 	public const string TYPE = "hint";
 	public override string DisplayName { get { return "HintBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,25 +7,25 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class TfxdBox() extends FullBox('uuid 6d1d9b0542d544e680e2141daff757b2') {
-	 if(version == 0x1) {
- unsigned int(64) fragmentAbsoluteTime;
- unsigned int(64) fragmentAbsoluteDuration;
- } else {
- unsigned int(32) fragmentAbsoluteTime;
- unsigned int(32) fragmentAbsoluteDuration;
- } }
+	if(version == 0x1) {
+		unsigned int(64) fragmentAbsoluteTime;
+		unsigned int(64) fragmentAbsoluteDuration;
+	} else {
+		unsigned int(32) fragmentAbsoluteTime;
+		unsigned int(32) fragmentAbsoluteDuration;
+} }
 */
 public partial class TfxdBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class TfxdBox() extends FullBox('uuid 6d1d9b0542d544e680e2141daff757b2') {
-	 if(version == 0x1) {
- unsigned int(64) fragmentAbsoluteTime;
- unsigned int(64) fragmentAbsoluteDuration;
- } else {
- unsigned int(32) fragmentAbsoluteTime;
- unsigned int(32) fragmentAbsoluteDuration;
- } }"; } }
+	if(version == 0x1) {
+		unsigned int(64) fragmentAbsoluteTime;
+		unsigned int(64) fragmentAbsoluteDuration;
+	} else {
+		unsigned int(32) fragmentAbsoluteTime;
+		unsigned int(32) fragmentAbsoluteDuration;
+} }"; } }
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "TfxdBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

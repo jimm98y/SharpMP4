@@ -7,12 +7,10 @@ namespace SharpISOBMFF
 {
 /*
 class DSTSpecificConfig(channelConfiguration) {
-  uimsbf(1) DSDDST_Coded;
-  uimsbf(14) N_Channels;
-  uimsbf(1) reserved;
+	uimsbf(1) DSDDST_Coded;
+	uimsbf(14) N_Channels;
+	uimsbf(1) reserved;
 }
-
-
 */
 public partial class DSTSpecificConfig : IMp4Serializable
 {
@@ -23,12 +21,10 @@ public partial class DSTSpecificConfig : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class DSTSpecificConfig(channelConfiguration) {
-  uimsbf(1) DSDDST_Coded;
-  uimsbf(14) N_Channels;
-  uimsbf(1) reserved;
-}
-
-"; } }
+	uimsbf(1) DSDDST_Coded;
+	uimsbf(14) N_Channels;
+	uimsbf(1) reserved;
+}"; } }
 	public virtual string DisplayName { get { return "DSTSpecificConfig"; } }
 
 	protected bool DSDDST_Coded; 

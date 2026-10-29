@@ -7,61 +7,60 @@ namespace SharpISOBMFF
 {
 /*
 // L-HEVC's operating points (ISO/IEC 14496-15 9.6, not at hand: the edition at hand predates it), as GPAC reads them (isomedia/avc_ext.c, gf_isom_oinf_read_entry); scalability_mask & (1 << j) written as a remainder, which the generator's flags need
-class OperatingPointsRecord { 
-unsigned int(16) scalability_mask; 
-bit(2) reserved = 0; 
-unsigned int(6) num_profile_tier_level; 
-for (i=0; i<num_profile_tier_level; i++) { 
- unsigned int(2) general_profile_space; 
- unsigned int(1) general_tier_flag; 
- unsigned int(5) general_profile_idc; 
- unsigned int(32) general_profile_compatibility_flags; 
- unsigned int(48) general_constraint_indicator_flags; 
- unsigned int(8) general_level_idc; 
-} 
-unsigned int(16) num_operating_points; 
-for (i=0; i<num_operating_points; i++) { 
- unsigned int(16) output_layer_set_idx; 
- unsigned int(8) max_temporal_id; 
- unsigned int(8) layer_count; 
- for (j=0; j<layer_count; j++) { 
-  unsigned int(8) ptl_idx; 
-  unsigned int(6) layer_id; 
-  unsigned int(1) is_outputlayer; 
-  unsigned int(1) is_alternate_outputlayer; 
- } 
- unsigned int(16) minPicWidth; 
- unsigned int(16) minPicHeight; 
- unsigned int(16) maxPicWidth; 
- unsigned int(16) maxPicHeight; 
- unsigned int(2) maxChromaFormat; 
- unsigned int(3) maxBitDepthMinus8; 
- bit(1) reserved = 0; 
- unsigned int(1) frame_rate_info_flag; 
- unsigned int(1) bit_rate_info_flag; 
- if (frame_rate_info_flag) { 
-  unsigned int(16) avgFrameRate; 
-  bit(6) reserved = 0; 
-  unsigned int(2) constantFrameRate; 
- } 
- if (bit_rate_info_flag) { 
-  unsigned int(32) maxBitRate; 
-  unsigned int(32) avgBitRate; 
- } 
-} 
-unsigned int(8) max_layer_count; 
-for (i=0; i<max_layer_count; i++) { 
- unsigned int(8) dependent_layerID; 
- unsigned int(8) num_layers_dependent_on; 
- for (j=0; j<num_layers_dependent_on; j++) 
-  unsigned int(8) dependent_on_layerID; 
- for (j=0; j<16; j++) { 
-  if ((scalability_mask >> j) % 2 == 1) 
-   unsigned int(8) dimension_identifier; 
- } 
-} 
+class OperatingPointsRecord {
+	unsigned int(16) scalability_mask;
+	bit(2) reserved = 0;
+	unsigned int(6) num_profile_tier_level;
+	for (i=0; i<num_profile_tier_level; i++) {
+		unsigned int(2) general_profile_space;
+		unsigned int(1) general_tier_flag;
+		unsigned int(5) general_profile_idc;
+		unsigned int(32) general_profile_compatibility_flags;
+		unsigned int(48) general_constraint_indicator_flags;
+		unsigned int(8) general_level_idc;
+	}
+	unsigned int(16) num_operating_points;
+	for (i=0; i<num_operating_points; i++) {
+		unsigned int(16) output_layer_set_idx;
+		unsigned int(8) max_temporal_id;
+		unsigned int(8) layer_count;
+		for (j=0; j<layer_count; j++) {
+			unsigned int(8) ptl_idx;
+			unsigned int(6) layer_id;
+			unsigned int(1) is_outputlayer;
+			unsigned int(1) is_alternate_outputlayer;
+		}
+		unsigned int(16) minPicWidth;
+		unsigned int(16) minPicHeight;
+		unsigned int(16) maxPicWidth;
+		unsigned int(16) maxPicHeight;
+		unsigned int(2) maxChromaFormat;
+		unsigned int(3) maxBitDepthMinus8;
+		bit(1) reserved = 0;
+		unsigned int(1) frame_rate_info_flag;
+		unsigned int(1) bit_rate_info_flag;
+		if (frame_rate_info_flag) {
+			unsigned int(16) avgFrameRate;
+			bit(6) reserved = 0;
+			unsigned int(2) constantFrameRate;
+		}
+		if (bit_rate_info_flag) {
+			unsigned int(32) maxBitRate;
+			unsigned int(32) avgBitRate;
+		}
+	}
+	unsigned int(8) max_layer_count;
+	for (i=0; i<max_layer_count; i++) {
+		unsigned int(8) dependent_layerID;
+		unsigned int(8) num_layers_dependent_on;
+		for (j=0; j<num_layers_dependent_on; j++)
+			unsigned int(8) dependent_on_layerID;
+		for (j=0; j<16; j++) {
+			if ((scalability_mask >> j) % 2 == 1)
+				unsigned int(8) dimension_identifier;
+		}
+	}
 }
-
 */
 public partial class OperatingPointsRecord : IMp4Serializable
 {
@@ -72,61 +71,60 @@ public partial class OperatingPointsRecord : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"// L-HEVC's operating points (ISO/IEC 14496-15 9.6, not at hand: the edition at hand predates it), as GPAC reads them (isomedia/avc_ext.c, gf_isom_oinf_read_entry); scalability_mask & (1 << j) written as a remainder, which the generator's flags need
-class OperatingPointsRecord { 
-unsigned int(16) scalability_mask; 
-bit(2) reserved = 0; 
-unsigned int(6) num_profile_tier_level; 
-for (i=0; i<num_profile_tier_level; i++) { 
- unsigned int(2) general_profile_space; 
- unsigned int(1) general_tier_flag; 
- unsigned int(5) general_profile_idc; 
- unsigned int(32) general_profile_compatibility_flags; 
- unsigned int(48) general_constraint_indicator_flags; 
- unsigned int(8) general_level_idc; 
-} 
-unsigned int(16) num_operating_points; 
-for (i=0; i<num_operating_points; i++) { 
- unsigned int(16) output_layer_set_idx; 
- unsigned int(8) max_temporal_id; 
- unsigned int(8) layer_count; 
- for (j=0; j<layer_count; j++) { 
-  unsigned int(8) ptl_idx; 
-  unsigned int(6) layer_id; 
-  unsigned int(1) is_outputlayer; 
-  unsigned int(1) is_alternate_outputlayer; 
- } 
- unsigned int(16) minPicWidth; 
- unsigned int(16) minPicHeight; 
- unsigned int(16) maxPicWidth; 
- unsigned int(16) maxPicHeight; 
- unsigned int(2) maxChromaFormat; 
- unsigned int(3) maxBitDepthMinus8; 
- bit(1) reserved = 0; 
- unsigned int(1) frame_rate_info_flag; 
- unsigned int(1) bit_rate_info_flag; 
- if (frame_rate_info_flag) { 
-  unsigned int(16) avgFrameRate; 
-  bit(6) reserved = 0; 
-  unsigned int(2) constantFrameRate; 
- } 
- if (bit_rate_info_flag) { 
-  unsigned int(32) maxBitRate; 
-  unsigned int(32) avgBitRate; 
- } 
-} 
-unsigned int(8) max_layer_count; 
-for (i=0; i<max_layer_count; i++) { 
- unsigned int(8) dependent_layerID; 
- unsigned int(8) num_layers_dependent_on; 
- for (j=0; j<num_layers_dependent_on; j++) 
-  unsigned int(8) dependent_on_layerID; 
- for (j=0; j<16; j++) { 
-  if ((scalability_mask >> j) % 2 == 1) 
-   unsigned int(8) dimension_identifier; 
- } 
-} 
-}
-"; } }
+class OperatingPointsRecord {
+	unsigned int(16) scalability_mask;
+	bit(2) reserved = 0;
+	unsigned int(6) num_profile_tier_level;
+	for (i=0; i<num_profile_tier_level; i++) {
+		unsigned int(2) general_profile_space;
+		unsigned int(1) general_tier_flag;
+		unsigned int(5) general_profile_idc;
+		unsigned int(32) general_profile_compatibility_flags;
+		unsigned int(48) general_constraint_indicator_flags;
+		unsigned int(8) general_level_idc;
+	}
+	unsigned int(16) num_operating_points;
+	for (i=0; i<num_operating_points; i++) {
+		unsigned int(16) output_layer_set_idx;
+		unsigned int(8) max_temporal_id;
+		unsigned int(8) layer_count;
+		for (j=0; j<layer_count; j++) {
+			unsigned int(8) ptl_idx;
+			unsigned int(6) layer_id;
+			unsigned int(1) is_outputlayer;
+			unsigned int(1) is_alternate_outputlayer;
+		}
+		unsigned int(16) minPicWidth;
+		unsigned int(16) minPicHeight;
+		unsigned int(16) maxPicWidth;
+		unsigned int(16) maxPicHeight;
+		unsigned int(2) maxChromaFormat;
+		unsigned int(3) maxBitDepthMinus8;
+		bit(1) reserved = 0;
+		unsigned int(1) frame_rate_info_flag;
+		unsigned int(1) bit_rate_info_flag;
+		if (frame_rate_info_flag) {
+			unsigned int(16) avgFrameRate;
+			bit(6) reserved = 0;
+			unsigned int(2) constantFrameRate;
+		}
+		if (bit_rate_info_flag) {
+			unsigned int(32) maxBitRate;
+			unsigned int(32) avgBitRate;
+		}
+	}
+	unsigned int(8) max_layer_count;
+	for (i=0; i<max_layer_count; i++) {
+		unsigned int(8) dependent_layerID;
+		unsigned int(8) num_layers_dependent_on;
+		for (j=0; j<num_layers_dependent_on; j++)
+			unsigned int(8) dependent_on_layerID;
+		for (j=0; j<16; j++) {
+			if ((scalability_mask >> j) % 2 == 1)
+				unsigned int(8) dimension_identifier;
+		}
+	}
+}"; } }
 	public virtual string DisplayName { get { return "OperatingPointsRecord"; } }
 
 	protected ushort scalability_mask; 

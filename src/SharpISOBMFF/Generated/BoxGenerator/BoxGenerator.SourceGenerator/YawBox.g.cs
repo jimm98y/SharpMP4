@@ -7,16 +7,16 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class YawBox() extends Box('_yaw') {
- signed int(32) numerator;
- signed int(32) denominator;
+	signed int(32) numerator;
+	signed int(32) denominator;
 }
 */
 public partial class YawBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class YawBox() extends Box('_yaw') {
- signed int(32) numerator;
- signed int(32) denominator;
+	signed int(32) numerator;
+	signed int(32) denominator;
 }"; } }
 	public const string TYPE = "_yaw";
 	public override string DisplayName { get { return "YawBox"; } }

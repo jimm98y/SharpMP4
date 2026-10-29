@@ -12,7 +12,7 @@ aligned(8) class ThreeGPPClassificationBox() extends FullBox('clsf', version = 0
 	bit(1) reserved = 0;
 	unsigned int(5)[3] language;
 	string value;
-} 
+}
 */
 public partial class ThreeGPPClassificationBox : FullBox
 {
@@ -23,7 +23,7 @@ public partial class ThreeGPPClassificationBox : FullBox
 	bit(1) reserved = 0;
 	unsigned int(5)[3] language;
 	string value;
-} "; } }
+}"; } }
 	public const string TYPE = "clsf";
 	public override string DisplayName { get { return "ThreeGPPClassificationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

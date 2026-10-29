@@ -7,17 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class IpirBox() extends Box('ipir') {
-	 unsigned int(32) entry_count;
- unsigned int(32) trackIDs[ entry_count ];
- } 
+	unsigned int(32) entry_count;
+	unsigned int(32) trackIDs[ entry_count ];
+}
 */
 public partial class IpirBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class IpirBox() extends Box('ipir') {
-	 unsigned int(32) entry_count;
- unsigned int(32) trackIDs[ entry_count ];
- } "; } }
+	unsigned int(32) entry_count;
+	unsigned int(32) trackIDs[ entry_count ];
+}"; } }
 	public const string TYPE = "ipir";
 	public override string DisplayName { get { return "IpirBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

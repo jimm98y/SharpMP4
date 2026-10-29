@@ -8,7 +8,7 @@ namespace SharpISOBMFF
 /*
 class ViewScalabilityInformationSEIBox extends Box('vsib', size)
 {
-	unsigned int(8*size-64)	mvcscalinfosei; 
+	unsigned int(8*size-64)	mvcscalinfosei;
 }
 */
 public partial class ViewScalabilityInformationSEIBox : Box
@@ -16,7 +16,7 @@ public partial class ViewScalabilityInformationSEIBox : Box
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class ViewScalabilityInformationSEIBox extends Box('vsib', size)
 {
-	unsigned int(8*size-64)	mvcscalinfosei; 
+	unsigned int(8*size-64)	mvcscalinfosei;
 }"; } }
 	public const string TYPE = "vsib";
 	public override string DisplayName { get { return "ViewScalabilityInformationSEIBox"; } }

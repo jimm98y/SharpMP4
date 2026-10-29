@@ -10,9 +10,9 @@ aligned(8) class ThreeGPPRatingBox() extends FullBox('rtng', version = 0, 0) {
 	unsigned int(32) rating_entity;
 	unsigned int(32) rating_criteria;
 	bit(1) pad = 0;
- unsigned int(5)[3] language;
+	unsigned int(5)[3] language;
 	string rating_info;
-} 
+}
 */
 public partial class ThreeGPPRatingBox : FullBox
 {
@@ -21,9 +21,9 @@ public partial class ThreeGPPRatingBox : FullBox
 	unsigned int(32) rating_entity;
 	unsigned int(32) rating_criteria;
 	bit(1) pad = 0;
- unsigned int(5)[3] language;
+	unsigned int(5)[3] language;
 	string rating_info;
-} "; } }
+}"; } }
 	public const string TYPE = "rtng";
 	public override string DisplayName { get { return "ThreeGPPRatingBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

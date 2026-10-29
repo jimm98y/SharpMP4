@@ -7,75 +7,75 @@ namespace SharpISOBMFF
 {
 /*
 class SLConfigDescriptor extends BaseDescriptor : bit(8) tag=SLConfigDescrTag {
- bit(8) predefined;
- if (predefined==0) {
- bit(1) useAccessUnitStartFlag;
- bit(1) useAccessUnitEndFlag;
- bit(1) useRandomAccessPointFlag;
- bit(1) hasRandomAccessUnitsOnlyFlag;
- bit(1) usePaddingFlag;
- bit(1) useTimeStampsFlag;
- bit(1) useIdleFlag;
- bit(1) durationFlag;
- bit(32) timeStampResolution;
- bit(32) OCRResolution;
- bit(8) timeStampLength; // must be <= 64
- bit(8) OCRLength; // must be <= 64
- bit(8) AU_Length; // must be <= 32
- bit(8) instantBitrateLength;
- bit(4) degradationPriorityLength;
- bit(5) AU_seqNumLength; // must be <= 16
- bit(5) packetSeqNumLength; // must be <= 16
- bit(2) reserved=0b11;
- }
- if (durationFlag) {
- bit(32) timeScale;
- bit(16) accessUnitDuration;
- bit(16) compositionUnitDuration;
- }
- if (!useTimeStampsFlag) {
- bit(timeStampLength) startDecodingTimeStamp;
- bit(timeStampLength) startCompositionTimeStamp;
- }
- bit(8) ocr[]; // OCR stream flag, reserved, OCR_ES_id 
- }
+	bit(8) predefined;
+	if (predefined==0) {
+		bit(1) useAccessUnitStartFlag;
+		bit(1) useAccessUnitEndFlag;
+		bit(1) useRandomAccessPointFlag;
+		bit(1) hasRandomAccessUnitsOnlyFlag;
+		bit(1) usePaddingFlag;
+		bit(1) useTimeStampsFlag;
+		bit(1) useIdleFlag;
+		bit(1) durationFlag;
+		bit(32) timeStampResolution;
+		bit(32) OCRResolution;
+		bit(8) timeStampLength; // must be <= 64
+		bit(8) OCRLength; // must be <= 64
+		bit(8) AU_Length; // must be <= 32
+		bit(8) instantBitrateLength;
+		bit(4) degradationPriorityLength;
+		bit(5) AU_seqNumLength; // must be <= 16
+		bit(5) packetSeqNumLength; // must be <= 16
+		bit(2) reserved=0b11;
+	}
+	if (durationFlag) {
+		bit(32) timeScale;
+		bit(16) accessUnitDuration;
+		bit(16) compositionUnitDuration;
+	}
+	if (!useTimeStampsFlag) {
+		bit(timeStampLength) startDecodingTimeStamp;
+		bit(timeStampLength) startCompositionTimeStamp;
+	}
+	bit(8) ocr[]; // OCR stream flag, reserved, OCR_ES_id
+}
 */
 public partial class SLConfigDescriptor : BaseDescriptor
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class SLConfigDescriptor extends BaseDescriptor : bit(8) tag=SLConfigDescrTag {
- bit(8) predefined;
- if (predefined==0) {
- bit(1) useAccessUnitStartFlag;
- bit(1) useAccessUnitEndFlag;
- bit(1) useRandomAccessPointFlag;
- bit(1) hasRandomAccessUnitsOnlyFlag;
- bit(1) usePaddingFlag;
- bit(1) useTimeStampsFlag;
- bit(1) useIdleFlag;
- bit(1) durationFlag;
- bit(32) timeStampResolution;
- bit(32) OCRResolution;
- bit(8) timeStampLength; // must be <= 64
- bit(8) OCRLength; // must be <= 64
- bit(8) AU_Length; // must be <= 32
- bit(8) instantBitrateLength;
- bit(4) degradationPriorityLength;
- bit(5) AU_seqNumLength; // must be <= 16
- bit(5) packetSeqNumLength; // must be <= 16
- bit(2) reserved=0b11;
- }
- if (durationFlag) {
- bit(32) timeScale;
- bit(16) accessUnitDuration;
- bit(16) compositionUnitDuration;
- }
- if (!useTimeStampsFlag) {
- bit(timeStampLength) startDecodingTimeStamp;
- bit(timeStampLength) startCompositionTimeStamp;
- }
- bit(8) ocr[]; // OCR stream flag, reserved, OCR_ES_id 
- }"; } }
+	bit(8) predefined;
+	if (predefined==0) {
+		bit(1) useAccessUnitStartFlag;
+		bit(1) useAccessUnitEndFlag;
+		bit(1) useRandomAccessPointFlag;
+		bit(1) hasRandomAccessUnitsOnlyFlag;
+		bit(1) usePaddingFlag;
+		bit(1) useTimeStampsFlag;
+		bit(1) useIdleFlag;
+		bit(1) durationFlag;
+		bit(32) timeStampResolution;
+		bit(32) OCRResolution;
+		bit(8) timeStampLength; // must be <= 64
+		bit(8) OCRLength; // must be <= 64
+		bit(8) AU_Length; // must be <= 32
+		bit(8) instantBitrateLength;
+		bit(4) degradationPriorityLength;
+		bit(5) AU_seqNumLength; // must be <= 16
+		bit(5) packetSeqNumLength; // must be <= 16
+		bit(2) reserved=0b11;
+	}
+	if (durationFlag) {
+		bit(32) timeScale;
+		bit(16) accessUnitDuration;
+		bit(16) compositionUnitDuration;
+	}
+	if (!useTimeStampsFlag) {
+		bit(timeStampLength) startDecodingTimeStamp;
+		bit(timeStampLength) startCompositionTimeStamp;
+	}
+	bit(8) ocr[]; // OCR stream flag, reserved, OCR_ES_id
+}"; } }
 	public const byte TYPE = DescriptorTags.SLConfigDescrTag;
 	public override string DisplayName { get { return "SLConfigDescriptor"; } }
 
@@ -151,7 +151,7 @@ public partial class SLConfigDescriptor : BaseDescriptor
 	protected byte[] startCompositionTimeStamp = []; 
 	public byte[] StartCompositionTimeStamp { get { return this.startCompositionTimeStamp; } set { this.startCompositionTimeStamp = value; } }
 
-	protected byte[] ocr = [];  //  OCR stream flag, reserved, OCR_ES_id 
+	protected byte[] ocr = [];  //  OCR stream flag, reserved, OCR_ES_id
 	public byte[] Ocr { get { return this.ocr; } set { this.ocr = value; } }
 
 	public SLConfigDescriptor(): base(DescriptorTags.SLConfigDescrTag)
@@ -198,7 +198,7 @@ public partial class SLConfigDescriptor : BaseDescriptor
 			boxSize += stream.ReadBits(boxSize, readSize, (uint)(timeStampLength ),  out this.startDecodingTimeStamp, "startDecodingTimeStamp"); 
 			boxSize += stream.ReadBits(boxSize, readSize, (uint)(timeStampLength ),  out this.startCompositionTimeStamp, "startCompositionTimeStamp"); 
 		}
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.ocr, "ocr"); // OCR stream flag, reserved, OCR_ES_id 
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.ocr, "ocr"); // OCR stream flag, reserved, OCR_ES_id
 		return boxSize;
 	}
 
@@ -242,7 +242,7 @@ public partial class SLConfigDescriptor : BaseDescriptor
 			boxSize += stream.WriteBits((uint)(timeStampLength ),  this.startDecodingTimeStamp, "startDecodingTimeStamp"); 
 			boxSize += stream.WriteBits((uint)(timeStampLength ),  this.startCompositionTimeStamp, "startCompositionTimeStamp"); 
 		}
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.ocr, "ocr"); // OCR stream flag, reserved, OCR_ES_id 
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.ocr, "ocr"); // OCR stream flag, reserved, OCR_ES_id
 		return boxSize;
 	}
 
@@ -330,7 +330,7 @@ public partial class SLConfigDescriptor : BaseDescriptor
 			boxSize += tracer.Field("startDecodingTimeStamp", (ulong)(timeStampLength ), this.startDecodingTimeStamp); 
 			boxSize += tracer.Field("startCompositionTimeStamp", (ulong)(timeStampLength ), this.startCompositionTimeStamp); 
 		}
-		boxSize += tracer.Field("ocr", ((ulong)ocr.Length * 8), this.ocr); // OCR stream flag, reserved, OCR_ES_id 
+		boxSize += tracer.Field("ocr", ((ulong)ocr.Length * 8), this.ocr); // OCR stream flag, reserved, OCR_ES_id
 		return boxSize;
 	}
 }

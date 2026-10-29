@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class MovieFragmentHeaderBox
-			extends FullBox('mfhd', 0, 0){
+	extends FullBox('mfhd', 0, 0){
 	unsigned int(32)	sequence_number;
 }
 */
@@ -15,7 +15,7 @@ public partial class MovieFragmentHeaderBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class MovieFragmentHeaderBox
-			extends FullBox('mfhd', 0, 0){
+	extends FullBox('mfhd', 0, 0){
 	unsigned int(32)	sequence_number;
 }"; } }
 	public const string TYPE = "mfhd";

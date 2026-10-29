@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AppleStartTimecode() extends Box('©TIM') {
- MultiLanguageString value[]; 
- } 
+	MultiLanguageString value[];
+}
 */
 public partial class AppleStartTimecode : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AppleStartTimecode() extends Box('©TIM') {
- MultiLanguageString value[]; 
- } "; } }
+	MultiLanguageString value[];
+}"; } }
 	public const string TYPE = "©TIM";
 	public override string DisplayName { get { return "AppleStartTimecode"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

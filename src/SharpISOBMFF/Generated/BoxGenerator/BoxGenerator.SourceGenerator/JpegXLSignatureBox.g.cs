@@ -8,16 +8,16 @@ namespace SharpISOBMFF
 /*
 // The signature a JPEG XL container starts with: 0x0D0A870A
 aligned(8) class JpegXLSignatureBox extends Box('JXL ') {
- unsigned int(32) signature;
- }
+	unsigned int(32) signature;
+}
 */
 public partial class JpegXLSignatureBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// The signature a JPEG XL container starts with: 0x0D0A870A
 aligned(8) class JpegXLSignatureBox extends Box('JXL ') {
- unsigned int(32) signature;
- }"; } }
+	unsigned int(32) signature;
+}"; } }
 	public const string TYPE = "JXL ";
 	public override string DisplayName { get { return "JpegXLSignatureBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

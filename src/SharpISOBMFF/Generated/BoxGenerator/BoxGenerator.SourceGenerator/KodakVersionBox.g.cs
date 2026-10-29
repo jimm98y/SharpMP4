@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class KodakVersionBox() extends Box ('ver '){
- bit(8) data[];
- }
-
+	bit(8) data[];
+}
 */
 public partial class KodakVersionBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class KodakVersionBox() extends Box ('ver '){
- bit(8) data[];
- }
-"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "ver ";
 	public override string DisplayName { get { return "KodakVersionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class MD5IntegrityBox()
-extends FullBox('md5i', version = 0, flags) {
+	extends FullBox('md5i', version = 0, flags) {
 	unsigned int(8)[16] input_MD5;
 	unsigned int(32) input_4cc;
 	if (input_4cc == 'sgpd') {
@@ -25,7 +25,7 @@ public partial class MD5IntegrityBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class MD5IntegrityBox()
-extends FullBox('md5i', version = 0, flags) {
+	extends FullBox('md5i', version = 0, flags) {
 	unsigned int(8)[16] input_MD5;
 	unsigned int(32) input_4cc;
 	if (input_4cc == 'sgpd') {

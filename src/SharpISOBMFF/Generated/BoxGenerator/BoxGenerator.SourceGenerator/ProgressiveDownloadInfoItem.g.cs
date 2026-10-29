@@ -7,10 +7,9 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ProgressiveDownloadInfoItem {
- 		unsigned int(32)  rate;
-		unsigned int(32)  initial_delay;
- }
-
+	unsigned int(32)  rate;
+	unsigned int(32)  initial_delay;
+}
 */
 public partial class ProgressiveDownloadInfoItem : IMp4Serializable
 {
@@ -21,10 +20,9 @@ public partial class ProgressiveDownloadInfoItem : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class ProgressiveDownloadInfoItem {
- 		unsigned int(32)  rate;
-		unsigned int(32)  initial_delay;
- }
-"; } }
+	unsigned int(32)  rate;
+	unsigned int(32)  initial_delay;
+}"; } }
 	public virtual string DisplayName { get { return "ProgressiveDownloadInfoItem"; } }
 
 	protected uint rate; 

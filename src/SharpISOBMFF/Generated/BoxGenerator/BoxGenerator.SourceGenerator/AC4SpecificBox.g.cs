@@ -8,54 +8,52 @@ namespace SharpISOBMFF
 /*
 // E.5, Pseudocode E.2: an ac4_dsi_v1() (E.6.1), to the end of the box
 aligned(8) class AC4SpecificBox extends Box('dac4') {
- bit(3) ac4_dsi_version;
- bit(7) bitstream_version;
- bit(1) fs_index;
- bit(4) frame_rate_index;
- bit(9) n_presentations;
- if (bitstream_version > 1) {
-  bit(1) b_program_id;
-  if (b_program_id) {
-   bit(16) short_program_id;
-   bit(1) b_uuid;
-   if (b_uuid) {
-    bit(8) program_uuid[16];
-   }
-  }
- }
- AC4BitrateDsi ac4_bitrate_dsi;
- byte_alignment(); // byte_align, 0..7: to a byte from the start of ac4_dsi_v1
- AC4PresentationDsi presentations[n_presentations];
+	bit(3) ac4_dsi_version;
+	bit(7) bitstream_version;
+	bit(1) fs_index;
+	bit(4) frame_rate_index;
+	bit(9) n_presentations;
+	if (bitstream_version > 1) {
+		bit(1) b_program_id;
+		if (b_program_id) {
+			bit(16) short_program_id;
+			bit(1) b_uuid;
+			if (b_uuid) {
+				bit(8) program_uuid[16];
+			}
+		}
+	}
+	AC4BitrateDsi ac4_bitrate_dsi;
+	byte_alignment(); // byte_align, 0..7: to a byte from the start of ac4_dsi_v1
+	AC4PresentationDsi presentations[n_presentations];
 }
 // E.7.1
-
 */
 public partial class AC4SpecificBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// E.5, Pseudocode E.2: an ac4_dsi_v1() (E.6.1), to the end of the box
 aligned(8) class AC4SpecificBox extends Box('dac4') {
- bit(3) ac4_dsi_version;
- bit(7) bitstream_version;
- bit(1) fs_index;
- bit(4) frame_rate_index;
- bit(9) n_presentations;
- if (bitstream_version > 1) {
-  bit(1) b_program_id;
-  if (b_program_id) {
-   bit(16) short_program_id;
-   bit(1) b_uuid;
-   if (b_uuid) {
-    bit(8) program_uuid[16];
-   }
-  }
- }
- AC4BitrateDsi ac4_bitrate_dsi;
- byte_alignment(); // byte_align, 0..7: to a byte from the start of ac4_dsi_v1
- AC4PresentationDsi presentations[n_presentations];
+	bit(3) ac4_dsi_version;
+	bit(7) bitstream_version;
+	bit(1) fs_index;
+	bit(4) frame_rate_index;
+	bit(9) n_presentations;
+	if (bitstream_version > 1) {
+		bit(1) b_program_id;
+		if (b_program_id) {
+			bit(16) short_program_id;
+			bit(1) b_uuid;
+			if (b_uuid) {
+				bit(8) program_uuid[16];
+			}
+		}
+	}
+	AC4BitrateDsi ac4_bitrate_dsi;
+	byte_alignment(); // byte_align, 0..7: to a byte from the start of ac4_dsi_v1
+	AC4PresentationDsi presentations[n_presentations];
 }
-// E.7.1
-"; } }
+// E.7.1"; } }
 	public const string TYPE = "dac4";
 	public override string DisplayName { get { return "AC4SpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

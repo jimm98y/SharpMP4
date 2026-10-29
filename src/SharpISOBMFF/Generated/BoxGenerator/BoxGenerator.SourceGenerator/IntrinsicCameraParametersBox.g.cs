@@ -6,46 +6,46 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class IntrinsicCameraParametersBox extends FullBox ('icam', version=0, flags) { 
- unsigned int(6)  
- reserved=0;  
- unsigned int(10)  ref_view_id; 
- unsigned int(32) prec_focal_length; 
- unsigned int(32) prec_principal_point; 
- unsigned int(32) prec_skew_factor; 
- unsigned int(8) exponent_focal_length_x; 
- signed   int(64) mantissa_focal_length_x; 
- unsigned int(8) exponent_focal_length_y; 
- signed   int(64) mantissa_focal_length_y;  
- unsigned int(8) exponent_principal_point_x; 
- signed   int(64) mantissa_principal_point_x; 
- unsigned int(8) exponent_principal_point_y; 
- signed   int(64) mantissa_principal_point_y; 
- unsigned int(8) exponent_skew_factor; 
- signed   int(64) mantissa_skew_factor; 
-} 
+class IntrinsicCameraParametersBox extends FullBox ('icam', version=0, flags) {
+	unsigned int(6)
+	reserved=0;
+	unsigned int(10)  ref_view_id;
+	unsigned int(32) prec_focal_length;
+	unsigned int(32) prec_principal_point;
+	unsigned int(32) prec_skew_factor;
+	unsigned int(8) exponent_focal_length_x;
+	signed   int(64) mantissa_focal_length_x;
+	unsigned int(8) exponent_focal_length_y;
+	signed   int(64) mantissa_focal_length_y;
+	unsigned int(8) exponent_principal_point_x;
+	signed   int(64) mantissa_principal_point_x;
+	unsigned int(8) exponent_principal_point_y;
+	signed   int(64) mantissa_principal_point_y;
+	unsigned int(8) exponent_skew_factor;
+	signed   int(64) mantissa_skew_factor;
+}
 */
 public partial class IntrinsicCameraParametersBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"class IntrinsicCameraParametersBox extends FullBox ('icam', version=0, flags) { 
- unsigned int(6)  
- reserved=0;  
- unsigned int(10)  ref_view_id; 
- unsigned int(32) prec_focal_length; 
- unsigned int(32) prec_principal_point; 
- unsigned int(32) prec_skew_factor; 
- unsigned int(8) exponent_focal_length_x; 
- signed   int(64) mantissa_focal_length_x; 
- unsigned int(8) exponent_focal_length_y; 
- signed   int(64) mantissa_focal_length_y;  
- unsigned int(8) exponent_principal_point_x; 
- signed   int(64) mantissa_principal_point_x; 
- unsigned int(8) exponent_principal_point_y; 
- signed   int(64) mantissa_principal_point_y; 
- unsigned int(8) exponent_skew_factor; 
- signed   int(64) mantissa_skew_factor; 
-} "; } }
+	public override string Syntax { get { return @"class IntrinsicCameraParametersBox extends FullBox ('icam', version=0, flags) {
+	unsigned int(6)
+	reserved=0;
+	unsigned int(10)  ref_view_id;
+	unsigned int(32) prec_focal_length;
+	unsigned int(32) prec_principal_point;
+	unsigned int(32) prec_skew_factor;
+	unsigned int(8) exponent_focal_length_x;
+	signed   int(64) mantissa_focal_length_x;
+	unsigned int(8) exponent_focal_length_y;
+	signed   int(64) mantissa_focal_length_y;
+	unsigned int(8) exponent_principal_point_x;
+	signed   int(64) mantissa_principal_point_x;
+	unsigned int(8) exponent_principal_point_y;
+	signed   int(64) mantissa_principal_point_y;
+	unsigned int(8) exponent_skew_factor;
+	signed   int(64) mantissa_skew_factor;
+}"; } }
 	public const string TYPE = "icam";
 	public override string DisplayName { get { return "IntrinsicCameraParametersBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

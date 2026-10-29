@@ -6,32 +6,32 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class MVCDecoderConfigurationRecord { 
-unsigned int(8) configurationVersion = 1; 
-unsigned int(8) AVCProfileIndication; 
-unsigned int(8) profile_compatibility; 
-unsigned int(8) AVCLevelIndication;  
- bit(1) complete_representation; 
- bit(1) explicit_au_track; 
-bit(4) reserved = '1111'b; 
-unsigned int(2) lengthSizeMinusOne;  
-bit(1) avcc_layout; // '0'b reserved since the 2014 edition; before it, the first of avcC's '111'b 
-if (avcc_layout) { 
-  bit(2) reserved = '11'b; 
-  unsigned int(5) numOfSequenceParameterSets; 
-} 
-else { 
-  unsigned int(7) numOfSequenceParameterSets; 
-} 
-for (i=0; i< numOfSequenceParameterSets; i++) { 
-unsigned int(16) sequenceParameterSetLength ; 
-  bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; 
- } 
-unsigned int(8) numOfPictureParameterSets; 
-for (i=0; i< numOfPictureParameterSets; i++) { 
-  unsigned int(16) pictureParameterSetLength; 
-  bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; 
- } 
+aligned(8) class MVCDecoderConfigurationRecord {
+	unsigned int(8) configurationVersion = 1;
+	unsigned int(8) AVCProfileIndication;
+	unsigned int(8) profile_compatibility;
+	unsigned int(8) AVCLevelIndication;
+	bit(1) complete_representation;
+	bit(1) explicit_au_track;
+	bit(4) reserved = '1111'b;
+	unsigned int(2) lengthSizeMinusOne;
+	bit(1) avcc_layout; // '0'b reserved since the 2014 edition; before it, the first of avcC's '111'b
+	if (avcc_layout) {
+		bit(2) reserved = '11'b;
+		unsigned int(5) numOfSequenceParameterSets;
+	}
+	else {
+		unsigned int(7) numOfSequenceParameterSets;
+	}
+	for (i=0; i< numOfSequenceParameterSets; i++) {
+		unsigned int(16) sequenceParameterSetLength ;
+		bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit;
+	}
+	unsigned int(8) numOfPictureParameterSets;
+	for (i=0; i< numOfPictureParameterSets; i++) {
+		unsigned int(16) pictureParameterSetLength;
+		bit(8*pictureParameterSetLength) pictureParameterSetNALUnit;
+	}
 }
 */
 public partial class MVCDecoderConfigurationRecord : IMp4Serializable
@@ -42,32 +42,32 @@ public partial class MVCDecoderConfigurationRecord : IMp4Serializable
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public virtual string Syntax { get { return @"aligned(8) class MVCDecoderConfigurationRecord { 
-unsigned int(8) configurationVersion = 1; 
-unsigned int(8) AVCProfileIndication; 
-unsigned int(8) profile_compatibility; 
-unsigned int(8) AVCLevelIndication;  
- bit(1) complete_representation; 
- bit(1) explicit_au_track; 
-bit(4) reserved = '1111'b; 
-unsigned int(2) lengthSizeMinusOne;  
-bit(1) avcc_layout; // '0'b reserved since the 2014 edition; before it, the first of avcC's '111'b 
-if (avcc_layout) { 
-  bit(2) reserved = '11'b; 
-  unsigned int(5) numOfSequenceParameterSets; 
-} 
-else { 
-  unsigned int(7) numOfSequenceParameterSets; 
-} 
-for (i=0; i< numOfSequenceParameterSets; i++) { 
-unsigned int(16) sequenceParameterSetLength ; 
-  bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; 
- } 
-unsigned int(8) numOfPictureParameterSets; 
-for (i=0; i< numOfPictureParameterSets; i++) { 
-  unsigned int(16) pictureParameterSetLength; 
-  bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; 
- } 
+	public virtual string Syntax { get { return @"aligned(8) class MVCDecoderConfigurationRecord {
+	unsigned int(8) configurationVersion = 1;
+	unsigned int(8) AVCProfileIndication;
+	unsigned int(8) profile_compatibility;
+	unsigned int(8) AVCLevelIndication;
+	bit(1) complete_representation;
+	bit(1) explicit_au_track;
+	bit(4) reserved = '1111'b;
+	unsigned int(2) lengthSizeMinusOne;
+	bit(1) avcc_layout; // '0'b reserved since the 2014 edition; before it, the first of avcC's '111'b
+	if (avcc_layout) {
+		bit(2) reserved = '11'b;
+		unsigned int(5) numOfSequenceParameterSets;
+	}
+	else {
+		unsigned int(7) numOfSequenceParameterSets;
+	}
+	for (i=0; i< numOfSequenceParameterSets; i++) {
+		unsigned int(16) sequenceParameterSetLength ;
+		bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit;
+	}
+	unsigned int(8) numOfPictureParameterSets;
+	for (i=0; i< numOfPictureParameterSets; i++) {
+		unsigned int(16) pictureParameterSetLength;
+		bit(8*pictureParameterSetLength) pictureParameterSetNALUnit;
+	}
 }"; } }
 	public virtual string DisplayName { get { return "MVCDecoderConfigurationRecord"; } }
 
@@ -95,7 +95,7 @@ for (i=0; i< numOfPictureParameterSets; i++) {
 	protected byte lengthSizeMinusOne; 
 	public byte LengthSizeMinusOne { get { return this.lengthSizeMinusOne; } set { this.lengthSizeMinusOne = value; } }
 
-	protected bool avcc_layout;  //  '0'b reserved since the 2014 edition; before it, the first of avcC's '111'b 
+	protected bool avcc_layout;  //  '0'b reserved since the 2014 edition; before it, the first of avcC's '111'b
 	public bool AvccLayout { get { return this.avcc_layout; } set { this.avcc_layout = value; } }
 
 	protected byte reserved0 = 0b11; 
@@ -134,7 +134,7 @@ for (i=0; i< numOfPictureParameterSets; i++) {
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.explicit_au_track, "explicit_au_track"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.reserved, "reserved"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 2,  out this.lengthSizeMinusOne, "lengthSizeMinusOne"); 
-		boxSize += stream.ReadBit(boxSize, readSize,  out this.avcc_layout, "avcc_layout"); // '0'b reserved since the 2014 edition; before it, the first of avcC's '111'b 
+		boxSize += stream.ReadBit(boxSize, readSize,  out this.avcc_layout, "avcc_layout"); // '0'b reserved since the 2014 edition; before it, the first of avcC's '111'b
 
 		if (avcc_layout)
 		{
@@ -177,7 +177,7 @@ for (i=0; i< numOfPictureParameterSets; i++) {
 		boxSize += stream.WriteBit( this.explicit_au_track, "explicit_au_track"); 
 		boxSize += stream.WriteBits(4,  this.reserved, "reserved"); 
 		boxSize += stream.WriteBits(2,  this.lengthSizeMinusOne, "lengthSizeMinusOne"); 
-		boxSize += stream.WriteBit( this.avcc_layout, "avcc_layout"); // '0'b reserved since the 2014 edition; before it, the first of avcC's '111'b 
+		boxSize += stream.WriteBit( this.avcc_layout, "avcc_layout"); // '0'b reserved since the 2014 edition; before it, the first of avcC's '111'b
 
 		if (avcc_layout)
 		{
@@ -255,7 +255,7 @@ for (i=0; i< numOfPictureParameterSets; i++) {
 		boxSize += tracer.Field("explicit_au_track", 1, this.explicit_au_track); 
 		boxSize += tracer.Field("reserved", 4, this.reserved); 
 		boxSize += tracer.Field("lengthSizeMinusOne", 2, this.lengthSizeMinusOne); 
-		boxSize += tracer.Field("avcc_layout", 1, this.avcc_layout); // '0'b reserved since the 2014 edition; before it, the first of avcC's '111'b 
+		boxSize += tracer.Field("avcc_layout", 1, this.avcc_layout); // '0'b reserved since the 2014 edition; before it, the first of avcC's '111'b
 
 		if (avcc_layout)
 		{

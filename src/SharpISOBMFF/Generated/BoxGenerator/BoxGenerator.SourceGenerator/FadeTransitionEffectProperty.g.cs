@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 class FadeTransitionEffectProperty
-extends ItemFullProperty('fade', version=0, flags=0) {
+	extends ItemFullProperty('fade', version=0, flags=0) {
 	unsigned int(8) transition_direction;
 }
 */
@@ -15,7 +15,7 @@ public partial class FadeTransitionEffectProperty : ItemFullProperty
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class FadeTransitionEffectProperty
-extends ItemFullProperty('fade', version=0, flags=0) {
+	extends ItemFullProperty('fade', version=0, flags=0) {
 	unsigned int(8) transition_direction;
 }"; } }
 	public const string TYPE = "fade";

@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ImageScaling
-extends ItemFullProperty('iscl', version = 0, flags = 0) {
+	extends ItemFullProperty('iscl', version = 0, flags = 0) {
 	unsigned int(16) target_width_numerator;
 	unsigned int(16) target_width_denominator;
 	unsigned int(16) target_height_numerator;
@@ -18,7 +18,7 @@ public partial class ImageScaling : ItemFullProperty
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class ImageScaling
-extends ItemFullProperty('iscl', version = 0, flags = 0) {
+	extends ItemFullProperty('iscl', version = 0, flags = 0) {
 	unsigned int(16) target_width_numerator;
 	unsigned int(16) target_width_denominator;
 	unsigned int(16) target_height_numerator;

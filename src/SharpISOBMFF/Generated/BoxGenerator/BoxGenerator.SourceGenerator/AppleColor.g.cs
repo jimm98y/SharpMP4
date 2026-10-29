@@ -7,12 +7,11 @@ namespace SharpISOBMFF
 {
 /*
 class AppleColor() {
-unsigned int(16) alpha;
- unsigned int(16) red;
- unsigned int(16) green;
- unsigned int(16) blue;
- }
-
+	unsigned int(16) alpha;
+	unsigned int(16) red;
+	unsigned int(16) green;
+	unsigned int(16) blue;
+}
 */
 public partial class AppleColor : IMp4Serializable
 {
@@ -23,12 +22,11 @@ public partial class AppleColor : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class AppleColor() {
-unsigned int(16) alpha;
- unsigned int(16) red;
- unsigned int(16) green;
- unsigned int(16) blue;
- }
-"; } }
+	unsigned int(16) alpha;
+	unsigned int(16) red;
+	unsigned int(16) green;
+	unsigned int(16) blue;
+}"; } }
 	public virtual string DisplayName { get { return "AppleColor"; } }
 
 	protected ushort alpha; 

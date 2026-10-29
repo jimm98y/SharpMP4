@@ -7,37 +7,37 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class PspVprfBox() extends Box('VPRF') {
-	 unsigned int(32) unknown1;
- unsigned int(32) unknown2;
- unsigned int(32) codec;
- unsigned int(32) unknown3;
- unsigned int(32) unknown4;
- unsigned int(32) maxBitrate;
- unsigned int(32) avgBitrate;
- unsigned int(32) frameRate1;
- unsigned int(32) frameRate2;
- unsigned int(16) width;
- unsigned int(16) height;
- unsigned int(32) unknown5;
- }
+	unsigned int(32) unknown1;
+	unsigned int(32) unknown2;
+	unsigned int(32) codec;
+	unsigned int(32) unknown3;
+	unsigned int(32) unknown4;
+	unsigned int(32) maxBitrate;
+	unsigned int(32) avgBitrate;
+	unsigned int(32) frameRate1;
+	unsigned int(32) frameRate2;
+	unsigned int(16) width;
+	unsigned int(16) height;
+	unsigned int(32) unknown5;
+}
 */
 public partial class PspVprfBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class PspVprfBox() extends Box('VPRF') {
-	 unsigned int(32) unknown1;
- unsigned int(32) unknown2;
- unsigned int(32) codec;
- unsigned int(32) unknown3;
- unsigned int(32) unknown4;
- unsigned int(32) maxBitrate;
- unsigned int(32) avgBitrate;
- unsigned int(32) frameRate1;
- unsigned int(32) frameRate2;
- unsigned int(16) width;
- unsigned int(16) height;
- unsigned int(32) unknown5;
- }"; } }
+	unsigned int(32) unknown1;
+	unsigned int(32) unknown2;
+	unsigned int(32) codec;
+	unsigned int(32) unknown3;
+	unsigned int(32) unknown4;
+	unsigned int(32) maxBitrate;
+	unsigned int(32) avgBitrate;
+	unsigned int(32) frameRate1;
+	unsigned int(32) frameRate2;
+	unsigned int(16) width;
+	unsigned int(16) height;
+	unsigned int(32) unknown5;
+}"; } }
 	public const string TYPE = "VPRF";
 	public override string DisplayName { get { return "PspVprfBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

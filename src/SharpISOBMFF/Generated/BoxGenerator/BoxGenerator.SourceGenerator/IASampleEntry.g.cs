@@ -8,7 +8,7 @@ namespace SharpISOBMFF
 /*
 // 6.2.3
 class IASampleEntry extends AudioSampleEntry('iamf') {
- IAConfigurationBox ia_configuration_box;
+	IAConfigurationBox ia_configuration_box;
 }
 */
 public partial class IASampleEntry : AudioSampleEntry
@@ -16,7 +16,7 @@ public partial class IASampleEntry : AudioSampleEntry
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// 6.2.3
 class IASampleEntry extends AudioSampleEntry('iamf') {
- IAConfigurationBox ia_configuration_box;
+	IAConfigurationBox ia_configuration_box;
 }"; } }
 	public const string TYPE = "iamf";
 	public override string DisplayName { get { return "IASampleEntry"; } }

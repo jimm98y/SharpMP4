@@ -6,29 +6,29 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class PiffSampleEncryptionBox() extends FullBox('uuid a2394f525a9b4f14a2446c427c648df4', version, flags) 
+aligned(8) class PiffSampleEncryptionBox() extends FullBox('uuid a2394f525a9b4f14a2446c427c648df4', version, flags)
 {
- if(flags & 0x1) {
- unsigned int(24) algorithmID;
- unsigned int(8) Per_Sample_IV_Size;
- unsigned int(8) kid[16];
- }
-  unsigned int(32)  sample_count;
-   unsigned int(8) sample_data[]; // each sample's IV and subsamples, the IV of the size above where the flags give one, else of the track's
+	if(flags & 0x1) {
+		unsigned int(24) algorithmID;
+		unsigned int(8) Per_Sample_IV_Size;
+		unsigned int(8) kid[16];
+	}
+	unsigned int(32)  sample_count;
+	unsigned int(8) sample_data[]; // each sample's IV and subsamples, the IV of the size above where the flags give one, else of the track's
 }
 */
 public partial class PiffSampleEncryptionBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class PiffSampleEncryptionBox() extends FullBox('uuid a2394f525a9b4f14a2446c427c648df4', version, flags) 
+	public override string Syntax { get { return @"aligned(8) class PiffSampleEncryptionBox() extends FullBox('uuid a2394f525a9b4f14a2446c427c648df4', version, flags)
 {
- if(flags & 0x1) {
- unsigned int(24) algorithmID;
- unsigned int(8) Per_Sample_IV_Size;
- unsigned int(8) kid[16];
- }
-  unsigned int(32)  sample_count;
-   unsigned int(8) sample_data[]; // each sample's IV and subsamples, the IV of the size above where the flags give one, else of the track's
+	if(flags & 0x1) {
+		unsigned int(24) algorithmID;
+		unsigned int(8) Per_Sample_IV_Size;
+		unsigned int(8) kid[16];
+	}
+	unsigned int(32)  sample_count;
+	unsigned int(8) sample_data[]; // each sample's IV and subsamples, the IV of the size above where the flags give one, else of the track's
 }"; } }
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "PiffSampleEncryptionBox"; } }

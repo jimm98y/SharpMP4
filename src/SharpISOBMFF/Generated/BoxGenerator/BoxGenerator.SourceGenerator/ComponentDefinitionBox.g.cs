@@ -8,28 +8,28 @@ namespace SharpISOBMFF
 /*
 // ISO/IEC 23001-17 component definition: what each component is - of a type of 0x8000 or more, of a URI
 aligned(8) class ComponentDefinitionBox() extends Box('cmpd') {
-	 unsigned int(32) component_count;
- for (i = 0; i < component_count; i++) {
- unsigned int(16) component_type;
- if (component_type >= 0x8000) {
- utf8string component_type_uri;
- }
- }
- } 
+	unsigned int(32) component_count;
+	for (i = 0; i < component_count; i++) {
+		unsigned int(16) component_type;
+		if (component_type >= 0x8000) {
+			utf8string component_type_uri;
+		}
+	}
+}
 */
 public partial class ComponentDefinitionBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// ISO/IEC 23001-17 component definition: what each component is - of a type of 0x8000 or more, of a URI
 aligned(8) class ComponentDefinitionBox() extends Box('cmpd') {
-	 unsigned int(32) component_count;
- for (i = 0; i < component_count; i++) {
- unsigned int(16) component_type;
- if (component_type >= 0x8000) {
- utf8string component_type_uri;
- }
- }
- } "; } }
+	unsigned int(32) component_count;
+	for (i = 0; i < component_count; i++) {
+		unsigned int(16) component_type;
+		if (component_type >= 0x8000) {
+			utf8string component_type_uri;
+		}
+	}
+}"; } }
 	public const string TYPE = "cmpd";
 	public override string DisplayName { get { return "ComponentDefinitionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

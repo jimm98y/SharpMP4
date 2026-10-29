@@ -7,29 +7,29 @@ namespace SharpISOBMFF
 {
 /*
 class IPMP_Descriptor() extends BaseDescriptor : bit(8) tag=IPMP_DescrTag {
- bit(8) IPMP_DescriptorID;
- unsigned int(16)
- IPMPS_Type;
- if (IPMPS_Type == 0) {
- bit(8) URLString[sizeOfInstance-3];
- } else {
- bit(8) IPMP_data[sizeOfInstance-3];
- }
- }
+	bit(8) IPMP_DescriptorID;
+	unsigned int(16)
+	IPMPS_Type;
+	if (IPMPS_Type == 0) {
+		bit(8) URLString[sizeOfInstance-3];
+	} else {
+		bit(8) IPMP_data[sizeOfInstance-3];
+	}
+}
 */
 public partial class IPMP_Descriptor : BaseDescriptor
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class IPMP_Descriptor() extends BaseDescriptor : bit(8) tag=IPMP_DescrTag {
- bit(8) IPMP_DescriptorID;
- unsigned int(16)
- IPMPS_Type;
- if (IPMPS_Type == 0) {
- bit(8) URLString[sizeOfInstance-3];
- } else {
- bit(8) IPMP_data[sizeOfInstance-3];
- }
- }"; } }
+	bit(8) IPMP_DescriptorID;
+	unsigned int(16)
+	IPMPS_Type;
+	if (IPMPS_Type == 0) {
+		bit(8) URLString[sizeOfInstance-3];
+	} else {
+		bit(8) IPMP_data[sizeOfInstance-3];
+	}
+}"; } }
 	public const byte TYPE = DescriptorTags.IPMP_DescrTag;
 	public override string DisplayName { get { return "IPMP_Descriptor"; } }
 

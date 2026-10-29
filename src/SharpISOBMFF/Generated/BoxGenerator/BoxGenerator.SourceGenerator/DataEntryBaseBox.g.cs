@@ -6,18 +6,18 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class DataEntryBaseBox(entry_type, bit(24) flags) 
-extends FullBox(entry_type, version = 0, flags) { 
+aligned(8) class DataEntryBaseBox(entry_type, bit(24) flags)
+	extends FullBox(entry_type, version = 0, flags) {
 
-} 
+}
 */
 public partial class DataEntryBaseBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class DataEntryBaseBox(entry_type, bit(24) flags) 
-extends FullBox(entry_type, version = 0, flags) { 
+	public override string Syntax { get { return @"aligned(8) class DataEntryBaseBox(entry_type, bit(24) flags)
+	extends FullBox(entry_type, version = 0, flags) {
 
-} "; } }
+}"; } }
 	public override string DisplayName { get { return "DataEntryBaseBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }

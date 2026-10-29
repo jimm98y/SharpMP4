@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 class AmbientViewingEnvironmentBox extends Box('amve'){
-	unsigned int(32) ambient_illuminance; 
+	unsigned int(32) ambient_illuminance;
 	unsigned int(16) ambient_light_x;
 	unsigned int(16) ambient_light_y;
 }
@@ -16,7 +16,7 @@ public partial class AmbientViewingEnvironmentBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AmbientViewingEnvironmentBox extends Box('amve'){
-	unsigned int(32) ambient_illuminance; 
+	unsigned int(32) ambient_illuminance;
 	unsigned int(16) ambient_light_x;
 	unsigned int(16) ambient_light_y;
 }"; } }

@@ -8,18 +8,18 @@ namespace SharpISOBMFF
 /*
 // A box compressed with Brotli: the type of the box it is, then that box's content, compressed
 aligned(8) class BrotliCompressedBox extends Box('brob') {
- unsigned int(32) box_type;
- bit(8) data[];
- }
+	unsigned int(32) box_type;
+	bit(8) data[];
+}
 */
 public partial class BrotliCompressedBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// A box compressed with Brotli: the type of the box it is, then that box's content, compressed
 aligned(8) class BrotliCompressedBox extends Box('brob') {
- unsigned int(32) box_type;
- bit(8) data[];
- }"; } }
+	unsigned int(32) box_type;
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "brob";
 	public override string DisplayName { get { return "BrotliCompressedBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

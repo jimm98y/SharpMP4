@@ -6,22 +6,18 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-abstract class SubtitleSampleGroupEntry (unsigned int(32) grouping_type) extends 
-SampleGroupDescriptionEntry (grouping_type) 
-{ 
-} 
-
-
+abstract class SubtitleSampleGroupEntry (unsigned int(32) grouping_type) extends
+	SampleGroupDescriptionEntry (grouping_type)
+{
+}
 */
 public abstract partial class SubtitleSampleGroupEntry : SampleGroupDescriptionEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"abstract class SubtitleSampleGroupEntry (unsigned int(32) grouping_type) extends 
-SampleGroupDescriptionEntry (grouping_type) 
-{ 
-} 
-
-"; } }
+	public override string Syntax { get { return @"abstract class SubtitleSampleGroupEntry (unsigned int(32) grouping_type) extends
+	SampleGroupDescriptionEntry (grouping_type)
+{
+}"; } }
 	public override string DisplayName { get { return "SubtitleSampleGroupEntry"; } }
 
 	public SubtitleSampleGroupEntry(uint grouping_type): base(grouping_type)

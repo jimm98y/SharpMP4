@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class GammaBox() extends Box ('gama'){
- unsigned int(32) gamma;
- }
+	unsigned int(32) gamma;
+}
 */
 public partial class GammaBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class GammaBox() extends Box ('gama'){
- unsigned int(32) gamma;
- }"; } }
+	unsigned int(32) gamma;
+}"; } }
 	public const string TYPE = "gama";
 	public override string DisplayName { get { return "GammaBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

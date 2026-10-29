@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AdzmBox() extends Box('adzm') {
- MultiLanguageString value[];
+	MultiLanguageString value[];
 }
-
 */
 public partial class AdzmBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AdzmBox() extends Box('adzm') {
- MultiLanguageString value[];
-}
-"; } }
+	MultiLanguageString value[];
+}"; } }
 	public const string TYPE = "adzm";
 	public override string DisplayName { get { return "AdzmBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

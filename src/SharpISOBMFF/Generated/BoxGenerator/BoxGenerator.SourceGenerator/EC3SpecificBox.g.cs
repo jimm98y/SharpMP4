@@ -7,21 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class EC3SpecificBox() extends Box('dec3') {
- bit(13) dataRate;
- bit(3) numIndSub;
- EC3SpecificEntry entries[numIndSub + 1];
- }
- 
+	bit(13) dataRate;
+	bit(3) numIndSub;
+	EC3SpecificEntry entries[numIndSub + 1];
+}
 */
 public partial class EC3SpecificBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class EC3SpecificBox() extends Box('dec3') {
- bit(13) dataRate;
- bit(3) numIndSub;
- EC3SpecificEntry entries[numIndSub + 1];
- }
- "; } }
+	bit(13) dataRate;
+	bit(3) numIndSub;
+	EC3SpecificEntry entries[numIndSub + 1];
+}"; } }
 	public const string TYPE = "dec3";
 	public override string DisplayName { get { return "EC3SpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

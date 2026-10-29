@@ -27,7 +27,6 @@ class VisualSampleEntry(codingname) extends SampleEntry (codingname){
 	CleanApertureBox			clap;		// optional
 	PixelAspectRatioBox		pasp;		// optional
 }
-
 */
 public partial class VisualSampleEntry : SampleEntry
 {
@@ -52,8 +51,7 @@ public partial class VisualSampleEntry : SampleEntry
 	// other boxes from derived specifications
 	CleanApertureBox			clap;		// optional
 	PixelAspectRatioBox		pasp;		// optional
-}
-"; } }
+}"; } }
 	public override string DisplayName { get { return "VisualSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "stsd" }); }

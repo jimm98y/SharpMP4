@@ -7,17 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ContentLightLevelBox() extends FullBox('CoLL') {
- unsigned int(16) maxCLL;
- unsigned int(16) maxFALL;
- } 
+	unsigned int(16) maxCLL;
+	unsigned int(16) maxFALL;
+}
 */
 public partial class ContentLightLevelBoxCoLLDup : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class ContentLightLevelBox() extends FullBox('CoLL') {
- unsigned int(16) maxCLL;
- unsigned int(16) maxFALL;
- } "; } }
+	unsigned int(16) maxCLL;
+	unsigned int(16) maxFALL;
+}"; } }
 	public const string TYPE = "CoLL";
 	public override string DisplayName { get { return "ContentLightLevelBoxCoLLDup"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,17 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 class TranscriptBox() extends Box ('scpt'){
- // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to
- unsigned int(32) track_IDs[];
- }
+	// a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to
+	unsigned int(32) track_IDs[];
+}
 */
 public partial class TranscriptBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class TranscriptBox() extends Box ('scpt'){
- // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to
- unsigned int(32) track_IDs[];
- }"; } }
+	// a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to
+	unsigned int(32) track_IDs[];
+}"; } }
 	public const string TYPE = "scpt";
 	public override string DisplayName { get { return "TranscriptBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

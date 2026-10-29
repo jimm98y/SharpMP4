@@ -7,45 +7,45 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class DTSSpecificBox() extends Box('ddts') {
- unsigned int(32) dtsSamplingFrequency;
- unsigned int(32) maxBitRate;
- unsigned int(32) avgBitRate;
- unsigned int(8) pcmSampleDepth;
- bit(2) frameDuration;
- bit(5) streamConstruction;
- bit(1) coreLFEPresent;
- bit(6) coreLayout;
- bit(14) coreSize;
- bit(1) stereoDownmix;
- bit(3) representationType;
- bit(16) channelLayout;
- bit(1) multiAssetFlag;
- bit(1) lbrDurationMod;
- bit(1) reservedBoxPresent;
- bit(5) reserved;
- } 
+	unsigned int(32) dtsSamplingFrequency;
+	unsigned int(32) maxBitRate;
+	unsigned int(32) avgBitRate;
+	unsigned int(8) pcmSampleDepth;
+	bit(2) frameDuration;
+	bit(5) streamConstruction;
+	bit(1) coreLFEPresent;
+	bit(6) coreLayout;
+	bit(14) coreSize;
+	bit(1) stereoDownmix;
+	bit(3) representationType;
+	bit(16) channelLayout;
+	bit(1) multiAssetFlag;
+	bit(1) lbrDurationMod;
+	bit(1) reservedBoxPresent;
+	bit(5) reserved;
+}
 */
 public partial class DTSSpecificBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class DTSSpecificBox() extends Box('ddts') {
- unsigned int(32) dtsSamplingFrequency;
- unsigned int(32) maxBitRate;
- unsigned int(32) avgBitRate;
- unsigned int(8) pcmSampleDepth;
- bit(2) frameDuration;
- bit(5) streamConstruction;
- bit(1) coreLFEPresent;
- bit(6) coreLayout;
- bit(14) coreSize;
- bit(1) stereoDownmix;
- bit(3) representationType;
- bit(16) channelLayout;
- bit(1) multiAssetFlag;
- bit(1) lbrDurationMod;
- bit(1) reservedBoxPresent;
- bit(5) reserved;
- } "; } }
+	unsigned int(32) dtsSamplingFrequency;
+	unsigned int(32) maxBitRate;
+	unsigned int(32) avgBitRate;
+	unsigned int(8) pcmSampleDepth;
+	bit(2) frameDuration;
+	bit(5) streamConstruction;
+	bit(1) coreLFEPresent;
+	bit(6) coreLayout;
+	bit(14) coreSize;
+	bit(1) stereoDownmix;
+	bit(3) representationType;
+	bit(16) channelLayout;
+	bit(1) multiAssetFlag;
+	bit(1) lbrDurationMod;
+	bit(1) reservedBoxPresent;
+	bit(5) reserved;
+}"; } }
 	public const string TYPE = "ddts";
 	public override string DisplayName { get { return "DTSSpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

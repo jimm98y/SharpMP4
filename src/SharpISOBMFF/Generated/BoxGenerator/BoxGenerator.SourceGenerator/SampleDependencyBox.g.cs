@@ -6,7 +6,7 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class SampleDependencyBox 
+aligned(8) class SampleDependencyBox
 	extends FullBox('sdep', version = 0, 0) {
 	for (i=0; i < sample_count; i++){
 		unsigned int(16) dependency_count;
@@ -19,7 +19,7 @@ aligned(8) class SampleDependencyBox
 public partial class SampleDependencyBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class SampleDependencyBox 
+	public override string Syntax { get { return @"aligned(8) class SampleDependencyBox
 	extends FullBox('sdep', version = 0, 0) {
 	for (i=0; i < sample_count; i++){
 		unsigned int(16) dependency_count;

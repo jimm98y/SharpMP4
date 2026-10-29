@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class MovieFragmentRandomAccessOffsetBox
- extends FullBox('mfro', version, 0) {
+	extends FullBox('mfro', version, 0) {
 	unsigned int(32)	parent_size;
 }
 */
@@ -15,7 +15,7 @@ public partial class MovieFragmentRandomAccessOffsetBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class MovieFragmentRandomAccessOffsetBox
- extends FullBox('mfro', version, 0) {
+	extends FullBox('mfro', version, 0) {
 	unsigned int(32)	parent_size;
 }"; } }
 	public const string TYPE = "mfro";

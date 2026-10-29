@@ -22,11 +22,11 @@ aligned(8) class VvcPTLRecord(num_sublayers) {
 	for (i=num_sublayers-2; i >= 0; i--) {
 		if (ptl_sublayer_level_present_flag[i])
 			unsigned int(8) sublayer_level_idc[i];
-		}
+	}
 	unsigned int(8) ptl_num_sub_profiles;
 	for (j=0; j < ptl_num_sub_profiles; j++)
 		unsigned int(32) general_sub_profile_idc[j];
-} 
+}
 */
 public partial class VvcPTLRecord : IMp4Serializable
 {
@@ -52,11 +52,11 @@ public partial class VvcPTLRecord : IMp4Serializable
 	for (i=num_sublayers-2; i >= 0; i--) {
 		if (ptl_sublayer_level_present_flag[i])
 			unsigned int(8) sublayer_level_idc[i];
-		}
+	}
 	unsigned int(8) ptl_num_sub_profiles;
 	for (j=0; j < ptl_num_sub_profiles; j++)
 		unsigned int(32) general_sub_profile_idc[j];
-} "; } }
+}"; } }
 	public virtual string DisplayName { get { return "VvcPTLRecord"; } }
 
 	protected byte reserved = 0; 

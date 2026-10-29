@@ -7,21 +7,21 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class LoadBox() extends Box('load') {
- signed int(32) preloadStartTime;
- signed int(32) preloadDuration;
- unsigned int(32) preloadFlags;
- unsigned int(32) defaultHints;
- } 
+	signed int(32) preloadStartTime;
+	signed int(32) preloadDuration;
+	unsigned int(32) preloadFlags;
+	unsigned int(32) defaultHints;
+}
 */
 public partial class LoadBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class LoadBox() extends Box('load') {
- signed int(32) preloadStartTime;
- signed int(32) preloadDuration;
- unsigned int(32) preloadFlags;
- unsigned int(32) defaultHints;
- } "; } }
+	signed int(32) preloadStartTime;
+	signed int(32) preloadDuration;
+	unsigned int(32) preloadFlags;
+	unsigned int(32) defaultHints;
+}"; } }
 	public const string TYPE = "load";
 	public override string DisplayName { get { return "LoadBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

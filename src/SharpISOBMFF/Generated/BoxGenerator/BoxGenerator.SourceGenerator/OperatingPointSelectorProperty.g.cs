@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class OperatingPointSelectorProperty extends ItemProperty('a1op') {
-    unsigned int(8) op_index;
+	unsigned int(8) op_index;
 }
-
 */
 public partial class OperatingPointSelectorProperty : ItemProperty
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class OperatingPointSelectorProperty extends ItemProperty('a1op') {
-    unsigned int(8) op_index;
-}
-"; } }
+	unsigned int(8) op_index;
+}"; } }
 	public const string TYPE = "a1op";
 	public override string DisplayName { get { return "OperatingPointSelectorProperty"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

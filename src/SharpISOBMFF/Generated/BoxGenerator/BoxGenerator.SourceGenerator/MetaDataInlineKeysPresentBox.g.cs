@@ -7,19 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class MetaDataInlineKeysPresentBox extends Box('keyi') {
-unsigned int(8) inlineKeyValueBoxesPresent;
+	unsigned int(8) inlineKeyValueBoxesPresent;
 }
-
-
 */
 public partial class MetaDataInlineKeysPresentBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class MetaDataInlineKeysPresentBox extends Box('keyi') {
-unsigned int(8) inlineKeyValueBoxesPresent;
-}
-
-"; } }
+	unsigned int(8) inlineKeyValueBoxesPresent;
+}"; } }
 	public const string TYPE = "keyi";
 	public override string DisplayName { get { return "MetaDataInlineKeysPresentBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

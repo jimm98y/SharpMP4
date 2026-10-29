@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ProjectionBox extends Box('proj') {
- Box boxes[];
+	Box boxes[];
 }
-
 */
 public partial class ProjectionBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class ProjectionBox extends Box('proj') {
- Box boxes[];
-}
-"; } }
+	Box boxes[];
+}"; } }
 	public const string TYPE = "proj";
 	public override string DisplayName { get { return "ProjectionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

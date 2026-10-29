@@ -8,36 +8,35 @@ namespace SharpISOBMFF
 /*
 class UsacConfig()
 {
-  uimsbf(5) usacSamplingFrequencyIndex;
-  if (usacSamplingFrequencyIndex == 0x1f) {
-    uimsbf(24) usacSamplingFrequency;
-  }
-  uimsbf(3) coreSbrFrameLengthIndex;
-  uimsbf(5) channelConfigurationIndex;
-  if (channelConfigurationIndex == 0) {
-    UsacChannelConfig() usacChannelConfig;
-  }
-  EscapedValue(4, 8, 16) numElementsMinusOne;
-  for (i = 0; i < numElementsMinusOne + 1; i++) {
-    uimsbf(2) usacElementType;
-    if (usacElementType == 0) {
-      UsacSingleChannelElementConfig(coreSbrFrameLengthIndex) usacSingleChannelElementConfig;
-    }
-    if (usacElementType == 1) {
-      UsacChannelPairElementConfig(coreSbrFrameLengthIndex) usacChannelPairElementConfig;
-    }
-    if (usacElementType == 3) {
-      UsacExtElementConfig() usacExtElementConfig;
-    }
-  }
-  bslbf(1) usacConfigExtensionPresent;
-  if (usacConfigExtensionPresent) {
-    UsacConfigExtension() usacConfigExtension;
-  }
+	uimsbf(5) usacSamplingFrequencyIndex;
+	if (usacSamplingFrequencyIndex == 0x1f) {
+		uimsbf(24) usacSamplingFrequency;
+	}
+	uimsbf(3) coreSbrFrameLengthIndex;
+	uimsbf(5) channelConfigurationIndex;
+	if (channelConfigurationIndex == 0) {
+		UsacChannelConfig() usacChannelConfig;
+	}
+	EscapedValue(4, 8, 16) numElementsMinusOne;
+	for (i = 0; i < numElementsMinusOne + 1; i++) {
+		uimsbf(2) usacElementType;
+		if (usacElementType == 0) {
+			UsacSingleChannelElementConfig(coreSbrFrameLengthIndex) usacSingleChannelElementConfig;
+		}
+		if (usacElementType == 1) {
+			UsacChannelPairElementConfig(coreSbrFrameLengthIndex) usacChannelPairElementConfig;
+		}
+		if (usacElementType == 3) {
+			UsacExtElementConfig() usacExtElementConfig;
+		}
+	}
+	bslbf(1) usacConfigExtensionPresent;
+	if (usacConfigExtensionPresent) {
+		UsacConfigExtension() usacConfigExtension;
+	}
 }
 
 // escapedValue(nBits1, nBits2, nBits3) is EscapedValue, written by hand: a number its parts add up to, of widths its arguments give
-
 */
 public partial class UsacConfig : IMp4Serializable
 {
@@ -49,36 +48,35 @@ public partial class UsacConfig : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class UsacConfig()
 {
-  uimsbf(5) usacSamplingFrequencyIndex;
-  if (usacSamplingFrequencyIndex == 0x1f) {
-    uimsbf(24) usacSamplingFrequency;
-  }
-  uimsbf(3) coreSbrFrameLengthIndex;
-  uimsbf(5) channelConfigurationIndex;
-  if (channelConfigurationIndex == 0) {
-    UsacChannelConfig() usacChannelConfig;
-  }
-  EscapedValue(4, 8, 16) numElementsMinusOne;
-  for (i = 0; i < numElementsMinusOne + 1; i++) {
-    uimsbf(2) usacElementType;
-    if (usacElementType == 0) {
-      UsacSingleChannelElementConfig(coreSbrFrameLengthIndex) usacSingleChannelElementConfig;
-    }
-    if (usacElementType == 1) {
-      UsacChannelPairElementConfig(coreSbrFrameLengthIndex) usacChannelPairElementConfig;
-    }
-    if (usacElementType == 3) {
-      UsacExtElementConfig() usacExtElementConfig;
-    }
-  }
-  bslbf(1) usacConfigExtensionPresent;
-  if (usacConfigExtensionPresent) {
-    UsacConfigExtension() usacConfigExtension;
-  }
+	uimsbf(5) usacSamplingFrequencyIndex;
+	if (usacSamplingFrequencyIndex == 0x1f) {
+		uimsbf(24) usacSamplingFrequency;
+	}
+	uimsbf(3) coreSbrFrameLengthIndex;
+	uimsbf(5) channelConfigurationIndex;
+	if (channelConfigurationIndex == 0) {
+		UsacChannelConfig() usacChannelConfig;
+	}
+	EscapedValue(4, 8, 16) numElementsMinusOne;
+	for (i = 0; i < numElementsMinusOne + 1; i++) {
+		uimsbf(2) usacElementType;
+		if (usacElementType == 0) {
+			UsacSingleChannelElementConfig(coreSbrFrameLengthIndex) usacSingleChannelElementConfig;
+		}
+		if (usacElementType == 1) {
+			UsacChannelPairElementConfig(coreSbrFrameLengthIndex) usacChannelPairElementConfig;
+		}
+		if (usacElementType == 3) {
+			UsacExtElementConfig() usacExtElementConfig;
+		}
+	}
+	bslbf(1) usacConfigExtensionPresent;
+	if (usacConfigExtensionPresent) {
+		UsacConfigExtension() usacConfigExtension;
+	}
 }
 
-// escapedValue(nBits1, nBits2, nBits3) is EscapedValue, written by hand: a number its parts add up to, of widths its arguments give
-"; } }
+// escapedValue(nBits1, nBits2, nBits3) is EscapedValue, written by hand: a number its parts add up to, of widths its arguments give"; } }
 	public virtual string DisplayName { get { return "UsacConfig"; } }
 
 	protected byte usacSamplingFrequencyIndex; 

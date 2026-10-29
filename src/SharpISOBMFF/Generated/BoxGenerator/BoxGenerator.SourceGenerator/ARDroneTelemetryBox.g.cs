@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class ARDroneTelemetryBox() extends Box ('prrt'){
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class ARDroneTelemetryBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class ARDroneTelemetryBox() extends Box ('prrt'){
- bit(8) data[];
- }"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "prrt";
 	public override string DisplayName { get { return "ARDroneTelemetryBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,17 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class IPMPControlBox() extends FullBox('ipmc') {
- Descriptor toollist;
- unsigned int(8) count; Descriptor descriptor[count];
- }
+	Descriptor toollist;
+	unsigned int(8) count;
+	Descriptor descriptor[count];
+}
 */
 public partial class IPMPControlBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class IPMPControlBox() extends FullBox('ipmc') {
- Descriptor toollist;
- unsigned int(8) count; Descriptor descriptor[count];
- }"; } }
+	Descriptor toollist;
+	unsigned int(8) count;
+	Descriptor descriptor[count];
+}"; } }
 	public const string TYPE = "ipmc";
 	public override string DisplayName { get { return "IPMPControlBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

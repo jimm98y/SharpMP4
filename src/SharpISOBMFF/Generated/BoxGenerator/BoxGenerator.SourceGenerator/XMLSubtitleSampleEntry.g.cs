@@ -6,26 +6,22 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class XMLSubtitleSampleEntry() extends SubtitleSampleEntry ('stpp') { 
- string namespace; 
- string schema_location;  // optional 
- string auxiliary_mime_types; // optional, required if auxiliary resources are present 
- BitRateBox (); 
-} 
-
-
+class XMLSubtitleSampleEntry() extends SubtitleSampleEntry ('stpp') {
+	string namespace;
+	string schema_location;  // optional
+	string auxiliary_mime_types; // optional, required if auxiliary resources are present
+	BitRateBox ();
+}
 */
 public partial class XMLSubtitleSampleEntry : SubtitleSampleEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"class XMLSubtitleSampleEntry() extends SubtitleSampleEntry ('stpp') { 
- string namespace; 
- string schema_location;  // optional 
- string auxiliary_mime_types; // optional, required if auxiliary resources are present 
- BitRateBox (); 
-} 
-
-"; } }
+	public override string Syntax { get { return @"class XMLSubtitleSampleEntry() extends SubtitleSampleEntry ('stpp') {
+	string namespace;
+	string schema_location;  // optional
+	string auxiliary_mime_types; // optional, required if auxiliary resources are present
+	BitRateBox ();
+}"; } }
 	public const string TYPE = "stpp";
 	public override string DisplayName { get { return "XMLSubtitleSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -35,12 +31,12 @@ public partial class XMLSubtitleSampleEntry : SubtitleSampleEntry
 	protected BinaryUTF8String ns; 
 	public BinaryUTF8String Ns { get { return this.ns; } set { this.ns = value; } }
 
-	protected BinaryUTF8String schema_location;  //  optional 
+	protected BinaryUTF8String schema_location;  //  optional
 	protected bool schema_locationPresent;
 	public BinaryUTF8String SchemaLocation { get { return this.schema_location; } set { this.schema_location = value; this.schema_locationPresent = true; } }
 	public bool SchemaLocationPresent { get { return this.schema_locationPresent; } set { this.schema_locationPresent = value; } }
 
-	protected BinaryUTF8String auxiliary_mime_types;  //  optional, required if auxiliary resources are present 
+	protected BinaryUTF8String auxiliary_mime_types;  //  optional, required if auxiliary resources are present
 	protected bool auxiliary_mime_typesPresent;
 	public BinaryUTF8String AuxiliaryMimeTypes { get { return this.auxiliary_mime_types; } set { this.auxiliary_mime_types = value; this.auxiliary_mime_typesPresent = true; } }
 	public bool AuxiliaryMimeTypesPresent { get { return this.auxiliary_mime_typesPresent; } set { this.auxiliary_mime_typesPresent = value; } }
@@ -55,8 +51,8 @@ public partial class XMLSubtitleSampleEntry : SubtitleSampleEntry
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.ns, "ns"); 
-		if (stream.HasStringBeforeBoxes(boxSize, readSize)) { boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.schema_location, "schema_location"); this.schema_locationPresent = true; } // optional 
-		if (stream.HasStringBeforeBoxes(boxSize, readSize)) { boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.auxiliary_mime_types, "auxiliary_mime_types"); this.auxiliary_mime_typesPresent = true; } // optional, required if auxiliary resources are present 
+		if (stream.HasStringBeforeBoxes(boxSize, readSize)) { boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.schema_location, "schema_location"); this.schema_locationPresent = true; } // optional
+		if (stream.HasStringBeforeBoxes(boxSize, readSize)) { boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.auxiliary_mime_types, "auxiliary_mime_types"); this.auxiliary_mime_typesPresent = true; } // optional, required if auxiliary resources are present
 		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox, "BitRateBox"); 
 		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
 		return boxSize;
@@ -67,8 +63,8 @@ public partial class XMLSubtitleSampleEntry : SubtitleSampleEntry
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
 		boxSize += stream.WriteStringZeroTerminated( this.ns, "ns"); 
-		if (this.schema_locationPresent) boxSize += stream.WriteStringZeroTerminated( this.schema_location, "schema_location"); // optional 
-		if (this.auxiliary_mime_typesPresent) boxSize += stream.WriteStringZeroTerminated( this.auxiliary_mime_types, "auxiliary_mime_types"); // optional, required if auxiliary resources are present 
+		if (this.schema_locationPresent) boxSize += stream.WriteStringZeroTerminated( this.schema_location, "schema_location"); // optional
+		if (this.auxiliary_mime_typesPresent) boxSize += stream.WriteStringZeroTerminated( this.auxiliary_mime_types, "auxiliary_mime_types"); // optional, required if auxiliary resources are present
 		// boxSize += stream.WriteBox( this.BitRateBox, "BitRateBox"); 
 		boxSize += stream.WriteBoxArrayTillEnd(this);
 		return boxSize;
@@ -91,8 +87,8 @@ public partial class XMLSubtitleSampleEntry : SubtitleSampleEntry
 		ulong boxSize = 0;
 		boxSize += base.Trace(tracer);
 		boxSize += tracer.Field("ns", IsoStream.CalculateStringSize(ns), this.ns); 
-		if (this.schema_locationPresent) boxSize += tracer.Field("schema_location", IsoStream.CalculateStringSize(schema_location), this.schema_location); // optional 
-		if (this.auxiliary_mime_typesPresent) boxSize += tracer.Field("auxiliary_mime_types", IsoStream.CalculateStringSize(auxiliary_mime_types), this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
+		if (this.schema_locationPresent) boxSize += tracer.Field("schema_location", IsoStream.CalculateStringSize(schema_location), this.schema_location); // optional
+		if (this.auxiliary_mime_typesPresent) boxSize += tracer.Field("auxiliary_mime_types", IsoStream.CalculateStringSize(auxiliary_mime_types), this.auxiliary_mime_types); // optional, required if auxiliary resources are present
 		// boxSize += tracer.Field("BitRateBox", IsoStream.CalculateBoxSize(BitRateBox), this.BitRateBox); 
 		boxSize += tracer.Children(this);
 		return boxSize;

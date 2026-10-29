@@ -7,19 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FullBox(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)
-extends Box(boxtype) { 
-unsigned int(8) version = v;
-bit(24) flags = f;
- }
+	extends Box(boxtype) {
+	unsigned int(8) version = v;
+	bit(24) flags = f;
+}
 */
 public partial class FullBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class FullBox(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)
-extends Box(boxtype) { 
-unsigned int(8) version = v;
-bit(24) flags = f;
- }"; } }
+	extends Box(boxtype) {
+	unsigned int(8) version = v;
+	bit(24) flags = f;
+}"; } }
 	public override string DisplayName { get { return "FullBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }

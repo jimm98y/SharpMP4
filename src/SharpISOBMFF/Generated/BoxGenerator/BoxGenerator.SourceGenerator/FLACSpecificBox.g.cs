@@ -8,18 +8,16 @@ namespace SharpISOBMFF
 /*
 // 3.3.2 FLAC Specific Box: the metadata blocks of the stream, to the end of the box
 aligned(8) class FLACSpecificBox extends FullBox('dfLa', version = 0, 0){
- FLACMetadataBlock blocks[];
- }
- 
+	FLACMetadataBlock blocks[];
+}
 */
 public partial class FLACSpecificBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// 3.3.2 FLAC Specific Box: the metadata blocks of the stream, to the end of the box
 aligned(8) class FLACSpecificBox extends FullBox('dfLa', version = 0, 0){
- FLACMetadataBlock blocks[];
- }
- "; } }
+	FLACMetadataBlock blocks[];
+}"; } }
 	public const string TYPE = "dfLa";
 	public override string DisplayName { get { return "FLACSpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

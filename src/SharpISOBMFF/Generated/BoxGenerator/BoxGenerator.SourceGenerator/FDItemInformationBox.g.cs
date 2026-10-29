@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FDItemInformationBox
-		extends FullBox('fiin', version = 0, 0) {
+	extends FullBox('fiin', version = 0, 0) {
 	unsigned int(16)	entry_count;
 	PartitionEntry		partition_entries[ entry_count ];
 	FDSessionGroupBox	session_info;			//optional
@@ -18,7 +18,7 @@ public partial class FDItemInformationBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class FDItemInformationBox
-		extends FullBox('fiin', version = 0, 0) {
+	extends FullBox('fiin', version = 0, 0) {
 	unsigned int(16)	entry_count;
 	PartitionEntry		partition_entries[ entry_count ];
 	FDSessionGroupBox	session_info;			//optional

@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FocusBracketingEntry
-extends VisualSampleGroupEntry('fobr') {
+	extends VisualSampleGroupEntry('fobr') {
 	unsigned int(16) focus_distance_numerator;
 	unsigned int(16) focus_distance_denominator;
 }
@@ -16,7 +16,7 @@ public partial class FocusBracketingEntry : VisualSampleGroupEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class FocusBracketingEntry
-extends VisualSampleGroupEntry('fobr') {
+	extends VisualSampleGroupEntry('fobr') {
 	unsigned int(16) focus_distance_numerator;
 	unsigned int(16) focus_distance_denominator;
 }"; } }

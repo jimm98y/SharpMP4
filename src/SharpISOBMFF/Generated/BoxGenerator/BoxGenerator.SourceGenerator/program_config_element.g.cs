@@ -8,53 +8,51 @@ namespace SharpISOBMFF
 /*
 class program_config_element()
 {
-  uimsbf(4) element_instance_tag;
-  uimsbf(2) object_type;
-  uimsbf(4) sampling_frequency_index;
-  uimsbf(4) num_front_channel_elements;
-  uimsbf(4) num_side_channel_elements;
-  uimsbf(4) num_back_channel_elements;
-  uimsbf(2) num_lfe_channel_elements;
-  uimsbf(3) num_assoc_data_elements;
-  uimsbf(4) num_valid_cc_elements;
-  uimsbf(1) mono_mixdown_present;
-  if (mono_mixdown_present == 1)
-    uimsbf(4) mono_mixdown_element_number;
-  uimsbf(1) stereo_mixdown_present;
-  if (stereo_mixdown_present == 1)
-    uimsbf(4) stereo_mixdown_element_number;
-  uimsbf(1) matrix_mixdown_idx_present;
-  if (matrix_mixdown_idx_present == 1) {
-    uimsbf(2) matrix_mixdown_idx;
-    uimsbf(1) pseudo_surround_enable;
-  }
-  for (i = 0; i < num_front_channel_elements; i++) {
-    bslbf(1) front_element_is_cpe[i];
-    uimsbf(4) front_element_tag_select[i];
-  }
-  for (i = 0; i < num_side_channel_elements; i++) {
-    bslbf(1) side_element_is_cpe[i];
-    uimsbf(4) side_element_tag_select[i];
-  }
-  for (i = 0; i < num_back_channel_elements; i++) {
-    bslbf(1) back_element_is_cpe[i];
-    uimsbf(4) back_element_tag_select[i];
-  }
-  for (i = 0; i < num_lfe_channel_elements; i++)
-    uimsbf(4) lfe_element_tag_select[i];
-  for (i = 0; i < num_assoc_data_elements; i++)
-    uimsbf(4) assoc_data_element_tag_select[i];
-  for (i = 0; i < num_valid_cc_elements; i++) {
-    uimsbf(1) cc_element_is_ind_sw[i];
-    uimsbf(4) valid_cc_element_tag_select[i];
-  }
-  byte_alignment();  // Note 1 
-  uimsbf(8) comment_field_bytes;
-  for (i = 0; i < comment_field_bytes; i++)
-    uimsbf(8) comment_field_data[i];
+	uimsbf(4) element_instance_tag;
+	uimsbf(2) object_type;
+	uimsbf(4) sampling_frequency_index;
+	uimsbf(4) num_front_channel_elements;
+	uimsbf(4) num_side_channel_elements;
+	uimsbf(4) num_back_channel_elements;
+	uimsbf(2) num_lfe_channel_elements;
+	uimsbf(3) num_assoc_data_elements;
+	uimsbf(4) num_valid_cc_elements;
+	uimsbf(1) mono_mixdown_present;
+	if (mono_mixdown_present == 1)
+		uimsbf(4) mono_mixdown_element_number;
+	uimsbf(1) stereo_mixdown_present;
+	if (stereo_mixdown_present == 1)
+		uimsbf(4) stereo_mixdown_element_number;
+	uimsbf(1) matrix_mixdown_idx_present;
+	if (matrix_mixdown_idx_present == 1) {
+		uimsbf(2) matrix_mixdown_idx;
+		uimsbf(1) pseudo_surround_enable;
+	}
+	for (i = 0; i < num_front_channel_elements; i++) {
+		bslbf(1) front_element_is_cpe[i];
+		uimsbf(4) front_element_tag_select[i];
+	}
+	for (i = 0; i < num_side_channel_elements; i++) {
+		bslbf(1) side_element_is_cpe[i];
+		uimsbf(4) side_element_tag_select[i];
+	}
+	for (i = 0; i < num_back_channel_elements; i++) {
+		bslbf(1) back_element_is_cpe[i];
+		uimsbf(4) back_element_tag_select[i];
+	}
+	for (i = 0; i < num_lfe_channel_elements; i++)
+		uimsbf(4) lfe_element_tag_select[i];
+	for (i = 0; i < num_assoc_data_elements; i++)
+		uimsbf(4) assoc_data_element_tag_select[i];
+	for (i = 0; i < num_valid_cc_elements; i++) {
+		uimsbf(1) cc_element_is_ind_sw[i];
+		uimsbf(4) valid_cc_element_tag_select[i];
+	}
+	byte_alignment();  // Note 1
+	uimsbf(8) comment_field_bytes;
+	for (i = 0; i < comment_field_bytes; i++)
+		uimsbf(8) comment_field_data[i];
 }
-
-
 */
 public partial class program_config_element : IMp4Serializable
 {
@@ -66,53 +64,51 @@ public partial class program_config_element : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class program_config_element()
 {
-  uimsbf(4) element_instance_tag;
-  uimsbf(2) object_type;
-  uimsbf(4) sampling_frequency_index;
-  uimsbf(4) num_front_channel_elements;
-  uimsbf(4) num_side_channel_elements;
-  uimsbf(4) num_back_channel_elements;
-  uimsbf(2) num_lfe_channel_elements;
-  uimsbf(3) num_assoc_data_elements;
-  uimsbf(4) num_valid_cc_elements;
-  uimsbf(1) mono_mixdown_present;
-  if (mono_mixdown_present == 1)
-    uimsbf(4) mono_mixdown_element_number;
-  uimsbf(1) stereo_mixdown_present;
-  if (stereo_mixdown_present == 1)
-    uimsbf(4) stereo_mixdown_element_number;
-  uimsbf(1) matrix_mixdown_idx_present;
-  if (matrix_mixdown_idx_present == 1) {
-    uimsbf(2) matrix_mixdown_idx;
-    uimsbf(1) pseudo_surround_enable;
-  }
-  for (i = 0; i < num_front_channel_elements; i++) {
-    bslbf(1) front_element_is_cpe[i];
-    uimsbf(4) front_element_tag_select[i];
-  }
-  for (i = 0; i < num_side_channel_elements; i++) {
-    bslbf(1) side_element_is_cpe[i];
-    uimsbf(4) side_element_tag_select[i];
-  }
-  for (i = 0; i < num_back_channel_elements; i++) {
-    bslbf(1) back_element_is_cpe[i];
-    uimsbf(4) back_element_tag_select[i];
-  }
-  for (i = 0; i < num_lfe_channel_elements; i++)
-    uimsbf(4) lfe_element_tag_select[i];
-  for (i = 0; i < num_assoc_data_elements; i++)
-    uimsbf(4) assoc_data_element_tag_select[i];
-  for (i = 0; i < num_valid_cc_elements; i++) {
-    uimsbf(1) cc_element_is_ind_sw[i];
-    uimsbf(4) valid_cc_element_tag_select[i];
-  }
-  byte_alignment();  // Note 1 
-  uimsbf(8) comment_field_bytes;
-  for (i = 0; i < comment_field_bytes; i++)
-    uimsbf(8) comment_field_data[i];
-}
-
-"; } }
+	uimsbf(4) element_instance_tag;
+	uimsbf(2) object_type;
+	uimsbf(4) sampling_frequency_index;
+	uimsbf(4) num_front_channel_elements;
+	uimsbf(4) num_side_channel_elements;
+	uimsbf(4) num_back_channel_elements;
+	uimsbf(2) num_lfe_channel_elements;
+	uimsbf(3) num_assoc_data_elements;
+	uimsbf(4) num_valid_cc_elements;
+	uimsbf(1) mono_mixdown_present;
+	if (mono_mixdown_present == 1)
+		uimsbf(4) mono_mixdown_element_number;
+	uimsbf(1) stereo_mixdown_present;
+	if (stereo_mixdown_present == 1)
+		uimsbf(4) stereo_mixdown_element_number;
+	uimsbf(1) matrix_mixdown_idx_present;
+	if (matrix_mixdown_idx_present == 1) {
+		uimsbf(2) matrix_mixdown_idx;
+		uimsbf(1) pseudo_surround_enable;
+	}
+	for (i = 0; i < num_front_channel_elements; i++) {
+		bslbf(1) front_element_is_cpe[i];
+		uimsbf(4) front_element_tag_select[i];
+	}
+	for (i = 0; i < num_side_channel_elements; i++) {
+		bslbf(1) side_element_is_cpe[i];
+		uimsbf(4) side_element_tag_select[i];
+	}
+	for (i = 0; i < num_back_channel_elements; i++) {
+		bslbf(1) back_element_is_cpe[i];
+		uimsbf(4) back_element_tag_select[i];
+	}
+	for (i = 0; i < num_lfe_channel_elements; i++)
+		uimsbf(4) lfe_element_tag_select[i];
+	for (i = 0; i < num_assoc_data_elements; i++)
+		uimsbf(4) assoc_data_element_tag_select[i];
+	for (i = 0; i < num_valid_cc_elements; i++) {
+		uimsbf(1) cc_element_is_ind_sw[i];
+		uimsbf(4) valid_cc_element_tag_select[i];
+	}
+	byte_alignment();  // Note 1
+	uimsbf(8) comment_field_bytes;
+	for (i = 0; i < comment_field_bytes; i++)
+		uimsbf(8) comment_field_data[i];
+}"; } }
 	public virtual string DisplayName { get { return "program_config_element"; } }
 
 	protected byte element_instance_tag; 
@@ -193,7 +189,7 @@ public partial class program_config_element : IMp4Serializable
 	protected byte[] valid_cc_element_tag_select; 
 	public byte[] ValidCcElementTagSelect { get { return this.valid_cc_element_tag_select; } set { this.valid_cc_element_tag_select = value; } }
 
-	protected AlignmentBits byte_alignment;  //  Note 1 
+	protected AlignmentBits byte_alignment;  //  Note 1
 	public AlignmentBits ByteAlignment { get { return this.byte_alignment; } set { this.byte_alignment = value; } }
 
 	protected byte comment_field_bytes; 
@@ -281,7 +277,7 @@ public partial class program_config_element : IMp4Serializable
 			boxSize += stream.ReadBit(boxSize, readSize,  out this.cc_element_is_ind_sw[i], "cc_element_is_ind_sw"); 
 			boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.valid_cc_element_tag_select[i], "valid_cc_element_tag_select"); 
 		}
-		boxSize += stream.ReadByteAlignment(boxSize, readSize,  out this.byte_alignment, "byte_alignment"); // Note 1 
+		boxSize += stream.ReadByteAlignment(boxSize, readSize,  out this.byte_alignment, "byte_alignment"); // Note 1
 		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.comment_field_bytes, "comment_field_bytes"); 
 
 		this.comment_field_data = stream.SafeAllocate<byte>(boxSize, readSize, IsoStream.GetInt( comment_field_bytes), "comment_field_data");
@@ -357,7 +353,7 @@ public partial class program_config_element : IMp4Serializable
 			boxSize += stream.WriteBit( this.cc_element_is_ind_sw[i], "cc_element_is_ind_sw"); 
 			boxSize += stream.WriteBits(4,  this.valid_cc_element_tag_select[i], "valid_cc_element_tag_select"); 
 		}
-		boxSize += stream.WriteByteAlignment( this.byte_alignment, "byte_alignment"); // Note 1 
+		boxSize += stream.WriteByteAlignment( this.byte_alignment, "byte_alignment"); // Note 1
 		boxSize += stream.WriteUInt8( this.comment_field_bytes, "comment_field_bytes"); 
 
 		for (int i = 0; i < comment_field_bytes; i++)
@@ -507,7 +503,7 @@ public partial class program_config_element : IMp4Serializable
 			boxSize += tracer.Field($"cc_element_is_ind_sw[{i}]", 1, this.cc_element_is_ind_sw[i]); 
 			boxSize += tracer.Field($"valid_cc_element_tag_select[{i}]", 4, this.valid_cc_element_tag_select[i]); 
 		}
-		boxSize += tracer.Field("byte_alignment", IsoStream.CalculateByteAlignmentSize(boxSize, byte_alignment), this.byte_alignment); // Note 1 
+		boxSize += tracer.Field("byte_alignment", IsoStream.CalculateByteAlignmentSize(boxSize, byte_alignment), this.byte_alignment); // Note 1
 		boxSize += tracer.Field("comment_field_bytes", 8, this.comment_field_bytes); 
 
 		for (int i = 0; i < comment_field_bytes; i++)

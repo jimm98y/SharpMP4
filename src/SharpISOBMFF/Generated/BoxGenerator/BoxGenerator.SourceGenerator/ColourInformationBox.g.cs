@@ -13,9 +13,9 @@ class ColourInformationBox extends Box('colr'){
 		unsigned int(16) colour_primaries;
 		unsigned int(16) transfer_characteristics;
 		unsigned int(16) matrix_coefficients;
- 		if(colour_type == 'nclx') {
- 			unsigned int(1)  full_range_flag;
-		unsigned int(7)  reserved = 0;
+		if(colour_type == 'nclx') {
+			unsigned int(1)  full_range_flag;
+			unsigned int(7)  reserved = 0;
 		}
 	}
 	else if (colour_type == 'rICC')
@@ -38,9 +38,9 @@ public partial class ColourInformationBox : Box
 		unsigned int(16) colour_primaries;
 		unsigned int(16) transfer_characteristics;
 		unsigned int(16) matrix_coefficients;
- 		if(colour_type == 'nclx') {
- 			unsigned int(1)  full_range_flag;
-		unsigned int(7)  reserved = 0;
+		if(colour_type == 'nclx') {
+			unsigned int(1)  full_range_flag;
+			unsigned int(7)  reserved = 0;
 		}
 	}
 	else if (colour_type == 'rICC')

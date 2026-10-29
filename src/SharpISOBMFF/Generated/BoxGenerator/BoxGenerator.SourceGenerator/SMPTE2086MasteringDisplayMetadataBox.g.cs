@@ -7,33 +7,33 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class SMPTE2086MasteringDisplayMetadataBox() extends FullBox('SmDm') {
- unsigned int(16) primaryRChromaticityX;
-unsigned int(16) primaryRChromaticityY;
-unsigned int(16) primaryGChromaticityX;
-unsigned int(16) primaryGChromaticityY;
-unsigned int(16) primaryBChromaticityX;
-unsigned int(16) primaryBChromaticityY;
-unsigned int(16) whitePointChromaticityX;
-unsigned int(16) whitePointChromaticityY;
- unsigned int(32) luminanceMax;
- unsigned int(32) luminanceMin;
- } 
+	unsigned int(16) primaryRChromaticityX;
+	unsigned int(16) primaryRChromaticityY;
+	unsigned int(16) primaryGChromaticityX;
+	unsigned int(16) primaryGChromaticityY;
+	unsigned int(16) primaryBChromaticityX;
+	unsigned int(16) primaryBChromaticityY;
+	unsigned int(16) whitePointChromaticityX;
+	unsigned int(16) whitePointChromaticityY;
+	unsigned int(32) luminanceMax;
+	unsigned int(32) luminanceMin;
+}
 */
 public partial class SMPTE2086MasteringDisplayMetadataBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class SMPTE2086MasteringDisplayMetadataBox() extends FullBox('SmDm') {
- unsigned int(16) primaryRChromaticityX;
-unsigned int(16) primaryRChromaticityY;
-unsigned int(16) primaryGChromaticityX;
-unsigned int(16) primaryGChromaticityY;
-unsigned int(16) primaryBChromaticityX;
-unsigned int(16) primaryBChromaticityY;
-unsigned int(16) whitePointChromaticityX;
-unsigned int(16) whitePointChromaticityY;
- unsigned int(32) luminanceMax;
- unsigned int(32) luminanceMin;
- } "; } }
+	unsigned int(16) primaryRChromaticityX;
+	unsigned int(16) primaryRChromaticityY;
+	unsigned int(16) primaryGChromaticityX;
+	unsigned int(16) primaryGChromaticityY;
+	unsigned int(16) primaryBChromaticityX;
+	unsigned int(16) primaryBChromaticityY;
+	unsigned int(16) whitePointChromaticityX;
+	unsigned int(16) whitePointChromaticityY;
+	unsigned int(32) luminanceMax;
+	unsigned int(32) luminanceMin;
+}"; } }
 	public const string TYPE = "SmDm";
 	public override string DisplayName { get { return "SMPTE2086MasteringDisplayMetadataBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

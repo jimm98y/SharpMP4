@@ -15,7 +15,6 @@ class MVCDSampleEntry() extends VisualSampleEntry ('mvd2') {
 	ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
 	A3DConfigurationBox	a3dconfig;	// optional
 }
-
 */
 public partial class MVCDSampleEntrymvd2Dup : VisualSampleEntry
 {
@@ -28,8 +27,7 @@ public partial class MVCDSampleEntrymvd2Dup : VisualSampleEntry
 	IntrinsicCameraParametersBox	intrinsic_camera_params;	// optional
 	ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
 	A3DConfigurationBox	a3dconfig;	// optional
-}
-"; } }
+}"; } }
 	public const string TYPE = "mvd2";
 	public override string DisplayName { get { return "MVCDSampleEntrymvd2Dup"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

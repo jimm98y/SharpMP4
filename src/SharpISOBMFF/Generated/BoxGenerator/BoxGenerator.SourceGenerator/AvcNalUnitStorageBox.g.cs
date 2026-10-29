@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AvcNalUnitStorageBox() extends Box('avcn') {
- AVCDecoderConfigurationRecord() AVCConfig;
- } 
+	AVCDecoderConfigurationRecord() AVCConfig;
+}
 */
 public partial class AvcNalUnitStorageBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AvcNalUnitStorageBox() extends Box('avcn') {
- AVCDecoderConfigurationRecord() AVCConfig;
- } "; } }
+	AVCDecoderConfigurationRecord() AVCConfig;
+}"; } }
 	public const string TYPE = "avcn";
 	public override string DisplayName { get { return "AvcNalUnitStorageBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

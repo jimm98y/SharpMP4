@@ -9,7 +9,7 @@ namespace SharpISOBMFF
 aligned(8) class CompositionOffsetBox
 	extends FullBox('ctts', version, 0) {
 	unsigned int(32)	entry_count;
-		int i;
+	int i;
 	if (version==0) {
 		for (i=0; i < entry_count; i++) {
 			unsigned int(32)	sample_count;
@@ -30,7 +30,7 @@ public partial class CompositionOffsetBox : FullBox
 	public override string Syntax { get { return @"aligned(8) class CompositionOffsetBox
 	extends FullBox('ctts', version, 0) {
 	unsigned int(32)	entry_count;
-		int i;
+	int i;
 	if (version==0) {
 		for (i=0; i < entry_count; i++) {
 			unsigned int(32)	sample_count;

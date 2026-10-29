@@ -49,21 +49,16 @@ namespace ItuGenerator.CSharp
             int count = 0;
             for (int i = 0; i < lines.Length; i++)
             {
-                if (Regex.IsMatch(lines[i], @"^\w+\s*\(.*\)\s*\{\s*$"))
+                if (Regex.IsMatch(lines[i], @"^[ \t]*\w+\s*\(.*\)\s*\{\s*$"))
                     count = 0;
-                else if (Regex.IsMatch(lines[i], @"^reserved u\(\d+\)$") && ++count > 1)
+                else if (Regex.IsMatch(lines[i], @"^[ \t]*reserved u\(\d+\)$") && ++count > 1)
                     lines[i] = lines[i].Replace("reserved ", $"reserved_{count} ");
             }
             return string.Join("\n", lines);
         }
 
         /// <summary>A replacement the text must have the place of: where it has not, the text is not the one this was made for.</summary>
-        private static string Fix(string definitions, string text, string replacement)
-        {
-            if (!definitions.Contains(text))
-                throw new InvalidOperationException($"ProRes.js has no '{text}'");
-            return definitions.Replace(text, replacement);
-        }
+        private static string Fix(string definitions, string text, string replacement) => IndentedText.Fix(definitions, text, replacement, "ProRes.js");
 
         public string FixCondition(string condition, MethodType methodType)
         {

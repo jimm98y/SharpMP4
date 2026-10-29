@@ -8,30 +8,30 @@ namespace SharpISOBMFF
 /*
 // Microsoft's WAVEFORMATEX (mmreg.h), as QuickTime's 'wfex' holds it of a codec of Windows': little-endian, which the generator reads it as; the size of what follows and it, where the structure has them
 class MicrosoftWaveFormatExBox() extends Box ('wfex'){
- unsigned int(16) format_tag;
- unsigned int(16) channels;
- unsigned int(32) samples_per_sec;
- unsigned int(32) avg_bytes_per_sec;
- unsigned int(16) block_align;
- unsigned int(16) bits_per_sample;
- unsigned int(16) extra_size; // optional
- bit(8) extra[];
- }
+	unsigned int(16) format_tag;
+	unsigned int(16) channels;
+	unsigned int(32) samples_per_sec;
+	unsigned int(32) avg_bytes_per_sec;
+	unsigned int(16) block_align;
+	unsigned int(16) bits_per_sample;
+	unsigned int(16) extra_size; // optional
+	bit(8) extra[];
+}
 */
 public partial class MicrosoftWaveFormatExBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// Microsoft's WAVEFORMATEX (mmreg.h), as QuickTime's 'wfex' holds it of a codec of Windows': little-endian, which the generator reads it as; the size of what follows and it, where the structure has them
 class MicrosoftWaveFormatExBox() extends Box ('wfex'){
- unsigned int(16) format_tag;
- unsigned int(16) channels;
- unsigned int(32) samples_per_sec;
- unsigned int(32) avg_bytes_per_sec;
- unsigned int(16) block_align;
- unsigned int(16) bits_per_sample;
- unsigned int(16) extra_size; // optional
- bit(8) extra[];
- }"; } }
+	unsigned int(16) format_tag;
+	unsigned int(16) channels;
+	unsigned int(32) samples_per_sec;
+	unsigned int(32) avg_bytes_per_sec;
+	unsigned int(16) block_align;
+	unsigned int(16) bits_per_sample;
+	unsigned int(16) extra_size; // optional
+	bit(8) extra[];
+}"; } }
 	public const string TYPE = "wfex";
 	public override string DisplayName { get { return "MicrosoftWaveFormatExBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

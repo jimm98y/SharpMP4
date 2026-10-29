@@ -6,23 +6,23 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class VideoContourMapBox extends FullBox('ctrm', 0, 0) { 
- bit(8) data[]; // TODO requires switch/case 
-} 
+aligned(8) class VideoContourMapBox extends FullBox('ctrm', 0, 0) {
+	bit(8) data[]; // TODO requires switch/case
+}
 */
 public partial class VideoContourMapBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class VideoContourMapBox extends FullBox('ctrm', 0, 0) { 
- bit(8) data[]; // TODO requires switch/case 
-} "; } }
+	public override string Syntax { get { return @"aligned(8) class VideoContourMapBox extends FullBox('ctrm', 0, 0) {
+	bit(8) data[]; // TODO requires switch/case
+}"; } }
 	public const string TYPE = "ctrm";
 	public override string DisplayName { get { return "VideoContourMapBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("ctrs"); }
 
 
-	protected byte[] data = [];  //  TODO requires switch/case 
+	protected byte[] data = [];  //  TODO requires switch/case
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public VideoContourMapBox(): base(IsoStream.FromFourCC("ctrm"), 0, 0)
@@ -33,7 +33,7 @@ public partial class VideoContourMapBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); // TODO requires switch/case 
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); // TODO requires switch/case
 		return boxSize;
 	}
 
@@ -41,7 +41,7 @@ public partial class VideoContourMapBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); // TODO requires switch/case 
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); // TODO requires switch/case
 		return boxSize;
 	}
 
@@ -57,7 +57,7 @@ public partial class VideoContourMapBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Trace(tracer);
-		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); // TODO requires switch/case 
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); // TODO requires switch/case
 		return boxSize;
 	}
 }

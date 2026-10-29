@@ -7,53 +7,53 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class TextMediaBox() extends Box('text') {
- unsigned int(8) reserved1[6];
- unsigned int(16) dataReferenceIndex;
- unsigned int(32) displayFlags;
- unsigned int(32) textJustification;
- unsigned int(16) bgColorRed;
- unsigned int(16) bgColorGreen;
- unsigned int(16) bgColorBlue;
- unsigned int(16) defTextBoxTop;
- unsigned int(16) defTextBoxLeft;
- unsigned int(16) defTextBoxBotton;
- unsigned int(16) defTextBoxRight;
- unsigned int(64) reserved2;
- unsigned int(16) fontNumber;
- unsigned int(16) fontFace;
- unsigned int(8) reserved3;
- unsigned int(16) reserved4;
- unsigned int(16) foreColorRed;
- unsigned int(16) foreColorGreen;
- unsigned int(16) foreColorBlue;
- string name;
- } 
+	unsigned int(8) reserved1[6];
+	unsigned int(16) dataReferenceIndex;
+	unsigned int(32) displayFlags;
+	unsigned int(32) textJustification;
+	unsigned int(16) bgColorRed;
+	unsigned int(16) bgColorGreen;
+	unsigned int(16) bgColorBlue;
+	unsigned int(16) defTextBoxTop;
+	unsigned int(16) defTextBoxLeft;
+	unsigned int(16) defTextBoxBotton;
+	unsigned int(16) defTextBoxRight;
+	unsigned int(64) reserved2;
+	unsigned int(16) fontNumber;
+	unsigned int(16) fontFace;
+	unsigned int(8) reserved3;
+	unsigned int(16) reserved4;
+	unsigned int(16) foreColorRed;
+	unsigned int(16) foreColorGreen;
+	unsigned int(16) foreColorBlue;
+	string name;
+}
 */
 public partial class TextMediaBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class TextMediaBox() extends Box('text') {
- unsigned int(8) reserved1[6];
- unsigned int(16) dataReferenceIndex;
- unsigned int(32) displayFlags;
- unsigned int(32) textJustification;
- unsigned int(16) bgColorRed;
- unsigned int(16) bgColorGreen;
- unsigned int(16) bgColorBlue;
- unsigned int(16) defTextBoxTop;
- unsigned int(16) defTextBoxLeft;
- unsigned int(16) defTextBoxBotton;
- unsigned int(16) defTextBoxRight;
- unsigned int(64) reserved2;
- unsigned int(16) fontNumber;
- unsigned int(16) fontFace;
- unsigned int(8) reserved3;
- unsigned int(16) reserved4;
- unsigned int(16) foreColorRed;
- unsigned int(16) foreColorGreen;
- unsigned int(16) foreColorBlue;
- string name;
- } "; } }
+	unsigned int(8) reserved1[6];
+	unsigned int(16) dataReferenceIndex;
+	unsigned int(32) displayFlags;
+	unsigned int(32) textJustification;
+	unsigned int(16) bgColorRed;
+	unsigned int(16) bgColorGreen;
+	unsigned int(16) bgColorBlue;
+	unsigned int(16) defTextBoxTop;
+	unsigned int(16) defTextBoxLeft;
+	unsigned int(16) defTextBoxBotton;
+	unsigned int(16) defTextBoxRight;
+	unsigned int(64) reserved2;
+	unsigned int(16) fontNumber;
+	unsigned int(16) fontFace;
+	unsigned int(8) reserved3;
+	unsigned int(16) reserved4;
+	unsigned int(16) foreColorRed;
+	unsigned int(16) foreColorGreen;
+	unsigned int(16) foreColorBlue;
+	string name;
+}"; } }
 	public const string TYPE = "text";
 	public override string DisplayName { get { return "TextMediaBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -9,11 +9,11 @@ namespace SharpISOBMFF
 aligned(8) class SeiInformationBox extends Box('seii') {
 	unsigned int(16) numRequiredSEIs;
 	for (i = 0; i < numRequiredSEIs; i++) {
-	unsigned int(16) requiredSEI_ID;
+		unsigned int(16) requiredSEI_ID;
 	}
 	unsigned int(16) numNotRequiredSEIs;
 	for (i = 0; i < numNotRequiredSEIs; i++) {
-	unsigned int(16) notrequiredSEI_ID;
+		unsigned int(16) notrequiredSEI_ID;
 	}
 }
 */
@@ -23,11 +23,11 @@ public partial class SeiInformationBox : Box
 	public override string Syntax { get { return @"aligned(8) class SeiInformationBox extends Box('seii') {
 	unsigned int(16) numRequiredSEIs;
 	for (i = 0; i < numRequiredSEIs; i++) {
-	unsigned int(16) requiredSEI_ID;
+		unsigned int(16) requiredSEI_ID;
 	}
 	unsigned int(16) numNotRequiredSEIs;
 	for (i = 0; i < numNotRequiredSEIs; i++) {
-	unsigned int(16) notrequiredSEI_ID;
+		unsigned int(16) notrequiredSEI_ID;
 	}
 }"; } }
 	public const string TYPE = "seii";

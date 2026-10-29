@@ -7,26 +7,26 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class TrunEntry(version, flags) {
-   if(flags & 0x100) {
-      unsigned int(32) sample_duration;
-   }
-   if(flags & 0x200) {
-      unsigned int(32) sample_size;
-   }
-   if(flags & 0x400) {
-      unsigned int(32) sample_flags;
-   }
-   if(flags & 0x800) 
-   {
-      if (version == 0)
-      { 
-          unsigned int(32) sample_composition_time_offset; 
-      }
-      else
-      {
-          signed int(32) sample_composition_time_offset; 
-      }
-   }
+	if(flags & 0x100) {
+		unsigned int(32) sample_duration;
+	}
+	if(flags & 0x200) {
+		unsigned int(32) sample_size;
+	}
+	if(flags & 0x400) {
+		unsigned int(32) sample_flags;
+	}
+	if(flags & 0x800)
+	{
+		if (version == 0)
+		{
+			unsigned int(32) sample_composition_time_offset;
+		}
+		else
+		{
+			signed int(32) sample_composition_time_offset;
+		}
+	}
 }
 */
 public partial class TrunEntry : IMp4Serializable
@@ -38,26 +38,26 @@ public partial class TrunEntry : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class TrunEntry(version, flags) {
-   if(flags & 0x100) {
-      unsigned int(32) sample_duration;
-   }
-   if(flags & 0x200) {
-      unsigned int(32) sample_size;
-   }
-   if(flags & 0x400) {
-      unsigned int(32) sample_flags;
-   }
-   if(flags & 0x800) 
-   {
-      if (version == 0)
-      { 
-          unsigned int(32) sample_composition_time_offset; 
-      }
-      else
-      {
-          signed int(32) sample_composition_time_offset; 
-      }
-   }
+	if(flags & 0x100) {
+		unsigned int(32) sample_duration;
+	}
+	if(flags & 0x200) {
+		unsigned int(32) sample_size;
+	}
+	if(flags & 0x400) {
+		unsigned int(32) sample_flags;
+	}
+	if(flags & 0x800)
+	{
+		if (version == 0)
+		{
+			unsigned int(32) sample_composition_time_offset;
+		}
+		else
+		{
+			signed int(32) sample_composition_time_offset;
+		}
+	}
 }"; } }
 	public virtual string DisplayName { get { return "TrunEntry"; } }
 

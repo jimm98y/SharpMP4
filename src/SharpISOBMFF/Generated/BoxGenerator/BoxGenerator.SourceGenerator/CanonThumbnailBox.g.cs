@@ -8,28 +8,26 @@ namespace SharpISOBMFF
 /*
 // Canon.pm, THMB: the thumbnail is after 16 bytes
 aligned(8) class CanonThumbnailBox() extends FullBox('THMB') {
- unsigned int(16) width;
- unsigned int(16) height;
- unsigned int(32) thumbnailSize;
- unsigned int(16) unknown1;
- unsigned int(16) unknown2;
- bit(8) data[];
+	unsigned int(16) width;
+	unsigned int(16) height;
+	unsigned int(32) thumbnailSize;
+	unsigned int(16) unknown1;
+	unsigned int(16) unknown2;
+	bit(8) data[];
 }
-
 */
 public partial class CanonThumbnailBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// Canon.pm, THMB: the thumbnail is after 16 bytes
 aligned(8) class CanonThumbnailBox() extends FullBox('THMB') {
- unsigned int(16) width;
- unsigned int(16) height;
- unsigned int(32) thumbnailSize;
- unsigned int(16) unknown1;
- unsigned int(16) unknown2;
- bit(8) data[];
-}
-"; } }
+	unsigned int(16) width;
+	unsigned int(16) height;
+	unsigned int(32) thumbnailSize;
+	unsigned int(16) unknown1;
+	unsigned int(16) unknown2;
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "THMB";
 	public override string DisplayName { get { return "CanonThumbnailBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

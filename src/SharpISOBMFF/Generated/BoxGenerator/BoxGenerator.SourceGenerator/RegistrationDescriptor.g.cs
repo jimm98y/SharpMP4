@@ -7,17 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 class RegistrationDescriptor extends BaseDescriptor : bit(8) tag=RegistrationDescrTag {
- bit(32) formatIdentifier;
- bit(8) additionalIdentificationInfo[sizeOfInstance-4];
- }
+	bit(32) formatIdentifier;
+	bit(8) additionalIdentificationInfo[sizeOfInstance-4];
+}
 */
 public partial class RegistrationDescriptor : BaseDescriptor
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class RegistrationDescriptor extends BaseDescriptor : bit(8) tag=RegistrationDescrTag {
- bit(32) formatIdentifier;
- bit(8) additionalIdentificationInfo[sizeOfInstance-4];
- }"; } }
+	bit(32) formatIdentifier;
+	bit(8) additionalIdentificationInfo[sizeOfInstance-4];
+}"; } }
 	public const byte TYPE = DescriptorTags.RegistrationDescrTag;
 	public override string DisplayName { get { return "RegistrationDescriptor"; } }
 

@@ -7,18 +7,18 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class CollectionNameBox() extends FullBox('coll', version = 0, 0) {
- bit(1) reserved = 0;
- unsigned int(5)[3] language;
- string value;
+	bit(1) reserved = 0;
+	unsigned int(5)[3] language;
+	string value;
 }
 */
 public partial class CollectionNameBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class CollectionNameBox() extends FullBox('coll', version = 0, 0) {
- bit(1) reserved = 0;
- unsigned int(5)[3] language;
- string value;
+	bit(1) reserved = 0;
+	unsigned int(5)[3] language;
+	string value;
 }"; } }
 	public const string TYPE = "coll";
 	public override string DisplayName { get { return "CollectionNameBox"; } }

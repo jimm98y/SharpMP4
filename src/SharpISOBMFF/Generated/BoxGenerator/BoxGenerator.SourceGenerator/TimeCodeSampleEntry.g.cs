@@ -7,27 +7,27 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class TimeCodeSampleEntry() extends SampleEntry('tmcd') {
- unsigned int(32) reserved;
- unsigned int(32) timecodeFlags;
- unsigned int(32) timeScale;
- unsigned int(32) frameDuration;
- unsigned int(8) numberOfFrames;
- unsigned int(8) reserved2;
- Box boxes[];
- } 
+	unsigned int(32) reserved;
+	unsigned int(32) timecodeFlags;
+	unsigned int(32) timeScale;
+	unsigned int(32) frameDuration;
+	unsigned int(8) numberOfFrames;
+	unsigned int(8) reserved2;
+	Box boxes[];
+}
 */
 public partial class TimeCodeSampleEntry : SampleEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class TimeCodeSampleEntry() extends SampleEntry('tmcd') {
- unsigned int(32) reserved;
- unsigned int(32) timecodeFlags;
- unsigned int(32) timeScale;
- unsigned int(32) frameDuration;
- unsigned int(8) numberOfFrames;
- unsigned int(8) reserved2;
- Box boxes[];
- } "; } }
+	unsigned int(32) reserved;
+	unsigned int(32) timecodeFlags;
+	unsigned int(32) timeScale;
+	unsigned int(32) frameDuration;
+	unsigned int(8) numberOfFrames;
+	unsigned int(8) reserved2;
+	Box boxes[];
+}"; } }
 	public const string TYPE = "tmcd";
 	public override string DisplayName { get { return "TimeCodeSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

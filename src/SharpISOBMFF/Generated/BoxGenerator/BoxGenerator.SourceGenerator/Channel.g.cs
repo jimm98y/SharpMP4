@@ -7,10 +7,10 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class Channel() {
- unsigned int(16) channel_index;
- unsigned int(16) channel_type;
- unsigned int(16) channel_association;
- } 
+	unsigned int(16) channel_index;
+	unsigned int(16) channel_type;
+	unsigned int(16) channel_association;
+}
 */
 public partial class Channel : IMp4Serializable
 {
@@ -21,10 +21,10 @@ public partial class Channel : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class Channel() {
- unsigned int(16) channel_index;
- unsigned int(16) channel_type;
- unsigned int(16) channel_association;
- } "; } }
+	unsigned int(16) channel_index;
+	unsigned int(16) channel_type;
+	unsigned int(16) channel_association;
+}"; } }
 	public virtual string DisplayName { get { return "Channel"; } }
 
 	protected ushort channel_index; 

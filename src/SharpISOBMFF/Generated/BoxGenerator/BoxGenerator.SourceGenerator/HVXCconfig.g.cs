@@ -8,15 +8,13 @@ namespace SharpISOBMFF
 /*
 class HVXCconfig()
 {
-  uimsbf(1) HVXCvarMode;
-  uimsbf(2) HVXCrateMode;
-  uimsbf(1) extensionFlag;
-  if (extensionFlag) {
-    // to be defined in MPEG-4 Version 2
-  }
+	uimsbf(1) HVXCvarMode;
+	uimsbf(2) HVXCrateMode;
+	uimsbf(1) extensionFlag;
+	if (extensionFlag) {
+		// to be defined in MPEG-4 Version 2
+	}
 }
-
-
 */
 public partial class HVXCconfig : IMp4Serializable
 {
@@ -28,15 +26,13 @@ public partial class HVXCconfig : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class HVXCconfig()
 {
-  uimsbf(1) HVXCvarMode;
-  uimsbf(2) HVXCrateMode;
-  uimsbf(1) extensionFlag;
-  if (extensionFlag) {
-    // to be defined in MPEG-4 Version 2
-  }
-}
-
-"; } }
+	uimsbf(1) HVXCvarMode;
+	uimsbf(2) HVXCrateMode;
+	uimsbf(1) extensionFlag;
+	if (extensionFlag) {
+		// to be defined in MPEG-4 Version 2
+	}
+}"; } }
 	public virtual string DisplayName { get { return "HVXCconfig"; } }
 
 	protected bool HVXCvarMode; 

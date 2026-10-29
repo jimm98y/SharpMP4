@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class FujiFilmFFMVBox() extends Box ('FFMV'){
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class FujiFilmFFMVBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class FujiFilmFFMVBox() extends Box ('FFMV'){
- bit(8) data[];
- }"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "FFMV";
 	public override string DisplayName { get { return "FujiFilmFFMVBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

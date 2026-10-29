@@ -8,16 +8,12 @@ namespace SharpISOBMFF
 /*
 aligned(8) class MovieHintInformation extends Box('hnti') {
 }
-
-
 */
 public partial class MovieHintInformation : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class MovieHintInformation extends Box('hnti') {
-}
-
-"; } }
+}"; } }
 	public const string TYPE = "hnti";
 	public override string DisplayName { get { return "MovieHintInformation"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,86 +7,86 @@ namespace SharpISOBMFF
 {
 /*
 class AudioSampleEntry(codingname) extends SampleEntry (codingname) {
-    unsigned int(16) soundversion = 0;
-    unsigned int(16) reserved1 = 0;
-    unsigned int(32) reserved2 = 0;
-    unsigned int(16) channelcount;
-    template unsigned int(16) samplesize = 16;
+	unsigned int(16) soundversion = 0;
+	unsigned int(16) reserved1 = 0;
+	unsigned int(32) reserved2 = 0;
+	unsigned int(16) channelcount;
+	template unsigned int(16) samplesize = 16;
 
-    unsigned int(16) pre_defined = 0;
-    const unsigned int(16) reserved = 0;
-    template unsigned int(32) samplerate;
+	unsigned int(16) pre_defined = 0;
+	const unsigned int(16) reserved = 0;
+	template unsigned int(32) samplerate;
 
-    if(codingname != 'mlpa') {
-        samplerate = samplerate >> 16;
-    }
+	if(codingname != 'mlpa') {
+		samplerate = samplerate >> 16;
+	}
 
-    if(soundversion == 1 || soundversion == 2) {
-       unsigned int(32) samplesPerPacket;
-       unsigned int(32) bytesPerPacket;
-       unsigned int(32) bytesPerFrame;
-       unsigned int(32) bytesPerSample;
-    }
+	if(soundversion == 1 || soundversion == 2) {
+		unsigned int(32) samplesPerPacket;
+		unsigned int(32) bytesPerPacket;
+		unsigned int(32) bytesPerFrame;
+		unsigned int(32) bytesPerSample;
+	}
 
-    if(soundversion == 2) {
-       unsigned int(8)[20] soundVersion2Data;
-    }
+	if(soundversion == 2) {
+		unsigned int(8)[20] soundVersion2Data;
+	}
 
-    ChannelLayout();
-    // we permit any number of DownMix or DRC boxes: 
-    DownMixInstructions() [];
-    DRCCoefficientsBasic() [];
-    DRCInstructionsBasic() [];
-    DRCCoefficientsUniDRC() [];
-    DRCInstructionsUniDRC() [];
-    // we permit only one DRC Extension box:
-    UniDrcConfigExtension();
-    // optional boxes follow
-    SamplingRateBox();
-    Box (); // further boxes as needed
+	ChannelLayout();
+	// we permit any number of DownMix or DRC boxes:
+	DownMixInstructions() [];
+	DRCCoefficientsBasic() [];
+	DRCInstructionsBasic() [];
+	DRCCoefficientsUniDRC() [];
+	DRCInstructionsUniDRC() [];
+	// we permit only one DRC Extension box:
+	UniDrcConfigExtension();
+	// optional boxes follow
+	SamplingRateBox();
+	Box (); // further boxes as needed
 }
 */
 public partial class AudioSampleEntry : SampleEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AudioSampleEntry(codingname) extends SampleEntry (codingname) {
-    unsigned int(16) soundversion = 0;
-    unsigned int(16) reserved1 = 0;
-    unsigned int(32) reserved2 = 0;
-    unsigned int(16) channelcount;
-    template unsigned int(16) samplesize = 16;
+	unsigned int(16) soundversion = 0;
+	unsigned int(16) reserved1 = 0;
+	unsigned int(32) reserved2 = 0;
+	unsigned int(16) channelcount;
+	template unsigned int(16) samplesize = 16;
 
-    unsigned int(16) pre_defined = 0;
-    const unsigned int(16) reserved = 0;
-    template unsigned int(32) samplerate;
+	unsigned int(16) pre_defined = 0;
+	const unsigned int(16) reserved = 0;
+	template unsigned int(32) samplerate;
 
-    if(codingname != 'mlpa') {
-        samplerate = samplerate >> 16;
-    }
+	if(codingname != 'mlpa') {
+		samplerate = samplerate >> 16;
+	}
 
-    if(soundversion == 1 || soundversion == 2) {
-       unsigned int(32) samplesPerPacket;
-       unsigned int(32) bytesPerPacket;
-       unsigned int(32) bytesPerFrame;
-       unsigned int(32) bytesPerSample;
-    }
+	if(soundversion == 1 || soundversion == 2) {
+		unsigned int(32) samplesPerPacket;
+		unsigned int(32) bytesPerPacket;
+		unsigned int(32) bytesPerFrame;
+		unsigned int(32) bytesPerSample;
+	}
 
-    if(soundversion == 2) {
-       unsigned int(8)[20] soundVersion2Data;
-    }
+	if(soundversion == 2) {
+		unsigned int(8)[20] soundVersion2Data;
+	}
 
-    ChannelLayout();
-    // we permit any number of DownMix or DRC boxes: 
-    DownMixInstructions() [];
-    DRCCoefficientsBasic() [];
-    DRCInstructionsBasic() [];
-    DRCCoefficientsUniDRC() [];
-    DRCInstructionsUniDRC() [];
-    // we permit only one DRC Extension box:
-    UniDrcConfigExtension();
-    // optional boxes follow
-    SamplingRateBox();
-    Box (); // further boxes as needed
+	ChannelLayout();
+	// we permit any number of DownMix or DRC boxes:
+	DownMixInstructions() [];
+	DRCCoefficientsBasic() [];
+	DRCInstructionsBasic() [];
+	DRCCoefficientsUniDRC() [];
+	DRCInstructionsUniDRC() [];
+	// we permit only one DRC Extension box:
+	UniDrcConfigExtension();
+	// optional boxes follow
+	SamplingRateBox();
+	Box (); // further boxes as needed
 }"; } }
 	public override string DisplayName { get { return "AudioSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -175,7 +175,7 @@ public partial class AudioSampleEntry : SampleEntry
 		{
 			boxSize += stream.ReadUInt8Array(boxSize, readSize, 20,  out this.soundVersion2Data, "soundVersion2Data"); 
 		}
-		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ChannelLayout, "ChannelLayout"); // we permit any number of DownMix or DRC boxes: 
+		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ChannelLayout, "ChannelLayout"); // we permit any number of DownMix or DRC boxes:
 		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DownMixInstructions, "DownMixInstructions"); 
 		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCCoefficientsBasic, "DRCCoefficientsBasic"); 
 		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCInstructionsBasic, "DRCInstructionsBasic"); 
@@ -218,7 +218,7 @@ public partial class AudioSampleEntry : SampleEntry
 		{
 			boxSize += stream.WriteUInt8Array(20,  this.soundVersion2Data, "soundVersion2Data"); 
 		}
-		// boxSize += stream.WriteBox( this.ChannelLayout, "ChannelLayout"); // we permit any number of DownMix or DRC boxes: 
+		// boxSize += stream.WriteBox( this.ChannelLayout, "ChannelLayout"); // we permit any number of DownMix or DRC boxes:
 		// boxSize += stream.WriteBox( this.DownMixInstructions, "DownMixInstructions"); 
 		// boxSize += stream.WriteBox( this.DRCCoefficientsBasic, "DRCCoefficientsBasic"); 
 		// boxSize += stream.WriteBox( this.DRCInstructionsBasic, "DRCInstructionsBasic"); 
@@ -304,7 +304,7 @@ public partial class AudioSampleEntry : SampleEntry
 		{
 			boxSize += tracer.Field("soundVersion2Data", 20 * 8, this.soundVersion2Data); 
 		}
-		// boxSize += tracer.Field("ChannelLayout", IsoStream.CalculateBoxSize(ChannelLayout), this.ChannelLayout); // we permit any number of DownMix or DRC boxes: 
+		// boxSize += tracer.Field("ChannelLayout", IsoStream.CalculateBoxSize(ChannelLayout), this.ChannelLayout); // we permit any number of DownMix or DRC boxes:
 		// boxSize += tracer.Field("DownMixInstructions", IsoStream.CalculateBoxSize(DownMixInstructions), this.DownMixInstructions); 
 		// boxSize += tracer.Field("DRCCoefficientsBasic", IsoStream.CalculateBoxSize(DRCCoefficientsBasic), this.DRCCoefficientsBasic); 
 		// boxSize += tracer.Field("DRCInstructionsBasic", IsoStream.CalculateBoxSize(DRCInstructionsBasic), this.DRCInstructionsBasic); 

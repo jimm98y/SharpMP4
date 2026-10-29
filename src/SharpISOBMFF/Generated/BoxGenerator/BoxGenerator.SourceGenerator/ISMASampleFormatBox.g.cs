@@ -8,22 +8,22 @@ namespace SharpISOBMFF
 /*
 // How the samples are encrypted: selectively or not, and how long their key indicators and IVs are
 aligned(8) class ISMASampleFormatBox extends FullBox('iSFM', 0, 0) {
- bit(1) selective_encryption;
- bit(7) reserved;
- unsigned int(8) key_indicator_length;
- unsigned int(8) IV_length;
- }
+	bit(1) selective_encryption;
+	bit(7) reserved;
+	unsigned int(8) key_indicator_length;
+	unsigned int(8) IV_length;
+}
 */
 public partial class ISMASampleFormatBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// How the samples are encrypted: selectively or not, and how long their key indicators and IVs are
 aligned(8) class ISMASampleFormatBox extends FullBox('iSFM', 0, 0) {
- bit(1) selective_encryption;
- bit(7) reserved;
- unsigned int(8) key_indicator_length;
- unsigned int(8) IV_length;
- }"; } }
+	bit(1) selective_encryption;
+	bit(7) reserved;
+	unsigned int(8) key_indicator_length;
+	unsigned int(8) IV_length;
+}"; } }
 	public const string TYPE = "iSFM";
 	public override string DisplayName { get { return "ISMASampleFormatBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

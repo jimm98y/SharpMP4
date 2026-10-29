@@ -8,30 +8,30 @@ namespace SharpISOBMFF
 /*
 // The index of an animation's key frames (ISO/IEC 18181-2 9.3): of the frames indexed, the ticks a second is of (TNUM/TDEN), and of each frame its offset in the codestream from the frame before, its duration in ticks and the frames it stands for, varints
 aligned(8) class JpegXLFrameIndexBox extends Box('jxli') {
- varint frame_count; // NF
- unsigned int(32) tick_numerator; // TNUM
- unsigned int(32) tick_denominator; // TDEN
- for (i = 0; i < frame_count; i++) {
- varint offset; // OFFi
- varint duration; // Ti
- varint frames; // Fi
- }
- }
+	varint frame_count; // NF
+	unsigned int(32) tick_numerator; // TNUM
+	unsigned int(32) tick_denominator; // TDEN
+	for (i = 0; i < frame_count; i++) {
+		varint offset; // OFFi
+		varint duration; // Ti
+		varint frames; // Fi
+	}
+}
 */
 public partial class JpegXLFrameIndexBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// The index of an animation's key frames (ISO/IEC 18181-2 9.3): of the frames indexed, the ticks a second is of (TNUM/TDEN), and of each frame its offset in the codestream from the frame before, its duration in ticks and the frames it stands for, varints
 aligned(8) class JpegXLFrameIndexBox extends Box('jxli') {
- varint frame_count; // NF
- unsigned int(32) tick_numerator; // TNUM
- unsigned int(32) tick_denominator; // TDEN
- for (i = 0; i < frame_count; i++) {
- varint offset; // OFFi
- varint duration; // Ti
- varint frames; // Fi
- }
- }"; } }
+	varint frame_count; // NF
+	unsigned int(32) tick_numerator; // TNUM
+	unsigned int(32) tick_denominator; // TDEN
+	for (i = 0; i < frame_count; i++) {
+		varint offset; // OFFi
+		varint duration; // Ti
+		varint frames; // Fi
+	}
+}"; } }
 	public const string TYPE = "jxli";
 	public override string DisplayName { get { return "JpegXLFrameIndexBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

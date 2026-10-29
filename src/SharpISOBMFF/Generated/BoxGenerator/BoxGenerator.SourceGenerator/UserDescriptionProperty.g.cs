@@ -7,25 +7,23 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class UserDescriptionProperty
-extends ItemFullProperty('udes', version = 0, flags = 0){
+	extends ItemFullProperty('udes', version = 0, flags = 0){
 	utf8string lang;
 	utf8string name;
 	utf8string description;
 	utf8string tags;
 }
-
 */
 public partial class UserDescriptionProperty : ItemFullProperty
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class UserDescriptionProperty
-extends ItemFullProperty('udes', version = 0, flags = 0){
+	extends ItemFullProperty('udes', version = 0, flags = 0){
 	utf8string lang;
 	utf8string name;
 	utf8string description;
 	utf8string tags;
-}
-"; } }
+}"; } }
 	public const string TYPE = "udes";
 	public override string DisplayName { get { return "UserDescriptionProperty"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

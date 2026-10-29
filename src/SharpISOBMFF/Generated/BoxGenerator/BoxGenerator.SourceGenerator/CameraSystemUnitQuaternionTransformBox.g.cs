@@ -6,22 +6,22 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class CameraSystemUnitQuaternionTransformBox extends 
-FullBox('uqua', 0, 0) { 
-BEFloat32 xyz0;
-BEFloat32 xyz1;
-BEFloat32 xyz2; 
-} 
+aligned(8) class CameraSystemUnitQuaternionTransformBox extends
+	FullBox('uqua', 0, 0) {
+	BEFloat32 xyz0;
+	BEFloat32 xyz1;
+	BEFloat32 xyz2;
+}
 */
 public partial class CameraSystemUnitQuaternionTransformBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class CameraSystemUnitQuaternionTransformBox extends 
-FullBox('uqua', 0, 0) { 
-BEFloat32 xyz0;
-BEFloat32 xyz1;
-BEFloat32 xyz2; 
-} "; } }
+	public override string Syntax { get { return @"aligned(8) class CameraSystemUnitQuaternionTransformBox extends
+	FullBox('uqua', 0, 0) {
+	BEFloat32 xyz0;
+	BEFloat32 xyz1;
+	BEFloat32 xyz2;
+}"; } }
 	public const string TYPE = "uqua";
 	public override string DisplayName { get { return "CameraSystemUnitQuaternionTransformBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

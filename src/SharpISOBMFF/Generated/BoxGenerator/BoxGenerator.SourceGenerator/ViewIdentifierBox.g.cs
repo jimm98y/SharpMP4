@@ -6,7 +6,7 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class ViewIdentifierBox extends FullBox ('vwid', version=0, flags) 
+class ViewIdentifierBox extends FullBox ('vwid', version=0, flags)
 {
 	unsigned int(2) 	reserved6 = 0;
 	unsigned int(3) 	min_temporal_id;
@@ -34,7 +34,7 @@ class ViewIdentifierBox extends FullBox ('vwid', version=0, flags)
 public partial class ViewIdentifierBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"class ViewIdentifierBox extends FullBox ('vwid', version=0, flags) 
+	public override string Syntax { get { return @"class ViewIdentifierBox extends FullBox ('vwid', version=0, flags)
 {
 	unsigned int(2) 	reserved6 = 0;
 	unsigned int(3) 	min_temporal_id;

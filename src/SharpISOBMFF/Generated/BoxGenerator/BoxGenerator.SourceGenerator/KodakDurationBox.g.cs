@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class KodakDurationBox() extends Box ('tima'){
- unsigned int(32) duration;
- }
-
+	unsigned int(32) duration;
+}
 */
 public partial class KodakDurationBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class KodakDurationBox() extends Box ('tima'){
- unsigned int(32) duration;
- }
-"; } }
+	unsigned int(32) duration;
+}"; } }
 	public const string TYPE = "tima";
 	public override string DisplayName { get { return "KodakDurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

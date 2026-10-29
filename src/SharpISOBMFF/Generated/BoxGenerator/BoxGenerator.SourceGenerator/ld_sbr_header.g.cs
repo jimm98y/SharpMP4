@@ -8,32 +8,30 @@ namespace SharpISOBMFF
 /*
 class ld_sbr_header(channelConfiguration)
 {
-  switch (channelConfiguration) {
-    case 1:
-    case 2:
-      numSbrHeader = 1;
-      break;
-    case 3:
-      numSbrHeader = 2;
-      break;
-    case 4:
-    case 5:
-    case 6:
-      numSbrHeader = 3;
-      break;
-    case 7:
-      numSbrHeader = 4;
-      break;
-    default:
-      numSbrHeader = 0;
-      break;
-  }
-  for (el = 0; el < numSbrHeader; el++) {
-    sbr_header();
-  }
+	switch (channelConfiguration) {
+		case 1:
+		case 2:
+			numSbrHeader = 1;
+			break;
+		case 3:
+			numSbrHeader = 2;
+			break;
+		case 4:
+		case 5:
+		case 6:
+			numSbrHeader = 3;
+			break;
+		case 7:
+			numSbrHeader = 4;
+			break;
+		default:
+			numSbrHeader = 0;
+			break;
+	}
+	for (el = 0; el < numSbrHeader; el++) {
+		sbr_header();
+	}
 }
-
-
 */
 public partial class ld_sbr_header : IMp4Serializable
 {
@@ -45,32 +43,30 @@ public partial class ld_sbr_header : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class ld_sbr_header(channelConfiguration)
 {
-  switch (channelConfiguration) {
-    case 1:
-    case 2:
-      numSbrHeader = 1;
-      break;
-    case 3:
-      numSbrHeader = 2;
-      break;
-    case 4:
-    case 5:
-    case 6:
-      numSbrHeader = 3;
-      break;
-    case 7:
-      numSbrHeader = 4;
-      break;
-    default:
-      numSbrHeader = 0;
-      break;
-  }
-  for (el = 0; el < numSbrHeader; el++) {
-    sbr_header();
-  }
-}
-
-"; } }
+	switch (channelConfiguration) {
+		case 1:
+		case 2:
+			numSbrHeader = 1;
+			break;
+		case 3:
+			numSbrHeader = 2;
+			break;
+		case 4:
+		case 5:
+		case 6:
+			numSbrHeader = 3;
+			break;
+		case 7:
+			numSbrHeader = 4;
+			break;
+		default:
+			numSbrHeader = 0;
+			break;
+	}
+	for (el = 0; el < numSbrHeader; el++) {
+		sbr_header();
+	}
+}"; } }
 	public virtual string DisplayName { get { return "ld_sbr_header"; } }
 
 	protected sbr_header[] sbr_header; 

@@ -8,52 +8,52 @@ namespace SharpISOBMFF
 /*
 // ISO/IEC 23001-7:2023 DAM 1 (MPEG w25903, 2026-01, a draft): version 2's use_AES_256, whether the key is of 256 bits
 aligned(8) class TrackEncryptionBox() extends FullBox('tenc', version, flags = 0) {
- unsigned int(8) reserved = 0;
- if (version == 0) {
-  unsigned int(8) reserved = 0;
- }
- else {
-  unsigned int(4) default_crypt_byte_block;
-  unsigned int(4) default_skip_byte_block;
-  if (version >= 2) {
-   unsigned int(1) use_AES_256;
-   unsigned int(7) reserved1 = 0;
-  }
- }
- unsigned int(8) default_isProtected;
- unsigned int(8) default_Per_Sample_IV_Size;
- unsigned int(8) default_KID[16];
- if (default_isProtected == 1 && default_Per_Sample_IV_Size == 0) {
-  unsigned int(8) defaultConstantIVSize;
-  unsigned int(8) defaultConstantIV[defaultConstantIVSize];
- }
- } 
+	unsigned int(8) reserved = 0;
+	if (version == 0) {
+		unsigned int(8) reserved = 0;
+	}
+	else {
+		unsigned int(4) default_crypt_byte_block;
+		unsigned int(4) default_skip_byte_block;
+		if (version >= 2) {
+			unsigned int(1) use_AES_256;
+			unsigned int(7) reserved1 = 0;
+		}
+	}
+	unsigned int(8) default_isProtected;
+	unsigned int(8) default_Per_Sample_IV_Size;
+	unsigned int(8) default_KID[16];
+	if (default_isProtected == 1 && default_Per_Sample_IV_Size == 0) {
+		unsigned int(8) defaultConstantIVSize;
+		unsigned int(8) defaultConstantIV[defaultConstantIVSize];
+	}
+}
 */
 public partial class TrackEncryptionBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// ISO/IEC 23001-7:2023 DAM 1 (MPEG w25903, 2026-01, a draft): version 2's use_AES_256, whether the key is of 256 bits
 aligned(8) class TrackEncryptionBox() extends FullBox('tenc', version, flags = 0) {
- unsigned int(8) reserved = 0;
- if (version == 0) {
-  unsigned int(8) reserved = 0;
- }
- else {
-  unsigned int(4) default_crypt_byte_block;
-  unsigned int(4) default_skip_byte_block;
-  if (version >= 2) {
-   unsigned int(1) use_AES_256;
-   unsigned int(7) reserved1 = 0;
-  }
- }
- unsigned int(8) default_isProtected;
- unsigned int(8) default_Per_Sample_IV_Size;
- unsigned int(8) default_KID[16];
- if (default_isProtected == 1 && default_Per_Sample_IV_Size == 0) {
-  unsigned int(8) defaultConstantIVSize;
-  unsigned int(8) defaultConstantIV[defaultConstantIVSize];
- }
- } "; } }
+	unsigned int(8) reserved = 0;
+	if (version == 0) {
+		unsigned int(8) reserved = 0;
+	}
+	else {
+		unsigned int(4) default_crypt_byte_block;
+		unsigned int(4) default_skip_byte_block;
+		if (version >= 2) {
+			unsigned int(1) use_AES_256;
+			unsigned int(7) reserved1 = 0;
+		}
+	}
+	unsigned int(8) default_isProtected;
+	unsigned int(8) default_Per_Sample_IV_Size;
+	unsigned int(8) default_KID[16];
+	if (default_isProtected == 1 && default_Per_Sample_IV_Size == 0) {
+		unsigned int(8) defaultConstantIVSize;
+		unsigned int(8) defaultConstantIV[defaultConstantIVSize];
+	}
+}"; } }
 	public const string TYPE = "tenc";
 	public override string DisplayName { get { return "TrackEncryptionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,19 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 class AppleClippingRegionBox() extends Box ('crgn'){
- unsigned int(16) regionSize;
- unsigned int(64) regionBoundaryBox;
- unsigned int(8) clippingRegionData[];
- }
+	unsigned int(16) regionSize;
+	unsigned int(64) regionBoundaryBox;
+	unsigned int(8) clippingRegionData[];
+}
 */
 public partial class AppleClippingRegionBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AppleClippingRegionBox() extends Box ('crgn'){
- unsigned int(16) regionSize;
- unsigned int(64) regionBoundaryBox;
- unsigned int(8) clippingRegionData[];
- }"; } }
+	unsigned int(16) regionSize;
+	unsigned int(64) regionBoundaryBox;
+	unsigned int(8) clippingRegionData[];
+}"; } }
 	public const string TYPE = "crgn";
 	public override string DisplayName { get { return "AppleClippingRegionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

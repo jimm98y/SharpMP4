@@ -7,14 +7,14 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ApplePrlBox() extends Box('©prl') {
- Box boxes[];
+	Box boxes[];
 }
 */
 public partial class ApplePrlBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class ApplePrlBox() extends Box('©prl') {
- Box boxes[];
+	Box boxes[];
 }"; } }
 	public const string TYPE = "©prl";
 	public override string DisplayName { get { return "ApplePrlBox"; } }

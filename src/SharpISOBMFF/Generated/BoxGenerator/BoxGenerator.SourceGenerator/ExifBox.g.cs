@@ -8,18 +8,18 @@ namespace SharpISOBMFF
 /*
 // Exif: where in it the TIFF header is, then the Exif
 aligned(8) class ExifBox extends Box('Exif') {
- unsigned int(32) tiff_header_offset;
- bit(8) data[];
- }
+	unsigned int(32) tiff_header_offset;
+	bit(8) data[];
+}
 */
 public partial class ExifBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// Exif: where in it the TIFF header is, then the Exif
 aligned(8) class ExifBox extends Box('Exif') {
- unsigned int(32) tiff_header_offset;
- bit(8) data[];
- }"; } }
+	unsigned int(32) tiff_header_offset;
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "Exif";
 	public override string DisplayName { get { return "ExifBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

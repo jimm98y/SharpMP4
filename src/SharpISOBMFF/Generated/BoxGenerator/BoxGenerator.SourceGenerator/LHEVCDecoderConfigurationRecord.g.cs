@@ -7,26 +7,26 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class LHEVCDecoderConfigurationRecord {
-unsigned int(8) configurationVersion = 1;
-bit(4) reserved = '1111'b;
-unsigned int(12) min_spatial_segmentation_idc;
-bit(6) reserved = '111111'b;
-unsigned int(2) parallelismType;
-bit(2) reserved = '11'b;
-bit(3) numTemporalLayers;
-bit(1) temporalIdNested;
-unsigned int(2) lengthSizeMinusOne;
-unsigned int(8) numOfArrays;
-for (j = 0; j <numOfArrays; j ++) {
-bit(1) array_completeness;
-unsigned int(1) reserved = 0;
-unsigned int(6) NAL_unit_type;
-unsigned int(16) numNalus;
-for (i = 0; i <numNalus; i ++) {
-unsigned int(16) nalUnitLength;
-bit(8*nalUnitLength) nalUnit;
-}
-}
+	unsigned int(8) configurationVersion = 1;
+	bit(4) reserved = '1111'b;
+	unsigned int(12) min_spatial_segmentation_idc;
+	bit(6) reserved = '111111'b;
+	unsigned int(2) parallelismType;
+	bit(2) reserved = '11'b;
+	bit(3) numTemporalLayers;
+	bit(1) temporalIdNested;
+	unsigned int(2) lengthSizeMinusOne;
+	unsigned int(8) numOfArrays;
+	for (j = 0; j <numOfArrays; j ++) {
+		bit(1) array_completeness;
+		unsigned int(1) reserved = 0;
+		unsigned int(6) NAL_unit_type;
+		unsigned int(16) numNalus;
+		for (i = 0; i <numNalus; i ++) {
+			unsigned int(16) nalUnitLength;
+			bit(8*nalUnitLength) nalUnit;
+		}
+	}
 }
 */
 public partial class LHEVCDecoderConfigurationRecord : IMp4Serializable
@@ -38,26 +38,26 @@ public partial class LHEVCDecoderConfigurationRecord : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class LHEVCDecoderConfigurationRecord {
-unsigned int(8) configurationVersion = 1;
-bit(4) reserved = '1111'b;
-unsigned int(12) min_spatial_segmentation_idc;
-bit(6) reserved = '111111'b;
-unsigned int(2) parallelismType;
-bit(2) reserved = '11'b;
-bit(3) numTemporalLayers;
-bit(1) temporalIdNested;
-unsigned int(2) lengthSizeMinusOne;
-unsigned int(8) numOfArrays;
-for (j = 0; j <numOfArrays; j ++) {
-bit(1) array_completeness;
-unsigned int(1) reserved = 0;
-unsigned int(6) NAL_unit_type;
-unsigned int(16) numNalus;
-for (i = 0; i <numNalus; i ++) {
-unsigned int(16) nalUnitLength;
-bit(8*nalUnitLength) nalUnit;
-}
-}
+	unsigned int(8) configurationVersion = 1;
+	bit(4) reserved = '1111'b;
+	unsigned int(12) min_spatial_segmentation_idc;
+	bit(6) reserved = '111111'b;
+	unsigned int(2) parallelismType;
+	bit(2) reserved = '11'b;
+	bit(3) numTemporalLayers;
+	bit(1) temporalIdNested;
+	unsigned int(2) lengthSizeMinusOne;
+	unsigned int(8) numOfArrays;
+	for (j = 0; j <numOfArrays; j ++) {
+		bit(1) array_completeness;
+		unsigned int(1) reserved = 0;
+		unsigned int(6) NAL_unit_type;
+		unsigned int(16) numNalus;
+		for (i = 0; i <numNalus; i ++) {
+			unsigned int(16) nalUnitLength;
+			bit(8*nalUnitLength) nalUnit;
+		}
+	}
 }"; } }
 	public virtual string DisplayName { get { return "LHEVCDecoderConfigurationRecord"; } }
 

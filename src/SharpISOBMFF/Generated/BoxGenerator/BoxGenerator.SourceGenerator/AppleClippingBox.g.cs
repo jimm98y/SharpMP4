@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class AppleClippingBox() extends Box ('clip'){
- Box boxes[];
- }
+	Box boxes[];
+}
 */
 public partial class AppleClippingBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AppleClippingBox() extends Box ('clip'){
- Box boxes[];
- }"; } }
+	Box boxes[];
+}"; } }
 	public const string TYPE = "clip";
 	public override string DisplayName { get { return "AppleClippingBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

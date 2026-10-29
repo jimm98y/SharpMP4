@@ -8,16 +8,16 @@ namespace SharpISOBMFF
 /*
 // The codestream, whole
 aligned(8) class JpegXLCodestreamBox extends Box('jxlc') {
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class JpegXLCodestreamBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// The codestream, whole
 aligned(8) class JpegXLCodestreamBox extends Box('jxlc') {
- bit(8) data[];
- }"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "jxlc";
 	public override string DisplayName { get { return "JpegXLCodestreamBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

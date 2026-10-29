@@ -8,29 +8,28 @@ namespace SharpISOBMFF
 /*
 aligned(8) class AV1CodecConfigurationRecord
 {
-  unsigned int(1) marker = 1;
-  unsigned int(7) version = 1;
-  unsigned int(3) seq_profile;
-  unsigned int(5) seq_level_idx_0;
-  unsigned int(1) seq_tier_0;
-  unsigned int(1) high_bitdepth;
-  unsigned int(1) twelve_bit;
-  unsigned int(1) monochrome;
-  unsigned int(1) chroma_subsampling_x;
-  unsigned int(1) chroma_subsampling_y;
-  unsigned int(2) chroma_sample_position;
-  unsigned int(3) reserved = 0;
+	unsigned int(1) marker = 1;
+	unsigned int(7) version = 1;
+	unsigned int(3) seq_profile;
+	unsigned int(5) seq_level_idx_0;
+	unsigned int(1) seq_tier_0;
+	unsigned int(1) high_bitdepth;
+	unsigned int(1) twelve_bit;
+	unsigned int(1) monochrome;
+	unsigned int(1) chroma_subsampling_x;
+	unsigned int(1) chroma_subsampling_y;
+	unsigned int(2) chroma_sample_position;
+	unsigned int(3) reserved = 0;
 
-  unsigned int(1) initial_presentation_delay_present;
-  if(initial_presentation_delay_present) {
-    unsigned int(4) initial_presentation_delay_minus_one;
-  } else {
-    unsigned int(4) reserved = 0;
-  }
+	unsigned int(1) initial_presentation_delay_present;
+	if(initial_presentation_delay_present) {
+		unsigned int(4) initial_presentation_delay_minus_one;
+	} else {
+		unsigned int(4) reserved = 0;
+	}
 
-  unsigned int(8) configOBUs[];
+	unsigned int(8) configOBUs[];
 }
-
 */
 public partial class AV1CodecConfigurationRecord : IMp4Serializable
 {
@@ -42,29 +41,28 @@ public partial class AV1CodecConfigurationRecord : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class AV1CodecConfigurationRecord
 {
-  unsigned int(1) marker = 1;
-  unsigned int(7) version = 1;
-  unsigned int(3) seq_profile;
-  unsigned int(5) seq_level_idx_0;
-  unsigned int(1) seq_tier_0;
-  unsigned int(1) high_bitdepth;
-  unsigned int(1) twelve_bit;
-  unsigned int(1) monochrome;
-  unsigned int(1) chroma_subsampling_x;
-  unsigned int(1) chroma_subsampling_y;
-  unsigned int(2) chroma_sample_position;
-  unsigned int(3) reserved = 0;
+	unsigned int(1) marker = 1;
+	unsigned int(7) version = 1;
+	unsigned int(3) seq_profile;
+	unsigned int(5) seq_level_idx_0;
+	unsigned int(1) seq_tier_0;
+	unsigned int(1) high_bitdepth;
+	unsigned int(1) twelve_bit;
+	unsigned int(1) monochrome;
+	unsigned int(1) chroma_subsampling_x;
+	unsigned int(1) chroma_subsampling_y;
+	unsigned int(2) chroma_sample_position;
+	unsigned int(3) reserved = 0;
 
-  unsigned int(1) initial_presentation_delay_present;
-  if(initial_presentation_delay_present) {
-    unsigned int(4) initial_presentation_delay_minus_one;
-  } else {
-    unsigned int(4) reserved = 0;
-  }
+	unsigned int(1) initial_presentation_delay_present;
+	if(initial_presentation_delay_present) {
+		unsigned int(4) initial_presentation_delay_minus_one;
+	} else {
+		unsigned int(4) reserved = 0;
+	}
 
-  unsigned int(8) configOBUs[];
-}
-"; } }
+	unsigned int(8) configOBUs[];
+}"; } }
 	public virtual string DisplayName { get { return "AV1CodecConfigurationRecord"; } }
 
 	protected bool marker = true; 

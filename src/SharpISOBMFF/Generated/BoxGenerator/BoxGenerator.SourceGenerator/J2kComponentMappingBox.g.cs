@@ -8,18 +8,16 @@ namespace SharpISOBMFF
 /*
 // JPEG 2000 component mapping (ISO/IEC 15444-1 I.5.3.5): of each channel, its component, and whether it is mapped directly or through the palette's column
 aligned(8) class J2kComponentMappingBox() extends Box('cmap') {
-	 J2kComponentMapping mappings[];
- } 
- 
+	J2kComponentMapping mappings[];
+}
 */
 public partial class J2kComponentMappingBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// JPEG 2000 component mapping (ISO/IEC 15444-1 I.5.3.5): of each channel, its component, and whether it is mapped directly or through the palette's column
 aligned(8) class J2kComponentMappingBox() extends Box('cmap') {
-	 J2kComponentMapping mappings[];
- } 
- "; } }
+	J2kComponentMapping mappings[];
+}"; } }
 	public const string TYPE = "cmap";
 	public override string DisplayName { get { return "J2kComponentMappingBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,19 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 class AppleComponentDetectBox() extends Box ('rmcd'){
- unsigned int(32) flags;
- ComponentDescription description;
- unsigned int(32) minimumVersion;
- } 
+	unsigned int(32) flags;
+	ComponentDescription description;
+	unsigned int(32) minimumVersion;
+}
 */
 public partial class AppleComponentDetectBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AppleComponentDetectBox() extends Box ('rmcd'){
- unsigned int(32) flags;
- ComponentDescription description;
- unsigned int(32) minimumVersion;
- } "; } }
+	unsigned int(32) flags;
+	ComponentDescription description;
+	unsigned int(32) minimumVersion;
+}"; } }
 	public const string TYPE = "rmcd";
 	public override string DisplayName { get { return "AppleComponentDetectBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

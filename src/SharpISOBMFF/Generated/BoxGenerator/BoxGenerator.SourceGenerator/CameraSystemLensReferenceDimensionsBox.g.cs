@@ -6,17 +6,17 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class CameraSystemLensReferenceDimensionsBox extends FullBox('rdim', 0, 0) { 
-unsigned int(32) reference_width; 
-unsigned int(32) reference_height; 
+aligned(8) class CameraSystemLensReferenceDimensionsBox extends FullBox('rdim', 0, 0) {
+	unsigned int(32) reference_width;
+	unsigned int(32) reference_height;
 }
 */
 public partial class CameraSystemLensReferenceDimensionsBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class CameraSystemLensReferenceDimensionsBox extends FullBox('rdim', 0, 0) { 
-unsigned int(32) reference_width; 
-unsigned int(32) reference_height; 
+	public override string Syntax { get { return @"aligned(8) class CameraSystemLensReferenceDimensionsBox extends FullBox('rdim', 0, 0) {
+	unsigned int(32) reference_width;
+	unsigned int(32) reference_height;
 }"; } }
 	public const string TYPE = "rdim";
 	public override string DisplayName { get { return "CameraSystemLensReferenceDimensionsBox"; } }

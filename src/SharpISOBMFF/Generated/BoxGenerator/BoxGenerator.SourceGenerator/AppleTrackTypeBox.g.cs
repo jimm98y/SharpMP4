@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class AppleTrackTypeBox() extends Box ('kgtt'){
- MultiLanguageString value[];
- }
+	MultiLanguageString value[];
+}
 */
 public partial class AppleTrackTypeBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AppleTrackTypeBox() extends Box ('kgtt'){
- MultiLanguageString value[];
- }"; } }
+	MultiLanguageString value[];
+}"; } }
 	public const string TYPE = "kgtt";
 	public override string DisplayName { get { return "AppleTrackTypeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

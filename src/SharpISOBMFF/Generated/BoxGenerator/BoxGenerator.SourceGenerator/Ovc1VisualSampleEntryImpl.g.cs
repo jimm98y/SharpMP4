@@ -7,19 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class Ovc1VisualSampleEntryImpl() extends Box('ovc1') {
- unsigned int(48) reserved;
- unsigned int(16) dataReferenceIndex;
- bit(8) vc1Content[];
- } 
+	unsigned int(48) reserved;
+	unsigned int(16) dataReferenceIndex;
+	bit(8) vc1Content[];
+}
 */
 public partial class Ovc1VisualSampleEntryImpl : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class Ovc1VisualSampleEntryImpl() extends Box('ovc1') {
- unsigned int(48) reserved;
- unsigned int(16) dataReferenceIndex;
- bit(8) vc1Content[];
- } "; } }
+	unsigned int(48) reserved;
+	unsigned int(16) dataReferenceIndex;
+	bit(8) vc1Content[];
+}"; } }
 	public const string TYPE = "ovc1";
 	public override string DisplayName { get { return "Ovc1VisualSampleEntryImpl"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class CanonCMT3Box() extends Box('CMT3') {
- bit(8) tiff[];
+	bit(8) tiff[];
 }
-
 */
 public partial class CanonCMT3Box : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class CanonCMT3Box() extends Box('CMT3') {
- bit(8) tiff[];
-}
-"; } }
+	bit(8) tiff[];
+}"; } }
 	public const string TYPE = "CMT3";
 	public override string DisplayName { get { return "CanonCMT3Box"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

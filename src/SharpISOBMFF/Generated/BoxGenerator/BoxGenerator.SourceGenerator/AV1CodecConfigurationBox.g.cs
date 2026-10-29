@@ -7,21 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 class AV1CodecConfigurationBox
-extends Box('av1C')
+	extends Box('av1C')
 {
-  AV1CodecConfigurationRecord av1Config;
+	AV1CodecConfigurationRecord av1Config;
 }
-
 */
 public partial class AV1CodecConfigurationBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AV1CodecConfigurationBox
-extends Box('av1C')
+	extends Box('av1C')
 {
-  AV1CodecConfigurationRecord av1Config;
-}
-"; } }
+	AV1CodecConfigurationRecord av1Config;
+}"; } }
 	public const string TYPE = "av1C";
 	public override string DisplayName { get { return "AV1CodecConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,23 +7,23 @@ namespace SharpISOBMFF
 {
 /*
 class AppleVersionCheckBox() extends Box ('rmvc'){
- unsigned int(32) flags;
- unsigned int(32) softwarePackage;
- unsigned int(32) version;
- unsigned int(32) mask;
- signed int(16) checkType;
- }
+	unsigned int(32) flags;
+	unsigned int(32) softwarePackage;
+	unsigned int(32) version;
+	unsigned int(32) mask;
+	signed int(16) checkType;
+}
 */
 public partial class AppleVersionCheckBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AppleVersionCheckBox() extends Box ('rmvc'){
- unsigned int(32) flags;
- unsigned int(32) softwarePackage;
- unsigned int(32) version;
- unsigned int(32) mask;
- signed int(16) checkType;
- }"; } }
+	unsigned int(32) flags;
+	unsigned int(32) softwarePackage;
+	unsigned int(32) version;
+	unsigned int(32) mask;
+	signed int(16) checkType;
+}"; } }
 	public const string TYPE = "rmvc";
 	public override string DisplayName { get { return "AppleVersionCheckBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

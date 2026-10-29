@@ -8,62 +8,62 @@ namespace SharpISOBMFF
 /*
 // Apple's camera extrinsic matrix, of the layout of 'cmex', as an iPhone's spatial photo has it of each eye
 aligned(8) class UuidCameraExtrinsicMatrixBox() extends FullBox('uuid 4363e9145b7d4aab97aebea69803b434') {
-	 if( flags & 0x1 ) { 
- signed int(32) pos_x;
- }
- if( flags & 0x2 ) { 
- signed int(32) pos_y;
- }
- if( flags & 0x4 ) { 
- signed int(32) pos_z;
- }
- if( flags & 0x8 ) { 
- if( flags & 0x10 ) { 
- signed int(32) quat_x;
- signed int(32) quat_y;
- signed int(32) quat_z;
- }
- else { 
- signed int(16) quat_x_short;
- signed int(16) quat_y_short;
- signed int(16) quat_z_short;
- }
- }
- if( flags & 0x20 ) { 
- unsigned int(32) world_coordinate_system_id;
- }
- } 
+	if( flags & 0x1 ) {
+		signed int(32) pos_x;
+	}
+	if( flags & 0x2 ) {
+		signed int(32) pos_y;
+	}
+	if( flags & 0x4 ) {
+		signed int(32) pos_z;
+	}
+	if( flags & 0x8 ) {
+		if( flags & 0x10 ) {
+			signed int(32) quat_x;
+			signed int(32) quat_y;
+			signed int(32) quat_z;
+		}
+		else {
+			signed int(16) quat_x_short;
+			signed int(16) quat_y_short;
+			signed int(16) quat_z_short;
+		}
+	}
+	if( flags & 0x20 ) {
+		unsigned int(32) world_coordinate_system_id;
+	}
+}
 */
 public partial class UuidCameraExtrinsicMatrixBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// Apple's camera extrinsic matrix, of the layout of 'cmex', as an iPhone's spatial photo has it of each eye
 aligned(8) class UuidCameraExtrinsicMatrixBox() extends FullBox('uuid 4363e9145b7d4aab97aebea69803b434') {
-	 if( flags & 0x1 ) { 
- signed int(32) pos_x;
- }
- if( flags & 0x2 ) { 
- signed int(32) pos_y;
- }
- if( flags & 0x4 ) { 
- signed int(32) pos_z;
- }
- if( flags & 0x8 ) { 
- if( flags & 0x10 ) { 
- signed int(32) quat_x;
- signed int(32) quat_y;
- signed int(32) quat_z;
- }
- else { 
- signed int(16) quat_x_short;
- signed int(16) quat_y_short;
- signed int(16) quat_z_short;
- }
- }
- if( flags & 0x20 ) { 
- unsigned int(32) world_coordinate_system_id;
- }
- } "; } }
+	if( flags & 0x1 ) {
+		signed int(32) pos_x;
+	}
+	if( flags & 0x2 ) {
+		signed int(32) pos_y;
+	}
+	if( flags & 0x4 ) {
+		signed int(32) pos_z;
+	}
+	if( flags & 0x8 ) {
+		if( flags & 0x10 ) {
+			signed int(32) quat_x;
+			signed int(32) quat_y;
+			signed int(32) quat_z;
+		}
+		else {
+			signed int(16) quat_x_short;
+			signed int(16) quat_y_short;
+			signed int(16) quat_z_short;
+		}
+	}
+	if( flags & 0x20 ) {
+		unsigned int(32) world_coordinate_system_id;
+	}
+}"; } }
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "UuidCameraExtrinsicMatrixBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -8,7 +8,7 @@ namespace SharpISOBMFF
 /*
 abstract class OCI_Descriptor extends BaseDescriptor : bit(8) tag=OCIDescrTagStartRange..OCIDescrTagEndRange
 {
- // empty. To be filled by classes extending this class.
+	// empty. To be filled by classes extending this class.
 }
 */
 public abstract partial class OCI_Descriptor : BaseDescriptor
@@ -16,7 +16,7 @@ public abstract partial class OCI_Descriptor : BaseDescriptor
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"abstract class OCI_Descriptor extends BaseDescriptor : bit(8) tag=OCIDescrTagStartRange..OCIDescrTagEndRange
 {
- // empty. To be filled by classes extending this class.
+	// empty. To be filled by classes extending this class.
 }"; } }
 	public byte TagMin { get; set; } = DescriptorTags.OCIDescrTagStartRange;
 	public byte TagMax { get; set; } = DescriptorTags.OCIDescrTagEndRange;	public override string DisplayName { get { return "OCI_Descriptor"; } }

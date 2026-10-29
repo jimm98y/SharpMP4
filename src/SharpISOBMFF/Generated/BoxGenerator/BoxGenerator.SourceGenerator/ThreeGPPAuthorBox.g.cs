@@ -10,7 +10,7 @@ aligned(8) class ThreeGPPAuthorBox() extends FullBox('auth', version = 0, 0) {
 	bit(1) reserved = 0;
 	unsigned int(5)[3] language;
 	string value;
-} 
+}
 */
 public partial class ThreeGPPAuthorBox : FullBox
 {
@@ -19,7 +19,7 @@ public partial class ThreeGPPAuthorBox : FullBox
 	bit(1) reserved = 0;
 	unsigned int(5)[3] language;
 	string value;
-} "; } }
+}"; } }
 	public const string TYPE = "auth";
 	public override string DisplayName { get { return "ThreeGPPAuthorBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

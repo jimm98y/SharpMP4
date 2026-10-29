@@ -8,16 +8,16 @@ namespace SharpISOBMFF
 /*
 // The level of the codestream, 5 or 10
 aligned(8) class JpegXLLevelBox extends Box('jxll') {
- unsigned int(8) level;
- }
+	unsigned int(8) level;
+}
 */
 public partial class JpegXLLevelBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// The level of the codestream, 5 or 10
 aligned(8) class JpegXLLevelBox extends Box('jxll') {
- unsigned int(8) level;
- }"; } }
+	unsigned int(8) level;
+}"; } }
 	public const string TYPE = "jxll";
 	public override string DisplayName { get { return "JpegXLLevelBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

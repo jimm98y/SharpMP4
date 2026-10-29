@@ -7,27 +7,27 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class TextSampleEntry() extends SampleEntry('tx3g') {
- unsigned int(32) displayFlags;
- unsigned int(8) horizontalJustification;
- unsigned int(8) verticalJustification;
- unsigned int(8) backgroundColorRgba[4];
- RectRecord rectRecord;
- StyleRecord styleRecord; Box boxes[];
- }
- 
+	unsigned int(32) displayFlags;
+	unsigned int(8) horizontalJustification;
+	unsigned int(8) verticalJustification;
+	unsigned int(8) backgroundColorRgba[4];
+	RectRecord rectRecord;
+	StyleRecord styleRecord;
+	Box boxes[];
+}
 */
 public partial class TextSampleEntrytx3gDup : SampleEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class TextSampleEntry() extends SampleEntry('tx3g') {
- unsigned int(32) displayFlags;
- unsigned int(8) horizontalJustification;
- unsigned int(8) verticalJustification;
- unsigned int(8) backgroundColorRgba[4];
- RectRecord rectRecord;
- StyleRecord styleRecord; Box boxes[];
- }
- "; } }
+	unsigned int(32) displayFlags;
+	unsigned int(8) horizontalJustification;
+	unsigned int(8) verticalJustification;
+	unsigned int(8) backgroundColorRgba[4];
+	RectRecord rectRecord;
+	StyleRecord styleRecord;
+	Box boxes[];
+}"; } }
 	public const string TYPE = "tx3g";
 	public override string DisplayName { get { return "TextSampleEntrytx3gDup"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

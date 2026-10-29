@@ -6,37 +6,37 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class ExtrinsicCameraParametersBox extends FullBox ('ecam', version=0, flags) { 
- unsigned int(6)  reserved=0; 
- unsigned int(10)  ref_view_id; 
- unsigned int(8) prec_rotation_param; 
- unsigned int(8) prec_translation_param; 
- for (j=1; j<=3; j++) { /* row *//*   
-  for (k=1; k<=3; k++) { /* column *//* 
-   unsigned int(8) exponent_r[j][k]; 
-   signed   int(64) mantissa_r [j][k]; 
-  } 
-  unsigned int(8) exponent_t[j]; 
-  signed   int(64) mantissa_t[j]; 
- } 
+class ExtrinsicCameraParametersBox extends FullBox ('ecam', version=0, flags) {
+	unsigned int(6)  reserved=0;
+	unsigned int(10)  ref_view_id;
+	unsigned int(8) prec_rotation_param;
+	unsigned int(8) prec_translation_param;
+	for (j=1; j<=3; j++) { /* row *//*
+		for (k=1; k<=3; k++) { /* column *//*
+			unsigned int(8) exponent_r[j][k];
+			signed   int(64) mantissa_r [j][k];
+		}
+		unsigned int(8) exponent_t[j];
+		signed   int(64) mantissa_t[j];
+	}
 }
 */
 public partial class ExtrinsicCameraParametersBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"class ExtrinsicCameraParametersBox extends FullBox ('ecam', version=0, flags) { 
- unsigned int(6)  reserved=0; 
- unsigned int(10)  ref_view_id; 
- unsigned int(8) prec_rotation_param; 
- unsigned int(8) prec_translation_param; 
- for (j=1; j<=3; j++) { /* row */   
-  for (k=1; k<=3; k++) { /* column */ 
-   unsigned int(8) exponent_r[j][k]; 
-   signed   int(64) mantissa_r [j][k]; 
-  } 
-  unsigned int(8) exponent_t[j]; 
-  signed   int(64) mantissa_t[j]; 
- } 
+	public override string Syntax { get { return @"class ExtrinsicCameraParametersBox extends FullBox ('ecam', version=0, flags) {
+	unsigned int(6)  reserved=0;
+	unsigned int(10)  ref_view_id;
+	unsigned int(8) prec_rotation_param;
+	unsigned int(8) prec_translation_param;
+	for (j=1; j<=3; j++) { /* row */
+		for (k=1; k<=3; k++) { /* column */
+			unsigned int(8) exponent_r[j][k];
+			signed   int(64) mantissa_r [j][k];
+		}
+		unsigned int(8) exponent_t[j];
+		signed   int(64) mantissa_t[j];
+	}
 }"; } }
 	public const string TYPE = "ecam";
 	public override string DisplayName { get { return "ExtrinsicCameraParametersBox"; } }

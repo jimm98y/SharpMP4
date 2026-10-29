@@ -7,19 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class PspFprfBox() extends Box('FPRF') {
-	 unsigned int(32) unknown1;
- unsigned int(32) unknown2;
- unsigned int(32) unknown3;
- }
+	unsigned int(32) unknown1;
+	unsigned int(32) unknown2;
+	unsigned int(32) unknown3;
+}
 */
 public partial class PspFprfBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class PspFprfBox() extends Box('FPRF') {
-	 unsigned int(32) unknown1;
- unsigned int(32) unknown2;
- unsigned int(32) unknown3;
- }"; } }
+	unsigned int(32) unknown1;
+	unsigned int(32) unknown2;
+	unsigned int(32) unknown3;
+}"; } }
 	public const string TYPE = "FPRF";
 	public override string DisplayName { get { return "PspFprfBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

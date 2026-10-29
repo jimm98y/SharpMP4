@@ -6,37 +6,37 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class CameraSystemLensIntrinsicsBox extends FullBox('lnin', version = 0, flags) { 
-signed int(16) denominator_shift_operand; 
-signed int(16) skew_denominator_shift_operand; 
-signed int(32) focal_length_x; 
-signed int(32) principal_point_x; 
-signed int(32) principal_point_y; 
-if (flags & 1) { 
-signed int(32) focal_length_y; 
-signed int(32) skew_factor; 
-} 
-if (flags & 2) { 
-BEFloat32 projection_offset; 
-} 
+aligned(8) class CameraSystemLensIntrinsicsBox extends FullBox('lnin', version = 0, flags) {
+	signed int(16) denominator_shift_operand;
+	signed int(16) skew_denominator_shift_operand;
+	signed int(32) focal_length_x;
+	signed int(32) principal_point_x;
+	signed int(32) principal_point_y;
+	if (flags & 1) {
+		signed int(32) focal_length_y;
+		signed int(32) skew_factor;
+	}
+	if (flags & 2) {
+		BEFloat32 projection_offset;
+	}
 }
 */
 public partial class CameraSystemLensIntrinsicsBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class CameraSystemLensIntrinsicsBox extends FullBox('lnin', version = 0, flags) { 
-signed int(16) denominator_shift_operand; 
-signed int(16) skew_denominator_shift_operand; 
-signed int(32) focal_length_x; 
-signed int(32) principal_point_x; 
-signed int(32) principal_point_y; 
-if (flags & 1) { 
-signed int(32) focal_length_y; 
-signed int(32) skew_factor; 
-} 
-if (flags & 2) { 
-BEFloat32 projection_offset; 
-} 
+	public override string Syntax { get { return @"aligned(8) class CameraSystemLensIntrinsicsBox extends FullBox('lnin', version = 0, flags) {
+	signed int(16) denominator_shift_operand;
+	signed int(16) skew_denominator_shift_operand;
+	signed int(32) focal_length_x;
+	signed int(32) principal_point_x;
+	signed int(32) principal_point_y;
+	if (flags & 1) {
+		signed int(32) focal_length_y;
+		signed int(32) skew_factor;
+	}
+	if (flags & 2) {
+		BEFloat32 projection_offset;
+	}
 }"; } }
 	public const string TYPE = "lnin";
 	public override string DisplayName { get { return "CameraSystemLensIntrinsicsBox"; } }

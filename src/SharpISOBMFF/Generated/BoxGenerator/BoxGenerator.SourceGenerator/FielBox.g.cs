@@ -7,17 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FielBox() extends Box('fiel') {
- unsigned int(8) total;
- unsigned int(8) order;
- } 
+	unsigned int(8) total;
+	unsigned int(8) order;
+}
 */
 public partial class FielBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class FielBox() extends Box('fiel') {
- unsigned int(8) total;
- unsigned int(8) order;
- } "; } }
+	unsigned int(8) total;
+	unsigned int(8) order;
+}"; } }
 	public const string TYPE = "fiel";
 	public override string DisplayName { get { return "FielBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -8,44 +8,42 @@ namespace SharpISOBMFF
 /*
 class ELDSpecificConfig(channelConfiguration)
 {
-  bslbf(1) frameLengthFlag;
-  bslbf(1) aacSectionDataResilienceFlag;
-  bslbf(1) aacScalefactorDataResilienceFlag;
-  bslbf(1) aacSpectralDataResilienceFlag;
+	bslbf(1) frameLengthFlag;
+	bslbf(1) aacSectionDataResilienceFlag;
+	bslbf(1) aacScalefactorDataResilienceFlag;
+	bslbf(1) aacSpectralDataResilienceFlag;
 
-  bslbf(1) ldSbrPresentFlag;
-  if (ldSbrPresentFlag) {
-    bslbf(1) ldSbrSamplingRate;
-    bslbf(1) ldSbrCrcFlag;
-    ld_sbr_header(channelConfiguration);
-  }
+	bslbf(1) ldSbrPresentFlag;
+	if (ldSbrPresentFlag) {
+		bslbf(1) ldSbrSamplingRate;
+		bslbf(1) ldSbrCrcFlag;
+		ld_sbr_header(channelConfiguration);
+	}
 
-  bslbf(4) eldExtType;
-while (eldExtType != ELDEXT_TERM) {
-    uimsbf(4) eldExtLen;
-    len = eldExtLen;
-    if (eldExtLen == 15) {
-      uimsbf(8) eldExtLenAdd;
-      len += eldExtLenAdd;
-    }
-    if (eldExtLenAdd == 255) {
-      uimsbf(16) eldExtLenAddAdd;
-      len += eldExtLenAddAdd;
-    }
-    switch (eldExtType) {
-      /* add future eld extension configs here *//*
-      default:
-        int cntt;
-        for (cnt = 0; cnt < len; cnt++) {
-           uimsbf(8) other_byte;
-        }
-        break;
-    }
-bslbf(4) eldExtType;
-  }
+	bslbf(4) eldExtType;
+	while (eldExtType != ELDEXT_TERM) {
+		uimsbf(4) eldExtLen;
+		len = eldExtLen;
+		if (eldExtLen == 15) {
+			uimsbf(8) eldExtLenAdd;
+			len += eldExtLenAdd;
+		}
+		if (eldExtLenAdd == 255) {
+			uimsbf(16) eldExtLenAddAdd;
+			len += eldExtLenAddAdd;
+		}
+		switch (eldExtType) {
+			/* add future eld extension configs here *//*
+			default:
+				int cntt;
+				for (cnt = 0; cnt < len; cnt++) {
+					uimsbf(8) other_byte;
+				}
+				break;
+		}
+		bslbf(4) eldExtType;
+	}
 }
-
-
 */
 public partial class ELDSpecificConfig : IMp4Serializable
 {
@@ -57,44 +55,42 @@ public partial class ELDSpecificConfig : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class ELDSpecificConfig(channelConfiguration)
 {
-  bslbf(1) frameLengthFlag;
-  bslbf(1) aacSectionDataResilienceFlag;
-  bslbf(1) aacScalefactorDataResilienceFlag;
-  bslbf(1) aacSpectralDataResilienceFlag;
+	bslbf(1) frameLengthFlag;
+	bslbf(1) aacSectionDataResilienceFlag;
+	bslbf(1) aacScalefactorDataResilienceFlag;
+	bslbf(1) aacSpectralDataResilienceFlag;
 
-  bslbf(1) ldSbrPresentFlag;
-  if (ldSbrPresentFlag) {
-    bslbf(1) ldSbrSamplingRate;
-    bslbf(1) ldSbrCrcFlag;
-    ld_sbr_header(channelConfiguration);
-  }
+	bslbf(1) ldSbrPresentFlag;
+	if (ldSbrPresentFlag) {
+		bslbf(1) ldSbrSamplingRate;
+		bslbf(1) ldSbrCrcFlag;
+		ld_sbr_header(channelConfiguration);
+	}
 
-  bslbf(4) eldExtType;
-while (eldExtType != ELDEXT_TERM) {
-    uimsbf(4) eldExtLen;
-    len = eldExtLen;
-    if (eldExtLen == 15) {
-      uimsbf(8) eldExtLenAdd;
-      len += eldExtLenAdd;
-    }
-    if (eldExtLenAdd == 255) {
-      uimsbf(16) eldExtLenAddAdd;
-      len += eldExtLenAddAdd;
-    }
-    switch (eldExtType) {
-      /* add future eld extension configs here */
-      default:
-        int cntt;
-        for (cnt = 0; cnt < len; cnt++) {
-           uimsbf(8) other_byte;
-        }
-        break;
-    }
-bslbf(4) eldExtType;
-  }
-}
-
-"; } }
+	bslbf(4) eldExtType;
+	while (eldExtType != ELDEXT_TERM) {
+		uimsbf(4) eldExtLen;
+		len = eldExtLen;
+		if (eldExtLen == 15) {
+			uimsbf(8) eldExtLenAdd;
+			len += eldExtLenAdd;
+		}
+		if (eldExtLenAdd == 255) {
+			uimsbf(16) eldExtLenAddAdd;
+			len += eldExtLenAddAdd;
+		}
+		switch (eldExtType) {
+			/* add future eld extension configs here */
+			default:
+				int cntt;
+				for (cnt = 0; cnt < len; cnt++) {
+					uimsbf(8) other_byte;
+				}
+				break;
+		}
+		bslbf(4) eldExtType;
+	}
+}"; } }
 	public virtual string DisplayName { get { return "ELDSpecificConfig"; } }
 
 	protected bool frameLengthFlag; 

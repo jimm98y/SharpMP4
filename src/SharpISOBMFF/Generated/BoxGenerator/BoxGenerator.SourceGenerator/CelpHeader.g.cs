@@ -8,20 +8,18 @@ namespace SharpISOBMFF
 /*
 class CelpHeader(samplingFrequencyIndex)
 {
-  uimsbf(1) ExcitationMode;
-  uimsbf(1) SampleRateMode;
-  uimsbf(1) FineRateControl;
-  if (ExcitationMode == RPE) {
-    uimsbf(3) RPE_Configuration;
-  }
-  if (ExcitationMode == MPE) {
-    uimsbf(5) MPE_Configuration;
-    uimsbf(2) NumEnhLayers;
-    uimsbf(1) BandwidthScalabilityMode;
-  }
+	uimsbf(1) ExcitationMode;
+	uimsbf(1) SampleRateMode;
+	uimsbf(1) FineRateControl;
+	if (ExcitationMode == RPE) {
+		uimsbf(3) RPE_Configuration;
+	}
+	if (ExcitationMode == MPE) {
+		uimsbf(5) MPE_Configuration;
+		uimsbf(2) NumEnhLayers;
+		uimsbf(1) BandwidthScalabilityMode;
+	}
 }
-
-
 */
 public partial class CelpHeader : IMp4Serializable
 {
@@ -33,20 +31,18 @@ public partial class CelpHeader : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class CelpHeader(samplingFrequencyIndex)
 {
-  uimsbf(1) ExcitationMode;
-  uimsbf(1) SampleRateMode;
-  uimsbf(1) FineRateControl;
-  if (ExcitationMode == RPE) {
-    uimsbf(3) RPE_Configuration;
-  }
-  if (ExcitationMode == MPE) {
-    uimsbf(5) MPE_Configuration;
-    uimsbf(2) NumEnhLayers;
-    uimsbf(1) BandwidthScalabilityMode;
-  }
-}
-
-"; } }
+	uimsbf(1) ExcitationMode;
+	uimsbf(1) SampleRateMode;
+	uimsbf(1) FineRateControl;
+	if (ExcitationMode == RPE) {
+		uimsbf(3) RPE_Configuration;
+	}
+	if (ExcitationMode == MPE) {
+		uimsbf(5) MPE_Configuration;
+		uimsbf(2) NumEnhLayers;
+		uimsbf(1) BandwidthScalabilityMode;
+	}
+}"; } }
 	public virtual string DisplayName { get { return "CelpHeader"; } }
 
 	protected bool ExcitationMode; 

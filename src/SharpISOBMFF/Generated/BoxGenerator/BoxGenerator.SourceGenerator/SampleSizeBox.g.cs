@@ -11,7 +11,7 @@ aligned(8) class SampleSizeBox extends FullBox('stsz', version = 0, 0) {
 	unsigned int(32)	sample_count;
 	if (sample_size==0) {
 		for (i=1; i <= sample_count; i++) {
-		unsigned int(32)	entry_size;
+			unsigned int(32)	entry_size;
 		}
 	}
 }
@@ -24,7 +24,7 @@ public partial class SampleSizeBox : FullBox
 	unsigned int(32)	sample_count;
 	if (sample_size==0) {
 		for (i=1; i <= sample_count; i++) {
-		unsigned int(32)	entry_size;
+			unsigned int(32)	entry_size;
 		}
 	}
 }"; } }

@@ -7,19 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 class AV1SwitchFrameSampleGroupEntry
-extends VisualSampleGroupEntry('av1s')
+	extends VisualSampleGroupEntry('av1s')
 {
 }
-
 */
 public partial class AV1SwitchFrameSampleGroupEntry : VisualSampleGroupEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AV1SwitchFrameSampleGroupEntry
-extends VisualSampleGroupEntry('av1s')
+	extends VisualSampleGroupEntry('av1s')
 {
-}
-"; } }
+}"; } }
 	public const string TYPE = "av1s";
 	public override string DisplayName { get { return "AV1SwitchFrameSampleGroupEntry"; } }
 

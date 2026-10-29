@@ -8,18 +8,16 @@ namespace SharpISOBMFF
 /*
 class SSCSpecificConfig(channelConfiguration)
 {
-  uimsbf(2) decoder_level;
-  uimsbf(4) update_rate;
-  uimsbf(2) synthesis_method;
-  if (channelConfiguration != 1) {
-    uimsbf(2) mode_ext;
-    if ((channelConfiguration == 2) && (mode_ext == 1)) {
-      uimsbf(2) reserved;
-    }
-  }
+	uimsbf(2) decoder_level;
+	uimsbf(4) update_rate;
+	uimsbf(2) synthesis_method;
+	if (channelConfiguration != 1) {
+		uimsbf(2) mode_ext;
+		if ((channelConfiguration == 2) && (mode_ext == 1)) {
+			uimsbf(2) reserved;
+		}
+	}
 }
-
-
 */
 public partial class SSCSpecificConfig : IMp4Serializable
 {
@@ -31,18 +29,16 @@ public partial class SSCSpecificConfig : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class SSCSpecificConfig(channelConfiguration)
 {
-  uimsbf(2) decoder_level;
-  uimsbf(4) update_rate;
-  uimsbf(2) synthesis_method;
-  if (channelConfiguration != 1) {
-    uimsbf(2) mode_ext;
-    if ((channelConfiguration == 2) && (mode_ext == 1)) {
-      uimsbf(2) reserved;
-    }
-  }
-}
-
-"; } }
+	uimsbf(2) decoder_level;
+	uimsbf(4) update_rate;
+	uimsbf(2) synthesis_method;
+	if (channelConfiguration != 1) {
+		uimsbf(2) mode_ext;
+		if ((channelConfiguration == 2) && (mode_ext == 1)) {
+			uimsbf(2) reserved;
+		}
+	}
+}"; } }
 	public virtual string DisplayName { get { return "SSCSpecificConfig"; } }
 
 	protected byte decoder_level; 

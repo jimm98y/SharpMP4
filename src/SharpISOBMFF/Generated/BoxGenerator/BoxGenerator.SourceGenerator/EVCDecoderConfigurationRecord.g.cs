@@ -7,29 +7,29 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class EVCDecoderConfigurationRecord {
-unsigned int(8) configurationVersion=1;
-unsigned int(8) profile_idc;
-unsigned int(8) level_idc;
- unsigned int(32) toolset_idc;
-unsigned int(2) chroma_format_idc;
- unsigned int(3) bit_depth_luma_minus8;
-unsigned int(3) bit_depth_chroma_minus8;
-unsigned int(32) pic_width_in_luma_samples;
-unsigned int(32) pic_height_in_luma_samples;
-unsigned int(5) reserved='00000'b;
-unsigned int(1) sps_in_stream;
- unsigned int(1) pps_in_stream;
-unsigned int(1) aps_in_stream;
- unsigned int(8) numOfArrays;
- for (j=0; j<numOfArrays; j++) {
-bit(2) reserved='00'b;
-unsigned int(6) NAL_unit_type;
- unsigned int(16) numNalus;
-for (i=0; i<numNalus; i++) {
- unsigned int(16) nalUnitLength;
-bit(8*nalUnitLength) nalUnit;
-}
-}
+	unsigned int(8) configurationVersion=1;
+	unsigned int(8) profile_idc;
+	unsigned int(8) level_idc;
+	unsigned int(32) toolset_idc;
+	unsigned int(2) chroma_format_idc;
+	unsigned int(3) bit_depth_luma_minus8;
+	unsigned int(3) bit_depth_chroma_minus8;
+	unsigned int(32) pic_width_in_luma_samples;
+	unsigned int(32) pic_height_in_luma_samples;
+	unsigned int(5) reserved='00000'b;
+	unsigned int(1) sps_in_stream;
+	unsigned int(1) pps_in_stream;
+	unsigned int(1) aps_in_stream;
+	unsigned int(8) numOfArrays;
+	for (j=0; j<numOfArrays; j++) {
+		bit(2) reserved='00'b;
+		unsigned int(6) NAL_unit_type;
+		unsigned int(16) numNalus;
+		for (i=0; i<numNalus; i++) {
+			unsigned int(16) nalUnitLength;
+			bit(8*nalUnitLength) nalUnit;
+		}
+	}
 }
 */
 public partial class EVCDecoderConfigurationRecord : IMp4Serializable
@@ -41,29 +41,29 @@ public partial class EVCDecoderConfigurationRecord : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class EVCDecoderConfigurationRecord {
-unsigned int(8) configurationVersion=1;
-unsigned int(8) profile_idc;
-unsigned int(8) level_idc;
- unsigned int(32) toolset_idc;
-unsigned int(2) chroma_format_idc;
- unsigned int(3) bit_depth_luma_minus8;
-unsigned int(3) bit_depth_chroma_minus8;
-unsigned int(32) pic_width_in_luma_samples;
-unsigned int(32) pic_height_in_luma_samples;
-unsigned int(5) reserved='00000'b;
-unsigned int(1) sps_in_stream;
- unsigned int(1) pps_in_stream;
-unsigned int(1) aps_in_stream;
- unsigned int(8) numOfArrays;
- for (j=0; j<numOfArrays; j++) {
-bit(2) reserved='00'b;
-unsigned int(6) NAL_unit_type;
- unsigned int(16) numNalus;
-for (i=0; i<numNalus; i++) {
- unsigned int(16) nalUnitLength;
-bit(8*nalUnitLength) nalUnit;
-}
-}
+	unsigned int(8) configurationVersion=1;
+	unsigned int(8) profile_idc;
+	unsigned int(8) level_idc;
+	unsigned int(32) toolset_idc;
+	unsigned int(2) chroma_format_idc;
+	unsigned int(3) bit_depth_luma_minus8;
+	unsigned int(3) bit_depth_chroma_minus8;
+	unsigned int(32) pic_width_in_luma_samples;
+	unsigned int(32) pic_height_in_luma_samples;
+	unsigned int(5) reserved='00000'b;
+	unsigned int(1) sps_in_stream;
+	unsigned int(1) pps_in_stream;
+	unsigned int(1) aps_in_stream;
+	unsigned int(8) numOfArrays;
+	for (j=0; j<numOfArrays; j++) {
+		bit(2) reserved='00'b;
+		unsigned int(6) NAL_unit_type;
+		unsigned int(16) numNalus;
+		for (i=0; i<numNalus; i++) {
+			unsigned int(16) nalUnitLength;
+			bit(8*nalUnitLength) nalUnit;
+		}
+	}
 }"; } }
 	public virtual string DisplayName { get { return "EVCDecoderConfigurationRecord"; } }
 

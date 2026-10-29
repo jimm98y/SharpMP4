@@ -6,24 +6,22 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class ScalableNALUMapEntry() extends VisualSampleGroupEntry ('scnm') { 
+class ScalableNALUMapEntry() extends VisualSampleGroupEntry ('scnm') {
 	bit(8) reserved = 0;
 	unsigned int(8) NALU_count;
 	for (i=1; i<= NALU_count; i++)
 		unsigned int(8) groupID;
-	}
-
+}
 */
 public partial class ScalableNALUMapEntry : VisualSampleGroupEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"class ScalableNALUMapEntry() extends VisualSampleGroupEntry ('scnm') { 
+	public override string Syntax { get { return @"class ScalableNALUMapEntry() extends VisualSampleGroupEntry ('scnm') {
 	bit(8) reserved = 0;
 	unsigned int(8) NALU_count;
 	for (i=1; i<= NALU_count; i++)
 		unsigned int(8) groupID;
-	}
-"; } }
+}"; } }
 	public const string TYPE = "scnm";
 	public override string DisplayName { get { return "ScalableNALUMapEntry"; } }
 

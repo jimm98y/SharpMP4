@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class URIInitBox
-		extends FullBox('uriI', version = 0, 0) {
+	extends FullBox('uriI', version = 0, 0) {
 	unsigned int(8) uri_initialization_data[];
 }
 */
@@ -15,7 +15,7 @@ public partial class URIInitBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class URIInitBox
-		extends FullBox('uriI', version = 0, 0) {
+	extends FullBox('uriI', version = 0, 0) {
 	unsigned int(8) uri_initialization_data[];
 }"; } }
 	public const string TYPE = "uriI";

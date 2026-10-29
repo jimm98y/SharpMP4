@@ -6,23 +6,23 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class ViewPackingInformationBox extends FullBox('pkin', 0, 0) { 
-unsigned int(32) view_packing_kind; // a FourCC for the kind of projection 
-} 
+aligned(8) class ViewPackingInformationBox extends FullBox('pkin', 0, 0) {
+	unsigned int(32) view_packing_kind; // a FourCC for the kind of projection
+}
 */
 public partial class ViewPackingInformationBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class ViewPackingInformationBox extends FullBox('pkin', 0, 0) { 
-unsigned int(32) view_packing_kind; // a FourCC for the kind of projection 
-} "; } }
+	public override string Syntax { get { return @"aligned(8) class ViewPackingInformationBox extends FullBox('pkin', 0, 0) {
+	unsigned int(32) view_packing_kind; // a FourCC for the kind of projection
+}"; } }
 	public const string TYPE = "pkin";
 	public override string DisplayName { get { return "ViewPackingInformationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("pack"); }
 
 
-	protected uint view_packing_kind;  //  a FourCC for the kind of projection 
+	protected uint view_packing_kind;  //  a FourCC for the kind of projection
 	public uint ViewPackingKind { get { return this.view_packing_kind; } set { this.view_packing_kind = value; } }
 
 	public ViewPackingInformationBox(): base(IsoStream.FromFourCC("pkin"), 0, 0)
@@ -33,7 +33,7 @@ unsigned int(32) view_packing_kind; // a FourCC for the kind of projection
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.view_packing_kind, "view_packing_kind"); // a FourCC for the kind of projection 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.view_packing_kind, "view_packing_kind"); // a FourCC for the kind of projection
 		return boxSize;
 	}
 
@@ -41,7 +41,7 @@ unsigned int(32) view_packing_kind; // a FourCC for the kind of projection
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt32( this.view_packing_kind, "view_packing_kind"); // a FourCC for the kind of projection 
+		boxSize += stream.WriteUInt32( this.view_packing_kind, "view_packing_kind"); // a FourCC for the kind of projection
 		return boxSize;
 	}
 
@@ -57,7 +57,7 @@ unsigned int(32) view_packing_kind; // a FourCC for the kind of projection
 	{
 		ulong boxSize = 0;
 		boxSize += base.Trace(tracer);
-		boxSize += tracer.Field("view_packing_kind", 32, this.view_packing_kind); // a FourCC for the kind of projection 
+		boxSize += tracer.Field("view_packing_kind", 32, this.view_packing_kind); // a FourCC for the kind of projection
 		return boxSize;
 	}
 }

@@ -7,8 +7,8 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class BoxHeader (
-		unsigned int(32) boxtype,
-		optional unsigned int(8)[16] extended_type) {
+	unsigned int(32) boxtype,
+	optional unsigned int(8)[16] extended_type) {
 	unsigned int(32) size;
 	unsigned int(32) type = boxtype;
 	if (size==1) {
@@ -30,8 +30,8 @@ public partial class BoxHeader : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class BoxHeader (
-		unsigned int(32) boxtype,
-		optional unsigned int(8)[16] extended_type) {
+	unsigned int(32) boxtype,
+	optional unsigned int(8)[16] extended_type) {
 	unsigned int(32) size;
 	unsigned int(32) type = boxtype;
 	if (size==1) {

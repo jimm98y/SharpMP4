@@ -9,17 +9,13 @@ namespace SharpISOBMFF
 class TimeScaleEntry() extends Box('tims') {
 	uint(32)	timescale;
 }
-
-
 */
 public partial class TimeScaleEntry : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class TimeScaleEntry() extends Box('tims') {
 	uint(32)	timescale;
-}
-
-"; } }
+}"; } }
 	public const string TYPE = "tims";
 	public override string DisplayName { get { return "TimeScaleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

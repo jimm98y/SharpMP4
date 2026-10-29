@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class KodakFreaBox() extends Box ('frea'){
- Box boxes[];
- }
-
+	Box boxes[];
+}
 */
 public partial class KodakFreaBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class KodakFreaBox() extends Box ('frea'){
- Box boxes[];
- }
-"; } }
+	Box boxes[];
+}"; } }
 	public const string TYPE = "frea";
 	public override string DisplayName { get { return "KodakFreaBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

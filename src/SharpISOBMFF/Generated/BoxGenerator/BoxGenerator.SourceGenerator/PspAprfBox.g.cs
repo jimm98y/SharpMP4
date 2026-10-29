@@ -7,31 +7,31 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class PspAprfBox() extends Box('APRF') {
-	 unsigned int(32) unknown1;
- unsigned int(32) unknown2;
- unsigned int(32) codec;
- unsigned int(32) unknown3;
- unsigned int(32) unknown4;
- unsigned int(32) maxBitrate;
- unsigned int(32) avgBitrate;
- unsigned int(32) frameRate;
- unsigned int(32) channels;
- }
+	unsigned int(32) unknown1;
+	unsigned int(32) unknown2;
+	unsigned int(32) codec;
+	unsigned int(32) unknown3;
+	unsigned int(32) unknown4;
+	unsigned int(32) maxBitrate;
+	unsigned int(32) avgBitrate;
+	unsigned int(32) frameRate;
+	unsigned int(32) channels;
+}
 */
 public partial class PspAprfBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class PspAprfBox() extends Box('APRF') {
-	 unsigned int(32) unknown1;
- unsigned int(32) unknown2;
- unsigned int(32) codec;
- unsigned int(32) unknown3;
- unsigned int(32) unknown4;
- unsigned int(32) maxBitrate;
- unsigned int(32) avgBitrate;
- unsigned int(32) frameRate;
- unsigned int(32) channels;
- }"; } }
+	unsigned int(32) unknown1;
+	unsigned int(32) unknown2;
+	unsigned int(32) codec;
+	unsigned int(32) unknown3;
+	unsigned int(32) unknown4;
+	unsigned int(32) maxBitrate;
+	unsigned int(32) avgBitrate;
+	unsigned int(32) frameRate;
+	unsigned int(32) channels;
+}"; } }
 	public const string TYPE = "APRF";
 	public override string DisplayName { get { return "PspAprfBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -8,16 +8,15 @@ namespace SharpISOBMFF
 /*
 class UsacConfigExtension()
 {
-  EscapedValue(2, 4, 8) numConfigExtensionsMinusOne;
-  for (i = 0; i < numConfigExtensionsMinusOne + 1; i++) {
-    EscapedValue(4, 8, 16) usacConfigExtType;
-    EscapedValue(4, 8, 16) usacConfigExtLength;
-    UsacConfigExtensionData(usacConfigExtLength) usacConfigExtensionData;
-  }
+	EscapedValue(2, 4, 8) numConfigExtensionsMinusOne;
+	for (i = 0; i < numConfigExtensionsMinusOne + 1; i++) {
+		EscapedValue(4, 8, 16) usacConfigExtType;
+		EscapedValue(4, 8, 16) usacConfigExtLength;
+		UsacConfigExtensionData(usacConfigExtLength) usacConfigExtensionData;
+	}
 }
 
 // the bytes of a config extension - loudness info, a stream id, fill - usacConfigExtLength of them
-
 */
 public partial class UsacConfigExtension : IMp4Serializable
 {
@@ -29,16 +28,15 @@ public partial class UsacConfigExtension : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class UsacConfigExtension()
 {
-  EscapedValue(2, 4, 8) numConfigExtensionsMinusOne;
-  for (i = 0; i < numConfigExtensionsMinusOne + 1; i++) {
-    EscapedValue(4, 8, 16) usacConfigExtType;
-    EscapedValue(4, 8, 16) usacConfigExtLength;
-    UsacConfigExtensionData(usacConfigExtLength) usacConfigExtensionData;
-  }
+	EscapedValue(2, 4, 8) numConfigExtensionsMinusOne;
+	for (i = 0; i < numConfigExtensionsMinusOne + 1; i++) {
+		EscapedValue(4, 8, 16) usacConfigExtType;
+		EscapedValue(4, 8, 16) usacConfigExtLength;
+		UsacConfigExtensionData(usacConfigExtLength) usacConfigExtensionData;
+	}
 }
 
-// the bytes of a config extension - loudness info, a stream id, fill - usacConfigExtLength of them
-"; } }
+// the bytes of a config extension - loudness info, a stream id, fill - usacConfigExtLength of them"; } }
 	public virtual string DisplayName { get { return "UsacConfigExtension"; } }
 
 	protected EscapedValue numConfigExtensionsMinusOne; 

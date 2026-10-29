@@ -8,58 +8,57 @@ namespace SharpISOBMFF
 /*
 class ErrorProtectionSpecificConfig()
 {
-  uimsbf(8) number_of_predefined_set;
-  uimsbf(2) interleave_type;
-  uimsbf(3) bit_stuffing;
-  uimsbf(3) number_of_concatenated_frame;
-  for (i = 0; i < number_of_predefined_set; i++) {
-    uimsbf(6) number_of_class[i];
-    for (j = 0; j < number_of_class[i]; j++) {
-      uimsbf(1) length_escape[i][j];
-      uimsbf(1) rate_escape[i][j];
-      uimsbf(1) crclen_escape[i][j];
-      if (number_of_concatenated_frame != 1) {
-        uimsbf(1) concatenate_flag[i][j];
-      }
-      uimsbf(2) fec_type[i][j];
-      if (fec_type[i][j] == 0) {
-        uimsbf(1) termination_switch[i][j];
-      }
-      if (interleave_type == 2) {
-        uimsbf(2) interleave_switch[i][j];
-      }
-      uimsbf(1) class_optional;
-      if (length_escape[i][j] == 1) { /* ESC *//*
-        uimsbf(4) number_of_bits_for_length[i][j];
-      }
-      else {
-        uimsbf(16) class_length[i][j];
-      }
-      if (rate_escape[i][j] != 1) { /* not ESC *//*
-        if (fec_type[i][j] != 0) {
-          uimsbf(7) class_rate[i][j];
-        } else {
-          uimsbf(5) class_rate[i][j];
-        }
-      }
-      if (crclen_escape[i][j] != 1) {  /* not ESC *//*
-        uimsbf(5) class_crclen[i][j];
-      }
-    }
-    uimsbf(1) class_reordered_output;
-    if (class_reordered_output == 1) {
-      for (j = 0; j < number_of_class[i]; j++) {
-        uimsbf(6) class_output_order[i][j];
-      }
-    }
-  }
-  uimsbf(1) header_protection;
-  if (header_protection == 1) {
-    uimsbf(5) header_rate;
-    uimsbf(5) header_crclen;
-  }
+	uimsbf(8) number_of_predefined_set;
+	uimsbf(2) interleave_type;
+	uimsbf(3) bit_stuffing;
+	uimsbf(3) number_of_concatenated_frame;
+	for (i = 0; i < number_of_predefined_set; i++) {
+		uimsbf(6) number_of_class[i];
+		for (j = 0; j < number_of_class[i]; j++) {
+			uimsbf(1) length_escape[i][j];
+			uimsbf(1) rate_escape[i][j];
+			uimsbf(1) crclen_escape[i][j];
+			if (number_of_concatenated_frame != 1) {
+				uimsbf(1) concatenate_flag[i][j];
+			}
+			uimsbf(2) fec_type[i][j];
+			if (fec_type[i][j] == 0) {
+				uimsbf(1) termination_switch[i][j];
+			}
+			if (interleave_type == 2) {
+				uimsbf(2) interleave_switch[i][j];
+			}
+			uimsbf(1) class_optional;
+			if (length_escape[i][j] == 1) { /* ESC *//*
+				uimsbf(4) number_of_bits_for_length[i][j];
+			}
+			else {
+				uimsbf(16) class_length[i][j];
+			}
+			if (rate_escape[i][j] != 1) { /* not ESC *//*
+				if (fec_type[i][j] != 0) {
+					uimsbf(7) class_rate[i][j];
+				} else {
+					uimsbf(5) class_rate[i][j];
+				}
+			}
+			if (crclen_escape[i][j] != 1) {  /* not ESC *//*
+				uimsbf(5) class_crclen[i][j];
+			}
+		}
+		uimsbf(1) class_reordered_output;
+		if (class_reordered_output == 1) {
+			for (j = 0; j < number_of_class[i]; j++) {
+				uimsbf(6) class_output_order[i][j];
+			}
+		}
+	}
+	uimsbf(1) header_protection;
+	if (header_protection == 1) {
+		uimsbf(5) header_rate;
+		uimsbf(5) header_crclen;
+	}
 }
-
 */
 public partial class ErrorProtectionSpecificConfig : IMp4Serializable
 {
@@ -71,58 +70,57 @@ public partial class ErrorProtectionSpecificConfig : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class ErrorProtectionSpecificConfig()
 {
-  uimsbf(8) number_of_predefined_set;
-  uimsbf(2) interleave_type;
-  uimsbf(3) bit_stuffing;
-  uimsbf(3) number_of_concatenated_frame;
-  for (i = 0; i < number_of_predefined_set; i++) {
-    uimsbf(6) number_of_class[i];
-    for (j = 0; j < number_of_class[i]; j++) {
-      uimsbf(1) length_escape[i][j];
-      uimsbf(1) rate_escape[i][j];
-      uimsbf(1) crclen_escape[i][j];
-      if (number_of_concatenated_frame != 1) {
-        uimsbf(1) concatenate_flag[i][j];
-      }
-      uimsbf(2) fec_type[i][j];
-      if (fec_type[i][j] == 0) {
-        uimsbf(1) termination_switch[i][j];
-      }
-      if (interleave_type == 2) {
-        uimsbf(2) interleave_switch[i][j];
-      }
-      uimsbf(1) class_optional;
-      if (length_escape[i][j] == 1) { /* ESC */
-        uimsbf(4) number_of_bits_for_length[i][j];
-      }
-      else {
-        uimsbf(16) class_length[i][j];
-      }
-      if (rate_escape[i][j] != 1) { /* not ESC */
-        if (fec_type[i][j] != 0) {
-          uimsbf(7) class_rate[i][j];
-        } else {
-          uimsbf(5) class_rate[i][j];
-        }
-      }
-      if (crclen_escape[i][j] != 1) {  /* not ESC */
-        uimsbf(5) class_crclen[i][j];
-      }
-    }
-    uimsbf(1) class_reordered_output;
-    if (class_reordered_output == 1) {
-      for (j = 0; j < number_of_class[i]; j++) {
-        uimsbf(6) class_output_order[i][j];
-      }
-    }
-  }
-  uimsbf(1) header_protection;
-  if (header_protection == 1) {
-    uimsbf(5) header_rate;
-    uimsbf(5) header_crclen;
-  }
-}
-"; } }
+	uimsbf(8) number_of_predefined_set;
+	uimsbf(2) interleave_type;
+	uimsbf(3) bit_stuffing;
+	uimsbf(3) number_of_concatenated_frame;
+	for (i = 0; i < number_of_predefined_set; i++) {
+		uimsbf(6) number_of_class[i];
+		for (j = 0; j < number_of_class[i]; j++) {
+			uimsbf(1) length_escape[i][j];
+			uimsbf(1) rate_escape[i][j];
+			uimsbf(1) crclen_escape[i][j];
+			if (number_of_concatenated_frame != 1) {
+				uimsbf(1) concatenate_flag[i][j];
+			}
+			uimsbf(2) fec_type[i][j];
+			if (fec_type[i][j] == 0) {
+				uimsbf(1) termination_switch[i][j];
+			}
+			if (interleave_type == 2) {
+				uimsbf(2) interleave_switch[i][j];
+			}
+			uimsbf(1) class_optional;
+			if (length_escape[i][j] == 1) { /* ESC */
+				uimsbf(4) number_of_bits_for_length[i][j];
+			}
+			else {
+				uimsbf(16) class_length[i][j];
+			}
+			if (rate_escape[i][j] != 1) { /* not ESC */
+				if (fec_type[i][j] != 0) {
+					uimsbf(7) class_rate[i][j];
+				} else {
+					uimsbf(5) class_rate[i][j];
+				}
+			}
+			if (crclen_escape[i][j] != 1) {  /* not ESC */
+				uimsbf(5) class_crclen[i][j];
+			}
+		}
+		uimsbf(1) class_reordered_output;
+		if (class_reordered_output == 1) {
+			for (j = 0; j < number_of_class[i]; j++) {
+				uimsbf(6) class_output_order[i][j];
+			}
+		}
+	}
+	uimsbf(1) header_protection;
+	if (header_protection == 1) {
+		uimsbf(5) header_rate;
+		uimsbf(5) header_crclen;
+	}
+}"; } }
 	public virtual string DisplayName { get { return "ErrorProtectionSpecificConfig"; } }
 
 	protected byte number_of_predefined_set; 

@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class LayerSelectorProperty
-extends ItemProperty('lsel') {
+	extends ItemProperty('lsel') {
 	unsigned int(16) layer_id;
 }
 */
@@ -15,7 +15,7 @@ public partial class LayerSelectorProperty : ItemProperty
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class LayerSelectorProperty
-extends ItemProperty('lsel') {
+	extends ItemProperty('lsel') {
 	unsigned int(16) layer_id;
 }"; } }
 	public const string TYPE = "lsel";

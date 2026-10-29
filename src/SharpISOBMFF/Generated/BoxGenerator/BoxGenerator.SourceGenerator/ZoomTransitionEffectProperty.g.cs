@@ -7,8 +7,8 @@ namespace SharpISOBMFF
 {
 /*
 class ZoomTransitionEffectProperty
-extends ItemFullProperty('zoom', version=0, flags=0) {
-	unsigned int(1) transition_direction; 
+	extends ItemFullProperty('zoom', version=0, flags=0) {
+	unsigned int(1) transition_direction;
 	unsigned int(7) transition_shape;
 }
 */
@@ -16,8 +16,8 @@ public partial class ZoomTransitionEffectProperty : ItemFullProperty
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class ZoomTransitionEffectProperty
-extends ItemFullProperty('zoom', version=0, flags=0) {
-	unsigned int(1) transition_direction; 
+	extends ItemFullProperty('zoom', version=0, flags=0) {
+	unsigned int(1) transition_direction;
 	unsigned int(7) transition_shape;
 }"; } }
 	public const string TYPE = "zoom";

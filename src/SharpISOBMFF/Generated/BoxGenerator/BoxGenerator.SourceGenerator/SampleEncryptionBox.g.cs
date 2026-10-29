@@ -8,8 +8,8 @@ namespace SharpISOBMFF
 /*
 aligned(8) class SampleEncryptionBox extends FullBox('senc', version, flags)
 {
-   unsigned int(32)  sample_count;
-   unsigned int(8) sample_data[]; // each sample's IV and subsamples (23001-7 7.2), whose IV size is the track's - its 'tenc', or the sample's 'seig' group - and not in the box: SharpMP4's SampleEncryptionReader reads them
+	unsigned int(32)  sample_count;
+	unsigned int(8) sample_data[]; // each sample's IV and subsamples (23001-7 7.2), whose IV size is the track's - its 'tenc', or the sample's 'seig' group - and not in the box: SharpMP4's SampleEncryptionReader reads them
 }
 */
 public partial class SampleEncryptionBox : FullBox
@@ -17,8 +17,8 @@ public partial class SampleEncryptionBox : FullBox
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class SampleEncryptionBox extends FullBox('senc', version, flags)
 {
-   unsigned int(32)  sample_count;
-   unsigned int(8) sample_data[]; // each sample's IV and subsamples (23001-7 7.2), whose IV size is the track's - its 'tenc', or the sample's 'seig' group - and not in the box: SharpMP4's SampleEncryptionReader reads them
+	unsigned int(32)  sample_count;
+	unsigned int(8) sample_data[]; // each sample's IV and subsamples (23001-7 7.2), whose IV size is the track's - its 'tenc', or the sample's 'seig' group - and not in the box: SharpMP4's SampleEncryptionReader reads them
 }"; } }
 	public const string TYPE = "senc";
 	public override string DisplayName { get { return "SampleEncryptionBox"; } }

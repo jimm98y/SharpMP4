@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class VideoExtendedUsageBox() extends Box ('vexu') {
- Box boxes[];
- }
+	Box boxes[];
+}
 */
 public partial class VideoExtendedUsageBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class VideoExtendedUsageBox() extends Box ('vexu') {
- Box boxes[];
- }"; } }
+	Box boxes[];
+}"; } }
 	public const string TYPE = "vexu";
 	public override string DisplayName { get { return "VideoExtendedUsageBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ImageMirror
-extends ItemProperty('imir') {
+	extends ItemProperty('imir') {
 	unsigned int(7) reserved = 0;
 	unsigned int(1) axis;
 }
@@ -16,7 +16,7 @@ public partial class ImageMirror : ItemProperty
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class ImageMirror
-extends ItemProperty('imir') {
+	extends ItemProperty('imir') {
 	unsigned int(7) reserved = 0;
 	unsigned int(1) axis;
 }"; } }

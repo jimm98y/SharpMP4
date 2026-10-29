@@ -7,31 +7,31 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class OpusSpecificBox extends Box('dOps'){
- unsigned int(8) Version;
- unsigned int(8) OutputChannelCount;
- unsigned int(16) PreSkip;
- unsigned int(32) InputSampleRate;
- signed int(16) OutputGain;
- unsigned int(8) ChannelMappingFamily;
- if (ChannelMappingFamily != 0) {
- ChannelMappingTable(OutputChannelCount);
- }
- }
+	unsigned int(8) Version;
+	unsigned int(8) OutputChannelCount;
+	unsigned int(16) PreSkip;
+	unsigned int(32) InputSampleRate;
+	signed int(16) OutputGain;
+	unsigned int(8) ChannelMappingFamily;
+	if (ChannelMappingFamily != 0) {
+		ChannelMappingTable(OutputChannelCount);
+	}
+}
 */
 public partial class OpusSpecificBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class OpusSpecificBox extends Box('dOps'){
- unsigned int(8) Version;
- unsigned int(8) OutputChannelCount;
- unsigned int(16) PreSkip;
- unsigned int(32) InputSampleRate;
- signed int(16) OutputGain;
- unsigned int(8) ChannelMappingFamily;
- if (ChannelMappingFamily != 0) {
- ChannelMappingTable(OutputChannelCount);
- }
- }"; } }
+	unsigned int(8) Version;
+	unsigned int(8) OutputChannelCount;
+	unsigned int(16) PreSkip;
+	unsigned int(32) InputSampleRate;
+	signed int(16) OutputGain;
+	unsigned int(8) ChannelMappingFamily;
+	if (ChannelMappingFamily != 0) {
+		ChannelMappingTable(OutputChannelCount);
+	}
+}"; } }
 	public const string TYPE = "dOps";
 	public override string DisplayName { get { return "OpusSpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

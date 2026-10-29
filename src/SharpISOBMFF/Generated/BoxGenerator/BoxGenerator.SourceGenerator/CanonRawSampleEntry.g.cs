@@ -8,46 +8,44 @@ namespace SharpISOBMFF
 /*
 // A CR3's image: a visual sample entry, then its type (3, 0 for JPEG; 1, 1 for raw) and its boxes (JPEG, CMP1, CDI1)
 aligned(8) class CanonRawSampleEntry() extends SampleEntry('CRAW') {
- unsigned int(16) pre_defined;
- unsigned int(16) reserved;
- unsigned int(32) pre_defined0[3];
- unsigned int(16) width;
- unsigned int(16) height;
- unsigned int(32) horizresolution;
- unsigned int(32) vertresolution;
- unsigned int(32) reserved0;
- unsigned int(16) frame_count;
- unsigned int(8) compressorname[32];
- unsigned int(16) depth;
- signed int(16) pre_defined1;
- unsigned int(16) imageType;
- unsigned int(16) imageFlags;
- Box boxes[];
+	unsigned int(16) pre_defined;
+	unsigned int(16) reserved;
+	unsigned int(32) pre_defined0[3];
+	unsigned int(16) width;
+	unsigned int(16) height;
+	unsigned int(32) horizresolution;
+	unsigned int(32) vertresolution;
+	unsigned int(32) reserved0;
+	unsigned int(16) frame_count;
+	unsigned int(8) compressorname[32];
+	unsigned int(16) depth;
+	signed int(16) pre_defined1;
+	unsigned int(16) imageType;
+	unsigned int(16) imageFlags;
+	Box boxes[];
 }
-
 */
 public partial class CanonRawSampleEntry : SampleEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// A CR3's image: a visual sample entry, then its type (3, 0 for JPEG; 1, 1 for raw) and its boxes (JPEG, CMP1, CDI1)
 aligned(8) class CanonRawSampleEntry() extends SampleEntry('CRAW') {
- unsigned int(16) pre_defined;
- unsigned int(16) reserved;
- unsigned int(32) pre_defined0[3];
- unsigned int(16) width;
- unsigned int(16) height;
- unsigned int(32) horizresolution;
- unsigned int(32) vertresolution;
- unsigned int(32) reserved0;
- unsigned int(16) frame_count;
- unsigned int(8) compressorname[32];
- unsigned int(16) depth;
- signed int(16) pre_defined1;
- unsigned int(16) imageType;
- unsigned int(16) imageFlags;
- Box boxes[];
-}
-"; } }
+	unsigned int(16) pre_defined;
+	unsigned int(16) reserved;
+	unsigned int(32) pre_defined0[3];
+	unsigned int(16) width;
+	unsigned int(16) height;
+	unsigned int(32) horizresolution;
+	unsigned int(32) vertresolution;
+	unsigned int(32) reserved0;
+	unsigned int(16) frame_count;
+	unsigned int(8) compressorname[32];
+	unsigned int(16) depth;
+	signed int(16) pre_defined1;
+	unsigned int(16) imageType;
+	unsigned int(16) imageFlags;
+	Box boxes[];
+}"; } }
 	public const string TYPE = "CRAW";
 	public override string DisplayName { get { return "CanonRawSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

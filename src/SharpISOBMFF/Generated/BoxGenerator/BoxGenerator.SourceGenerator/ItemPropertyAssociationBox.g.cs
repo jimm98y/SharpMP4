@@ -25,7 +25,6 @@ aligned(8) class ItemPropertyAssociationBox
 		}
 	}
 }
-
 */
 public partial class ItemPropertyAssociationBox : FullBox
 {
@@ -48,8 +47,7 @@ public partial class ItemPropertyAssociationBox : FullBox
 				unsigned int(7) property_index;
 		}
 	}
-}
-"; } }
+}"; } }
 	public const string TYPE = "ipma";
 	public override string DisplayName { get { return "ItemPropertyAssociationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

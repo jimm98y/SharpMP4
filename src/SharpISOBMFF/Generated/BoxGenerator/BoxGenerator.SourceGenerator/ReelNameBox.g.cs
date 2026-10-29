@@ -7,14 +7,14 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ReelNameBox() extends Box('reel') {
- string value;
+	string value;
 }
 */
 public partial class ReelNameBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class ReelNameBox() extends Box('reel') {
- string value;
+	string value;
 }"; } }
 	public const string TYPE = "reel";
 	public override string DisplayName { get { return "ReelNameBox"; } }

@@ -7,10 +7,10 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AudioChannelDescription() {
- unsigned int(32) channelLabel;
- unsigned int(32) channelFlags;
- unsigned int(32) coordinates[3];
- } 
+	unsigned int(32) channelLabel;
+	unsigned int(32) channelFlags;
+	unsigned int(32) coordinates[3];
+}
 */
 public partial class AudioChannelDescription : IMp4Serializable
 {
@@ -21,10 +21,10 @@ public partial class AudioChannelDescription : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class AudioChannelDescription() {
- unsigned int(32) channelLabel;
- unsigned int(32) channelFlags;
- unsigned int(32) coordinates[3];
- } "; } }
+	unsigned int(32) channelLabel;
+	unsigned int(32) channelFlags;
+	unsigned int(32) coordinates[3];
+}"; } }
 	public virtual string DisplayName { get { return "AudioChannelDescription"; } }
 
 	protected uint channelLabel; 

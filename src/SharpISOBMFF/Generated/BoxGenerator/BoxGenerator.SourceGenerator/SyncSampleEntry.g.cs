@@ -8,8 +8,8 @@ namespace SharpISOBMFF
 /*
 class SyncSampleEntry() extends VisualSampleGroupEntry ('sync')
 {
-		bit(2) reserved = 0;
-		unsigned int(6) NAL_unit_type;
+	bit(2) reserved = 0;
+	unsigned int(6) NAL_unit_type;
 }
 */
 public partial class SyncSampleEntry : VisualSampleGroupEntry
@@ -17,8 +17,8 @@ public partial class SyncSampleEntry : VisualSampleGroupEntry
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class SyncSampleEntry() extends VisualSampleGroupEntry ('sync')
 {
-		bit(2) reserved = 0;
-		unsigned int(6) NAL_unit_type;
+	bit(2) reserved = 0;
+	unsigned int(6) NAL_unit_type;
 }"; } }
 	public const string TYPE = "sync";
 	public override string DisplayName { get { return "SyncSampleEntry"; } }

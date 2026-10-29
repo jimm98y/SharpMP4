@@ -9,7 +9,7 @@ namespace SharpISOBMFF
 class MVCViewPriorityAssignmentBox extends Box('mvcP')
 {
 	unsigned int(8)	method_count;
-	string PriorityAssignmentURI[method_count]; 
+	string PriorityAssignmentURI[method_count];
 }
 */
 public partial class MVCViewPriorityAssignmentBox : Box
@@ -18,7 +18,7 @@ public partial class MVCViewPriorityAssignmentBox : Box
 	public override string Syntax { get { return @"class MVCViewPriorityAssignmentBox extends Box('mvcP')
 {
 	unsigned int(8)	method_count;
-	string PriorityAssignmentURI[method_count]; 
+	string PriorityAssignmentURI[method_count];
 }"; } }
 	public const string TYPE = "mvcP";
 	public override string DisplayName { get { return "MVCViewPriorityAssignmentBox"; } }

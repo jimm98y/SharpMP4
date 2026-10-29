@@ -6,13 +6,12 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class DependencyInfo  
-{ 
-unsigned int(8)   subSeqDirectionFlag; 
-unsigned int(8)   layerNumber; 
-unsigned int(16)  subSequenceIdentifier; 
-} 
-
+aligned(8) class DependencyInfo
+{
+	unsigned int(8)   subSeqDirectionFlag;
+	unsigned int(8)   layerNumber;
+	unsigned int(16)  subSequenceIdentifier;
+}
 */
 public partial class DependencyInfo : IMp4Serializable
 {
@@ -22,13 +21,12 @@ public partial class DependencyInfo : IMp4Serializable
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public virtual string Syntax { get { return @"aligned(8) class DependencyInfo  
-{ 
-unsigned int(8)   subSeqDirectionFlag; 
-unsigned int(8)   layerNumber; 
-unsigned int(16)  subSequenceIdentifier; 
-} 
-"; } }
+	public virtual string Syntax { get { return @"aligned(8) class DependencyInfo
+{
+	unsigned int(8)   subSeqDirectionFlag;
+	unsigned int(8)   layerNumber;
+	unsigned int(16)  subSequenceIdentifier;
+}"; } }
 	public virtual string DisplayName { get { return "DependencyInfo"; } }
 
 	protected byte subSeqDirectionFlag; 

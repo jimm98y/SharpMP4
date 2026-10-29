@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class Stereoscopic3D extends FullBox('st3d', 0, 0) {
-    unsigned int(8) stereo_mode;
- }
-
+	unsigned int(8) stereo_mode;
+}
 */
 public partial class Stereoscopic3D : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class Stereoscopic3D extends FullBox('st3d', 0, 0) {
-    unsigned int(8) stereo_mode;
- }
-"; } }
+	unsigned int(8) stereo_mode;
+}"; } }
 	public const string TYPE = "st3d";
 	public override string DisplayName { get { return "Stereoscopic3D"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

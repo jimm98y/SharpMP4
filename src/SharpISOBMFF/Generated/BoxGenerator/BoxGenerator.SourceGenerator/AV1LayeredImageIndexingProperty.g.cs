@@ -7,28 +7,28 @@ namespace SharpISOBMFF
 {
 /*
 class AV1LayeredImageIndexingProperty extends ItemProperty('a1lx') {
-    unsigned int(7) reserved = 0;
-    unsigned int(1) large_size;
-    if(large_size) {
-       unsigned int(32) layer_size[3];
-    }
-    else {
-       unsigned int(16) layer_size[3];
-    }
+	unsigned int(7) reserved = 0;
+	unsigned int(1) large_size;
+	if(large_size) {
+		unsigned int(32) layer_size[3];
+	}
+	else {
+		unsigned int(16) layer_size[3];
+	}
 }
 */
 public partial class AV1LayeredImageIndexingProperty : ItemProperty
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AV1LayeredImageIndexingProperty extends ItemProperty('a1lx') {
-    unsigned int(7) reserved = 0;
-    unsigned int(1) large_size;
-    if(large_size) {
-       unsigned int(32) layer_size[3];
-    }
-    else {
-       unsigned int(16) layer_size[3];
-    }
+	unsigned int(7) reserved = 0;
+	unsigned int(1) large_size;
+	if(large_size) {
+		unsigned int(32) layer_size[3];
+	}
+	else {
+		unsigned int(16) layer_size[3];
+	}
 }"; } }
 	public const string TYPE = "a1lx";
 	public override string DisplayName { get { return "AV1LayeredImageIndexingProperty"; } }

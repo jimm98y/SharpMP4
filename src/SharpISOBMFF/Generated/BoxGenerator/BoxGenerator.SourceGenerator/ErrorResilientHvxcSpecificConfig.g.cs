@@ -7,13 +7,11 @@ namespace SharpISOBMFF
 {
 /*
 class ErrorResilientHvxcSpecificConfig() {
-  uimsbf(1) isBaseLayer;
-  if (isBaseLayer) {
-    ErHVXCconfig();
-  }
+	uimsbf(1) isBaseLayer;
+	if (isBaseLayer) {
+		ErHVXCconfig();
+	}
 }
-
-
 */
 public partial class ErrorResilientHvxcSpecificConfig : IMp4Serializable
 {
@@ -24,13 +22,11 @@ public partial class ErrorResilientHvxcSpecificConfig : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class ErrorResilientHvxcSpecificConfig() {
-  uimsbf(1) isBaseLayer;
-  if (isBaseLayer) {
-    ErHVXCconfig();
-  }
-}
-
-"; } }
+	uimsbf(1) isBaseLayer;
+	if (isBaseLayer) {
+		ErHVXCconfig();
+	}
+}"; } }
 	public virtual string DisplayName { get { return "ErrorResilientHvxcSpecificConfig"; } }
 
 	protected bool isBaseLayer; 

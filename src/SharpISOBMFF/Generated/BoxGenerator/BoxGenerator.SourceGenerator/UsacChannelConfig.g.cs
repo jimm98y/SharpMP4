@@ -8,14 +8,13 @@ namespace SharpISOBMFF
 /*
 class UsacChannelConfig()
 {
-  EscapedValue(5, 8, 16) numOutChannels;
-  for (i = 0; i < numOutChannels; i++) {
-    uimsbf(5) bsOutputChannelPos;
-  }
+	EscapedValue(5, 8, 16) numOutChannels;
+	for (i = 0; i < numOutChannels; i++) {
+		uimsbf(5) bsOutputChannelPos;
+	}
 }
 
 // sbrRatioIndex, of coreSbrFrameLengthIndex 2, 3 and 4, is not 0: SBR is used
-
 */
 public partial class UsacChannelConfig : IMp4Serializable
 {
@@ -27,14 +26,13 @@ public partial class UsacChannelConfig : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class UsacChannelConfig()
 {
-  EscapedValue(5, 8, 16) numOutChannels;
-  for (i = 0; i < numOutChannels; i++) {
-    uimsbf(5) bsOutputChannelPos;
-  }
+	EscapedValue(5, 8, 16) numOutChannels;
+	for (i = 0; i < numOutChannels; i++) {
+		uimsbf(5) bsOutputChannelPos;
+	}
 }
 
-// sbrRatioIndex, of coreSbrFrameLengthIndex 2, 3 and 4, is not 0: SBR is used
-"; } }
+// sbrRatioIndex, of coreSbrFrameLengthIndex 2, 3 and 4, is not 0: SBR is used"; } }
 	public virtual string DisplayName { get { return "UsacChannelConfig"; } }
 
 	protected EscapedValue numOutChannels; 

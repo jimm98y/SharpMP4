@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class NikonNCDTBox() extends Box ('NCDT'){
- Box boxes[];
- }
+	Box boxes[];
+}
 */
 public partial class NikonNCDTBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class NikonNCDTBox() extends Box ('NCDT'){
- Box boxes[];
- }"; } }
+	Box boxes[];
+}"; } }
 	public const string TYPE = "NCDT";
 	public override string DisplayName { get { return "NikonNCDTBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

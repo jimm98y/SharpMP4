@@ -7,21 +7,21 @@ namespace SharpISOBMFF
 {
 /*
 class AppleQTVRTrackBox() extends Box ('qtvr'){
- unsigned int(32) reserved1;
- unsigned int(16) reserved2;
- unsigned int(16) dataRefIndex;
- unsigned int(32) data;
- }
+	unsigned int(32) reserved1;
+	unsigned int(16) reserved2;
+	unsigned int(16) dataRefIndex;
+	unsigned int(32) data;
+}
 */
 public partial class AppleQTVRTrackBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AppleQTVRTrackBox() extends Box ('qtvr'){
- unsigned int(32) reserved1;
- unsigned int(16) reserved2;
- unsigned int(16) dataRefIndex;
- unsigned int(32) data;
- }"; } }
+	unsigned int(32) reserved1;
+	unsigned int(16) reserved2;
+	unsigned int(16) dataRefIndex;
+	unsigned int(32) data;
+}"; } }
 	public const string TYPE = "qtvr";
 	public override string DisplayName { get { return "AppleQTVRTrackBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

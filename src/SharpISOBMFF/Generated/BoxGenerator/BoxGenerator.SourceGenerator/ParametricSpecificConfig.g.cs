@@ -8,16 +8,14 @@ namespace SharpISOBMFF
 /*
 class ParametricSpecificConfig()
 {
-  uimsbf(1) isBaseLayer;
-  if (isBaseLayer) {
-    PARAconfig();
-  }
-  else {
-    HILNenexConfig();
-  }
+	uimsbf(1) isBaseLayer;
+	if (isBaseLayer) {
+		PARAconfig();
+	}
+	else {
+		HILNenexConfig();
+	}
 }
-
-
 */
 public partial class ParametricSpecificConfig : IMp4Serializable
 {
@@ -29,16 +27,14 @@ public partial class ParametricSpecificConfig : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class ParametricSpecificConfig()
 {
-  uimsbf(1) isBaseLayer;
-  if (isBaseLayer) {
-    PARAconfig();
-  }
-  else {
-    HILNenexConfig();
-  }
-}
-
-"; } }
+	uimsbf(1) isBaseLayer;
+	if (isBaseLayer) {
+		PARAconfig();
+	}
+	else {
+		HILNenexConfig();
+	}
+}"; } }
 	public virtual string DisplayName { get { return "ParametricSpecificConfig"; } }
 
 	protected bool isBaseLayer; 

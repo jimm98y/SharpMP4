@@ -7,21 +7,21 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class H263SpecificBox() extends Box('d263') {
-	 unsigned int(32) vendor;
-	 unsigned int(8) decoderVersion;
- unsigned int(8) level;
- unsigned int(8) profile;
- } 
+	unsigned int(32) vendor;
+	unsigned int(8) decoderVersion;
+	unsigned int(8) level;
+	unsigned int(8) profile;
+}
 */
 public partial class H263SpecificBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class H263SpecificBox() extends Box('d263') {
-	 unsigned int(32) vendor;
-	 unsigned int(8) decoderVersion;
- unsigned int(8) level;
- unsigned int(8) profile;
- } "; } }
+	unsigned int(32) vendor;
+	unsigned int(8) decoderVersion;
+	unsigned int(8) level;
+	unsigned int(8) profile;
+}"; } }
 	public const string TYPE = "d263";
 	public override string DisplayName { get { return "H263SpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

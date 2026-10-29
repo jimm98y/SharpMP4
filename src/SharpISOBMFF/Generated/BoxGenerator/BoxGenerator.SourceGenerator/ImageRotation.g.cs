@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ImageRotation
-extends ItemProperty('irot') {
+	extends ItemProperty('irot') {
 	unsigned int(6) reserved = 0;
 	unsigned int(2) angle;
 }
@@ -16,7 +16,7 @@ public partial class ImageRotation : ItemProperty
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class ImageRotation
-extends ItemProperty('irot') {
+	extends ItemProperty('irot') {
 	unsigned int(6) reserved = 0;
 	unsigned int(2) angle;
 }"; } }

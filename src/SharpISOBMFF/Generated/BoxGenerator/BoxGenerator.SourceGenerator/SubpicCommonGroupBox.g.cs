@@ -7,7 +7,8 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class SubpicCommonGroupBox extends EntityToGroupBox('acgl',0,0)
-{	unsigned int(1) level_is_present_flag;
+{
+	unsigned int(1) level_is_present_flag;
 	unsigned int(1) level_is_static_flag;
 	bit(6) reserved = 0;
 	if( level_is_present_flag )
@@ -21,7 +22,8 @@ public partial class SubpicCommonGroupBox : EntityToGroupBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class SubpicCommonGroupBox extends EntityToGroupBox('acgl',0,0)
-{	unsigned int(1) level_is_present_flag;
+{
+	unsigned int(1) level_is_present_flag;
 	unsigned int(1) level_is_static_flag;
 	bit(6) reserved = 0;
 	if( level_is_present_flag )

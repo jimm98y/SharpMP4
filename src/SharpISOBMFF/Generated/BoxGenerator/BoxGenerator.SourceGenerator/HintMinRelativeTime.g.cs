@@ -8,14 +8,12 @@ namespace SharpISOBMFF
 /*
 aligned(8) class HintMinRelativeTime extends Box('tmin') {
 	int(32)		time; }		// smallest relative transmission time, milliseconds
-
 */
 public partial class HintMinRelativeTime : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class HintMinRelativeTime extends Box('tmin') {
-	int(32)		time; }		// smallest relative transmission time, milliseconds
-"; } }
+	int(32)		time; }		// smallest relative transmission time, milliseconds"; } }
 	public const string TYPE = "tmin";
 	public override string DisplayName { get { return "HintMinRelativeTime"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

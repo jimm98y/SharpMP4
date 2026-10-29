@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class RightsBox() extends Box('righ') {
- RightsEntry entries[];
+	RightsEntry entries[];
 }
-
 */
 public partial class RightsBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class RightsBox() extends Box('righ') {
- RightsEntry entries[];
-}
-"; } }
+	RightsEntry entries[];
+}"; } }
 	public const string TYPE = "righ";
 	public override string DisplayName { get { return "RightsBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,17 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AppleProductionApertureDimensionsBox() extends FullBox('prof') {
- unsigned int(32) width;
- unsigned int(32) height;
- } 
+	unsigned int(32) width;
+	unsigned int(32) height;
+}
 */
 public partial class AppleProductionApertureDimensionsBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AppleProductionApertureDimensionsBox() extends FullBox('prof') {
- unsigned int(32) width;
- unsigned int(32) height;
- } "; } }
+	unsigned int(32) width;
+	unsigned int(32) height;
+}"; } }
 	public const string TYPE = "prof";
 	public override string DisplayName { get { return "AppleProductionApertureDimensionsBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

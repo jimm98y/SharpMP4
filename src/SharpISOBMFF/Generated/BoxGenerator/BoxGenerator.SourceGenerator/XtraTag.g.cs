@@ -7,13 +7,12 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class XtraTag() {
- unsigned int(32) inputSize;
- unsigned int(32) tagLength;
- char tagName[tagLength];
- unsigned int(32) count;
- XtraValue values[count];
- }
- 
+	unsigned int(32) inputSize;
+	unsigned int(32) tagLength;
+	char tagName[tagLength];
+	unsigned int(32) count;
+	XtraValue values[count];
+}
 */
 public partial class XtraTag : IMp4Serializable
 {
@@ -24,13 +23,12 @@ public partial class XtraTag : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class XtraTag() {
- unsigned int(32) inputSize;
- unsigned int(32) tagLength;
- char tagName[tagLength];
- unsigned int(32) count;
- XtraValue values[count];
- }
- "; } }
+	unsigned int(32) inputSize;
+	unsigned int(32) tagLength;
+	char tagName[tagLength];
+	unsigned int(32) count;
+	XtraValue values[count];
+}"; } }
 	public virtual string DisplayName { get { return "XtraTag"; } }
 
 	protected uint inputSize; 

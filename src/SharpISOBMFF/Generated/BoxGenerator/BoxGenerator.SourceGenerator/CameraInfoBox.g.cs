@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class CameraInfoBox() extends Box ('infi'){
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class CameraInfoBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class CameraInfoBox() extends Box ('infi'){
- bit(8) data[];
- }"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "infi";
 	public override string DisplayName { get { return "CameraInfoBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

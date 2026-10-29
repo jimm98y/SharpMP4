@@ -7,12 +7,10 @@ namespace SharpISOBMFF
 {
 /*
 class ChannelMappingTable (unsigned int(8) OutputChannelCount){
- unsigned int(8) StreamCount;
- unsigned int(8) CoupledCount;
- unsigned int(8 * OutputChannelCount) ChannelMapping;
- }
-
- 
+	unsigned int(8) StreamCount;
+	unsigned int(8) CoupledCount;
+	unsigned int(8 * OutputChannelCount) ChannelMapping;
+}
 */
 public partial class ChannelMappingTable : IMp4Serializable
 {
@@ -23,12 +21,10 @@ public partial class ChannelMappingTable : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class ChannelMappingTable (unsigned int(8) OutputChannelCount){
- unsigned int(8) StreamCount;
- unsigned int(8) CoupledCount;
- unsigned int(8 * OutputChannelCount) ChannelMapping;
- }
-
- "; } }
+	unsigned int(8) StreamCount;
+	unsigned int(8) CoupledCount;
+	unsigned int(8 * OutputChannelCount) ChannelMapping;
+}"; } }
 	public virtual string DisplayName { get { return "ChannelMappingTable"; } }
 
 	protected byte StreamCount; 

@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AppleInitialObjectDescriptorBox() extends FullBox('iods') {
- Descriptor descriptor[0 .. 255];
- } 
+	Descriptor descriptor[0 .. 255];
+}
 */
 public partial class AppleInitialObjectDescriptorBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AppleInitialObjectDescriptorBox() extends FullBox('iods') {
- Descriptor descriptor[0 .. 255];
- } "; } }
+	Descriptor descriptor[0 .. 255];
+}"; } }
 	public const string TYPE = "iods";
 	public override string DisplayName { get { return "AppleInitialObjectDescriptorBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

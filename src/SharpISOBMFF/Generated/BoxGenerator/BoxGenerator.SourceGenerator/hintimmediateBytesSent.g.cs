@@ -8,14 +8,12 @@ namespace SharpISOBMFF
 /*
 aligned(8) class hintimmediateBytesSent extends Box('dimm') {
 	uint(64)	bytessent; }	// total bytes sent immediate mode
-
 */
 public partial class hintimmediateBytesSent : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class hintimmediateBytesSent extends Box('dimm') {
-	uint(64)	bytessent; }	// total bytes sent immediate mode
-"; } }
+	uint(64)	bytessent; }	// total bytes sent immediate mode"; } }
 	public const string TYPE = "dimm";
 	public override string DisplayName { get { return "hintimmediateBytesSent"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

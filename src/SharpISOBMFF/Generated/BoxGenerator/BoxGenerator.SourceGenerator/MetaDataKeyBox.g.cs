@@ -7,25 +7,23 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class MetaDataKeyBox extends	Box(local_key_id) {
- MetaDataKeyDeclarationBox();
- MetaDataDatatypeBox();	  // optional
- MetaDataLocaleBox();	  // optional
- MetaDataSetupBox();	  // optional
- MetaDataExtensionsBox();  // optional
+	MetaDataKeyDeclarationBox();
+	MetaDataDatatypeBox();	  // optional
+	MetaDataLocaleBox();	  // optional
+	MetaDataSetupBox();	  // optional
+	MetaDataExtensionsBox();  // optional
 }
-
 */
 public partial class MetaDataKeyBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class MetaDataKeyBox extends	Box(local_key_id) {
- MetaDataKeyDeclarationBox();
- MetaDataDatatypeBox();	  // optional
- MetaDataLocaleBox();	  // optional
- MetaDataSetupBox();	  // optional
- MetaDataExtensionsBox();  // optional
-}
-"; } }
+	MetaDataKeyDeclarationBox();
+	MetaDataDatatypeBox();	  // optional
+	MetaDataLocaleBox();	  // optional
+	MetaDataSetupBox();	  // optional
+	MetaDataExtensionsBox();  // optional
+}"; } }
 	public override string DisplayName { get { return "MetaDataKeyBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? BoxPlacements.OfType(FourCC)); }

@@ -7,17 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ItaiBox() extends FullBox('itai') {
-	 unsigned int(64) tai_timestamp;
- unsigned int(8) status_bits;
- } 
+	unsigned int(64) tai_timestamp;
+	unsigned int(8) status_bits;
+}
 */
 public partial class ItaiBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class ItaiBox() extends FullBox('itai') {
-	 unsigned int(64) tai_timestamp;
- unsigned int(8) status_bits;
- } "; } }
+	unsigned int(64) tai_timestamp;
+	unsigned int(8) status_bits;
+}"; } }
 	public const string TYPE = "itai";
 	public override string DisplayName { get { return "ItaiBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

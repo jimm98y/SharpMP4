@@ -6,18 +6,18 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class StereoComfortDisparityAdjustmentBox extends 
-FullBox('dadj') { 
-int(32) disparity_adjustment; 
-} 
+aligned(8) class StereoComfortDisparityAdjustmentBox extends
+	FullBox('dadj') {
+	int(32) disparity_adjustment;
+}
 */
 public partial class StereoComfortDisparityAdjustmentBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class StereoComfortDisparityAdjustmentBox extends 
-FullBox('dadj') { 
-int(32) disparity_adjustment; 
-} "; } }
+	public override string Syntax { get { return @"aligned(8) class StereoComfortDisparityAdjustmentBox extends
+	FullBox('dadj') {
+	int(32) disparity_adjustment;
+}"; } }
 	public const string TYPE = "dadj";
 	public override string DisplayName { get { return "StereoComfortDisparityAdjustmentBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

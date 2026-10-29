@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class LivePhotoConfigurationBox() extends Box('cfgv') {
- bit(8) binaryPropertyList[];
+	bit(8) binaryPropertyList[];
 }
-
 */
 public partial class LivePhotoConfigurationBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class LivePhotoConfigurationBox() extends Box('cfgv') {
- bit(8) binaryPropertyList[];
-}
-"; } }
+	bit(8) binaryPropertyList[];
+}"; } }
 	public const string TYPE = "cfgv";
 	public override string DisplayName { get { return "LivePhotoConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

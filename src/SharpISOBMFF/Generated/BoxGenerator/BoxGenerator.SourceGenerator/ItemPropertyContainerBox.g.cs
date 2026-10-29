@@ -10,10 +10,9 @@ aligned(8) class ItemPropertyContainerBox
 	extends Box('ipco')
 {
 	Box properties[];	// boxes derived from
-		// ItemProperty or ItemFullProperty, or FreeSpaceBox(es)
-		// to fill the box
+	// ItemProperty or ItemFullProperty, or FreeSpaceBox(es)
+	// to fill the box
 }
-
 */
 public partial class ItemPropertyContainerBox : Box
 {
@@ -22,10 +21,9 @@ public partial class ItemPropertyContainerBox : Box
 	extends Box('ipco')
 {
 	Box properties[];	// boxes derived from
-		// ItemProperty or ItemFullProperty, or FreeSpaceBox(es)
-		// to fill the box
-}
-"; } }
+	// ItemProperty or ItemFullProperty, or FreeSpaceBox(es)
+	// to fill the box
+}"; } }
 	public const string TYPE = "ipco";
 	public override string DisplayName { get { return "ItemPropertyContainerBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

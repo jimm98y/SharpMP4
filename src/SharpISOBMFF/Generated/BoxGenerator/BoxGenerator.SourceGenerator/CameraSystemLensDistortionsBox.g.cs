@@ -6,27 +6,27 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class CameraSystemLensDistortionsBox extends FullBox('ldst', version = 0, flags) { 
-BEFloat32 k1; // radial parameter k1 
-BEFloat32 k2; // radial parameter k2 
-BEFloat32 p1; // tangential parameter p1 
-BEFloat32 p2; // tangential parameter p2 
-if (flags & 1) { 
-BEFloat32 calibration_limit_radial_angle; 
-} 
+aligned(8) class CameraSystemLensDistortionsBox extends FullBox('ldst', version = 0, flags) {
+	BEFloat32 k1; // radial parameter k1
+	BEFloat32 k2; // radial parameter k2
+	BEFloat32 p1; // tangential parameter p1
+	BEFloat32 p2; // tangential parameter p2
+	if (flags & 1) {
+		BEFloat32 calibration_limit_radial_angle;
+	}
 }
 */
 public partial class CameraSystemLensDistortionsBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class CameraSystemLensDistortionsBox extends FullBox('ldst', version = 0, flags) { 
-BEFloat32 k1; // radial parameter k1 
-BEFloat32 k2; // radial parameter k2 
-BEFloat32 p1; // tangential parameter p1 
-BEFloat32 p2; // tangential parameter p2 
-if (flags & 1) { 
-BEFloat32 calibration_limit_radial_angle; 
-} 
+	public override string Syntax { get { return @"aligned(8) class CameraSystemLensDistortionsBox extends FullBox('ldst', version = 0, flags) {
+	BEFloat32 k1; // radial parameter k1
+	BEFloat32 k2; // radial parameter k2
+	BEFloat32 p1; // tangential parameter p1
+	BEFloat32 p2; // tangential parameter p2
+	if (flags & 1) {
+		BEFloat32 calibration_limit_radial_angle;
+	}
 }"; } }
 	public const string TYPE = "ldst";
 	public override string DisplayName { get { return "CameraSystemLensDistortionsBox"; } }
@@ -34,16 +34,16 @@ BEFloat32 calibration_limit_radial_angle;
 	public override bool ValidatePlacement() { return IsPlacedIn("lens"); }
 
 
-	protected double k1;  //  radial parameter k1 
+	protected double k1;  //  radial parameter k1
 	public double K1 { get { return this.k1; } set { this.k1 = value; } }
 
-	protected double k2;  //  radial parameter k2 
+	protected double k2;  //  radial parameter k2
 	public double K2 { get { return this.k2; } set { this.k2 = value; } }
 
-	protected double p1;  //  tangential parameter p1 
+	protected double p1;  //  tangential parameter p1
 	public double P1 { get { return this.p1; } set { this.p1 = value; } }
 
-	protected double p2;  //  tangential parameter p2 
+	protected double p2;  //  tangential parameter p2
 	public double P2 { get { return this.p2; } set { this.p2 = value; } }
 
 	protected double calibration_limit_radial_angle; 
@@ -57,10 +57,10 @@ BEFloat32 calibration_limit_radial_angle;
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.k1, "k1"); // radial parameter k1 
-		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.k2, "k2"); // radial parameter k2 
-		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.p1, "p1"); // tangential parameter p1 
-		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.p2, "p2"); // tangential parameter p2 
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.k1, "k1"); // radial parameter k1
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.k2, "k2"); // radial parameter k2
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.p1, "p1"); // tangential parameter p1
+		boxSize += stream.ReadFloat32(boxSize, readSize,  out this.p2, "p2"); // tangential parameter p2
 
 		if ((flags  &  1) ==  1)
 		{
@@ -73,10 +73,10 @@ BEFloat32 calibration_limit_radial_angle;
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteFloat32( this.k1, "k1"); // radial parameter k1 
-		boxSize += stream.WriteFloat32( this.k2, "k2"); // radial parameter k2 
-		boxSize += stream.WriteFloat32( this.p1, "p1"); // tangential parameter p1 
-		boxSize += stream.WriteFloat32( this.p2, "p2"); // tangential parameter p2 
+		boxSize += stream.WriteFloat32( this.k1, "k1"); // radial parameter k1
+		boxSize += stream.WriteFloat32( this.k2, "k2"); // radial parameter k2
+		boxSize += stream.WriteFloat32( this.p1, "p1"); // tangential parameter p1
+		boxSize += stream.WriteFloat32( this.p2, "p2"); // tangential parameter p2
 
 		if ((flags  &  1) ==  1)
 		{
@@ -105,10 +105,10 @@ BEFloat32 calibration_limit_radial_angle;
 	{
 		ulong boxSize = 0;
 		boxSize += base.Trace(tracer);
-		boxSize += tracer.Field("k1", 32, this.k1); // radial parameter k1 
-		boxSize += tracer.Field("k2", 32, this.k2); // radial parameter k2 
-		boxSize += tracer.Field("p1", 32, this.p1); // tangential parameter p1 
-		boxSize += tracer.Field("p2", 32, this.p2); // tangential parameter p2 
+		boxSize += tracer.Field("k1", 32, this.k1); // radial parameter k1
+		boxSize += tracer.Field("k2", 32, this.k2); // radial parameter k2
+		boxSize += tracer.Field("p1", 32, this.p1); // tangential parameter p1
+		boxSize += tracer.Field("p2", 32, this.p2); // tangential parameter p2
 
 		if ((flags  &  1) ==  1)
 		{

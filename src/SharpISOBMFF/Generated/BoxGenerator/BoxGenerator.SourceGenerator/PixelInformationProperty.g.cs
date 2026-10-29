@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class PixelInformationProperty
-extends ItemFullProperty('pixi', version = 0, flags){
+	extends ItemFullProperty('pixi', version = 0, flags){
 	unsigned int(8) num_channels;
 	for (i=0; i<num_channels; i++) {
 		unsigned int(8) bits_per_channel;
@@ -34,7 +34,7 @@ public partial class PixelInformationProperty : ItemFullProperty
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class PixelInformationProperty
-extends ItemFullProperty('pixi', version = 0, flags){
+	extends ItemFullProperty('pixi', version = 0, flags){
 	unsigned int(8) num_channels;
 	for (i=0; i<num_channels; i++) {
 		unsigned int(8) bits_per_channel;

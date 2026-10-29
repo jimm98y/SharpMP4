@@ -9,7 +9,7 @@ namespace SharpISOBMFF
 class IroiInfoBox extends Box('iroi'){
 	unsigned int(2) iroi_type;
 	bit(6) reserved = 0;
-	if(iroi_type == 0) { 
+	if(iroi_type == 0) {
 		unsigned int(8) grid_roi_mb_width;
 		unsigned int(8) grid_roi_mb_height;
 	}
@@ -29,7 +29,7 @@ public partial class IroiInfoBox : Box
 	public override string Syntax { get { return @"class IroiInfoBox extends Box('iroi'){
 	unsigned int(2) iroi_type;
 	bit(6) reserved = 0;
-	if(iroi_type == 0) { 
+	if(iroi_type == 0) {
 		unsigned int(8) grid_roi_mb_width;
 		unsigned int(8) grid_roi_mb_height;
 	}

@@ -29,10 +29,10 @@ aligned(8) class VvcDecoderConfigurationRecord {
 		unsigned int(5) NAL_unit_type;
 		if (NAL_unit_type != DCI_NUT  &&  NAL_unit_type != OPI_NUT) {
 			unsigned int(16) num_nalus;
-		for (i=0; i< num_nalus; i++) {
-			unsigned int(16) nal_unit_length;
-			bit(8*nal_unit_length) nal_unit;
-		}
+			for (i=0; i< num_nalus; i++) {
+				unsigned int(16) nal_unit_length;
+				bit(8*nal_unit_length) nal_unit;
+			}
 		}
 	}
 }
@@ -68,10 +68,10 @@ public partial class VvcDecoderConfigurationRecord : IMp4Serializable
 		unsigned int(5) NAL_unit_type;
 		if (NAL_unit_type != DCI_NUT  &&  NAL_unit_type != OPI_NUT) {
 			unsigned int(16) num_nalus;
-		for (i=0; i< num_nalus; i++) {
-			unsigned int(16) nal_unit_length;
-			bit(8*nal_unit_length) nal_unit;
-		}
+			for (i=0; i< num_nalus; i++) {
+				unsigned int(16) nal_unit_length;
+				bit(8*nal_unit_length) nal_unit;
+			}
 		}
 	}
 }"; } }

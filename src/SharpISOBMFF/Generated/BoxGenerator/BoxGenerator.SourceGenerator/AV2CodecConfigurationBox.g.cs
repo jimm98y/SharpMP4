@@ -8,26 +8,24 @@ namespace SharpISOBMFF
 /*
 aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
 {
-  unsigned int(8) reserved1 = 0;
-  unsigned int(8) config_obus_count_minus1;
-  for (i = 0; i < config_obus_count_minus1 + 1; ++i) {
-    unsigned int(8) config_obu[];
-  }
+	unsigned int(8) reserved1 = 0;
+	unsigned int(8) config_obus_count_minus1;
+	for (i = 0; i < config_obus_count_minus1 + 1; ++i) {
+		unsigned int(8) config_obu[];
+	}
 }
-
 */
 public partial class AV2CodecConfigurationBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
 {
-  unsigned int(8) reserved1 = 0;
-  unsigned int(8) config_obus_count_minus1;
-  for (i = 0; i < config_obus_count_minus1 + 1; ++i) {
-    unsigned int(8) config_obu[];
-  }
-}
-"; } }
+	unsigned int(8) reserved1 = 0;
+	unsigned int(8) config_obus_count_minus1;
+	for (i = 0; i < config_obus_count_minus1 + 1; ++i) {
+		unsigned int(8) config_obu[];
+	}
+}"; } }
 	public const string TYPE = "av2C";
 	public override string DisplayName { get { return "AV2CodecConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

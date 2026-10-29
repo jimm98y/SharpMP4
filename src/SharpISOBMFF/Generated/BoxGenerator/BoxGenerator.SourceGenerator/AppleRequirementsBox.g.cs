@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AppleRequirementsBox() extends FullBox('©req', version = 0, 0) {
-string requirement;
- } 
+	string requirement;
+}
 */
 public partial class AppleRequirementsBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AppleRequirementsBox() extends FullBox('©req', version = 0, 0) {
-string requirement;
- } "; } }
+	string requirement;
+}"; } }
 	public const string TYPE = "©req";
 	public override string DisplayName { get { return "AppleRequirementsBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

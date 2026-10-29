@@ -7,17 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class PcmCBox() extends FullBox('pcmC') {
-	 unsigned int(8) formatFlags;
-	 unsigned int(8) pcmSampleSize;
- } 
+	unsigned int(8) formatFlags;
+	unsigned int(8) pcmSampleSize;
+}
 */
 public partial class PcmCBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class PcmCBox() extends FullBox('pcmC') {
-	 unsigned int(8) formatFlags;
-	 unsigned int(8) pcmSampleSize;
- } "; } }
+	unsigned int(8) formatFlags;
+	unsigned int(8) pcmSampleSize;
+}"; } }
 	public const string TYPE = "pcmC";
 	public override string DisplayName { get { return "PcmCBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

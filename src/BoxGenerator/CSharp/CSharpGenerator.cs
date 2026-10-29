@@ -198,7 +198,11 @@ namespace BoxGenerator.CSharp
                 { "unsigned int(32) proj_type, unsigned int(8) version, unsigned int(24) flags",                "uint proj_type, byte version = 0, uint flags = 0" },
             };
 
-            return map[par];            
+            if (map.TryGetValue(par, out var ctorParams))
+                return ctorParams;
+            // of parameters over more lines, however indented
+            string normalized = Regex.Replace(par.Trim(), @"\s+", " ");
+            return map.First(x => Regex.Replace(x.Key.Trim(), @"\s+", " ") == normalized).Value;
         }
 
         public Dictionary<string, string> GenerateParser()

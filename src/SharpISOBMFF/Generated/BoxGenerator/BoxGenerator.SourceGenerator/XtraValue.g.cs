@@ -7,10 +7,10 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class XtraValue() {
- unsigned int(32) length;
- unsigned int(16) type;
- unsigned int(8) value[length-6];
- }
+	unsigned int(32) length;
+	unsigned int(16) type;
+	unsigned int(8) value[length-6];
+}
 */
 public partial class XtraValue : IMp4Serializable
 {
@@ -21,10 +21,10 @@ public partial class XtraValue : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class XtraValue() {
- unsigned int(32) length;
- unsigned int(16) type;
- unsigned int(8) value[length-6];
- }"; } }
+	unsigned int(32) length;
+	unsigned int(16) type;
+	unsigned int(8) value[length-6];
+}"; } }
 	public virtual string DisplayName { get { return "XtraValue"; } }
 
 	protected uint length; 

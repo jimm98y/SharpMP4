@@ -6,13 +6,13 @@
       "fourcc": "iamf",
       "containers": [ "stsd" ],
       "type": "Box",
-      "syntax": "// 6.2.3\r\nclass IASampleEntry extends AudioSampleEntry('iamf') {\r\n IAConfigurationBox ia_configuration_box;\r\n}"
+      "syntax": "// 6.2.3\r\nclass IASampleEntry extends AudioSampleEntry('iamf') {\r\n\tIAConfigurationBox ia_configuration_box;\r\n}"
     },
     {
       "fourcc": "iacb",
       "containers": [ {"AudioSampleEntry": ["iamf"]} ],
       "type": "Box",
-      "syntax": "// 6.2.4: unsigned int (8 x configOBUs_size) configOBUs, as bytes; what a later version puts after them is left\r\nclass IAConfigurationBox extends Box('iacb') {\r\n unsigned int(8) configurationVersion = 1;\r\n leb128() configOBUs_size;\r\n unsigned int(8) configOBUs[configOBUs_size];\r\n}"
+      "syntax": "// 6.2.4: unsigned int (8 x configOBUs_size) configOBUs, as bytes; what a later version puts after them is left\r\nclass IAConfigurationBox extends Box('iacb') {\r\n\tunsigned int(8) configurationVersion = 1;\r\n\tleb128() configOBUs_size;\r\n\tunsigned int(8) configOBUs[configOBUs_size];\r\n}"
     }
   ]
 }

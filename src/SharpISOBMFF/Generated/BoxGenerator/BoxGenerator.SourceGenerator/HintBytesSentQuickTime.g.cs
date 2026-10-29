@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class HintBytesSentQuickTime() extends Box('trpY') {
- unsigned int(64) bytessent;
+	unsigned int(64) bytessent;
 }
-
 */
 public partial class HintBytesSentQuickTime : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class HintBytesSentQuickTime() extends Box('trpY') {
- unsigned int(64) bytessent;
-}
-"; } }
+	unsigned int(64) bytessent;
+}"; } }
 	public const string TYPE = "trpY";
 	public override string DisplayName { get { return "HintBytesSentQuickTime"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

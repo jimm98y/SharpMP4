@@ -7,17 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 class AppleQualityBox() extends Box ('rmqu'){
- unsigned int(32) flags;
- unsigned int(32) quality;
- }
+	unsigned int(32) flags;
+	unsigned int(32) quality;
+}
 */
 public partial class AppleQualityBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AppleQualityBox() extends Box ('rmqu'){
- unsigned int(32) flags;
- unsigned int(32) quality;
- }"; } }
+	unsigned int(32) flags;
+	unsigned int(32) quality;
+}"; } }
 	public const string TYPE = "rmqu";
 	public override string DisplayName { get { return "AppleQualityBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

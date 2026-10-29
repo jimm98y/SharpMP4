@@ -7,19 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class LevelMeter2Box() extends Box('lvlm') {
- signed int(32) numerator;
- signed int(32) denominator;
+	signed int(32) numerator;
+	signed int(32) denominator;
 }
-
 */
 public partial class LevelMeter2Box : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class LevelMeter2Box() extends Box('lvlm') {
- signed int(32) numerator;
- signed int(32) denominator;
-}
-"; } }
+	signed int(32) numerator;
+	signed int(32) denominator;
+}"; } }
 	public const string TYPE = "lvlm";
 	public override string DisplayName { get { return "LevelMeter2Box"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

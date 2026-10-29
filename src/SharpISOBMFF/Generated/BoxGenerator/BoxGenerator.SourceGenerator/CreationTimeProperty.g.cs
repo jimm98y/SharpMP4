@@ -7,19 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class CreationTimeProperty
-extends ItemFullProperty('crtt', version = 0, flags = 0) {
+	extends ItemFullProperty('crtt', version = 0, flags = 0) {
 	unsigned int(64)  creation_time;
 }
-
 */
 public partial class CreationTimeProperty : ItemFullProperty
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class CreationTimeProperty
-extends ItemFullProperty('crtt', version = 0, flags = 0) {
+	extends ItemFullProperty('crtt', version = 0, flags = 0) {
 	unsigned int(64)  creation_time;
-}
-"; } }
+}"; } }
 	public const string TYPE = "crtt";
 	public override string DisplayName { get { return "CreationTimeProperty"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

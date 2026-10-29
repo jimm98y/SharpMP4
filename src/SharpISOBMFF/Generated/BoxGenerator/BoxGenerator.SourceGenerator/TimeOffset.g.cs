@@ -9,17 +9,13 @@ namespace SharpISOBMFF
 class TimeOffset() extends Box('tsro') {
 	int(32)		offset;
 }
-
-
 */
 public partial class TimeOffset : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class TimeOffset() extends Box('tsro') {
 	int(32)		offset;
-}
-
-"; } }
+}"; } }
 	public const string TYPE = "tsro";
 	public override string DisplayName { get { return "TimeOffset"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

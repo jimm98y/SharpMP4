@@ -7,17 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 class AppleCompressedMoovDataBox() extends Box ('cmvd'){
- unsigned int(32) uncompressedSize;
-bit(8) compressedData[];
- }
+	unsigned int(32) uncompressedSize;
+	bit(8) compressedData[];
+}
 */
 public partial class AppleCompressedMoovDataBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AppleCompressedMoovDataBox() extends Box ('cmvd'){
- unsigned int(32) uncompressedSize;
-bit(8) compressedData[];
- }"; } }
+	unsigned int(32) uncompressedSize;
+	bit(8) compressedData[];
+}"; } }
 	public const string TYPE = "cmvd";
 	public override string DisplayName { get { return "AppleCompressedMoovDataBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

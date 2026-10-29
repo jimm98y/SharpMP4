@@ -6,16 +6,16 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class EVCSliceComponentTrackSampleEntry() 
-      extends VisualSampleEntry ('evs1' or 'evs2'){
+class EVCSliceComponentTrackSampleEntry()
+	extends VisualSampleEntry ('evs1' or 'evs2'){
 	EVCSliceComponentTrackConfigurationBox	config;
 }
 */
 public partial class EVCSliceComponentTrackSampleEntry : VisualSampleEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"class EVCSliceComponentTrackSampleEntry() 
-      extends VisualSampleEntry ('evs1' or 'evs2'){
+	public override string Syntax { get { return @"class EVCSliceComponentTrackSampleEntry()
+	extends VisualSampleEntry ('evs1' or 'evs2'){
 	EVCSliceComponentTrackConfigurationBox	config;
 }"; } }
 	public const string TYPE = "evs1";

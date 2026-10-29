@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class PanasonicPANABox() extends Box ('PANA') {
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class PanasonicPANABox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class PanasonicPANABox() extends Box ('PANA') {
- bit(8) data[];
- }"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "PANA";
 	public override string DisplayName { get { return "PanasonicPANABox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

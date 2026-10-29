@@ -7,21 +7,21 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class OMAAccessUnitFormatBox() extends FullBox('odaf') {
-	 bit(7) reserved;
- bit(1) selectiveEncrypted;
- unsigned int(8) keyIndicatorLength;
- unsigned int(8) initialVectorLength;
- } 
+	bit(7) reserved;
+	bit(1) selectiveEncrypted;
+	unsigned int(8) keyIndicatorLength;
+	unsigned int(8) initialVectorLength;
+}
 */
 public partial class OMAAccessUnitFormatBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class OMAAccessUnitFormatBox() extends FullBox('odaf') {
-	 bit(7) reserved;
- bit(1) selectiveEncrypted;
- unsigned int(8) keyIndicatorLength;
- unsigned int(8) initialVectorLength;
- } "; } }
+	bit(7) reserved;
+	bit(1) selectiveEncrypted;
+	unsigned int(8) keyIndicatorLength;
+	unsigned int(8) initialVectorLength;
+}"; } }
 	public const string TYPE = "odaf";
 	public override string DisplayName { get { return "OMAAccessUnitFormatBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

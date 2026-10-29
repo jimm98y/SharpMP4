@@ -8,16 +8,16 @@ namespace SharpISOBMFF
 /*
 // ISO/IEC 14496-14 3.1.2: the track reference of an MPEG-4 Systems OD track to the tracks its object descriptors are of
 aligned(8) class MpodBox() extends Box('mpod') {
- unsigned int(32) track_IDs[];
- }
+	unsigned int(32) track_IDs[];
+}
 */
 public partial class MpodBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// ISO/IEC 14496-14 3.1.2: the track reference of an MPEG-4 Systems OD track to the tracks its object descriptors are of
 aligned(8) class MpodBox() extends Box('mpod') {
- unsigned int(32) track_IDs[];
- }"; } }
+	unsigned int(32) track_IDs[];
+}"; } }
 	public const string TYPE = "mpod";
 	public override string DisplayName { get { return "MpodBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -7,31 +7,31 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class OMACommonHeadersBox() extends FullBox('ohdr') {
-	 unsigned int(8) encryptionMethod;
- unsigned int(8) paddingScheme;
- unsigned int(64) plaintextLength;
- unsigned int(16) contentIDLength;
- unsigned int(16) rightsIssuerLength;
- unsigned int(16) textualHeadersLength;
- unsigned int(8) contentID[contentIDLength];
- unsigned int(8) rightsIssuerURL[rightsIssuerLength];
- unsigned int(8) textualHeaders[textualHeadersLength];
- } 
+	unsigned int(8) encryptionMethod;
+	unsigned int(8) paddingScheme;
+	unsigned int(64) plaintextLength;
+	unsigned int(16) contentIDLength;
+	unsigned int(16) rightsIssuerLength;
+	unsigned int(16) textualHeadersLength;
+	unsigned int(8) contentID[contentIDLength];
+	unsigned int(8) rightsIssuerURL[rightsIssuerLength];
+	unsigned int(8) textualHeaders[textualHeadersLength];
+}
 */
 public partial class OMACommonHeadersBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class OMACommonHeadersBox() extends FullBox('ohdr') {
-	 unsigned int(8) encryptionMethod;
- unsigned int(8) paddingScheme;
- unsigned int(64) plaintextLength;
- unsigned int(16) contentIDLength;
- unsigned int(16) rightsIssuerLength;
- unsigned int(16) textualHeadersLength;
- unsigned int(8) contentID[contentIDLength];
- unsigned int(8) rightsIssuerURL[rightsIssuerLength];
- unsigned int(8) textualHeaders[textualHeadersLength];
- } "; } }
+	unsigned int(8) encryptionMethod;
+	unsigned int(8) paddingScheme;
+	unsigned int(64) plaintextLength;
+	unsigned int(16) contentIDLength;
+	unsigned int(16) rightsIssuerLength;
+	unsigned int(16) textualHeadersLength;
+	unsigned int(8) contentID[contentIDLength];
+	unsigned int(8) rightsIssuerURL[rightsIssuerLength];
+	unsigned int(8) textualHeaders[textualHeadersLength];
+}"; } }
 	public const string TYPE = "ohdr";
 	public override string DisplayName { get { return "OMACommonHeadersBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

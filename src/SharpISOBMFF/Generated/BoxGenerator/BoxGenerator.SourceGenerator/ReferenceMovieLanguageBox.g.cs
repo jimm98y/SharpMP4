@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class ReferenceMovieLanguageBox() extends Box ('rmla'){
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class ReferenceMovieLanguageBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class ReferenceMovieLanguageBox() extends Box ('rmla'){
- bit(8) data[];
- }"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "rmla";
 	public override string DisplayName { get { return "ReferenceMovieLanguageBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

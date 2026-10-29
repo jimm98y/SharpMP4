@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class WhiteBalanceBracketingEntry
-extends VisualSampleGroupEntry('wbbr') {
+	extends VisualSampleGroupEntry('wbbr') {
 	unsigned int(16) blue_amber;
 	int(8) green_magenta;
 }
@@ -16,7 +16,7 @@ public partial class WhiteBalanceBracketingEntry : VisualSampleGroupEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class WhiteBalanceBracketingEntry
-extends VisualSampleGroupEntry('wbbr') {
+	extends VisualSampleGroupEntry('wbbr') {
 	unsigned int(16) blue_amber;
 	int(8) green_magenta;
 }"; } }

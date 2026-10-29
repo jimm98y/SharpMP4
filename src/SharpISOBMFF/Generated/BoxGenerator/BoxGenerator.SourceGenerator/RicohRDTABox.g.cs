@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class RicohRDTABox() extends Box ('RDTA') {
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class RicohRDTABox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class RicohRDTABox() extends Box ('RDTA') {
- bit(8) data[];
- }"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "RDTA";
 	public override string DisplayName { get { return "RicohRDTABox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

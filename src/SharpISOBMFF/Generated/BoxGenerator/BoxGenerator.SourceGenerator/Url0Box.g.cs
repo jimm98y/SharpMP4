@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class Url0Box() extends Box ('url\0') {
- bit(8) data[];
- }
+	bit(8) data[];
+}
 */
 public partial class Url0Box : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class Url0Box() extends Box ('url\0') {
- bit(8) data[];
- }"; } }
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "url\0";
 	public override string DisplayName { get { return "Url0Box"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

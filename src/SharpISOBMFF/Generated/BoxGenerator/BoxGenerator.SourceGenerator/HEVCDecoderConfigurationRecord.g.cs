@@ -28,7 +28,7 @@ aligned(8) class HEVCDecoderConfigurationRecord {
 	bit(2) constantFrameRate;
 	bit(3) numTemporalLayers;
 	bit(1) temporalIdNested;
-	unsigned int(2) lengthSizeMinusOne; 
+	unsigned int(2) lengthSizeMinusOne;
 	unsigned int(8) numOfArrays;
 	for (j=0; j < numOfArrays; j++) {
 		bit(1) array_completeness;
@@ -72,7 +72,7 @@ public partial class HEVCDecoderConfigurationRecord : IMp4Serializable
 	bit(2) constantFrameRate;
 	bit(3) numTemporalLayers;
 	bit(1) temporalIdNested;
-	unsigned int(2) lengthSizeMinusOne; 
+	unsigned int(2) lengthSizeMinusOne;
 	unsigned int(8) numOfArrays;
 	for (j=0; j < numOfArrays; j++) {
 		bit(1) array_completeness;

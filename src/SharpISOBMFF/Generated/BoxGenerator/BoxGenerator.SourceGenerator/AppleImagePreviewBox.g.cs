@@ -7,21 +7,21 @@ namespace SharpISOBMFF
 {
 /*
 class AppleImagePreviewBox() extends Box ('pnot'){
- unsigned int(32) modificationDate;
- signed int(16) version;
- signed int(32) atomType;
- signed int(16) atomIndex;
- }
+	unsigned int(32) modificationDate;
+	signed int(16) version;
+	signed int(32) atomType;
+	signed int(16) atomIndex;
+}
 */
 public partial class AppleImagePreviewBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AppleImagePreviewBox() extends Box ('pnot'){
- unsigned int(32) modificationDate;
- signed int(16) version;
- signed int(32) atomType;
- signed int(16) atomIndex;
- }"; } }
+	unsigned int(32) modificationDate;
+	signed int(16) version;
+	signed int(32) atomType;
+	signed int(16) atomIndex;
+}"; } }
 	public const string TYPE = "pnot";
 	public override string DisplayName { get { return "AppleImagePreviewBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

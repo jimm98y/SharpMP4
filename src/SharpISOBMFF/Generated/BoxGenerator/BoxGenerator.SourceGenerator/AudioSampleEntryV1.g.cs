@@ -7,7 +7,7 @@ namespace SharpISOBMFF
 {
 /*
 class AudioSampleEntryV1(codingname) extends SampleEntry (codingname){
-	unsigned int(16) entry_version;	// shall be 1, 
+	unsigned int(16) entry_version;	// shall be 1,
 	// and shall be in an stsd with version ==1
 	const unsigned int(16)[3] reserved = 0;
 	template unsigned int(16) channelcount;	// shall be correct
@@ -34,7 +34,7 @@ public partial class AudioSampleEntryV1 : SampleEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AudioSampleEntryV1(codingname) extends SampleEntry (codingname){
-	unsigned int(16) entry_version;	// shall be 1, 
+	unsigned int(16) entry_version;	// shall be 1,
 	// and shall be in an stsd with version ==1
 	const unsigned int(16)[3] reserved = 0;
 	template unsigned int(16) channelcount;	// shall be correct
@@ -61,7 +61,7 @@ public partial class AudioSampleEntryV1 : SampleEntry
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "stsd" }); }
 
 
-	protected ushort entry_version;  //  shall be 1, 
+	protected ushort entry_version;  //  shall be 1,
 	public ushort EntryVersion { get { return this.entry_version; } set { this.entry_version = value; } }
 
 	protected ushort[] reserved = new ushort[3]; 
@@ -101,7 +101,7 @@ public partial class AudioSampleEntryV1 : SampleEntry
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.entry_version, "entry_version"); // shall be 1, 
+		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.entry_version, "entry_version"); // shall be 1,
 		/*  and shall be in an stsd with version ==1 */
 		boxSize += stream.ReadUInt16Array(boxSize, readSize, 3,  out this.reserved, "reserved"); 
 		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.channelcount, "channelcount"); // shall be correct
@@ -127,7 +127,7 @@ public partial class AudioSampleEntryV1 : SampleEntry
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt16( this.entry_version, "entry_version"); // shall be 1, 
+		boxSize += stream.WriteUInt16( this.entry_version, "entry_version"); // shall be 1,
 		/*  and shall be in an stsd with version ==1 */
 		boxSize += stream.WriteUInt16Array(3,  this.reserved, "reserved"); 
 		boxSize += stream.WriteUInt16( this.channelcount, "channelcount"); // shall be correct
@@ -179,7 +179,7 @@ public partial class AudioSampleEntryV1 : SampleEntry
 	{
 		ulong boxSize = 0;
 		boxSize += base.Trace(tracer);
-		boxSize += tracer.Field("entry_version", 16, this.entry_version); // shall be 1, 
+		boxSize += tracer.Field("entry_version", 16, this.entry_version); // shall be 1,
 		/*  and shall be in an stsd with version ==1 */
 		boxSize += tracer.Field("reserved", 3 * 16, this.reserved); 
 		boxSize += tracer.Field("channelcount", 16, this.channelcount); // shall be correct

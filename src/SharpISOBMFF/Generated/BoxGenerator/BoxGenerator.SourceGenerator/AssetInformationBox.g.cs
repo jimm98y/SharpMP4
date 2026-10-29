@@ -7,17 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AssetInformationBox() extends FullBox('ainf') {
- unsigned int(8) profileVersion[4];
- string apid;
- } 
+	unsigned int(8) profileVersion[4];
+	string apid;
+}
 */
 public partial class AssetInformationBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AssetInformationBox() extends FullBox('ainf') {
- unsigned int(8) profileVersion[4];
- string apid;
- } "; } }
+	unsigned int(8) profileVersion[4];
+	string apid;
+}"; } }
 	public const string TYPE = "ainf";
 	public override string DisplayName { get { return "AssetInformationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

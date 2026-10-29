@@ -8,15 +8,13 @@ namespace SharpISOBMFF
 /*
 class GetAudioObjectType()
 {
-  uimsbf(5) audioObjectType;
-  if (audioObjectType == 31) {
-    uimsbf(6) audioObjectTypeExt;
-    audioObjectType = 32 + audioObjectTypeExt;
-  }
-  return audioObjectType;
+	uimsbf(5) audioObjectType;
+	if (audioObjectType == 31) {
+		uimsbf(6) audioObjectTypeExt;
+		audioObjectType = 32 + audioObjectTypeExt;
+	}
+	return audioObjectType;
 }
-
-
 */
 public partial class GetAudioObjectType : IMp4Serializable
 {
@@ -28,15 +26,13 @@ public partial class GetAudioObjectType : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class GetAudioObjectType()
 {
-  uimsbf(5) audioObjectType;
-  if (audioObjectType == 31) {
-    uimsbf(6) audioObjectTypeExt;
-    audioObjectType = 32 + audioObjectTypeExt;
-  }
-  return audioObjectType;
-}
-
-"; } }
+	uimsbf(5) audioObjectType;
+	if (audioObjectType == 31) {
+		uimsbf(6) audioObjectTypeExt;
+		audioObjectType = 32 + audioObjectTypeExt;
+	}
+	return audioObjectType;
+}"; } }
 	public virtual string DisplayName { get { return "GetAudioObjectType"; } }
 
 	protected byte audioObjectType; 

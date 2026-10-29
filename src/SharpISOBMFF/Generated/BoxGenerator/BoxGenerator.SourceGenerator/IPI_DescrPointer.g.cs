@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class IPI_DescrPointer extends BaseDescriptor : bit(8) tag=IPI_DescrPointerTag {
- bit(16) IPI_ES_Id;
- }
+	bit(16) IPI_ES_Id;
+}
 */
 public partial class IPI_DescrPointer : BaseDescriptor
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class IPI_DescrPointer extends BaseDescriptor : bit(8) tag=IPI_DescrPointerTag {
- bit(16) IPI_ES_Id;
- }"; } }
+	bit(16) IPI_ES_Id;
+}"; } }
 	public const byte TYPE = DescriptorTags.IPI_DescrPointerTag;
 	public override string DisplayName { get { return "IPI_DescrPointer"; } }
 

@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class StereoViewBox() extends Box ('eyes') {
- Box boxes[];
- }
+	Box boxes[];
+}
 */
 public partial class StereoViewBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class StereoViewBox() extends Box ('eyes') {
- Box boxes[];
- }"; } }
+	Box boxes[];
+}"; } }
 	public const string TYPE = "eyes";
 	public override string DisplayName { get { return "StereoViewBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

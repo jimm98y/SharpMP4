@@ -8,29 +8,27 @@ namespace SharpISOBMFF
 /*
 class sbr_header()
 {
-  uimsbf(1) bs_amp_res;
-  uimsbf(4) bs_start_freq;
-  uimsbf(4) bs_stop_freq;
-  uimsbf(3) bs_xover_band;
-  uimsbf(2) bs_reserved;
-  uimsbf(1) bs_header_extra_1;
-  uimsbf(1) bs_header_extra_2;
+	uimsbf(1) bs_amp_res;
+	uimsbf(4) bs_start_freq;
+	uimsbf(4) bs_stop_freq;
+	uimsbf(3) bs_xover_band;
+	uimsbf(2) bs_reserved;
+	uimsbf(1) bs_header_extra_1;
+	uimsbf(1) bs_header_extra_2;
 
-  if (bs_header_extra_1) {
-    uimsbf(2) bs_freq_scale;
-    uimsbf(1) bs_alter_scale;
-    uimsbf(2) bs_noise_bands;
-  }
+	if (bs_header_extra_1) {
+		uimsbf(2) bs_freq_scale;
+		uimsbf(1) bs_alter_scale;
+		uimsbf(2) bs_noise_bands;
+	}
 
-  if (bs_header_extra_2) {
-    uimsbf(2) bs_limiter_bands;
-    uimsbf(2) bs_limiter_gains;
-    uimsbf(1) bs_interpol_freq;
-    uimsbf(1) bs_smoothing_mode;
-  }
+	if (bs_header_extra_2) {
+		uimsbf(2) bs_limiter_bands;
+		uimsbf(2) bs_limiter_gains;
+		uimsbf(1) bs_interpol_freq;
+		uimsbf(1) bs_smoothing_mode;
+	}
 }
-
-
 */
 public partial class sbr_header : IMp4Serializable
 {
@@ -42,29 +40,27 @@ public partial class sbr_header : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class sbr_header()
 {
-  uimsbf(1) bs_amp_res;
-  uimsbf(4) bs_start_freq;
-  uimsbf(4) bs_stop_freq;
-  uimsbf(3) bs_xover_band;
-  uimsbf(2) bs_reserved;
-  uimsbf(1) bs_header_extra_1;
-  uimsbf(1) bs_header_extra_2;
+	uimsbf(1) bs_amp_res;
+	uimsbf(4) bs_start_freq;
+	uimsbf(4) bs_stop_freq;
+	uimsbf(3) bs_xover_band;
+	uimsbf(2) bs_reserved;
+	uimsbf(1) bs_header_extra_1;
+	uimsbf(1) bs_header_extra_2;
 
-  if (bs_header_extra_1) {
-    uimsbf(2) bs_freq_scale;
-    uimsbf(1) bs_alter_scale;
-    uimsbf(2) bs_noise_bands;
-  }
+	if (bs_header_extra_1) {
+		uimsbf(2) bs_freq_scale;
+		uimsbf(1) bs_alter_scale;
+		uimsbf(2) bs_noise_bands;
+	}
 
-  if (bs_header_extra_2) {
-    uimsbf(2) bs_limiter_bands;
-    uimsbf(2) bs_limiter_gains;
-    uimsbf(1) bs_interpol_freq;
-    uimsbf(1) bs_smoothing_mode;
-  }
-}
-
-"; } }
+	if (bs_header_extra_2) {
+		uimsbf(2) bs_limiter_bands;
+		uimsbf(2) bs_limiter_gains;
+		uimsbf(1) bs_interpol_freq;
+		uimsbf(1) bs_smoothing_mode;
+	}
+}"; } }
 	public virtual string DisplayName { get { return "sbr_header"; } }
 
 	protected bool bs_amp_res; 

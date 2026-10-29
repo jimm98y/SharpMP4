@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class GoogleSourceDataBox() extends Box('gssd') {
- Box boxes[];
- } 
+	Box boxes[];
+}
 */
 public partial class GoogleSourceDataBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class GoogleSourceDataBox() extends Box('gssd') {
- Box boxes[];
- } "; } }
+	Box boxes[];
+}"; } }
 	public const string TYPE = "gssd";
 	public override string DisplayName { get { return "GoogleSourceDataBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

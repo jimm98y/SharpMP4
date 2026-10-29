@@ -8,14 +8,12 @@ namespace SharpISOBMFF
 /*
 class HILNconfig()
 {
-  uimsbf(1) HILNquantMode;
-  uimsbf(8) HILNmaxNumLine;
-  uimsbf(4) HILNsampleRateCode;
-  uimsbf(12) HILNframeLength;
-  uimsbf(2) HILNcontMode;
+	uimsbf(1) HILNquantMode;
+	uimsbf(8) HILNmaxNumLine;
+	uimsbf(4) HILNsampleRateCode;
+	uimsbf(12) HILNframeLength;
+	uimsbf(2) HILNcontMode;
 }
-
-
 */
 public partial class HILNconfig : IMp4Serializable
 {
@@ -27,14 +25,12 @@ public partial class HILNconfig : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class HILNconfig()
 {
-  uimsbf(1) HILNquantMode;
-  uimsbf(8) HILNmaxNumLine;
-  uimsbf(4) HILNsampleRateCode;
-  uimsbf(12) HILNframeLength;
-  uimsbf(2) HILNcontMode;
-}
-
-"; } }
+	uimsbf(1) HILNquantMode;
+	uimsbf(8) HILNmaxNumLine;
+	uimsbf(4) HILNsampleRateCode;
+	uimsbf(12) HILNframeLength;
+	uimsbf(2) HILNcontMode;
+}"; } }
 	public virtual string DisplayName { get { return "HILNconfig"; } }
 
 	protected bool HILNquantMode; 

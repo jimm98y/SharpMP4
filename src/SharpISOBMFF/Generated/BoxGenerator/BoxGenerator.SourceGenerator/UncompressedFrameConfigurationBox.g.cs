@@ -8,62 +8,62 @@ namespace SharpISOBMFF
 /*
 // ISO/IEC 23001-17 uncompressed frame configuration: of version 1 a profile alone, of version 0 the components, how they are sampled, interleaved, laid in blocks and aligned, and the tiles
 aligned(8) class UncompressedFrameConfigurationBox() extends FullBox('uncC') {
-	 unsigned int(32) profile;
- if (version == 0) {
- unsigned int(32) component_count;
- for (i = 0; i < component_count; i++) {
- unsigned int(16) component_index;
- unsigned int(8) component_bit_depth_minus_one;
- unsigned int(8) component_format;
- unsigned int(8) component_align_size;
- }
- unsigned int(8) sampling_type;
- unsigned int(8) interleave_type;
- unsigned int(8) block_size;
- unsigned int(1) components_little_endian;
- unsigned int(1) block_pad_lsb;
- unsigned int(1) block_little_endian;
- unsigned int(1) block_reversed;
- unsigned int(1) pad_unknown;
- unsigned int(3) reserved;
- unsigned int(32) pixel_size;
- unsigned int(32) row_align_size;
- unsigned int(32) tile_align_size;
- unsigned int(32) num_tile_cols_minus_one;
- unsigned int(32) num_tile_rows_minus_one;
- }
- } 
+	unsigned int(32) profile;
+	if (version == 0) {
+		unsigned int(32) component_count;
+		for (i = 0; i < component_count; i++) {
+			unsigned int(16) component_index;
+			unsigned int(8) component_bit_depth_minus_one;
+			unsigned int(8) component_format;
+			unsigned int(8) component_align_size;
+		}
+		unsigned int(8) sampling_type;
+		unsigned int(8) interleave_type;
+		unsigned int(8) block_size;
+		unsigned int(1) components_little_endian;
+		unsigned int(1) block_pad_lsb;
+		unsigned int(1) block_little_endian;
+		unsigned int(1) block_reversed;
+		unsigned int(1) pad_unknown;
+		unsigned int(3) reserved;
+		unsigned int(32) pixel_size;
+		unsigned int(32) row_align_size;
+		unsigned int(32) tile_align_size;
+		unsigned int(32) num_tile_cols_minus_one;
+		unsigned int(32) num_tile_rows_minus_one;
+	}
+}
 */
 public partial class UncompressedFrameConfigurationBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// ISO/IEC 23001-17 uncompressed frame configuration: of version 1 a profile alone, of version 0 the components, how they are sampled, interleaved, laid in blocks and aligned, and the tiles
 aligned(8) class UncompressedFrameConfigurationBox() extends FullBox('uncC') {
-	 unsigned int(32) profile;
- if (version == 0) {
- unsigned int(32) component_count;
- for (i = 0; i < component_count; i++) {
- unsigned int(16) component_index;
- unsigned int(8) component_bit_depth_minus_one;
- unsigned int(8) component_format;
- unsigned int(8) component_align_size;
- }
- unsigned int(8) sampling_type;
- unsigned int(8) interleave_type;
- unsigned int(8) block_size;
- unsigned int(1) components_little_endian;
- unsigned int(1) block_pad_lsb;
- unsigned int(1) block_little_endian;
- unsigned int(1) block_reversed;
- unsigned int(1) pad_unknown;
- unsigned int(3) reserved;
- unsigned int(32) pixel_size;
- unsigned int(32) row_align_size;
- unsigned int(32) tile_align_size;
- unsigned int(32) num_tile_cols_minus_one;
- unsigned int(32) num_tile_rows_minus_one;
- }
- } "; } }
+	unsigned int(32) profile;
+	if (version == 0) {
+		unsigned int(32) component_count;
+		for (i = 0; i < component_count; i++) {
+			unsigned int(16) component_index;
+			unsigned int(8) component_bit_depth_minus_one;
+			unsigned int(8) component_format;
+			unsigned int(8) component_align_size;
+		}
+		unsigned int(8) sampling_type;
+		unsigned int(8) interleave_type;
+		unsigned int(8) block_size;
+		unsigned int(1) components_little_endian;
+		unsigned int(1) block_pad_lsb;
+		unsigned int(1) block_little_endian;
+		unsigned int(1) block_reversed;
+		unsigned int(1) pad_unknown;
+		unsigned int(3) reserved;
+		unsigned int(32) pixel_size;
+		unsigned int(32) row_align_size;
+		unsigned int(32) tile_align_size;
+		unsigned int(32) num_tile_cols_minus_one;
+		unsigned int(32) num_tile_rows_minus_one;
+	}
+}"; } }
 	public const string TYPE = "uncC";
 	public override string DisplayName { get { return "UncompressedFrameConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

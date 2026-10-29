@@ -7,14 +7,13 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class MtdtEntry() {
- unsigned int(16) size;
- unsigned int(32) type;
- bit(1) reserved;
-unsigned int(5)[3] language;
- unsigned int(16) dataType;
- bit(8) data[size-10];
- }
-
+	unsigned int(16) size;
+	unsigned int(32) type;
+	bit(1) reserved;
+	unsigned int(5)[3] language;
+	unsigned int(16) dataType;
+	bit(8) data[size-10];
+}
 */
 public partial class MtdtEntry : IMp4Serializable
 {
@@ -25,14 +24,13 @@ public partial class MtdtEntry : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class MtdtEntry() {
- unsigned int(16) size;
- unsigned int(32) type;
- bit(1) reserved;
-unsigned int(5)[3] language;
- unsigned int(16) dataType;
- bit(8) data[size-10];
- }
-"; } }
+	unsigned int(16) size;
+	unsigned int(32) type;
+	bit(1) reserved;
+	unsigned int(5)[3] language;
+	unsigned int(16) dataType;
+	bit(8) data[size-10];
+}"; } }
 	public virtual string DisplayName { get { return "MtdtEntry"; } }
 
 	protected ushort size; 

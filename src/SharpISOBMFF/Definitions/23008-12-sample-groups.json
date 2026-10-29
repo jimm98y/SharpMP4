@@ -14,49 +14,49 @@
       "description": "Direct reference samples list",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "class DirectReferenceSamplesList()\r\nextends VisualSampleGroupEntry ('refs') {\r\n\tunsigned int(32) sample_id;\r\n\tunsigned int(8) num_direct_reference_samples;\r\n\tfor(i = 0; i < num_direct_reference_samples; i++) {\r\n\t\tunsigned int(32)direct_reference_sample_id;\r\n\t}\r\n}"
+      "syntax": "class DirectReferenceSamplesList()\r\n\textends VisualSampleGroupEntry ('refs') {\r\n\tunsigned int(32) sample_id;\r\n\tunsigned int(8) num_direct_reference_samples;\r\n\tfor(i = 0; i < num_direct_reference_samples; i++) {\r\n\t\tunsigned int(32)direct_reference_sample_id;\r\n\t}\r\n}"
     },
     {
       "fourcc": "aebr",
       "description": "Auto exposure bracketing",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "aligned(8) class AutoExposureBracketingEntry\r\nextends VisualSampleGroupEntry('aebr') {\r\n\tint(8) exposure_step;\r\n\tint(8) exposure_numerator;\r\n}"
+      "syntax": "aligned(8) class AutoExposureBracketingEntry\r\n\textends VisualSampleGroupEntry('aebr') {\r\n\tint(8) exposure_step;\r\n\tint(8) exposure_numerator;\r\n}"
     },
     {
       "fourcc": "afbr",
       "description": "Flash exposure bracketing",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "aligned(8) class FlashExposureBracketingEntry\r\nextends VisualSampleGroupEntry('afbr') {\r\n\tint(8) flash_exposure_numerator;\r\n\tint(8) flash_exposure_denominator;\r\n}"
+      "syntax": "aligned(8) class FlashExposureBracketingEntry\r\n\textends VisualSampleGroupEntry('afbr') {\r\n\tint(8) flash_exposure_numerator;\r\n\tint(8) flash_exposure_denominator;\r\n}"
     },
     {
       "fourcc": "dobr",
       "description": "Depth of field bracketing",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "aligned(8) class DepthOfFieldBracketingEntry\r\nextends VisualSampleGroupEntry('dobr') {\r\n\tint(8) f_stop_numerator;\r\n\tint(8) f_stop_denominator;\r\n}"
+      "syntax": "aligned(8) class DepthOfFieldBracketingEntry\r\n\textends VisualSampleGroupEntry('dobr') {\r\n\tint(8) f_stop_numerator;\r\n\tint(8) f_stop_denominator;\r\n}"
     },
     {
       "fourcc": "fobr",
       "description": "Focus bracketing exposure bracketing",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "aligned(8) class FocusBracketingEntry\r\nextends VisualSampleGroupEntry('fobr') {\r\n\tunsigned int(16) focus_distance_numerator;\r\n\tunsigned int(16) focus_distance_denominator;\r\n}"
+      "syntax": "aligned(8) class FocusBracketingEntry\r\n\textends VisualSampleGroupEntry('fobr') {\r\n\tunsigned int(16) focus_distance_numerator;\r\n\tunsigned int(16) focus_distance_denominator;\r\n}"
     },
     {
       "fourcc": "pano",
       "description": "Panorama sample group",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "aligned(8) class PanoramaEntry\r\nextends VisualSampleGroupEntry('pano') {\r\n\tunsigned int(16) frame_number;\r\n}\r\n"
+      "syntax": "aligned(8) class PanoramaEntry\r\n\textends VisualSampleGroupEntry('pano') {\r\n\tunsigned int(16) frame_number;\r\n}"
     },
     {
       "fourcc": "wbbr",
       "description": "White balance bracketing",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "aligned(8) class WhiteBalanceBracketingEntry\r\nextends VisualSampleGroupEntry('wbbr') {\r\n\tunsigned int(16) blue_amber;\r\n\tint(8) green_magenta;\r\n}"
+      "syntax": "aligned(8) class WhiteBalanceBracketingEntry\r\n\textends VisualSampleGroupEntry('wbbr') {\r\n\tunsigned int(16) blue_amber;\r\n\tint(8) green_magenta;\r\n}"
     }
   ]
 }

@@ -7,33 +7,33 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class DoViConfigurationBox() extends Box('dvcC') {
- unsigned int(8) dv_version_major;
- unsigned int(8) dv_version_minor;
- unsigned int(7) dv_profile;
- unsigned int(6) dv_level;
- bit(1) rpu_present_flag;
- bit(1) el_present_flag;
- bit(1) bl_present_flag;
- unsigned int(4) dv_bl_signal_compatibility_id;
- const unsigned int(28) reserved = 0;
- const unsigned int(32)[4] reserved = 0;
- } 
+	unsigned int(8) dv_version_major;
+	unsigned int(8) dv_version_minor;
+	unsigned int(7) dv_profile;
+	unsigned int(6) dv_level;
+	bit(1) rpu_present_flag;
+	bit(1) el_present_flag;
+	bit(1) bl_present_flag;
+	unsigned int(4) dv_bl_signal_compatibility_id;
+	const unsigned int(28) reserved = 0;
+	const unsigned int(32)[4] reserved = 0;
+}
 */
 public partial class DoViConfigurationBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class DoViConfigurationBox() extends Box('dvcC') {
- unsigned int(8) dv_version_major;
- unsigned int(8) dv_version_minor;
- unsigned int(7) dv_profile;
- unsigned int(6) dv_level;
- bit(1) rpu_present_flag;
- bit(1) el_present_flag;
- bit(1) bl_present_flag;
- unsigned int(4) dv_bl_signal_compatibility_id;
- const unsigned int(28) reserved = 0;
- const unsigned int(32)[4] reserved = 0;
- } "; } }
+	unsigned int(8) dv_version_major;
+	unsigned int(8) dv_version_minor;
+	unsigned int(7) dv_profile;
+	unsigned int(6) dv_level;
+	bit(1) rpu_present_flag;
+	bit(1) el_present_flag;
+	bit(1) bl_present_flag;
+	unsigned int(4) dv_bl_signal_compatibility_id;
+	const unsigned int(28) reserved = 0;
+	const unsigned int(32)[4] reserved = 0;
+}"; } }
 	public const string TYPE = "dvcC";
 	public override string DisplayName { get { return "DoViConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

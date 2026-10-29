@@ -6,17 +6,17 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class ScalableGroupEntry() extends VisualSampleGroupEntry ('scif') { 
+class ScalableGroupEntry() extends VisualSampleGroupEntry ('scif') {
 	unsigned int(8) groupID;
 	unsigned int(8) primary_groupID;
 	unsigned int(1) is_tier_IDR;
-	unsigned int(1) noInterLayerPredFlag; 
+	unsigned int(1) noInterLayerPredFlag;
 	unsigned int(1) useRefBasePicFlag;
-	unsigned int(1) storeBaseRepFlag; 
+	unsigned int(1) storeBaseRepFlag;
 	unsigned int(1) is_tl_switching_point;
 	bit(3) reserved = 0;
 	unsigned int(8) tl_switching_distance;
-	
+
 	if (groupID == primary_groupID)	// primary definition of tier
 	{
 		TierInfoBox(); 				// Mandatory
@@ -38,17 +38,17 @@ class ScalableGroupEntry() extends VisualSampleGroupEntry ('scif') {
 public partial class ScalableGroupEntry : VisualSampleGroupEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"class ScalableGroupEntry() extends VisualSampleGroupEntry ('scif') { 
+	public override string Syntax { get { return @"class ScalableGroupEntry() extends VisualSampleGroupEntry ('scif') {
 	unsigned int(8) groupID;
 	unsigned int(8) primary_groupID;
 	unsigned int(1) is_tier_IDR;
-	unsigned int(1) noInterLayerPredFlag; 
+	unsigned int(1) noInterLayerPredFlag;
 	unsigned int(1) useRefBasePicFlag;
-	unsigned int(1) storeBaseRepFlag; 
+	unsigned int(1) storeBaseRepFlag;
 	unsigned int(1) is_tl_switching_point;
 	bit(3) reserved = 0;
 	unsigned int(8) tl_switching_distance;
-	
+
 	if (groupID == primary_groupID)	// primary definition of tier
 	{
 		TierInfoBox(); 				// Mandatory

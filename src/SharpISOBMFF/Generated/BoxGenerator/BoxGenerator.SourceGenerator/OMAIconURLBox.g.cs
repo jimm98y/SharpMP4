@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class OMAIconURLBox() extends FullBox('icnu') {
-	 string content;
- } 
+	string content;
+}
 */
 public partial class OMAIconURLBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class OMAIconURLBox() extends FullBox('icnu') {
-	 string content;
- } "; } }
+	string content;
+}"; } }
 	public const string TYPE = "icnu";
 	public override string DisplayName { get { return "OMAIconURLBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

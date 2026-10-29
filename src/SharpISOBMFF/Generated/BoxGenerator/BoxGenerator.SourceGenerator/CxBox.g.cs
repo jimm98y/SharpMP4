@@ -7,16 +7,16 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class CxBox() extends Box('_cx_') {
- signed int(32) numerator;
- signed int(32) denominator;
+	signed int(32) numerator;
+	signed int(32) denominator;
 }
 */
 public partial class CxBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class CxBox() extends Box('_cx_') {
- signed int(32) numerator;
- signed int(32) denominator;
+	signed int(32) numerator;
+	signed int(32) denominator;
 }"; } }
 	public const string TYPE = "_cx_";
 	public override string DisplayName { get { return "CxBox"; } }

@@ -8,16 +8,16 @@ namespace SharpISOBMFF
 /*
 // Encapsulation of FLAC in ISO Base Media File Format (Xiph, isoflac.txt), 3.3.1 FLAC Sample Entry
 class FLACSampleEntry() extends AudioSampleEntry ('fLaC'){
- FLACSpecificBox();
- }
+	FLACSpecificBox();
+}
 */
 public partial class FLACSampleEntry : AudioSampleEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// Encapsulation of FLAC in ISO Base Media File Format (Xiph, isoflac.txt), 3.3.1 FLAC Sample Entry
 class FLACSampleEntry() extends AudioSampleEntry ('fLaC'){
- FLACSpecificBox();
- }"; } }
+	FLACSpecificBox();
+}"; } }
 	public const string TYPE = "fLaC";
 	public override string DisplayName { get { return "FLACSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

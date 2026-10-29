@@ -7,13 +7,11 @@ namespace SharpISOBMFF
 {
 /*
 class HvxcSpecificConfig() {
-  uimsbf(1) isBaseLayer;
-  if (isBaseLayer) {
-    HVXCconfig();
-  }
+	uimsbf(1) isBaseLayer;
+	if (isBaseLayer) {
+		HVXCconfig();
+	}
 }
-
-
 */
 public partial class HvxcSpecificConfig : IMp4Serializable
 {
@@ -24,13 +22,11 @@ public partial class HvxcSpecificConfig : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class HvxcSpecificConfig() {
-  uimsbf(1) isBaseLayer;
-  if (isBaseLayer) {
-    HVXCconfig();
-  }
-}
-
-"; } }
+	uimsbf(1) isBaseLayer;
+	if (isBaseLayer) {
+		HVXCconfig();
+	}
+}"; } }
 	public virtual string DisplayName { get { return "HvxcSpecificConfig"; } }
 
 	protected bool isBaseLayer; 

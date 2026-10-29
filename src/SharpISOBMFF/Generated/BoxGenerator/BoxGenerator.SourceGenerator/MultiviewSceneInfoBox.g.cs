@@ -6,7 +6,7 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class MultiviewSceneInfoBox extends Box ('vwdi') 
+class MultiviewSceneInfoBox extends Box ('vwdi')
 {
 	unsigned int(8) 	max_disparity;
 }
@@ -14,7 +14,7 @@ class MultiviewSceneInfoBox extends Box ('vwdi')
 public partial class MultiviewSceneInfoBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"class MultiviewSceneInfoBox extends Box ('vwdi') 
+	public override string Syntax { get { return @"class MultiviewSceneInfoBox extends Box ('vwdi')
 {
 	unsigned int(8) 	max_disparity;
 }"; } }

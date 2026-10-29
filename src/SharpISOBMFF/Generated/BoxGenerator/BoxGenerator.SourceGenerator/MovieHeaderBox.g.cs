@@ -24,7 +24,7 @@ aligned(8) class MovieHeaderBox extends FullBox('mvhd', version, 0) {
 	const unsigned int(32)[2]	reserved = 0;
 	template int(32)[9]	matrix =
 		{ 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };
-		// Unity matrix
+	// Unity matrix
 	bit(32)[6]	pre_defined = 0;
 	unsigned int(32)	next_track_ID;
 }
@@ -50,7 +50,7 @@ public partial class MovieHeaderBox : FullBox
 	const unsigned int(32)[2]	reserved = 0;
 	template int(32)[9]	matrix =
 		{ 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };
-		// Unity matrix
+	// Unity matrix
 	bit(32)[6]	pre_defined = 0;
 	unsigned int(32)	next_track_ID;
 }"; } }

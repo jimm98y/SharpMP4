@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class StereoCameraSystemBaselineBox extends FullBox('blin') {
-  unsigned int(32) baseline_value;
- }
-
+	unsigned int(32) baseline_value;
+}
 */
 public partial class StereoCameraSystemBaselineBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class StereoCameraSystemBaselineBox extends FullBox('blin') {
-  unsigned int(32) baseline_value;
- }
-"; } }
+	unsigned int(32) baseline_value;
+}"; } }
 	public const string TYPE = "blin";
 	public override string DisplayName { get { return "StereoCameraSystemBaselineBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

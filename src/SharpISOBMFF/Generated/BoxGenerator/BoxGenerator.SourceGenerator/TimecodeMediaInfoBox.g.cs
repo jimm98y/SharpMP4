@@ -7,29 +7,29 @@ namespace SharpISOBMFF
 {
 /*
 class TimecodeMediaInfoBox() extends FullBox ('tcmi'){
- signed int(16) text_font;
- signed int(16) text_face;
- signed int(16) text_size;
- signed int(16) reserved;
- unsigned int(48) text_color;
- unsigned int(48) background_color;
- unsigned int(8) font_name_length;
- unsigned int(8) font_name[font_name_length];
- }
+	signed int(16) text_font;
+	signed int(16) text_face;
+	signed int(16) text_size;
+	signed int(16) reserved;
+	unsigned int(48) text_color;
+	unsigned int(48) background_color;
+	unsigned int(8) font_name_length;
+	unsigned int(8) font_name[font_name_length];
+}
 */
 public partial class TimecodeMediaInfoBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class TimecodeMediaInfoBox() extends FullBox ('tcmi'){
- signed int(16) text_font;
- signed int(16) text_face;
- signed int(16) text_size;
- signed int(16) reserved;
- unsigned int(48) text_color;
- unsigned int(48) background_color;
- unsigned int(8) font_name_length;
- unsigned int(8) font_name[font_name_length];
- }"; } }
+	signed int(16) text_font;
+	signed int(16) text_face;
+	signed int(16) text_size;
+	signed int(16) reserved;
+	unsigned int(48) text_color;
+	unsigned int(48) background_color;
+	unsigned int(8) font_name_length;
+	unsigned int(8) font_name[font_name_length];
+}"; } }
 	public const string TYPE = "tcmi";
 	public override string DisplayName { get { return "TimecodeMediaInfoBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

@@ -9,12 +9,11 @@ namespace SharpISOBMFF
 aligned(8) class CompatibleSchemeTypeBox extends FullBox('csch', 0, flags) {
 	// identical syntax to SchemeTypeBox
 	unsigned int(32)	scheme_type;		// 4CC identifying the scheme
-	unsigned int(32)	scheme_version;	// scheme version 
+	unsigned int(32)	scheme_version;	// scheme version
 	if (flags & 0x000001) {
 		utf8string scheme_uri;		// browser uri
 	}
 }
-
 */
 public partial class CompatibleSchemeTypeBox : FullBox
 {
@@ -22,12 +21,11 @@ public partial class CompatibleSchemeTypeBox : FullBox
 	public override string Syntax { get { return @"aligned(8) class CompatibleSchemeTypeBox extends FullBox('csch', 0, flags) {
 	// identical syntax to SchemeTypeBox
 	unsigned int(32)	scheme_type;		// 4CC identifying the scheme
-	unsigned int(32)	scheme_version;	// scheme version 
+	unsigned int(32)	scheme_version;	// scheme version
 	if (flags & 0x000001) {
 		utf8string scheme_uri;		// browser uri
 	}
-}
-"; } }
+}"; } }
 	public const string TYPE = "csch";
 	public override string DisplayName { get { return "CompatibleSchemeTypeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -37,7 +35,7 @@ public partial class CompatibleSchemeTypeBox : FullBox
 	protected uint scheme_type;  //  4CC identifying the scheme
 	public uint SchemeType { get { return this.scheme_type; } set { this.scheme_type = value; } }
 
-	protected uint scheme_version;  //  scheme version 
+	protected uint scheme_version;  //  scheme version
 	public uint SchemeVersion { get { return this.scheme_version; } set { this.scheme_version = value; } }
 
 	protected BinaryUTF8String scheme_uri;  //  browser uri
@@ -53,7 +51,7 @@ public partial class CompatibleSchemeTypeBox : FullBox
 		boxSize += base.Read(stream, readSize);
 		/*  identical syntax to SchemeTypeBox */
 		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.scheme_type, "scheme_type"); // 4CC identifying the scheme
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.scheme_version, "scheme_version"); // scheme version 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.scheme_version, "scheme_version"); // scheme version
 
 		if ((flags  &  0x000001) ==  0x000001)
 		{
@@ -68,7 +66,7 @@ public partial class CompatibleSchemeTypeBox : FullBox
 		boxSize += base.Write(stream);
 		/*  identical syntax to SchemeTypeBox */
 		boxSize += stream.WriteUInt32( this.scheme_type, "scheme_type"); // 4CC identifying the scheme
-		boxSize += stream.WriteUInt32( this.scheme_version, "scheme_version"); // scheme version 
+		boxSize += stream.WriteUInt32( this.scheme_version, "scheme_version"); // scheme version
 
 		if ((flags  &  0x000001) ==  0x000001)
 		{
@@ -98,7 +96,7 @@ public partial class CompatibleSchemeTypeBox : FullBox
 		boxSize += base.Trace(tracer);
 		/*  identical syntax to SchemeTypeBox */
 		boxSize += tracer.Field("scheme_type", 32, this.scheme_type); // 4CC identifying the scheme
-		boxSize += tracer.Field("scheme_version", 32, this.scheme_version); // scheme version 
+		boxSize += tracer.Field("scheme_version", 32, this.scheme_version); // scheme version
 
 		if ((flags  &  0x000001) ==  0x000001)
 		{

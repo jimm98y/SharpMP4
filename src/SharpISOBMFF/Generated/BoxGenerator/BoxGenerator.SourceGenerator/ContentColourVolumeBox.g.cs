@@ -23,9 +23,9 @@ class ContentColourVolumeBox extends Box('cclv'){
 	if( ccv_min_luminance_value_present_flag )
 		unsigned int(32) ccv_min_luminance_value;
 	if( ccv_max_luminance_value_present_flag )
- 		unsigned int(32) ccv_max_luminance_value;
+		unsigned int(32) ccv_max_luminance_value;
 	if( ccv_avg_luminance_value_present_flag )
- 		unsigned int(32) ccv_avg_luminance_value;
+		unsigned int(32) ccv_avg_luminance_value;
 }
 */
 public partial class ContentColourVolumeBox : Box
@@ -48,9 +48,9 @@ public partial class ContentColourVolumeBox : Box
 	if( ccv_min_luminance_value_present_flag )
 		unsigned int(32) ccv_min_luminance_value;
 	if( ccv_max_luminance_value_present_flag )
- 		unsigned int(32) ccv_max_luminance_value;
+		unsigned int(32) ccv_max_luminance_value;
 	if( ccv_avg_luminance_value_present_flag )
- 		unsigned int(32) ccv_avg_luminance_value;
+		unsigned int(32) ccv_avg_luminance_value;
 }"; } }
 	public const string TYPE = "cclv";
 	public override string DisplayName { get { return "ContentColourVolumeBox"; } }

@@ -6,14 +6,14 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class MultiviewGroupEntry() extends VisualSampleGroupEntry ('mvif') { 
+class MultiviewGroupEntry() extends VisualSampleGroupEntry ('mvif') {
 	unsigned int(8) groupID;
 	unsigned int(8) primary_groupID;
 	bit(4) reserved = 0;
 	unsigned int(1) is_tl_switching_point;
 	bit(3) reserved = 0;
 	unsigned int(8) tl_switching_distance;
-	
+
 	if (groupID == primary_groupID)	// primary definition of tier
 	{
 		ViewIdentifierBox();			// Mandatory
@@ -33,14 +33,14 @@ class MultiviewGroupEntry() extends VisualSampleGroupEntry ('mvif') {
 public partial class MultiviewGroupEntry : VisualSampleGroupEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"class MultiviewGroupEntry() extends VisualSampleGroupEntry ('mvif') { 
+	public override string Syntax { get { return @"class MultiviewGroupEntry() extends VisualSampleGroupEntry ('mvif') {
 	unsigned int(8) groupID;
 	unsigned int(8) primary_groupID;
 	bit(4) reserved = 0;
 	unsigned int(1) is_tl_switching_point;
 	bit(3) reserved = 0;
 	unsigned int(8) tl_switching_distance;
-	
+
 	if (groupID == primary_groupID)	// primary definition of tier
 	{
 		ViewIdentifierBox();			// Mandatory

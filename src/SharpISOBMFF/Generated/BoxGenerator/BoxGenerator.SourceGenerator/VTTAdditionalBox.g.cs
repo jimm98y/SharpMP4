@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class VTTAdditionalBox() extends Box ('vtta') {
- boxstring cueAdditionalText; 
- }
+	boxstring cueAdditionalText;
+}
 */
 public partial class VTTAdditionalBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class VTTAdditionalBox() extends Box ('vtta') {
- boxstring cueAdditionalText; 
- }"; } }
+	boxstring cueAdditionalText;
+}"; } }
 	public const string TYPE = "vtta";
 	public override string DisplayName { get { return "VTTAdditionalBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

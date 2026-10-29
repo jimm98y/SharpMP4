@@ -28,8 +28,8 @@ class RectangularRegionGroupEntry() extends VisualSampleGroupEntry ('trif')
 			unsigned int(16) dependency_rect_region_count;
 			for (i=1; i<= dependency_rect_region_count; i++)
 				unsigned int(16) dependencyRectRegionGroupID;
+		}
 	}
-}
 }
 */
 public partial class RectangularRegionGroupEntry : VisualSampleGroupEntry
@@ -57,8 +57,8 @@ public partial class RectangularRegionGroupEntry : VisualSampleGroupEntry
 			unsigned int(16) dependency_rect_region_count;
 			for (i=1; i<= dependency_rect_region_count; i++)
 				unsigned int(16) dependencyRectRegionGroupID;
+		}
 	}
-}
 }"; } }
 	public const string TYPE = "trif";
 	public override string DisplayName { get { return "RectangularRegionGroupEntry"; } }

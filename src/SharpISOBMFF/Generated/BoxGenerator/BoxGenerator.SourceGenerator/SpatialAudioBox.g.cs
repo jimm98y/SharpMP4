@@ -7,30 +7,30 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class SpatialAudioBox extends Box('SA3D') {
-    unsigned int(8)  version;
-    unsigned int(8)  ambisonic_type;
-    unsigned int(32) ambisonic_order;
-    unsigned int(8)  ambisonic_channel_ordering;
-    unsigned int(8)  ambisonic_normalization;
-    unsigned int(32) num_channels;
-    for (i = 0; i < num_channels; i++) {
-        unsigned int(32) channel_map;
-    }
+	unsigned int(8)  version;
+	unsigned int(8)  ambisonic_type;
+	unsigned int(32) ambisonic_order;
+	unsigned int(8)  ambisonic_channel_ordering;
+	unsigned int(8)  ambisonic_normalization;
+	unsigned int(32) num_channels;
+	for (i = 0; i < num_channels; i++) {
+		unsigned int(32) channel_map;
+	}
 }
 */
 public partial class SpatialAudioBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class SpatialAudioBox extends Box('SA3D') {
-    unsigned int(8)  version;
-    unsigned int(8)  ambisonic_type;
-    unsigned int(32) ambisonic_order;
-    unsigned int(8)  ambisonic_channel_ordering;
-    unsigned int(8)  ambisonic_normalization;
-    unsigned int(32) num_channels;
-    for (i = 0; i < num_channels; i++) {
-        unsigned int(32) channel_map;
-    }
+	unsigned int(8)  version;
+	unsigned int(8)  ambisonic_type;
+	unsigned int(32) ambisonic_order;
+	unsigned int(8)  ambisonic_channel_ordering;
+	unsigned int(8)  ambisonic_normalization;
+	unsigned int(32) num_channels;
+	for (i = 0; i < num_channels; i++) {
+		unsigned int(32) channel_map;
+	}
 }"; } }
 	public const string TYPE = "SA3D";
 	public override string DisplayName { get { return "SpatialAudioBox"; } }

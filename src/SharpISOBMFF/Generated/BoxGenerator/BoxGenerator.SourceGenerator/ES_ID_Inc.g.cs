@@ -7,17 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class ES_ID_Inc extends BaseDescriptor : bit(8) tag=ES_ID_IncTag {
- bit(32) Track_ID;
- }
- 
+	bit(32) Track_ID;
+}
 */
 public partial class ES_ID_Inc : BaseDescriptor
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class ES_ID_Inc extends BaseDescriptor : bit(8) tag=ES_ID_IncTag {
- bit(32) Track_ID;
- }
- "; } }
+	bit(32) Track_ID;
+}"; } }
 	public const byte TYPE = DescriptorTags.ES_ID_IncTag;
 	public override string DisplayName { get { return "ES_ID_Inc"; } }
 

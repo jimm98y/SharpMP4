@@ -6,7 +6,7 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class DecodeRetimingEntry() extends VisualSampleGroupEntry ('dtrt') { 
+class DecodeRetimingEntry() extends VisualSampleGroupEntry ('dtrt') {
 	unsigned int(8) tierCount;
 	for (i=1; i<=tierCount; i++) {
 		unsigned int(16) tierID;
@@ -17,7 +17,7 @@ class DecodeRetimingEntry() extends VisualSampleGroupEntry ('dtrt') {
 public partial class DecodeRetimingEntry : VisualSampleGroupEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"class DecodeRetimingEntry() extends VisualSampleGroupEntry ('dtrt') { 
+	public override string Syntax { get { return @"class DecodeRetimingEntry() extends VisualSampleGroupEntry ('dtrt') {
 	unsigned int(8) tierCount;
 	for (i=1; i<=tierCount; i++) {
 		unsigned int(16) tierID;

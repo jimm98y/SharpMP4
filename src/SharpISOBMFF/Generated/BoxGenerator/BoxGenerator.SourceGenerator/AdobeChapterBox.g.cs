@@ -7,19 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AdobeChapterBox() extends FullBox('chpl', version = 0, 0) {
- unsigned int(32) unknown; unsigned int(8) count;
- AdobeChapterRecord chapters[]; 
- }
- 
+	unsigned int(32) unknown;
+	unsigned int(8) count;
+	AdobeChapterRecord chapters[];
+}
 */
 public partial class AdobeChapterBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class AdobeChapterBox() extends FullBox('chpl', version = 0, 0) {
- unsigned int(32) unknown; unsigned int(8) count;
- AdobeChapterRecord chapters[]; 
- }
- "; } }
+	unsigned int(32) unknown;
+	unsigned int(8) count;
+	AdobeChapterRecord chapters[];
+}"; } }
 	public const string TYPE = "chpl";
 	public override string DisplayName { get { return "AdobeChapterBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

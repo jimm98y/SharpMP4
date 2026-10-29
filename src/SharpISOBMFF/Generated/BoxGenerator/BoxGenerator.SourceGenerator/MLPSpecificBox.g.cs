@@ -7,21 +7,21 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class MLPSpecificBox() extends Box('dmlp') {
- unsigned int(32) formatInfo;
- bit(15) peakDataRate;
- bit(1) reserved;
- unsigned int(32) reserved2; 
- } 
+	unsigned int(32) formatInfo;
+	bit(15) peakDataRate;
+	bit(1) reserved;
+	unsigned int(32) reserved2;
+}
 */
 public partial class MLPSpecificBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class MLPSpecificBox() extends Box('dmlp') {
- unsigned int(32) formatInfo;
- bit(15) peakDataRate;
- bit(1) reserved;
- unsigned int(32) reserved2; 
- } "; } }
+	unsigned int(32) formatInfo;
+	bit(15) peakDataRate;
+	bit(1) reserved;
+	unsigned int(32) reserved2;
+}"; } }
 	public const string TYPE = "dmlp";
 	public override string DisplayName { get { return "MLPSpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

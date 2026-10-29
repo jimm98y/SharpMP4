@@ -7,14 +7,14 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class GroupingBox() extends Box('grup') {
- Box boxes[];
+	Box boxes[];
 }
 */
 public partial class GroupingBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class GroupingBox() extends Box('grup') {
- Box boxes[];
+	Box boxes[];
 }"; } }
 	public const string TYPE = "grup";
 	public override string DisplayName { get { return "GroupingBox"; } }

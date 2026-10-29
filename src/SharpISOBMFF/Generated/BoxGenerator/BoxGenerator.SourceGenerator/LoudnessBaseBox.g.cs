@@ -6,46 +6,44 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class LoudnessBaseBox extends FullBox(loudnessType) { 
-unsigned int(3) reserved = 0; 
-unsigned int(7) downmix_ID;  // matching downmix 
-unsigned int(6) DRC_set_ID;  // to match a DRC box 
-signed int(12)  bs_sample_peak_level; 
-signed int(12)  bs_true_peak_level; 
-unsigned int(4) measurement_system_for_TP; 
-unsigned int(4) reliability_for_TP; 
-unsigned int(8) measurement_count; 
-int i; 
-for (i = 1 ; i <= measurement_count; i++){ 
-  unsigned int(8) method_definition; 
-  unsigned int(8) method_value; 
-  unsigned int(4) measurement_system; 
-  unsigned int(4) reliability; 
- } 
-} 
-
+aligned(8) class LoudnessBaseBox extends FullBox(loudnessType) {
+	unsigned int(3) reserved = 0;
+	unsigned int(7) downmix_ID;  // matching downmix
+	unsigned int(6) DRC_set_ID;  // to match a DRC box
+	signed int(12)  bs_sample_peak_level;
+	signed int(12)  bs_true_peak_level;
+	unsigned int(4) measurement_system_for_TP;
+	unsigned int(4) reliability_for_TP;
+	unsigned int(8) measurement_count;
+	int i;
+	for (i = 1 ; i <= measurement_count; i++){
+		unsigned int(8) method_definition;
+		unsigned int(8) method_value;
+		unsigned int(4) measurement_system;
+		unsigned int(4) reliability;
+	}
+}
 */
 public partial class LoudnessBaseBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class LoudnessBaseBox extends FullBox(loudnessType) { 
-unsigned int(3) reserved = 0; 
-unsigned int(7) downmix_ID;  // matching downmix 
-unsigned int(6) DRC_set_ID;  // to match a DRC box 
-signed int(12)  bs_sample_peak_level; 
-signed int(12)  bs_true_peak_level; 
-unsigned int(4) measurement_system_for_TP; 
-unsigned int(4) reliability_for_TP; 
-unsigned int(8) measurement_count; 
-int i; 
-for (i = 1 ; i <= measurement_count; i++){ 
-  unsigned int(8) method_definition; 
-  unsigned int(8) method_value; 
-  unsigned int(4) measurement_system; 
-  unsigned int(4) reliability; 
- } 
-} 
-"; } }
+	public override string Syntax { get { return @"aligned(8) class LoudnessBaseBox extends FullBox(loudnessType) {
+	unsigned int(3) reserved = 0;
+	unsigned int(7) downmix_ID;  // matching downmix
+	unsigned int(6) DRC_set_ID;  // to match a DRC box
+	signed int(12)  bs_sample_peak_level;
+	signed int(12)  bs_true_peak_level;
+	unsigned int(4) measurement_system_for_TP;
+	unsigned int(4) reliability_for_TP;
+	unsigned int(8) measurement_count;
+	int i;
+	for (i = 1 ; i <= measurement_count; i++){
+		unsigned int(8) method_definition;
+		unsigned int(8) method_value;
+		unsigned int(4) measurement_system;
+		unsigned int(4) reliability;
+	}
+}"; } }
 	public override string DisplayName { get { return "LoudnessBaseBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
@@ -54,10 +52,10 @@ for (i = 1 ; i <= measurement_count; i++){
 	protected byte reserved = 0; 
 	public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-	protected byte downmix_ID;  //  matching downmix 
+	protected byte downmix_ID;  //  matching downmix
 	public byte DownmixID { get { return this.downmix_ID; } set { this.downmix_ID = value; } }
 
-	protected byte DRC_set_ID;  //  to match a DRC box 
+	protected byte DRC_set_ID;  //  to match a DRC box
 	public byte DRCSetID { get { return this.DRC_set_ID; } set { this.DRC_set_ID = value; } }
 
 	protected short bs_sample_peak_level; 
@@ -96,8 +94,8 @@ for (i = 1 ; i <= measurement_count; i++){
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadBits(boxSize, readSize, 3,  out this.reserved, "reserved"); 
-		boxSize += stream.ReadBits(boxSize, readSize, 7,  out this.downmix_ID, "downmix_ID"); // matching downmix 
-		boxSize += stream.ReadBits(boxSize, readSize, 6,  out this.DRC_set_ID, "DRC_set_ID"); // to match a DRC box 
+		boxSize += stream.ReadBits(boxSize, readSize, 7,  out this.downmix_ID, "downmix_ID"); // matching downmix
+		boxSize += stream.ReadBits(boxSize, readSize, 6,  out this.DRC_set_ID, "DRC_set_ID"); // to match a DRC box
 		boxSize += stream.ReadBits(boxSize, readSize, 12,  out this.bs_sample_peak_level, "bs_sample_peak_level"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 12,  out this.bs_true_peak_level, "bs_true_peak_level"); 
 		boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.measurement_system_for_TP, "measurement_system_for_TP"); 
@@ -124,8 +122,8 @@ for (i = 1 ; i <= measurement_count; i++){
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
 		boxSize += stream.WriteBits(3,  this.reserved, "reserved"); 
-		boxSize += stream.WriteBits(7,  this.downmix_ID, "downmix_ID"); // matching downmix 
-		boxSize += stream.WriteBits(6,  this.DRC_set_ID, "DRC_set_ID"); // to match a DRC box 
+		boxSize += stream.WriteBits(7,  this.downmix_ID, "downmix_ID"); // matching downmix
+		boxSize += stream.WriteBits(6,  this.DRC_set_ID, "DRC_set_ID"); // to match a DRC box
 		boxSize += stream.WriteBits(12,  this.bs_sample_peak_level, "bs_sample_peak_level"); 
 		boxSize += stream.WriteBits(12,  this.bs_true_peak_level, "bs_true_peak_level"); 
 		boxSize += stream.WriteBits(4,  this.measurement_system_for_TP, "measurement_system_for_TP"); 
@@ -172,8 +170,8 @@ for (i = 1 ; i <= measurement_count; i++){
 		ulong boxSize = 0;
 		boxSize += base.Trace(tracer);
 		boxSize += tracer.Field("reserved", 3, this.reserved); 
-		boxSize += tracer.Field("downmix_ID", 7, this.downmix_ID); // matching downmix 
-		boxSize += tracer.Field("DRC_set_ID", 6, this.DRC_set_ID); // to match a DRC box 
+		boxSize += tracer.Field("downmix_ID", 7, this.downmix_ID); // matching downmix
+		boxSize += tracer.Field("DRC_set_ID", 6, this.DRC_set_ID); // to match a DRC box
 		boxSize += tracer.Field("bs_sample_peak_level", 12, this.bs_sample_peak_level); 
 		boxSize += tracer.Field("bs_true_peak_level", 12, this.bs_true_peak_level); 
 		boxSize += tracer.Field("measurement_system_for_TP", 4, this.measurement_system_for_TP); 

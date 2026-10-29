@@ -7,15 +7,15 @@ namespace SharpISOBMFF
 {
 /*
 class TomTomMetaDataBox() extends Box ('TTMD') {
- Box boxes[];
- }
+	Box boxes[];
+}
 */
 public partial class TomTomMetaDataBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class TomTomMetaDataBox() extends Box ('TTMD') {
- Box boxes[];
- }"; } }
+	Box boxes[];
+}"; } }
 	public const string TYPE = "TTMD";
 	public override string DisplayName { get { return "TomTomMetaDataBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

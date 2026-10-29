@@ -13,13 +13,13 @@ aligned(8) class DownMixInstructions extends FullBox('dmix', version, flags=0) {
 	} else {
 		int downmix_instructions_count = 1;
 	}
-	for (a=1; a<=downmix_instructions_count; a++) { 
+	for (a=1; a<=downmix_instructions_count; a++) {
 		unsigned int(8) targetLayout;
- 		unsigned int(1) reserved = 0;
+		unsigned int(1) reserved = 0;
 		unsigned int(7) targetChannelCount;
-		bit(1) in_stream; 
+		bit(1) in_stream;
 		unsigned int(7) downmix_ID;
-		if (in_stream==0) 
+		if (in_stream==0)
 		{	// downmix coefficients are out of stream and supplied here
 			int i, j;
 			if (version >= 1) {
@@ -53,13 +53,13 @@ public partial class DownMixInstructions : FullBox
 	} else {
 		int downmix_instructions_count = 1;
 	}
-	for (a=1; a<=downmix_instructions_count; a++) { 
+	for (a=1; a<=downmix_instructions_count; a++) {
 		unsigned int(8) targetLayout;
- 		unsigned int(1) reserved = 0;
+		unsigned int(1) reserved = 0;
 		unsigned int(7) targetChannelCount;
-		bit(1) in_stream; 
+		bit(1) in_stream;
 		unsigned int(7) downmix_ID;
-		if (in_stream==0) 
+		if (in_stream==0)
 		{	// downmix coefficients are out of stream and supplied here
 			int i, j;
 			if (version >= 1) {

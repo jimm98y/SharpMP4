@@ -7,19 +7,19 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ItemPropertiesBox
-		extends Box('iprp') {
+	extends Box('iprp') {
 	ItemPropertyContainerBox property_container;
 	ItemPropertyAssociationBox association[];
- }
+}
 */
 public partial class ItemPropertiesBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class ItemPropertiesBox
-		extends Box('iprp') {
+	extends Box('iprp') {
 	ItemPropertyContainerBox property_container;
 	ItemPropertyAssociationBox association[];
- }"; } }
+}"; } }
 	public const string TYPE = "iprp";
 	public override string DisplayName { get { return "ItemPropertiesBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

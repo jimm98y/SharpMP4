@@ -8,24 +8,22 @@ namespace SharpISOBMFF
 /*
 // Canon.pm, CCTP: 12 bytes, then a CCDT for each image track
 aligned(8) class CanonCCTPBox() extends Box('CCTP') {
- unsigned int(32) reserved;
- unsigned int(32) unknown;
- unsigned int(32) entryCount;
- Box boxes[];
+	unsigned int(32) reserved;
+	unsigned int(32) unknown;
+	unsigned int(32) entryCount;
+	Box boxes[];
 }
-
 */
 public partial class CanonCCTPBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// Canon.pm, CCTP: 12 bytes, then a CCDT for each image track
 aligned(8) class CanonCCTPBox() extends Box('CCTP') {
- unsigned int(32) reserved;
- unsigned int(32) unknown;
- unsigned int(32) entryCount;
- Box boxes[];
-}
-"; } }
+	unsigned int(32) reserved;
+	unsigned int(32) unknown;
+	unsigned int(32) entryCount;
+	Box boxes[];
+}"; } }
 	public const string TYPE = "CCTP";
 	public override string DisplayName { get { return "CanonCCTPBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

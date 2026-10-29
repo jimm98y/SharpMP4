@@ -7,10 +7,10 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FontRecord() {
- unsigned int(16) fontId;
- unsigned int(8) count;
- unsigned int(8) fontName[count];
- }
+	unsigned int(16) fontId;
+	unsigned int(8) count;
+	unsigned int(8) fontName[count];
+}
 */
 public partial class FontRecord : IMp4Serializable
 {
@@ -21,10 +21,10 @@ public partial class FontRecord : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class FontRecord() {
- unsigned int(16) fontId;
- unsigned int(8) count;
- unsigned int(8) fontName[count];
- }"; } }
+	unsigned int(16) fontId;
+	unsigned int(8) count;
+	unsigned int(8) fontName[count];
+}"; } }
 	public virtual string DisplayName { get { return "FontRecord"; } }
 
 	protected ushort fontId; 

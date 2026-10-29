@@ -8,15 +8,13 @@ namespace SharpISOBMFF
 /*
 class ErHVXCconfig()
 {
-  uimsbf(1) HVXCvarMode;
-  uimsbf(2) HVXCrateMode;
-  uimsbf(1) extensionFlag;
-  if (extensionFlag) {
-    uimsbf(1) var_ScalableFlag;
-  }
+	uimsbf(1) HVXCvarMode;
+	uimsbf(2) HVXCrateMode;
+	uimsbf(1) extensionFlag;
+	if (extensionFlag) {
+		uimsbf(1) var_ScalableFlag;
+	}
 }
-
-
 */
 public partial class ErHVXCconfig : IMp4Serializable
 {
@@ -28,15 +26,13 @@ public partial class ErHVXCconfig : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class ErHVXCconfig()
 {
-  uimsbf(1) HVXCvarMode;
-  uimsbf(2) HVXCrateMode;
-  uimsbf(1) extensionFlag;
-  if (extensionFlag) {
-    uimsbf(1) var_ScalableFlag;
-  }
-}
-
-"; } }
+	uimsbf(1) HVXCvarMode;
+	uimsbf(2) HVXCrateMode;
+	uimsbf(1) extensionFlag;
+	if (extensionFlag) {
+		uimsbf(1) var_ScalableFlag;
+	}
+}"; } }
 	public virtual string DisplayName { get { return "ErHVXCconfig"; } }
 
 	protected bool HVXCvarMode; 

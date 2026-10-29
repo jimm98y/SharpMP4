@@ -8,18 +8,16 @@ namespace SharpISOBMFF
 /*
 class TTS_Sequence()
 {
-  uimsbf(5) TTS_Sequence_ID;
-  uimsbf(18) Language_Code;
-  bslbf(1) Gender_Enable;
-  bslbf(1) Age_Enable;
-  bslbf(1) Speech_Rate_Enable;
-  bslbf(1) Prosody_Enable;
-  bslbf(1) Video_Enable;
-  bslbf(1) Lip_Shape_Enable;
-  bslbf(1) Trick_Mode_Enable;
+	uimsbf(5) TTS_Sequence_ID;
+	uimsbf(18) Language_Code;
+	bslbf(1) Gender_Enable;
+	bslbf(1) Age_Enable;
+	bslbf(1) Speech_Rate_Enable;
+	bslbf(1) Prosody_Enable;
+	bslbf(1) Video_Enable;
+	bslbf(1) Lip_Shape_Enable;
+	bslbf(1) Trick_Mode_Enable;
 }
-
-
 */
 public partial class TTS_Sequence : IMp4Serializable
 {
@@ -31,18 +29,16 @@ public partial class TTS_Sequence : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"class TTS_Sequence()
 {
-  uimsbf(5) TTS_Sequence_ID;
-  uimsbf(18) Language_Code;
-  bslbf(1) Gender_Enable;
-  bslbf(1) Age_Enable;
-  bslbf(1) Speech_Rate_Enable;
-  bslbf(1) Prosody_Enable;
-  bslbf(1) Video_Enable;
-  bslbf(1) Lip_Shape_Enable;
-  bslbf(1) Trick_Mode_Enable;
-}
-
-"; } }
+	uimsbf(5) TTS_Sequence_ID;
+	uimsbf(18) Language_Code;
+	bslbf(1) Gender_Enable;
+	bslbf(1) Age_Enable;
+	bslbf(1) Speech_Rate_Enable;
+	bslbf(1) Prosody_Enable;
+	bslbf(1) Video_Enable;
+	bslbf(1) Lip_Shape_Enable;
+	bslbf(1) Trick_Mode_Enable;
+}"; } }
 	public virtual string DisplayName { get { return "TTS_Sequence"; } }
 
 	protected byte TTS_Sequence_ID; 

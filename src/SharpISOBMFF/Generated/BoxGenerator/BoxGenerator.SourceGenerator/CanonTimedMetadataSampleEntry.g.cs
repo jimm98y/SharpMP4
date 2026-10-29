@@ -8,20 +8,18 @@ namespace SharpISOBMFF
 /*
 // Canon.pm, CTMD: a CR3's timed metadata; its entry lists the type and size of each record
 aligned(8) class CanonTimedMetadataSampleEntry() extends SampleEntry('CTMD') {
- unsigned int(32) recordCount;
- CanonCTMDRecordType recordTypes[recordCount];
+	unsigned int(32) recordCount;
+	CanonCTMDRecordType recordTypes[recordCount];
 }
-
 */
 public partial class CanonTimedMetadataSampleEntry : SampleEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// Canon.pm, CTMD: a CR3's timed metadata; its entry lists the type and size of each record
 aligned(8) class CanonTimedMetadataSampleEntry() extends SampleEntry('CTMD') {
- unsigned int(32) recordCount;
- CanonCTMDRecordType recordTypes[recordCount];
-}
-"; } }
+	unsigned int(32) recordCount;
+	CanonCTMDRecordType recordTypes[recordCount];
+}"; } }
 	public const string TYPE = "CTMD";
 	public override string DisplayName { get { return "CanonTimedMetadataSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

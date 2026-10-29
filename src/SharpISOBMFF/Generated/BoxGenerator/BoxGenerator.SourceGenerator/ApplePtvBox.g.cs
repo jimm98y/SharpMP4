@@ -7,23 +7,23 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class ApplePtvBox() extends Box('ptv ') {
-	 unsigned int(16) displaySize;
- unsigned int(16) reserved1;
- unsigned int(16) reserved2;
- unsigned int(8) slideShow;
- unsigned int(8) playOnOpen;
- } 
+	unsigned int(16) displaySize;
+	unsigned int(16) reserved1;
+	unsigned int(16) reserved2;
+	unsigned int(8) slideShow;
+	unsigned int(8) playOnOpen;
+}
 */
 public partial class ApplePtvBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class ApplePtvBox() extends Box('ptv ') {
-	 unsigned int(16) displaySize;
- unsigned int(16) reserved1;
- unsigned int(16) reserved2;
- unsigned int(8) slideShow;
- unsigned int(8) playOnOpen;
- } "; } }
+	unsigned int(16) displaySize;
+	unsigned int(16) reserved1;
+	unsigned int(16) reserved2;
+	unsigned int(8) slideShow;
+	unsigned int(8) playOnOpen;
+}"; } }
 	public const string TYPE = "ptv ";
 	public override string DisplayName { get { return "ApplePtvBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

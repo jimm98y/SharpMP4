@@ -69,7 +69,7 @@ namespace ItuGenerator.CSharp
 
             // The marker bits of a loop, of a name of their own: the loop's are kept by their index, where the structure has
             // others of one
-            definitions = Regex.Replace(definitions, @"for \([^)]*\) \{[^{}]*\}", m => m.Value.Replace("\nmarker_bit ", "\nloop_marker_bit "));
+            definitions = Regex.Replace(definitions, @"for \([^)]*\) \{[^{}]*\}", m => Regex.Replace(m.Value, @"\n([ \t]*)marker_bit ", "\n$1loop_marker_bit "));
 
             // A condition broken over two lines: 'nextbits()' / '== "Sequence Scalable Extension ID"'
             definitions = Regex.Replace(definitions, @"nextbits\(\)\s*\n\s*==", "nextbits() ==");
@@ -94,7 +94,7 @@ namespace ItuGenerator.CSharp
             // Bits of 1 before more of the header: those of the element read in the loop
             definitions = Regex.Replace(definitions, @"while\s*\(\s*nextbits\(\)\s*==\s*'1'\s*\)(\s*\{?\s*\n\s*)(\w+)",
                 "while ( next_bit_one( $2 ) )$1$2");
-            definitions = definitions.Replace("if (nextbits() == '1') {\nslice_extension_flag", "if ( next_bit_one( slice_extension_flag ) ) {\nslice_extension_flag");
+            definitions = Regex.Replace(definitions, @"if \(nextbits\(\) == '1'\) \{(\n[ \t]*)slice_extension_flag", "if ( next_bit_one( slice_extension_flag ) ) {$1slice_extension_flag");
 
             // The slice's macroblocks, which are not read: the rest of the unit, taken as it is
             definitions = Regex.Replace(definitions, @"do \{\s*macroblock\(\)\s*\} while \(nextbits\(\) != '000 0000 0000 0000 0000 0000'\)", "slice_data()");

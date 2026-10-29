@@ -7,14 +7,14 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class FreeSpaceBox extends Box('skip') {
-unsigned int(8) data[];
+	unsigned int(8) data[];
 }
 */
 public partial class FreeSpaceBoxskipDup : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class FreeSpaceBox extends Box('skip') {
-unsigned int(8) data[];
+	unsigned int(8) data[];
 }"; } }
 	public const string TYPE = "skip";
 	public override string DisplayName { get { return "FreeSpaceBoxskipDup"; } }

@@ -8,16 +8,16 @@ namespace SharpISOBMFF
 /*
 // The URI of the key management system, to the end of the box
 aligned(8) class ISMAKMSBox extends FullBox('iKMS', 0, 0) {
- string kms_URI;
- }
+	string kms_URI;
+}
 */
 public partial class ISMAKMSBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// The URI of the key management system, to the end of the box
 aligned(8) class ISMAKMSBox extends FullBox('iKMS', 0, 0) {
- string kms_URI;
- }"; } }
+	string kms_URI;
+}"; } }
 	public const string TYPE = "iKMS";
 	public override string DisplayName { get { return "ISMAKMSBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

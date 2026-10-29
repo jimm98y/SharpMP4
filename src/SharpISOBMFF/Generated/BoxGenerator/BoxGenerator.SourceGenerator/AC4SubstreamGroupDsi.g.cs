@@ -7,47 +7,46 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class AC4SubstreamGroupDsi() {
- bit(1) b_substreams_present;
- bit(1) b_hsf_ext;
- bit(1) b_channel_coded;
- bit(8) n_substreams;
- for (i = 0; i < n_substreams; i++) {
-  bit(2) dsi_sf_multiplier;
-  bit(1) b_substream_bitrate_indicator;
-  if (b_substream_bitrate_indicator) {
-   bit(5) substream_bitrate_indicator;
-  }
-  if (b_channel_coded) {
-   bit(6) reserved_zero;
-   bit(18) dsi_substream_channel_groups;
-  }
-  else {
-   bit(1) b_ajoc;
-   if (b_ajoc) {
-    bit(1) b_static_dmx;
-    if (!b_static_dmx) {
-     bit(4) n_dmx_objects_minus1;
-    }
-    bit(6) n_umx_objects_minus1;
-   }
-   bit(1) b_substream_contains_bed_objects;
-   bit(1) b_substream_contains_dynamic_objects;
-   bit(1) b_substream_contains_ISF_objects;
-   bit(1) reserved;
-  }
- }
- bit(1) b_content_type;
- if (b_content_type) {
-  bit(3) content_classifier;
-  bit(1) b_language_indicator;
-  if (b_language_indicator) {
-   bit(6) n_language_tag_bytes;
-   bit(8) language_tag_bytes[n_language_tag_bytes];
-  }
- }
+	bit(1) b_substreams_present;
+	bit(1) b_hsf_ext;
+	bit(1) b_channel_coded;
+	bit(8) n_substreams;
+	for (i = 0; i < n_substreams; i++) {
+		bit(2) dsi_sf_multiplier;
+		bit(1) b_substream_bitrate_indicator;
+		if (b_substream_bitrate_indicator) {
+			bit(5) substream_bitrate_indicator;
+		}
+		if (b_channel_coded) {
+			bit(6) reserved_zero;
+			bit(18) dsi_substream_channel_groups;
+		}
+		else {
+			bit(1) b_ajoc;
+			if (b_ajoc) {
+				bit(1) b_static_dmx;
+				if (!b_static_dmx) {
+					bit(4) n_dmx_objects_minus1;
+				}
+				bit(6) n_umx_objects_minus1;
+			}
+			bit(1) b_substream_contains_bed_objects;
+			bit(1) b_substream_contains_dynamic_objects;
+			bit(1) b_substream_contains_ISF_objects;
+			bit(1) reserved;
+		}
+	}
+	bit(1) b_content_type;
+	if (b_content_type) {
+		bit(3) content_classifier;
+		bit(1) b_language_indicator;
+		if (b_language_indicator) {
+			bit(6) n_language_tag_bytes;
+			bit(8) language_tag_bytes[n_language_tag_bytes];
+		}
+	}
 }
 // E.12.1, the loop over t counted by i
-
 */
 public partial class AC4SubstreamGroupDsi : IMp4Serializable
 {
@@ -58,47 +57,46 @@ public partial class AC4SubstreamGroupDsi : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class AC4SubstreamGroupDsi() {
- bit(1) b_substreams_present;
- bit(1) b_hsf_ext;
- bit(1) b_channel_coded;
- bit(8) n_substreams;
- for (i = 0; i < n_substreams; i++) {
-  bit(2) dsi_sf_multiplier;
-  bit(1) b_substream_bitrate_indicator;
-  if (b_substream_bitrate_indicator) {
-   bit(5) substream_bitrate_indicator;
-  }
-  if (b_channel_coded) {
-   bit(6) reserved_zero;
-   bit(18) dsi_substream_channel_groups;
-  }
-  else {
-   bit(1) b_ajoc;
-   if (b_ajoc) {
-    bit(1) b_static_dmx;
-    if (!b_static_dmx) {
-     bit(4) n_dmx_objects_minus1;
-    }
-    bit(6) n_umx_objects_minus1;
-   }
-   bit(1) b_substream_contains_bed_objects;
-   bit(1) b_substream_contains_dynamic_objects;
-   bit(1) b_substream_contains_ISF_objects;
-   bit(1) reserved;
-  }
- }
- bit(1) b_content_type;
- if (b_content_type) {
-  bit(3) content_classifier;
-  bit(1) b_language_indicator;
-  if (b_language_indicator) {
-   bit(6) n_language_tag_bytes;
-   bit(8) language_tag_bytes[n_language_tag_bytes];
-  }
- }
+	bit(1) b_substreams_present;
+	bit(1) b_hsf_ext;
+	bit(1) b_channel_coded;
+	bit(8) n_substreams;
+	for (i = 0; i < n_substreams; i++) {
+		bit(2) dsi_sf_multiplier;
+		bit(1) b_substream_bitrate_indicator;
+		if (b_substream_bitrate_indicator) {
+			bit(5) substream_bitrate_indicator;
+		}
+		if (b_channel_coded) {
+			bit(6) reserved_zero;
+			bit(18) dsi_substream_channel_groups;
+		}
+		else {
+			bit(1) b_ajoc;
+			if (b_ajoc) {
+				bit(1) b_static_dmx;
+				if (!b_static_dmx) {
+					bit(4) n_dmx_objects_minus1;
+				}
+				bit(6) n_umx_objects_minus1;
+			}
+			bit(1) b_substream_contains_bed_objects;
+			bit(1) b_substream_contains_dynamic_objects;
+			bit(1) b_substream_contains_ISF_objects;
+			bit(1) reserved;
+		}
+	}
+	bit(1) b_content_type;
+	if (b_content_type) {
+		bit(3) content_classifier;
+		bit(1) b_language_indicator;
+		if (b_language_indicator) {
+			bit(6) n_language_tag_bytes;
+			bit(8) language_tag_bytes[n_language_tag_bytes];
+		}
+	}
 }
-// E.12.1, the loop over t counted by i
-"; } }
+// E.12.1, the loop over t counted by i"; } }
 	public virtual string DisplayName { get { return "AC4SubstreamGroupDsi"; } }
 
 	protected bool b_substreams_present; 

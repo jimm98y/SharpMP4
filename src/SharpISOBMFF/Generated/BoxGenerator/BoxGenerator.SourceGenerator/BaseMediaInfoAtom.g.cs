@@ -7,25 +7,25 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class BaseMediaInfoAtom() extends FullBox('gmin', version = 0, 0) {
- unsigned int(16) graphicsMode;
- unsigned int(16) opColorR;
- unsigned int(16) opColorG;
- unsigned int(16) opColorB;
- unsigned int(16) balance;
- unsigned int(16) reserved;
- } 
+	unsigned int(16) graphicsMode;
+	unsigned int(16) opColorR;
+	unsigned int(16) opColorG;
+	unsigned int(16) opColorB;
+	unsigned int(16) balance;
+	unsigned int(16) reserved;
+}
 */
 public partial class BaseMediaInfoAtom : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class BaseMediaInfoAtom() extends FullBox('gmin', version = 0, 0) {
- unsigned int(16) graphicsMode;
- unsigned int(16) opColorR;
- unsigned int(16) opColorG;
- unsigned int(16) opColorB;
- unsigned int(16) balance;
- unsigned int(16) reserved;
- } "; } }
+	unsigned int(16) graphicsMode;
+	unsigned int(16) opColorR;
+	unsigned int(16) opColorG;
+	unsigned int(16) opColorB;
+	unsigned int(16) balance;
+	unsigned int(16) reserved;
+}"; } }
 	public const string TYPE = "gmin";
 	public override string DisplayName { get { return "BaseMediaInfoAtom"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

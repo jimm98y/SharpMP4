@@ -23,7 +23,7 @@ aligned(8) class CompactSampleToGroupBox
 	for (j=1; j <= pattern_count; j++) {
 		for (k=1; k <= pattern_length[j]; k++) {
 			unsigned int(f(index_size_code))
-						 sample_group_description_index[j][k];
+			sample_group_description_index[j][k];
 			// whose msb might indicate fragment_local or global
 		}
 	}
@@ -49,7 +49,7 @@ public partial class CompactSampleToGroupBox : FullBox
 	for (j=1; j <= pattern_count; j++) {
 		for (k=1; k <= pattern_length[j]; k++) {
 			unsigned int(f(index_size_code))
-						 sample_group_description_index[j][k];
+			sample_group_description_index[j][k];
 			// whose msb might indicate fragment_local or global
 		}
 	}

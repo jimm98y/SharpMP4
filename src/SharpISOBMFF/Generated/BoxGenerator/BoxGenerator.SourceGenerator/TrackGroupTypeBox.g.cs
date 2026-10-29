@@ -9,7 +9,7 @@ namespace SharpISOBMFF
 aligned(8) class TrackGroupTypeBox(boxtype = 'msrc') extends FullBox(boxtype, version = 0, flags = 0)
 {
 	unsigned int(32) track_group_id;
-	// the remaining data may be specified 
+	// the remaining data may be specified
 	//  for a particular track_group_type
 }
 */
@@ -19,7 +19,7 @@ public partial class TrackGroupTypeBox : FullBox
 	public override string Syntax { get { return @"aligned(8) class TrackGroupTypeBox(boxtype = 'msrc') extends FullBox(boxtype, version = 0, flags = 0)
 {
 	unsigned int(32) track_group_id;
-	// the remaining data may be specified 
+	// the remaining data may be specified
 	//  for a particular track_group_type
 }"; } }
 	public override string DisplayName { get { return "TrackGroupTypeBox"; } }
@@ -27,7 +27,7 @@ public partial class TrackGroupTypeBox : FullBox
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "trgr" }); }
 
 
-	protected uint track_group_id;  //  the remaining data may be specified 
+	protected uint track_group_id;  //  the remaining data may be specified
 	public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
 
 	public TrackGroupTypeBox(uint boxtype = 1836282467): base(boxtype, 0, 0)
@@ -38,7 +38,7 @@ public partial class TrackGroupTypeBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.track_group_id, "track_group_id"); // the remaining data may be specified 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.track_group_id, "track_group_id"); // the remaining data may be specified
 		/*   for a particular track_group_type */
 		return boxSize;
 	}
@@ -47,7 +47,7 @@ public partial class TrackGroupTypeBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt32( this.track_group_id, "track_group_id"); // the remaining data may be specified 
+		boxSize += stream.WriteUInt32( this.track_group_id, "track_group_id"); // the remaining data may be specified
 		/*   for a particular track_group_type */
 		return boxSize;
 	}
@@ -65,7 +65,7 @@ public partial class TrackGroupTypeBox : FullBox
 	{
 		ulong boxSize = 0;
 		boxSize += base.Trace(tracer);
-		boxSize += tracer.Field("track_group_id", 32, this.track_group_id); // the remaining data may be specified 
+		boxSize += tracer.Field("track_group_id", 32, this.track_group_id); // the remaining data may be specified
 		/*   for a particular track_group_type */
 		return boxSize;
 	}

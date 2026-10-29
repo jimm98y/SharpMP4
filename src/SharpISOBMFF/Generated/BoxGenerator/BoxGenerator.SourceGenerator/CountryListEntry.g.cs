@@ -6,11 +6,10 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-class CountryListEntry() { 
- unsigned int(16) country_count;
- unsigned int(16) country[ country_count ];
- }
-
+class CountryListEntry() {
+	unsigned int(16) country_count;
+	unsigned int(16) country[ country_count ];
+}
 */
 public partial class CountryListEntry : IMp4Serializable
 {
@@ -20,11 +19,10 @@ public partial class CountryListEntry : IMp4Serializable
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public virtual string Syntax { get { return @"class CountryListEntry() { 
- unsigned int(16) country_count;
- unsigned int(16) country[ country_count ];
- }
-"; } }
+	public virtual string Syntax { get { return @"class CountryListEntry() {
+	unsigned int(16) country_count;
+	unsigned int(16) country[ country_count ];
+}"; } }
 	public virtual string DisplayName { get { return "CountryListEntry"; } }
 
 	protected ushort country_count; 

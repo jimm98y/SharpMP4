@@ -7,21 +7,21 @@ namespace SharpISOBMFF
 {
 /*
 class JPEG_DecoderConfig extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
- int(16) headerLength;
- int(16) Xdensity;
- int(16) Ydensity;
- int(8) numComponents;
- }
+	int(16) headerLength;
+	int(16) Xdensity;
+	int(16) Ydensity;
+	int(8) numComponents;
+}
 */
 public partial class JPEG_DecoderConfig : DecoderSpecificInfo
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class JPEG_DecoderConfig extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
- int(16) headerLength;
- int(16) Xdensity;
- int(16) Ydensity;
- int(8) numComponents;
- }"; } }
+	int(16) headerLength;
+	int(16) Xdensity;
+	int(16) Ydensity;
+	int(8) numComponents;
+}"; } }
 	public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
 	public override string DisplayName { get { return "JPEG_DecoderConfig"; } }
 

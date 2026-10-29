@@ -7,19 +7,17 @@ namespace SharpISOBMFF
 {
 /*
 class AV1MetadataSampleGroupEntry
-extends VisualSampleGroupEntry('av1M')
+	extends VisualSampleGroupEntry('av1M')
 {
 }
-
 */
 public partial class AV1MetadataSampleGroupEntry : VisualSampleGroupEntry
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class AV1MetadataSampleGroupEntry
-extends VisualSampleGroupEntry('av1M')
+	extends VisualSampleGroupEntry('av1M')
 {
-}
-"; } }
+}"; } }
 	public const string TYPE = "av1M";
 	public override string DisplayName { get { return "AV1MetadataSampleGroupEntry"; } }
 

@@ -8,20 +8,19 @@ namespace SharpISOBMFF
 /*
 // is ac4_presentation_v1_dsi() (E.10); version 0's (ETSI TS 103 190-1, not at hand) and any other's are bytes
 aligned(8) class AC4PresentationDsi() {
- bit(8) presentation_version;
- bit(8) pres_bytes;
- if (pres_bytes == 255) {
-  bit(16) add_pres_bytes;
- }
- if (presentation_version == 1) {
-  AC4PresentationV1Dsi(pres_bytes + add_pres_bytes) presentation_v1;
- }
- else {
-  bit(8) presentation_data[pres_bytes + add_pres_bytes];
- }
+	bit(8) presentation_version;
+	bit(8) pres_bytes;
+	if (pres_bytes == 255) {
+		bit(16) add_pres_bytes;
+	}
+	if (presentation_version == 1) {
+		AC4PresentationV1Dsi(pres_bytes + add_pres_bytes) presentation_v1;
+	}
+	else {
+		bit(8) presentation_data[pres_bytes + add_pres_bytes];
+	}
 }
 // E.10.1: in [a, b] written out, the loops over sg counted by i, b_add_emdf_substreams = 1 of config 0x06 in the condition; the spec's dsi_presentation_channel_mode is its dsi_presentation_ch_mode.
-
 */
 public partial class AC4PresentationDsi : IMp4Serializable
 {
@@ -33,20 +32,19 @@ public partial class AC4PresentationDsi : IMp4Serializable
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"// is ac4_presentation_v1_dsi() (E.10); version 0's (ETSI TS 103 190-1, not at hand) and any other's are bytes
 aligned(8) class AC4PresentationDsi() {
- bit(8) presentation_version;
- bit(8) pres_bytes;
- if (pres_bytes == 255) {
-  bit(16) add_pres_bytes;
- }
- if (presentation_version == 1) {
-  AC4PresentationV1Dsi(pres_bytes + add_pres_bytes) presentation_v1;
- }
- else {
-  bit(8) presentation_data[pres_bytes + add_pres_bytes];
- }
+	bit(8) presentation_version;
+	bit(8) pres_bytes;
+	if (pres_bytes == 255) {
+		bit(16) add_pres_bytes;
+	}
+	if (presentation_version == 1) {
+		AC4PresentationV1Dsi(pres_bytes + add_pres_bytes) presentation_v1;
+	}
+	else {
+		bit(8) presentation_data[pres_bytes + add_pres_bytes];
+	}
 }
-// E.10.1: in [a, b] written out, the loops over sg counted by i, b_add_emdf_substreams = 1 of config 0x06 in the condition; the spec's dsi_presentation_channel_mode is its dsi_presentation_ch_mode.
-"; } }
+// E.10.1: in [a, b] written out, the loops over sg counted by i, b_add_emdf_substreams = 1 of config 0x06 in the condition; the spec's dsi_presentation_channel_mode is its dsi_presentation_ch_mode."; } }
 	public virtual string DisplayName { get { return "AC4PresentationDsi"; } }
 
 	protected byte presentation_version; 

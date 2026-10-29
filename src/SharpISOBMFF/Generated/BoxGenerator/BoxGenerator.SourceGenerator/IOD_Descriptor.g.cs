@@ -8,48 +8,46 @@ namespace SharpISOBMFF
 /*
 // ISO/IEC 14496-1:2010's InitialObjectDescriptor, as an MP4 file has it (ISO/IEC 14496-14): ES_ID_Inc for its ES_Descriptors
 aligned(8) class IOD_Descriptor extends BaseDescriptor : bit(8) tag=MP4_IOD_Tag {
- bit(10) ObjectDescriptorID;
- bit(1) URL_Flag;
- bit(1) includeInlineProfileLevelFlag;
- bit(4) reserved;
- if (URL_Flag) {
-  bit(8) URLlength;
-  bit(8) URLstring[URLlength];
- }
- else {
-  bit(8) ODProfileLevelIndication;
-  bit(8) sceneProfileLevelIndication;
-  bit(8) audioProfileLevelIndication;
-  bit(8) visualProfileLevelIndication;
-  bit(8) graphicsProfileLevelIndication;
- }
- ES_ID_Inc esIdInc[1 .. 255];
- }
- 
+	bit(10) ObjectDescriptorID;
+	bit(1) URL_Flag;
+	bit(1) includeInlineProfileLevelFlag;
+	bit(4) reserved;
+	if (URL_Flag) {
+		bit(8) URLlength;
+		bit(8) URLstring[URLlength];
+	}
+	else {
+		bit(8) ODProfileLevelIndication;
+		bit(8) sceneProfileLevelIndication;
+		bit(8) audioProfileLevelIndication;
+		bit(8) visualProfileLevelIndication;
+		bit(8) graphicsProfileLevelIndication;
+	}
+	ES_ID_Inc esIdInc[1 .. 255];
+}
 */
 public partial class IOD_Descriptor : BaseDescriptor
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// ISO/IEC 14496-1:2010's InitialObjectDescriptor, as an MP4 file has it (ISO/IEC 14496-14): ES_ID_Inc for its ES_Descriptors
 aligned(8) class IOD_Descriptor extends BaseDescriptor : bit(8) tag=MP4_IOD_Tag {
- bit(10) ObjectDescriptorID;
- bit(1) URL_Flag;
- bit(1) includeInlineProfileLevelFlag;
- bit(4) reserved;
- if (URL_Flag) {
-  bit(8) URLlength;
-  bit(8) URLstring[URLlength];
- }
- else {
-  bit(8) ODProfileLevelIndication;
-  bit(8) sceneProfileLevelIndication;
-  bit(8) audioProfileLevelIndication;
-  bit(8) visualProfileLevelIndication;
-  bit(8) graphicsProfileLevelIndication;
- }
- ES_ID_Inc esIdInc[1 .. 255];
- }
- "; } }
+	bit(10) ObjectDescriptorID;
+	bit(1) URL_Flag;
+	bit(1) includeInlineProfileLevelFlag;
+	bit(4) reserved;
+	if (URL_Flag) {
+		bit(8) URLlength;
+		bit(8) URLstring[URLlength];
+	}
+	else {
+		bit(8) ODProfileLevelIndication;
+		bit(8) sceneProfileLevelIndication;
+		bit(8) audioProfileLevelIndication;
+		bit(8) visualProfileLevelIndication;
+		bit(8) graphicsProfileLevelIndication;
+	}
+	ES_ID_Inc esIdInc[1 .. 255];
+}"; } }
 	public const byte TYPE = DescriptorTags.MP4_IOD_Tag;
 	public override string DisplayName { get { return "IOD_Descriptor"; } }
 

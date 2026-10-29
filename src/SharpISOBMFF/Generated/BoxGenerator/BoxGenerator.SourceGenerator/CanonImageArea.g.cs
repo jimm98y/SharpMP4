@@ -7,10 +7,10 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class CanonImageArea() {
- unsigned int(16) left;
- unsigned int(16) top;
- unsigned int(16) right;
- unsigned int(16) bottom;
+	unsigned int(16) left;
+	unsigned int(16) top;
+	unsigned int(16) right;
+	unsigned int(16) bottom;
 }
 */
 public partial class CanonImageArea : IMp4Serializable
@@ -22,10 +22,10 @@ public partial class CanonImageArea : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class CanonImageArea() {
- unsigned int(16) left;
- unsigned int(16) top;
- unsigned int(16) right;
- unsigned int(16) bottom;
+	unsigned int(16) left;
+	unsigned int(16) top;
+	unsigned int(16) right;
+	unsigned int(16) bottom;
 }"; } }
 	public virtual string DisplayName { get { return "CanonImageArea"; } }
 

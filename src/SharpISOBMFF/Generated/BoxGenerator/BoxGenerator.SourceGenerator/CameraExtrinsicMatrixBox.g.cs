@@ -8,62 +8,62 @@ namespace SharpISOBMFF
 /*
 // ISO/IEC 23008-12 camera extrinsic matrix: the camera's position, in micrometres, and its orientation, a unit quaternion of its x, y and z - of 2^-30 in 32 bits, of 2^-14 in 16 - each where its flag says it is there: 0x1, 0x2 and 0x4 the position, 0x8 the orientation, 0x10 of 32 bits, 0x20 the world coordinate system
 aligned(8) class CameraExtrinsicMatrixBox() extends FullBox('cmex') {
-	 if( flags & 0x1 ) { 
- signed int(32) pos_x;
- }
- if( flags & 0x2 ) { 
- signed int(32) pos_y;
- }
- if( flags & 0x4 ) { 
- signed int(32) pos_z;
- }
- if( flags & 0x8 ) { 
- if( flags & 0x10 ) { 
- signed int(32) quat_x;
- signed int(32) quat_y;
- signed int(32) quat_z;
- }
- else { 
- signed int(16) quat_x_short;
- signed int(16) quat_y_short;
- signed int(16) quat_z_short;
- }
- }
- if( flags & 0x20 ) { 
- unsigned int(32) world_coordinate_system_id;
- }
- } 
+	if( flags & 0x1 ) {
+		signed int(32) pos_x;
+	}
+	if( flags & 0x2 ) {
+		signed int(32) pos_y;
+	}
+	if( flags & 0x4 ) {
+		signed int(32) pos_z;
+	}
+	if( flags & 0x8 ) {
+		if( flags & 0x10 ) {
+			signed int(32) quat_x;
+			signed int(32) quat_y;
+			signed int(32) quat_z;
+		}
+		else {
+			signed int(16) quat_x_short;
+			signed int(16) quat_y_short;
+			signed int(16) quat_z_short;
+		}
+	}
+	if( flags & 0x20 ) {
+		unsigned int(32) world_coordinate_system_id;
+	}
+}
 */
 public partial class CameraExtrinsicMatrixBox : FullBox
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// ISO/IEC 23008-12 camera extrinsic matrix: the camera's position, in micrometres, and its orientation, a unit quaternion of its x, y and z - of 2^-30 in 32 bits, of 2^-14 in 16 - each where its flag says it is there: 0x1, 0x2 and 0x4 the position, 0x8 the orientation, 0x10 of 32 bits, 0x20 the world coordinate system
 aligned(8) class CameraExtrinsicMatrixBox() extends FullBox('cmex') {
-	 if( flags & 0x1 ) { 
- signed int(32) pos_x;
- }
- if( flags & 0x2 ) { 
- signed int(32) pos_y;
- }
- if( flags & 0x4 ) { 
- signed int(32) pos_z;
- }
- if( flags & 0x8 ) { 
- if( flags & 0x10 ) { 
- signed int(32) quat_x;
- signed int(32) quat_y;
- signed int(32) quat_z;
- }
- else { 
- signed int(16) quat_x_short;
- signed int(16) quat_y_short;
- signed int(16) quat_z_short;
- }
- }
- if( flags & 0x20 ) { 
- unsigned int(32) world_coordinate_system_id;
- }
- } "; } }
+	if( flags & 0x1 ) {
+		signed int(32) pos_x;
+	}
+	if( flags & 0x2 ) {
+		signed int(32) pos_y;
+	}
+	if( flags & 0x4 ) {
+		signed int(32) pos_z;
+	}
+	if( flags & 0x8 ) {
+		if( flags & 0x10 ) {
+			signed int(32) quat_x;
+			signed int(32) quat_y;
+			signed int(32) quat_z;
+		}
+		else {
+			signed int(16) quat_x_short;
+			signed int(16) quat_y_short;
+			signed int(16) quat_z_short;
+		}
+	}
+	if( flags & 0x20 ) {
+		unsigned int(32) world_coordinate_system_id;
+	}
+}"; } }
 	public const string TYPE = "cmex";
 	public override string DisplayName { get { return "CameraExtrinsicMatrixBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

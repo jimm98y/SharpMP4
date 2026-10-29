@@ -8,7 +8,7 @@ namespace SharpISOBMFF
 /*
 class ScalabilityInformationSEIBox extends Box('seib', size)
 {
-	unsigned int(8*size-64)	scalinfosei; 
+	unsigned int(8*size-64)	scalinfosei;
 }
 */
 public partial class ScalabilityInformationSEIBox : Box
@@ -16,7 +16,7 @@ public partial class ScalabilityInformationSEIBox : Box
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class ScalabilityInformationSEIBox extends Box('seib', size)
 {
-	unsigned int(8*size-64)	scalinfosei; 
+	unsigned int(8*size-64)	scalinfosei;
 }"; } }
 	public const string TYPE = "seib";
 	public override string DisplayName { get { return "ScalabilityInformationSEIBox"; } }

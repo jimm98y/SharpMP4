@@ -8,48 +8,46 @@ namespace SharpISOBMFF
 /*
 aligned(8) class ItemEncryptionBox extends ItemFullProperty('ienc', version, flags=0)
 {
-      unsigned int(8) reserved = 0;
-      if (version==0) { 
-            unsigned int(8) reserved = 0;
-      } else { // version is 1 or greater
-            unsigned int(4) crypt_byte_block;
-            unsigned int(4) skip_byte_block;
-      }
-      unsigned int(8) num_keys;
-      for (i=1; i<= num_keys; i++) {
-         unsigned int(8) Per_Sample_IV_Size;
-         unsigned int(8)[16] KID;
-         if (Per_Sample_IV_Size == 0) { 
-            unsigned int(8) constant_IV_size; 
-            unsigned int(8)[constant_IV_size] constant_IV;
-         }
-      }
+	unsigned int(8) reserved = 0;
+	if (version==0) {
+		unsigned int(8) reserved = 0;
+	} else { // version is 1 or greater
+		unsigned int(4) crypt_byte_block;
+		unsigned int(4) skip_byte_block;
+	}
+	unsigned int(8) num_keys;
+	for (i=1; i<= num_keys; i++) {
+		unsigned int(8) Per_Sample_IV_Size;
+		unsigned int(8)[16] KID;
+		if (Per_Sample_IV_Size == 0) {
+			unsigned int(8) constant_IV_size;
+			unsigned int(8)[constant_IV_size] constant_IV;
+		}
+	}
 }
-
 */
 public partial class ItemEncryptionBox : ItemFullProperty
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"aligned(8) class ItemEncryptionBox extends ItemFullProperty('ienc', version, flags=0)
 {
-      unsigned int(8) reserved = 0;
-      if (version==0) { 
-            unsigned int(8) reserved = 0;
-      } else { // version is 1 or greater
-            unsigned int(4) crypt_byte_block;
-            unsigned int(4) skip_byte_block;
-      }
-      unsigned int(8) num_keys;
-      for (i=1; i<= num_keys; i++) {
-         unsigned int(8) Per_Sample_IV_Size;
-         unsigned int(8)[16] KID;
-         if (Per_Sample_IV_Size == 0) { 
-            unsigned int(8) constant_IV_size; 
-            unsigned int(8)[constant_IV_size] constant_IV;
-         }
-      }
-}
-"; } }
+	unsigned int(8) reserved = 0;
+	if (version==0) {
+		unsigned int(8) reserved = 0;
+	} else { // version is 1 or greater
+		unsigned int(4) crypt_byte_block;
+		unsigned int(4) skip_byte_block;
+	}
+	unsigned int(8) num_keys;
+	for (i=1; i<= num_keys; i++) {
+		unsigned int(8) Per_Sample_IV_Size;
+		unsigned int(8)[16] KID;
+		if (Per_Sample_IV_Size == 0) {
+			unsigned int(8) constant_IV_size;
+			unsigned int(8)[constant_IV_size] constant_IV;
+		}
+	}
+}"; } }
 	public const string TYPE = "ienc";
 	public override string DisplayName { get { return "ItemEncryptionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

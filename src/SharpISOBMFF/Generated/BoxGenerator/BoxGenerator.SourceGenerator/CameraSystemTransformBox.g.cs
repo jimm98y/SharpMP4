@@ -6,16 +6,16 @@ using SharpMP4.Common;
 namespace SharpISOBMFF
 {
 /*
-aligned(8) class CameraSystemTransformBox extends Box('cxfm') { 
- Box boxes[];
-} 
+aligned(8) class CameraSystemTransformBox extends Box('cxfm') {
+	Box boxes[];
+}
 */
 public partial class CameraSystemTransformBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
-	public override string Syntax { get { return @"aligned(8) class CameraSystemTransformBox extends Box('cxfm') { 
- Box boxes[];
-} "; } }
+	public override string Syntax { get { return @"aligned(8) class CameraSystemTransformBox extends Box('cxfm') {
+	Box boxes[];
+}"; } }
 	public const string TYPE = "cxfm";
 	public override string DisplayName { get { return "CameraSystemTransformBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>

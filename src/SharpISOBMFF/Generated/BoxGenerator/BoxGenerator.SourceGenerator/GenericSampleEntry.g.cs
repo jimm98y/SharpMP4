@@ -8,14 +8,14 @@ namespace SharpISOBMFF
 /*
 class GenericSampleEntry extends Box('encv') {
 	// ProtectionSchemeInfoBox {
-		// OriginalFormatBox;	// data_format is 'resv'
-		// SchemeTypeBox;
-		// SchemeInformationBox;
+	// OriginalFormatBox;	// data_format is 'resv'
+	// SchemeTypeBox;
+	// SchemeInformationBox;
 	// }
-// tRestrictedSchemeInfoBox {
-		// OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1'
-		// SchemeTypeBox;
-		// SchemeInformationBox;
+	// tRestrictedSchemeInfoBox {
+	// OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1'
+	// SchemeTypeBox;
+	// SchemeInformationBox;
 	// }
 	// Boxes specific to the untransformed sample entry type
 	// For 'avc1', these would include AVCConfigurationBox
@@ -26,14 +26,14 @@ public partial class GenericSampleEntry : Box
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"class GenericSampleEntry extends Box('encv') {
 	// ProtectionSchemeInfoBox {
-		// OriginalFormatBox;	// data_format is 'resv'
-		// SchemeTypeBox;
-		// SchemeInformationBox;
+	// OriginalFormatBox;	// data_format is 'resv'
+	// SchemeTypeBox;
+	// SchemeInformationBox;
 	// }
-// tRestrictedSchemeInfoBox {
-		// OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1'
-		// SchemeTypeBox;
-		// SchemeInformationBox;
+	// tRestrictedSchemeInfoBox {
+	// OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1'
+	// SchemeTypeBox;
+	// SchemeInformationBox;
 	// }
 	// Boxes specific to the untransformed sample entry type
 	// For 'avc1', these would include AVCConfigurationBox

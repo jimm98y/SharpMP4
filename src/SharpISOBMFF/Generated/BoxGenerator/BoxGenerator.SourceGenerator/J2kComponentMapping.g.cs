@@ -7,10 +7,10 @@ namespace SharpISOBMFF
 {
 /*
 aligned(8) class J2kComponentMapping() {
- unsigned int(16) component;
- unsigned int(8) mapping_type;
- unsigned int(8) palette_column;
- } 
+	unsigned int(16) component;
+	unsigned int(8) mapping_type;
+	unsigned int(8) palette_column;
+}
 */
 public partial class J2kComponentMapping : IMp4Serializable
 {
@@ -21,10 +21,10 @@ public partial class J2kComponentMapping : IMp4Serializable
 	public override string ToString() { return BoxStringBuilder.Format(this); }
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public virtual string Syntax { get { return @"aligned(8) class J2kComponentMapping() {
- unsigned int(16) component;
- unsigned int(8) mapping_type;
- unsigned int(8) palette_column;
- } "; } }
+	unsigned int(16) component;
+	unsigned int(8) mapping_type;
+	unsigned int(8) palette_column;
+}"; } }
 	public virtual string DisplayName { get { return "J2kComponentMapping"; } }
 
 	protected ushort component; 

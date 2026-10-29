@@ -8,30 +8,30 @@ namespace SharpISOBMFF
 /*
 // ISO/IEC 23001-7:2016/Amd 1:2019, clause 6: a single key, or with multi_key_flag several, each with its IV size and KID (its constant IV's size multi_constant_IV_length here, for the generator's rewriting of constant_IV_size); the single key's fields as they were, its constant IV only where it is protected, as GPAC reads it
 aligned(8) class CencSampleEncryptionInformationGroupEntry() extends SampleGroupDescriptionEntry('seig') {
- unsigned int(1) multi_key_flag;
- unsigned int(7) reserved = 0;
- unsigned int(4) crypt_byte_block;
- unsigned int(4) skip_byte_block;
- unsigned int(8) isProtected;
- if (multi_key_flag) {
-  unsigned int(16) key_count;
-  for (i=1; i <= key_count; i++) {
-   unsigned int(8) multi_Per_Sample_IV_Size;
-   unsigned int(8)[16] multi_KID;
-   if (multi_Per_Sample_IV_Size == 0) {
-    unsigned int(8) multi_constant_IV_length;
-    unsigned int(8)[multi_constant_IV_length] multi_constant_IV;
-   }
-  }
- }
- else {
-  unsigned int(8) Per_Sample_IV_Size;
-  unsigned int(8) KID[16];
-  if (isProtected == 1 && Per_Sample_IV_Size == 0) {
-   unsigned int(8) constant_IV_size;
-   unsigned int(8) constant_IV[constant_IV_size];
-  }
- }
+	unsigned int(1) multi_key_flag;
+	unsigned int(7) reserved = 0;
+	unsigned int(4) crypt_byte_block;
+	unsigned int(4) skip_byte_block;
+	unsigned int(8) isProtected;
+	if (multi_key_flag) {
+		unsigned int(16) key_count;
+		for (i=1; i <= key_count; i++) {
+			unsigned int(8) multi_Per_Sample_IV_Size;
+			unsigned int(8)[16] multi_KID;
+			if (multi_Per_Sample_IV_Size == 0) {
+				unsigned int(8) multi_constant_IV_length;
+				unsigned int(8)[multi_constant_IV_length] multi_constant_IV;
+			}
+		}
+	}
+	else {
+		unsigned int(8) Per_Sample_IV_Size;
+		unsigned int(8) KID[16];
+		if (isProtected == 1 && Per_Sample_IV_Size == 0) {
+			unsigned int(8) constant_IV_size;
+			unsigned int(8) constant_IV[constant_IV_size];
+		}
+	}
 }
 */
 public partial class CencSampleEncryptionInformationGroupEntry : SampleGroupDescriptionEntry
@@ -39,30 +39,30 @@ public partial class CencSampleEncryptionInformationGroupEntry : SampleGroupDesc
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// ISO/IEC 23001-7:2016/Amd 1:2019, clause 6: a single key, or with multi_key_flag several, each with its IV size and KID (its constant IV's size multi_constant_IV_length here, for the generator's rewriting of constant_IV_size); the single key's fields as they were, its constant IV only where it is protected, as GPAC reads it
 aligned(8) class CencSampleEncryptionInformationGroupEntry() extends SampleGroupDescriptionEntry('seig') {
- unsigned int(1) multi_key_flag;
- unsigned int(7) reserved = 0;
- unsigned int(4) crypt_byte_block;
- unsigned int(4) skip_byte_block;
- unsigned int(8) isProtected;
- if (multi_key_flag) {
-  unsigned int(16) key_count;
-  for (i=1; i <= key_count; i++) {
-   unsigned int(8) multi_Per_Sample_IV_Size;
-   unsigned int(8)[16] multi_KID;
-   if (multi_Per_Sample_IV_Size == 0) {
-    unsigned int(8) multi_constant_IV_length;
-    unsigned int(8)[multi_constant_IV_length] multi_constant_IV;
-   }
-  }
- }
- else {
-  unsigned int(8) Per_Sample_IV_Size;
-  unsigned int(8) KID[16];
-  if (isProtected == 1 && Per_Sample_IV_Size == 0) {
-   unsigned int(8) constant_IV_size;
-   unsigned int(8) constant_IV[constant_IV_size];
-  }
- }
+	unsigned int(1) multi_key_flag;
+	unsigned int(7) reserved = 0;
+	unsigned int(4) crypt_byte_block;
+	unsigned int(4) skip_byte_block;
+	unsigned int(8) isProtected;
+	if (multi_key_flag) {
+		unsigned int(16) key_count;
+		for (i=1; i <= key_count; i++) {
+			unsigned int(8) multi_Per_Sample_IV_Size;
+			unsigned int(8)[16] multi_KID;
+			if (multi_Per_Sample_IV_Size == 0) {
+				unsigned int(8) multi_constant_IV_length;
+				unsigned int(8)[multi_constant_IV_length] multi_constant_IV;
+			}
+		}
+	}
+	else {
+		unsigned int(8) Per_Sample_IV_Size;
+		unsigned int(8) KID[16];
+		if (isProtected == 1 && Per_Sample_IV_Size == 0) {
+			unsigned int(8) constant_IV_size;
+			unsigned int(8) constant_IV[constant_IV_size];
+		}
+	}
 }"; } }
 	public const string TYPE = "seig";
 	public override string DisplayName { get { return "CencSampleEncryptionInformationGroupEntry"; } }

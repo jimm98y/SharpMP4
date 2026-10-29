@@ -8,20 +8,20 @@ namespace SharpISOBMFF
 /*
 // A part of the codestream: its index, the last part's with the top bit set
 aligned(8) class JpegXLPartialCodestreamBox extends Box('jxlp') {
- unsigned int(1) is_last;
- unsigned int(31) index;
- bit(8) data[];
- }
+	unsigned int(1) is_last;
+	unsigned int(31) index;
+	bit(8) data[];
+}
 */
 public partial class JpegXLPartialCodestreamBox : Box
 {
 	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
 	public override string Syntax { get { return @"// A part of the codestream: its index, the last part's with the top bit set
 aligned(8) class JpegXLPartialCodestreamBox extends Box('jxlp') {
- unsigned int(1) is_last;
- unsigned int(31) index;
- bit(8) data[];
- }"; } }
+	unsigned int(1) is_last;
+	unsigned int(31) index;
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "jxlp";
 	public override string DisplayName { get { return "JpegXLPartialCodestreamBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
