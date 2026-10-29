@@ -13,6 +13,11 @@ bit(8) compressedData[];
 */
 public partial class AppleCompressedMoovDataBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AppleCompressedMoovDataBox() extends Box ('cmvd'){
+ unsigned int(32) uncompressedSize;
+bit(8) compressedData[];
+ }"; } }
 	public const string TYPE = "cmvd";
 	public override string DisplayName { get { return "AppleCompressedMoovDataBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -22,7 +27,7 @@ public partial class AppleCompressedMoovDataBox : Box
 	protected uint uncompressedSize; 
 	public uint UncompressedSize { get { return this.uncompressedSize; } set { this.uncompressedSize = value; } }
 
-	protected byte[] compressedData; 
+	protected byte[] compressedData = []; 
 	public byte[] CompressedData { get { return this.compressedData; } set { this.compressedData = value; } }
 
 	public AppleCompressedMoovDataBox(): base(IsoStream.FromFourCC("cmvd"))
@@ -56,12 +61,12 @@ public partial class AppleCompressedMoovDataBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("uncompressedSize", 32, this.uncompressedSize); 
-		boxSize += builder.Field("compressedData", ((ulong)compressedData.Length * 8), this.compressedData); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("uncompressedSize", 32, this.uncompressedSize); 
+		boxSize += tracer.Field("compressedData", ((ulong)compressedData.Length * 8), this.compressedData); 
 		return boxSize;
 	}
 }

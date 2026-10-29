@@ -13,6 +13,11 @@ aligned(8) class Stereoscopic3D extends FullBox('st3d', 0, 0) {
 */
 public partial class Stereoscopic3D : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class Stereoscopic3D extends FullBox('st3d', 0, 0) {
+    unsigned int(8) stereo_mode;
+ }
+"; } }
 	public const string TYPE = "st3d";
 	public override string DisplayName { get { return "Stereoscopic3D"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +55,11 @@ public partial class Stereoscopic3D : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("stereo_mode", 8, this.stereo_mode); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("stereo_mode", 8, this.stereo_mode); 
 		return boxSize;
 	}
 }

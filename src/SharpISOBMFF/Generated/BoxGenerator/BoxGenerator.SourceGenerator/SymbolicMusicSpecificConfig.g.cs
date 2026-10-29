@@ -79,6 +79,72 @@ public partial class SymbolicMusicSpecificConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class SymbolicMusicSpecificConfig
+{  // the bitstream header  
+    bit(4) version; //version of this specification is 0b0000 
+ 
+    unsigned int(12) pictureWidth; // rendering window X size 
+    unsigned int(12) pictureHight; // rendering window Y size 
+ 
+    bit(1) isScoreMultiwindow; // 0: one window only – 1: multiple windows 
+ 
+    unsigned int(8) numberOfParts; // parts of the main score 
+ 
+    unsigned int(3) notationFormat; // CWMN or other sets 
+ 
+    vluimsbf8 urlMIDIStream_length; //length in bytes 
+    byte(urlMIDIStream_length) urlMIDIStream; // reference to the MIDI stream, as url 
+    bit(2) codingType; // coding of the XML chunks 
+    vluimsbf8 length; //length in bits of decoder configuration, unsigned integer 
+    // start of decoderConfiguration 
+    if (codingType == 0b11) { 
+       bit(3) decoderInitConfig; 
+       if (decoderInitConfig == 0b000) { 
+           bit(length-3)  decoderInit; 
+       }
+    } else
+    {
+      bit(length) reserved;
+    }
+    // end of decoderConfiguration 
+    bit more_data; // 1 if yes, 0 if no 
+    while (more_data)
+    {
+        aligned bit(3) chunk_type;
+        bit(5) reserved; // for alignment 
+        vluimsbf8 chunk_length;  // length of the chunk in byte 
+        switch (chunk_type)
+        {
+            case 0b000:
+                bit(8) sco[chunk_length];
+                break;
+            case 0b001:
+                bit(8) part[chunk_length]; // ID of the part at which the following info refers 
+                break;
+            case 0b010:
+                // this segment is always in binary as stated in Section 9 
+                bit(8) sync[chunk_length];
+                break;
+            case 0b011:
+                bit(8) fmt[chunk_length];
+                break;
+            case 0b100:
+                bit(8) lyrics[chunk_length];
+  break;
+            case 0b101:
+                // this segment is always in binary as stated in Section 11.4 
+                bit(8) fon[chunk_length];
+                break;
+            case 0b110: // reserved;
+            break;
+            case 0b111: // reserved;
+            break;
+        }
+        aligned bit(1) more_data;
+        bit(7) reserved; //for alignment 
+    } 
+} "; } }
 	public virtual string DisplayName { get { return "SymbolicMusicSpecificConfig"; } }
 
 	protected byte version;  // version of this specification is 0b0000 
@@ -102,7 +168,7 @@ public partial class SymbolicMusicSpecificConfig : IMp4Serializable
 	protected byte urlMIDIStream_length;  // length in bytes 
 	public byte UrlMIDIStreamLength { get { return this.urlMIDIStream_length; } set { this.urlMIDIStream_length = value; } }
 
-	protected byte[] urlMIDIStream;  //  reference to the MIDI stream, as url 
+	protected byte[] urlMIDIStream = [];  //  reference to the MIDI stream, as url 
 	public byte[] UrlMIDIStream { get { return this.urlMIDIStream; } set { this.urlMIDIStream = value; } }
 
 	protected byte codingType;  //  coding of the XML chunks 
@@ -114,10 +180,10 @@ public partial class SymbolicMusicSpecificConfig : IMp4Serializable
 	protected byte decoderInitConfig; 
 	public byte DecoderInitConfig { get { return this.decoderInitConfig; } set { this.decoderInitConfig = value; } }
 
-	protected byte[] decoderInit; 
+	protected byte[] decoderInit = []; 
 	public byte[] DecoderInit { get { return this.decoderInit; } set { this.decoderInit = value; } }
 
-	protected byte[] reserved; 
+	protected byte[] reserved = []; 
 	public byte[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
 	protected bool more_data;  //  1 if yes, 0 if no 
@@ -132,22 +198,22 @@ public partial class SymbolicMusicSpecificConfig : IMp4Serializable
 	protected byte chunk_length;  //  length of the chunk in byte 
 	public byte ChunkLength { get { return this.chunk_length; } set { this.chunk_length = value; } }
 
-	protected byte[] sco; 
+	protected byte[] sco = []; 
 	public byte[] Sco { get { return this.sco; } set { this.sco = value; } }
 
-	protected byte[] part;  //  ID of the part at which the following info refers 
+	protected byte[] part = [];  //  ID of the part at which the following info refers 
 	public byte[] Part { get { return this.part; } set { this.part = value; } }
 
-	protected byte[] sync; 
+	protected byte[] sync = []; 
 	public byte[] Sync { get { return this.sync; } set { this.sync = value; } }
 
-	protected byte[] fmt; 
+	protected byte[] fmt = []; 
 	public byte[] Fmt { get { return this.fmt; } set { this.fmt = value; } }
 
-	protected byte[] lyrics; 
+	protected byte[] lyrics = []; 
 	public byte[] Lyrics { get { return this.lyrics; } set { this.lyrics = value; } }
 
-	protected byte[] fon; 
+	protected byte[] fon = []; 
 	public byte[] Fon { get { return this.fon; } set { this.fon = value; } }
 
 	protected byte reserved00;  // for alignment 
@@ -403,71 +469,71 @@ public partial class SymbolicMusicSpecificConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
 		/*  the bitstream header   */
-		boxSize += builder.Field("version", 4, this.version); //version of this specification is 0b0000 
-		boxSize += builder.Field("pictureWidth", 12, this.pictureWidth); // rendering window X size 
-		boxSize += builder.Field("pictureHight", 12, this.pictureHight); // rendering window Y size 
-		boxSize += builder.Field("isScoreMultiwindow", 1, this.isScoreMultiwindow); // 0: one window only – 1: multiple windows 
-		boxSize += builder.Field("numberOfParts", 8, this.numberOfParts); // parts of the main score 
-		boxSize += builder.Field("notationFormat", 3, this.notationFormat); // CWMN or other sets 
-		boxSize += builder.Field("urlMIDIStream_length", 8, this.urlMIDIStream_length); //length in bytes 
-		boxSize += builder.Field("urlMIDIStream", (ulong)(urlMIDIStream_length ), this.urlMIDIStream); // reference to the MIDI stream, as url 
-		boxSize += builder.Field("codingType", 2, this.codingType); // coding of the XML chunks 
-		boxSize += builder.Field("length", 8, this.length); //length in bits of decoder configuration, unsigned integer 
+		boxSize += tracer.Field("version", 4, this.version); //version of this specification is 0b0000 
+		boxSize += tracer.Field("pictureWidth", 12, this.pictureWidth); // rendering window X size 
+		boxSize += tracer.Field("pictureHight", 12, this.pictureHight); // rendering window Y size 
+		boxSize += tracer.Field("isScoreMultiwindow", 1, this.isScoreMultiwindow); // 0: one window only – 1: multiple windows 
+		boxSize += tracer.Field("numberOfParts", 8, this.numberOfParts); // parts of the main score 
+		boxSize += tracer.Field("notationFormat", 3, this.notationFormat); // CWMN or other sets 
+		boxSize += tracer.Field("urlMIDIStream_length", 8, this.urlMIDIStream_length); //length in bytes 
+		boxSize += tracer.Field("urlMIDIStream", (ulong)(urlMIDIStream_length ), this.urlMIDIStream); // reference to the MIDI stream, as url 
+		boxSize += tracer.Field("codingType", 2, this.codingType); // coding of the XML chunks 
+		boxSize += tracer.Field("length", 8, this.length); //length in bits of decoder configuration, unsigned integer 
 		/*  start of decoderConfiguration  */
 
 		if (codingType == 0b11)
 		{
-			boxSize += builder.Field("decoderInitConfig", 3, this.decoderInitConfig); 
+			boxSize += tracer.Field("decoderInitConfig", 3, this.decoderInitConfig); 
 
 			if (decoderInitConfig == 0b000)
 			{
-				boxSize += builder.Field("decoderInit", (ulong)(length-3 ), this.decoderInit); 
+				boxSize += tracer.Field("decoderInit", (ulong)(length-3 ), this.decoderInit); 
 			}
 		}
 
 		else 
 		{
-			boxSize += builder.Field("reserved", (ulong)(length ), this.reserved); 
+			boxSize += tracer.Field("reserved", (ulong)(length ), this.reserved); 
 		}
 		/*  end of decoderConfiguration  */
-		boxSize += builder.Field("more_data", 1, this.more_data); // 1 if yes, 0 if no 
+		boxSize += tracer.Field("more_data", 1, this.more_data); // 1 if yes, 0 if no 
 
 		while (more_data)
 		{
-			boxSize += builder.Field("chunk_type", 3, this.chunk_type); 
-			boxSize += builder.Field("reserved0", 5, this.reserved0); // for alignment 
-			boxSize += builder.Field("chunk_length", 8, this.chunk_length); // length of the chunk in byte 
+			boxSize += tracer.Field("chunk_type", 3, this.chunk_type); 
+			boxSize += tracer.Field("reserved0", 5, this.reserved0); // for alignment 
+			boxSize += tracer.Field("chunk_length", 8, this.chunk_length); // length of the chunk in byte 
 
 			switch (chunk_type)
 			{
 				case 0b000:
-				boxSize += builder.Field("sco", ((ulong)(chunk_length) * 8), this.sco); 
+				boxSize += tracer.Field("sco", ((ulong)(chunk_length) * 8), this.sco); 
 				break;
 
 				case 0b001:
-				boxSize += builder.Field("part", ((ulong)(chunk_length) * 8), this.part); // ID of the part at which the following info refers 
+				boxSize += tracer.Field("part", ((ulong)(chunk_length) * 8), this.part); // ID of the part at which the following info refers 
 				break;
 
 				case 0b010:
 				/*  this segment is always in binary as stated in Section 9  */
-				boxSize += builder.Field("sync", ((ulong)(chunk_length) * 8), this.sync); 
+				boxSize += tracer.Field("sync", ((ulong)(chunk_length) * 8), this.sync); 
 				break;
 
 				case 0b011:
-				boxSize += builder.Field("fmt", ((ulong)(chunk_length) * 8), this.fmt); 
+				boxSize += tracer.Field("fmt", ((ulong)(chunk_length) * 8), this.fmt); 
 				break;
 
 				case 0b100:
-				boxSize += builder.Field("lyrics", ((ulong)(chunk_length) * 8), this.lyrics); 
+				boxSize += tracer.Field("lyrics", ((ulong)(chunk_length) * 8), this.lyrics); 
 				break;
 
 				case 0b101:
 				/*  this segment is always in binary as stated in Section 11.4  */
-				boxSize += builder.Field("fon", ((ulong)(chunk_length) * 8), this.fon); 
+				boxSize += tracer.Field("fon", ((ulong)(chunk_length) * 8), this.fon); 
 				break;
 
 				case 0b110:
@@ -479,8 +545,8 @@ public partial class SymbolicMusicSpecificConfig : IMp4Serializable
 				break;
 
 			}
-			boxSize += builder.Field("more_data", 1, this.more_data); 
-			boxSize += builder.Field("reserved00", 7, this.reserved00); //for alignment 
+			boxSize += tracer.Field("more_data", 1, this.more_data); 
+			boxSize += tracer.Field("reserved00", 7, this.reserved00); //for alignment 
 		}
 		return boxSize;
 	}

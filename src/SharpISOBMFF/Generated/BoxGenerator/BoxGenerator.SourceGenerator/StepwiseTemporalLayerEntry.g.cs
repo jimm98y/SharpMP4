@@ -12,6 +12,10 @@ class StepwiseTemporalLayerEntry() extends VisualSampleGroupEntry ('stsa')
 */
 public partial class StepwiseTemporalLayerEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class StepwiseTemporalLayerEntry() extends VisualSampleGroupEntry ('stsa')
+{
+}"; } }
 	public const string TYPE = "stsa";
 	public override string DisplayName { get { return "StepwiseTemporalLayerEntry"; } }
 
@@ -40,10 +44,10 @@ public partial class StepwiseTemporalLayerEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

@@ -24,6 +24,22 @@ class TierInfoBox extends Box('tiri'){ //Mandatory Box
 */
 public partial class TierInfoBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class TierInfoBox extends Box('tiri'){ //Mandatory Box
+	unsigned int(16) tierID;
+	unsigned int(8) profileIndication;
+	unsigned int(8) profile_compatibility;
+	unsigned int(8) levelIndication;
+	bit(8) reserved = 0;
+
+	unsigned int(16) visualWidth;
+	unsigned int(16) visualHeight;
+
+	unsigned int(2) discardable;
+	unsigned int(2) constantFrameRate;
+	bit(4) reserved = 0;
+	unsigned int(16) frameRate;
+}"; } }
 	public const string TYPE = "tiri";
 	public override string DisplayName { get { return "TierInfoBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -124,22 +140,22 @@ public partial class TierInfoBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		/* Mandatory Box */
-		boxSize += builder.Field("tierID", 16, this.tierID); 
-		boxSize += builder.Field("profileIndication", 8, this.profileIndication); 
-		boxSize += builder.Field("profile_compatibility", 8, this.profile_compatibility); 
-		boxSize += builder.Field("levelIndication", 8, this.levelIndication); 
-		boxSize += builder.Field("reserved", 8, this.reserved); 
-		boxSize += builder.Field("visualWidth", 16, this.visualWidth); 
-		boxSize += builder.Field("visualHeight", 16, this.visualHeight); 
-		boxSize += builder.Field("discardable", 2, this.discardable); 
-		boxSize += builder.Field("constantFrameRate", 2, this.constantFrameRate); 
-		boxSize += builder.Field("reserved0", 4, this.reserved0); 
-		boxSize += builder.Field("frameRate", 16, this.frameRate); 
+		boxSize += tracer.Field("tierID", 16, this.tierID); 
+		boxSize += tracer.Field("profileIndication", 8, this.profileIndication); 
+		boxSize += tracer.Field("profile_compatibility", 8, this.profile_compatibility); 
+		boxSize += tracer.Field("levelIndication", 8, this.levelIndication); 
+		boxSize += tracer.Field("reserved", 8, this.reserved); 
+		boxSize += tracer.Field("visualWidth", 16, this.visualWidth); 
+		boxSize += tracer.Field("visualHeight", 16, this.visualHeight); 
+		boxSize += tracer.Field("discardable", 2, this.discardable); 
+		boxSize += tracer.Field("constantFrameRate", 2, this.constantFrameRate); 
+		boxSize += tracer.Field("reserved0", 4, this.reserved0); 
+		boxSize += tracer.Field("frameRate", 16, this.frameRate); 
 		return boxSize;
 	}
 }

@@ -18,6 +18,16 @@ aligned(8) class TextSampleEntry() extends SampleEntry('enct') {
 */
 public partial class TextSampleEntry : SampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TextSampleEntry() extends SampleEntry('enct') {
+ unsigned int(32) displayFlags;
+ unsigned int(8) horizontalJustification;
+ unsigned int(8) verticalJustification;
+ unsigned int(8) backgroundColorRgba[4];
+ RectRecord rectRecord;
+ StyleRecord styleRecord; Box boxes[];
+ }
+ "; } }
 	public const string TYPE = "enct";
 	public override string DisplayName { get { return "TextSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -33,7 +43,7 @@ public partial class TextSampleEntry : SampleEntry
 	protected byte verticalJustification; 
 	public byte VerticalJustification { get { return this.verticalJustification; } set { this.verticalJustification = value; } }
 
-	protected byte[] backgroundColorRgba; 
+	protected byte[] backgroundColorRgba = new byte[4]; 
 	public byte[] BackgroundColorRgba { get { return this.backgroundColorRgba; } set { this.backgroundColorRgba = value; } }
 
 	protected RectRecord rectRecord; 
@@ -91,18 +101,18 @@ public partial class TextSampleEntry : SampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("displayFlags", 32, this.displayFlags); 
-		boxSize += builder.Field("horizontalJustification", 8, this.horizontalJustification); 
-		boxSize += builder.Field("verticalJustification", 8, this.verticalJustification); 
-		boxSize += builder.Field("backgroundColorRgba", 4 * 8, this.backgroundColorRgba); 
-		boxSize += builder.Field("rectRecord", IsoStream.CalculateClassSize(rectRecord), this.rectRecord); 
-		boxSize += builder.Field("styleRecord", IsoStream.CalculateClassSize(styleRecord), this.styleRecord); 
-		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("displayFlags", 32, this.displayFlags); 
+		boxSize += tracer.Field("horizontalJustification", 8, this.horizontalJustification); 
+		boxSize += tracer.Field("verticalJustification", 8, this.verticalJustification); 
+		boxSize += tracer.Field("backgroundColorRgba", 4 * 8, this.backgroundColorRgba); 
+		boxSize += tracer.Field("rectRecord", IsoStream.CalculateClassSize(rectRecord), this.rectRecord); 
+		boxSize += tracer.Field("styleRecord", IsoStream.CalculateClassSize(styleRecord), this.styleRecord); 
+		// boxSize += tracer.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

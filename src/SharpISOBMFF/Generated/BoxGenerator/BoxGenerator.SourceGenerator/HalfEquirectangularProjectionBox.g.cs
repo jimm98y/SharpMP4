@@ -12,6 +12,10 @@ aligned(8) class HalfEquirectangularProjectionBox extends FullBox('hequ', 0, 0) 
 */
 public partial class HalfEquirectangularProjectionBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class HalfEquirectangularProjectionBox extends FullBox('hequ', 0, 0) { 
+// fields reserved for future use 
+}"; } }
 	public const string TYPE = "hequ";
 	public override string DisplayName { get { return "HalfEquirectangularProjectionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -46,10 +50,10 @@ public partial class HalfEquirectangularProjectionBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		/*  fields reserved for future use  */
 		return boxSize;
 	}

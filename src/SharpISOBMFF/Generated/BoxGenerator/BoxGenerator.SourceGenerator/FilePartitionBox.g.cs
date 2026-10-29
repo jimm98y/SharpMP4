@@ -34,6 +34,32 @@ aligned(8) class FilePartitionBox
 */
 public partial class FilePartitionBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class FilePartitionBox
+		extends FullBox('fpar', version, 0) {
+	if (version == 0) {
+		unsigned int(16)	item_ID;
+	} else {
+		unsigned int(32)	item_ID;
+	}
+	unsigned int(16)	packet_payload_size;
+	unsigned int(8)	reserved = 0;
+	unsigned int(8)	FEC_encoding_ID;
+	unsigned int(16)	FEC_instance_ID;
+	unsigned int(16)	max_source_block_length;
+	unsigned int(16)	encoding_symbol_length;
+	unsigned int(16)	max_number_of_encoding_symbols;
+	base64string		scheme_specific_info;
+	if (version == 0) {
+		unsigned int(16)	entry_count;
+	} else {
+		unsigned int(32)	entry_count;
+	}
+	for (i=1; i <= entry_count; i++) {
+		unsigned int(16)	block_count;
+		unsigned int(32)	block_size;
+	}
+}"; } }
 	public const string TYPE = "fpar";
 	public override string DisplayName { get { return "FilePartitionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -205,43 +231,43 @@ public partial class FilePartitionBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if (version == 0)
 		{
-			boxSize += builder.Field("item_ID", 16, this.item_ID); 
+			boxSize += tracer.Field("item_ID", 16, this.item_ID); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("item_ID", 32, this.item_ID); 
+			boxSize += tracer.Field("item_ID", 32, this.item_ID); 
 		}
-		boxSize += builder.Field("packet_payload_size", 16, this.packet_payload_size); 
-		boxSize += builder.Field("reserved", 8, this.reserved); 
-		boxSize += builder.Field("FEC_encoding_ID", 8, this.FEC_encoding_ID); 
-		boxSize += builder.Field("FEC_instance_ID", 16, this.FEC_instance_ID); 
-		boxSize += builder.Field("max_source_block_length", 16, this.max_source_block_length); 
-		boxSize += builder.Field("encoding_symbol_length", 16, this.encoding_symbol_length); 
-		boxSize += builder.Field("max_number_of_encoding_symbols", 16, this.max_number_of_encoding_symbols); 
-		boxSize += builder.Field("scheme_specific_info", IsoStream.CalculateStringSize(scheme_specific_info), this.scheme_specific_info); 
+		boxSize += tracer.Field("packet_payload_size", 16, this.packet_payload_size); 
+		boxSize += tracer.Field("reserved", 8, this.reserved); 
+		boxSize += tracer.Field("FEC_encoding_ID", 8, this.FEC_encoding_ID); 
+		boxSize += tracer.Field("FEC_instance_ID", 16, this.FEC_instance_ID); 
+		boxSize += tracer.Field("max_source_block_length", 16, this.max_source_block_length); 
+		boxSize += tracer.Field("encoding_symbol_length", 16, this.encoding_symbol_length); 
+		boxSize += tracer.Field("max_number_of_encoding_symbols", 16, this.max_number_of_encoding_symbols); 
+		boxSize += tracer.Field("scheme_specific_info", IsoStream.CalculateStringSize(scheme_specific_info), this.scheme_specific_info); 
 
 		if (version == 0)
 		{
-			boxSize += builder.Field("entry_count", 16, this.entry_count); 
+			boxSize += tracer.Field("entry_count", 16, this.entry_count); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("entry_count", 32, this.entry_count); 
+			boxSize += tracer.Field("entry_count", 32, this.entry_count); 
 		}
 
 		for (int i=0; i < entry_count; i++)
 		{
-			boxSize += builder.Field($"block_count[{i}]", 16, this.block_count[i]); 
-			boxSize += builder.Field($"block_size[{i}]", 32, this.block_size[i]); 
+			boxSize += tracer.Field($"block_count[{i}]", 16, this.block_count[i]); 
+			boxSize += tracer.Field($"block_size[{i}]", 32, this.block_size[i]); 
 		}
 		return boxSize;
 	}

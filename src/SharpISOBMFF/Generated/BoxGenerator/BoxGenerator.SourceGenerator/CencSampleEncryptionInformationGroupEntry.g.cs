@@ -36,6 +36,34 @@ aligned(8) class CencSampleEncryptionInformationGroupEntry() extends SampleGroup
 */
 public partial class CencSampleEncryptionInformationGroupEntry : SampleGroupDescriptionEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// ISO/IEC 23001-7:2016/Amd 1:2019, clause 6: a single key, or with multi_key_flag several, each with its IV size and KID (its constant IV's size multi_constant_IV_length here, for the generator's rewriting of constant_IV_size); the single key's fields as they were, its constant IV only where it is protected, as GPAC reads it
+aligned(8) class CencSampleEncryptionInformationGroupEntry() extends SampleGroupDescriptionEntry('seig') {
+ unsigned int(1) multi_key_flag;
+ unsigned int(7) reserved = 0;
+ unsigned int(4) crypt_byte_block;
+ unsigned int(4) skip_byte_block;
+ unsigned int(8) isProtected;
+ if (multi_key_flag) {
+  unsigned int(16) key_count;
+  for (i=1; i <= key_count; i++) {
+   unsigned int(8) multi_Per_Sample_IV_Size;
+   unsigned int(8)[16] multi_KID;
+   if (multi_Per_Sample_IV_Size == 0) {
+    unsigned int(8) multi_constant_IV_length;
+    unsigned int(8)[multi_constant_IV_length] multi_constant_IV;
+   }
+  }
+ }
+ else {
+  unsigned int(8) Per_Sample_IV_Size;
+  unsigned int(8) KID[16];
+  if (isProtected == 1 && Per_Sample_IV_Size == 0) {
+   unsigned int(8) constant_IV_size;
+   unsigned int(8) constant_IV[constant_IV_size];
+  }
+ }
+}"; } }
 	public const string TYPE = "seig";
 	public override string DisplayName { get { return "CencSampleEncryptionInformationGroupEntry"; } }
 
@@ -72,13 +100,13 @@ public partial class CencSampleEncryptionInformationGroupEntry : SampleGroupDesc
 	protected byte Per_Sample_IV_Size; 
 	public byte PerSampleIVSize { get { return this.Per_Sample_IV_Size; } set { this.Per_Sample_IV_Size = value; } }
 
-	protected byte[] KID; 
+	protected byte[] KID = new byte[16]; 
 	public byte[] _KID { get { return this.KID; } set { this.KID = value; } }
 
 	protected byte constant_IV_size; 
 	public byte ConstantIVSize { get { return this.constant_IV_size; } set { this.constant_IV_size = value; } }
 
-	protected byte[] constant_IV; 
+	protected byte[] constant_IV = []; 
 	public byte[] ConstantIV { get { return this.constant_IV; } set { this.constant_IV = value; } }
 
 	public CencSampleEncryptionInformationGroupEntry(): base(IsoStream.FromFourCC("seig"))
@@ -212,42 +240,42 @@ public partial class CencSampleEncryptionInformationGroupEntry : SampleGroupDesc
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("multi_key_flag", 1, this.multi_key_flag); 
-		boxSize += builder.Field("reserved", 7, this.reserved); 
-		boxSize += builder.Field("crypt_byte_block", 4, this.crypt_byte_block); 
-		boxSize += builder.Field("skip_byte_block", 4, this.skip_byte_block); 
-		boxSize += builder.Field("isProtected", 8, this.isProtected); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("multi_key_flag", 1, this.multi_key_flag); 
+		boxSize += tracer.Field("reserved", 7, this.reserved); 
+		boxSize += tracer.Field("crypt_byte_block", 4, this.crypt_byte_block); 
+		boxSize += tracer.Field("skip_byte_block", 4, this.skip_byte_block); 
+		boxSize += tracer.Field("isProtected", 8, this.isProtected); 
 
 		if (multi_key_flag)
 		{
-			boxSize += builder.Field("key_count", 16, this.key_count); 
+			boxSize += tracer.Field("key_count", 16, this.key_count); 
 
 			for (int i=0; i < key_count; i++)
 			{
-				boxSize += builder.Field($"multi_Per_Sample_IV_Size[{i}]", 8, this.multi_Per_Sample_IV_Size[i]); 
-				boxSize += builder.Field($"multi_KID[{i}]", 16 * 8, this.multi_KID[i]); 
+				boxSize += tracer.Field($"multi_Per_Sample_IV_Size[{i}]", 8, this.multi_Per_Sample_IV_Size[i]); 
+				boxSize += tracer.Field($"multi_KID[{i}]", 16 * 8, this.multi_KID[i]); 
 
 				if (multi_Per_Sample_IV_Size[i] == 0)
 				{
-					boxSize += builder.Field($"multi_constant_IV_length[{i}]", 8, this.multi_constant_IV_length[i]); 
-					boxSize += builder.Field($"multi_constant_IV[{i}]", ((ulong)(multi_constant_IV_length[i]) * 8), this.multi_constant_IV[i]); 
+					boxSize += tracer.Field($"multi_constant_IV_length[{i}]", 8, this.multi_constant_IV_length[i]); 
+					boxSize += tracer.Field($"multi_constant_IV[{i}]", ((ulong)(multi_constant_IV_length[i]) * 8), this.multi_constant_IV[i]); 
 				}
 			}
 		}
 
 		else 
 		{
-			boxSize += builder.Field("Per_Sample_IV_Size", 8, this.Per_Sample_IV_Size); 
-			boxSize += builder.Field("KID", 16 * 8, this.KID); 
+			boxSize += tracer.Field("Per_Sample_IV_Size", 8, this.Per_Sample_IV_Size); 
+			boxSize += tracer.Field("KID", 16 * 8, this.KID); 
 
 			if (isProtected == 1 && Per_Sample_IV_Size == 0)
 			{
-				boxSize += builder.Field("constant_IV_size", 8, this.constant_IV_size); 
-				boxSize += builder.Field("constant_IV", ((ulong)(IsoStream.GetInt(constant_IV_size)) * 8), this.constant_IV); 
+				boxSize += tracer.Field("constant_IV_size", 8, this.constant_IV_size); 
+				boxSize += tracer.Field("constant_IV", ((ulong)(IsoStream.GetInt(constant_IV_size)) * 8), this.constant_IV); 
 			}
 		}
 		return boxSize;

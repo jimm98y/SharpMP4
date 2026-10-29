@@ -28,6 +28,26 @@ aligned(8) class VPCodecConfigurationBox() extends FullBox('vpcC') {
 */
 public partial class VPCodecConfigurationBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class VPCodecConfigurationBox() extends FullBox('vpcC') {
+ unsigned int(8) profile;
+ unsigned int(8) level;
+ if (version == 0) {
+ bit(4) bitDepth;
+ bit(4) colorSpace;
+ bit(4) chromaSubsampling;
+ bit(3) transferFunction;
+ bit(1) videoFullRangeFlag;
+ } else {
+ bit(4) bitDepth;
+ bit(3) chromaSubsampling;
+ bit(1) videoFullRangeFlag;
+ unsigned int(8) colourPrimaries; unsigned int(8) transferCharacteristics;
+ unsigned int(8) matrixCoefficients;
+ }
+ unsigned int(16) codecInitializationDataSize;
+ unsigned int(8) codecInitializationData[codecInitializationDataSize];
+ } "; } }
 	public const string TYPE = "vpcC";
 	public override string DisplayName { get { return "VPCodecConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -67,7 +87,7 @@ public partial class VPCodecConfigurationBox : FullBox
 	protected ushort codecInitializationDataSize; 
 	public ushort CodecInitializationDataSize { get { return this.codecInitializationDataSize; } set { this.codecInitializationDataSize = value; } }
 
-	protected byte[] codecInitializationData; 
+	protected byte[] codecInitializationData = []; 
 	public byte[] CodecInitializationData { get { return this.codecInitializationData; } set { this.codecInitializationData = value; } }
 
 	public VPCodecConfigurationBox(): base(IsoStream.FromFourCC("vpcC"))
@@ -164,33 +184,33 @@ public partial class VPCodecConfigurationBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("profile", 8, this.profile); 
-		boxSize += builder.Field("level", 8, this.level); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("profile", 8, this.profile); 
+		boxSize += tracer.Field("level", 8, this.level); 
 
 		if (version == 0)
 		{
-			boxSize += builder.Field("bitDepth", 4, this.bitDepth); 
-			boxSize += builder.Field("colorSpace", 4, this.colorSpace); 
-			boxSize += builder.Field("chromaSubsampling", 4, this.chromaSubsampling); 
-			boxSize += builder.Field("transferFunction", 3, this.transferFunction); 
-			boxSize += builder.Field("videoFullRangeFlag", 1, this.videoFullRangeFlag); 
+			boxSize += tracer.Field("bitDepth", 4, this.bitDepth); 
+			boxSize += tracer.Field("colorSpace", 4, this.colorSpace); 
+			boxSize += tracer.Field("chromaSubsampling", 4, this.chromaSubsampling); 
+			boxSize += tracer.Field("transferFunction", 3, this.transferFunction); 
+			boxSize += tracer.Field("videoFullRangeFlag", 1, this.videoFullRangeFlag); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("bitDepth", 4, this.bitDepth); 
-			boxSize += builder.Field("chromaSubsampling", 3, this.chromaSubsampling); 
-			boxSize += builder.Field("videoFullRangeFlag", 1, this.videoFullRangeFlag); 
-			boxSize += builder.Field("colourPrimaries", 8, this.colourPrimaries); 
-			boxSize += builder.Field("transferCharacteristics", 8, this.transferCharacteristics); 
-			boxSize += builder.Field("matrixCoefficients", 8, this.matrixCoefficients); 
+			boxSize += tracer.Field("bitDepth", 4, this.bitDepth); 
+			boxSize += tracer.Field("chromaSubsampling", 3, this.chromaSubsampling); 
+			boxSize += tracer.Field("videoFullRangeFlag", 1, this.videoFullRangeFlag); 
+			boxSize += tracer.Field("colourPrimaries", 8, this.colourPrimaries); 
+			boxSize += tracer.Field("transferCharacteristics", 8, this.transferCharacteristics); 
+			boxSize += tracer.Field("matrixCoefficients", 8, this.matrixCoefficients); 
 		}
-		boxSize += builder.Field("codecInitializationDataSize", 16, this.codecInitializationDataSize); 
-		boxSize += builder.Field("codecInitializationData", ((ulong)(codecInitializationDataSize) * 8), this.codecInitializationData); 
+		boxSize += tracer.Field("codecInitializationDataSize", 16, this.codecInitializationDataSize); 
+		boxSize += tracer.Field("codecInitializationData", ((ulong)(codecInitializationDataSize) * 8), this.codecInitializationData); 
 		return boxSize;
 	}
 }

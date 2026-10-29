@@ -16,6 +16,14 @@ aligned(8) class ISMASampleFormatBox extends FullBox('iSFM', 0, 0) {
 */
 public partial class ISMASampleFormatBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// How the samples are encrypted: selectively or not, and how long their key indicators and IVs are
+aligned(8) class ISMASampleFormatBox extends FullBox('iSFM', 0, 0) {
+ bit(1) selective_encryption;
+ bit(7) reserved;
+ unsigned int(8) key_indicator_length;
+ unsigned int(8) IV_length;
+ }"; } }
 	public const string TYPE = "iSFM";
 	public override string DisplayName { get { return "ISMASampleFormatBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -71,14 +79,14 @@ public partial class ISMASampleFormatBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("selective_encryption", 1, this.selective_encryption); 
-		boxSize += builder.Field("reserved", 7, this.reserved); 
-		boxSize += builder.Field("key_indicator_length", 8, this.key_indicator_length); 
-		boxSize += builder.Field("IV_length", 8, this.IV_length); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("selective_encryption", 1, this.selective_encryption); 
+		boxSize += tracer.Field("reserved", 7, this.reserved); 
+		boxSize += tracer.Field("key_indicator_length", 8, this.key_indicator_length); 
+		boxSize += tracer.Field("IV_length", 8, this.IV_length); 
 		return boxSize;
 	}
 }

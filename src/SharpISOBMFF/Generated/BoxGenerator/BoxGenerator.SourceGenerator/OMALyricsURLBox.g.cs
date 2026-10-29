@@ -12,6 +12,10 @@ aligned(8) class OMALyricsURLBox() extends FullBox('lrcu') {
 */
 public partial class OMALyricsURLBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class OMALyricsURLBox() extends FullBox('lrcu') {
+	 string content;
+ } "; } }
 	public const string TYPE = "lrcu";
 	public override string DisplayName { get { return "OMALyricsURLBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class OMALyricsURLBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("content", IsoStream.CalculateStringSize(content), this.content); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("content", IsoStream.CalculateStringSize(content), this.content); 
 		return boxSize;
 	}
 }

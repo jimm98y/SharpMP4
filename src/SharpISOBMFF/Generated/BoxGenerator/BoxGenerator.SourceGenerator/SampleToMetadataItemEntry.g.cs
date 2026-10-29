@@ -17,6 +17,15 @@ extends SampleGroupDescriptionEntry('stmi') {
 */
 public partial class SampleToMetadataItemEntry : SampleGroupDescriptionEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class SampleToMetadataItemEntry() 
+extends SampleGroupDescriptionEntry('stmi') {
+	unsigned int(32) meta_box_handler_type;
+	unsigned int(32) num_items;
+	for(i = 0; i < num_items; i++) {
+		unsigned int(32) item_id[i];
+	}
+}"; } }
 	public const string TYPE = "stmi";
 	public override string DisplayName { get { return "SampleToMetadataItemEntry"; } }
 
@@ -76,16 +85,16 @@ public partial class SampleToMetadataItemEntry : SampleGroupDescriptionEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("meta_box_handler_type", 32, this.meta_box_handler_type); 
-		boxSize += builder.Field("num_items", 32, this.num_items); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("meta_box_handler_type", 32, this.meta_box_handler_type); 
+		boxSize += tracer.Field("num_items", 32, this.num_items); 
 
 		for (int i = 0; i < num_items; i++)
 		{
-			boxSize += builder.Field($"item_id[{i}]", 32, this.item_id[i]); 
+			boxSize += tracer.Field($"item_id[{i}]", 32, this.item_id[i]); 
 		}
 		return boxSize;
 	}

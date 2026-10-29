@@ -45,6 +45,43 @@ aligned(8) class ItemLocationBox extends FullBox('iloc', version, 0) {
 */
 public partial class ItemLocationBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ItemLocationBox extends FullBox('iloc', version, 0) {
+	unsigned int(4)	offset_size;
+	unsigned int(4)	length_size;
+	unsigned int(4)	base_offset_size;
+	if ((version == 1) || (version == 2)) {
+		unsigned int(4)	index_size;
+	} else {
+		unsigned int(4)	reserved;
+	}
+	if (version < 2) {
+		unsigned int(16)	item_count;
+	} else if (version == 2) {
+		unsigned int(32)	item_count;
+	}
+	for (i=0; i<item_count; i++) {
+		if (version < 2) {
+			unsigned int(16)	item_ID;
+		} else if (version == 2) {
+			unsigned int(32)	item_ID;
+		}
+		if ((version == 1) || (version == 2)) {
+			unsigned int(12)	reserved = 0;
+			unsigned int(4)	construction_method;
+		}
+		unsigned int(16)	data_reference_index;
+		unsigned int(base_offset_size*8)	base_offset;
+		unsigned int(16)		extent_count;
+		for (j=0; j<extent_count; j++) {
+			if (((version == 1) || (version == 2)) && (index_size > 0)) {
+				unsigned int(index_size*8)	item_reference_index;
+			}
+			unsigned int(offset_size*8)	extent_offset;
+			unsigned int(length_size*8)	extent_length;
+		}
+	}
+}"; } }
 	public const string TYPE = "iloc";
 	public override string DisplayName { get { return "ItemLocationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -304,32 +341,32 @@ public partial class ItemLocationBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("offset_size", 4, this.offset_size); 
-		boxSize += builder.Field("length_size", 4, this.length_size); 
-		boxSize += builder.Field("base_offset_size", 4, this.base_offset_size); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("offset_size", 4, this.offset_size); 
+		boxSize += tracer.Field("length_size", 4, this.length_size); 
+		boxSize += tracer.Field("base_offset_size", 4, this.base_offset_size); 
 
 		if ((version == 1) || (version == 2))
 		{
-			boxSize += builder.Field("index_size", 4, this.index_size); 
+			boxSize += tracer.Field("index_size", 4, this.index_size); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("reserved", 4, this.reserved); 
+			boxSize += tracer.Field("reserved", 4, this.reserved); 
 		}
 
 		if (version < 2)
 		{
-			boxSize += builder.Field("item_count", 16, this.item_count); 
+			boxSize += tracer.Field("item_count", 16, this.item_count); 
 		}
 
 		else if (version == 2)
 		{
-			boxSize += builder.Field("item_count", 32, this.item_count); 
+			boxSize += tracer.Field("item_count", 32, this.item_count); 
 		}
 
 		for (int i=0; i<item_count; i++)
@@ -337,32 +374,32 @@ public partial class ItemLocationBox : FullBox
 
 			if (version < 2)
 			{
-				boxSize += builder.Field($"item_ID[{i}]", 16, this.item_ID[i]); 
+				boxSize += tracer.Field($"item_ID[{i}]", 16, this.item_ID[i]); 
 			}
 
 			else if (version == 2)
 			{
-				boxSize += builder.Field($"item_ID[{i}]", 32, this.item_ID[i]); 
+				boxSize += tracer.Field($"item_ID[{i}]", 32, this.item_ID[i]); 
 			}
 
 			if ((version == 1) || (version == 2))
 			{
-				boxSize += builder.Field($"reserved0[{i}]", 12, this.reserved0[i]); 
-				boxSize += builder.Field($"construction_method[{i}]", 4, this.construction_method[i]); 
+				boxSize += tracer.Field($"reserved0[{i}]", 12, this.reserved0[i]); 
+				boxSize += tracer.Field($"construction_method[{i}]", 4, this.construction_method[i]); 
 			}
-			boxSize += builder.Field($"data_reference_index[{i}]", 16, this.data_reference_index[i]); 
-			boxSize += builder.Field($"base_offset[{i}]", (ulong)(base_offset_size*8 ), this.base_offset[i]); 
-			boxSize += builder.Field($"extent_count[{i}]", 16, this.extent_count[i]); 
+			boxSize += tracer.Field($"data_reference_index[{i}]", 16, this.data_reference_index[i]); 
+			boxSize += tracer.Field($"base_offset[{i}]", (ulong)(base_offset_size*8 ), this.base_offset[i]); 
+			boxSize += tracer.Field($"extent_count[{i}]", 16, this.extent_count[i]); 
 
 			for (int j=0; j<extent_count[i]; j++)
 			{
 
 				if (((version == 1) || (version == 2)) && (index_size > 0))
 				{
-					boxSize += builder.Field($"item_reference_index[{i}][{j}]", (ulong)(index_size*8 ), this.item_reference_index[i][j]); 
+					boxSize += tracer.Field($"item_reference_index[{i}][{j}]", (ulong)(index_size*8 ), this.item_reference_index[i][j]); 
 				}
-				boxSize += builder.Field($"extent_offset[{i}][{j}]", (ulong)(offset_size*8 ), this.extent_offset[i][j]); 
-				boxSize += builder.Field($"extent_length[{i}][{j}]", (ulong)(length_size*8 ), this.extent_length[i][j]); 
+				boxSize += tracer.Field($"extent_offset[{i}][{j}]", (ulong)(offset_size*8 ), this.extent_offset[i][j]); 
+				boxSize += tracer.Field($"extent_length[{i}][{j}]", (ulong)(length_size*8 ), this.extent_length[i][j]); 
 			}
 		}
 		return boxSize;

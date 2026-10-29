@@ -19,6 +19,12 @@ public partial class TTSSpecificConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class TTSSpecificConfig() {
+    TTS_Sequence();
+}
+
+"; } }
 	public virtual string DisplayName { get { return "TTSSpecificConfig"; } }
 
 	protected TTS_Sequence TTS_Sequence; 
@@ -49,10 +55,10 @@ public partial class TTSSpecificConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("TTS_Sequence", IsoStream.CalculateClassSize(TTS_Sequence), this.TTS_Sequence); 
+		boxSize += tracer.Field("TTS_Sequence", IsoStream.CalculateClassSize(TTS_Sequence), this.TTS_Sequence); 
 		return boxSize;
 	}
 }

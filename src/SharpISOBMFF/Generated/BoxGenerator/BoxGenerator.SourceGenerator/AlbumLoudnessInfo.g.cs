@@ -10,6 +10,8 @@ aligned(8) class AlbumLoudnessInfo extends LoudnessBaseBox ('alou') { }
 */
 public partial class AlbumLoudnessInfo : LoudnessBaseBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AlbumLoudnessInfo extends LoudnessBaseBox ('alou') { }"; } }
 	public const string TYPE = "alou";
 	public override string DisplayName { get { return "AlbumLoudnessInfo"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -41,10 +43,10 @@ public partial class AlbumLoudnessInfo : LoudnessBaseBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

@@ -14,6 +14,12 @@ class TimeScaleEntry() extends Box('tims') {
 */
 public partial class TimeScaleEntry : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class TimeScaleEntry() extends Box('tims') {
+	uint(32)	timescale;
+}
+
+"; } }
 	public const string TYPE = "tims";
 	public override string DisplayName { get { return "TimeScaleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -51,11 +57,11 @@ public partial class TimeScaleEntry : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("timescale", 32, this.timescale); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("timescale", 32, this.timescale); 
 		return boxSize;
 	}
 }

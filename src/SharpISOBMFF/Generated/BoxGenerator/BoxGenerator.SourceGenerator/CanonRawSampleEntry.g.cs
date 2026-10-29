@@ -28,6 +28,26 @@ aligned(8) class CanonRawSampleEntry() extends SampleEntry('CRAW') {
 */
 public partial class CanonRawSampleEntry : SampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// A CR3's image: a visual sample entry, then its type (3, 0 for JPEG; 1, 1 for raw) and its boxes (JPEG, CMP1, CDI1)
+aligned(8) class CanonRawSampleEntry() extends SampleEntry('CRAW') {
+ unsigned int(16) pre_defined;
+ unsigned int(16) reserved;
+ unsigned int(32) pre_defined0[3];
+ unsigned int(16) width;
+ unsigned int(16) height;
+ unsigned int(32) horizresolution;
+ unsigned int(32) vertresolution;
+ unsigned int(32) reserved0;
+ unsigned int(16) frame_count;
+ unsigned int(8) compressorname[32];
+ unsigned int(16) depth;
+ signed int(16) pre_defined1;
+ unsigned int(16) imageType;
+ unsigned int(16) imageFlags;
+ Box boxes[];
+}
+"; } }
 	public const string TYPE = "CRAW";
 	public override string DisplayName { get { return "CanonRawSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -40,7 +60,7 @@ public partial class CanonRawSampleEntry : SampleEntry
 	protected ushort reserved; 
 	public ushort Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-	protected uint[] pre_defined0; 
+	protected uint[] pre_defined0 = new uint[3]; 
 	public uint[] PreDefined0 { get { return this.pre_defined0; } set { this.pre_defined0 = value; } }
 
 	protected ushort width; 
@@ -61,7 +81,7 @@ public partial class CanonRawSampleEntry : SampleEntry
 	protected ushort frame_count; 
 	public ushort FrameCount { get { return this.frame_count; } set { this.frame_count = value; } }
 
-	protected byte[] compressorname; 
+	protected byte[] compressorname = new byte[32]; 
 	public byte[] Compressorname { get { return this.compressorname; } set { this.compressorname = value; } }
 
 	protected ushort depth; 
@@ -149,26 +169,26 @@ public partial class CanonRawSampleEntry : SampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("pre_defined", 16, this.pre_defined); 
-		boxSize += builder.Field("reserved", 16, this.reserved); 
-		boxSize += builder.Field("pre_defined0", 3 * 32, this.pre_defined0); 
-		boxSize += builder.Field("width", 16, this.width); 
-		boxSize += builder.Field("height", 16, this.height); 
-		boxSize += builder.Field("horizresolution", 32, this.horizresolution); 
-		boxSize += builder.Field("vertresolution", 32, this.vertresolution); 
-		boxSize += builder.Field("reserved0", 32, this.reserved0); 
-		boxSize += builder.Field("frame_count", 16, this.frame_count); 
-		boxSize += builder.Field("compressorname", 32 * 8, this.compressorname); 
-		boxSize += builder.Field("depth", 16, this.depth); 
-		boxSize += builder.Field("pre_defined1", 16, this.pre_defined1); 
-		boxSize += builder.Field("imageType", 16, this.imageType); 
-		boxSize += builder.Field("imageFlags", 16, this.imageFlags); 
-		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("pre_defined", 16, this.pre_defined); 
+		boxSize += tracer.Field("reserved", 16, this.reserved); 
+		boxSize += tracer.Field("pre_defined0", 3 * 32, this.pre_defined0); 
+		boxSize += tracer.Field("width", 16, this.width); 
+		boxSize += tracer.Field("height", 16, this.height); 
+		boxSize += tracer.Field("horizresolution", 32, this.horizresolution); 
+		boxSize += tracer.Field("vertresolution", 32, this.vertresolution); 
+		boxSize += tracer.Field("reserved0", 32, this.reserved0); 
+		boxSize += tracer.Field("frame_count", 16, this.frame_count); 
+		boxSize += tracer.Field("compressorname", 32 * 8, this.compressorname); 
+		boxSize += tracer.Field("depth", 16, this.depth); 
+		boxSize += tracer.Field("pre_defined1", 16, this.pre_defined1); 
+		boxSize += tracer.Field("imageType", 16, this.imageType); 
+		boxSize += tracer.Field("imageFlags", 16, this.imageFlags); 
+		// boxSize += tracer.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

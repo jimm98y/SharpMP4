@@ -1875,6 +1875,10 @@ namespace SharpISOBMFF
 
         public ulong WriteUInt8ArrayTillEnd(StreamMarker data, string name)
         {
+            // of no bytes - of a box made, not read - there is no stream to copy of
+            if (data.Length == 0)
+                return 0;
+
             IsoStream readStream = data.Stream;
             long originalPosition = readStream.GetCurrentOffset();
             readStream.SeekFromBeginning(data.Position);

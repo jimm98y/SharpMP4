@@ -21,6 +21,14 @@ public partial class AC4BitrateDsi : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class AC4BitrateDsi() {
+ bit(2) bit_rate_mode;
+ bit(32) bit_rate;
+ bit(32) bit_rate_precision;
+}
+// a presentation of ac4_dsi_v1(): its version, and its pres_bytes (pres_bytes += add_pres_bytes). Version 1's content
+"; } }
 	public virtual string DisplayName { get { return "AC4BitrateDsi"; } }
 
 	protected byte bit_rate_mode; 
@@ -63,12 +71,12 @@ public partial class AC4BitrateDsi : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("bit_rate_mode", 2, this.bit_rate_mode); 
-		boxSize += builder.Field("bit_rate", 32, this.bit_rate); 
-		boxSize += builder.Field("bit_rate_precision", 32, this.bit_rate_precision); 
+		boxSize += tracer.Field("bit_rate_mode", 2, this.bit_rate_mode); 
+		boxSize += tracer.Field("bit_rate", 32, this.bit_rate); 
+		boxSize += tracer.Field("bit_rate_precision", 32, this.bit_rate_precision); 
 		return boxSize;
 	}
 }

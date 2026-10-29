@@ -23,6 +23,16 @@ public partial class HILNenexConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class HILNenexConfig()
+{
+  uimsbf(1) HILNenhaLayer;
+  if (HILNenhaLayer) {
+    uimsbf(2) HILNenhaQuantMode;
+  }
+}
+
+"; } }
 	public virtual string DisplayName { get { return "HILNenexConfig"; } }
 
 	protected bool HILNenhaLayer; 
@@ -71,14 +81,14 @@ public partial class HILNenexConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("HILNenhaLayer", 1, this.HILNenhaLayer); 
+		boxSize += tracer.Field("HILNenhaLayer", 1, this.HILNenhaLayer); 
 
 		if (HILNenhaLayer)
 		{
-			boxSize += builder.Field("HILNenhaQuantMode", 2, this.HILNenhaQuantMode); 
+			boxSize += tracer.Field("HILNenhaQuantMode", 2, this.HILNenhaQuantMode); 
 		}
 		return boxSize;
 	}

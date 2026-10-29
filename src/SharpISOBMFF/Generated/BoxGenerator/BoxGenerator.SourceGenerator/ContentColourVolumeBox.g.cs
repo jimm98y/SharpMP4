@@ -30,6 +30,28 @@ class ContentColourVolumeBox extends Box('cclv'){
 */
 public partial class ContentColourVolumeBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ContentColourVolumeBox extends Box('cclv'){
+	unsigned int(1) reserved1 = 0;	// ccv_cancel_flag
+	unsigned int(1) reserved2 = 0;	// ccv_persistence_flag
+	unsigned int(1) ccv_primaries_present_flag;
+	unsigned int(1) ccv_min_luminance_value_present_flag;
+	unsigned int(1) ccv_max_luminance_value_present_flag;
+	unsigned int(1) ccv_avg_luminance_value_present_flag;
+	unsigned int(2) ccv_reserved_zero_2bits = 0;
+	if( ccv_primaries_present_flag ) {
+		for( c = 0; c < 3; c++ ) {
+			signed int(32) ccv_primaries_x[ c ];
+			signed int(32) ccv_primaries_y[ c ];
+		}
+	}
+	if( ccv_min_luminance_value_present_flag )
+		unsigned int(32) ccv_min_luminance_value;
+	if( ccv_max_luminance_value_present_flag )
+ 		unsigned int(32) ccv_max_luminance_value;
+	if( ccv_avg_luminance_value_present_flag )
+ 		unsigned int(32) ccv_avg_luminance_value;
+}"; } }
 	public const string TYPE = "cclv";
 	public override string DisplayName { get { return "ContentColourVolumeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -195,41 +217,41 @@ public partial class ContentColourVolumeBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved1", 1, this.reserved1); // ccv_cancel_flag
-		boxSize += builder.Field("reserved2", 1, this.reserved2); // ccv_persistence_flag
-		boxSize += builder.Field("ccv_primaries_present_flag", 1, this.ccv_primaries_present_flag); 
-		boxSize += builder.Field("ccv_min_luminance_value_present_flag", 1, this.ccv_min_luminance_value_present_flag); 
-		boxSize += builder.Field("ccv_max_luminance_value_present_flag", 1, this.ccv_max_luminance_value_present_flag); 
-		boxSize += builder.Field("ccv_avg_luminance_value_present_flag", 1, this.ccv_avg_luminance_value_present_flag); 
-		boxSize += builder.Field("ccv_reserved_zero_2bits", 2, this.ccv_reserved_zero_2bits); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved1", 1, this.reserved1); // ccv_cancel_flag
+		boxSize += tracer.Field("reserved2", 1, this.reserved2); // ccv_persistence_flag
+		boxSize += tracer.Field("ccv_primaries_present_flag", 1, this.ccv_primaries_present_flag); 
+		boxSize += tracer.Field("ccv_min_luminance_value_present_flag", 1, this.ccv_min_luminance_value_present_flag); 
+		boxSize += tracer.Field("ccv_max_luminance_value_present_flag", 1, this.ccv_max_luminance_value_present_flag); 
+		boxSize += tracer.Field("ccv_avg_luminance_value_present_flag", 1, this.ccv_avg_luminance_value_present_flag); 
+		boxSize += tracer.Field("ccv_reserved_zero_2bits", 2, this.ccv_reserved_zero_2bits); 
 
 		if ( ccv_primaries_present_flag )
 		{
 
 			for (int  c = 0; c < 3; c++ )
 			{
-				boxSize += builder.Field($"ccv_primaries_x[{c}]", 32, this.ccv_primaries_x[ c ]); 
-				boxSize += builder.Field($"ccv_primaries_y[{c}]", 32, this.ccv_primaries_y[ c ]); 
+				boxSize += tracer.Field($"ccv_primaries_x[{c}]", 32, this.ccv_primaries_x[ c ]); 
+				boxSize += tracer.Field($"ccv_primaries_y[{c}]", 32, this.ccv_primaries_y[ c ]); 
 			}
 		}
 
 		if ( ccv_min_luminance_value_present_flag )
 		{
-			boxSize += builder.Field("ccv_min_luminance_value", 32, this.ccv_min_luminance_value); 
+			boxSize += tracer.Field("ccv_min_luminance_value", 32, this.ccv_min_luminance_value); 
 		}
 
 		if ( ccv_max_luminance_value_present_flag )
 		{
-			boxSize += builder.Field("ccv_max_luminance_value", 32, this.ccv_max_luminance_value); 
+			boxSize += tracer.Field("ccv_max_luminance_value", 32, this.ccv_max_luminance_value); 
 		}
 
 		if ( ccv_avg_luminance_value_present_flag )
 		{
-			boxSize += builder.Field("ccv_avg_luminance_value", 32, this.ccv_avg_luminance_value); 
+			boxSize += tracer.Field("ccv_avg_luminance_value", 32, this.ccv_avg_luminance_value); 
 		}
 		return boxSize;
 	}

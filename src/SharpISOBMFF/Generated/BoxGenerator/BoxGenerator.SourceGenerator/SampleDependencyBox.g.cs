@@ -18,6 +18,16 @@ aligned(8) class SampleDependencyBox
 */
 public partial class SampleDependencyBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SampleDependencyBox 
+	extends FullBox('sdep', version = 0, 0) {
+	for (i=0; i < sample_count; i++){
+		unsigned int(16) dependency_count;
+		for (k=0; k < dependency_count; k++) {
+			signed int(16) relative_sample_number;
+		}
+	}
+}"; } }
 	public const string TYPE = "sdep";
 	public override string DisplayName { get { return "SampleDependencyBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -94,20 +104,20 @@ public partial class SampleDependencyBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		int sample_count = 0; // TODO: taken from the stsz sample_count
 
 
 		for (int i=0; i < sample_count; i++)
 		{
-			boxSize += builder.Field($"dependency_count[{i}]", 16, this.dependency_count[i]); 
+			boxSize += tracer.Field($"dependency_count[{i}]", 16, this.dependency_count[i]); 
 
 			for (int k=0; k < dependency_count[i]; k++)
 			{
-				boxSize += builder.Field($"relative_sample_number[{i}][{k}]", 16, this.relative_sample_number[i][k]); 
+				boxSize += tracer.Field($"relative_sample_number[{i}][{k}]", 16, this.relative_sample_number[i][k]); 
 			}
 		}
 		return boxSize;

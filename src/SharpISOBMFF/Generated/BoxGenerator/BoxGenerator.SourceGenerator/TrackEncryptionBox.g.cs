@@ -31,6 +31,29 @@ aligned(8) class TrackEncryptionBox() extends FullBox('tenc', version, flags = 0
 */
 public partial class TrackEncryptionBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// ISO/IEC 23001-7:2023 DAM 1 (MPEG w25903, 2026-01, a draft): version 2's use_AES_256, whether the key is of 256 bits
+aligned(8) class TrackEncryptionBox() extends FullBox('tenc', version, flags = 0) {
+ unsigned int(8) reserved = 0;
+ if (version == 0) {
+  unsigned int(8) reserved = 0;
+ }
+ else {
+  unsigned int(4) default_crypt_byte_block;
+  unsigned int(4) default_skip_byte_block;
+  if (version >= 2) {
+   unsigned int(1) use_AES_256;
+   unsigned int(7) reserved1 = 0;
+  }
+ }
+ unsigned int(8) default_isProtected;
+ unsigned int(8) default_Per_Sample_IV_Size;
+ unsigned int(8) default_KID[16];
+ if (default_isProtected == 1 && default_Per_Sample_IV_Size == 0) {
+  unsigned int(8) defaultConstantIVSize;
+  unsigned int(8) defaultConstantIV[defaultConstantIVSize];
+ }
+ } "; } }
 	public const string TYPE = "tenc";
 	public override string DisplayName { get { return "TrackEncryptionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -61,13 +84,13 @@ public partial class TrackEncryptionBox : FullBox
 	protected byte default_Per_Sample_IV_Size; 
 	public byte DefaultPerSampleIVSize { get { return this.default_Per_Sample_IV_Size; } set { this.default_Per_Sample_IV_Size = value; } }
 
-	protected byte[] default_KID; 
+	protected byte[] default_KID = new byte[16]; 
 	public byte[] DefaultKID { get { return this.default_KID; } set { this.default_KID = value; } }
 
 	protected byte defaultConstantIVSize; 
 	public byte DefaultConstantIVSize { get { return this.defaultConstantIVSize; } set { this.defaultConstantIVSize = value; } }
 
-	protected byte[] defaultConstantIV; 
+	protected byte[] defaultConstantIV = []; 
 	public byte[] DefaultConstantIV { get { return this.defaultConstantIV; } set { this.defaultConstantIV = value; } }
 
 	public TrackEncryptionBox(byte version = 0): base(IsoStream.FromFourCC("tenc"), version, 0)
@@ -176,36 +199,36 @@ public partial class TrackEncryptionBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 8, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 8, this.reserved); 
 
 		if (version == 0)
 		{
-			boxSize += builder.Field("reserved0", 8, this.reserved0); 
+			boxSize += tracer.Field("reserved0", 8, this.reserved0); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("default_crypt_byte_block", 4, this.default_crypt_byte_block); 
-			boxSize += builder.Field("default_skip_byte_block", 4, this.default_skip_byte_block); 
+			boxSize += tracer.Field("default_crypt_byte_block", 4, this.default_crypt_byte_block); 
+			boxSize += tracer.Field("default_skip_byte_block", 4, this.default_skip_byte_block); 
 
 			if (version >= 2)
 			{
-				boxSize += builder.Field("use_AES_256", 1, this.use_AES_256); 
-				boxSize += builder.Field("reserved1", 7, this.reserved1); 
+				boxSize += tracer.Field("use_AES_256", 1, this.use_AES_256); 
+				boxSize += tracer.Field("reserved1", 7, this.reserved1); 
 			}
 		}
-		boxSize += builder.Field("default_isProtected", 8, this.default_isProtected); 
-		boxSize += builder.Field("default_Per_Sample_IV_Size", 8, this.default_Per_Sample_IV_Size); 
-		boxSize += builder.Field("default_KID", 16 * 8, this.default_KID); 
+		boxSize += tracer.Field("default_isProtected", 8, this.default_isProtected); 
+		boxSize += tracer.Field("default_Per_Sample_IV_Size", 8, this.default_Per_Sample_IV_Size); 
+		boxSize += tracer.Field("default_KID", 16 * 8, this.default_KID); 
 
 		if (default_isProtected == 1 && default_Per_Sample_IV_Size == 0)
 		{
-			boxSize += builder.Field("defaultConstantIVSize", 8, this.defaultConstantIVSize); 
-			boxSize += builder.Field("defaultConstantIV", ((ulong)(defaultConstantIVSize) * 8), this.defaultConstantIV); 
+			boxSize += tracer.Field("defaultConstantIVSize", 8, this.defaultConstantIVSize); 
+			boxSize += tracer.Field("defaultConstantIV", ((ulong)(defaultConstantIVSize) * 8), this.defaultConstantIV); 
 		}
 		return boxSize;
 	}

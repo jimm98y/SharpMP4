@@ -14,6 +14,12 @@ class SVCPriorityAssignmentBox extends Box('svcP')
 */
 public partial class SVCPriorityAssignmentBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class SVCPriorityAssignmentBox extends Box('svcP')
+{
+	unsigned int(8)	method_count;
+	string PriorityAssignmentURI[method_count]; 
+}"; } }
 	public const string TYPE = "svcP";
 	public override string DisplayName { get { return "SVCPriorityAssignmentBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -23,7 +29,7 @@ public partial class SVCPriorityAssignmentBox : Box
 	protected byte method_count; 
 	public byte MethodCount { get { return this.method_count; } set { this.method_count = value; } }
 
-	protected BinaryUTF8String[] PriorityAssignmentURI; 
+	protected BinaryUTF8String[] PriorityAssignmentURI = []; 
 	public BinaryUTF8String[] _PriorityAssignmentURI { get { return this.PriorityAssignmentURI; } set { this.PriorityAssignmentURI = value; } }
 
 	public SVCPriorityAssignmentBox(): base(IsoStream.FromFourCC("svcP"))
@@ -57,12 +63,12 @@ public partial class SVCPriorityAssignmentBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("method_count", 8, this.method_count); 
-		boxSize += builder.Field("PriorityAssignmentURI", IsoStream.CalculateStringSize(PriorityAssignmentURI), this.PriorityAssignmentURI); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("method_count", 8, this.method_count); 
+		boxSize += tracer.Field("PriorityAssignmentURI", IsoStream.CalculateStringSize(PriorityAssignmentURI), this.PriorityAssignmentURI); 
 		return boxSize;
 	}
 }

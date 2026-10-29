@@ -12,6 +12,10 @@ aligned(8) class AppleHintVersionBox() extends Box('hinv') {
 */
 public partial class AppleHintVersionBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AppleHintVersionBox() extends Box('hinv') {
+ string version;
+ } "; } }
 	public const string TYPE = "hinv";
 	public override string DisplayName { get { return "AppleHintVersionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class AppleHintVersionBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("version", IsoStream.CalculateStringSize(version), this.version); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("version", IsoStream.CalculateStringSize(version), this.version); 
 		return boxSize;
 	}
 }

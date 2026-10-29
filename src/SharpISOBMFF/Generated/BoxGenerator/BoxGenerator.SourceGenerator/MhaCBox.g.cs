@@ -17,6 +17,15 @@ aligned(8) class MhaCBox() extends Box('mhaC') {
 */
 public partial class MhaCBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// MPEG-H 3D Audio's configuration, as GPAC's mhac_box_read and FFmpeg's mov_read_mhac read it
+aligned(8) class MhaCBox() extends Box('mhaC') {
+	unsigned int(8) configurationVersion = 1;
+	unsigned int(8) mpegh3daProfileLevelIndication;
+	unsigned int(8) referenceChannelLayout;
+	unsigned int(16) mpegh3daConfigLength;
+	bit(8*mpegh3daConfigLength) mpegh3daConfig;
+}"; } }
 	public const string TYPE = "mhaC";
 	public override string DisplayName { get { return "MhaCBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -35,7 +44,7 @@ public partial class MhaCBox : Box
 	protected ushort mpegh3daConfigLength; 
 	public ushort Mpegh3daConfigLength { get { return this.mpegh3daConfigLength; } set { this.mpegh3daConfigLength = value; } }
 
-	protected byte[] mpegh3daConfig; 
+	protected byte[] mpegh3daConfig = []; 
 	public byte[] Mpegh3daConfig { get { return this.mpegh3daConfig; } set { this.mpegh3daConfig = value; } }
 
 	public MhaCBox(): base(IsoStream.FromFourCC("mhaC"))
@@ -78,15 +87,15 @@ public partial class MhaCBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("configurationVersion", 8, this.configurationVersion); 
-		boxSize += builder.Field("mpegh3daProfileLevelIndication", 8, this.mpegh3daProfileLevelIndication); 
-		boxSize += builder.Field("referenceChannelLayout", 8, this.referenceChannelLayout); 
-		boxSize += builder.Field("mpegh3daConfigLength", 16, this.mpegh3daConfigLength); 
-		boxSize += builder.Field("mpegh3daConfig", (ulong)(8*mpegh3daConfigLength ), this.mpegh3daConfig); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("configurationVersion", 8, this.configurationVersion); 
+		boxSize += tracer.Field("mpegh3daProfileLevelIndication", 8, this.mpegh3daProfileLevelIndication); 
+		boxSize += tracer.Field("referenceChannelLayout", 8, this.referenceChannelLayout); 
+		boxSize += tracer.Field("mpegh3daConfigLength", 16, this.mpegh3daConfigLength); 
+		boxSize += tracer.Field("mpegh3daConfig", (ulong)(8*mpegh3daConfigLength ), this.mpegh3daConfig); 
 		return boxSize;
 	}
 }

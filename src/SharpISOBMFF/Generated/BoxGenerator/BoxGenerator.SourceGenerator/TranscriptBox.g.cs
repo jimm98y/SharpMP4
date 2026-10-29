@@ -13,13 +13,18 @@ class TranscriptBox() extends Box ('scpt'){
 */
 public partial class TranscriptBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class TranscriptBox() extends Box ('scpt'){
+ // a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to
+ unsigned int(32) track_IDs[];
+ }"; } }
 	public const string TYPE = "scpt";
 	public override string DisplayName { get { return "TranscriptBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("tref"); }
 
 
-	protected uint[] track_IDs; 
+	protected uint[] track_IDs = []; 
 	public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
 
 	public TranscriptBox(): base(IsoStream.FromFourCC("scpt"))
@@ -53,12 +58,12 @@ public partial class TranscriptBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		/*  a track reference (ISO/IEC 14496-12 8.3.3, QuickTime): the IDs of the tracks referred to */
-		boxSize += builder.Field("track_IDs", ((ulong)track_IDs.Length * 32), this.track_IDs); 
+		boxSize += tracer.Field("track_IDs", ((ulong)track_IDs.Length * 32), this.track_IDs); 
 		return boxSize;
 	}
 }

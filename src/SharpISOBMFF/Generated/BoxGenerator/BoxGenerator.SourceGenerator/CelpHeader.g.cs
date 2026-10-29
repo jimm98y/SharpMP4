@@ -30,6 +30,23 @@ public partial class CelpHeader : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class CelpHeader(samplingFrequencyIndex)
+{
+  uimsbf(1) ExcitationMode;
+  uimsbf(1) SampleRateMode;
+  uimsbf(1) FineRateControl;
+  if (ExcitationMode == RPE) {
+    uimsbf(3) RPE_Configuration;
+  }
+  if (ExcitationMode == MPE) {
+    uimsbf(5) MPE_Configuration;
+    uimsbf(2) NumEnhLayers;
+    uimsbf(1) BandwidthScalabilityMode;
+  }
+}
+
+"; } }
 	public virtual string DisplayName { get { return "CelpHeader"; } }
 
 	protected bool ExcitationMode; 
@@ -132,27 +149,27 @@ public partial class CelpHeader : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
 		const bool RPE = true;
 
 		const bool MPE = false;
 
-		boxSize += builder.Field("ExcitationMode", 1, this.ExcitationMode); 
-		boxSize += builder.Field("SampleRateMode", 1, this.SampleRateMode); 
-		boxSize += builder.Field("FineRateControl", 1, this.FineRateControl); 
+		boxSize += tracer.Field("ExcitationMode", 1, this.ExcitationMode); 
+		boxSize += tracer.Field("SampleRateMode", 1, this.SampleRateMode); 
+		boxSize += tracer.Field("FineRateControl", 1, this.FineRateControl); 
 
 		if (ExcitationMode == RPE)
 		{
-			boxSize += builder.Field("RPE_Configuration", 3, this.RPE_Configuration); 
+			boxSize += tracer.Field("RPE_Configuration", 3, this.RPE_Configuration); 
 		}
 
 		if (ExcitationMode == MPE)
 		{
-			boxSize += builder.Field("MPE_Configuration", 5, this.MPE_Configuration); 
-			boxSize += builder.Field("NumEnhLayers", 2, this.NumEnhLayers); 
-			boxSize += builder.Field("BandwidthScalabilityMode", 1, this.BandwidthScalabilityMode); 
+			boxSize += tracer.Field("MPE_Configuration", 5, this.MPE_Configuration); 
+			boxSize += tracer.Field("NumEnhLayers", 2, this.NumEnhLayers); 
+			boxSize += tracer.Field("BandwidthScalabilityMode", 1, this.BandwidthScalabilityMode); 
 		}
 		return boxSize;
 	}

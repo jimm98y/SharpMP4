@@ -14,6 +14,12 @@ aligned(8) class MicrosoftWindowsVersionBox() extends Box('uuid 5ca708fb328e4205
 */
 public partial class MicrosoftWindowsVersionBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MicrosoftWindowsVersionBox() extends Box('uuid 5ca708fb328e4205a861650eca0a9596') {
+	 unsigned int(16) unknown1;
+ unsigned int(16) count;
+ char version[count];
+ }"; } }
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "MicrosoftWindowsVersionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -26,7 +32,7 @@ public partial class MicrosoftWindowsVersionBox : Box
 	protected ushort count; 
 	public ushort Count { get { return this.count; } set { this.count = value; } }
 
-	protected byte[] version; 
+	protected byte[] version = []; 
 	public byte[] Version { get { return this.version; } set { this.version = value; } }
 
 	public MicrosoftWindowsVersionBox(): base(IsoStream.FromFourCC("uuid"), ConvertEx.FromHexString("5ca708fb328e4205a861650eca0a9596"))
@@ -63,13 +69,13 @@ public partial class MicrosoftWindowsVersionBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("unknown1", 16, this.unknown1); 
-		boxSize += builder.Field("count", 16, this.count); 
-		boxSize += builder.Field("version", ((ulong)(count) * 8), this.version); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("unknown1", 16, this.unknown1); 
+		boxSize += tracer.Field("count", 16, this.count); 
+		boxSize += tracer.Field("version", ((ulong)(count) * 8), this.version); 
 		return boxSize;
 	}
 }

@@ -13,6 +13,11 @@ aligned(8) class OMAContentObjectBox() extends FullBox('odda') {
 */
 public partial class OMAContentObjectBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class OMAContentObjectBox() extends FullBox('odda') {
+	 unsigned int(32) count;
+ unsigned int(8) data[count];
+ } "; } }
 	public const string TYPE = "odda";
 	public override string DisplayName { get { return "OMAContentObjectBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -22,7 +27,7 @@ public partial class OMAContentObjectBox : FullBox
 	protected uint count; 
 	public uint Count { get { return this.count; } set { this.count = value; } }
 
-	protected byte[] data; 
+	protected byte[] data = []; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public OMAContentObjectBox(): base(IsoStream.FromFourCC("odda"))
@@ -56,12 +61,12 @@ public partial class OMAContentObjectBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("count", 32, this.count); 
-		boxSize += builder.Field("data", ((ulong)(count) * 8), this.data); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("count", 32, this.count); 
+		boxSize += tracer.Field("data", ((ulong)(count) * 8), this.data); 
 		return boxSize;
 	}
 }

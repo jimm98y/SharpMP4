@@ -17,6 +17,15 @@ aligned(8) class TfxdBox() extends FullBox('uuid 6d1d9b0542d544e680e2141daff757b
 */
 public partial class TfxdBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TfxdBox() extends FullBox('uuid 6d1d9b0542d544e680e2141daff757b2') {
+	 if(version == 0x1) {
+ unsigned int(64) fragmentAbsoluteTime;
+ unsigned int(64) fragmentAbsoluteDuration;
+ } else {
+ unsigned int(32) fragmentAbsoluteTime;
+ unsigned int(32) fragmentAbsoluteDuration;
+ } }"; } }
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "TfxdBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -90,21 +99,21 @@ public partial class TfxdBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if (version == 0x1)
 		{
-			boxSize += builder.Field("fragmentAbsoluteTime", 64, this.fragmentAbsoluteTime); 
-			boxSize += builder.Field("fragmentAbsoluteDuration", 64, this.fragmentAbsoluteDuration); 
+			boxSize += tracer.Field("fragmentAbsoluteTime", 64, this.fragmentAbsoluteTime); 
+			boxSize += tracer.Field("fragmentAbsoluteDuration", 64, this.fragmentAbsoluteDuration); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("fragmentAbsoluteTime", 32, this.fragmentAbsoluteTime); 
-			boxSize += builder.Field("fragmentAbsoluteDuration", 32, this.fragmentAbsoluteDuration); 
+			boxSize += tracer.Field("fragmentAbsoluteTime", 32, this.fragmentAbsoluteTime); 
+			boxSize += tracer.Field("fragmentAbsoluteDuration", 32, this.fragmentAbsoluteDuration); 
 		}
 		return boxSize;
 	}

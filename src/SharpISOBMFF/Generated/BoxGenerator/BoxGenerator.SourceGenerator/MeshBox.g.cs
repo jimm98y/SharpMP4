@@ -39,6 +39,37 @@ aligned(8) class MeshBox extends Box('mesh') {
 */
 public partial class MeshBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MeshBox extends Box('mesh') {
+    const unsigned int(1) reserved = 0;
+    unsigned int(31) coordinate_count;
+     for (i = 0; i < coordinate_count; i++) {
+      float(32) coordinate;
+    }
+    const unsigned int(1) reserved = 0;
+    unsigned int(31) vertex_count;
+    for (i = 0; i < vertex_count; i++) {
+      unsigned int(ceil(log2(coordinate_count * 2))) x_index_delta;
+      unsigned int(ceil(log2(coordinate_count * 2))) y_index_delta;
+      unsigned int(ceil(log2(coordinate_count * 2))) z_index_delta;
+      unsigned int(ceil(log2(coordinate_count * 2))) u_index_delta;
+      unsigned int(ceil(log2(coordinate_count * 2))) v_index_delta;
+    }
+    const unsigned int(1) mesh_padding;
+
+    const unsigned int(1) reserved = 0;
+    unsigned int(31) vertex_list_count;
+    for (i = 0; i < vertex_list_count; i++) {
+      unsigned int(8) texture_id;
+      unsigned int(8) index_type;
+      const unsigned int(1) reserved = 0;
+      unsigned int(31) index_count;
+      for (j = 0; j < index_count; j++) {
+        unsigned int(ceil(log2(vertex_count * 2))) index_as_delta;
+      }
+      const unsigned int(1) mesh_padding2;
+    }
+}"; } }
 	public const string TYPE = "mesh";
 	public override string DisplayName { get { return "MeshBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -245,44 +276,44 @@ public partial class MeshBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 1, this.reserved); 
-		boxSize += builder.Field("coordinate_count", 31, this.coordinate_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 1, this.reserved); 
+		boxSize += tracer.Field("coordinate_count", 31, this.coordinate_count); 
 
 		for (int i = 0; i < coordinate_count; i++)
 		{
-			boxSize += builder.Field($"coordinate[{i}]", 32, this.coordinate[i]); 
+			boxSize += tracer.Field($"coordinate[{i}]", 32, this.coordinate[i]); 
 		}
-		boxSize += builder.Field("reserved0", 1, this.reserved0); 
-		boxSize += builder.Field("vertex_count", 31, this.vertex_count); 
+		boxSize += tracer.Field("reserved0", 1, this.reserved0); 
+		boxSize += tracer.Field("vertex_count", 31, this.vertex_count); 
 
 		for (int i = 0; i < vertex_count; i++)
 		{
-			boxSize += builder.Field($"x_index_delta[{i}]", (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ), this.x_index_delta[i]); 
-			boxSize += builder.Field($"y_index_delta[{i}]", (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ), this.y_index_delta[i]); 
-			boxSize += builder.Field($"z_index_delta[{i}]", (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ), this.z_index_delta[i]); 
-			boxSize += builder.Field($"u_index_delta[{i}]", (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ), this.u_index_delta[i]); 
-			boxSize += builder.Field($"v_index_delta[{i}]", (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ), this.v_index_delta[i]); 
+			boxSize += tracer.Field($"x_index_delta[{i}]", (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ), this.x_index_delta[i]); 
+			boxSize += tracer.Field($"y_index_delta[{i}]", (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ), this.y_index_delta[i]); 
+			boxSize += tracer.Field($"z_index_delta[{i}]", (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ), this.z_index_delta[i]); 
+			boxSize += tracer.Field($"u_index_delta[{i}]", (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ), this.u_index_delta[i]); 
+			boxSize += tracer.Field($"v_index_delta[{i}]", (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ), this.v_index_delta[i]); 
 		}
-		boxSize += builder.Field("mesh_padding", 1, this.mesh_padding); 
-		boxSize += builder.Field("reserved1", 1, this.reserved1); 
-		boxSize += builder.Field("vertex_list_count", 31, this.vertex_list_count); 
+		boxSize += tracer.Field("mesh_padding", 1, this.mesh_padding); 
+		boxSize += tracer.Field("reserved1", 1, this.reserved1); 
+		boxSize += tracer.Field("vertex_list_count", 31, this.vertex_list_count); 
 
 		for (int i = 0; i < vertex_list_count; i++)
 		{
-			boxSize += builder.Field($"texture_id[{i}]", 8, this.texture_id[i]); 
-			boxSize += builder.Field($"index_type[{i}]", 8, this.index_type[i]); 
-			boxSize += builder.Field($"reserved2[{i}]", 1, this.reserved2[i]); 
-			boxSize += builder.Field($"index_count[{i}]", 31, this.index_count[i]); 
+			boxSize += tracer.Field($"texture_id[{i}]", 8, this.texture_id[i]); 
+			boxSize += tracer.Field($"index_type[{i}]", 8, this.index_type[i]); 
+			boxSize += tracer.Field($"reserved2[{i}]", 1, this.reserved2[i]); 
+			boxSize += tracer.Field($"index_count[{i}]", 31, this.index_count[i]); 
 
 			for (int j = 0; j < index_count[i]; j++)
 			{
-				boxSize += builder.Field($"index_as_delta[{i}][{j}]", (ulong)(Math.Ceiling(MathEx.Log2(vertex_count * 2)) ), this.index_as_delta[i][j]); 
+				boxSize += tracer.Field($"index_as_delta[{i}][{j}]", (ulong)(Math.Ceiling(MathEx.Log2(vertex_count * 2)) ), this.index_as_delta[i][j]); 
 			}
-			boxSize += builder.Field($"mesh_padding2[{i}]", 1, this.mesh_padding2[i]); 
+			boxSize += tracer.Field($"mesh_padding2[{i}]", 1, this.mesh_padding2[i]); 
 		}
 		return boxSize;
 	}

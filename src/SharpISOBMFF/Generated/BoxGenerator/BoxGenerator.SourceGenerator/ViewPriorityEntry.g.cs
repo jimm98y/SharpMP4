@@ -13,6 +13,11 @@ class ViewPriorityEntry() extends VisualSampleGroupEntry ('vipr')
 */
 public partial class ViewPriorityEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ViewPriorityEntry() extends VisualSampleGroupEntry ('vipr')
+{
+	ViewPriorityBox();
+}"; } }
 	public const string TYPE = "vipr";
 	public override string DisplayName { get { return "ViewPriorityEntry"; } }
 	public ViewPriorityBox _ViewPriorityBox { get { return this.children.OfType<ViewPriorityBox>().FirstOrDefault(); } }
@@ -48,12 +53,12 @@ public partial class ViewPriorityEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("ViewPriorityBox", IsoStream.CalculateBoxSize(ViewPriorityBox), this.ViewPriorityBox); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("ViewPriorityBox", IsoStream.CalculateBoxSize(ViewPriorityBox), this.ViewPriorityBox); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

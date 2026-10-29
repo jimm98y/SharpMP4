@@ -13,6 +13,11 @@ class QoS_Qualifier_LOSS_PROB extends QoS_Qualifier : bit(8) tag=0x03 {
 */
 public partial class QoS_Qualifier_LOSS_PROB : QoS_Qualifier
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class QoS_Qualifier_LOSS_PROB extends QoS_Qualifier : bit(8) tag=0x03 {
+ double(32) LOSS_PROB;
+ }
+ "; } }
 	public const byte TYPE = 0x03;
 	public override string DisplayName { get { return "QoS_Qualifier_LOSS_PROB"; } }
 
@@ -47,11 +52,11 @@ public partial class QoS_Qualifier_LOSS_PROB : QoS_Qualifier
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("LOSS_PROB", 32, this.LOSS_PROB); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("LOSS_PROB", 32, this.LOSS_PROB); 
 		return boxSize;
 	}
 }

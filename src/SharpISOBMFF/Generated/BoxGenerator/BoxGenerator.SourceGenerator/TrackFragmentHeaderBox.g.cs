@@ -30,6 +30,28 @@ aligned(8) class TrackFragmentHeaderBox
 */
 public partial class TrackFragmentHeaderBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TrackFragmentHeaderBox
+                extends FullBox('tfhd', 0, tf_flags){
+        unsigned int(32)	track_ID;
+        // all the following are optional fields
+        // their presence is indicated by bits in the tf_flags
+        if (flags & 0x1) {
+           unsigned int(64)	base_data_offset;
+        }
+        if (flags & 0x2) {
+           unsigned int(32)	sample_description_index;
+        }
+        if (flags & 0x8) {
+           unsigned int(32)	default_sample_duration;
+        }
+        if (flags & 0x10) {
+           unsigned int(32)	default_sample_size;
+        }
+        if (flags & 0x20) {
+           unsigned int(32)	default_sample_flags;
+        }
+    }"; } }
 	public const string TYPE = "tfhd";
 	public override string DisplayName { get { return "TrackFragmentHeaderBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -162,36 +184,36 @@ public partial class TrackFragmentHeaderBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		if (this.track_IDPresent) boxSize += builder.Field("track_ID", 32, this.track_ID); // all the following are optional fields
+		boxSize += base.Trace(tracer);
+		if (this.track_IDPresent) boxSize += tracer.Field("track_ID", 32, this.track_ID); // all the following are optional fields
 		/*  their presence is indicated by bits in the tf_flags */
 
 		if ((flags  &  0x1) ==  0x1)
 		{
-			boxSize += builder.Field("base_data_offset", 64, this.base_data_offset); 
+			boxSize += tracer.Field("base_data_offset", 64, this.base_data_offset); 
 		}
 
 		if ((flags  &  0x2) ==  0x2)
 		{
-			boxSize += builder.Field("sample_description_index", 32, this.sample_description_index); 
+			boxSize += tracer.Field("sample_description_index", 32, this.sample_description_index); 
 		}
 
 		if ((flags  &  0x8) ==  0x8)
 		{
-			boxSize += builder.Field("default_sample_duration", 32, this.default_sample_duration); 
+			boxSize += tracer.Field("default_sample_duration", 32, this.default_sample_duration); 
 		}
 
 		if ((flags  &  0x10) ==  0x10)
 		{
-			boxSize += builder.Field("default_sample_size", 32, this.default_sample_size); 
+			boxSize += tracer.Field("default_sample_size", 32, this.default_sample_size); 
 		}
 
 		if ((flags  &  0x20) ==  0x20)
 		{
-			boxSize += builder.Field("default_sample_flags", 32, this.default_sample_flags); 
+			boxSize += tracer.Field("default_sample_flags", 32, this.default_sample_flags); 
 		}
 		return boxSize;
 	}

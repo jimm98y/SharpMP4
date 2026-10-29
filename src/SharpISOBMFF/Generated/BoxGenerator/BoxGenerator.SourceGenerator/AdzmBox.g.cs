@@ -13,13 +13,18 @@ aligned(8) class AdzmBox() extends Box('adzm') {
 */
 public partial class AdzmBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AdzmBox() extends Box('adzm') {
+ MultiLanguageString value[];
+}
+"; } }
 	public const string TYPE = "adzm";
 	public override string DisplayName { get { return "AdzmBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
 
 
-	protected MultiLanguageString[] value; 
+	protected MultiLanguageString[] value = []; 
 	public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
 
 	public AdzmBox(): base(IsoStream.FromFourCC("adzm"))
@@ -50,11 +55,11 @@ public partial class AdzmBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("value", IsoStream.CalculateStringSizeLangPrefixed(value), this.value); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("value", IsoStream.CalculateStringSizeLangPrefixed(value), this.value); 
 		return boxSize;
 	}
 }

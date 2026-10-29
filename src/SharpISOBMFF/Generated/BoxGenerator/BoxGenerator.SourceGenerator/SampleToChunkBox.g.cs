@@ -18,6 +18,16 @@ aligned(8) class SampleToChunkBox
 */
 public partial class SampleToChunkBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SampleToChunkBox
+	extends FullBox('stsc', version = 0, 0) {
+	unsigned int(32)	entry_count;
+	for (i=1; i <= entry_count; i++) {
+		unsigned int(32)	first_chunk;
+		unsigned int(32)	samples_per_chunk;
+		unsigned int(32)	sample_description_index;
+	}
+}"; } }
 	public const string TYPE = "stsc";
 	public override string DisplayName { get { return "SampleToChunkBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -88,17 +98,17 @@ public partial class SampleToChunkBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entry_count", 32, this.entry_count); 
 
 		for (int i=0; i < entry_count; i++)
 		{
-			boxSize += builder.Field($"first_chunk[{i}]", 32, this.first_chunk[i]); 
-			boxSize += builder.Field($"samples_per_chunk[{i}]", 32, this.samples_per_chunk[i]); 
-			boxSize += builder.Field($"sample_description_index[{i}]", 32, this.sample_description_index[i]); 
+			boxSize += tracer.Field($"first_chunk[{i}]", 32, this.first_chunk[i]); 
+			boxSize += tracer.Field($"samples_per_chunk[{i}]", 32, this.samples_per_chunk[i]); 
+			boxSize += tracer.Field($"sample_description_index[{i}]", 32, this.sample_description_index[i]); 
 		}
 		return boxSize;
 	}

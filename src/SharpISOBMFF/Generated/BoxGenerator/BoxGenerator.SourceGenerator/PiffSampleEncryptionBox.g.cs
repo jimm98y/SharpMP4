@@ -19,6 +19,17 @@ aligned(8) class PiffSampleEncryptionBox() extends FullBox('uuid a2394f525a9b4f1
 */
 public partial class PiffSampleEncryptionBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class PiffSampleEncryptionBox() extends FullBox('uuid a2394f525a9b4f14a2446c427c648df4', version, flags) 
+{
+ if(flags & 0x1) {
+ unsigned int(24) algorithmID;
+ unsigned int(8) Per_Sample_IV_Size;
+ unsigned int(8) kid[16];
+ }
+  unsigned int(32)  sample_count;
+   unsigned int(8) sample_data[]; // each sample's IV and subsamples, the IV of the size above where the flags give one, else of the track's
+}"; } }
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "PiffSampleEncryptionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -31,13 +42,13 @@ public partial class PiffSampleEncryptionBox : FullBox
 	protected byte Per_Sample_IV_Size; 
 	public byte PerSampleIVSize { get { return this.Per_Sample_IV_Size; } set { this.Per_Sample_IV_Size = value; } }
 
-	protected byte[] kid; 
+	protected byte[] kid = new byte[16]; 
 	public byte[] Kid { get { return this.kid; } set { this.kid = value; } }
 
 	protected uint sample_count; 
 	public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
 
-	protected byte[] sample_data;  //  each sample's IV and subsamples, the IV of the size above where the flags give one, else of the track's
+	protected byte[] sample_data = [];  //  each sample's IV and subsamples, the IV of the size above where the flags give one, else of the track's
 	public byte[] SampleData { get { return this.sample_data; } set { this.sample_data = value; } }
 
 	public PiffSampleEncryptionBox(byte version = 0, uint flags = 0): base(IsoStream.FromFourCC("uuid"), version, flags)
@@ -93,19 +104,19 @@ public partial class PiffSampleEncryptionBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if ((flags  &  0x1) ==  0x1)
 		{
-			boxSize += builder.Field("algorithmID", 24, this.algorithmID); 
-			boxSize += builder.Field("Per_Sample_IV_Size", 8, this.Per_Sample_IV_Size); 
-			boxSize += builder.Field("kid", 16 * 8, this.kid); 
+			boxSize += tracer.Field("algorithmID", 24, this.algorithmID); 
+			boxSize += tracer.Field("Per_Sample_IV_Size", 8, this.Per_Sample_IV_Size); 
+			boxSize += tracer.Field("kid", 16 * 8, this.kid); 
 		}
-		boxSize += builder.Field("sample_count", 32, this.sample_count); 
-		boxSize += builder.Field("sample_data", ((ulong)sample_data.Length * 8), this.sample_data); // each sample's IV and subsamples, the IV of the size above where the flags give one, else of the track's
+		boxSize += tracer.Field("sample_count", 32, this.sample_count); 
+		boxSize += tracer.Field("sample_data", ((ulong)sample_data.Length * 8), this.sample_data); // each sample's IV and subsamples, the IV of the size above where the flags give one, else of the track's
 		return boxSize;
 	}
 }

@@ -12,6 +12,10 @@ class ReceivedSsrcBox extends Box('rssr') {
 */
 public partial class ReceivedSsrcBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ReceivedSsrcBox extends Box('rssr') {
+	unsigned int(32)	SSRC
+}"; } }
 	public const string TYPE = "rssr";
 	public override string DisplayName { get { return "ReceivedSsrcBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class ReceivedSsrcBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("SSRC", 32, this.SSRC); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("SSRC", 32, this.SSRC); 
 		return boxSize;
 	}
 }

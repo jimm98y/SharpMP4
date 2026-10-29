@@ -19,6 +19,12 @@ public partial class J2kComponentMapping : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class J2kComponentMapping() {
+ unsigned int(16) component;
+ unsigned int(8) mapping_type;
+ unsigned int(8) palette_column;
+ } "; } }
 	public virtual string DisplayName { get { return "J2kComponentMapping"; } }
 
 	protected ushort component; 
@@ -61,12 +67,12 @@ public partial class J2kComponentMapping : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("component", 16, this.component); 
-		boxSize += builder.Field("mapping_type", 8, this.mapping_type); 
-		boxSize += builder.Field("palette_column", 8, this.palette_column); 
+		boxSize += tracer.Field("component", 16, this.component); 
+		boxSize += tracer.Field("mapping_type", 8, this.mapping_type); 
+		boxSize += tracer.Field("palette_column", 8, this.palette_column); 
 		return boxSize;
 	}
 }

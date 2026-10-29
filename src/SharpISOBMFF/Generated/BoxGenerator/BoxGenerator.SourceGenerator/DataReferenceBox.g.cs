@@ -16,6 +16,14 @@ aligned(8) class DataReferenceBox
 */
 public partial class DataReferenceBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class DataReferenceBox
+	extends FullBox('dref', version = 0, 0) {
+	unsigned int(32)	entry_count;
+	for (i=1; i <= entry_count; i++) {
+		DataEntryBaseBox(entry_type, entry_flags)	data_entry;
+	}
+}"; } }
 	public const string TYPE = "dref";
 	public override string DisplayName { get { return "DataReferenceBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -66,15 +74,15 @@ public partial class DataReferenceBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entry_count", 32, this.entry_count); 
 
 		// for (int i=0; i < entry_count; i++)
-			// boxSize += builder.Field($"data_entry[{i}]", IsoStream.CalculateBoxSize(data_entry[i]), this.data_entry[i]); 
-		boxSize += builder.Children(this);
+			// boxSize += tracer.Field($"data_entry[{i}]", IsoStream.CalculateBoxSize(data_entry[i]), this.data_entry[i]); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

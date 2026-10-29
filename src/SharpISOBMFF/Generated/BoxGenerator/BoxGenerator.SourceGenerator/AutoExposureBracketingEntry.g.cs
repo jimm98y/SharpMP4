@@ -14,6 +14,12 @@ extends VisualSampleGroupEntry('aebr') {
 */
 public partial class AutoExposureBracketingEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AutoExposureBracketingEntry
+extends VisualSampleGroupEntry('aebr') {
+	int(8) exposure_step;
+	int(8) exposure_numerator;
+}"; } }
 	public const string TYPE = "aebr";
 	public override string DisplayName { get { return "AutoExposureBracketingEntry"; } }
 
@@ -54,12 +60,12 @@ public partial class AutoExposureBracketingEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("exposure_step", 8, this.exposure_step); 
-		boxSize += builder.Field("exposure_numerator", 8, this.exposure_numerator); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("exposure_step", 8, this.exposure_step); 
+		boxSize += tracer.Field("exposure_numerator", 8, this.exposure_numerator); 
 		return boxSize;
 	}
 }

@@ -33,6 +33,31 @@ aligned(8) class SubSampleInformationBox
 */
 public partial class SubSampleInformationBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SubSampleInformationBox
+	extends FullBox('subs', version, flags) {
+	unsigned int(32) entry_count;
+	int i,j;
+	for (i=0; i < entry_count; i++) {
+		unsigned int(32) sample_delta;
+		unsigned int(16) subsample_count;
+		if (subsample_count > 0) {
+			for (j=0; j < subsample_count; j++) {
+				if(version == 1)
+				{
+					unsigned int(32) subsample_size;
+				}
+				else
+				{
+					unsigned int(16) subsample_size;
+				}
+				unsigned int(8) subsample_priority;
+				unsigned int(8) discardable;
+				unsigned int(32) codec_specific_parameters;
+			}
+		}
+	}
+}"; } }
 	public const string TYPE = "subs";
 	public override string DisplayName { get { return "SubSampleInformationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -182,17 +207,17 @@ public partial class SubSampleInformationBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entry_count", 32, this.entry_count); 
 		
 
 		for (int i=0; i < entry_count; i++)
 		{
-			boxSize += builder.Field($"sample_delta[{i}]", 32, this.sample_delta[i]); 
-			boxSize += builder.Field($"subsample_count[{i}]", 16, this.subsample_count[i]); 
+			boxSize += tracer.Field($"sample_delta[{i}]", 32, this.sample_delta[i]); 
+			boxSize += tracer.Field($"subsample_count[{i}]", 16, this.subsample_count[i]); 
 
 			if (subsample_count[i] > 0)
 			{
@@ -202,16 +227,16 @@ public partial class SubSampleInformationBox : FullBox
 
 					if (version == 1)
 					{
-						boxSize += builder.Field($"subsample_size[{i}][{j}]", 32, this.subsample_size[i][j]); 
+						boxSize += tracer.Field($"subsample_size[{i}][{j}]", 32, this.subsample_size[i][j]); 
 					}
 
 					else 
 					{
-						boxSize += builder.Field($"subsample_size[{i}][{j}]", 16, this.subsample_size[i][j]); 
+						boxSize += tracer.Field($"subsample_size[{i}][{j}]", 16, this.subsample_size[i][j]); 
 					}
-					boxSize += builder.Field($"subsample_priority[{i}][{j}]", 8, this.subsample_priority[i][j]); 
-					boxSize += builder.Field($"discardable[{i}][{j}]", 8, this.discardable[i][j]); 
-					boxSize += builder.Field($"codec_specific_parameters[{i}][{j}]", 32, this.codec_specific_parameters[i][j]); 
+					boxSize += tracer.Field($"subsample_priority[{i}][{j}]", 8, this.subsample_priority[i][j]); 
+					boxSize += tracer.Field($"discardable[{i}][{j}]", 8, this.discardable[i][j]); 
+					boxSize += tracer.Field($"codec_specific_parameters[{i}][{j}]", 32, this.codec_specific_parameters[i][j]); 
 				}
 			}
 		}

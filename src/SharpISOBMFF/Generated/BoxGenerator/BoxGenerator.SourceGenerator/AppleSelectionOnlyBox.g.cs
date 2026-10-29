@@ -12,6 +12,10 @@ aligned(8) class AppleSelectionOnlyBox() extends Box('SelO') {
 */
 public partial class AppleSelectionOnlyBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AppleSelectionOnlyBox() extends Box('SelO') {
+	 unsigned int(8) data;
+ } "; } }
 	public const string TYPE = "SelO";
 	public override string DisplayName { get { return "AppleSelectionOnlyBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class AppleSelectionOnlyBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("data", 8, this.data); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("data", 8, this.data); 
 		return boxSize;
 	}
 }

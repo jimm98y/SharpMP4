@@ -12,6 +12,10 @@ string requirement;
 */
 public partial class AppleRequirementsBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AppleRequirementsBox() extends FullBox('©req', version = 0, 0) {
+string requirement;
+ } "; } }
 	public const string TYPE = "©req";
 	public override string DisplayName { get { return "AppleRequirementsBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class AppleRequirementsBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("requirement", IsoStream.CalculateStringSize(requirement), this.requirement); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("requirement", IsoStream.CalculateStringSize(requirement), this.requirement); 
 		return boxSize;
 	}
 }

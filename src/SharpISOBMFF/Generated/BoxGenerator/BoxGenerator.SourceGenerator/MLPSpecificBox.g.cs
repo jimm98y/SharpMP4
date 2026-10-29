@@ -15,6 +15,13 @@ aligned(8) class MLPSpecificBox() extends Box('dmlp') {
 */
 public partial class MLPSpecificBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MLPSpecificBox() extends Box('dmlp') {
+ unsigned int(32) formatInfo;
+ bit(15) peakDataRate;
+ bit(1) reserved;
+ unsigned int(32) reserved2; 
+ } "; } }
 	public const string TYPE = "dmlp";
 	public override string DisplayName { get { return "MLPSpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -70,14 +77,14 @@ public partial class MLPSpecificBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("formatInfo", 32, this.formatInfo); 
-		boxSize += builder.Field("peakDataRate", 15, this.peakDataRate); 
-		boxSize += builder.Field("reserved", 1, this.reserved); 
-		boxSize += builder.Field("reserved2", 32, this.reserved2); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("formatInfo", 32, this.formatInfo); 
+		boxSize += tracer.Field("peakDataRate", 15, this.peakDataRate); 
+		boxSize += tracer.Field("reserved", 1, this.reserved); 
+		boxSize += tracer.Field("reserved2", 32, this.reserved2); 
 		return boxSize;
 	}
 }

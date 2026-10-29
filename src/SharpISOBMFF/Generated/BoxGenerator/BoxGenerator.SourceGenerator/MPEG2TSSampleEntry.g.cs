@@ -18,6 +18,16 @@ class MPEG2TSSampleEntry(name) extends HintSampleEntry(name) {
 */
 public partial class MPEG2TSSampleEntry : HintSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class MPEG2TSSampleEntry(name) extends HintSampleEntry(name) { 
+ uint(16) hinttrackversion = 1; 
+ uint(16) highestcompatibleversion = 1; 
+ uint(8) precedingbyteslen; 
+ uint(8) trailingbyteslen; 
+ uint(1) precomputed_only_flag; 
+ uint(7) reserved; 
+ Box  additionaldata[]; 
+} "; } }
 	public override string DisplayName { get { return "MPEG2TSSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
@@ -90,18 +100,18 @@ public partial class MPEG2TSSampleEntry : HintSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("hinttrackversion", 16, this.hinttrackversion); 
-		boxSize += builder.Field("highestcompatibleversion", 16, this.highestcompatibleversion); 
-		boxSize += builder.Field("precedingbyteslen", 8, this.precedingbyteslen); 
-		boxSize += builder.Field("trailingbyteslen", 8, this.trailingbyteslen); 
-		boxSize += builder.Field("precomputed_only_flag", 1, this.precomputed_only_flag); 
-		boxSize += builder.Field("reserved", 7, this.reserved); 
-		// boxSize += builder.Field("additionaldata", IsoStream.CalculateBoxSize(additionaldata), this.additionaldata); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("hinttrackversion", 16, this.hinttrackversion); 
+		boxSize += tracer.Field("highestcompatibleversion", 16, this.highestcompatibleversion); 
+		boxSize += tracer.Field("precedingbyteslen", 8, this.precedingbyteslen); 
+		boxSize += tracer.Field("trailingbyteslen", 8, this.trailingbyteslen); 
+		boxSize += tracer.Field("precomputed_only_flag", 1, this.precomputed_only_flag); 
+		boxSize += tracer.Field("reserved", 7, this.reserved); 
+		// boxSize += tracer.Field("additionaldata", IsoStream.CalculateBoxSize(additionaldata), this.additionaldata); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

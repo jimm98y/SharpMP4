@@ -19,25 +19,36 @@ aligned(8) class ProtectionSystemSpecificHeaderBox() extends FullBox('pssh', ver
 */
 public partial class ProtectionSystemSpecificHeaderBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ProtectionSystemSpecificHeaderBox() extends FullBox('pssh', version, flags = 0) {
+ unsigned int(8) systemId[16];
+ if (version > 0) {
+  unsigned int(32) count;
+  ProtectionSystemSpecificKeyID keyIDs[count];
+ }
+ unsigned int(32) dataSize;
+ unsigned int(8) data[dataSize];
+ }
+ "; } }
 	public const string TYPE = "pssh";
 	public override string DisplayName { get { return "ProtectionSystemSpecificHeaderBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("moov", "moof", "meta"); }
 
 
-	protected byte[] systemId; 
+	protected byte[] systemId = new byte[16]; 
 	public byte[] SystemId { get { return this.systemId; } set { this.systemId = value; } }
 
 	protected uint count; 
 	public uint Count { get { return this.count; } set { this.count = value; } }
 
-	protected ProtectionSystemSpecificKeyID[] keyIDs; 
+	protected ProtectionSystemSpecificKeyID[] keyIDs = []; 
 	public ProtectionSystemSpecificKeyID[] KeyIDs { get { return this.keyIDs; } set { this.keyIDs = value; } }
 
 	protected uint dataSize; 
 	public uint DataSize { get { return this.dataSize; } set { this.dataSize = value; } }
 
-	protected byte[] data; 
+	protected byte[] data = []; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public ProtectionSystemSpecificHeaderBox(byte version = 0): base(IsoStream.FromFourCC("pssh"), version, 0)
@@ -92,19 +103,19 @@ public partial class ProtectionSystemSpecificHeaderBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("systemId", 16 * 8, this.systemId); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("systemId", 16 * 8, this.systemId); 
 
 		if (version > 0)
 		{
-			boxSize += builder.Field("count", 32, this.count); 
-			boxSize += builder.Field("keyIDs", IsoStream.CalculateClassSize(keyIDs), this.keyIDs); 
+			boxSize += tracer.Field("count", 32, this.count); 
+			boxSize += tracer.Field("keyIDs", IsoStream.CalculateClassSize(keyIDs), this.keyIDs); 
 		}
-		boxSize += builder.Field("dataSize", 32, this.dataSize); 
-		boxSize += builder.Field("data", ((ulong)(dataSize) * 8), this.data); 
+		boxSize += tracer.Field("dataSize", 32, this.dataSize); 
+		boxSize += tracer.Field("data", ((ulong)(dataSize) * 8), this.data); 
 		return boxSize;
 	}
 }

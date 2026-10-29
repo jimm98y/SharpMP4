@@ -34,6 +34,32 @@ class RectangularRegionGroupEntry() extends VisualSampleGroupEntry ('trif')
 */
 public partial class RectangularRegionGroupEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class RectangularRegionGroupEntry() extends VisualSampleGroupEntry ('trif')
+{
+	unsigned int(16) groupID;
+	unsigned int(1) rect_region_flag;
+	if (!rect_region_flag)
+		bit(7)  reserved = 0;
+	else {
+		unsigned int(2) independent_idc;
+		unsigned int(1) full_picture;
+		unsigned int(1) filtering_disabled;
+		unsigned int(1) has_dependency_list;
+		bit(2)  reserved = 0;
+		if (!full_picture) {
+			unsigned int(16) horizontal_offset;
+			unsigned int(16) vertical_offset;
+		}
+		unsigned int(16) region_width;
+		unsigned int(16) region_height;
+		if (has_dependency_list) {
+			unsigned int(16) dependency_rect_region_count;
+			for (i=1; i<= dependency_rect_region_count; i++)
+				unsigned int(16) dependencyRectRegionGroupID;
+	}
+}
+}"; } }
 	public const string TYPE = "trif";
 	public override string DisplayName { get { return "RectangularRegionGroupEntry"; } }
 
@@ -207,41 +233,41 @@ public partial class RectangularRegionGroupEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("groupID", 16, this.groupID); 
-		boxSize += builder.Field("rect_region_flag", 1, this.rect_region_flag); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("groupID", 16, this.groupID); 
+		boxSize += tracer.Field("rect_region_flag", 1, this.rect_region_flag); 
 
 		if (!rect_region_flag)
 		{
-			boxSize += builder.Field("reserved", 7, this.reserved); 
+			boxSize += tracer.Field("reserved", 7, this.reserved); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("independent_idc", 2, this.independent_idc); 
-			boxSize += builder.Field("full_picture", 1, this.full_picture); 
-			boxSize += builder.Field("filtering_disabled", 1, this.filtering_disabled); 
-			boxSize += builder.Field("has_dependency_list", 1, this.has_dependency_list); 
-			boxSize += builder.Field("reserved0", 2, this.reserved0); 
+			boxSize += tracer.Field("independent_idc", 2, this.independent_idc); 
+			boxSize += tracer.Field("full_picture", 1, this.full_picture); 
+			boxSize += tracer.Field("filtering_disabled", 1, this.filtering_disabled); 
+			boxSize += tracer.Field("has_dependency_list", 1, this.has_dependency_list); 
+			boxSize += tracer.Field("reserved0", 2, this.reserved0); 
 
 			if (!full_picture)
 			{
-				boxSize += builder.Field("horizontal_offset", 16, this.horizontal_offset); 
-				boxSize += builder.Field("vertical_offset", 16, this.vertical_offset); 
+				boxSize += tracer.Field("horizontal_offset", 16, this.horizontal_offset); 
+				boxSize += tracer.Field("vertical_offset", 16, this.vertical_offset); 
 			}
-			boxSize += builder.Field("region_width", 16, this.region_width); 
-			boxSize += builder.Field("region_height", 16, this.region_height); 
+			boxSize += tracer.Field("region_width", 16, this.region_width); 
+			boxSize += tracer.Field("region_height", 16, this.region_height); 
 
 			if (has_dependency_list)
 			{
-				boxSize += builder.Field("dependency_rect_region_count", 16, this.dependency_rect_region_count); 
+				boxSize += tracer.Field("dependency_rect_region_count", 16, this.dependency_rect_region_count); 
 
 				for (int i=0; i< dependency_rect_region_count; i++)
 				{
-					boxSize += builder.Field($"dependencyRectRegionGroupID[{i}]", 16, this.dependencyRectRegionGroupID[i]); 
+					boxSize += tracer.Field($"dependencyRectRegionGroupID[{i}]", 16, this.dependencyRectRegionGroupID[i]); 
 				}
 			}
 		}

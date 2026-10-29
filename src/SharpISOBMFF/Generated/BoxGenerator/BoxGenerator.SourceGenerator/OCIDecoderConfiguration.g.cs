@@ -12,6 +12,10 @@ class OCIDecoderConfiguration extends DecoderSpecificInfo : bit(8) tag=DecSpecif
 */
 public partial class OCIDecoderConfiguration : DecoderSpecificInfo
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class OCIDecoderConfiguration extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
+ bit(8) versionLabel = 0x01;
+ }"; } }
 	public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
 	public override string DisplayName { get { return "OCIDecoderConfiguration"; } }
 
@@ -46,11 +50,11 @@ public partial class OCIDecoderConfiguration : DecoderSpecificInfo
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("versionLabel", 8, this.versionLabel); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("versionLabel", 8, this.versionLabel); 
 		return boxSize;
 	}
 }

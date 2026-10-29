@@ -19,6 +19,17 @@ aligned(8) class ProducerReferenceTimeBox
 */
 public partial class ProducerReferenceTimeBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ProducerReferenceTimeBox
+	extends FullBox('prft', version, flags) {
+	unsigned int(32) reference_track_ID;
+	unsigned int(64) ntp_timestamp;
+	if (version==0) {
+		unsigned int(32) media_time;
+	} else {
+		unsigned int(64) media_time;
+	}
+}"; } }
 	public const string TYPE = "prft";
 	public override string DisplayName { get { return "ProducerReferenceTimeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -95,21 +106,21 @@ public partial class ProducerReferenceTimeBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reference_track_ID", 32, this.reference_track_ID); 
-		boxSize += builder.Field("ntp_timestamp", 64, this.ntp_timestamp); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reference_track_ID", 32, this.reference_track_ID); 
+		boxSize += tracer.Field("ntp_timestamp", 64, this.ntp_timestamp); 
 
 		if (version==0)
 		{
-			boxSize += builder.Field("media_time", 32, this.media_time); 
+			boxSize += tracer.Field("media_time", 32, this.media_time); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("media_time", 64, this.media_time); 
+			boxSize += tracer.Field("media_time", 64, this.media_time); 
 		}
 		return boxSize;
 	}

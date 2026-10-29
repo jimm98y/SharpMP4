@@ -21,6 +21,14 @@ public partial class RectRecord : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class RectRecord() {
+ unsigned int(16) top;
+ unsigned int(16) left;
+ unsigned int(16) bottom;
+ unsigned int(16) right;
+ }
+ "; } }
 	public virtual string DisplayName { get { return "RectRecord"; } }
 
 	protected ushort top; 
@@ -69,13 +77,13 @@ public partial class RectRecord : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("top", 16, this.top); 
-		boxSize += builder.Field("left", 16, this.left); 
-		boxSize += builder.Field("bottom", 16, this.bottom); 
-		boxSize += builder.Field("right", 16, this.right); 
+		boxSize += tracer.Field("top", 16, this.top); 
+		boxSize += tracer.Field("left", 16, this.left); 
+		boxSize += tracer.Field("bottom", 16, this.bottom); 
+		boxSize += tracer.Field("right", 16, this.right); 
 		return boxSize;
 	}
 }

@@ -17,6 +17,15 @@ class XMLSubtitleSampleEntry() extends SubtitleSampleEntry ('stpp') {
 */
 public partial class XMLSubtitleSampleEntry : SubtitleSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class XMLSubtitleSampleEntry() extends SubtitleSampleEntry ('stpp') { 
+ string namespace; 
+ string schema_location;  // optional 
+ string auxiliary_mime_types; // optional, required if auxiliary resources are present 
+ BitRateBox (); 
+} 
+
+"; } }
 	public const string TYPE = "stpp";
 	public override string DisplayName { get { return "XMLSubtitleSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -77,15 +86,15 @@ public partial class XMLSubtitleSampleEntry : SubtitleSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("ns", IsoStream.CalculateStringSize(ns), this.ns); 
-		if (this.schema_locationPresent) boxSize += builder.Field("schema_location", IsoStream.CalculateStringSize(schema_location), this.schema_location); // optional 
-		if (this.auxiliary_mime_typesPresent) boxSize += builder.Field("auxiliary_mime_types", IsoStream.CalculateStringSize(auxiliary_mime_types), this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
-		// boxSize += builder.Field("BitRateBox", IsoStream.CalculateBoxSize(BitRateBox), this.BitRateBox); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("ns", IsoStream.CalculateStringSize(ns), this.ns); 
+		if (this.schema_locationPresent) boxSize += tracer.Field("schema_location", IsoStream.CalculateStringSize(schema_location), this.schema_location); // optional 
+		if (this.auxiliary_mime_typesPresent) boxSize += tracer.Field("auxiliary_mime_types", IsoStream.CalculateStringSize(auxiliary_mime_types), this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
+		// boxSize += tracer.Field("BitRateBox", IsoStream.CalculateBoxSize(BitRateBox), this.BitRateBox); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

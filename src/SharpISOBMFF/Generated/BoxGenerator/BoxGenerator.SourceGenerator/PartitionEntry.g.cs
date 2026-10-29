@@ -16,6 +16,14 @@ aligned(8) class PartitionEntry extends Box('paen') {
 */
 public partial class PartitionEntry : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class PartitionEntry extends Box('paen') {
+	FilePartitionBox	blocks_and_symbols;
+	FECReservoirBox	FEC_symbol_locations; //optional
+	FileReservoirBox	File_symbol_locations; //optional
+}
+
+"; } }
 	public const string TYPE = "paen";
 	public override string DisplayName { get { return "PartitionEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -62,14 +70,14 @@ public partial class PartitionEntry : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("blocks_and_symbols", IsoStream.CalculateBoxSize(blocks_and_symbols), this.blocks_and_symbols); 
-		// boxSize += builder.Field("FEC_symbol_locations", IsoStream.CalculateBoxSize(FEC_symbol_locations), this.FEC_symbol_locations); //optional
-		// boxSize += builder.Field("File_symbol_locations", IsoStream.CalculateBoxSize(File_symbol_locations), this.File_symbol_locations); //optional
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("blocks_and_symbols", IsoStream.CalculateBoxSize(blocks_and_symbols), this.blocks_and_symbols); 
+		// boxSize += tracer.Field("FEC_symbol_locations", IsoStream.CalculateBoxSize(FEC_symbol_locations), this.FEC_symbol_locations); //optional
+		// boxSize += tracer.Field("File_symbol_locations", IsoStream.CalculateBoxSize(File_symbol_locations), this.File_symbol_locations); //optional
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

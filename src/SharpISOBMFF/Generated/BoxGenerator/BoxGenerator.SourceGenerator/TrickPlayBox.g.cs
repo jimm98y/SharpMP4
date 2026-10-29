@@ -13,13 +13,18 @@ aligned(8) class TrickPlayBox() extends FullBox('trik') {
 */
 public partial class TrickPlayBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TrickPlayBox() extends FullBox('trik') {
+ TrickPlayEntry entries[];
+ }
+ "; } }
 	public const string TYPE = "trik";
 	public override string DisplayName { get { return "TrickPlayBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("traf"); }
 
 
-	protected TrickPlayEntry[] entries; 
+	protected TrickPlayEntry[] entries = []; 
 	public TrickPlayEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
 
 	public TrickPlayBox(): base(IsoStream.FromFourCC("trik"))
@@ -50,11 +55,11 @@ public partial class TrickPlayBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entries", IsoStream.CalculateClassSize(entries), this.entries); 
 		return boxSize;
 	}
 }

@@ -23,6 +23,21 @@ class GenericSampleEntry extends Box('encv') {
 */
 public partial class GenericSampleEntry : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class GenericSampleEntry extends Box('encv') {
+	// ProtectionSchemeInfoBox {
+		// OriginalFormatBox;	// data_format is 'resv'
+		// SchemeTypeBox;
+		// SchemeInformationBox;
+	// }
+// tRestrictedSchemeInfoBox {
+		// OriginalFormatBox; // data_format indicates a codec, e.g. 'avc1'
+		// SchemeTypeBox;
+		// SchemeInformationBox;
+	// }
+	// Boxes specific to the untransformed sample entry type
+	// For 'avc1', these would include AVCConfigurationBox
+}"; } }
 	public const string TYPE = "encv";
 	public override string DisplayName { get { return "GenericSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -93,10 +108,10 @@ public partial class GenericSampleEntry : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		/*  ProtectionSchemeInfoBox { */
 		/*  OriginalFormatBox;	// data_format is 'resv' */
 		/*  SchemeTypeBox; */
@@ -109,7 +124,7 @@ public partial class GenericSampleEntry : Box
 		/*  } */
 		/*  Boxes specific to the untransformed sample entry type */
 		/*  For 'avc1', these would include AVCConfigurationBox */
-		boxSize += builder.Children(this);
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

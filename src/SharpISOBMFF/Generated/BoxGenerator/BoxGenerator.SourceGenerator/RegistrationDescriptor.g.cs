@@ -13,13 +13,18 @@ class RegistrationDescriptor extends BaseDescriptor : bit(8) tag=RegistrationDes
 */
 public partial class RegistrationDescriptor : BaseDescriptor
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class RegistrationDescriptor extends BaseDescriptor : bit(8) tag=RegistrationDescrTag {
+ bit(32) formatIdentifier;
+ bit(8) additionalIdentificationInfo[sizeOfInstance-4];
+ }"; } }
 	public const byte TYPE = DescriptorTags.RegistrationDescrTag;
 	public override string DisplayName { get { return "RegistrationDescriptor"; } }
 
 	protected uint formatIdentifier; 
 	public uint FormatIdentifier { get { return this.formatIdentifier; } set { this.formatIdentifier = value; } }
 
-	protected byte[] additionalIdentificationInfo; 
+	protected byte[] additionalIdentificationInfo = []; 
 	public byte[] AdditionalIdentificationInfo { get { return this.additionalIdentificationInfo; } set { this.additionalIdentificationInfo = value; } }
 
 	public RegistrationDescriptor(): base(DescriptorTags.RegistrationDescrTag)
@@ -53,12 +58,12 @@ public partial class RegistrationDescriptor : BaseDescriptor
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("formatIdentifier", 32, this.formatIdentifier); 
-		boxSize += builder.Field("additionalIdentificationInfo", ((ulong)(sizeOfInstance-4) * 8), this.additionalIdentificationInfo); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("formatIdentifier", 32, this.formatIdentifier); 
+		boxSize += tracer.Field("additionalIdentificationInfo", ((ulong)(sizeOfInstance-4) * 8), this.additionalIdentificationInfo); 
 		return boxSize;
 	}
 }

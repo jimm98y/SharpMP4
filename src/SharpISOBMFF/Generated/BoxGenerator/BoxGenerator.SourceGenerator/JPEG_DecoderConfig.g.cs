@@ -15,6 +15,13 @@ class JPEG_DecoderConfig extends DecoderSpecificInfo : bit(8) tag=DecSpecificInf
 */
 public partial class JPEG_DecoderConfig : DecoderSpecificInfo
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class JPEG_DecoderConfig extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
+ int(16) headerLength;
+ int(16) Xdensity;
+ int(16) Ydensity;
+ int(8) numComponents;
+ }"; } }
 	public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
 	public override string DisplayName { get { return "JPEG_DecoderConfig"; } }
 
@@ -67,14 +74,14 @@ public partial class JPEG_DecoderConfig : DecoderSpecificInfo
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("headerLength", 16, this.headerLength); 
-		boxSize += builder.Field("Xdensity", 16, this.Xdensity); 
-		boxSize += builder.Field("Ydensity", 16, this.Ydensity); 
-		boxSize += builder.Field("numComponents", 8, this.numComponents); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("headerLength", 16, this.headerLength); 
+		boxSize += tracer.Field("Xdensity", 16, this.Xdensity); 
+		boxSize += tracer.Field("Ydensity", 16, this.Ydensity); 
+		boxSize += tracer.Field("numComponents", 8, this.numComponents); 
 		return boxSize;
 	}
 }

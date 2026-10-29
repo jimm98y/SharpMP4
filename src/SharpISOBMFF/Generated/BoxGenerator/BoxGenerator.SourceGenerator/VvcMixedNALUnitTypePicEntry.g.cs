@@ -19,6 +19,17 @@ aligned(8) class VvcMixedNALUnitTypePicEntry() extends VisualSampleGroupEntry('m
 */
 public partial class VvcMixedNALUnitTypePicEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class VvcMixedNALUnitTypePicEntry() extends VisualSampleGroupEntry('minp')
+{
+	unsigned int(16) num_mix_nalu_pic_idx;
+	for (i = 0; i < num_mix_nalu_pic_idx; i++){
+		unsigned int(16) mix_subp_track_idx1[i];
+		unsigned int(16) mix_subp_track_idx2[i];
+	}
+	unsigned int(10) pps_mix_nalu_types_in_pic_bit_pos;
+	unsigned int(6) pps_id;
+}"; } }
 	public const string TYPE = "minp";
 	public override string DisplayName { get { return "VvcMixedNALUnitTypePicEntry"; } }
 
@@ -91,19 +102,19 @@ public partial class VvcMixedNALUnitTypePicEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("num_mix_nalu_pic_idx", 16, this.num_mix_nalu_pic_idx); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("num_mix_nalu_pic_idx", 16, this.num_mix_nalu_pic_idx); 
 
 		for (int i = 0; i < num_mix_nalu_pic_idx; i++)
 		{
-			boxSize += builder.Field($"mix_subp_track_idx1[{i}]", 16, this.mix_subp_track_idx1[i]); 
-			boxSize += builder.Field($"mix_subp_track_idx2[{i}]", 16, this.mix_subp_track_idx2[i]); 
+			boxSize += tracer.Field($"mix_subp_track_idx1[{i}]", 16, this.mix_subp_track_idx1[i]); 
+			boxSize += tracer.Field($"mix_subp_track_idx2[{i}]", 16, this.mix_subp_track_idx2[i]); 
 		}
-		boxSize += builder.Field("pps_mix_nalu_types_in_pic_bit_pos", 10, this.pps_mix_nalu_types_in_pic_bit_pos); 
-		boxSize += builder.Field("pps_id", 6, this.pps_id); 
+		boxSize += tracer.Field("pps_mix_nalu_types_in_pic_bit_pos", 10, this.pps_mix_nalu_types_in_pic_bit_pos); 
+		boxSize += tracer.Field("pps_id", 6, this.pps_id); 
 		return boxSize;
 	}
 }

@@ -16,6 +16,14 @@ aligned(8) class MVCSubTrackMultiviewGroupBox
 */
 public partial class MVCSubTrackMultiviewGroupBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MVCSubTrackMultiviewGroupBox
+	extends FullBox('stmg', 0, 0) {
+	unsigned int(16) item_count;
+	for(i = 0; i< item_count; i++) {
+		unsigned int(32)	MultiviewGroupId;
+	}
+}"; } }
 	public const string TYPE = "stmg";
 	public override string DisplayName { get { return "MVCSubTrackMultiviewGroupBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -72,15 +80,15 @@ public partial class MVCSubTrackMultiviewGroupBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("item_count", 16, this.item_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("item_count", 16, this.item_count); 
 
 		for (int i = 0; i< item_count; i++)
 		{
-			boxSize += builder.Field($"MultiviewGroupId[{i}]", 32, this.MultiviewGroupId[i]); 
+			boxSize += tracer.Field($"MultiviewGroupId[{i}]", 32, this.MultiviewGroupId[i]); 
 		}
 		return boxSize;
 	}

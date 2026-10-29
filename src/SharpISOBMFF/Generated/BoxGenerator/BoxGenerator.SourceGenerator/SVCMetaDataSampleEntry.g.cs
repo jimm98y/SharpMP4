@@ -15,6 +15,13 @@ class SVCMetaDataSampleEntry () extends MetaDataSampleEntry('svcM')
 */
 public partial class SVCMetaDataSampleEntry : MetaDataSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class SVCMetaDataSampleEntry () extends MetaDataSampleEntry('svcM')
+{
+	SVCMetadataSampleConfigBox	config;
+	SVCPriorityAssignmentBox	methods;		// optional
+	SVCPriorityLayerInfoBox		priorities;	// optional
+}"; } }
 	public const string TYPE = "svcM";
 	public override string DisplayName { get { return "SVCMetaDataSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -61,14 +68,14 @@ public partial class SVCMetaDataSampleEntry : MetaDataSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("config", IsoStream.CalculateBoxSize(config), this.config); 
-		// boxSize += builder.Field("methods", IsoStream.CalculateBoxSize(methods), this.methods); // optional
-		// boxSize += builder.Field("priorities", IsoStream.CalculateBoxSize(priorities), this.priorities); // optional
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("config", IsoStream.CalculateBoxSize(config), this.config); 
+		// boxSize += tracer.Field("methods", IsoStream.CalculateBoxSize(methods), this.methods); // optional
+		// boxSize += tracer.Field("priorities", IsoStream.CalculateBoxSize(priorities), this.priorities); // optional
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

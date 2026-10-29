@@ -20,6 +20,13 @@ public partial class FLACMetadataBlock : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class FLACMetadataBlock {
+ unsigned int(1) LastMetadataBlockFlag;
+ unsigned int(7) BlockType;
+ unsigned int(24) Length;
+ unsigned int(8) BlockData[Length];
+ }"; } }
 	public virtual string DisplayName { get { return "FLACMetadataBlock"; } }
 
 	protected bool LastMetadataBlockFlag; 
@@ -31,7 +38,7 @@ public partial class FLACMetadataBlock : IMp4Serializable
 	protected uint Length; 
 	public uint _Length { get { return this.Length; } set { this.Length = value; } }
 
-	protected byte[] BlockData; 
+	protected byte[] BlockData = []; 
 	public byte[] _BlockData { get { return this.BlockData; } set { this.BlockData = value; } }
 
 	public FLACMetadataBlock(): base()
@@ -68,13 +75,13 @@ public partial class FLACMetadataBlock : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("LastMetadataBlockFlag", 1, this.LastMetadataBlockFlag); 
-		boxSize += builder.Field("BlockType", 7, this.BlockType); 
-		boxSize += builder.Field("Length", 24, this.Length); 
-		boxSize += builder.Field("BlockData", ((ulong)(Length) * 8), this.BlockData); 
+		boxSize += tracer.Field("LastMetadataBlockFlag", 1, this.LastMetadataBlockFlag); 
+		boxSize += tracer.Field("BlockType", 7, this.BlockType); 
+		boxSize += tracer.Field("Length", 24, this.Length); 
+		boxSize += tracer.Field("BlockData", ((ulong)(Length) * 8), this.BlockData); 
 		return boxSize;
 	}
 }

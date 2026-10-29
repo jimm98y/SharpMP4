@@ -18,6 +18,16 @@ aligned(8) class CompatibleSchemeTypeBox extends FullBox('csch', 0, flags) {
 */
 public partial class CompatibleSchemeTypeBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class CompatibleSchemeTypeBox extends FullBox('csch', 0, flags) {
+	// identical syntax to SchemeTypeBox
+	unsigned int(32)	scheme_type;		// 4CC identifying the scheme
+	unsigned int(32)	scheme_version;	// scheme version 
+	if (flags & 0x000001) {
+		utf8string scheme_uri;		// browser uri
+	}
+}
+"; } }
 	public const string TYPE = "csch";
 	public override string DisplayName { get { return "CompatibleSchemeTypeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -82,17 +92,17 @@ public partial class CompatibleSchemeTypeBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		/*  identical syntax to SchemeTypeBox */
-		boxSize += builder.Field("scheme_type", 32, this.scheme_type); // 4CC identifying the scheme
-		boxSize += builder.Field("scheme_version", 32, this.scheme_version); // scheme version 
+		boxSize += tracer.Field("scheme_type", 32, this.scheme_type); // 4CC identifying the scheme
+		boxSize += tracer.Field("scheme_version", 32, this.scheme_version); // scheme version 
 
 		if ((flags  &  0x000001) ==  0x000001)
 		{
-			boxSize += builder.Field("scheme_uri", IsoStream.CalculateStringSize(scheme_uri), this.scheme_uri); // browser uri
+			boxSize += tracer.Field("scheme_uri", IsoStream.CalculateStringSize(scheme_uri), this.scheme_uri); // browser uri
 		}
 		return boxSize;
 	}

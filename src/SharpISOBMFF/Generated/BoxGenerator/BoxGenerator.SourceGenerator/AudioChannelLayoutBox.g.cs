@@ -16,6 +16,14 @@ aligned(8) class AudioChannelLayoutBox() extends FullBox('chan') {
 */
 public partial class AudioChannelLayoutBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AudioChannelLayoutBox() extends FullBox('chan') {
+ unsigned int(32) channelLayoutTag;
+ unsigned int(32) channelBitmap;
+ unsigned int(32) numberChannelDescriptions;
+ AudioChannelDescription channelDescriptions[numberChannelDescriptions];
+ }
+ "; } }
 	public const string TYPE = "chan";
 	public override string DisplayName { get { return "AudioChannelLayoutBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -31,7 +39,7 @@ public partial class AudioChannelLayoutBox : FullBox
 	protected uint numberChannelDescriptions; 
 	public uint NumberChannelDescriptions { get { return this.numberChannelDescriptions; } set { this.numberChannelDescriptions = value; } }
 
-	protected AudioChannelDescription[] channelDescriptions; 
+	protected AudioChannelDescription[] channelDescriptions = []; 
 	public AudioChannelDescription[] ChannelDescriptions { get { return this.channelDescriptions; } set { this.channelDescriptions = value; } }
 
 	public AudioChannelLayoutBox(): base(IsoStream.FromFourCC("chan"))
@@ -71,14 +79,14 @@ public partial class AudioChannelLayoutBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("channelLayoutTag", 32, this.channelLayoutTag); 
-		boxSize += builder.Field("channelBitmap", 32, this.channelBitmap); 
-		boxSize += builder.Field("numberChannelDescriptions", 32, this.numberChannelDescriptions); 
-		boxSize += builder.Field("channelDescriptions", IsoStream.CalculateClassSize(channelDescriptions), this.channelDescriptions); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("channelLayoutTag", 32, this.channelLayoutTag); 
+		boxSize += tracer.Field("channelBitmap", 32, this.channelBitmap); 
+		boxSize += tracer.Field("numberChannelDescriptions", 32, this.numberChannelDescriptions); 
+		boxSize += tracer.Field("channelDescriptions", IsoStream.CalculateClassSize(channelDescriptions), this.channelDescriptions); 
 		return boxSize;
 	}
 }

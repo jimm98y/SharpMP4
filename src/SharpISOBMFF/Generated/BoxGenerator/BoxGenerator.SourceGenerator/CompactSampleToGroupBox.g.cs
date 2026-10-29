@@ -31,6 +31,29 @@ aligned(8) class CompactSampleToGroupBox
 */
 public partial class CompactSampleToGroupBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class CompactSampleToGroupBox
+	extends FullBox('csgp', version, flags)
+{
+	unsigned int(32) grouping_type;
+
+	if (grouping_type_parameter_present == 1) {
+		unsigned int(32) grouping_type_parameter;
+	}
+	unsigned int(32) pattern_count;
+	totalPatternLength = 0;
+	for (i=1; i <= pattern_count; i++) {
+		unsigned int(f(pattern_size_code)) pattern_length[i];
+		unsigned int(f(count_size_code)) sample_count[i];
+	}
+	for (j=1; j <= pattern_count; j++) {
+		for (k=1; k <= pattern_length[j]; k++) {
+			unsigned int(f(index_size_code))
+						 sample_group_description_index[j][k];
+			// whose msb might indicate fragment_local or global
+		}
+	}
+}"; } }
 	public const string TYPE = "csgp";
 	public override string DisplayName { get { return "CompactSampleToGroupBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -168,28 +191,28 @@ public partial class CompactSampleToGroupBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		bool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);
 		uint count_size_code = 4u << (int)((flags >> 2) & 0x3);
 		uint pattern_size_code = 4u << (int)((flags >> 4) & 0x3);
 		uint index_size_code = 4u << (int)(flags & 0x3);
 
-		boxSize += builder.Field("grouping_type", 32, this.grouping_type); 
+		boxSize += tracer.Field("grouping_type", 32, this.grouping_type); 
 
 		if (grouping_type_parameter_present == true)
 		{
-			boxSize += builder.Field("grouping_type_parameter", 32, this.grouping_type_parameter); 
+			boxSize += tracer.Field("grouping_type_parameter", 32, this.grouping_type_parameter); 
 		}
-		boxSize += builder.Field("pattern_count", 32, this.pattern_count); 
+		boxSize += tracer.Field("pattern_count", 32, this.pattern_count); 
 		
 
 		for (int i=0; i < pattern_count; i++)
 		{
-			boxSize += builder.Field($"pattern_length[{i}]", (ulong)(pattern_size_code ), this.pattern_length[i]); 
-			boxSize += builder.Field($"sample_count[{i}]", (ulong)(count_size_code ), this.sample_count[i]); 
+			boxSize += tracer.Field($"pattern_length[{i}]", (ulong)(pattern_size_code ), this.pattern_length[i]); 
+			boxSize += tracer.Field($"sample_count[{i}]", (ulong)(count_size_code ), this.sample_count[i]); 
 		}
 
 		for (int j=0; j < pattern_count; j++)
@@ -197,7 +220,7 @@ public partial class CompactSampleToGroupBox : FullBox
 
 			for (int k=0; k < IsoStream.GetInt(pattern_length[j]); k++)
 			{
-				boxSize += builder.Field($"sample_group_description_index[{j}][{k}]", (ulong)(index_size_code ), this.sample_group_description_index[j][k]); // whose msb might indicate fragment_local or global
+				boxSize += tracer.Field($"sample_group_description_index[{j}][{k}]", (ulong)(index_size_code ), this.sample_group_description_index[j][k]); // whose msb might indicate fragment_local or global
 			}
 		}
 		return boxSize;

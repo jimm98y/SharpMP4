@@ -17,6 +17,15 @@ aligned(8) class EventMessageBox() extends Box('emsg') {
 */
 public partial class EventMessageBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class EventMessageBox() extends Box('emsg') {
+ string schemeIdUri;
+ string value;
+ unsigned int(32) timescale;
+ unsigned int(32) presentationTimeDelta;
+ unsigned int(32) eventDuration;
+ unsigned int(32) id;
+ unsigned int(8) messageData[]; } "; } }
 	public const string TYPE = "emsg";
 	public override string DisplayName { get { return "EventMessageBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -41,7 +50,7 @@ public partial class EventMessageBox : Box
 	protected uint id; 
 	public uint Id { get { return this.id; } set { this.id = value; } }
 
-	protected byte[] messageData; 
+	protected byte[] messageData = []; 
 	public byte[] MessageData { get { return this.messageData; } set { this.messageData = value; } }
 
 	public EventMessageBox(): base(IsoStream.FromFourCC("emsg"))
@@ -90,17 +99,17 @@ public partial class EventMessageBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("schemeIdUri", IsoStream.CalculateStringSize(schemeIdUri), this.schemeIdUri); 
-		boxSize += builder.Field("value", IsoStream.CalculateStringSize(value), this.value); 
-		boxSize += builder.Field("timescale", 32, this.timescale); 
-		boxSize += builder.Field("presentationTimeDelta", 32, this.presentationTimeDelta); 
-		boxSize += builder.Field("eventDuration", 32, this.eventDuration); 
-		boxSize += builder.Field("id", 32, this.id); 
-		boxSize += builder.Field("messageData", ((ulong)messageData.Length * 8), this.messageData); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("schemeIdUri", IsoStream.CalculateStringSize(schemeIdUri), this.schemeIdUri); 
+		boxSize += tracer.Field("value", IsoStream.CalculateStringSize(value), this.value); 
+		boxSize += tracer.Field("timescale", 32, this.timescale); 
+		boxSize += tracer.Field("presentationTimeDelta", 32, this.presentationTimeDelta); 
+		boxSize += tracer.Field("eventDuration", 32, this.eventDuration); 
+		boxSize += tracer.Field("id", 32, this.id); 
+		boxSize += tracer.Field("messageData", ((ulong)messageData.Length * 8), this.messageData); 
 		return boxSize;
 	}
 }

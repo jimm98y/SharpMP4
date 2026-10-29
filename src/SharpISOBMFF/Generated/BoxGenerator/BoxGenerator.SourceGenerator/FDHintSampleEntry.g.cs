@@ -15,6 +15,13 @@ class FDHintSampleEntry() extends HintSampleEntry ('fdp ') {
 */
 public partial class FDHintSampleEntry : HintSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class FDHintSampleEntry() extends HintSampleEntry ('fdp ') {
+	unsigned int(16)	hinttrackversion = 1;
+	unsigned int(16)	highestcompatibleversion = 1;
+	unsigned int(16)	partition_entry_ID;
+	unsigned int(16)	FEC_overhead;
+}"; } }
 	public const string TYPE = "fdp ";
 	public override string DisplayName { get { return "FDHintSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -73,15 +80,15 @@ public partial class FDHintSampleEntry : HintSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("hinttrackversion", 16, this.hinttrackversion); 
-		boxSize += builder.Field("highestcompatibleversion", 16, this.highestcompatibleversion); 
-		boxSize += builder.Field("partition_entry_ID", 16, this.partition_entry_ID); 
-		boxSize += builder.Field("FEC_overhead", 16, this.FEC_overhead); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("hinttrackversion", 16, this.hinttrackversion); 
+		boxSize += tracer.Field("highestcompatibleversion", 16, this.highestcompatibleversion); 
+		boxSize += tracer.Field("partition_entry_ID", 16, this.partition_entry_ID); 
+		boxSize += tracer.Field("FEC_overhead", 16, this.FEC_overhead); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

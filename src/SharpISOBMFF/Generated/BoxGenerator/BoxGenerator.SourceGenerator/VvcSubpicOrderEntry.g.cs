@@ -18,6 +18,16 @@ aligned(8) class VvcSubpicOrderEntry() extends VisualSampleGroupEntry('spor')
 */
 public partial class VvcSubpicOrderEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class VvcSubpicOrderEntry() extends VisualSampleGroupEntry('spor')
+{
+	unsigned int(1) subpic_id_info_flag;
+	unsigned int(15) num_subpic_ref_idx;
+	for (i = 0; i < num_subpic_ref_idx; i++)
+		unsigned int(16) subp_track_ref_idx[i];
+	if (subpic_id_info_flag)
+		VVCSubpicIDRewritingInfomationStruct() subpic_id_rewriting_info;
+}"; } }
 	public const string TYPE = "spor";
 	public override string DisplayName { get { return "VvcSubpicOrderEntry"; } }
 
@@ -95,21 +105,21 @@ public partial class VvcSubpicOrderEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("subpic_id_info_flag", 1, this.subpic_id_info_flag); 
-		boxSize += builder.Field("num_subpic_ref_idx", 15, this.num_subpic_ref_idx); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("subpic_id_info_flag", 1, this.subpic_id_info_flag); 
+		boxSize += tracer.Field("num_subpic_ref_idx", 15, this.num_subpic_ref_idx); 
 
 		for (int i = 0; i < num_subpic_ref_idx; i++)
 		{
-			boxSize += builder.Field($"subp_track_ref_idx[{i}]", 16, this.subp_track_ref_idx[i]); 
+			boxSize += tracer.Field($"subp_track_ref_idx[{i}]", 16, this.subp_track_ref_idx[i]); 
 		}
 
 		if (subpic_id_info_flag)
 		{
-			boxSize += builder.Field("subpic_id_rewriting_info", IsoStream.CalculateClassSize(subpic_id_rewriting_info), this.subpic_id_rewriting_info); 
+			boxSize += tracer.Field("subpic_id_rewriting_info", IsoStream.CalculateClassSize(subpic_id_rewriting_info), this.subpic_id_rewriting_info); 
 		}
 		return boxSize;
 	}

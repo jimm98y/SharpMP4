@@ -21,6 +21,9 @@ namespace SharpH263
     /// </summary>
     public sealed class PictureData : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         public int LeadingBits { get; set; }
         public int LeadingBitCount { get; set; }
         public byte[] Data { get; set; } = Array.Empty<byte>();
@@ -67,6 +70,9 @@ namespace SharpH263
     /// </summary>
     public sealed class Bcm : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
         public ulong Read(IItuContext context, ItuStream stream) =>
@@ -81,6 +87,9 @@ namespace SharpH263
     /// </summary>
     public sealed class Rprp : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
         public ulong Read(IItuContext context, ItuStream stream) =>

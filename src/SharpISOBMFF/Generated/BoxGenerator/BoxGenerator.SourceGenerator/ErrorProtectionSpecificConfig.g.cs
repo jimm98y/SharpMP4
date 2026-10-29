@@ -68,6 +68,61 @@ public partial class ErrorProtectionSpecificConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class ErrorProtectionSpecificConfig()
+{
+  uimsbf(8) number_of_predefined_set;
+  uimsbf(2) interleave_type;
+  uimsbf(3) bit_stuffing;
+  uimsbf(3) number_of_concatenated_frame;
+  for (i = 0; i < number_of_predefined_set; i++) {
+    uimsbf(6) number_of_class[i];
+    for (j = 0; j < number_of_class[i]; j++) {
+      uimsbf(1) length_escape[i][j];
+      uimsbf(1) rate_escape[i][j];
+      uimsbf(1) crclen_escape[i][j];
+      if (number_of_concatenated_frame != 1) {
+        uimsbf(1) concatenate_flag[i][j];
+      }
+      uimsbf(2) fec_type[i][j];
+      if (fec_type[i][j] == 0) {
+        uimsbf(1) termination_switch[i][j];
+      }
+      if (interleave_type == 2) {
+        uimsbf(2) interleave_switch[i][j];
+      }
+      uimsbf(1) class_optional;
+      if (length_escape[i][j] == 1) { /* ESC */
+        uimsbf(4) number_of_bits_for_length[i][j];
+      }
+      else {
+        uimsbf(16) class_length[i][j];
+      }
+      if (rate_escape[i][j] != 1) { /* not ESC */
+        if (fec_type[i][j] != 0) {
+          uimsbf(7) class_rate[i][j];
+        } else {
+          uimsbf(5) class_rate[i][j];
+        }
+      }
+      if (crclen_escape[i][j] != 1) {  /* not ESC */
+        uimsbf(5) class_crclen[i][j];
+      }
+    }
+    uimsbf(1) class_reordered_output;
+    if (class_reordered_output == 1) {
+      for (j = 0; j < number_of_class[i]; j++) {
+        uimsbf(6) class_output_order[i][j];
+      }
+    }
+  }
+  uimsbf(1) header_protection;
+  if (header_protection == 1) {
+    uimsbf(5) header_rate;
+    uimsbf(5) header_crclen;
+  }
+}
+"; } }
 	public virtual string DisplayName { get { return "ErrorProtectionSpecificConfig"; } }
 
 	protected byte number_of_predefined_set; 
@@ -432,50 +487,50 @@ public partial class ErrorProtectionSpecificConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("number_of_predefined_set", 8, this.number_of_predefined_set); 
-		boxSize += builder.Field("interleave_type", 2, this.interleave_type); 
-		boxSize += builder.Field("bit_stuffing", 3, this.bit_stuffing); 
-		boxSize += builder.Field("number_of_concatenated_frame", 3, this.number_of_concatenated_frame); 
+		boxSize += tracer.Field("number_of_predefined_set", 8, this.number_of_predefined_set); 
+		boxSize += tracer.Field("interleave_type", 2, this.interleave_type); 
+		boxSize += tracer.Field("bit_stuffing", 3, this.bit_stuffing); 
+		boxSize += tracer.Field("number_of_concatenated_frame", 3, this.number_of_concatenated_frame); 
 
 		for (int i = 0; i < number_of_predefined_set; i++)
 		{
-			boxSize += builder.Field($"number_of_class[{i}]", 6, this.number_of_class[i]); 
+			boxSize += tracer.Field($"number_of_class[{i}]", 6, this.number_of_class[i]); 
 
 			for (int j = 0; j < number_of_class[i]; j++)
 			{
-				boxSize += builder.Field($"length_escape[{i}][{j}]", 1, this.length_escape[i][j]); 
-				boxSize += builder.Field($"rate_escape[{i}][{j}]", 1, this.rate_escape[i][j]); 
-				boxSize += builder.Field($"crclen_escape[{i}][{j}]", 1, this.crclen_escape[i][j]); 
+				boxSize += tracer.Field($"length_escape[{i}][{j}]", 1, this.length_escape[i][j]); 
+				boxSize += tracer.Field($"rate_escape[{i}][{j}]", 1, this.rate_escape[i][j]); 
+				boxSize += tracer.Field($"crclen_escape[{i}][{j}]", 1, this.crclen_escape[i][j]); 
 
 				if (number_of_concatenated_frame != 1)
 				{
-					boxSize += builder.Field($"concatenate_flag[{i}][{j}]", 1, this.concatenate_flag[i][j]); 
+					boxSize += tracer.Field($"concatenate_flag[{i}][{j}]", 1, this.concatenate_flag[i][j]); 
 				}
-				boxSize += builder.Field($"fec_type[{i}][{j}]", 2, this.fec_type[i][j]); 
+				boxSize += tracer.Field($"fec_type[{i}][{j}]", 2, this.fec_type[i][j]); 
 
 				if (fec_type[i][j] == 0)
 				{
-					boxSize += builder.Field($"termination_switch[{i}][{j}]", 1, this.termination_switch[i][j]); 
+					boxSize += tracer.Field($"termination_switch[{i}][{j}]", 1, this.termination_switch[i][j]); 
 				}
 
 				if (interleave_type == 2)
 				{
-					boxSize += builder.Field($"interleave_switch[{i}][{j}]", 2, this.interleave_switch[i][j]); 
+					boxSize += tracer.Field($"interleave_switch[{i}][{j}]", 2, this.interleave_switch[i][j]); 
 				}
-				boxSize += builder.Field($"class_optional[{i}][{j}]", 1, this.class_optional[i][j]); 
+				boxSize += tracer.Field($"class_optional[{i}][{j}]", 1, this.class_optional[i][j]); 
 
 				if (length_escape[i][j] == true)
 				{
 					/*  ESC  */
-					boxSize += builder.Field($"number_of_bits_for_length[{i}][{j}]", 4, this.number_of_bits_for_length[i][j]); 
+					boxSize += tracer.Field($"number_of_bits_for_length[{i}][{j}]", 4, this.number_of_bits_for_length[i][j]); 
 				}
 
 				else 
 				{
-					boxSize += builder.Field($"class_length[{i}][{j}]", 16, this.class_length[i][j]); 
+					boxSize += tracer.Field($"class_length[{i}][{j}]", 16, this.class_length[i][j]); 
 				}
 
 				if (rate_escape[i][j] != true)
@@ -484,38 +539,38 @@ public partial class ErrorProtectionSpecificConfig : IMp4Serializable
 
 					if (fec_type[i][j] != 0)
 					{
-						boxSize += builder.Field($"class_rate[{i}][{j}]", 7, this.class_rate[i][j]); 
+						boxSize += tracer.Field($"class_rate[{i}][{j}]", 7, this.class_rate[i][j]); 
 					}
 
 					else 
 					{
-						boxSize += builder.Field($"class_rate[{i}][{j}]", 5, this.class_rate[i][j]); 
+						boxSize += tracer.Field($"class_rate[{i}][{j}]", 5, this.class_rate[i][j]); 
 					}
 				}
 
 				if (crclen_escape[i][j] != true)
 				{
 					/*  not ESC  */
-					boxSize += builder.Field($"class_crclen[{i}][{j}]", 5, this.class_crclen[i][j]); 
+					boxSize += tracer.Field($"class_crclen[{i}][{j}]", 5, this.class_crclen[i][j]); 
 				}
 			}
-			boxSize += builder.Field($"class_reordered_output[{i}]", 1, this.class_reordered_output[i]); 
+			boxSize += tracer.Field($"class_reordered_output[{i}]", 1, this.class_reordered_output[i]); 
 
 			if (class_reordered_output[i] == true)
 			{
 
 				for (int j = 0; j < number_of_class[i]; j++)
 				{
-					boxSize += builder.Field($"class_output_order[{i}][{j}]", 6, this.class_output_order[i][j]); 
+					boxSize += tracer.Field($"class_output_order[{i}][{j}]", 6, this.class_output_order[i][j]); 
 				}
 			}
 		}
-		boxSize += builder.Field("header_protection", 1, this.header_protection); 
+		boxSize += tracer.Field("header_protection", 1, this.header_protection); 
 
 		if (header_protection == true)
 		{
-			boxSize += builder.Field("header_rate", 5, this.header_rate); 
-			boxSize += builder.Field("header_crclen", 5, this.header_crclen); 
+			boxSize += tracer.Field("header_rate", 5, this.header_rate); 
+			boxSize += tracer.Field("header_crclen", 5, this.header_crclen); 
 		}
 		return boxSize;
 	}

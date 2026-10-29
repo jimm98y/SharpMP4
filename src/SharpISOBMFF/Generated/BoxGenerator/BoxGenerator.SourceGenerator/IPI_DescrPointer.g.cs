@@ -12,6 +12,10 @@ class IPI_DescrPointer extends BaseDescriptor : bit(8) tag=IPI_DescrPointerTag {
 */
 public partial class IPI_DescrPointer : BaseDescriptor
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class IPI_DescrPointer extends BaseDescriptor : bit(8) tag=IPI_DescrPointerTag {
+ bit(16) IPI_ES_Id;
+ }"; } }
 	public const byte TYPE = DescriptorTags.IPI_DescrPointerTag;
 	public override string DisplayName { get { return "IPI_DescrPointer"; } }
 
@@ -46,11 +50,11 @@ public partial class IPI_DescrPointer : BaseDescriptor
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("IPI_ES_Id", 16, this.IPI_ES_Id); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("IPI_ES_Id", 16, this.IPI_ES_Id); 
 		return boxSize;
 	}
 }

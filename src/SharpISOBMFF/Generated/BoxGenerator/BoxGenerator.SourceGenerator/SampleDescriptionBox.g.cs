@@ -17,6 +17,15 @@ aligned(8) class SampleDescriptionBox ()
 */
 public partial class SampleDescriptionBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SampleDescriptionBox ()
+	extends FullBox('stsd', version, 0){
+	int i ;
+	unsigned int(32) entry_count;
+	for (i = 1 ; i <= entry_count ; i++){
+		SampleEntry();		// an instance of a class derived from SampleEntry
+	}
+}"; } }
 	public const string TYPE = "stsd";
 	public override string DisplayName { get { return "SampleDescriptionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -70,16 +79,16 @@ public partial class SampleDescriptionBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		
-		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		boxSize += tracer.Field("entry_count", 32, this.entry_count); 
 
 		// for (int i = 0 ; i < entry_count ; i++)
-			// boxSize += builder.Field($"SampleEntry[{i}]", IsoStream.CalculateBoxSize(SampleEntry), this.SampleEntry[i]); // an instance of a class derived from SampleEntry
-		boxSize += builder.Children(this);
+			// boxSize += tracer.Field($"SampleEntry[{i}]", IsoStream.CalculateBoxSize(SampleEntry), this.SampleEntry[i]); // an instance of a class derived from SampleEntry
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

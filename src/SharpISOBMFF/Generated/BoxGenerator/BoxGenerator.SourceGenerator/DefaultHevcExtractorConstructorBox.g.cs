@@ -24,6 +24,22 @@ class DefaultHevcExtractorConstructorBox extends FullBox('dhec'){
 */
 public partial class DefaultHevcExtractorConstructorBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class DefaultHevcExtractorConstructorBox extends FullBox('dhec'){
+	unsigned int(32) num_entries;
+	for (i=1; i<= num_entries; i++) { 
+		unsigned int(8) constructor_type;
+		unsigned int(8) constructor_flags; 
+		if( constructor_type == 0 ) 
+			SampleConstructor();
+		else if( constructor_type == 2 ) 
+			InlineConstructor();
+		else if( constructor_type == 3 ) 
+			SampleConstructorFromTrackGroup();
+		else if( constructor_type == 6 ) 
+			NALUStartInlineConstructor ();
+	}
+}"; } }
 	public const string TYPE = "dhec";
 	public override string DisplayName { get { return "DefaultHevcExtractorConstructorBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -154,38 +170,38 @@ public partial class DefaultHevcExtractorConstructorBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("num_entries", 32, this.num_entries); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("num_entries", 32, this.num_entries); 
 
 		for (int i=0; i< num_entries; i++)
 		{
-			boxSize += builder.Field($"constructor_type[{i}]", 8, this.constructor_type[i]); 
-			boxSize += builder.Field($"constructor_flags[{i}]", 8, this.constructor_flags[i]); 
+			boxSize += tracer.Field($"constructor_type[{i}]", 8, this.constructor_type[i]); 
+			boxSize += tracer.Field($"constructor_flags[{i}]", 8, this.constructor_flags[i]); 
 
 			if ( constructor_type[i] == 0 )
 			{
-				// boxSize += builder.Field($"SampleConstructor[{i}]", IsoStream.CalculateBoxSize(SampleConstructor), this.SampleConstructor[i]); 
+				// boxSize += tracer.Field($"SampleConstructor[{i}]", IsoStream.CalculateBoxSize(SampleConstructor), this.SampleConstructor[i]); 
 			}
 
 			else if ( constructor_type[i] == 2 )
 			{
-				// boxSize += builder.Field($"InlineConstructor[{i}]", IsoStream.CalculateBoxSize(InlineConstructor), this.InlineConstructor[i]); 
+				// boxSize += tracer.Field($"InlineConstructor[{i}]", IsoStream.CalculateBoxSize(InlineConstructor), this.InlineConstructor[i]); 
 			}
 
 			else if ( constructor_type[i] == 3 )
 			{
-				// boxSize += builder.Field($"SampleConstructorFromTrackGroup[{i}]", IsoStream.CalculateBoxSize(SampleConstructorFromTrackGroup), this.SampleConstructorFromTrackGroup[i]); 
+				// boxSize += tracer.Field($"SampleConstructorFromTrackGroup[{i}]", IsoStream.CalculateBoxSize(SampleConstructorFromTrackGroup), this.SampleConstructorFromTrackGroup[i]); 
 			}
 
 			else if ( constructor_type[i] == 6 )
 			{
-				// boxSize += builder.Field($"NALUStartInlineConstructor[{i}]", IsoStream.CalculateBoxSize(NALUStartInlineConstructor), this.NALUStartInlineConstructor[i]); 
+				// boxSize += tracer.Field($"NALUStartInlineConstructor[{i}]", IsoStream.CalculateBoxSize(NALUStartInlineConstructor), this.NALUStartInlineConstructor[i]); 
 			}
 		}
-		boxSize += builder.Children(this);
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

@@ -20,6 +20,18 @@ aligned(8) class ADHRBox() extends Box('ADHR') {
 */
 public partial class ADHRBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// Avid's DNxHR header, as FFmpeg's mov_write_avid_tag writes it
+aligned(8) class ADHRBox() extends Box('ADHR') {
+	unsigned int(32) version;
+	unsigned int(32) compressionId;
+	unsigned int(32) subSamplingControl;
+	unsigned int(32) sampleBitDepth;
+	unsigned int(16) colorFormat;
+	unsigned int(16) colorVolume;
+	unsigned int(16) alphaPresent;
+	unsigned int(16) preMultipliedAlpha;
+}"; } }
 	public const string TYPE = "ADHR";
 	public override string DisplayName { get { return "ADHRBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -99,18 +111,18 @@ public partial class ADHRBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("version", 32, this.version); 
-		boxSize += builder.Field("compressionId", 32, this.compressionId); 
-		boxSize += builder.Field("subSamplingControl", 32, this.subSamplingControl); 
-		boxSize += builder.Field("sampleBitDepth", 32, this.sampleBitDepth); 
-		boxSize += builder.Field("colorFormat", 16, this.colorFormat); 
-		boxSize += builder.Field("colorVolume", 16, this.colorVolume); 
-		boxSize += builder.Field("alphaPresent", 16, this.alphaPresent); 
-		boxSize += builder.Field("preMultipliedAlpha", 16, this.preMultipliedAlpha); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("version", 32, this.version); 
+		boxSize += tracer.Field("compressionId", 32, this.compressionId); 
+		boxSize += tracer.Field("subSamplingControl", 32, this.subSamplingControl); 
+		boxSize += tracer.Field("sampleBitDepth", 32, this.sampleBitDepth); 
+		boxSize += tracer.Field("colorFormat", 16, this.colorFormat); 
+		boxSize += tracer.Field("colorVolume", 16, this.colorVolume); 
+		boxSize += tracer.Field("alphaPresent", 16, this.alphaPresent); 
+		boxSize += tracer.Field("preMultipliedAlpha", 16, this.preMultipliedAlpha); 
 		return boxSize;
 	}
 }

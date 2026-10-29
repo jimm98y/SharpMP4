@@ -13,6 +13,11 @@ aligned(8) class KindBox extends FullBox('kind', version = 0, 0) {
 */
 public partial class KindBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class KindBox extends FullBox('kind', version = 0, 0) {
+	utf8string schemeURI;
+	utf8string value;
+}"; } }
 	public const string TYPE = "kind";
 	public override string DisplayName { get { return "KindBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -56,12 +61,12 @@ public partial class KindBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("schemeURI", IsoStream.CalculateStringSize(schemeURI), this.schemeURI); 
-		boxSize += builder.Field("value", IsoStream.CalculateStringSize(value), this.value); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("schemeURI", IsoStream.CalculateStringSize(schemeURI), this.schemeURI); 
+		boxSize += tracer.Field("value", IsoStream.CalculateStringSize(value), this.value); 
 		return boxSize;
 	}
 }

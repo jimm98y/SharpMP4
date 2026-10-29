@@ -13,6 +13,11 @@ aligned(8) class IPMPControlBox() extends FullBox('ipmc') {
 */
 public partial class IPMPControlBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class IPMPControlBox() extends FullBox('ipmc') {
+ Descriptor toollist;
+ unsigned int(8) count; Descriptor descriptor[count];
+ }"; } }
 	public const string TYPE = "ipmc";
 	public override string DisplayName { get { return "IPMPControlBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -25,7 +30,7 @@ public partial class IPMPControlBox : FullBox
 	protected byte count; 
 	public byte Count { get { return this.count; } set { this.count = value; } }
 
-	protected Descriptor[] descriptor; 
+	protected Descriptor[] descriptor = []; 
 	public Descriptor[] Descriptor { get { return this.descriptor; } set { this.descriptor = value; } }
 
 	public IPMPControlBox(): base(IsoStream.FromFourCC("ipmc"))
@@ -62,13 +67,13 @@ public partial class IPMPControlBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("toollist", IsoStream.CalculateDescriptorSize(toollist), this.toollist); 
-		boxSize += builder.Field("count", 8, this.count); 
-		// boxSize += builder.Field("descriptor", IsoStream.CalculateDescriptorSize(descriptor), this.descriptor); 
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("toollist", IsoStream.CalculateDescriptorSize(toollist), this.toollist); 
+		boxSize += tracer.Field("count", 8, this.count); 
+		// boxSize += tracer.Field("descriptor", IsoStream.CalculateDescriptorSize(descriptor), this.descriptor); 
 		return boxSize;
 	}
 }

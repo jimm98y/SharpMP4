@@ -16,6 +16,14 @@ aligned(8) class LhvcExternalBaseLayerInfo() extends VisualSampleGroupEntry('lbl
 */
 public partial class LhvcExternalBaseLayerInfo : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class LhvcExternalBaseLayerInfo() extends VisualSampleGroupEntry('lbli')
+{
+	bit(1) reserved = 1;
+	unsigned int(1) bl_irap_pic_flag;
+	unsigned int(6) bl_irap_nal_unit_type;
+	signed   int(8) sample_offset;
+}"; } }
 	public const string TYPE = "lbli";
 	public override string DisplayName { get { return "LhvcExternalBaseLayerInfo"; } }
 
@@ -68,14 +76,14 @@ public partial class LhvcExternalBaseLayerInfo : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 1, this.reserved); 
-		boxSize += builder.Field("bl_irap_pic_flag", 1, this.bl_irap_pic_flag); 
-		boxSize += builder.Field("bl_irap_nal_unit_type", 6, this.bl_irap_nal_unit_type); 
-		boxSize += builder.Field("sample_offset", 8, this.sample_offset); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 1, this.reserved); 
+		boxSize += tracer.Field("bl_irap_pic_flag", 1, this.bl_irap_pic_flag); 
+		boxSize += tracer.Field("bl_irap_nal_unit_type", 6, this.bl_irap_nal_unit_type); 
+		boxSize += tracer.Field("sample_offset", 8, this.sample_offset); 
 		return boxSize;
 	}
 }

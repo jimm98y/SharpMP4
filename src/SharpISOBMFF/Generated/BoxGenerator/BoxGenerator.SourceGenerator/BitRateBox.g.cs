@@ -14,6 +14,12 @@ class BitRateBox extends Box('btrt'){
 */
 public partial class BitRateBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class BitRateBox extends Box('btrt'){
+	unsigned int(32) bufferSizeDB;
+	unsigned int(32) maxBitrate;
+	unsigned int(32) avgBitrate;
+}"; } }
 	public const string TYPE = "btrt";
 	public override string DisplayName { get { return "BitRateBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -63,13 +69,13 @@ public partial class BitRateBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("bufferSizeDB", 32, this.bufferSizeDB); 
-		boxSize += builder.Field("maxBitrate", 32, this.maxBitrate); 
-		boxSize += builder.Field("avgBitrate", 32, this.avgBitrate); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("bufferSizeDB", 32, this.bufferSizeDB); 
+		boxSize += tracer.Field("maxBitrate", 32, this.maxBitrate); 
+		boxSize += tracer.Field("avgBitrate", 32, this.avgBitrate); 
 		return boxSize;
 	}
 }

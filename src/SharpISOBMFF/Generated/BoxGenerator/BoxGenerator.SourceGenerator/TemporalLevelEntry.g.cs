@@ -14,6 +14,12 @@ class TemporalLevelEntry() extends VisualSampleGroupEntry('tele')
 */
 public partial class TemporalLevelEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class TemporalLevelEntry() extends VisualSampleGroupEntry('tele')
+{
+	bit(1)	level_independently_decodable;
+	bit(7)	reserved=0;
+}"; } }
 	public const string TYPE = "tele";
 	public override string DisplayName { get { return "TemporalLevelEntry"; } }
 
@@ -54,12 +60,12 @@ public partial class TemporalLevelEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("level_independently_decodable", 1, this.level_independently_decodable); 
-		boxSize += builder.Field("reserved", 7, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("level_independently_decodable", 1, this.level_independently_decodable); 
+		boxSize += tracer.Field("reserved", 7, this.reserved); 
 		return boxSize;
 	}
 }

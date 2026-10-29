@@ -12,6 +12,10 @@ aligned(8) class TrackReferenceBox extends Box('tref') {
 */
 public partial class TrackReferenceBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TrackReferenceBox extends Box('tref') {
+	TrackReferenceTypeBox [];
+}"; } }
 	public const string TYPE = "tref";
 	public override string DisplayName { get { return "TrackReferenceBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,12 +54,12 @@ public partial class TrackReferenceBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("TrackReferenceTypeBox", IsoStream.CalculateBoxSize(TrackReferenceTypeBox), this.TrackReferenceTypeBox); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("TrackReferenceTypeBox", IsoStream.CalculateBoxSize(TrackReferenceTypeBox), this.TrackReferenceTypeBox); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

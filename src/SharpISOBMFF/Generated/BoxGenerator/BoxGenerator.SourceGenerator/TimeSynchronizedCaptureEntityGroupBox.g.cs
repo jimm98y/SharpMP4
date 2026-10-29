@@ -13,6 +13,11 @@ aligned(8) class TimeSynchronizedCaptureEntityGroupBox extends EntityToGroupBox(
 */
 public partial class TimeSynchronizedCaptureEntityGroupBox : EntityToGroupBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// ISO/IEC 23008-12 entity group 'tsyn': the fields of an EntityToGroupBox alone, as 23008-12-entity-groups.json has it
+aligned(8) class TimeSynchronizedCaptureEntityGroupBox extends EntityToGroupBox('tsyn',0,0)
+{
+}"; } }
 	public const string TYPE = "tsyn";
 	public override string DisplayName { get { return "TimeSynchronizedCaptureEntityGroupBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -44,10 +49,10 @@ public partial class TimeSynchronizedCaptureEntityGroupBox : EntityToGroupBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

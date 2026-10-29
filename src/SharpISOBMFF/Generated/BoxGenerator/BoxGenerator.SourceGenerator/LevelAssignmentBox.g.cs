@@ -33,6 +33,31 @@ aligned(8) class LevelAssignmentBox extends FullBox('leva', 0, 0)
 */
 public partial class LevelAssignmentBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class LevelAssignmentBox extends FullBox('leva', 0, 0)
+{
+	unsigned int(8)	level_count;
+	for (j=1; j <= level_count; j++) {
+		unsigned int(32)	track_ID;
+		unsigned int(1)	padding_flag;
+		unsigned int(7)	assignment_type;
+		if (assignment_type == 0) {
+			unsigned int(32)	grouping_type;
+		}
+		else if (assignment_type == 1) {
+			unsigned int(32)	grouping_type;
+			unsigned int(32)	grouping_type_parameter;
+		}
+		else if (assignment_type == 2) {}
+			// no further syntax elements needed
+		else if (assignment_type == 3) {}
+			// no further syntax elements needed
+		else if (assignment_type == 4) {
+			unsigned int(32) sub_track_ID;
+		}
+		// other assignment_type values are reserved
+	}
+}"; } }
 	public const string TYPE = "leva";
 	public override string DisplayName { get { return "LevelAssignmentBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -196,27 +221,27 @@ public partial class LevelAssignmentBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("level_count", 8, this.level_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("level_count", 8, this.level_count); 
 
 		for (int j=0; j < level_count; j++)
 		{
-			boxSize += builder.Field($"track_ID[{j}]", 32, this.track_ID[j]); 
-			boxSize += builder.Field($"padding_flag[{j}]", 1, this.padding_flag[j]); 
-			boxSize += builder.Field($"assignment_type[{j}]", 7, this.assignment_type[j]); 
+			boxSize += tracer.Field($"track_ID[{j}]", 32, this.track_ID[j]); 
+			boxSize += tracer.Field($"padding_flag[{j}]", 1, this.padding_flag[j]); 
+			boxSize += tracer.Field($"assignment_type[{j}]", 7, this.assignment_type[j]); 
 
 			if (assignment_type[j] == 0)
 			{
-				boxSize += builder.Field($"grouping_type[{j}]", 32, this.grouping_type[j]); 
+				boxSize += tracer.Field($"grouping_type[{j}]", 32, this.grouping_type[j]); 
 			}
 
 			else if (assignment_type[j] == 1)
 			{
-				boxSize += builder.Field($"grouping_type[{j}]", 32, this.grouping_type[j]); 
-				boxSize += builder.Field($"grouping_type_parameter[{j}]", 32, this.grouping_type_parameter[j]); 
+				boxSize += tracer.Field($"grouping_type[{j}]", 32, this.grouping_type[j]); 
+				boxSize += tracer.Field($"grouping_type_parameter[{j}]", 32, this.grouping_type_parameter[j]); 
 			}
 
 			else if (assignment_type[j] == 2)
@@ -231,7 +256,7 @@ public partial class LevelAssignmentBox : FullBox
 
 			else if (assignment_type[j] == 4)
 			{
-				boxSize += builder.Field($"sub_track_ID[{j}]", 32, this.sub_track_ID[j]); 
+				boxSize += tracer.Field($"sub_track_ID[{j}]", 32, this.sub_track_ID[j]); 
 			}
 			/*  other assignment_type values are reserved */
 		}

@@ -13,6 +13,11 @@ aligned(8) class ISMAKMSBox extends FullBox('iKMS', 0, 0) {
 */
 public partial class ISMAKMSBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// The URI of the key management system, to the end of the box
+aligned(8) class ISMAKMSBox extends FullBox('iKMS', 0, 0) {
+ string kms_URI;
+ }"; } }
 	public const string TYPE = "iKMS";
 	public override string DisplayName { get { return "ISMAKMSBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +55,11 @@ public partial class ISMAKMSBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("kms_URI", IsoStream.CalculateStringSize(kms_URI), this.kms_URI); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("kms_URI", IsoStream.CalculateStringSize(kms_URI), this.kms_URI); 
 		return boxSize;
 	}
 }

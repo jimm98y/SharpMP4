@@ -12,12 +12,16 @@ aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends
 */
 public partial class TrackReferenceTypeBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {
+	unsigned int(32) track_IDs[];
+}"; } }
 	public override string DisplayName { get { return "TrackReferenceTypeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "tref", "iref" }); }
 
 
-	protected uint[] track_IDs; 
+	protected uint[] track_IDs = []; 
 	public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
 
 	public TrackReferenceTypeBox(uint reference_type): base(reference_type)
@@ -48,11 +52,11 @@ public partial class TrackReferenceTypeBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("track_IDs", ((ulong)track_IDs.Length * 32), this.track_IDs); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("track_IDs", ((ulong)track_IDs.Length * 32), this.track_IDs); 
 		return boxSize;
 	}
 }

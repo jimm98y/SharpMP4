@@ -13,6 +13,11 @@ aligned(8) class AppleSdpiBox extends Box('sdpi') {
 */
 public partial class AppleSdpiBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AppleSdpiBox extends Box('sdpi') {
+ unsigned int(32) data; //TODO 
+}
+"; } }
 	public const string TYPE = "sdpi";
 	public override string DisplayName { get { return "AppleSdpiBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +55,11 @@ public partial class AppleSdpiBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("data", 32, this.data); //TODO 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("data", 32, this.data); //TODO 
 		return boxSize;
 	}
 }

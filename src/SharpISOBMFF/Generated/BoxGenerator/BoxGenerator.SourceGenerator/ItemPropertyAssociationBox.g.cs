@@ -29,6 +29,27 @@ aligned(8) class ItemPropertyAssociationBox
 */
 public partial class ItemPropertyAssociationBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ItemPropertyAssociationBox
+	extends FullBox('ipma', version, flags)
+{
+	unsigned int(32) entry_count;
+	for(i = 0; i < entry_count; i++) {
+		if (version < 1)
+			unsigned int(16)	item_ID;
+		else
+			unsigned int(32)	item_ID;
+		unsigned int(8) association_count;
+		for (j=0; j<association_count; j++) {
+			bit(1) essential;
+			if (flags & 1)
+				unsigned int(15) property_index;
+			else
+				unsigned int(7) property_index;
+		}
+	}
+}
+"; } }
 	public const string TYPE = "ipma";
 	public override string DisplayName { get { return "ItemPropertyAssociationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -174,38 +195,38 @@ public partial class ItemPropertyAssociationBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entry_count", 32, this.entry_count); 
 
 		for (int i = 0; i < entry_count; i++)
 		{
 
 			if (version < 1)
 			{
-				boxSize += builder.Field($"item_ID[{i}]", 16, this.item_ID[i]); 
+				boxSize += tracer.Field($"item_ID[{i}]", 16, this.item_ID[i]); 
 			}
 
 			else 
 			{
-				boxSize += builder.Field($"item_ID[{i}]", 32, this.item_ID[i]); 
+				boxSize += tracer.Field($"item_ID[{i}]", 32, this.item_ID[i]); 
 			}
-			boxSize += builder.Field($"association_count[{i}]", 8, this.association_count[i]); 
+			boxSize += tracer.Field($"association_count[{i}]", 8, this.association_count[i]); 
 
 			for (int j=0; j<association_count[i]; j++)
 			{
-				boxSize += builder.Field($"essential[{i}][{j}]", 1, this.essential[i][j]); 
+				boxSize += tracer.Field($"essential[{i}][{j}]", 1, this.essential[i][j]); 
 
 				if ((flags  &  1) ==  1)
 				{
-					boxSize += builder.Field($"property_index[{i}][{j}]", 15, this.property_index[i][j]); 
+					boxSize += tracer.Field($"property_index[{i}][{j}]", 15, this.property_index[i][j]); 
 				}
 
 				else 
 				{
-					boxSize += builder.Field($"property_index[{i}][{j}]", 7, this.property_index[i][j]); 
+					boxSize += tracer.Field($"property_index[{i}][{j}]", 7, this.property_index[i][j]); 
 				}
 			}
 		}

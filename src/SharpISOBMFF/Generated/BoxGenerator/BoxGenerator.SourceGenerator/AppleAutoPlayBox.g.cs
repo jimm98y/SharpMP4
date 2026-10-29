@@ -12,6 +12,10 @@ aligned(8) class AppleAutoPlayBox() extends Box('play') {
 */
 public partial class AppleAutoPlayBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AppleAutoPlayBox() extends Box('play') {
+	 unsigned int(8) autoplay;
+ } "; } }
 	public const string TYPE = "play";
 	public override string DisplayName { get { return "AppleAutoPlayBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class AppleAutoPlayBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("autoplay", 8, this.autoplay); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("autoplay", 8, this.autoplay); 
 		return boxSize;
 	}
 }

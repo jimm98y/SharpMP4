@@ -12,13 +12,17 @@ class TagsBox() extends Box ('TAGS') {
 */
 public partial class TagsBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class TagsBox() extends Box ('TAGS') {
+ bit(8) data[];
+ }"; } }
 	public const string TYPE = "TAGS";
 	public override string DisplayName { get { return "TagsBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("udta"); }
 
 
-	protected byte[] data; 
+	protected byte[] data = []; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public TagsBox(): base(IsoStream.FromFourCC("TAGS"))
@@ -52,12 +56,12 @@ public partial class TagsBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

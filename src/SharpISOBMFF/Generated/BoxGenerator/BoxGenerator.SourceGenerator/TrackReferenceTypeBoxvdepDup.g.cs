@@ -12,13 +12,17 @@ aligned(8) class TrackReferenceTypeBox() extends Box('vdep') {
 */
 public partial class TrackReferenceTypeBoxvdepDup : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TrackReferenceTypeBox() extends Box('vdep') {
+ unsigned int(32) trackIds[];
+ } "; } }
 	public const string TYPE = "vdep";
 	public override string DisplayName { get { return "TrackReferenceTypeBoxvdepDup"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("tref"); }
 
 
-	protected uint[] trackIds; 
+	protected uint[] trackIds = []; 
 	public uint[] TrackIds { get { return this.trackIds; } set { this.trackIds = value; } }
 
 	public TrackReferenceTypeBoxvdepDup(): base(IsoStream.FromFourCC("vdep"))
@@ -49,11 +53,11 @@ public partial class TrackReferenceTypeBoxvdepDup : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("trackIds", ((ulong)trackIds.Length * 32), this.trackIds); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("trackIds", ((ulong)trackIds.Length * 32), this.trackIds); 
 		return boxSize;
 	}
 }

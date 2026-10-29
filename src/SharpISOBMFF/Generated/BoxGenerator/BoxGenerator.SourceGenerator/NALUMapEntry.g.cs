@@ -29,6 +29,27 @@ class NALUMapEntry() extends VisualSampleGroupEntry ('nalm') {
 */
 public partial class NALUMapEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class NALUMapEntry() extends VisualSampleGroupEntry ('nalm') {
+	bit(6) reserved = 0;
+	unsigned int(1) large_size;
+	unsigned int(1) rle;
+	if (large_size) {
+		unsigned int(16) entry_count;
+	} else {
+		unsigned int(8) entry_count;
+	}
+	for (i=1; i<= entry_count; i++) {
+		if (rle) {
+			if (large_size) {
+				unsigned int(16) NALU_start_number;
+			} else {
+				unsigned int(8) NALU_start_number;
+			}
+		}
+		unsigned int(16) groupID;
+	}
+}"; } }
 	public const string TYPE = "nalm";
 	public override string DisplayName { get { return "NALUMapEntry"; } }
 
@@ -173,22 +194,22 @@ public partial class NALUMapEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 6, this.reserved); 
-		boxSize += builder.Field("large_size", 1, this.large_size); 
-		boxSize += builder.Field("rle", 1, this.rle); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 6, this.reserved); 
+		boxSize += tracer.Field("large_size", 1, this.large_size); 
+		boxSize += tracer.Field("rle", 1, this.rle); 
 
 		if (large_size)
 		{
-			boxSize += builder.Field("entry_count", 16, this.entry_count); 
+			boxSize += tracer.Field("entry_count", 16, this.entry_count); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("entry_count", 8, this.entry_count); 
+			boxSize += tracer.Field("entry_count", 8, this.entry_count); 
 		}
 
 		for (int i=0; i< entry_count; i++)
@@ -199,15 +220,15 @@ public partial class NALUMapEntry : VisualSampleGroupEntry
 
 				if (large_size)
 				{
-					boxSize += builder.Field($"NALU_start_number[{i}]", 16, this.NALU_start_number[i]); 
+					boxSize += tracer.Field($"NALU_start_number[{i}]", 16, this.NALU_start_number[i]); 
 				}
 
 				else 
 				{
-					boxSize += builder.Field($"NALU_start_number[{i}]", 8, this.NALU_start_number[i]); 
+					boxSize += tracer.Field($"NALU_start_number[{i}]", 8, this.NALU_start_number[i]); 
 				}
 			}
-			boxSize += builder.Field($"groupID[{i}]", 16, this.groupID[i]); 
+			boxSize += tracer.Field($"groupID[{i}]", 16, this.groupID[i]); 
 		}
 		return boxSize;
 	}

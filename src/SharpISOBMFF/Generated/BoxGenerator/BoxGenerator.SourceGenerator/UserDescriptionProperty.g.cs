@@ -17,6 +17,15 @@ extends ItemFullProperty('udes', version = 0, flags = 0){
 */
 public partial class UserDescriptionProperty : ItemFullProperty
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class UserDescriptionProperty
+extends ItemFullProperty('udes', version = 0, flags = 0){
+	utf8string lang;
+	utf8string name;
+	utf8string description;
+	utf8string tags;
+}
+"; } }
 	public const string TYPE = "udes";
 	public override string DisplayName { get { return "UserDescriptionProperty"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -72,14 +81,14 @@ public partial class UserDescriptionProperty : ItemFullProperty
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("lang", IsoStream.CalculateStringSize(lang), this.lang); 
-		boxSize += builder.Field("name", IsoStream.CalculateStringSize(name), this.name); 
-		boxSize += builder.Field("description", IsoStream.CalculateStringSize(description), this.description); 
-		boxSize += builder.Field("tags", IsoStream.CalculateStringSize(tags), this.tags); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("lang", IsoStream.CalculateStringSize(lang), this.lang); 
+		boxSize += tracer.Field("name", IsoStream.CalculateStringSize(name), this.name); 
+		boxSize += tracer.Field("description", IsoStream.CalculateStringSize(description), this.description); 
+		boxSize += tracer.Field("tags", IsoStream.CalculateStringSize(tags), this.tags); 
 		return boxSize;
 	}
 }

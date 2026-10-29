@@ -20,6 +20,13 @@ public partial class CanonCTBOEntry : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class CanonCTBOEntry() {
+ unsigned int(32) index;
+ unsigned int(64) offset;
+ unsigned int(64) size;
+}
+"; } }
 	public virtual string DisplayName { get { return "CanonCTBOEntry"; } }
 
 	protected uint index; 
@@ -62,12 +69,12 @@ public partial class CanonCTBOEntry : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("index", 32, this.index); 
-		boxSize += builder.Field("offset", 64, this.offset); 
-		boxSize += builder.Field("size", 64, this.size); 
+		boxSize += tracer.Field("index", 32, this.index); 
+		boxSize += tracer.Field("offset", 64, this.offset); 
+		boxSize += tracer.Field("size", 64, this.size); 
 		return boxSize;
 	}
 }

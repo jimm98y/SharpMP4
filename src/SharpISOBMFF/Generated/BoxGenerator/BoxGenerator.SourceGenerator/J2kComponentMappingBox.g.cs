@@ -14,13 +14,19 @@ aligned(8) class J2kComponentMappingBox() extends Box('cmap') {
 */
 public partial class J2kComponentMappingBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// JPEG 2000 component mapping (ISO/IEC 15444-1 I.5.3.5): of each channel, its component, and whether it is mapped directly or through the palette's column
+aligned(8) class J2kComponentMappingBox() extends Box('cmap') {
+	 J2kComponentMapping mappings[];
+ } 
+ "; } }
 	public const string TYPE = "cmap";
 	public override string DisplayName { get { return "J2kComponentMappingBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("j2kH"); }
 
 
-	protected J2kComponentMapping[] mappings; 
+	protected J2kComponentMapping[] mappings = []; 
 	public J2kComponentMapping[] Mappings { get { return this.mappings; } set { this.mappings = value; } }
 
 	public J2kComponentMappingBox(): base(IsoStream.FromFourCC("cmap"))
@@ -51,11 +57,11 @@ public partial class J2kComponentMappingBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("mappings", IsoStream.CalculateClassSize(mappings), this.mappings); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("mappings", IsoStream.CalculateClassSize(mappings), this.mappings); 
 		return boxSize;
 	}
 }

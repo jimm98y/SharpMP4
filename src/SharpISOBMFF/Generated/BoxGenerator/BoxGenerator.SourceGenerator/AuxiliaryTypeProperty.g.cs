@@ -15,6 +15,13 @@ extends ItemFullProperty('auxC', version = 0, flags) {
 */
 public partial class AuxiliaryTypeProperty : ItemFullProperty
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AuxiliaryTypeProperty
+extends ItemFullProperty('auxC', version = 0, flags) {
+	string aux_type;
+	template unsigned int(8) aux_subtype[];
+		// until the end of the box, the semantics depend on the aux_type value
+}"; } }
 	public const string TYPE = "auxC";
 	public override string DisplayName { get { return "AuxiliaryTypeProperty"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -24,7 +31,7 @@ public partial class AuxiliaryTypeProperty : ItemFullProperty
 	protected BinaryUTF8String aux_type; 
 	public BinaryUTF8String AuxType { get { return this.aux_type; } set { this.aux_type = value; } }
 
-	protected byte[] aux_subtype;  //  until the end of the box, the semantics depend on the aux_type value
+	protected byte[] aux_subtype = [];  //  until the end of the box, the semantics depend on the aux_type value
 	public byte[] AuxSubtype { get { return this.aux_subtype; } set { this.aux_subtype = value; } }
 
 	public AuxiliaryTypeProperty(uint flags = 0): base(IsoStream.FromFourCC("auxC"), 0, flags)
@@ -58,12 +65,12 @@ public partial class AuxiliaryTypeProperty : ItemFullProperty
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("aux_type", IsoStream.CalculateStringSize(aux_type), this.aux_type); 
-		boxSize += builder.Field("aux_subtype", ((ulong)aux_subtype.Length * 8), this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("aux_type", IsoStream.CalculateStringSize(aux_type), this.aux_type); 
+		boxSize += tracer.Field("aux_subtype", ((ulong)aux_subtype.Length * 8), this.aux_subtype); // until the end of the box, the semantics depend on the aux_type value
 		return boxSize;
 	}
 }

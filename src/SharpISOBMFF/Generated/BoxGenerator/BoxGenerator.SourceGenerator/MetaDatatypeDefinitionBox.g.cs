@@ -14,6 +14,12 @@ aligned(8) class MetaDatatypeDefinitionBox extends Box('dtyp') {
 */
 public partial class MetaDatatypeDefinitionBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MetaDatatypeDefinitionBox extends Box('dtyp') {
+ unsigned int(32) datatype_namespace;
+ unsigned int(8) datatype_array[];
+}
+"; } }
 	public const string TYPE = "dtyp";
 	public override string DisplayName { get { return "MetaDatatypeDefinitionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -23,7 +29,7 @@ public partial class MetaDatatypeDefinitionBox : Box
 	protected uint datatype_namespace; 
 	public uint DatatypeNamespace { get { return this.datatype_namespace; } set { this.datatype_namespace = value; } }
 
-	protected byte[] datatype_array; 
+	protected byte[] datatype_array = []; 
 	public byte[] DatatypeArray { get { return this.datatype_array; } set { this.datatype_array = value; } }
 
 	public MetaDatatypeDefinitionBox(): base(IsoStream.FromFourCC("dtyp"))
@@ -57,12 +63,12 @@ public partial class MetaDatatypeDefinitionBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("datatype_namespace", 32, this.datatype_namespace); 
-		boxSize += builder.Field("datatype_array", ((ulong)datatype_array.Length * 8), this.datatype_array); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("datatype_namespace", 32, this.datatype_namespace); 
+		boxSize += tracer.Field("datatype_array", ((ulong)datatype_array.Length * 8), this.datatype_array); 
 		return boxSize;
 	}
 }

@@ -14,6 +14,12 @@ aligned(8) class MetaBoxRelationBox() extends FullBox('mere') {
 */
 public partial class MetaBoxRelationBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MetaBoxRelationBox() extends FullBox('mere') {
+ unsigned int(32) firstMetaBoxHandlerType;
+ unsigned int(32) secondMetaBoxHandlerType;
+ bit(8) metaboxRelation; 
+ }"; } }
 	public const string TYPE = "mere";
 	public override string DisplayName { get { return "MetaBoxRelationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -63,13 +69,13 @@ public partial class MetaBoxRelationBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("firstMetaBoxHandlerType", 32, this.firstMetaBoxHandlerType); 
-		boxSize += builder.Field("secondMetaBoxHandlerType", 32, this.secondMetaBoxHandlerType); 
-		boxSize += builder.Field("metaboxRelation", 8, this.metaboxRelation); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("firstMetaBoxHandlerType", 32, this.firstMetaBoxHandlerType); 
+		boxSize += tracer.Field("secondMetaBoxHandlerType", 32, this.secondMetaBoxHandlerType); 
+		boxSize += tracer.Field("metaboxRelation", 8, this.metaboxRelation); 
 		return boxSize;
 	}
 }

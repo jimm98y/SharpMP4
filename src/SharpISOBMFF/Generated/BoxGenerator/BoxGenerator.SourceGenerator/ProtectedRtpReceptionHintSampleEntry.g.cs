@@ -13,6 +13,11 @@ class ProtectedRtpReceptionHintSampleEntry
 */
 public partial class ProtectedRtpReceptionHintSampleEntry : RtpReceptionHintSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ProtectedRtpReceptionHintSampleEntry
+	extends RtpReceptionHintSampleEntry ('prtp') {
+	ProtectionSchemeInfoBox		SchemeInformation;
+}"; } }
 	public const string TYPE = "prtp";
 	public override string DisplayName { get { return "ProtectedRtpReceptionHintSampleEntry"; } }
 	public ProtectionSchemeInfoBox _SchemeInformation { get { return this.children.OfType<ProtectionSchemeInfoBox>().FirstOrDefault(); } }
@@ -48,12 +53,12 @@ public partial class ProtectedRtpReceptionHintSampleEntry : RtpReceptionHintSamp
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("SchemeInformation", IsoStream.CalculateBoxSize(SchemeInformation), this.SchemeInformation); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("SchemeInformation", IsoStream.CalculateBoxSize(SchemeInformation), this.SchemeInformation); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

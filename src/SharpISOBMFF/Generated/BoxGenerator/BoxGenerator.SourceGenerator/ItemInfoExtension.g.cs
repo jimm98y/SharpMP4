@@ -18,6 +18,11 @@ public partial class ItemInfoExtension : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class ItemInfoExtension(unsigned int(32) extension_type)
+{ 
+} 
+"; } }
 	public virtual string DisplayName { get { return "ItemInfoExtension"; } }
 
 	public ItemInfoExtension(uint extension_type): base()
@@ -42,7 +47,7 @@ public partial class ItemInfoExtension : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
 		return boxSize;

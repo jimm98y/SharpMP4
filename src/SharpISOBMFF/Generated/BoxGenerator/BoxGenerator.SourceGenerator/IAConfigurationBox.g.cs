@@ -15,6 +15,13 @@ class IAConfigurationBox extends Box('iacb') {
 */
 public partial class IAConfigurationBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// 6.2.4: unsigned int (8 x configOBUs_size) configOBUs, as bytes; what a later version puts after them is left
+class IAConfigurationBox extends Box('iacb') {
+ unsigned int(8) configurationVersion = 1;
+ leb128() configOBUs_size;
+ unsigned int(8) configOBUs[configOBUs_size];
+}"; } }
 	public const string TYPE = "iacb";
 	public override string DisplayName { get { return "IAConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -27,7 +34,7 @@ public partial class IAConfigurationBox : Box
 	protected Leb128 configOBUs_size; 
 	public Leb128 ConfigOBUsSize { get { return this.configOBUs_size; } set { this.configOBUs_size = value; } }
 
-	protected byte[] configOBUs; 
+	protected byte[] configOBUs = []; 
 	public byte[] ConfigOBUs { get { return this.configOBUs; } set { this.configOBUs = value; } }
 
 	public IAConfigurationBox(): base(IsoStream.FromFourCC("iacb"))
@@ -64,13 +71,13 @@ public partial class IAConfigurationBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("configurationVersion", 8, this.configurationVersion); 
-		boxSize += builder.Field("configOBUs_size", IsoStream.CalculateLeb128Size(configOBUs_size), this.configOBUs_size); 
-		boxSize += builder.Field("configOBUs", ((ulong)(configOBUs_size) * 8), this.configOBUs); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("configurationVersion", 8, this.configurationVersion); 
+		boxSize += tracer.Field("configOBUs_size", IsoStream.CalculateLeb128Size(configOBUs_size), this.configOBUs_size); 
+		boxSize += tracer.Field("configOBUs", ((ulong)(configOBUs_size) * 8), this.configOBUs); 
 		return boxSize;
 	}
 }

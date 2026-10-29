@@ -16,6 +16,14 @@ class SVCSampleEntry() extends VisualSampleEntry ('svc1' or 'svc2') {
 */
 public partial class SVCSampleEntry : VisualSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// Use this if the track is NOT AVC compatible
+class SVCSampleEntry() extends VisualSampleEntry ('svc1' or 'svc2') {
+	SVCConfigurationBox		svcconfig;
+	MPEG4ExtensionDescriptorsBox descr;	// optional
+	ScalabilityInformationSEIBox	scalability;	// optional
+	SVCPriorityAssignmentBox	method;			// optional
+}"; } }
 	public const string TYPE = "svc1";
 	public override string DisplayName { get { return "SVCSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -66,15 +74,15 @@ public partial class SVCSampleEntry : VisualSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("svcconfig", IsoStream.CalculateBoxSize(svcconfig), this.svcconfig); 
-		// boxSize += builder.Field("descr", IsoStream.CalculateBoxSize(descr), this.descr); // optional
-		// boxSize += builder.Field("scalability", IsoStream.CalculateBoxSize(scalability), this.scalability); // optional
-		// boxSize += builder.Field("method", IsoStream.CalculateBoxSize(method), this.method); // optional
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("svcconfig", IsoStream.CalculateBoxSize(svcconfig), this.svcconfig); 
+		// boxSize += tracer.Field("descr", IsoStream.CalculateBoxSize(descr), this.descr); // optional
+		// boxSize += tracer.Field("scalability", IsoStream.CalculateBoxSize(scalability), this.scalability); // optional
+		// boxSize += tracer.Field("method", IsoStream.CalculateBoxSize(method), this.method); // optional
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

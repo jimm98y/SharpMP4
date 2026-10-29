@@ -12,6 +12,10 @@ unsigned int(32) view_packing_kind; // a FourCC for the kind of projection
 */
 public partial class ViewPackingInformationBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ViewPackingInformationBox extends FullBox('pkin', 0, 0) { 
+unsigned int(32) view_packing_kind; // a FourCC for the kind of projection 
+} "; } }
 	public const string TYPE = "pkin";
 	public override string DisplayName { get { return "ViewPackingInformationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class ViewPackingInformationBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("view_packing_kind", 32, this.view_packing_kind); // a FourCC for the kind of projection 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("view_packing_kind", 32, this.view_packing_kind); // a FourCC for the kind of projection 
 		return boxSize;
 	}
 }

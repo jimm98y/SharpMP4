@@ -24,6 +24,17 @@ public partial class UsacChannelConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class UsacChannelConfig()
+{
+  EscapedValue(5, 8, 16) numOutChannels;
+  for (i = 0; i < numOutChannels; i++) {
+    uimsbf(5) bsOutputChannelPos;
+  }
+}
+
+// sbrRatioIndex, of coreSbrFrameLengthIndex 2, 3 and 4, is not 0: SBR is used
+"; } }
 	public virtual string DisplayName { get { return "UsacChannelConfig"; } }
 
 	protected EscapedValue numOutChannels; 
@@ -73,14 +84,14 @@ public partial class UsacChannelConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("numOutChannels", IsoStream.CalculateClassSize(numOutChannels), this.numOutChannels); 
+		boxSize += tracer.Field("numOutChannels", IsoStream.CalculateClassSize(numOutChannels), this.numOutChannels); 
 
 		for (int i = 0; i < numOutChannels; i++)
 		{
-			boxSize += builder.Field($"bsOutputChannelPos[{i}]", 5, this.bsOutputChannelPos[i]); 
+			boxSize += tracer.Field($"bsOutputChannelPos[{i}]", 5, this.bsOutputChannelPos[i]); 
 		}
 		return boxSize;
 	}

@@ -25,6 +25,23 @@ class TranscodingInfoBox extends Box('tran'){
 */
 public partial class TranscodingInfoBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class TranscodingInfoBox extends Box('tran'){
+	bit(4) reserved = 0;
+	unsigned int(2) conversion_idc;
+	unsigned int(1) cavlc_info_present_flag;
+	unsigned int(1) cabac_info_present_flag;
+	if(cavlc_info_present_flag){
+		unsigned int(24) cavlc_profile_level_idc;
+		unsigned int(32) cavlc_max_bitrate;
+		unsigned int(32) cavlc_avg_bitrate;
+	}
+	if(cabac_info_present_flag){
+		unsigned int(24) cabac_profile_level_idc;
+		unsigned int(32) cabac_max_bitrate;
+		unsigned int(32) cabac_avg_bitrate;
+	}
+}"; } }
 	public const string TYPE = "tran";
 	public override string DisplayName { get { return "TranscodingInfoBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -140,27 +157,27 @@ public partial class TranscodingInfoBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 4, this.reserved); 
-		boxSize += builder.Field("conversion_idc", 2, this.conversion_idc); 
-		boxSize += builder.Field("cavlc_info_present_flag", 1, this.cavlc_info_present_flag); 
-		boxSize += builder.Field("cabac_info_present_flag", 1, this.cabac_info_present_flag); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 4, this.reserved); 
+		boxSize += tracer.Field("conversion_idc", 2, this.conversion_idc); 
+		boxSize += tracer.Field("cavlc_info_present_flag", 1, this.cavlc_info_present_flag); 
+		boxSize += tracer.Field("cabac_info_present_flag", 1, this.cabac_info_present_flag); 
 
 		if (cavlc_info_present_flag)
 		{
-			boxSize += builder.Field("cavlc_profile_level_idc", 24, this.cavlc_profile_level_idc); 
-			boxSize += builder.Field("cavlc_max_bitrate", 32, this.cavlc_max_bitrate); 
-			boxSize += builder.Field("cavlc_avg_bitrate", 32, this.cavlc_avg_bitrate); 
+			boxSize += tracer.Field("cavlc_profile_level_idc", 24, this.cavlc_profile_level_idc); 
+			boxSize += tracer.Field("cavlc_max_bitrate", 32, this.cavlc_max_bitrate); 
+			boxSize += tracer.Field("cavlc_avg_bitrate", 32, this.cavlc_avg_bitrate); 
 		}
 
 		if (cabac_info_present_flag)
 		{
-			boxSize += builder.Field("cabac_profile_level_idc", 24, this.cabac_profile_level_idc); 
-			boxSize += builder.Field("cabac_max_bitrate", 32, this.cabac_max_bitrate); 
-			boxSize += builder.Field("cabac_avg_bitrate", 32, this.cabac_avg_bitrate); 
+			boxSize += tracer.Field("cabac_profile_level_idc", 24, this.cabac_profile_level_idc); 
+			boxSize += tracer.Field("cabac_max_bitrate", 32, this.cabac_max_bitrate); 
+			boxSize += tracer.Field("cabac_avg_bitrate", 32, this.cabac_avg_bitrate); 
 		}
 		return boxSize;
 	}

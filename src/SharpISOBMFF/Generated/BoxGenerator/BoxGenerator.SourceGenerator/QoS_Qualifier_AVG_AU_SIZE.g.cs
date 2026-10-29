@@ -13,6 +13,11 @@ class QoS_Qualifier_AVG_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x42 {
 */
 public partial class QoS_Qualifier_AVG_AU_SIZE : QoS_Qualifier
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class QoS_Qualifier_AVG_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x42 {
+ unsigned int(32) AVG_AU_SIZE;
+ }
+ "; } }
 	public const byte TYPE = 0x42;
 	public override string DisplayName { get { return "QoS_Qualifier_AVG_AU_SIZE"; } }
 
@@ -47,11 +52,11 @@ public partial class QoS_Qualifier_AVG_AU_SIZE : QoS_Qualifier
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("AVG_AU_SIZE", 32, this.AVG_AU_SIZE); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("AVG_AU_SIZE", 32, this.AVG_AU_SIZE); 
 		return boxSize;
 	}
 }

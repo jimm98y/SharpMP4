@@ -22,6 +22,20 @@ aligned(8) class VvcSubpicIDEntry() extends VisualSampleGroupEntry('spid')
 */
 public partial class VvcSubpicIDEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class VvcSubpicIDEntry() extends VisualSampleGroupEntry('spid')
+{
+	unsigned int(1) rect_region_flag;
+	bit(2) reserved = 0;
+	unsigned int(1) continuous_id_flag;
+	unsigned int(12) num_subpics_minus1;
+	for (i = 0; i <= num_subpics_minus1; i++) {
+		if ((continuous_id_flag && i == 0) || !continuous_id_flag)
+			unsigned int(16) subpic_id[i];
+		if (rect_region_flag)
+			unsigned int(16) groupID[i];
+	}
+}"; } }
 	public const string TYPE = "spid";
 	public override string DisplayName { get { return "VvcSubpicIDEntry"; } }
 
@@ -124,26 +138,26 @@ public partial class VvcSubpicIDEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("rect_region_flag", 1, this.rect_region_flag); 
-		boxSize += builder.Field("reserved", 2, this.reserved); 
-		boxSize += builder.Field("continuous_id_flag", 1, this.continuous_id_flag); 
-		boxSize += builder.Field("num_subpics_minus1", 12, this.num_subpics_minus1); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("rect_region_flag", 1, this.rect_region_flag); 
+		boxSize += tracer.Field("reserved", 2, this.reserved); 
+		boxSize += tracer.Field("continuous_id_flag", 1, this.continuous_id_flag); 
+		boxSize += tracer.Field("num_subpics_minus1", 12, this.num_subpics_minus1); 
 
 		for (int i = 0; i <= num_subpics_minus1; i++)
 		{
 
 			if ((continuous_id_flag && i == 0) || !continuous_id_flag)
 			{
-				boxSize += builder.Field($"subpic_id[{i}]", 16, this.subpic_id[i]); 
+				boxSize += tracer.Field($"subpic_id[{i}]", 16, this.subpic_id[i]); 
 			}
 
 			if (rect_region_flag)
 			{
-				boxSize += builder.Field($"groupID[{i}]", 16, this.groupID[i]); 
+				boxSize += tracer.Field($"groupID[{i}]", 16, this.groupID[i]); 
 			}
 		}
 		return boxSize;

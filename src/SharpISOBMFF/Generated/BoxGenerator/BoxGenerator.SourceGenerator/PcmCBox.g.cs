@@ -13,6 +13,11 @@ aligned(8) class PcmCBox() extends FullBox('pcmC') {
 */
 public partial class PcmCBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class PcmCBox() extends FullBox('pcmC') {
+	 unsigned int(8) formatFlags;
+	 unsigned int(8) pcmSampleSize;
+ } "; } }
 	public const string TYPE = "pcmC";
 	public override string DisplayName { get { return "PcmCBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -56,12 +61,12 @@ public partial class PcmCBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("formatFlags", 8, this.formatFlags); 
-		boxSize += builder.Field("pcmSampleSize", 8, this.pcmSampleSize); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("formatFlags", 8, this.formatFlags); 
+		boxSize += tracer.Field("pcmSampleSize", 8, this.pcmSampleSize); 
 		return boxSize;
 	}
 }

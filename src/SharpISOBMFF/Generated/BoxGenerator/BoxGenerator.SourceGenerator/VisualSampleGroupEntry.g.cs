@@ -15,6 +15,13 @@ SampleGroupDescriptionEntry (grouping_type)
 */
 public abstract partial class VisualSampleGroupEntry : SampleGroupDescriptionEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"abstract class VisualSampleGroupEntry (unsigned int(32) grouping_type) extends 
+SampleGroupDescriptionEntry (grouping_type) 
+{ 
+} 
+
+"; } }
 	public override string DisplayName { get { return "VisualSampleGroupEntry"; } }
 
 	public VisualSampleGroupEntry(uint grouping_type): base(grouping_type)
@@ -42,10 +49,10 @@ public abstract partial class VisualSampleGroupEntry : SampleGroupDescriptionEnt
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

@@ -19,6 +19,17 @@ aligned(8) class AC3SpecificBox() extends Box('dac3') {
 */
 public partial class AC3SpecificBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// ETSI TS 102 366 F.4, as GPAC's gf_odf_ac3_cfg_parse_bs and FFmpeg's mov_read_dac3 read it
+aligned(8) class AC3SpecificBox() extends Box('dac3') {
+	unsigned int(2) fscod;
+	unsigned int(5) bsid;
+	unsigned int(3) bsmod;
+	unsigned int(3) acmod;
+	unsigned int(1) lfeon;
+	unsigned int(5) bit_rate_code;
+	bit(5) reserved = 0;
+}"; } }
 	public const string TYPE = "dac3";
 	public override string DisplayName { get { return "AC3SpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -92,17 +103,17 @@ public partial class AC3SpecificBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("fscod", 2, this.fscod); 
-		boxSize += builder.Field("bsid", 5, this.bsid); 
-		boxSize += builder.Field("bsmod", 3, this.bsmod); 
-		boxSize += builder.Field("acmod", 3, this.acmod); 
-		boxSize += builder.Field("lfeon", 1, this.lfeon); 
-		boxSize += builder.Field("bit_rate_code", 5, this.bit_rate_code); 
-		boxSize += builder.Field("reserved", 5, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("fscod", 2, this.fscod); 
+		boxSize += tracer.Field("bsid", 5, this.bsid); 
+		boxSize += tracer.Field("bsmod", 3, this.bsmod); 
+		boxSize += tracer.Field("acmod", 3, this.acmod); 
+		boxSize += tracer.Field("lfeon", 1, this.lfeon); 
+		boxSize += tracer.Field("bit_rate_code", 5, this.bit_rate_code); 
+		boxSize += tracer.Field("reserved", 5, this.reserved); 
 		return boxSize;
 	}
 }

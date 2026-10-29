@@ -13,6 +13,11 @@ class AppleQualityBox() extends Box ('rmqu'){
 */
 public partial class AppleQualityBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AppleQualityBox() extends Box ('rmqu'){
+ unsigned int(32) flags;
+ unsigned int(32) quality;
+ }"; } }
 	public const string TYPE = "rmqu";
 	public override string DisplayName { get { return "AppleQualityBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -56,12 +61,12 @@ public partial class AppleQualityBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("flags", 32, this.flags); 
-		boxSize += builder.Field("quality", 32, this.quality); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("flags", 32, this.flags); 
+		boxSize += tracer.Field("quality", 32, this.quality); 
 		return boxSize;
 	}
 }

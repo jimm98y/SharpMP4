@@ -32,6 +32,30 @@ aligned(8) class AC4SpecificBox extends Box('dac4') {
 */
 public partial class AC4SpecificBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// E.5, Pseudocode E.2: an ac4_dsi_v1() (E.6.1), to the end of the box
+aligned(8) class AC4SpecificBox extends Box('dac4') {
+ bit(3) ac4_dsi_version;
+ bit(7) bitstream_version;
+ bit(1) fs_index;
+ bit(4) frame_rate_index;
+ bit(9) n_presentations;
+ if (bitstream_version > 1) {
+  bit(1) b_program_id;
+  if (b_program_id) {
+   bit(16) short_program_id;
+   bit(1) b_uuid;
+   if (b_uuid) {
+    bit(8) program_uuid[16];
+   }
+  }
+ }
+ AC4BitrateDsi ac4_bitrate_dsi;
+ byte_alignment(); // byte_align, 0..7: to a byte from the start of ac4_dsi_v1
+ AC4PresentationDsi presentations[n_presentations];
+}
+// E.7.1
+"; } }
 	public const string TYPE = "dac4";
 	public override string DisplayName { get { return "AC4SpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -62,7 +86,7 @@ public partial class AC4SpecificBox : Box
 	protected bool b_uuid; 
 	public bool bUuid { get { return this.b_uuid; } set { this.b_uuid = value; } }
 
-	protected byte[] program_uuid; 
+	protected byte[] program_uuid = new byte[16]; 
 	public byte[] ProgramUuid { get { return this.program_uuid; } set { this.program_uuid = value; } }
 
 	protected AC4BitrateDsi ac4_bitrate_dsi; 
@@ -71,7 +95,7 @@ public partial class AC4SpecificBox : Box
 	protected AlignmentBits byte_alignment;  //  byte_align, 0..7: to a byte from the start of ac4_dsi_v1
 	public AlignmentBits ByteAlignment { get { return this.byte_alignment; } set { this.byte_alignment = value; } }
 
-	protected AC4PresentationDsi[] presentations; 
+	protected AC4PresentationDsi[] presentations = []; 
 	public AC4PresentationDsi[] Presentations { get { return this.presentations; } set { this.presentations = value; } }
 
 	public AC4SpecificBox(): base(IsoStream.FromFourCC("dac4"))
@@ -171,34 +195,34 @@ public partial class AC4SpecificBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("ac4_dsi_version", 3, this.ac4_dsi_version); 
-		boxSize += builder.Field("bitstream_version", 7, this.bitstream_version); 
-		boxSize += builder.Field("fs_index", 1, this.fs_index); 
-		boxSize += builder.Field("frame_rate_index", 4, this.frame_rate_index); 
-		boxSize += builder.Field("n_presentations", 9, this.n_presentations); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("ac4_dsi_version", 3, this.ac4_dsi_version); 
+		boxSize += tracer.Field("bitstream_version", 7, this.bitstream_version); 
+		boxSize += tracer.Field("fs_index", 1, this.fs_index); 
+		boxSize += tracer.Field("frame_rate_index", 4, this.frame_rate_index); 
+		boxSize += tracer.Field("n_presentations", 9, this.n_presentations); 
 
 		if (bitstream_version > 1)
 		{
-			boxSize += builder.Field("b_program_id", 1, this.b_program_id); 
+			boxSize += tracer.Field("b_program_id", 1, this.b_program_id); 
 
 			if (b_program_id)
 			{
-				boxSize += builder.Field("short_program_id", 16, this.short_program_id); 
-				boxSize += builder.Field("b_uuid", 1, this.b_uuid); 
+				boxSize += tracer.Field("short_program_id", 16, this.short_program_id); 
+				boxSize += tracer.Field("b_uuid", 1, this.b_uuid); 
 
 				if (b_uuid)
 				{
-					boxSize += builder.Field("program_uuid", 16 * 8, this.program_uuid); 
+					boxSize += tracer.Field("program_uuid", 16 * 8, this.program_uuid); 
 				}
 			}
 		}
-		boxSize += builder.Field("ac4_bitrate_dsi", IsoStream.CalculateClassSize(ac4_bitrate_dsi), this.ac4_bitrate_dsi); 
-		boxSize += builder.Field("byte_alignment", IsoStream.CalculateByteAlignmentSize(boxSize, byte_alignment), this.byte_alignment); // byte_align, 0..7: to a byte from the start of ac4_dsi_v1
-		boxSize += builder.Field("presentations", IsoStream.CalculateClassSize(presentations), this.presentations); 
+		boxSize += tracer.Field("ac4_bitrate_dsi", IsoStream.CalculateClassSize(ac4_bitrate_dsi), this.ac4_bitrate_dsi); 
+		boxSize += tracer.Field("byte_alignment", IsoStream.CalculateByteAlignmentSize(boxSize, byte_alignment), this.byte_alignment); // byte_align, 0..7: to a byte from the start of ac4_dsi_v1
+		boxSize += tracer.Field("presentations", IsoStream.CalculateClassSize(presentations), this.presentations); 
 		return boxSize;
 	}
 }

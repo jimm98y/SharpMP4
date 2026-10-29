@@ -16,6 +16,14 @@ aligned(8) class TrackExtendsBox extends FullBox('trex', 0, 0){
 */
 public partial class TrackExtendsBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TrackExtendsBox extends FullBox('trex', 0, 0){
+	unsigned int(32)	track_ID;
+	unsigned int(32)	default_sample_description_index;
+	unsigned int(32)	default_sample_duration;
+	unsigned int(32)	default_sample_size;
+	unsigned int(32)	default_sample_flags;
+}"; } }
 	public const string TYPE = "trex";
 	public override string DisplayName { get { return "TrackExtendsBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -77,15 +85,15 @@ public partial class TrackExtendsBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("track_ID", 32, this.track_ID); 
-		boxSize += builder.Field("default_sample_description_index", 32, this.default_sample_description_index); 
-		boxSize += builder.Field("default_sample_duration", 32, this.default_sample_duration); 
-		boxSize += builder.Field("default_sample_size", 32, this.default_sample_size); 
-		boxSize += builder.Field("default_sample_flags", 32, this.default_sample_flags); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("track_ID", 32, this.track_ID); 
+		boxSize += tracer.Field("default_sample_description_index", 32, this.default_sample_description_index); 
+		boxSize += tracer.Field("default_sample_duration", 32, this.default_sample_duration); 
+		boxSize += tracer.Field("default_sample_size", 32, this.default_sample_size); 
+		boxSize += tracer.Field("default_sample_flags", 32, this.default_sample_flags); 
 		return boxSize;
 	}
 }

@@ -15,6 +15,13 @@ aligned(8) class CopyrightBox
 */
 public partial class CopyrightBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class CopyrightBox
+	extends FullBox('cprt', version = 0, 0) {
+	const bit(1) pad = 0;
+	unsigned int(5)[3] language; // ISO-639-2/T language code
+	utfstring notice;
+}"; } }
 	public const string TYPE = "cprt";
 	public override string DisplayName { get { return "CopyrightBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -24,7 +31,7 @@ public partial class CopyrightBox : FullBox
 	protected bool pad = false; 
 	public bool Pad { get { return this.pad; } set { this.pad = value; } }
 
-	protected string language;  //  ISO-639-2/T language code
+	protected string language = "und";  //  ISO-639-2/T language code
 	public string Language { get { return this.language; } set { this.language = value; } }
 
 	protected BinaryUTF8String notice; 
@@ -64,13 +71,13 @@ public partial class CopyrightBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("pad", 1, this.pad); 
-		boxSize += builder.Field("language", 15, this.language); // ISO-639-2/T language code
-		boxSize += builder.Field("notice", IsoStream.CalculateStringSize(notice), this.notice); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("pad", 1, this.pad); 
+		boxSize += tracer.Field("language", 15, this.language); // ISO-639-2/T language code
+		boxSize += tracer.Field("notice", IsoStream.CalculateStringSize(notice), this.notice); 
 		return boxSize;
 	}
 }

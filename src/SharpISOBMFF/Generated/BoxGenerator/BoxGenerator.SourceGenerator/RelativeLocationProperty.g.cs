@@ -15,6 +15,13 @@ extends ItemFullProperty('rloc', version = 0, flags = 0)
 */
 public partial class RelativeLocationProperty : ItemFullProperty
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class RelativeLocationProperty
+extends ItemFullProperty('rloc', version = 0, flags = 0)
+{
+	unsigned int(32) horizontal_offset;
+	unsigned int(32) vertical_offset;
+}"; } }
 	public const string TYPE = "rloc";
 	public override string DisplayName { get { return "RelativeLocationProperty"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -58,12 +65,12 @@ public partial class RelativeLocationProperty : ItemFullProperty
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("horizontal_offset", 32, this.horizontal_offset); 
-		boxSize += builder.Field("vertical_offset", 32, this.vertical_offset); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("horizontal_offset", 32, this.horizontal_offset); 
+		boxSize += tracer.Field("vertical_offset", 32, this.vertical_offset); 
 		return boxSize;
 	}
 }

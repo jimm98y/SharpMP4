@@ -21,6 +21,19 @@ class SVCMetadataSampleConfigBox extends FullBox('svmC')
 */
 public partial class SVCMetadataSampleConfigBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class SVCMetadataSampleConfigBox extends FullBox('svmC')
+{
+	int i;		// local variable, not a field
+	unsigned int(8) sample_statement_type;	/* normally group, or seq */
+	unsigned int(8) default_statement_type;
+	unsigned int(8) default_statement_length;
+	unsigned int(8) entry_count;
+	for (i=1; i<=entry_count; i++) {
+		unsigned int(8) statement_type;	// from the user extension ranges
+		string statement_namespace;
+	}
+}"; } }
 	public const string TYPE = "svmC";
 	public override string DisplayName { get { return "SVCMetadataSampleConfigBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -108,21 +121,21 @@ public partial class SVCMetadataSampleConfigBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		
-		boxSize += builder.Field("sample_statement_type", 8, this.sample_statement_type); 
+		boxSize += tracer.Field("sample_statement_type", 8, this.sample_statement_type); 
 		/*  normally group, or seq  */
-		boxSize += builder.Field("default_statement_type", 8, this.default_statement_type); 
-		boxSize += builder.Field("default_statement_length", 8, this.default_statement_length); 
-		boxSize += builder.Field("entry_count", 8, this.entry_count); 
+		boxSize += tracer.Field("default_statement_type", 8, this.default_statement_type); 
+		boxSize += tracer.Field("default_statement_length", 8, this.default_statement_length); 
+		boxSize += tracer.Field("entry_count", 8, this.entry_count); 
 
 		for (int i=0; i<entry_count; i++)
 		{
-			boxSize += builder.Field($"statement_type[{i}]", 8, this.statement_type[i]); // from the user extension ranges
-			boxSize += builder.Field($"statement_namespace[{i}]", IsoStream.CalculateStringSize(statement_namespace[i]), this.statement_namespace[i]); 
+			boxSize += tracer.Field($"statement_type[{i}]", 8, this.statement_type[i]); // from the user extension ranges
+			boxSize += tracer.Field($"statement_namespace[{i}]", IsoStream.CalculateStringSize(statement_namespace[i]), this.statement_namespace[i]); 
 		}
 		return boxSize;
 	}

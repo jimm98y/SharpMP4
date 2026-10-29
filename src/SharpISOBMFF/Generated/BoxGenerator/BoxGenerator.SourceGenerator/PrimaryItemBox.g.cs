@@ -17,6 +17,15 @@ aligned(8) class PrimaryItemBox
 */
 public partial class PrimaryItemBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class PrimaryItemBox
+		extends FullBox('pitm', version, 0) {
+	if (version == 0) {
+		unsigned int(16)	item_ID;
+	} else {
+		unsigned int(32)	item_ID;
+	}
+}"; } }
 	public const string TYPE = "pitm";
 	public override string DisplayName { get { return "PrimaryItemBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -81,19 +90,19 @@ public partial class PrimaryItemBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if (version == 0)
 		{
-			boxSize += builder.Field("item_ID", 16, this.item_ID); 
+			boxSize += tracer.Field("item_ID", 16, this.item_ID); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("item_ID", 32, this.item_ID); 
+			boxSize += tracer.Field("item_ID", 32, this.item_ID); 
 		}
 		return boxSize;
 	}

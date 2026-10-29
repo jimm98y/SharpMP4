@@ -12,6 +12,10 @@ class CueTimeBox() extends Box ('ctim') {
 */
 public partial class CueTimeBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class CueTimeBox() extends Box ('ctim') {
+ boxstring cueCurrentTime; 
+ }"; } }
 	public const string TYPE = "ctim";
 	public override string DisplayName { get { return "CueTimeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +54,11 @@ public partial class CueTimeBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("cueCurrentTime", IsoStream.CalculateStringSize(cueCurrentTime), this.cueCurrentTime); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("cueCurrentTime", IsoStream.CalculateStringSize(cueCurrentTime), this.cueCurrentTime); 
 		return boxSize;
 	}
 }

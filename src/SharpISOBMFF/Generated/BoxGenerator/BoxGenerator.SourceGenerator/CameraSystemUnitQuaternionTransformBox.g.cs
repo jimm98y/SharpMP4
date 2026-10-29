@@ -15,6 +15,13 @@ BEFloat32 xyz2;
 */
 public partial class CameraSystemUnitQuaternionTransformBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class CameraSystemUnitQuaternionTransformBox extends 
+FullBox('uqua', 0, 0) { 
+BEFloat32 xyz0;
+BEFloat32 xyz1;
+BEFloat32 xyz2; 
+} "; } }
 	public const string TYPE = "uqua";
 	public override string DisplayName { get { return "CameraSystemUnitQuaternionTransformBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -64,13 +71,13 @@ public partial class CameraSystemUnitQuaternionTransformBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("xyz0", 32, this.xyz0); 
-		boxSize += builder.Field("xyz1", 32, this.xyz1); 
-		boxSize += builder.Field("xyz2", 32, this.xyz2); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("xyz0", 32, this.xyz0); 
+		boxSize += tracer.Field("xyz1", 32, this.xyz1); 
+		boxSize += tracer.Field("xyz2", 32, this.xyz2); 
 		return boxSize;
 	}
 }

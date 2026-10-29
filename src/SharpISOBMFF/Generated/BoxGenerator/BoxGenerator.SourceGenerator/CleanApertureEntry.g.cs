@@ -25,6 +25,23 @@ class CleanApertureEntry() extends VisualSampleGroupEntry ('casg'){
 */
 public partial class CleanApertureEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class CleanApertureEntry() extends VisualSampleGroupEntry ('casg'){
+	unsigned int(32) cleanApertureWidthN;
+	unsigned int(32) cleanApertureWidthD;
+
+	unsigned int(32) cleanApertureHeightN;
+	unsigned int(32) cleanApertureHeightD;
+
+
+	unsigned int(32) horizOffN;
+	unsigned int(32) horizOffD;
+
+
+	unsigned int(32) vertOffN;
+	unsigned int(32) vertOffD;
+
+}"; } }
 	public const string TYPE = "casg";
 	public override string DisplayName { get { return "CleanApertureEntry"; } }
 
@@ -101,18 +118,18 @@ public partial class CleanApertureEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("cleanApertureWidthN", 32, this.cleanApertureWidthN); 
-		boxSize += builder.Field("cleanApertureWidthD", 32, this.cleanApertureWidthD); 
-		boxSize += builder.Field("cleanApertureHeightN", 32, this.cleanApertureHeightN); 
-		boxSize += builder.Field("cleanApertureHeightD", 32, this.cleanApertureHeightD); 
-		boxSize += builder.Field("horizOffN", 32, this.horizOffN); 
-		boxSize += builder.Field("horizOffD", 32, this.horizOffD); 
-		boxSize += builder.Field("vertOffN", 32, this.vertOffN); 
-		boxSize += builder.Field("vertOffD", 32, this.vertOffD); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("cleanApertureWidthN", 32, this.cleanApertureWidthN); 
+		boxSize += tracer.Field("cleanApertureWidthD", 32, this.cleanApertureWidthD); 
+		boxSize += tracer.Field("cleanApertureHeightN", 32, this.cleanApertureHeightN); 
+		boxSize += tracer.Field("cleanApertureHeightD", 32, this.cleanApertureHeightD); 
+		boxSize += tracer.Field("horizOffN", 32, this.horizOffN); 
+		boxSize += tracer.Field("horizOffD", 32, this.horizOffD); 
+		boxSize += tracer.Field("vertOffN", 32, this.vertOffN); 
+		boxSize += tracer.Field("vertOffD", 32, this.vertOffD); 
 		return boxSize;
 	}
 }

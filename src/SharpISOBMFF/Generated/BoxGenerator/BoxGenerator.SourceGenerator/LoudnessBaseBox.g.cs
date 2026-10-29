@@ -27,6 +27,25 @@ for (i = 1 ; i <= measurement_count; i++){
 */
 public partial class LoudnessBaseBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class LoudnessBaseBox extends FullBox(loudnessType) { 
+unsigned int(3) reserved = 0; 
+unsigned int(7) downmix_ID;  // matching downmix 
+unsigned int(6) DRC_set_ID;  // to match a DRC box 
+signed int(12)  bs_sample_peak_level; 
+signed int(12)  bs_true_peak_level; 
+unsigned int(4) measurement_system_for_TP; 
+unsigned int(4) reliability_for_TP; 
+unsigned int(8) measurement_count; 
+int i; 
+for (i = 1 ; i <= measurement_count; i++){ 
+  unsigned int(8) method_definition; 
+  unsigned int(8) method_value; 
+  unsigned int(4) measurement_system; 
+  unsigned int(4) reliability; 
+ } 
+} 
+"; } }
 	public override string DisplayName { get { return "LoudnessBaseBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
@@ -148,26 +167,26 @@ public partial class LoudnessBaseBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 3, this.reserved); 
-		boxSize += builder.Field("downmix_ID", 7, this.downmix_ID); // matching downmix 
-		boxSize += builder.Field("DRC_set_ID", 6, this.DRC_set_ID); // to match a DRC box 
-		boxSize += builder.Field("bs_sample_peak_level", 12, this.bs_sample_peak_level); 
-		boxSize += builder.Field("bs_true_peak_level", 12, this.bs_true_peak_level); 
-		boxSize += builder.Field("measurement_system_for_TP", 4, this.measurement_system_for_TP); 
-		boxSize += builder.Field("reliability_for_TP", 4, this.reliability_for_TP); 
-		boxSize += builder.Field("measurement_count", 8, this.measurement_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 3, this.reserved); 
+		boxSize += tracer.Field("downmix_ID", 7, this.downmix_ID); // matching downmix 
+		boxSize += tracer.Field("DRC_set_ID", 6, this.DRC_set_ID); // to match a DRC box 
+		boxSize += tracer.Field("bs_sample_peak_level", 12, this.bs_sample_peak_level); 
+		boxSize += tracer.Field("bs_true_peak_level", 12, this.bs_true_peak_level); 
+		boxSize += tracer.Field("measurement_system_for_TP", 4, this.measurement_system_for_TP); 
+		boxSize += tracer.Field("reliability_for_TP", 4, this.reliability_for_TP); 
+		boxSize += tracer.Field("measurement_count", 8, this.measurement_count); 
 		
 
 		for (int i = 0 ; i < measurement_count; i++)
 		{
-			boxSize += builder.Field($"method_definition[{i}]", 8, this.method_definition[i]); 
-			boxSize += builder.Field($"method_value[{i}]", 8, this.method_value[i]); 
-			boxSize += builder.Field($"measurement_system[{i}]", 4, this.measurement_system[i]); 
-			boxSize += builder.Field($"reliability[{i}]", 4, this.reliability[i]); 
+			boxSize += tracer.Field($"method_definition[{i}]", 8, this.method_definition[i]); 
+			boxSize += tracer.Field($"method_value[{i}]", 8, this.method_value[i]); 
+			boxSize += tracer.Field($"measurement_system[{i}]", 4, this.measurement_system[i]); 
+			boxSize += tracer.Field($"reliability[{i}]", 4, this.reliability[i]); 
 		}
 		return boxSize;
 	}

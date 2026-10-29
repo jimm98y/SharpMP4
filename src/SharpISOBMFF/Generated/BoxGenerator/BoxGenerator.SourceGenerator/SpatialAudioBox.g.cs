@@ -20,6 +20,18 @@ aligned(8) class SpatialAudioBox extends Box('SA3D') {
 */
 public partial class SpatialAudioBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SpatialAudioBox extends Box('SA3D') {
+    unsigned int(8)  version;
+    unsigned int(8)  ambisonic_type;
+    unsigned int(32) ambisonic_order;
+    unsigned int(8)  ambisonic_channel_ordering;
+    unsigned int(8)  ambisonic_normalization;
+    unsigned int(32) num_channels;
+    for (i = 0; i < num_channels; i++) {
+        unsigned int(32) channel_map;
+    }
+}"; } }
 	public const string TYPE = "SA3D";
 	public override string DisplayName { get { return "SpatialAudioBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -106,20 +118,20 @@ public partial class SpatialAudioBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("version", 8, this.version); 
-		boxSize += builder.Field("ambisonic_type", 8, this.ambisonic_type); 
-		boxSize += builder.Field("ambisonic_order", 32, this.ambisonic_order); 
-		boxSize += builder.Field("ambisonic_channel_ordering", 8, this.ambisonic_channel_ordering); 
-		boxSize += builder.Field("ambisonic_normalization", 8, this.ambisonic_normalization); 
-		boxSize += builder.Field("num_channels", 32, this.num_channels); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("version", 8, this.version); 
+		boxSize += tracer.Field("ambisonic_type", 8, this.ambisonic_type); 
+		boxSize += tracer.Field("ambisonic_order", 32, this.ambisonic_order); 
+		boxSize += tracer.Field("ambisonic_channel_ordering", 8, this.ambisonic_channel_ordering); 
+		boxSize += tracer.Field("ambisonic_normalization", 8, this.ambisonic_normalization); 
+		boxSize += tracer.Field("num_channels", 32, this.num_channels); 
 
 		for (int i = 0; i < num_channels; i++)
 		{
-			boxSize += builder.Field($"channel_map[{i}]", 32, this.channel_map[i]); 
+			boxSize += tracer.Field($"channel_map[{i}]", 32, this.channel_map[i]); 
 		}
 		return boxSize;
 	}

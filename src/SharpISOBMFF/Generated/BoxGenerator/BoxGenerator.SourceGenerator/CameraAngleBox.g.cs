@@ -12,6 +12,10 @@ aligned(8) class CameraAngleBox() extends Box('angl') {
 */
 public partial class CameraAngleBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class CameraAngleBox() extends Box('angl') {
+ string value;
+}"; } }
 	public const string TYPE = "angl";
 	public override string DisplayName { get { return "CameraAngleBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class CameraAngleBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("value", IsoStream.CalculateStringSize(value), this.value); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("value", IsoStream.CalculateStringSize(value), this.value); 
 		return boxSize;
 	}
 }

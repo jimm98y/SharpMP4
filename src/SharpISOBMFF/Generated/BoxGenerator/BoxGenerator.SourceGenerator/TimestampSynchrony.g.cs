@@ -13,6 +13,11 @@ class TimestampSynchrony() extends Box('tssy') {
 */
 public partial class TimestampSynchrony : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class TimestampSynchrony() extends Box('tssy') {
+	unsigned int(6) reserved;
+	unsigned int(2) timestamp_sync;
+}"; } }
 	public const string TYPE = "tssy";
 	public override string DisplayName { get { return "TimestampSynchrony"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -56,12 +61,12 @@ public partial class TimestampSynchrony : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 6, this.reserved); 
-		boxSize += builder.Field("timestamp_sync", 2, this.timestamp_sync); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 6, this.reserved); 
+		boxSize += tracer.Field("timestamp_sync", 2, this.timestamp_sync); 
 		return boxSize;
 	}
 }

@@ -23,6 +23,21 @@ class LayerInfoGroupEntry extends VisualSampleGroupEntry ('linf') {
 */
 public partial class LayerInfoGroupEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class LayerInfoGroupEntry extends VisualSampleGroupEntry ('linf') {
+	bit(2) reserved = 0;
+	unsigned int(6) num_layers_in_track;
+	for (i=0; i<num_layers_in_track; i++) {
+		bit(2) reserved = 0;
+		unsigned int(1) irap_gdr_pics_in_layer_only_flag;
+		unsigned int(1) completeness_flag;
+		unsigned int(6) layer_id;
+		unsigned int(3) min_TemporalId;
+		unsigned int(3) max_TemporalId;
+		bit(1) reserved = 0;
+		unsigned int(7) sub_layer_presence_flags;
+	}
+}"; } }
 	public const string TYPE = "linf";
 	public override string DisplayName { get { return "LayerInfoGroupEntry"; } }
 
@@ -131,23 +146,23 @@ public partial class LayerInfoGroupEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 2, this.reserved); 
-		boxSize += builder.Field("num_layers_in_track", 6, this.num_layers_in_track); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 2, this.reserved); 
+		boxSize += tracer.Field("num_layers_in_track", 6, this.num_layers_in_track); 
 
 		for (int i=0; i<num_layers_in_track; i++)
 		{
-			boxSize += builder.Field($"reserved0[{i}]", 2, this.reserved0[i]); 
-			boxSize += builder.Field($"irap_gdr_pics_in_layer_only_flag[{i}]", 1, this.irap_gdr_pics_in_layer_only_flag[i]); 
-			boxSize += builder.Field($"completeness_flag[{i}]", 1, this.completeness_flag[i]); 
-			boxSize += builder.Field($"layer_id[{i}]", 6, this.layer_id[i]); 
-			boxSize += builder.Field($"min_TemporalId[{i}]", 3, this.min_TemporalId[i]); 
-			boxSize += builder.Field($"max_TemporalId[{i}]", 3, this.max_TemporalId[i]); 
-			boxSize += builder.Field($"reserved00[{i}]", 1, this.reserved00[i]); 
-			boxSize += builder.Field($"sub_layer_presence_flags[{i}]", 7, this.sub_layer_presence_flags[i]); 
+			boxSize += tracer.Field($"reserved0[{i}]", 2, this.reserved0[i]); 
+			boxSize += tracer.Field($"irap_gdr_pics_in_layer_only_flag[{i}]", 1, this.irap_gdr_pics_in_layer_only_flag[i]); 
+			boxSize += tracer.Field($"completeness_flag[{i}]", 1, this.completeness_flag[i]); 
+			boxSize += tracer.Field($"layer_id[{i}]", 6, this.layer_id[i]); 
+			boxSize += tracer.Field($"min_TemporalId[{i}]", 3, this.min_TemporalId[i]); 
+			boxSize += tracer.Field($"max_TemporalId[{i}]", 3, this.max_TemporalId[i]); 
+			boxSize += tracer.Field($"reserved00[{i}]", 1, this.reserved00[i]); 
+			boxSize += tracer.Field($"sub_layer_presence_flags[{i}]", 7, this.sub_layer_presence_flags[i]); 
 		}
 		return boxSize;
 	}

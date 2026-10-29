@@ -14,6 +14,12 @@ extends VisualSampleGroupEntry('av1M')
 */
 public partial class AV1MetadataSampleGroupEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AV1MetadataSampleGroupEntry
+extends VisualSampleGroupEntry('av1M')
+{
+}
+"; } }
 	public const string TYPE = "av1M";
 	public override string DisplayName { get { return "AV1MetadataSampleGroupEntry"; } }
 
@@ -42,10 +48,10 @@ public partial class AV1MetadataSampleGroupEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

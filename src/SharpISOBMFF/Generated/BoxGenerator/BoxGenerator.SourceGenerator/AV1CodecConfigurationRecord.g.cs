@@ -39,6 +39,32 @@ public partial class AV1CodecConfigurationRecord : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class AV1CodecConfigurationRecord
+{
+  unsigned int(1) marker = 1;
+  unsigned int(7) version = 1;
+  unsigned int(3) seq_profile;
+  unsigned int(5) seq_level_idx_0;
+  unsigned int(1) seq_tier_0;
+  unsigned int(1) high_bitdepth;
+  unsigned int(1) twelve_bit;
+  unsigned int(1) monochrome;
+  unsigned int(1) chroma_subsampling_x;
+  unsigned int(1) chroma_subsampling_y;
+  unsigned int(2) chroma_sample_position;
+  unsigned int(3) reserved = 0;
+
+  unsigned int(1) initial_presentation_delay_present;
+  if(initial_presentation_delay_present) {
+    unsigned int(4) initial_presentation_delay_minus_one;
+  } else {
+    unsigned int(4) reserved = 0;
+  }
+
+  unsigned int(8) configOBUs[];
+}
+"; } }
 	public virtual string DisplayName { get { return "AV1CodecConfigurationRecord"; } }
 
 	protected bool marker = true; 
@@ -86,7 +112,7 @@ public partial class AV1CodecConfigurationRecord : IMp4Serializable
 	protected byte reserved0 = 0; 
 	public byte Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
-	protected byte[] configOBUs; 
+	protected byte[] configOBUs = []; 
 	public byte[] ConfigOBUs { get { return this.configOBUs; } set { this.configOBUs = value; } }
 
 	public AV1CodecConfigurationRecord(): base()
@@ -183,33 +209,33 @@ public partial class AV1CodecConfigurationRecord : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("marker", 1, this.marker); 
-		boxSize += builder.Field("version", 7, this.version); 
-		boxSize += builder.Field("seq_profile", 3, this.seq_profile); 
-		boxSize += builder.Field("seq_level_idx_0", 5, this.seq_level_idx_0); 
-		boxSize += builder.Field("seq_tier_0", 1, this.seq_tier_0); 
-		boxSize += builder.Field("high_bitdepth", 1, this.high_bitdepth); 
-		boxSize += builder.Field("twelve_bit", 1, this.twelve_bit); 
-		boxSize += builder.Field("monochrome", 1, this.monochrome); 
-		boxSize += builder.Field("chroma_subsampling_x", 1, this.chroma_subsampling_x); 
-		boxSize += builder.Field("chroma_subsampling_y", 1, this.chroma_subsampling_y); 
-		boxSize += builder.Field("chroma_sample_position", 2, this.chroma_sample_position); 
-		boxSize += builder.Field("reserved", 3, this.reserved); 
-		boxSize += builder.Field("initial_presentation_delay_present", 1, this.initial_presentation_delay_present); 
+		boxSize += tracer.Field("marker", 1, this.marker); 
+		boxSize += tracer.Field("version", 7, this.version); 
+		boxSize += tracer.Field("seq_profile", 3, this.seq_profile); 
+		boxSize += tracer.Field("seq_level_idx_0", 5, this.seq_level_idx_0); 
+		boxSize += tracer.Field("seq_tier_0", 1, this.seq_tier_0); 
+		boxSize += tracer.Field("high_bitdepth", 1, this.high_bitdepth); 
+		boxSize += tracer.Field("twelve_bit", 1, this.twelve_bit); 
+		boxSize += tracer.Field("monochrome", 1, this.monochrome); 
+		boxSize += tracer.Field("chroma_subsampling_x", 1, this.chroma_subsampling_x); 
+		boxSize += tracer.Field("chroma_subsampling_y", 1, this.chroma_subsampling_y); 
+		boxSize += tracer.Field("chroma_sample_position", 2, this.chroma_sample_position); 
+		boxSize += tracer.Field("reserved", 3, this.reserved); 
+		boxSize += tracer.Field("initial_presentation_delay_present", 1, this.initial_presentation_delay_present); 
 
 		if (initial_presentation_delay_present)
 		{
-			boxSize += builder.Field("initial_presentation_delay_minus_one", 4, this.initial_presentation_delay_minus_one); 
+			boxSize += tracer.Field("initial_presentation_delay_minus_one", 4, this.initial_presentation_delay_minus_one); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("reserved0", 4, this.reserved0); 
+			boxSize += tracer.Field("reserved0", 4, this.reserved0); 
 		}
-		boxSize += builder.Field("configOBUs", ((ulong)configOBUs.Length * 8), this.configOBUs); 
+		boxSize += tracer.Field("configOBUs", ((ulong)configOBUs.Length * 8), this.configOBUs); 
 		return boxSize;
 	}
 }

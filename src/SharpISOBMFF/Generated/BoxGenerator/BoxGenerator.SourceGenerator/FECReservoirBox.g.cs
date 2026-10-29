@@ -25,6 +25,23 @@ aligned(8) class FECReservoirBox
 */
 public partial class FECReservoirBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class FECReservoirBox
+		extends FullBox('fecr', version, 0) {
+	if (version == 0) {
+		unsigned int(16)	entry_count;
+	} else {
+		unsigned int(32)	entry_count;
+	}
+	for (i=1; i <= entry_count; i++) {
+		if (version == 0) {
+			unsigned int(16)	item_ID;
+		} else {
+			unsigned int(32)	item_ID;
+		}
+		unsigned int(32)	symbol_count;
+	}
+}"; } }
 	public const string TYPE = "fecr";
 	public override string DisplayName { get { return "FECReservoirBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -142,19 +159,19 @@ public partial class FECReservoirBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if (version == 0)
 		{
-			boxSize += builder.Field("entry_count", 16, this.entry_count); 
+			boxSize += tracer.Field("entry_count", 16, this.entry_count); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("entry_count", 32, this.entry_count); 
+			boxSize += tracer.Field("entry_count", 32, this.entry_count); 
 		}
 
 		for (int i=0; i < entry_count; i++)
@@ -162,14 +179,14 @@ public partial class FECReservoirBox : FullBox
 
 			if (version == 0)
 			{
-				boxSize += builder.Field($"item_ID[{i}]", 16, this.item_ID[i]); 
+				boxSize += tracer.Field($"item_ID[{i}]", 16, this.item_ID[i]); 
 			}
 
 			else 
 			{
-				boxSize += builder.Field($"item_ID[{i}]", 32, this.item_ID[i]); 
+				boxSize += tracer.Field($"item_ID[{i}]", 32, this.item_ID[i]); 
 			}
-			boxSize += builder.Field($"symbol_count[{i}]", 32, this.symbol_count[i]); 
+			boxSize += tracer.Field($"symbol_count[{i}]", 32, this.symbol_count[i]); 
 		}
 		return boxSize;
 	}

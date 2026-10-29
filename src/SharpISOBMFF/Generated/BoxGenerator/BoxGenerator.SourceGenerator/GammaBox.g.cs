@@ -12,6 +12,10 @@ class GammaBox() extends Box ('gama'){
 */
 public partial class GammaBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class GammaBox() extends Box ('gama'){
+ unsigned int(32) gamma;
+ }"; } }
 	public const string TYPE = "gama";
 	public override string DisplayName { get { return "GammaBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class GammaBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("gamma", 32, this.gamma); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("gamma", 32, this.gamma); 
 		return boxSize;
 	}
 }

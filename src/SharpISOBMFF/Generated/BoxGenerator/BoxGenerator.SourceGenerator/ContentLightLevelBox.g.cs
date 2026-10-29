@@ -13,6 +13,11 @@ class ContentLightLevelBox extends Box('clli'){
 */
 public partial class ContentLightLevelBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ContentLightLevelBox extends Box('clli'){
+	unsigned int(16) max_content_light_level;
+	unsigned int(16) max_pic_average_light_level;
+}"; } }
 	public const string TYPE = "clli";
 	public override string DisplayName { get { return "ContentLightLevelBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -56,12 +61,12 @@ public partial class ContentLightLevelBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("max_content_light_level", 16, this.max_content_light_level); 
-		boxSize += builder.Field("max_pic_average_light_level", 16, this.max_pic_average_light_level); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("max_content_light_level", 16, this.max_content_light_level); 
+		boxSize += tracer.Field("max_pic_average_light_level", 16, this.max_pic_average_light_level); 
 		return boxSize;
 	}
 }

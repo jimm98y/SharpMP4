@@ -16,6 +16,14 @@ class DecodeRetimingEntry() extends VisualSampleGroupEntry ('dtrt') {
 */
 public partial class DecodeRetimingEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class DecodeRetimingEntry() extends VisualSampleGroupEntry ('dtrt') { 
+	unsigned int(8) tierCount;
+	for (i=1; i<=tierCount; i++) {
+		unsigned int(16) tierID;
+		signed int(16) delta;
+	}
+}"; } }
 	public const string TYPE = "dtrt";
 	public override string DisplayName { get { return "DecodeRetimingEntry"; } }
 
@@ -76,16 +84,16 @@ public partial class DecodeRetimingEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("tierCount", 8, this.tierCount); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("tierCount", 8, this.tierCount); 
 
 		for (int i=0; i<tierCount; i++)
 		{
-			boxSize += builder.Field($"tierID[{i}]", 16, this.tierID[i]); 
-			boxSize += builder.Field($"delta[{i}]", 16, this.delta[i]); 
+			boxSize += tracer.Field($"tierID[{i}]", 16, this.tierID[i]); 
+			boxSize += tracer.Field($"delta[{i}]", 16, this.delta[i]); 
 		}
 		return boxSize;
 	}

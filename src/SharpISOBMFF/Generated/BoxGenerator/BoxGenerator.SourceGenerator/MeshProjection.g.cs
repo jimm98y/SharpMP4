@@ -18,6 +18,16 @@ aligned(8) class MeshProjection extends ProjectionDataBox('mshp', 0, 0) {
 */
 public partial class MeshProjection : ProjectionDataBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MeshProjection extends ProjectionDataBox('mshp', 0, 0) {
+    unsigned int(32) crc;
+    unsigned int(32) encoding_four_cc;
+
+    // All bytes below this point are compressed according to
+    // the algorithm specified by the encoding_four_cc field.
+    // MeshBox() meshes[]; // At least 1 mesh box must be present.
+    Box boxes[]; // further boxes as needed
+}"; } }
 	public const string TYPE = "mshp";
 	public override string DisplayName { get { return "MeshProjection"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -73,16 +83,16 @@ public partial class MeshProjection : ProjectionDataBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("crc", 32, this.crc); 
-		boxSize += builder.Field("encoding_four_cc", 32, this.encoding_four_cc); // All bytes below this point are compressed according to
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("crc", 32, this.crc); 
+		boxSize += tracer.Field("encoding_four_cc", 32, this.encoding_four_cc); // All bytes below this point are compressed according to
 		/*  the algorithm specified by the encoding_four_cc field. */
 		/*  MeshBox() meshes[]; // At least 1 mesh box must be present. */
-		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); // further boxes as needed
-		boxSize += builder.Children(this);
+		// boxSize += tracer.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); // further boxes as needed
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

@@ -27,6 +27,25 @@ aligned(8) class DTSSpecificBox() extends Box('ddts') {
 */
 public partial class DTSSpecificBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class DTSSpecificBox() extends Box('ddts') {
+ unsigned int(32) dtsSamplingFrequency;
+ unsigned int(32) maxBitRate;
+ unsigned int(32) avgBitRate;
+ unsigned int(8) pcmSampleDepth;
+ bit(2) frameDuration;
+ bit(5) streamConstruction;
+ bit(1) coreLFEPresent;
+ bit(6) coreLayout;
+ bit(14) coreSize;
+ bit(1) stereoDownmix;
+ bit(3) representationType;
+ bit(16) channelLayout;
+ bit(1) multiAssetFlag;
+ bit(1) lbrDurationMod;
+ bit(1) reservedBoxPresent;
+ bit(5) reserved;
+ } "; } }
 	public const string TYPE = "ddts";
 	public override string DisplayName { get { return "DTSSpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -154,26 +173,26 @@ public partial class DTSSpecificBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("dtsSamplingFrequency", 32, this.dtsSamplingFrequency); 
-		boxSize += builder.Field("maxBitRate", 32, this.maxBitRate); 
-		boxSize += builder.Field("avgBitRate", 32, this.avgBitRate); 
-		boxSize += builder.Field("pcmSampleDepth", 8, this.pcmSampleDepth); 
-		boxSize += builder.Field("frameDuration", 2, this.frameDuration); 
-		boxSize += builder.Field("streamConstruction", 5, this.streamConstruction); 
-		boxSize += builder.Field("coreLFEPresent", 1, this.coreLFEPresent); 
-		boxSize += builder.Field("coreLayout", 6, this.coreLayout); 
-		boxSize += builder.Field("coreSize", 14, this.coreSize); 
-		boxSize += builder.Field("stereoDownmix", 1, this.stereoDownmix); 
-		boxSize += builder.Field("representationType", 3, this.representationType); 
-		boxSize += builder.Field("channelLayout", 16, this.channelLayout); 
-		boxSize += builder.Field("multiAssetFlag", 1, this.multiAssetFlag); 
-		boxSize += builder.Field("lbrDurationMod", 1, this.lbrDurationMod); 
-		boxSize += builder.Field("reservedBoxPresent", 1, this.reservedBoxPresent); 
-		boxSize += builder.Field("reserved", 5, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("dtsSamplingFrequency", 32, this.dtsSamplingFrequency); 
+		boxSize += tracer.Field("maxBitRate", 32, this.maxBitRate); 
+		boxSize += tracer.Field("avgBitRate", 32, this.avgBitRate); 
+		boxSize += tracer.Field("pcmSampleDepth", 8, this.pcmSampleDepth); 
+		boxSize += tracer.Field("frameDuration", 2, this.frameDuration); 
+		boxSize += tracer.Field("streamConstruction", 5, this.streamConstruction); 
+		boxSize += tracer.Field("coreLFEPresent", 1, this.coreLFEPresent); 
+		boxSize += tracer.Field("coreLayout", 6, this.coreLayout); 
+		boxSize += tracer.Field("coreSize", 14, this.coreSize); 
+		boxSize += tracer.Field("stereoDownmix", 1, this.stereoDownmix); 
+		boxSize += tracer.Field("representationType", 3, this.representationType); 
+		boxSize += tracer.Field("channelLayout", 16, this.channelLayout); 
+		boxSize += tracer.Field("multiAssetFlag", 1, this.multiAssetFlag); 
+		boxSize += tracer.Field("lbrDurationMod", 1, this.lbrDurationMod); 
+		boxSize += tracer.Field("reservedBoxPresent", 1, this.reservedBoxPresent); 
+		boxSize += tracer.Field("reserved", 5, this.reserved); 
 		return boxSize;
 	}
 }

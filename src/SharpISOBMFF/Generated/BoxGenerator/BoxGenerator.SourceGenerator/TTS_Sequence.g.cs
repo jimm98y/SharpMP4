@@ -28,6 +28,21 @@ public partial class TTS_Sequence : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class TTS_Sequence()
+{
+  uimsbf(5) TTS_Sequence_ID;
+  uimsbf(18) Language_Code;
+  bslbf(1) Gender_Enable;
+  bslbf(1) Age_Enable;
+  bslbf(1) Speech_Rate_Enable;
+  bslbf(1) Prosody_Enable;
+  bslbf(1) Video_Enable;
+  bslbf(1) Lip_Shape_Enable;
+  bslbf(1) Trick_Mode_Enable;
+}
+
+"; } }
 	public virtual string DisplayName { get { return "TTS_Sequence"; } }
 
 	protected byte TTS_Sequence_ID; 
@@ -106,18 +121,18 @@ public partial class TTS_Sequence : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("TTS_Sequence_ID", 5, this.TTS_Sequence_ID); 
-		boxSize += builder.Field("Language_Code", 18, this.Language_Code); 
-		boxSize += builder.Field("Gender_Enable", 1, this.Gender_Enable); 
-		boxSize += builder.Field("Age_Enable", 1, this.Age_Enable); 
-		boxSize += builder.Field("Speech_Rate_Enable", 1, this.Speech_Rate_Enable); 
-		boxSize += builder.Field("Prosody_Enable", 1, this.Prosody_Enable); 
-		boxSize += builder.Field("Video_Enable", 1, this.Video_Enable); 
-		boxSize += builder.Field("Lip_Shape_Enable", 1, this.Lip_Shape_Enable); 
-		boxSize += builder.Field("Trick_Mode_Enable", 1, this.Trick_Mode_Enable); 
+		boxSize += tracer.Field("TTS_Sequence_ID", 5, this.TTS_Sequence_ID); 
+		boxSize += tracer.Field("Language_Code", 18, this.Language_Code); 
+		boxSize += tracer.Field("Gender_Enable", 1, this.Gender_Enable); 
+		boxSize += tracer.Field("Age_Enable", 1, this.Age_Enable); 
+		boxSize += tracer.Field("Speech_Rate_Enable", 1, this.Speech_Rate_Enable); 
+		boxSize += tracer.Field("Prosody_Enable", 1, this.Prosody_Enable); 
+		boxSize += tracer.Field("Video_Enable", 1, this.Video_Enable); 
+		boxSize += tracer.Field("Lip_Shape_Enable", 1, this.Lip_Shape_Enable); 
+		boxSize += tracer.Field("Trick_Mode_Enable", 1, this.Trick_Mode_Enable); 
 		return boxSize;
 	}
 }

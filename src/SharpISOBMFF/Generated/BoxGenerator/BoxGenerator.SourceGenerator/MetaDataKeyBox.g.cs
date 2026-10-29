@@ -17,6 +17,15 @@ aligned(8) class MetaDataKeyBox extends	Box(local_key_id) {
 */
 public partial class MetaDataKeyBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MetaDataKeyBox extends	Box(local_key_id) {
+ MetaDataKeyDeclarationBox();
+ MetaDataDatatypeBox();	  // optional
+ MetaDataLocaleBox();	  // optional
+ MetaDataSetupBox();	  // optional
+ MetaDataExtensionsBox();  // optional
+}
+"; } }
 	public override string DisplayName { get { return "MetaDataKeyBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? BoxPlacements.OfType(FourCC)); }
@@ -70,16 +79,16 @@ public partial class MetaDataKeyBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("MetaDataKeyDeclarationBox", IsoStream.CalculateBoxSize(MetaDataKeyDeclarationBox), this.MetaDataKeyDeclarationBox); 
-		// boxSize += builder.Field("MetaDataDatatypeBox", IsoStream.CalculateBoxSize(MetaDataDatatypeBox), this.MetaDataDatatypeBox); // optional
-		// boxSize += builder.Field("MetaDataLocaleBox", IsoStream.CalculateBoxSize(MetaDataLocaleBox), this.MetaDataLocaleBox); // optional
-		// boxSize += builder.Field("MetaDataSetupBox", IsoStream.CalculateBoxSize(MetaDataSetupBox), this.MetaDataSetupBox); // optional
-		// boxSize += builder.Field("MetaDataExtensionsBox", IsoStream.CalculateBoxSize(MetaDataExtensionsBox), this.MetaDataExtensionsBox); // optional
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("MetaDataKeyDeclarationBox", IsoStream.CalculateBoxSize(MetaDataKeyDeclarationBox), this.MetaDataKeyDeclarationBox); 
+		// boxSize += tracer.Field("MetaDataDatatypeBox", IsoStream.CalculateBoxSize(MetaDataDatatypeBox), this.MetaDataDatatypeBox); // optional
+		// boxSize += tracer.Field("MetaDataLocaleBox", IsoStream.CalculateBoxSize(MetaDataLocaleBox), this.MetaDataLocaleBox); // optional
+		// boxSize += tracer.Field("MetaDataSetupBox", IsoStream.CalculateBoxSize(MetaDataSetupBox), this.MetaDataSetupBox); // optional
+		// boxSize += tracer.Field("MetaDataExtensionsBox", IsoStream.CalculateBoxSize(MetaDataExtensionsBox), this.MetaDataExtensionsBox); // optional
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

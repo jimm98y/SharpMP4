@@ -15,6 +15,13 @@ aligned(8) class SnutTrackGroupTypeBox() extends FullBox('snut', version = 0, fl
 */
 public partial class SnutTrackGroupTypeBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SnutTrackGroupTypeBox() extends FullBox('snut', version = 0, flags = 0)
+{
+	unsigned int(32) track_group_id;
+	// the remaining data may be specified 
+	//  for a particular track_group_type
+}"; } }
 	public const string TYPE = "snut";
 	public override string DisplayName { get { return "SnutTrackGroupTypeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -55,11 +62,11 @@ public partial class SnutTrackGroupTypeBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("track_group_id", 32, this.track_group_id); // the remaining data may be specified 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("track_group_id", 32, this.track_group_id); // the remaining data may be specified 
 		/*   for a particular track_group_type */
 		return boxSize;
 	}

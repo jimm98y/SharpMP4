@@ -12,6 +12,10 @@ aligned(8) class SamplingRateBox extends FullBox('srat') {
 */
 public partial class SamplingRateBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SamplingRateBox extends FullBox('srat') {
+	unsigned int(32) sampling_rate;
+}"; } }
 	public const string TYPE = "srat";
 	public override string DisplayName { get { return "SamplingRateBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class SamplingRateBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("sampling_rate", 32, this.sampling_rate); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("sampling_rate", 32, this.sampling_rate); 
 		return boxSize;
 	}
 }

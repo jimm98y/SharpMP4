@@ -10,6 +10,8 @@ class MPEG2TSServerSampleEntry extends MPEG2TSSampleEntry('sm2t') {}
 */
 public partial class MPEG2TSServerSampleEntry : MPEG2TSSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class MPEG2TSServerSampleEntry extends MPEG2TSSampleEntry('sm2t') {}"; } }
 	public const string TYPE = "sm2t";
 	public override string DisplayName { get { return "MPEG2TSServerSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -41,10 +43,10 @@ public partial class MPEG2TSServerSampleEntry : MPEG2TSSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

@@ -45,6 +45,43 @@ aligned(8) class DownMixInstructions extends FullBox('dmix', version, flags=0) {
 */
 public partial class DownMixInstructions : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class DownMixInstructions extends FullBox('dmix', version, flags=0) {
+	if (version >= 1) {
+		bit(1) reserved = 0;
+		bit(7) downmix_instructions_count;
+	} else {
+		int downmix_instructions_count = 1;
+	}
+	for (a=1; a<=downmix_instructions_count; a++) { 
+		unsigned int(8) targetLayout;
+ 		unsigned int(1) reserved = 0;
+		unsigned int(7) targetChannelCount;
+		bit(1) in_stream; 
+		unsigned int(7) downmix_ID;
+		if (in_stream==0) 
+		{	// downmix coefficients are out of stream and supplied here
+			int i, j;
+			if (version >= 1) {
+				bit(4) bs_downmix_offset;
+				int size = 4;
+				for (i=1; i <= targetChannelCount; i++){
+					for (j=1; j <= baseChannelCount; j++) {
+						bit(5) bs_downmix_coefficient_v1;
+						size += 5;
+					}
+				}
+				bit(8 ceil(size / 8) – size) reserved = 0; // byte align
+			} else {
+				for (i=1; i <= targetChannelCount; i++){
+					for (j=1; j <= baseChannelCount; j++) {
+						bit(4) bs_downmix_coefficient;
+					}
+				}
+			}
+		}
+	}
+}"; } }
 	public const string TYPE = "dmix";
 	public override string DisplayName { get { return "DownMixInstructions"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -293,16 +330,16 @@ public partial class DownMixInstructions : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		int baseChannelCount = 0; // TODO: get somewhere
 
 		if (version >= 1)
 		{
-			boxSize += builder.Field("reserved", 1, this.reserved); 
-			boxSize += builder.Field("downmix_instructions_count", 7, this.downmix_instructions_count); 
+			boxSize += tracer.Field("reserved", 1, this.reserved); 
+			boxSize += tracer.Field("downmix_instructions_count", 7, this.downmix_instructions_count); 
 		}
 
 		else 
@@ -312,11 +349,11 @@ public partial class DownMixInstructions : FullBox
 
 		for (int a=0; a<downmix_instructions_count; a++)
 		{
-			boxSize += builder.Field($"targetLayout[{a}]", 8, this.targetLayout[a]); 
-			boxSize += builder.Field($"reserved0[{a}]", 1, this.reserved0[a]); 
-			boxSize += builder.Field($"targetChannelCount[{a}]", 7, this.targetChannelCount[a]); 
-			boxSize += builder.Field($"in_stream[{a}]", 1, this.in_stream[a]); 
-			boxSize += builder.Field($"downmix_ID[{a}]", 7, this.downmix_ID[a]); 
+			boxSize += tracer.Field($"targetLayout[{a}]", 8, this.targetLayout[a]); 
+			boxSize += tracer.Field($"reserved0[{a}]", 1, this.reserved0[a]); 
+			boxSize += tracer.Field($"targetChannelCount[{a}]", 7, this.targetChannelCount[a]); 
+			boxSize += tracer.Field($"in_stream[{a}]", 1, this.in_stream[a]); 
+			boxSize += tracer.Field($"downmix_ID[{a}]", 7, this.downmix_ID[a]); 
 
 			if (in_stream[a]== false)
 			{
@@ -325,7 +362,7 @@ public partial class DownMixInstructions : FullBox
 
 				if (version >= 1)
 				{
-					boxSize += builder.Field($"bs_downmix_offset[{a}]", 4, this.bs_downmix_offset[a]); 
+					boxSize += tracer.Field($"bs_downmix_offset[{a}]", 4, this.bs_downmix_offset[a]); 
 					int size = 4;
 
 					for (int i=0; i < targetChannelCount[a]; i++)
@@ -333,11 +370,11 @@ public partial class DownMixInstructions : FullBox
 
 						for (int j=0; j < baseChannelCount; j++)
 						{
-							boxSize += builder.Field($"bs_downmix_coefficient_v1[{a}][{i}][{j}]", 5, this.bs_downmix_coefficient_v1[a][i][j]); 
+							boxSize += tracer.Field($"bs_downmix_coefficient_v1[{a}][{i}][{j}]", 5, this.bs_downmix_coefficient_v1[a][i][j]); 
 							size += 5;
 						}
 					}
-					boxSize += builder.Field($"reserved00[{a}]", (ulong)((Math.Ceiling(size / 8d) - size) * 8 ), this.reserved00[a]); // byte align
+					boxSize += tracer.Field($"reserved00[{a}]", (ulong)((Math.Ceiling(size / 8d) - size) * 8 ), this.reserved00[a]); // byte align
 				}
 
 				else 
@@ -348,7 +385,7 @@ public partial class DownMixInstructions : FullBox
 
 						for (int j=0; j < baseChannelCount; j++)
 						{
-							boxSize += builder.Field($"bs_downmix_coefficient[{a}][{i}][{j}]", 4, this.bs_downmix_coefficient[a][i][j]); 
+							boxSize += tracer.Field($"bs_downmix_coefficient[{a}][{i}][{j}]", 4, this.bs_downmix_coefficient[a][i][j]); 
 						}
 					}
 				}

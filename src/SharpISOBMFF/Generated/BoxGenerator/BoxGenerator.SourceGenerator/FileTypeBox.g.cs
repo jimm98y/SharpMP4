@@ -16,6 +16,14 @@ unsigned int(32) compatible_brands[];// to end of the box
 */
 public partial class FileTypeBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class FileTypeBox
+extends Box('ftyp')
+{
+unsigned int(32) major_brand;
+unsigned int(32) minor_version;
+unsigned int(32) compatible_brands[];// to end of the box
+}"; } }
 	public const string TYPE = "ftyp";
 	public override string DisplayName { get { return "FileTypeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -28,7 +36,7 @@ public partial class FileTypeBox : Box
 	protected uint minor_version; 
 	public uint MinorVersion { get { return this.minor_version; } set { this.minor_version = value; } }
 
-	protected uint[] compatible_brands;  //  to end of the box
+	protected uint[] compatible_brands = [];  //  to end of the box
 	public uint[] CompatibleBrands { get { return this.compatible_brands; } set { this.compatible_brands = value; } }
 
 	public FileTypeBox(): base(IsoStream.FromFourCC("ftyp"))
@@ -65,13 +73,13 @@ public partial class FileTypeBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("major_brand", 32, this.major_brand); 
-		boxSize += builder.Field("minor_version", 32, this.minor_version); 
-		boxSize += builder.Field("compatible_brands", ((ulong)compatible_brands.Length * 32), this.compatible_brands); // to end of the box
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("major_brand", 32, this.major_brand); 
+		boxSize += tracer.Field("minor_version", 32, this.minor_version); 
+		boxSize += tracer.Field("compatible_brands", ((ulong)compatible_brands.Length * 32), this.compatible_brands); // to end of the box
 		return boxSize;
 	}
 }

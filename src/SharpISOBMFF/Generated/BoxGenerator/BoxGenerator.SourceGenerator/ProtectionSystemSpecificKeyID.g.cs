@@ -17,9 +17,13 @@ public partial class ProtectionSystemSpecificKeyID : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class ProtectionSystemSpecificKeyID() {
+ unsigned int(8) key[16];
+ } "; } }
 	public virtual string DisplayName { get { return "ProtectionSystemSpecificKeyID"; } }
 
-	protected byte[] key; 
+	protected byte[] key = new byte[16]; 
 	public byte[] Key { get { return this.key; } set { this.key = value; } }
 
 	public ProtectionSystemSpecificKeyID(): base()
@@ -47,10 +51,10 @@ public partial class ProtectionSystemSpecificKeyID : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("key", 16 * 8, this.key); 
+		boxSize += tracer.Field("key", 16 * 8, this.key); 
 		return boxSize;
 	}
 }

@@ -23,6 +23,16 @@ public partial class MtdtEntry : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class MtdtEntry() {
+ unsigned int(16) size;
+ unsigned int(32) type;
+ bit(1) reserved;
+unsigned int(5)[3] language;
+ unsigned int(16) dataType;
+ bit(8) data[size-10];
+ }
+"; } }
 	public virtual string DisplayName { get { return "MtdtEntry"; } }
 
 	protected ushort size; 
@@ -34,13 +44,13 @@ public partial class MtdtEntry : IMp4Serializable
 	protected bool reserved; 
 	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-	protected string language; 
+	protected string language = "und"; 
 	public string Language { get { return this.language; } set { this.language = value; } }
 
 	protected ushort dataType; 
 	public ushort DataType { get { return this.dataType; } set { this.dataType = value; } }
 
-	protected byte[] data; 
+	protected byte[] data = []; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public MtdtEntry(): base()
@@ -83,15 +93,15 @@ public partial class MtdtEntry : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("size", 16, this.size); 
-		boxSize += builder.Field("type", 32, this.type); 
-		boxSize += builder.Field("reserved", 1, this.reserved); 
-		boxSize += builder.Field("language", 15, this.language); 
-		boxSize += builder.Field("dataType", 16, this.dataType); 
-		boxSize += builder.Field("data", ((ulong)(size-10) * 8), this.data); 
+		boxSize += tracer.Field("size", 16, this.size); 
+		boxSize += tracer.Field("type", 32, this.type); 
+		boxSize += tracer.Field("reserved", 1, this.reserved); 
+		boxSize += tracer.Field("language", 15, this.language); 
+		boxSize += tracer.Field("dataType", 16, this.dataType); 
+		boxSize += tracer.Field("data", ((ulong)(size-10) * 8), this.data); 
 		return boxSize;
 	}
 }

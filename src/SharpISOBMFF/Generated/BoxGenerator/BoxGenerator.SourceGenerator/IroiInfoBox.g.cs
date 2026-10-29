@@ -25,6 +25,23 @@ class IroiInfoBox extends Box('iroi'){
 */
 public partial class IroiInfoBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class IroiInfoBox extends Box('iroi'){
+	unsigned int(2) iroi_type;
+	bit(6) reserved = 0;
+	if(iroi_type == 0) { 
+		unsigned int(8) grid_roi_mb_width;
+		unsigned int(8) grid_roi_mb_height;
+	}
+	else if(iroi_type == 1){
+		unsigned int(24) num_roi;
+		for(i=1; i<= num_roi; i++) {
+			unsigned int(32) top_left_mb;
+			unsigned int(8) roi_mb_width;
+			unsigned int(8) roi_mb_height;
+		}
+	}
+}"; } }
 	public const string TYPE = "iroi";
 	public override string DisplayName { get { return "IroiInfoBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -143,28 +160,28 @@ public partial class IroiInfoBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("iroi_type", 2, this.iroi_type); 
-		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("iroi_type", 2, this.iroi_type); 
+		boxSize += tracer.Field("reserved", 6, this.reserved); 
 
 		if (iroi_type == 0)
 		{
-			boxSize += builder.Field("grid_roi_mb_width", 8, this.grid_roi_mb_width); 
-			boxSize += builder.Field("grid_roi_mb_height", 8, this.grid_roi_mb_height); 
+			boxSize += tracer.Field("grid_roi_mb_width", 8, this.grid_roi_mb_width); 
+			boxSize += tracer.Field("grid_roi_mb_height", 8, this.grid_roi_mb_height); 
 		}
 
 		else if (iroi_type == 1)
 		{
-			boxSize += builder.Field("num_roi", 24, this.num_roi); 
+			boxSize += tracer.Field("num_roi", 24, this.num_roi); 
 
 			for (int i=0; i< num_roi; i++)
 			{
-				boxSize += builder.Field($"top_left_mb[{i}]", 32, this.top_left_mb[i]); 
-				boxSize += builder.Field($"roi_mb_width[{i}]", 8, this.roi_mb_width[i]); 
-				boxSize += builder.Field($"roi_mb_height[{i}]", 8, this.roi_mb_height[i]); 
+				boxSize += tracer.Field($"top_left_mb[{i}]", 32, this.top_left_mb[i]); 
+				boxSize += tracer.Field($"roi_mb_width[{i}]", 8, this.roi_mb_width[i]); 
+				boxSize += tracer.Field($"roi_mb_height[{i}]", 8, this.roi_mb_height[i]); 
 			}
 		}
 		return boxSize;

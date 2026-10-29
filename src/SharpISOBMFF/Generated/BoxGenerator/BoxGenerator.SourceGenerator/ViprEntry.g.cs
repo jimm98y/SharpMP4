@@ -20,6 +20,13 @@ public partial class ViprEntry : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class ViprEntry() {
+ unsigned int(6) reserved = 0; 
+  unsigned int(10) view_id; 
+  unsigned int(32) content_priority_id;
+ }
+"; } }
 	public virtual string DisplayName { get { return "ViprEntry"; } }
 
 	protected byte reserved = 0; 
@@ -62,12 +69,12 @@ public partial class ViprEntry : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("reserved", 6, this.reserved); 
-		boxSize += builder.Field("view_id", 10, this.view_id); 
-		boxSize += builder.Field("content_priority_id", 32, this.content_priority_id); 
+		boxSize += tracer.Field("reserved", 6, this.reserved); 
+		boxSize += tracer.Field("view_id", 10, this.view_id); 
+		boxSize += tracer.Field("content_priority_id", 32, this.content_priority_id); 
 		return boxSize;
 	}
 }

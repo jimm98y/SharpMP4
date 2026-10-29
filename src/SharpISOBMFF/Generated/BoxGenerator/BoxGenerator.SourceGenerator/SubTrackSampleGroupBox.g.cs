@@ -16,6 +16,14 @@ aligned(8) class SubTrackSampleGroupBox
 */
 public partial class SubTrackSampleGroupBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SubTrackSampleGroupBox
+	extends FullBox('stsg', 0, 0){
+	unsigned int(32) grouping_type;
+	unsigned int(16) item_count;
+	for(i = 0; i< item_count; i++)
+		unsigned int(32)	group_description_index;
+}"; } }
 	public const string TYPE = "stsg";
 	public override string DisplayName { get { return "SubTrackSampleGroupBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -78,16 +86,16 @@ public partial class SubTrackSampleGroupBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("grouping_type", 32, this.grouping_type); 
-		boxSize += builder.Field("item_count", 16, this.item_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("grouping_type", 32, this.grouping_type); 
+		boxSize += tracer.Field("item_count", 16, this.item_count); 
 
 		for (int i = 0; i< item_count; i++)
 		{
-			boxSize += builder.Field($"group_description_index[{i}]", 32, this.group_description_index[i]); 
+			boxSize += tracer.Field($"group_description_index[{i}]", 32, this.group_description_index[i]); 
 		}
 		return boxSize;
 	}

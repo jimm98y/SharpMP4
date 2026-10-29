@@ -13,6 +13,11 @@ extends ItemFullProperty('ssld', version=0, flags=0) {
 */
 public partial class SuggestedTimeDisplayDurationProperty : ItemFullProperty
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class SuggestedTimeDisplayDurationProperty
+extends ItemFullProperty('ssld', version=0, flags=0) {
+	unsigned int(16) duration;
+}"; } }
 	public const string TYPE = "ssld";
 	public override string DisplayName { get { return "SuggestedTimeDisplayDurationProperty"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +55,11 @@ public partial class SuggestedTimeDisplayDurationProperty : ItemFullProperty
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("duration", 16, this.duration); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("duration", 16, this.duration); 
 		return boxSize;
 	}
 }

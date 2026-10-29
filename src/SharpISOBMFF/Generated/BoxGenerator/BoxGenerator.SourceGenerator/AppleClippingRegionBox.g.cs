@@ -14,6 +14,12 @@ class AppleClippingRegionBox() extends Box ('crgn'){
 */
 public partial class AppleClippingRegionBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AppleClippingRegionBox() extends Box ('crgn'){
+ unsigned int(16) regionSize;
+ unsigned int(64) regionBoundaryBox;
+ unsigned int(8) clippingRegionData[];
+ }"; } }
 	public const string TYPE = "crgn";
 	public override string DisplayName { get { return "AppleClippingRegionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -26,7 +32,7 @@ public partial class AppleClippingRegionBox : Box
 	protected ulong regionBoundaryBox; 
 	public ulong RegionBoundaryBox { get { return this.regionBoundaryBox; } set { this.regionBoundaryBox = value; } }
 
-	protected byte[] clippingRegionData; 
+	protected byte[] clippingRegionData = []; 
 	public byte[] ClippingRegionData { get { return this.clippingRegionData; } set { this.clippingRegionData = value; } }
 
 	public AppleClippingRegionBox(): base(IsoStream.FromFourCC("crgn"))
@@ -63,13 +69,13 @@ public partial class AppleClippingRegionBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("regionSize", 16, this.regionSize); 
-		boxSize += builder.Field("regionBoundaryBox", 64, this.regionBoundaryBox); 
-		boxSize += builder.Field("clippingRegionData", ((ulong)clippingRegionData.Length * 8), this.clippingRegionData); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("regionSize", 16, this.regionSize); 
+		boxSize += tracer.Field("regionBoundaryBox", 64, this.regionBoundaryBox); 
+		boxSize += tracer.Field("clippingRegionData", ((ulong)clippingRegionData.Length * 8), this.clippingRegionData); 
 		return boxSize;
 	}
 }

@@ -14,12 +14,18 @@ unsigned int(16) data_reference_index;
 */
 public abstract partial class SampleEntry : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"abstract aligned(8) class SampleEntry (unsigned int(32) format) extends Box(format){ 
+const unsigned int(8)[6] reservedSampleEntry = 0; 
+unsigned int(16) data_reference_index; 
+}
+"; } }
 	public override string DisplayName { get { return "SampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "*" }); }
 
 
-	protected byte[] reservedSampleEntry = []; 
+	protected byte[] reservedSampleEntry = new byte[6]; 
 	public byte[] ReservedSampleEntry { get { return this.reservedSampleEntry; } set { this.reservedSampleEntry = value; } }
 
 	protected ushort data_reference_index; 
@@ -56,12 +62,12 @@ public abstract partial class SampleEntry : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reservedSampleEntry", 6 * 8, this.reservedSampleEntry); 
-		boxSize += builder.Field("data_reference_index", 16, this.data_reference_index); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reservedSampleEntry", 6 * 8, this.reservedSampleEntry); 
+		boxSize += tracer.Field("data_reference_index", 16, this.data_reference_index); 
 		return boxSize;
 	}
 }

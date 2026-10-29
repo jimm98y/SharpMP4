@@ -15,6 +15,13 @@ aligned(8) class PittasoftOriginalFileNameBox() extends Box('ptnm') {
 */
 public partial class PittasoftOriginalFileNameBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// ExifTool: substr($val, 4, -1) - 4 bytes, then the name and its terminator
+aligned(8) class PittasoftOriginalFileNameBox() extends Box('ptnm') {
+ unsigned int(32) unknown;
+ string name;
+}
+"; } }
 	public const string TYPE = "ptnm";
 	public override string DisplayName { get { return "PittasoftOriginalFileNameBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -58,12 +65,12 @@ public partial class PittasoftOriginalFileNameBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("unknown", 32, this.unknown); 
-		boxSize += builder.Field("name", IsoStream.CalculateStringSize(name), this.name); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("unknown", 32, this.unknown); 
+		boxSize += tracer.Field("name", IsoStream.CalculateStringSize(name), this.name); 
 		return boxSize;
 	}
 }

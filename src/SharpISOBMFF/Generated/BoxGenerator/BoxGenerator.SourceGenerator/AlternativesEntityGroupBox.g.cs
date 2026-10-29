@@ -13,6 +13,11 @@ aligned(8) class AlternativesEntityGroupBox extends EntityToGroupBox('altr',0,0)
 */
 public partial class AlternativesEntityGroupBox : EntityToGroupBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// ISO/IEC 14496-12 entity group 'altr': the fields of an EntityToGroupBox alone, as 14496-12-entity-groups.json has it
+aligned(8) class AlternativesEntityGroupBox extends EntityToGroupBox('altr',0,0)
+{
+}"; } }
 	public const string TYPE = "altr";
 	public override string DisplayName { get { return "AlternativesEntityGroupBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -44,10 +49,10 @@ public partial class AlternativesEntityGroupBox : EntityToGroupBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

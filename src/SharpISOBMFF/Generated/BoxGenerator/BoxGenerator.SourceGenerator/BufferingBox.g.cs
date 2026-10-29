@@ -19,6 +19,17 @@ class BufferingBox extends Box('buff'){
 */
 public partial class BufferingBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class BufferingBox extends Box('buff'){
+	unsigned int(16) 		operating_point_count
+;	for (i = 0; i < operating_point_count; i++){
+		unsigned int (32) 	byte_rate;
+		unsigned int (32) 	cpb_size;
+		unsigned int (32) 	dpb_size;
+		unsigned int (32)		init_cpb_delay;
+		unsigned int (32) 	init_dpb_delay;
+	}
+}"; } }
 	public const string TYPE = "buff";
 	public override string DisplayName { get { return "BufferingBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -103,19 +114,19 @@ public partial class BufferingBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("operating_point_count", 16, this.operating_point_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("operating_point_count", 16, this.operating_point_count); 
 
 		for (int i = 0; i < operating_point_count; i++)
 		{
-			boxSize += builder.Field($"byte_rate[{i}]", 32, this.byte_rate[i]); 
-			boxSize += builder.Field($"cpb_size[{i}]", 32, this.cpb_size[i]); 
-			boxSize += builder.Field($"dpb_size[{i}]", 32, this.dpb_size[i]); 
-			boxSize += builder.Field($"init_cpb_delay[{i}]", 32, this.init_cpb_delay[i]); 
-			boxSize += builder.Field($"init_dpb_delay[{i}]", 32, this.init_dpb_delay[i]); 
+			boxSize += tracer.Field($"byte_rate[{i}]", 32, this.byte_rate[i]); 
+			boxSize += tracer.Field($"cpb_size[{i}]", 32, this.cpb_size[i]); 
+			boxSize += tracer.Field($"dpb_size[{i}]", 32, this.dpb_size[i]); 
+			boxSize += tracer.Field($"init_cpb_delay[{i}]", 32, this.init_cpb_delay[i]); 
+			boxSize += tracer.Field($"init_dpb_delay[{i}]", 32, this.init_dpb_delay[i]); 
 		}
 		return boxSize;
 	}

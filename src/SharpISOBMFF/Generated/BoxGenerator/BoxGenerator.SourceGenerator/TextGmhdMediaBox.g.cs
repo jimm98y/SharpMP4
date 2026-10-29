@@ -12,13 +12,17 @@ aligned(8) class TextGmhdMediaBox() extends Box('text') {
 */
 public partial class TextGmhdMediaBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TextGmhdMediaBox() extends Box('text') {
+ unsigned int(8) textData[36];
+ } "; } }
 	public const string TYPE = "text";
 	public override string DisplayName { get { return "TextGmhdMediaBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("stsd", "gmhd"); }
 
 
-	protected byte[] textData; 
+	protected byte[] textData = new byte[36]; 
 	public byte[] TextData { get { return this.textData; } set { this.textData = value; } }
 
 	public TextGmhdMediaBox(): base(IsoStream.FromFourCC("text"))
@@ -49,11 +53,11 @@ public partial class TextGmhdMediaBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("textData", 36 * 8, this.textData); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("textData", 36 * 8, this.textData); 
 		return boxSize;
 	}
 }

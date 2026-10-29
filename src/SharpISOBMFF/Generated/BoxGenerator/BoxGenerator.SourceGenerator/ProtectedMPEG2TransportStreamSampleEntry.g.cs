@@ -13,6 +13,11 @@ class ProtectedMPEG2TransportStreamSampleEntry
 */
 public partial class ProtectedMPEG2TransportStreamSampleEntry : MPEG2TSSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ProtectedMPEG2TransportStreamSampleEntry
+	extends MPEG2TSSampleEntry('pm2t') {
+	ProtectionSchemeInfoBox		SchemeInformation;
+}"; } }
 	public const string TYPE = "pm2t";
 	public override string DisplayName { get { return "ProtectedMPEG2TransportStreamSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -51,12 +56,12 @@ public partial class ProtectedMPEG2TransportStreamSampleEntry : MPEG2TSSampleEnt
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("SchemeInformation", IsoStream.CalculateBoxSize(SchemeInformation), this.SchemeInformation); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("SchemeInformation", IsoStream.CalculateBoxSize(SchemeInformation), this.SchemeInformation); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

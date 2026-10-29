@@ -19,6 +19,17 @@ aligned(8) class SeiInformationBox extends Box('seii') {
 */
 public partial class SeiInformationBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SeiInformationBox extends Box('seii') {
+	unsigned int(16) numRequiredSEIs;
+	for (i = 0; i < numRequiredSEIs; i++) {
+	unsigned int(16) requiredSEI_ID;
+	}
+	unsigned int(16) numNotRequiredSEIs;
+	for (i = 0; i < numNotRequiredSEIs; i++) {
+	unsigned int(16) notrequiredSEI_ID;
+	}
+}"; } }
 	public const string TYPE = "seii";
 	public override string DisplayName { get { return "SeiInformationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -100,21 +111,21 @@ public partial class SeiInformationBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("numRequiredSEIs", 16, this.numRequiredSEIs); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("numRequiredSEIs", 16, this.numRequiredSEIs); 
 
 		for (int i = 0; i < numRequiredSEIs; i++)
 		{
-			boxSize += builder.Field($"requiredSEI_ID[{i}]", 16, this.requiredSEI_ID[i]); 
+			boxSize += tracer.Field($"requiredSEI_ID[{i}]", 16, this.requiredSEI_ID[i]); 
 		}
-		boxSize += builder.Field("numNotRequiredSEIs", 16, this.numNotRequiredSEIs); 
+		boxSize += tracer.Field("numNotRequiredSEIs", 16, this.numNotRequiredSEIs); 
 
 		for (int i = 0; i < numNotRequiredSEIs; i++)
 		{
-			boxSize += builder.Field($"notrequiredSEI_ID[{i}]", 16, this.notrequiredSEI_ID[i]); 
+			boxSize += tracer.Field($"notrequiredSEI_ID[{i}]", 16, this.notrequiredSEI_ID[i]); 
 		}
 		return boxSize;
 	}

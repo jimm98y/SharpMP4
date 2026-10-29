@@ -28,6 +28,26 @@ class AVCSubSequenceEntry () extends VisualSampleGroupEntry ('avss')
 */
 public partial class AVCSubSequenceEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AVCSubSequenceEntry () extends VisualSampleGroupEntry ('avss') 
+{ 
+  unsigned int(16) subSequenceIdentifer; 
+  unsigned int(8)  layerNumber;  
+  unsigned int(1)  durationFlag; 
+  unsigned int(1)  avgRateFlag; 
+  unsigned int(6)  reserved = 0;  
+  if (durationFlag) 
+   unsigned int(32) duration; 
+  if (avgRateFlag) 
+  {
+   unsigned int(8)  accurateStatisticsFlag; 
+   unsigned int(16) avgBitRate; 
+   unsigned int(16) avgFrameRate; 
+  }
+  unsigned int(8) numReferences; 
+  DependencyInfo dependency[numReferences]; 
+ } 
+"; } }
 	public const string TYPE = "avss";
 	public override string DisplayName { get { return "AVCSubSequenceEntry"; } }
 
@@ -61,7 +81,7 @@ public partial class AVCSubSequenceEntry : VisualSampleGroupEntry
 	protected byte numReferences; 
 	public byte NumReferences { get { return this.numReferences; } set { this.numReferences = value; } }
 
-	protected DependencyInfo[] dependency; 
+	protected DependencyInfo[] dependency = []; 
 	public DependencyInfo[] Dependency { get { return this.dependency; } set { this.dependency = value; } }
 
 	public AVCSubSequenceEntry(): base(IsoStream.FromFourCC("avss"))
@@ -146,29 +166,29 @@ public partial class AVCSubSequenceEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("subSequenceIdentifer", 16, this.subSequenceIdentifer); 
-		boxSize += builder.Field("layerNumber", 8, this.layerNumber); 
-		boxSize += builder.Field("durationFlag", 1, this.durationFlag); 
-		boxSize += builder.Field("avgRateFlag", 1, this.avgRateFlag); 
-		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("subSequenceIdentifer", 16, this.subSequenceIdentifer); 
+		boxSize += tracer.Field("layerNumber", 8, this.layerNumber); 
+		boxSize += tracer.Field("durationFlag", 1, this.durationFlag); 
+		boxSize += tracer.Field("avgRateFlag", 1, this.avgRateFlag); 
+		boxSize += tracer.Field("reserved", 6, this.reserved); 
 
 		if (durationFlag)
 		{
-			boxSize += builder.Field("duration", 32, this.duration); 
+			boxSize += tracer.Field("duration", 32, this.duration); 
 		}
 
 		if (avgRateFlag)
 		{
-			boxSize += builder.Field("accurateStatisticsFlag", 8, this.accurateStatisticsFlag); 
-			boxSize += builder.Field("avgBitRate", 16, this.avgBitRate); 
-			boxSize += builder.Field("avgFrameRate", 16, this.avgFrameRate); 
+			boxSize += tracer.Field("accurateStatisticsFlag", 8, this.accurateStatisticsFlag); 
+			boxSize += tracer.Field("avgBitRate", 16, this.avgBitRate); 
+			boxSize += tracer.Field("avgFrameRate", 16, this.avgFrameRate); 
 		}
-		boxSize += builder.Field("numReferences", 8, this.numReferences); 
-		boxSize += builder.Field("dependency", IsoStream.CalculateClassSize(dependency), this.dependency); 
+		boxSize += tracer.Field("numReferences", 8, this.numReferences); 
+		boxSize += tracer.Field("dependency", IsoStream.CalculateClassSize(dependency), this.dependency); 
 		return boxSize;
 	}
 }

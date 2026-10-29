@@ -17,6 +17,15 @@ BEFloat32 polynomialParametersY0;
 */
 public partial class CameraSystemLensFrameAdjustmentBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class CameraSystemLensFrameAdjustmentBox extends FullBox('lfad', version = 0, 0) { 
+BEFloat32 polynomialParametersX0;
+ BEFloat32 polynomialParametersX1;
+ BEFloat32 polynomialParametersX2; // parameters for X axis 
+BEFloat32 polynomialParametersY0;
+ BEFloat32 polynomialParametersY1;
+ BEFloat32 polynomialParametersY2; // parameters for Y axis 
+} "; } }
 	public const string TYPE = "lfad";
 	public override string DisplayName { get { return "CameraSystemLensFrameAdjustmentBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -84,16 +93,16 @@ public partial class CameraSystemLensFrameAdjustmentBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("polynomialParametersX0", 32, this.polynomialParametersX0); 
-		boxSize += builder.Field("polynomialParametersX1", 32, this.polynomialParametersX1); 
-		boxSize += builder.Field("polynomialParametersX2", 32, this.polynomialParametersX2); // parameters for X axis 
-		boxSize += builder.Field("polynomialParametersY0", 32, this.polynomialParametersY0); 
-		boxSize += builder.Field("polynomialParametersY1", 32, this.polynomialParametersY1); 
-		boxSize += builder.Field("polynomialParametersY2", 32, this.polynomialParametersY2); // parameters for Y axis 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("polynomialParametersX0", 32, this.polynomialParametersX0); 
+		boxSize += tracer.Field("polynomialParametersX1", 32, this.polynomialParametersX1); 
+		boxSize += tracer.Field("polynomialParametersX2", 32, this.polynomialParametersX2); // parameters for X axis 
+		boxSize += tracer.Field("polynomialParametersY0", 32, this.polynomialParametersY0); 
+		boxSize += tracer.Field("polynomialParametersY1", 32, this.polynomialParametersY1); 
+		boxSize += tracer.Field("polynomialParametersY2", 32, this.polynomialParametersY2); // parameters for Y axis 
 		return boxSize;
 	}
 }

@@ -15,6 +15,13 @@ aligned(8) class MetaDataKeyDeclarationBox extends Box('keyd') {
 */
 public partial class MetaDataKeyDeclarationBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MetaDataKeyDeclarationBox extends Box('keyd') {
+ unsigned int(32) key_namespace;
+ unsigned int(8) key_value[];
+}
+
+"; } }
 	public const string TYPE = "keyd";
 	public override string DisplayName { get { return "MetaDataKeyDeclarationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -24,7 +31,7 @@ public partial class MetaDataKeyDeclarationBox : Box
 	protected uint key_namespace; 
 	public uint KeyNamespace { get { return this.key_namespace; } set { this.key_namespace = value; } }
 
-	protected byte[] key_value; 
+	protected byte[] key_value = []; 
 	public byte[] KeyValue { get { return this.key_value; } set { this.key_value = value; } }
 
 	public MetaDataKeyDeclarationBox(): base(IsoStream.FromFourCC("keyd"))
@@ -58,12 +65,12 @@ public partial class MetaDataKeyDeclarationBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("key_namespace", 32, this.key_namespace); 
-		boxSize += builder.Field("key_value", ((ulong)key_value.Length * 8), this.key_value); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("key_namespace", 32, this.key_namespace); 
+		boxSize += tracer.Field("key_value", ((ulong)key_value.Length * 8), this.key_value); 
 		return boxSize;
 	}
 }

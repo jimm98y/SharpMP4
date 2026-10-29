@@ -20,14 +20,22 @@ namespace SharpISOBMFF
         ulong CalculateSize();
 
         /// <summary>
-        /// Its fields as they are now - read, or set since - each of its position, size and value, to the builder: what
+        /// Its fields as they are now - read, or set since - each of its position, size and value, to the tracer: what
         /// <see cref="object.ToString"/> is made of. Its size, as <see cref="CalculateSize"/> counts it.
         /// </summary>
-        ulong ToString(BoxStringBuilder builder);
+        ulong Trace(BoxTracer tracer);
+
+        /// <summary>
+        /// The syntax its class is defined of, as the definition gives it; null of a class of no definition.
+        /// </summary>
+        string Syntax { get; }
     }
 
     public abstract class Box : IMp4Serializable, IHasBoxChildren
     {
+        /// <summary>Of a class of no definition, none: a generated class gives its own.</summary>
+        public virtual string Syntax { get { return null; } }
+
         public virtual uint FourCC { get; set; }
         public abstract string DisplayName { get; }
 
@@ -175,25 +183,25 @@ namespace SharpISOBMFF
         /// <summary>The box, its fields and its boxes, a line each, as <see cref="BoxStringBuilder"/> describes them.</summary>
         public override string ToString() { return BoxStringBuilder.Format(this); }
 
-        public virtual ulong ToString(BoxStringBuilder builder)
+        public virtual ulong Trace(BoxTracer tracer)
         {
-            return HeaderToString(builder);
+            return TraceHeader(tracer);
         }
 
         /// <summary>
         /// The header the box is written with: its size as it is now - of its fields and boxes as they are - its type, and
         /// of a 'uuid' box, its user type.
         /// </summary>
-        protected ulong HeaderToString(BoxStringBuilder builder)
+        protected ulong TraceHeader(BoxTracer tracer)
         {
             ulong size = IsoStream.CalculateBoxSize(this) >> 3;
             ulong boxSize = 0;
-            boxSize += builder.Field("size", 32, IsCountingLargeSize ? 1u : (uint)size);
-            boxSize += builder.Field("type", 32, FourCC);
+            boxSize += tracer.Field("size", 32, IsCountingLargeSize ? 1u : (uint)size);
+            boxSize += tracer.Field("type", 32, FourCC);
             if (IsCountingLargeSize)
-                boxSize += builder.Field("largesize", 64, size);
+                boxSize += tracer.Field("largesize", 64, size);
             if (uuid != null)
-                boxSize += builder.Field("usertype", 8 * (ulong)uuid.Length, uuid);
+                boxSize += tracer.Field("usertype", 8 * (ulong)uuid.Length, uuid);
             return boxSize;
         }
     }
@@ -314,11 +322,11 @@ namespace SharpISOBMFF
             return boxSize;
         }
 
-        public override ulong ToString(BoxStringBuilder builder)
+        public override ulong Trace(BoxTracer tracer)
         {
             ulong boxSize = 0;
-            boxSize += base.ToString(builder);
-            boxSize += builder.Field("data", (ulong)data.Length << 3, this.data);
+            boxSize += base.Trace(tracer);
+            boxSize += tracer.Field("data", (ulong)data.Length << 3, this.data);
             return boxSize;
         }
     }
@@ -344,10 +352,10 @@ namespace SharpISOBMFF
         /// <summary>Why the box's syntax could not read it.</summary>
         public string Error { get; }
 
-        public override ulong ToString(BoxStringBuilder builder)
+        public override ulong Trace(BoxTracer tracer)
         {
-            ulong boxSize = base.ToString(builder);
-            boxSize += builder.Field("error", 0, Error);
+            ulong boxSize = base.Trace(tracer);
+            boxSize += tracer.Field("error", 0, Error);
             return boxSize;
         }
     }
@@ -387,17 +395,20 @@ namespace SharpISOBMFF
             return boxSize;
         }
 
-        public override ulong ToString(BoxStringBuilder builder)
+        public override ulong Trace(BoxTracer tracer)
         {
             ulong boxSize = 0;
-            boxSize += base.ToString(builder);
-            boxSize += builder.Field("data", (ulong)data.Length << 3, this.data);
+            boxSize += base.Trace(tracer);
+            boxSize += tracer.Field("data", (ulong)data.Length << 3, this.data);
             return boxSize;
         }
     }
 
     public class UnknownClass : IMp4Serializable
     {
+        /// <summary>Of a class of no definition, none: a generated class gives its own.</summary>
+        public virtual string Syntax { get { return null; } }
+
         public virtual string DisplayName { get { return nameof(UnknownClass); } }
 
         protected StreamMarker data;
@@ -437,9 +448,9 @@ namespace SharpISOBMFF
 
         public override string ToString() { return BoxStringBuilder.Format(this); }
 
-        public virtual ulong ToString(BoxStringBuilder builder)
+        public virtual ulong Trace(BoxTracer tracer)
         {
-            return builder.Field("data", (ulong)data.Length << 3, this.data);
+            return tracer.Field("data", (ulong)data.Length << 3, this.data);
         }
     }
 
@@ -491,6 +502,9 @@ namespace SharpISOBMFF
 
     public abstract class Descriptor : IMp4Serializable
     {
+        /// <summary>Of a class of no definition, none: a generated class gives its own.</summary>
+        public virtual string Syntax { get { return null; } }
+
         public abstract string DisplayName { get; }
         protected List<Descriptor> children = null;
         public List<Descriptor> Children { get { return children; } set { children = value; } }
@@ -536,8 +550,8 @@ namespace SharpISOBMFF
 
         public override string ToString() { return BoxStringBuilder.Format(this); }
 
-        /// <summary>Of its fields, none: its tag and size, written before them, <see cref="BoxStringBuilder"/> describes.</summary>
-        public virtual ulong ToString(BoxStringBuilder builder)
+        /// <summary>Of its fields, none: its tag and size, written before them, <see cref="BoxTracer"/> traces.</summary>
+        public virtual ulong Trace(BoxTracer tracer)
         {
             return 0;
         }
@@ -565,10 +579,10 @@ namespace SharpISOBMFF
         /// <summary>Why the descriptor's syntax could not read it.</summary>
         public string Error { get; }
 
-        public override ulong ToString(BoxStringBuilder builder)
+        public override ulong Trace(BoxTracer tracer)
         {
-            ulong boxSize = base.ToString(builder);
-            boxSize += builder.Field("error", 0, Error);
+            ulong boxSize = base.Trace(tracer);
+            boxSize += tracer.Field("error", 0, Error);
             return boxSize;
         }
     }
@@ -602,10 +616,10 @@ namespace SharpISOBMFF
             return boxSize;
         }
 
-        public override ulong ToString(BoxStringBuilder builder)
+        public override ulong Trace(BoxTracer tracer)
         {
-            ulong boxSize = base.ToString(builder);
-            boxSize += builder.Field("data", (ulong)data.Length << 3, this.data);
+            ulong boxSize = base.Trace(tracer);
+            boxSize += tracer.Field("data", (ulong)data.Length << 3, this.data);
             return boxSize;
         }
     }

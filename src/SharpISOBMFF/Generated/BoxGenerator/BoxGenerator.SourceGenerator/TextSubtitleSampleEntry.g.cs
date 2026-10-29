@@ -15,6 +15,13 @@ class TextSubtitleSampleEntry() extends SubtitleSampleEntry ('sbtt') {
 */
 public partial class TextSubtitleSampleEntry : SubtitleSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class TextSubtitleSampleEntry() extends SubtitleSampleEntry ('sbtt') { 
+ string content_encoding; // optional 
+ string mime_format; 
+ BitRateBox (); // optional 
+ TextConfigBox (); // optional 
+}"; } }
 	public const string TYPE = "sbtt";
 	public override string DisplayName { get { return "TextSubtitleSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -71,15 +78,15 @@ public partial class TextSubtitleSampleEntry : SubtitleSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		if (this.content_encodingPresent) boxSize += builder.Field("content_encoding", IsoStream.CalculateStringSize(content_encoding), this.content_encoding); // optional 
-		boxSize += builder.Field("mime_format", IsoStream.CalculateStringSize(mime_format), this.mime_format); 
-		// boxSize += builder.Field("BitRateBox", IsoStream.CalculateBoxSize(BitRateBox), this.BitRateBox); // optional 
-		// boxSize += builder.Field("TextConfigBox", IsoStream.CalculateBoxSize(TextConfigBox), this.TextConfigBox); // optional 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		if (this.content_encodingPresent) boxSize += tracer.Field("content_encoding", IsoStream.CalculateStringSize(content_encoding), this.content_encoding); // optional 
+		boxSize += tracer.Field("mime_format", IsoStream.CalculateStringSize(mime_format), this.mime_format); 
+		// boxSize += tracer.Field("BitRateBox", IsoStream.CalculateBoxSize(BitRateBox), this.BitRateBox); // optional 
+		// boxSize += tracer.Field("TextConfigBox", IsoStream.CalculateBoxSize(TextConfigBox), this.TextConfigBox); // optional 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

@@ -13,6 +13,11 @@ extends ItemFullProperty('spor', version = 0, flags = 0){
 */
 public partial class VvcSubpicOrderProperty : ItemFullProperty
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class VvcSubpicOrderProperty
+extends ItemFullProperty('spor', version = 0, flags = 0){
+	VvcSubpicOrderEntry sor_info; // specified in ISO/IEC 14496-15
+}"; } }
 	public const string TYPE = "spor";
 	public override string DisplayName { get { return "VvcSubpicOrderProperty"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +55,11 @@ public partial class VvcSubpicOrderProperty : ItemFullProperty
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("sor_info", IsoStream.CalculateClassSize(sor_info), this.sor_info); // specified in ISO/IEC 14496-15
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("sor_info", IsoStream.CalculateClassSize(sor_info), this.sor_info); // specified in ISO/IEC 14496-15
 		return boxSize;
 	}
 }

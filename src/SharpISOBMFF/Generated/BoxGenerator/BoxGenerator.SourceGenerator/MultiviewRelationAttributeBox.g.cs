@@ -22,6 +22,20 @@ aligned(8) class MultiviewRelationAttributeBox
 */
 public partial class MultiviewRelationAttributeBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MultiviewRelationAttributeBox
+	extends FullBox('mvra', version = 0, flags) {
+	bit(16) reserved1 = 0;
+	unsigned int(16) num_common_attributes;
+	for (i=0; i<num_common_attributes; i++) {
+		unsigned int(32) common_attribute; 
+		unsigned int(32) common_value;
+	}
+	bit(16) reserved2 = 0;
+	unsigned int(16) num_differentiating_attributes;
+	for (i=0; i<num_differentiating_attributes; i++)
+		unsigned int(32) differentiating_attribute;
+}"; } }
 	public const string TYPE = "mvra";
 	public override string DisplayName { get { return "MultiviewRelationAttributeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -122,24 +136,24 @@ public partial class MultiviewRelationAttributeBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved1", 16, this.reserved1); 
-		boxSize += builder.Field("num_common_attributes", 16, this.num_common_attributes); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved1", 16, this.reserved1); 
+		boxSize += tracer.Field("num_common_attributes", 16, this.num_common_attributes); 
 
 		for (int i=0; i<num_common_attributes; i++)
 		{
-			boxSize += builder.Field($"common_attribute[{i}]", 32, this.common_attribute[i]); 
-			boxSize += builder.Field($"common_value[{i}]", 32, this.common_value[i]); 
+			boxSize += tracer.Field($"common_attribute[{i}]", 32, this.common_attribute[i]); 
+			boxSize += tracer.Field($"common_value[{i}]", 32, this.common_value[i]); 
 		}
-		boxSize += builder.Field("reserved2", 16, this.reserved2); 
-		boxSize += builder.Field("num_differentiating_attributes", 16, this.num_differentiating_attributes); 
+		boxSize += tracer.Field("reserved2", 16, this.reserved2); 
+		boxSize += tracer.Field("num_differentiating_attributes", 16, this.num_differentiating_attributes); 
 
 		for (int i=0; i<num_differentiating_attributes; i++)
 		{
-			boxSize += builder.Field($"differentiating_attribute[{i}]", 32, this.differentiating_attribute[i]); 
+			boxSize += tracer.Field($"differentiating_attribute[{i}]", 32, this.differentiating_attribute[i]); 
 		}
 		return boxSize;
 	}

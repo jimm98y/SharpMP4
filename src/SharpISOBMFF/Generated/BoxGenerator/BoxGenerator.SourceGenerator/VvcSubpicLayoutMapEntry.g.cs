@@ -15,6 +15,13 @@ class VvcSubpicLayoutMapEntry() extends VisualSampleGroupEntry ('sulm') {
 */
 public partial class VvcSubpicLayoutMapEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class VvcSubpicLayoutMapEntry() extends VisualSampleGroupEntry ('sulm') {
+	unsigned int(32) groupID_info_4cc;
+	unsigned int(16) entry_count_minus1;
+	for(i=0; i <= entry_count_minus1; i++)
+		unsigned int(16) groupID;
+}"; } }
 	public const string TYPE = "sulm";
 	public override string DisplayName { get { return "VvcSubpicLayoutMapEntry"; } }
 
@@ -74,16 +81,16 @@ public partial class VvcSubpicLayoutMapEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("groupID_info_4cc", 32, this.groupID_info_4cc); 
-		boxSize += builder.Field("entry_count_minus1", 16, this.entry_count_minus1); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("groupID_info_4cc", 32, this.groupID_info_4cc); 
+		boxSize += tracer.Field("entry_count_minus1", 16, this.entry_count_minus1); 
 
 		for (int i=0; i <= entry_count_minus1; i++)
 		{
-			boxSize += builder.Field($"groupID[{i}]", 16, this.groupID[i]); 
+			boxSize += tracer.Field($"groupID[{i}]", 16, this.groupID[i]); 
 		}
 		return boxSize;
 	}

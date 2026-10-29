@@ -15,6 +15,13 @@ aligned(8) class OriginalFormatBox(codingname) extends Box ('frma') {
 */
 public partial class OriginalFormatBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class OriginalFormatBox(codingname) extends Box ('frma') {
+	unsigned int(32)	data_format = codingname;
+			// format of decrypted, encoded data (in case of protection)
+			// or un-transformed sample entry (in case of restriction
+			// and complete track information)
+}"; } }
 	public const string TYPE = "frma";
 	public override string DisplayName { get { return "OriginalFormatBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -58,11 +65,11 @@ public partial class OriginalFormatBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("data_format", 32, this.data_format); // format of decrypted, encoded data (in case of protection)
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("data_format", 32, this.data_format); // format of decrypted, encoded data (in case of protection)
 		/*  or un-transformed sample entry (in case of restriction */
 		/*  and complete track information) */
 		return boxSize;

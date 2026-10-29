@@ -12,6 +12,10 @@ class VTTAdditionalBox() extends Box ('vtta') {
 */
 public partial class VTTAdditionalBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class VTTAdditionalBox() extends Box ('vtta') {
+ boxstring cueAdditionalText; 
+ }"; } }
 	public const string TYPE = "vtta";
 	public override string DisplayName { get { return "VTTAdditionalBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +54,11 @@ public partial class VTTAdditionalBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("cueAdditionalText", IsoStream.CalculateStringSize(cueAdditionalText), this.cueAdditionalText); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("cueAdditionalText", IsoStream.CalculateStringSize(cueAdditionalText), this.cueAdditionalText); 
 		return boxSize;
 	}
 }

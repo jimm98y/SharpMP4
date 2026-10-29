@@ -18,6 +18,16 @@ aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
 */
 public partial class AV2CodecConfigurationBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AV2CodecConfigurationBox extends Box('av2C')
+{
+  unsigned int(8) reserved1 = 0;
+  unsigned int(8) config_obus_count_minus1;
+  for (i = 0; i < config_obus_count_minus1 + 1; ++i) {
+    unsigned int(8) config_obu[];
+  }
+}
+"; } }
 	public const string TYPE = "av2C";
 	public override string DisplayName { get { return "AV2CodecConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -80,16 +90,16 @@ public partial class AV2CodecConfigurationBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved1", 8, this.reserved1); 
-		boxSize += builder.Field("config_obus_count_minus1", 8, this.config_obus_count_minus1); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved1", 8, this.reserved1); 
+		boxSize += tracer.Field("config_obus_count_minus1", 8, this.config_obus_count_minus1); 
 
 		for (int i = 0; i < config_obus_count_minus1 + 1; ++i)
 		{
-			boxSize += builder.Field($"config_obu[{i}]", ((ulong)config_obu[i].Length * 8), this.config_obu[i]); 
+			boxSize += tracer.Field($"config_obu[{i}]", ((ulong)config_obu[i].Length * 8), this.config_obu[i]); 
 		}
 		return boxSize;
 	}

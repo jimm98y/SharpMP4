@@ -12,13 +12,17 @@ class OlympusOLYMBox() extends Box ('OLYM') {
 */
 public partial class OlympusOLYMBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class OlympusOLYMBox() extends Box ('OLYM') {
+ bit(8) data[];
+ }"; } }
 	public const string TYPE = "OLYM";
 	public override string DisplayName { get { return "OlympusOLYMBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("TAGS", "uuid"); }
 
 
-	protected byte[] data; 
+	protected byte[] data = []; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public OlympusOLYMBox(): base(IsoStream.FromFourCC("OLYM"))
@@ -52,12 +56,12 @@ public partial class OlympusOLYMBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

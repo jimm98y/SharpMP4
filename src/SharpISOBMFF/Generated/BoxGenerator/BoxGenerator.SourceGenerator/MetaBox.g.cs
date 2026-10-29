@@ -22,6 +22,20 @@ aligned(8) class MetaBox (handler_type)
 */
 public partial class MetaBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MetaBox (handler_type)
+	extends FullBox('meta', version = 0, 0) {
+	HandlerBox(handler_type)	theHandler;
+	PrimaryItemBox		primary_resource;		// optional
+	DataInformationBox	file_locations;		// optional
+	ItemLocationBox		item_locations;		// optional
+	ItemProtectionBox	protections;			// optional
+	ItemInfoBox			item_infos;				// optional
+	IPMPControlBox		IPMP_control;			// optional
+	ItemReferenceBox		item_refs;					// optional
+	ItemDataBox			item_data;					// optional
+	Box	other_boxes[];								// optional
+}"; } }
 	public const string TYPE = "meta";
 	public override string DisplayName { get { return "MetaBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -99,21 +113,21 @@ public bool IsQuickTime { get { return HasFullBoxHeader ?? (GetParent() == null 
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += IsQuickTime ? base.ToString(builder) : HeaderToString(builder);
-		// boxSize += builder.Field("theHandler", IsoStream.CalculateBoxSize(theHandler), this.theHandler); 
-		// boxSize += builder.Field("primary_resource", IsoStream.CalculateBoxSize(primary_resource), this.primary_resource); // optional
-		// boxSize += builder.Field("file_locations", IsoStream.CalculateBoxSize(file_locations), this.file_locations); // optional
-		// boxSize += builder.Field("item_locations", IsoStream.CalculateBoxSize(item_locations), this.item_locations); // optional
-		// boxSize += builder.Field("protections", IsoStream.CalculateBoxSize(protections), this.protections); // optional
-		// boxSize += builder.Field("item_infos", IsoStream.CalculateBoxSize(item_infos), this.item_infos); // optional
-		// boxSize += builder.Field("IPMP_control", IsoStream.CalculateBoxSize(IPMP_control), this.IPMP_control); // optional
-		// boxSize += builder.Field("item_refs", IsoStream.CalculateBoxSize(item_refs), this.item_refs); // optional
-		// boxSize += builder.Field("item_data", IsoStream.CalculateBoxSize(item_data), this.item_data); // optional
-		// boxSize += builder.Field("other_boxes", IsoStream.CalculateBoxSize(other_boxes), this.other_boxes); // optional
-		boxSize += builder.Children(this);
+		boxSize += IsQuickTime ? base.Trace(tracer) : TraceHeader(tracer);
+		// boxSize += tracer.Field("theHandler", IsoStream.CalculateBoxSize(theHandler), this.theHandler); 
+		// boxSize += tracer.Field("primary_resource", IsoStream.CalculateBoxSize(primary_resource), this.primary_resource); // optional
+		// boxSize += tracer.Field("file_locations", IsoStream.CalculateBoxSize(file_locations), this.file_locations); // optional
+		// boxSize += tracer.Field("item_locations", IsoStream.CalculateBoxSize(item_locations), this.item_locations); // optional
+		// boxSize += tracer.Field("protections", IsoStream.CalculateBoxSize(protections), this.protections); // optional
+		// boxSize += tracer.Field("item_infos", IsoStream.CalculateBoxSize(item_infos), this.item_infos); // optional
+		// boxSize += tracer.Field("IPMP_control", IsoStream.CalculateBoxSize(IPMP_control), this.IPMP_control); // optional
+		// boxSize += tracer.Field("item_refs", IsoStream.CalculateBoxSize(item_refs), this.item_refs); // optional
+		// boxSize += tracer.Field("item_data", IsoStream.CalculateBoxSize(item_data), this.item_data); // optional
+		// boxSize += tracer.Field("other_boxes", IsoStream.CalculateBoxSize(other_boxes), this.other_boxes); // optional
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

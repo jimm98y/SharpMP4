@@ -19,6 +19,17 @@ aligned(8) class PaddingBitsBox extends FullBox('padb', version = 0, 0) {
 */
 public partial class PaddingBitsBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class PaddingBitsBox extends FullBox('padb', version = 0, 0) {
+	unsigned int(32)	sample_count;
+	int i;
+	for (i=0; i < floor((sample_count + 1)/2); i++) {
+		bit(1)	reserved = 0;
+		bit(3)	pad1;
+		bit(1)	reserved = 0;
+		bit(3)	pad2;
+	}
+}"; } }
 	public const string TYPE = "padb";
 	public override string DisplayName { get { return "PaddingBitsBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -99,19 +110,19 @@ public partial class PaddingBitsBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("sample_count", 32, this.sample_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("sample_count", 32, this.sample_count); 
 		
 
 		for (int i=0; i < (int)Math.Floor((double)(sample_count + 1)/2); i++)
 		{
-			boxSize += builder.Field($"reserved[{i}]", 1, this.reserved[i]); 
-			boxSize += builder.Field($"pad1[{i}]", 3, this.pad1[i]); 
-			boxSize += builder.Field($"reserved0[{i}]", 1, this.reserved0[i]); 
-			boxSize += builder.Field($"pad2[{i}]", 3, this.pad2[i]); 
+			boxSize += tracer.Field($"reserved[{i}]", 1, this.reserved[i]); 
+			boxSize += tracer.Field($"pad1[{i}]", 3, this.pad1[i]); 
+			boxSize += tracer.Field($"reserved0[{i}]", 1, this.reserved0[i]); 
+			boxSize += tracer.Field($"pad2[{i}]", 3, this.pad2[i]); 
 		}
 		return boxSize;
 	}

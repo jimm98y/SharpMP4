@@ -31,6 +31,29 @@ aligned(8) class MovieHeaderBox extends FullBox('mvhd', version, 0) {
 */
 public partial class MovieHeaderBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MovieHeaderBox extends FullBox('mvhd', version, 0) {
+	if (version==1) {
+		unsigned int(64)	creation_time;
+		unsigned int(64)	modification_time;
+		unsigned int(32)	timescale;
+		unsigned int(64)	duration;
+	} else { // version==0
+		unsigned int(32)	creation_time;
+		unsigned int(32)	modification_time;
+		unsigned int(32)	timescale;
+		unsigned int(32)	duration;
+	}
+	template int(32)	rate = 0x00010000;	// typically 1.0
+	template int(16)	volume = 0x0100;	// typically, full volume
+	const bit(16)	reserved = 0;
+	const unsigned int(32)[2]	reserved = 0;
+	template int(32)[9]	matrix =
+		{ 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };
+		// Unity matrix
+	bit(32)[6]	pre_defined = 0;
+	unsigned int(32)	next_track_ID;
+}"; } }
 	public const string TYPE = "mvhd";
 	public override string DisplayName { get { return "MovieHeaderBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -58,14 +81,14 @@ public partial class MovieHeaderBox : FullBox
 	protected ushort reserved = 0; 
 	public ushort Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-	protected uint[] reserved0 = []; 
+	protected uint[] reserved0 = new uint[2]; 
 	public uint[] Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
 
 	protected int[] matrix =
 		{ 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };  //  Unity matrix
 	public int[] Matrix { get { return this.matrix; } set { this.matrix = value; } }
 
-	protected uint[] pre_defined = []; 
+	protected uint[] pre_defined = new uint[6]; 
 	public uint[] PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
 
 	protected uint next_track_ID; 
@@ -168,34 +191,34 @@ public partial class MovieHeaderBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if (version==1)
 		{
-			boxSize += builder.Field("creation_time", 64, this.creation_time); 
-			boxSize += builder.Field("modification_time", 64, this.modification_time); 
-			boxSize += builder.Field("timescale", 32, this.timescale); 
-			boxSize += builder.Field("duration", 64, this.duration); 
+			boxSize += tracer.Field("creation_time", 64, this.creation_time); 
+			boxSize += tracer.Field("modification_time", 64, this.modification_time); 
+			boxSize += tracer.Field("timescale", 32, this.timescale); 
+			boxSize += tracer.Field("duration", 64, this.duration); 
 		}
 
 		else 
 		{
 			/*  version==0 */
-			boxSize += builder.Field("creation_time", 32, this.creation_time); 
-			boxSize += builder.Field("modification_time", 32, this.modification_time); 
-			boxSize += builder.Field("timescale", 32, this.timescale); 
-			boxSize += builder.Field("duration", 32, this.duration); 
+			boxSize += tracer.Field("creation_time", 32, this.creation_time); 
+			boxSize += tracer.Field("modification_time", 32, this.modification_time); 
+			boxSize += tracer.Field("timescale", 32, this.timescale); 
+			boxSize += tracer.Field("duration", 32, this.duration); 
 		}
-		boxSize += builder.Field("rate", 32, this.rate); // typically 1.0
-		boxSize += builder.Field("volume", 16, this.volume); // typically, full volume
-		boxSize += builder.Field("reserved", 16, this.reserved); 
-		boxSize += builder.Field("reserved0", 2 * 32, this.reserved0); 
-		boxSize += builder.Field("matrix", 9 * 32, this.matrix); // Unity matrix
-		boxSize += builder.Field("pre_defined", 6 * 32, this.pre_defined); 
-		boxSize += builder.Field("next_track_ID", 32, this.next_track_ID); 
+		boxSize += tracer.Field("rate", 32, this.rate); // typically 1.0
+		boxSize += tracer.Field("volume", 16, this.volume); // typically, full volume
+		boxSize += tracer.Field("reserved", 16, this.reserved); 
+		boxSize += tracer.Field("reserved0", 2 * 32, this.reserved0); 
+		boxSize += tracer.Field("matrix", 9 * 32, this.matrix); // Unity matrix
+		boxSize += tracer.Field("pre_defined", 6 * 32, this.pre_defined); 
+		boxSize += tracer.Field("next_track_ID", 32, this.next_track_ID); 
 		return boxSize;
 	}
 }

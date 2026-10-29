@@ -37,6 +37,35 @@ aligned(8) class MultiviewGroupBox extends FullBox('mvcg', version = 0, flags) {
 */
 public partial class MultiviewGroupBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MultiviewGroupBox extends FullBox('mvcg', version = 0, flags) {
+	unsigned int(32) multiview_group_id;
+	unsigned int(16) num_entries;
+	bit(8) reserved = 0;
+	for(i=0; i<num_entries; i++) {
+		unsigned int(8) entry_type;
+		if (entry_type == 0)
+			unsigned int(32) track_id;
+		else if (entry_type == 1) {
+			unsigned int(32) track_id;
+			unsigned int(16) tier_id;
+		}
+		else if (entry_type == 2) {
+			bit(6) reserved1 = 0;
+			unsigned int(10) output_view_id;
+		}
+		else if (entry_type == 3) {
+			bit(6) reserved2 = 0;
+			unsigned int(10) start_view_id;
+			unsigned int(16) view_count;
+		}
+	}
+	TierInfoBox subset_stream_info; 			// optional
+	MultiviewRelationAttributeBox relation_attributes; // optional
+	TierBitRateBox subset_stream_bit_rate; // optional
+	BufferingBox subset_stream_buffering; 	// optional
+	MultiviewSceneInfoBox multiview_scene_info; 			// optional
+}"; } }
 	public const string TYPE = "mvcg";
 	public override string DisplayName { get { return "MultiviewGroupBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -228,48 +257,48 @@ public partial class MultiviewGroupBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("multiview_group_id", 32, this.multiview_group_id); 
-		boxSize += builder.Field("num_entries", 16, this.num_entries); 
-		boxSize += builder.Field("reserved", 8, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("multiview_group_id", 32, this.multiview_group_id); 
+		boxSize += tracer.Field("num_entries", 16, this.num_entries); 
+		boxSize += tracer.Field("reserved", 8, this.reserved); 
 
 		for (int i=0; i<num_entries; i++)
 		{
-			boxSize += builder.Field($"entry_type[{i}]", 8, this.entry_type[i]); 
+			boxSize += tracer.Field($"entry_type[{i}]", 8, this.entry_type[i]); 
 
 			if (entry_type[i] == 0)
 			{
-				boxSize += builder.Field($"track_id[{i}]", 32, this.track_id[i]); 
+				boxSize += tracer.Field($"track_id[{i}]", 32, this.track_id[i]); 
 			}
 
 			else if (entry_type[i] == 1)
 			{
-				boxSize += builder.Field($"track_id[{i}]", 32, this.track_id[i]); 
-				boxSize += builder.Field($"tier_id[{i}]", 16, this.tier_id[i]); 
+				boxSize += tracer.Field($"track_id[{i}]", 32, this.track_id[i]); 
+				boxSize += tracer.Field($"tier_id[{i}]", 16, this.tier_id[i]); 
 			}
 
 			else if (entry_type[i] == 2)
 			{
-				boxSize += builder.Field($"reserved1[{i}]", 6, this.reserved1[i]); 
-				boxSize += builder.Field($"output_view_id[{i}]", 10, this.output_view_id[i]); 
+				boxSize += tracer.Field($"reserved1[{i}]", 6, this.reserved1[i]); 
+				boxSize += tracer.Field($"output_view_id[{i}]", 10, this.output_view_id[i]); 
 			}
 
 			else if (entry_type[i] == 3)
 			{
-				boxSize += builder.Field($"reserved2[{i}]", 6, this.reserved2[i]); 
-				boxSize += builder.Field($"start_view_id[{i}]", 10, this.start_view_id[i]); 
-				boxSize += builder.Field($"view_count[{i}]", 16, this.view_count[i]); 
+				boxSize += tracer.Field($"reserved2[{i}]", 6, this.reserved2[i]); 
+				boxSize += tracer.Field($"start_view_id[{i}]", 10, this.start_view_id[i]); 
+				boxSize += tracer.Field($"view_count[{i}]", 16, this.view_count[i]); 
 			}
 		}
-		// boxSize += builder.Field("subset_stream_info", IsoStream.CalculateBoxSize(subset_stream_info), this.subset_stream_info); // optional
-		// boxSize += builder.Field("relation_attributes", IsoStream.CalculateBoxSize(relation_attributes), this.relation_attributes); // optional
-		// boxSize += builder.Field("subset_stream_bit_rate", IsoStream.CalculateBoxSize(subset_stream_bit_rate), this.subset_stream_bit_rate); // optional
-		// boxSize += builder.Field("subset_stream_buffering", IsoStream.CalculateBoxSize(subset_stream_buffering), this.subset_stream_buffering); // optional
-		// boxSize += builder.Field("multiview_scene_info", IsoStream.CalculateBoxSize(multiview_scene_info), this.multiview_scene_info); // optional
-		boxSize += builder.Children(this);
+		// boxSize += tracer.Field("subset_stream_info", IsoStream.CalculateBoxSize(subset_stream_info), this.subset_stream_info); // optional
+		// boxSize += tracer.Field("relation_attributes", IsoStream.CalculateBoxSize(relation_attributes), this.relation_attributes); // optional
+		// boxSize += tracer.Field("subset_stream_bit_rate", IsoStream.CalculateBoxSize(subset_stream_bit_rate), this.subset_stream_bit_rate); // optional
+		// boxSize += tracer.Field("subset_stream_buffering", IsoStream.CalculateBoxSize(subset_stream_buffering), this.subset_stream_buffering); // optional
+		// boxSize += tracer.Field("multiview_scene_info", IsoStream.CalculateBoxSize(multiview_scene_info), this.multiview_scene_info); // optional
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

@@ -12,13 +12,17 @@ aligned(8) class OMARightsObjectBox() extends FullBox('odrb') {
 */
 public partial class OMARightsObjectBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class OMARightsObjectBox() extends FullBox('odrb') {
+	 unsigned int(8) data[];
+ } "; } }
 	public const string TYPE = "odrb";
 	public override string DisplayName { get { return "OMARightsObjectBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("mdri"); }
 
 
-	protected byte[] data; 
+	protected byte[] data = []; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public OMARightsObjectBox(): base(IsoStream.FromFourCC("odrb"))
@@ -49,11 +53,11 @@ public partial class OMARightsObjectBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

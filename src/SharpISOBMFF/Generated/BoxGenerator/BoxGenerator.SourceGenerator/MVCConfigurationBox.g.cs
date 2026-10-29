@@ -12,6 +12,10 @@ class MVCConfigurationBox extends Box('mvcC') {
 */
 public partial class MVCConfigurationBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class MVCConfigurationBox extends Box('mvcC') {
+	MVCDecoderConfigurationRecord() MVCConfig;
+}"; } }
 	public const string TYPE = "mvcC";
 	public override string DisplayName { get { return "MVCConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class MVCConfigurationBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("MVCConfig", IsoStream.CalculateClassSize(MVCConfig), this.MVCConfig); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("MVCConfig", IsoStream.CalculateClassSize(MVCConfig), this.MVCConfig); 
 		return boxSize;
 	}
 }

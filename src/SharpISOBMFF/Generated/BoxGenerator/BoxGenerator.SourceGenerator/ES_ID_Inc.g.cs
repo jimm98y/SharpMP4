@@ -13,6 +13,11 @@ class ES_ID_Inc extends BaseDescriptor : bit(8) tag=ES_ID_IncTag {
 */
 public partial class ES_ID_Inc : BaseDescriptor
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class ES_ID_Inc extends BaseDescriptor : bit(8) tag=ES_ID_IncTag {
+ bit(32) Track_ID;
+ }
+ "; } }
 	public const byte TYPE = DescriptorTags.ES_ID_IncTag;
 	public override string DisplayName { get { return "ES_ID_Inc"; } }
 
@@ -47,11 +52,11 @@ public partial class ES_ID_Inc : BaseDescriptor
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("Track_ID", 32, this.Track_ID); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("Track_ID", 32, this.Track_ID); 
 		return boxSize;
 	}
 }

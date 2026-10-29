@@ -15,6 +15,13 @@ aligned(8) class MultiviewGroupRelationBox() extends FullBox('swtc', version = 0
 */
 public partial class MultiviewGroupRelationBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MultiviewGroupRelationBox() extends FullBox('swtc', version = 0, flags) {
+	unsigned int(32) num_entries;
+	for (i=0; i<num_entries; i++)
+		unsigned int(32) multiview_group_id;
+	MultiviewRelationAttributeBox relation_attributes;
+}"; } }
 	public const string TYPE = "swtc";
 	public override string DisplayName { get { return "MultiviewGroupRelationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -78,18 +85,18 @@ public partial class MultiviewGroupRelationBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("num_entries", 32, this.num_entries); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("num_entries", 32, this.num_entries); 
 
 		for (int i=0; i<num_entries; i++)
 		{
-			boxSize += builder.Field($"multiview_group_id[{i}]", 32, this.multiview_group_id[i]); 
+			boxSize += tracer.Field($"multiview_group_id[{i}]", 32, this.multiview_group_id[i]); 
 		}
-		// boxSize += builder.Field("relation_attributes", IsoStream.CalculateBoxSize(relation_attributes), this.relation_attributes); 
-		boxSize += builder.Children(this);
+		// boxSize += tracer.Field("relation_attributes", IsoStream.CalculateBoxSize(relation_attributes), this.relation_attributes); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

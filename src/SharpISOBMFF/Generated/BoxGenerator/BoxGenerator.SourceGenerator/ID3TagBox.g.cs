@@ -14,6 +14,12 @@ aligned(8) class ID3TagBox() extends FullBox('ID32') {
 */
 public partial class ID3TagBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ID3TagBox() extends FullBox('ID32') {
+ bit(1) pad;
+ unsigned int(5)[3] language;
+ bit(8) data[]; 
+ }"; } }
 	public const string TYPE = "ID32";
 	public override string DisplayName { get { return "ID3TagBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -23,10 +29,10 @@ public partial class ID3TagBox : FullBox
 	protected bool pad; 
 	public bool Pad { get { return this.pad; } set { this.pad = value; } }
 
-	protected string language; 
+	protected string language = "und"; 
 	public string Language { get { return this.language; } set { this.language = value; } }
 
-	protected byte[] data; 
+	protected byte[] data = []; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public ID3TagBox(): base(IsoStream.FromFourCC("ID32"))
@@ -63,13 +69,13 @@ public partial class ID3TagBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("pad", 1, this.pad); 
-		boxSize += builder.Field("language", 15, this.language); 
-		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("pad", 1, this.pad); 
+		boxSize += tracer.Field("language", 15, this.language); 
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

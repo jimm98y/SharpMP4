@@ -15,6 +15,13 @@ aligned(8) class LoadBox() extends Box('load') {
 */
 public partial class LoadBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class LoadBox() extends Box('load') {
+ signed int(32) preloadStartTime;
+ signed int(32) preloadDuration;
+ unsigned int(32) preloadFlags;
+ unsigned int(32) defaultHints;
+ } "; } }
 	public const string TYPE = "load";
 	public override string DisplayName { get { return "LoadBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -70,14 +77,14 @@ public partial class LoadBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("preloadStartTime", 32, this.preloadStartTime); 
-		boxSize += builder.Field("preloadDuration", 32, this.preloadDuration); 
-		boxSize += builder.Field("preloadFlags", 32, this.preloadFlags); 
-		boxSize += builder.Field("defaultHints", 32, this.defaultHints); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("preloadStartTime", 32, this.preloadStartTime); 
+		boxSize += tracer.Field("preloadDuration", 32, this.preloadDuration); 
+		boxSize += tracer.Field("preloadFlags", 32, this.preloadFlags); 
+		boxSize += tracer.Field("defaultHints", 32, this.defaultHints); 
 		return boxSize;
 	}
 }

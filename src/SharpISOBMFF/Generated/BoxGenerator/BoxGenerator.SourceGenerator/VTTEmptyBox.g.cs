@@ -10,6 +10,8 @@ class VTTEmptyBox() extends Box ('vtte') { }
 */
 public partial class VTTEmptyBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class VTTEmptyBox() extends Box ('vtte') { }"; } }
 	public const string TYPE = "vtte";
 	public override string DisplayName { get { return "VTTEmptyBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -42,10 +44,10 @@ public partial class VTTEmptyBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		return boxSize;
 	}
 }

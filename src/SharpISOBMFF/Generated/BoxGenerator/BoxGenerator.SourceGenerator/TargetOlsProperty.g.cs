@@ -13,6 +13,11 @@ extends ItemFullProperty('tols', version = 0, flags = 0){
 */
 public partial class TargetOlsProperty : ItemFullProperty
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TargetOlsProperty
+extends ItemFullProperty('tols', version = 0, flags = 0){
+	unsigned int(16) target_ols_idx;
+}"; } }
 	public const string TYPE = "tols";
 	public override string DisplayName { get { return "TargetOlsProperty"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +55,11 @@ public partial class TargetOlsProperty : ItemFullProperty
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("target_ols_idx", 16, this.target_ols_idx); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("target_ols_idx", 16, this.target_ols_idx); 
 		return boxSize;
 	}
 }

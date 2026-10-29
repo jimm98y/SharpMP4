@@ -13,6 +13,11 @@ aligned(8) class ScrambleSchemeInfoBox extends Box('scrb') {
 */
 public partial class ScrambleSchemeInfoBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ScrambleSchemeInfoBox extends Box('scrb') {
+	SchemeTypeBox scheme_type_box;
+	SchemeInformationBox info; // optional
+}"; } }
 	public const string TYPE = "scrb";
 	public override string DisplayName { get { return "ScrambleSchemeInfoBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -55,13 +60,13 @@ public partial class ScrambleSchemeInfoBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("scheme_type_box", IsoStream.CalculateBoxSize(scheme_type_box), this.scheme_type_box); 
-		// boxSize += builder.Field("info", IsoStream.CalculateBoxSize(info), this.info); // optional
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("scheme_type_box", IsoStream.CalculateBoxSize(scheme_type_box), this.scheme_type_box); 
+		// boxSize += tracer.Field("info", IsoStream.CalculateBoxSize(info), this.info); // optional
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

@@ -13,13 +13,18 @@ aligned(8) class BinaryXMLBox
 */
 public partial class BinaryXMLBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class BinaryXMLBox
+		extends FullBox('bxml', version = 0, 0) {
+	unsigned int(8) data[];		// to end of box
+}"; } }
 	public const string TYPE = "bxml";
 	public override string DisplayName { get { return "BinaryXMLBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
 
 
-	protected byte[] data;  //  to end of box
+	protected byte[] data = [];  //  to end of box
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public BinaryXMLBox(): base(IsoStream.FromFourCC("bxml"), 0, 0)
@@ -50,11 +55,11 @@ public partial class BinaryXMLBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); // to end of box
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); // to end of box
 		return boxSize;
 	}
 }

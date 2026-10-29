@@ -24,6 +24,17 @@ public partial class UsacSingleChannelElementConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class UsacSingleChannelElementConfig(coreSbrFrameLengthIndex)
+{
+  bslbf(1) tw_mdct;
+  bslbf(1) noiseFilling;
+  if (coreSbrFrameLengthIndex >= 2 && coreSbrFrameLengthIndex <= 4) {
+    SbrConfig() sbrConfig;
+  }
+}
+
+"; } }
 	public virtual string DisplayName { get { return "UsacSingleChannelElementConfig"; } }
 
 	protected bool tw_mdct; 
@@ -82,15 +93,15 @@ public partial class UsacSingleChannelElementConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("tw_mdct", 1, this.tw_mdct); 
-		boxSize += builder.Field("noiseFilling", 1, this.noiseFilling); 
+		boxSize += tracer.Field("tw_mdct", 1, this.tw_mdct); 
+		boxSize += tracer.Field("noiseFilling", 1, this.noiseFilling); 
 
 		if (coreSbrFrameLengthIndex >= 2 && coreSbrFrameLengthIndex <= 4)
 		{
-			boxSize += builder.Field("sbrConfig", IsoStream.CalculateClassSize(sbrConfig), this.sbrConfig); 
+			boxSize += tracer.Field("sbrConfig", IsoStream.CalculateClassSize(sbrConfig), this.sbrConfig); 
 		}
 		return boxSize;
 	}

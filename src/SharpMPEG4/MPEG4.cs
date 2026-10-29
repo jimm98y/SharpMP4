@@ -34,6 +34,9 @@ namespace SharpMPEG4
     /// <summary>A unit of the stream the syntax here does not describe, from its start code to the next, kept as it is.</summary>
     public sealed class UnknownUnit : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         public byte[] Data { get; set; } = Array.Empty<byte>();
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -60,6 +63,9 @@ namespace SharpMPEG4
     /// </summary>
     public sealed class NextStartCode : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         /// <summary>The bits read to the next byte, and how many.</summary>
         public int AlignmentBits { get; set; }
         public int AlignmentBitCount { get; set; }
@@ -108,6 +114,9 @@ namespace SharpMPEG4
     /// </summary>
     public sealed class VopData : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         public int LeadingBits { get; set; }
         public int LeadingBitCount { get; set; }
         public byte[] Data { get; set; } = Array.Empty<byte>();
@@ -135,6 +144,9 @@ namespace SharpMPEG4
     /// </summary>
     public abstract class LoadedMatrix : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         private readonly int _bits;
 
         protected LoadedMatrix(int bits) { _bits = bits; }
@@ -192,6 +204,9 @@ namespace SharpMPEG4
     /// </summary>
     public sealed class SpriteTrajectory : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         /// <summary>A warping_mv_code( d ): its dmv_length - the SSS of Table B.34 - its dmv_code, and its marker bit.</summary>
         public struct WarpingMvCode
         {
@@ -318,6 +333,9 @@ namespace SharpMPEG4
     /// </summary>
     public sealed class BrightnessChangeFactor : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         /// <summary>brightness_change_factor_size: the number of 1s of its code, 0 to 4.</summary>
         public int BrightnessChangeFactorSize { get; set; }
         public uint BrightnessChangeFactorCode { get; set; }
@@ -361,6 +379,9 @@ namespace SharpMPEG4
     /// </summary>
     public sealed class StaticSpriteVop : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
         public ulong Read(IItuContext context, ItuStream stream) =>
@@ -372,6 +393,9 @@ namespace SharpMPEG4
     /// <summary>backward_shape( ) of the plane of an enhancement layer (6.2.5): of macroblocks, not read, so the plane is kept as its bytes.</summary>
     public sealed class BackwardShape : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
         public ulong Read(IItuContext context, ItuStream stream) =>
@@ -383,6 +407,9 @@ namespace SharpMPEG4
     /// <summary>forward_shape( ) of the plane of an enhancement layer (6.2.5): of macroblocks, not read, so the plane is kept as its bytes.</summary>
     public sealed class ForwardShape : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
         public ulong Read(IItuContext context, ItuStream stream) =>

@@ -10,6 +10,9 @@ namespace SharpProRes
     /// </summary>
     public abstract class HeaderRemainder : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         public byte[] Data { get; set; } = Array.Empty<byte>();
 
         public int HasMoreRbspData { get; set; }
@@ -52,6 +55,9 @@ namespace SharpProRes
     /// </summary>
     public sealed class SliceData : IItuSerializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public string Syntax { get { return null; } }
+
         public byte[] Data { get; set; } = Array.Empty<byte>();
 
         public int HasMoreRbspData { get; set; }

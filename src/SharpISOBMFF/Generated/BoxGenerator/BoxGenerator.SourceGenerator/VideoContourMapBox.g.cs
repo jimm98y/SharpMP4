@@ -12,13 +12,17 @@ aligned(8) class VideoContourMapBox extends FullBox('ctrm', 0, 0) {
 */
 public partial class VideoContourMapBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class VideoContourMapBox extends FullBox('ctrm', 0, 0) { 
+ bit(8) data[]; // TODO requires switch/case 
+} "; } }
 	public const string TYPE = "ctrm";
 	public override string DisplayName { get { return "VideoContourMapBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("ctrs"); }
 
 
-	protected byte[] data;  //  TODO requires switch/case 
+	protected byte[] data = [];  //  TODO requires switch/case 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public VideoContourMapBox(): base(IsoStream.FromFourCC("ctrm"), 0, 0)
@@ -49,11 +53,11 @@ public partial class VideoContourMapBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); // TODO requires switch/case 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); // TODO requires switch/case 
 		return boxSize;
 	}
 }

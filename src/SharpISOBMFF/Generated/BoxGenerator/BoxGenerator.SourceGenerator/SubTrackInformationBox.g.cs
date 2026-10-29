@@ -16,6 +16,14 @@ aligned(8) class SubTrackInformationBox
 */
 public partial class SubTrackInformationBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SubTrackInformationBox
+	extends FullBox('stri', version = 0, 0){
+	template int(16)	switch_group = 0;
+	template int(16)	alternate_group = 0;
+	template unsigned int(32)	sub_track_ID = 0;
+	unsigned int(32)	attribute_list[];	// to the end of the box
+}"; } }
 	public const string TYPE = "stri";
 	public override string DisplayName { get { return "SubTrackInformationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -31,7 +39,7 @@ public partial class SubTrackInformationBox : FullBox
 	protected uint sub_track_ID = 0; 
 	public uint SubTrackID { get { return this.sub_track_ID; } set { this.sub_track_ID = value; } }
 
-	protected uint[] attribute_list;  //  to the end of the box
+	protected uint[] attribute_list = [];  //  to the end of the box
 	public uint[] AttributeList { get { return this.attribute_list; } set { this.attribute_list = value; } }
 
 	public SubTrackInformationBox(): base(IsoStream.FromFourCC("stri"), 0, 0)
@@ -71,14 +79,14 @@ public partial class SubTrackInformationBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("switch_group", 16, this.switch_group); 
-		boxSize += builder.Field("alternate_group", 16, this.alternate_group); 
-		boxSize += builder.Field("sub_track_ID", 32, this.sub_track_ID); 
-		boxSize += builder.Field("attribute_list", ((ulong)attribute_list.Length * 32), this.attribute_list); // to the end of the box
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("switch_group", 16, this.switch_group); 
+		boxSize += tracer.Field("alternate_group", 16, this.alternate_group); 
+		boxSize += tracer.Field("sub_track_ID", 32, this.sub_track_ID); 
+		boxSize += tracer.Field("attribute_list", ((ulong)attribute_list.Length * 32), this.attribute_list); // to the end of the box
 		return boxSize;
 	}
 }

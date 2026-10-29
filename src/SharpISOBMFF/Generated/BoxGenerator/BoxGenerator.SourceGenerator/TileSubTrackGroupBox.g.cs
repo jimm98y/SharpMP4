@@ -15,6 +15,13 @@ aligned(8) class TileSubTrackGroupBox extends FullBox('tstb', 0, 0) {
 */
 public partial class TileSubTrackGroupBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TileSubTrackGroupBox extends FullBox('tstb', 0, 0) {
+	unsigned int(16) item_count;
+	for(i = 0; i< item_count; i++) {
+		unsigned int(16) tileGroupID;
+	}
+}"; } }
 	public const string TYPE = "tstb";
 	public override string DisplayName { get { return "TileSubTrackGroupBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -71,15 +78,15 @@ public partial class TileSubTrackGroupBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("item_count", 16, this.item_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("item_count", 16, this.item_count); 
 
 		for (int i = 0; i< item_count; i++)
 		{
-			boxSize += builder.Field($"tileGroupID[{i}]", 16, this.tileGroupID[i]); 
+			boxSize += tracer.Field($"tileGroupID[{i}]", 16, this.tileGroupID[i]); 
 		}
 		return boxSize;
 	}

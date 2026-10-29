@@ -13,6 +13,11 @@ class IASampleEntry extends AudioSampleEntry('iamf') {
 */
 public partial class IASampleEntry : AudioSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// 6.2.3
+class IASampleEntry extends AudioSampleEntry('iamf') {
+ IAConfigurationBox ia_configuration_box;
+}"; } }
 	public const string TYPE = "iamf";
 	public override string DisplayName { get { return "IASampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -51,12 +56,12 @@ public partial class IASampleEntry : AudioSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("ia_configuration_box", IsoStream.CalculateBoxSize(ia_configuration_box), this.ia_configuration_box); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("ia_configuration_box", IsoStream.CalculateBoxSize(ia_configuration_box), this.ia_configuration_box); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

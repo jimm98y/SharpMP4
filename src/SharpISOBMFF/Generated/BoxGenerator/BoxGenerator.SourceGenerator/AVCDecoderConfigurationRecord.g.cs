@@ -48,6 +48,41 @@ public partial class AVCDecoderConfigurationRecord : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class AVCDecoderConfigurationRecord { 
+ unsigned int(8) configurationVersion = 1; 
+ unsigned int(8) AVCProfileIndication; 
+ unsigned int(8) profile_compatibility; 
+ unsigned int(8) AVCLevelIndication;  
+ bit(6) reserved = '111111'b; 
+ unsigned int(2) lengthSizeMinusOne;  
+ bit(3) reserved = '111'b; 
+ unsigned int(5) numOfSequenceParameterSets; 
+ for (i=0; i< numOfSequenceParameterSets;  i++) { 
+  unsigned int(16) sequenceParameterSetLength ; 
+  bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit; 
+ } 
+ unsigned int(8) numOfPictureParameterSets; 
+ for (i=0; i< numOfPictureParameterSets;  i++) { 
+  unsigned int(16) pictureParameterSetLength; 
+  bit(8*pictureParameterSetLength) pictureParameterSetNALUnit; 
+ } 
+ if( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  || 
+    AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144 ) 
+ { 
+  bit(6) reserved = '111111'b; 
+  unsigned int(2) chroma_format; 
+  bit(5) reserved = '11111'b; 
+  unsigned int(3) bit_depth_luma_minus8; 
+  bit(5) reserved = '11111'b; 
+  unsigned int(3) bit_depth_chroma_minus8; 
+  unsigned int(8) numOfSequenceParameterSetExt; 
+  for (i=0; i< numOfSequenceParameterSetExt; i++) { 
+   unsigned int(16) sequenceParameterSetExtLength; 
+   bit(8*sequenceParameterSetExtLength) sequenceParameterSetExtNALUnit; 
+  }
+ } 
+}"; } }
 	public virtual string DisplayName { get { return "AVCDecoderConfigurationRecord"; } }
 
 	protected byte configurationVersion = 1; 
@@ -265,47 +300,47 @@ public bool HasExtensions { get; set; } = false;
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("configurationVersion", 8, this.configurationVersion); 
-		boxSize += builder.Field("AVCProfileIndication", 8, this.AVCProfileIndication); 
-		boxSize += builder.Field("profile_compatibility", 8, this.profile_compatibility); 
-		boxSize += builder.Field("AVCLevelIndication", 8, this.AVCLevelIndication); 
-		boxSize += builder.Field("reserved", 6, this.reserved); 
-		boxSize += builder.Field("lengthSizeMinusOne", 2, this.lengthSizeMinusOne); 
-		boxSize += builder.Field("reserved0", 3, this.reserved0); 
-		boxSize += builder.Field("numOfSequenceParameterSets", 5, this.numOfSequenceParameterSets); 
+		boxSize += tracer.Field("configurationVersion", 8, this.configurationVersion); 
+		boxSize += tracer.Field("AVCProfileIndication", 8, this.AVCProfileIndication); 
+		boxSize += tracer.Field("profile_compatibility", 8, this.profile_compatibility); 
+		boxSize += tracer.Field("AVCLevelIndication", 8, this.AVCLevelIndication); 
+		boxSize += tracer.Field("reserved", 6, this.reserved); 
+		boxSize += tracer.Field("lengthSizeMinusOne", 2, this.lengthSizeMinusOne); 
+		boxSize += tracer.Field("reserved0", 3, this.reserved0); 
+		boxSize += tracer.Field("numOfSequenceParameterSets", 5, this.numOfSequenceParameterSets); 
 
 		for (int i=0; i< numOfSequenceParameterSets;  i++)
 		{
-			boxSize += builder.Field($"sequenceParameterSetLength[{i}]", 16, this.sequenceParameterSetLength[i]); 
-			boxSize += builder.Field($"sequenceParameterSetNALUnit[{i}]", (ulong)(8*sequenceParameterSetLength[i] ), this.sequenceParameterSetNALUnit[i]); 
+			boxSize += tracer.Field($"sequenceParameterSetLength[{i}]", 16, this.sequenceParameterSetLength[i]); 
+			boxSize += tracer.Field($"sequenceParameterSetNALUnit[{i}]", (ulong)(8*sequenceParameterSetLength[i] ), this.sequenceParameterSetNALUnit[i]); 
 		}
-		boxSize += builder.Field("numOfPictureParameterSets", 8, this.numOfPictureParameterSets); 
+		boxSize += tracer.Field("numOfPictureParameterSets", 8, this.numOfPictureParameterSets); 
 
 		for (int i=0; i< numOfPictureParameterSets;  i++)
 		{
-			boxSize += builder.Field($"pictureParameterSetLength[{i}]", 16, this.pictureParameterSetLength[i]); 
-			boxSize += builder.Field($"pictureParameterSetNALUnit[{i}]", (ulong)(8*pictureParameterSetLength[i] ), this.pictureParameterSetNALUnit[i]); 
+			boxSize += tracer.Field($"pictureParameterSetLength[{i}]", 16, this.pictureParameterSetLength[i]); 
+			boxSize += tracer.Field($"pictureParameterSetNALUnit[{i}]", (ulong)(8*pictureParameterSetLength[i] ), this.pictureParameterSetNALUnit[i]); 
 		}
 
 		if (!HasExtensions) return boxSize;
 		if ( AVCProfileIndication  ==  100  ||  AVCProfileIndication  ==  110  || 
     AVCProfileIndication  ==  122  ||  AVCProfileIndication  ==  144  ||  AVCProfileIndication  ==  244 )
 		{
-			boxSize += builder.Field("reserved1", 6, this.reserved1); 
-			boxSize += builder.Field("chroma_format", 2, this.chroma_format); 
-			boxSize += builder.Field("reserved00", 5, this.reserved00); 
-			boxSize += builder.Field("bit_depth_luma_minus8", 3, this.bit_depth_luma_minus8); 
-			boxSize += builder.Field("reserved10", 5, this.reserved10); 
-			boxSize += builder.Field("bit_depth_chroma_minus8", 3, this.bit_depth_chroma_minus8); 
-			boxSize += builder.Field("numOfSequenceParameterSetExt", 8, this.numOfSequenceParameterSetExt); 
+			boxSize += tracer.Field("reserved1", 6, this.reserved1); 
+			boxSize += tracer.Field("chroma_format", 2, this.chroma_format); 
+			boxSize += tracer.Field("reserved00", 5, this.reserved00); 
+			boxSize += tracer.Field("bit_depth_luma_minus8", 3, this.bit_depth_luma_minus8); 
+			boxSize += tracer.Field("reserved10", 5, this.reserved10); 
+			boxSize += tracer.Field("bit_depth_chroma_minus8", 3, this.bit_depth_chroma_minus8); 
+			boxSize += tracer.Field("numOfSequenceParameterSetExt", 8, this.numOfSequenceParameterSetExt); 
 
 			for (int i=0; i< numOfSequenceParameterSetExt; i++)
 			{
-				boxSize += builder.Field($"sequenceParameterSetExtLength[{i}]", 16, this.sequenceParameterSetExtLength[i]); 
-				boxSize += builder.Field($"sequenceParameterSetExtNALUnit[{i}]", (ulong)(8*sequenceParameterSetExtLength[i] ), this.sequenceParameterSetExtNALUnit[i]); 
+				boxSize += tracer.Field($"sequenceParameterSetExtLength[{i}]", 16, this.sequenceParameterSetExtLength[i]); 
+				boxSize += tracer.Field($"sequenceParameterSetExtNALUnit[{i}]", (ulong)(8*sequenceParameterSetExtLength[i] ), this.sequenceParameterSetExtNALUnit[i]); 
 			}
 		}
 		return boxSize;

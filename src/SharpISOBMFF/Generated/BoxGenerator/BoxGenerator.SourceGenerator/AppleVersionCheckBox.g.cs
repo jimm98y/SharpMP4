@@ -16,6 +16,14 @@ class AppleVersionCheckBox() extends Box ('rmvc'){
 */
 public partial class AppleVersionCheckBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AppleVersionCheckBox() extends Box ('rmvc'){
+ unsigned int(32) flags;
+ unsigned int(32) softwarePackage;
+ unsigned int(32) version;
+ unsigned int(32) mask;
+ signed int(16) checkType;
+ }"; } }
 	public const string TYPE = "rmvc";
 	public override string DisplayName { get { return "AppleVersionCheckBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -77,15 +85,15 @@ public partial class AppleVersionCheckBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("flags", 32, this.flags); 
-		boxSize += builder.Field("softwarePackage", 32, this.softwarePackage); 
-		boxSize += builder.Field("version", 32, this.version); 
-		boxSize += builder.Field("mask", 32, this.mask); 
-		boxSize += builder.Field("checkType", 16, this.checkType); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("flags", 32, this.flags); 
+		boxSize += tracer.Field("softwarePackage", 32, this.softwarePackage); 
+		boxSize += tracer.Field("version", 32, this.version); 
+		boxSize += tracer.Field("mask", 32, this.mask); 
+		boxSize += tracer.Field("checkType", 16, this.checkType); 
 		return boxSize;
 	}
 }

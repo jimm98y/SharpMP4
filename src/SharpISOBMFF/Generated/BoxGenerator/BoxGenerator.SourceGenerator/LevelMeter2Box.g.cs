@@ -14,6 +14,12 @@ aligned(8) class LevelMeter2Box() extends Box('lvlm') {
 */
 public partial class LevelMeter2Box : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class LevelMeter2Box() extends Box('lvlm') {
+ signed int(32) numerator;
+ signed int(32) denominator;
+}
+"; } }
 	public const string TYPE = "lvlm";
 	public override string DisplayName { get { return "LevelMeter2Box"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -57,12 +63,12 @@ public partial class LevelMeter2Box : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("numerator", 32, this.numerator); 
-		boxSize += builder.Field("denominator", 32, this.denominator); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("numerator", 32, this.numerator); 
+		boxSize += tracer.Field("denominator", 32, this.denominator); 
 		return boxSize;
 	}
 }

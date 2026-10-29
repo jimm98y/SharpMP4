@@ -18,6 +18,11 @@ public partial class RightsEntry : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class RightsEntry() {
+ unsigned int(32) key; // veID, plat, aver, tran, song, tool, medi, mode
+ unsigned int(32) value;
+}"; } }
 	public virtual string DisplayName { get { return "RightsEntry"; } }
 
 	protected uint key;  //  veID, plat, aver, tran, song, tool, medi, mode
@@ -54,11 +59,11 @@ public partial class RightsEntry : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("key", 32, this.key); // veID, plat, aver, tran, song, tool, medi, mode
-		boxSize += builder.Field("value", 32, this.value); 
+		boxSize += tracer.Field("key", 32, this.key); // veID, plat, aver, tran, song, tool, medi, mode
+		boxSize += tracer.Field("value", 32, this.value); 
 		return boxSize;
 	}
 }

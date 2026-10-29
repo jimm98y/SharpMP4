@@ -12,6 +12,10 @@ aligned(8) class HintBytesSent extends Box('totl') {
 */
 public partial class HintBytesSenttotlDup : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class HintBytesSent extends Box('totl') {
+	uint(32)	bytessent; }	// total bytes sent, including 12-byte RTP headers
+"; } }
 	public const string TYPE = "totl";
 	public override string DisplayName { get { return "HintBytesSenttotlDup"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class HintBytesSenttotlDup : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("bytessent", 32, this.bytessent); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("bytessent", 32, this.bytessent); 
 		return boxSize;
 	}
 }

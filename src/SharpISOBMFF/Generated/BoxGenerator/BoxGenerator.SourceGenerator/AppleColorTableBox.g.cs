@@ -16,6 +16,14 @@ class AppleColorTableBox() extends Box ('ctab'){
 */
 public partial class AppleColorTableBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AppleColorTableBox() extends Box ('ctab'){
+ signed int(32) color_table_seed;
+ signed int(16) flags;
+ signed int(16) color_table_size;
+ AppleColor colors[];
+ }
+ "; } }
 	public const string TYPE = "ctab";
 	public override string DisplayName { get { return "AppleColorTableBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -31,7 +39,7 @@ public partial class AppleColorTableBox : Box
 	protected short color_table_size; 
 	public short ColorTableSize { get { return this.color_table_size; } set { this.color_table_size = value; } }
 
-	protected AppleColor[] colors; 
+	protected AppleColor[] colors = []; 
 	public AppleColor[] Colors { get { return this.colors; } set { this.colors = value; } }
 
 	public AppleColorTableBox(): base(IsoStream.FromFourCC("ctab"))
@@ -71,14 +79,14 @@ public partial class AppleColorTableBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("color_table_seed", 32, this.color_table_seed); 
-		boxSize += builder.Field("flags", 16, this.flags); 
-		boxSize += builder.Field("color_table_size", 16, this.color_table_size); 
-		boxSize += builder.Field("colors", IsoStream.CalculateClassSize(colors), this.colors); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("color_table_seed", 32, this.color_table_seed); 
+		boxSize += tracer.Field("flags", 16, this.flags); 
+		boxSize += tracer.Field("color_table_size", 16, this.color_table_size); 
+		boxSize += tracer.Field("colors", IsoStream.CalculateClassSize(colors), this.colors); 
 		return boxSize;
 	}
 }

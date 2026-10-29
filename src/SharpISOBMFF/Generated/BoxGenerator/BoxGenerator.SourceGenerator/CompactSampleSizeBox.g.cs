@@ -18,6 +18,16 @@ aligned(8) class CompactSampleSizeBox
 */
 public partial class CompactSampleSizeBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class CompactSampleSizeBox 
+		extends FullBox('stz2', version = 0, 0) {
+	unsigned int(24)	reserved = 0;
+	unsigned int(8)	field_size;
+	unsigned int(32)	sample_count;
+	for (i=1; i <= sample_count; i++) {
+		unsigned int(field_size)	entry_size;
+	}
+}"; } }
 	public const string TYPE = "stz2";
 	public override string DisplayName { get { return "CompactSampleSizeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -86,17 +96,17 @@ public partial class CompactSampleSizeBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 24, this.reserved); 
-		boxSize += builder.Field("field_size", 8, this.field_size); 
-		boxSize += builder.Field("sample_count", 32, this.sample_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 24, this.reserved); 
+		boxSize += tracer.Field("field_size", 8, this.field_size); 
+		boxSize += tracer.Field("sample_count", 32, this.sample_count); 
 
 		for (int i=0; i < sample_count; i++)
 		{
-			boxSize += builder.Field($"entry_size[{i}]", (ulong)(field_size ), this.entry_size[i]); 
+			boxSize += tracer.Field($"entry_size[{i}]", (ulong)(field_size ), this.entry_size[i]); 
 		}
 		return boxSize;
 	}

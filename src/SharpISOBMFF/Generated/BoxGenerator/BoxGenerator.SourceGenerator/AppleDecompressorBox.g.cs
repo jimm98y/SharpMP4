@@ -12,6 +12,10 @@ class AppleDecompressorBox() extends Box ('dcom'){
 */
 public partial class AppleDecompressorBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AppleDecompressorBox() extends Box ('dcom'){
+ unsigned int(32) decompressor;
+ }"; } }
 	public const string TYPE = "dcom";
 	public override string DisplayName { get { return "AppleDecompressorBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class AppleDecompressorBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("decompressor", 32, this.decompressor); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("decompressor", 32, this.decompressor); 
 		return boxSize;
 	}
 }

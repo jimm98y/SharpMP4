@@ -12,6 +12,10 @@ class HEVCConfigurationBox extends Box('hvcC') {
 */
 public partial class HEVCConfigurationBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class HEVCConfigurationBox extends Box('hvcC') {
+	HEVCDecoderConfigurationRecord() HEVCConfig;
+}"; } }
 	public const string TYPE = "hvcC";
 	public override string DisplayName { get { return "HEVCConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class HEVCConfigurationBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("HEVCConfig", IsoStream.CalculateClassSize(HEVCConfig), this.HEVCConfig); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("HEVCConfig", IsoStream.CalculateClassSize(HEVCConfig), this.HEVCConfig); 
 		return boxSize;
 	}
 }

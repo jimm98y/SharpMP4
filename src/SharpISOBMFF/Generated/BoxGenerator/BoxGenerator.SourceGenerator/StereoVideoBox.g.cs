@@ -18,6 +18,16 @@ aligned(8) class StereoVideoBox extends FullBox('stvi', version = 0, 0)
 */
 public partial class StereoVideoBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class StereoVideoBox extends FullBox('stvi', version = 0, 0)
+{
+	template unsigned int(30) reserved = 0;
+	unsigned int(2)	single_view_allowed;
+	unsigned int(32)	stereo_scheme;
+	unsigned int(32)	length;
+	unsigned int(8)[length]	stereo_indication_type;
+	Box[] any_box; // optional
+}"; } }
 	public const string TYPE = "stvi";
 	public override string DisplayName { get { return "StereoVideoBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -36,7 +46,7 @@ public partial class StereoVideoBox : FullBox
 	protected uint length; 
 	public uint Length { get { return this.length; } set { this.length = value; } }
 
-	protected byte[] stereo_indication_type; 
+	protected byte[] stereo_indication_type = []; 
 	public byte[] StereoIndicationType { get { return this.stereo_indication_type; } set { this.stereo_indication_type = value; } }
 
 	public StereoVideoBox(): base(IsoStream.FromFourCC("stvi"), 0, 0)
@@ -85,17 +95,17 @@ public partial class StereoVideoBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 30, this.reserved); 
-		boxSize += builder.Field("single_view_allowed", 2, this.single_view_allowed); 
-		boxSize += builder.Field("stereo_scheme", 32, this.stereo_scheme); 
-		boxSize += builder.Field("length", 32, this.length); 
-		boxSize += builder.Field("stereo_indication_type", ((ulong)(length) * 8), this.stereo_indication_type); 
-		// boxSize += builder.Field("any_box", IsoStream.CalculateBoxSize(any_box), this.any_box); // optional
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 30, this.reserved); 
+		boxSize += tracer.Field("single_view_allowed", 2, this.single_view_allowed); 
+		boxSize += tracer.Field("stereo_scheme", 32, this.stereo_scheme); 
+		boxSize += tracer.Field("length", 32, this.length); 
+		boxSize += tracer.Field("stereo_indication_type", ((ulong)(length) * 8), this.stereo_indication_type); 
+		// boxSize += tracer.Field("any_box", IsoStream.CalculateBoxSize(any_box), this.any_box); // optional
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

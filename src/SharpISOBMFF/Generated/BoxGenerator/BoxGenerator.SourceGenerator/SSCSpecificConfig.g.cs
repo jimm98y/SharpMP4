@@ -28,6 +28,21 @@ public partial class SSCSpecificConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class SSCSpecificConfig(channelConfiguration)
+{
+  uimsbf(2) decoder_level;
+  uimsbf(4) update_rate;
+  uimsbf(2) synthesis_method;
+  if (channelConfiguration != 1) {
+    uimsbf(2) mode_ext;
+    if ((channelConfiguration == 2) && (mode_ext == 1)) {
+      uimsbf(2) reserved;
+    }
+  }
+}
+
+"; } }
 	public virtual string DisplayName { get { return "SSCSpecificConfig"; } }
 
 	protected byte decoder_level; 
@@ -110,20 +125,20 @@ public partial class SSCSpecificConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("decoder_level", 2, this.decoder_level); 
-		boxSize += builder.Field("update_rate", 4, this.update_rate); 
-		boxSize += builder.Field("synthesis_method", 2, this.synthesis_method); 
+		boxSize += tracer.Field("decoder_level", 2, this.decoder_level); 
+		boxSize += tracer.Field("update_rate", 4, this.update_rate); 
+		boxSize += tracer.Field("synthesis_method", 2, this.synthesis_method); 
 
 		if (channelConfiguration != 1)
 		{
-			boxSize += builder.Field("mode_ext", 2, this.mode_ext); 
+			boxSize += tracer.Field("mode_ext", 2, this.mode_ext); 
 
 			if ((channelConfiguration == 2) && (mode_ext == 1))
 			{
-				boxSize += builder.Field("reserved", 2, this.reserved); 
+				boxSize += tracer.Field("reserved", 2, this.reserved); 
 			}
 		}
 		return boxSize;

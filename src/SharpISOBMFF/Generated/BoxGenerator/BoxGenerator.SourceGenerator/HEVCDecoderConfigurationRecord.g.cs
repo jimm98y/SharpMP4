@@ -49,6 +49,42 @@ public partial class HEVCDecoderConfigurationRecord : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class HEVCDecoderConfigurationRecord {
+	unsigned int(8) configurationVersion = 1;
+	unsigned int(2) general_profile_space;
+	unsigned int(1) general_tier_flag;
+	unsigned int(5) general_profile_idc;
+	unsigned int(32) general_profile_compatibility_flags;
+	unsigned int(48) general_constraint_indicator_flags;
+	unsigned int(8) general_level_idc;
+	bit(4) reserved = '1111'b;
+	unsigned int(12) min_spatial_segmentation_idc;
+	bit(6) reserved = '111111'b;
+	unsigned int(2) parallelismType;
+	bit(6) reserved = '111111'b;
+	unsigned int(2) chromaFormat;
+	bit(5) reserved = '11111'b;
+	unsigned int(3) bitDepthLumaMinus8;
+	bit(5) reserved = '11111'b;
+	unsigned int(3) bitDepthChromaMinus8;
+	bit(16) avgFrameRate;
+	bit(2) constantFrameRate;
+	bit(3) numTemporalLayers;
+	bit(1) temporalIdNested;
+	unsigned int(2) lengthSizeMinusOne; 
+	unsigned int(8) numOfArrays;
+	for (j=0; j < numOfArrays; j++) {
+		bit(1) array_completeness;
+		unsigned int(1) reserved = 0;
+		unsigned int(6) NAL_unit_type;
+		unsigned int(16) numNalus;
+		for (i=0; i< numNalus; i++) {
+			unsigned int(16) nalUnitLength;
+			bit(8*nalUnitLength) nalUnit;
+		}
+	}
+}"; } }
 	public virtual string DisplayName { get { return "HEVCDecoderConfigurationRecord"; } }
 
 	protected byte configurationVersion = 1; 
@@ -279,44 +315,44 @@ public partial class HEVCDecoderConfigurationRecord : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("configurationVersion", 8, this.configurationVersion); 
-		boxSize += builder.Field("general_profile_space", 2, this.general_profile_space); 
-		boxSize += builder.Field("general_tier_flag", 1, this.general_tier_flag); 
-		boxSize += builder.Field("general_profile_idc", 5, this.general_profile_idc); 
-		boxSize += builder.Field("general_profile_compatibility_flags", 32, this.general_profile_compatibility_flags); 
-		boxSize += builder.Field("general_constraint_indicator_flags", 48, this.general_constraint_indicator_flags); 
-		boxSize += builder.Field("general_level_idc", 8, this.general_level_idc); 
-		boxSize += builder.Field("reserved", 4, this.reserved); 
-		boxSize += builder.Field("min_spatial_segmentation_idc", 12, this.min_spatial_segmentation_idc); 
-		boxSize += builder.Field("reserved0", 6, this.reserved0); 
-		boxSize += builder.Field("parallelismType", 2, this.parallelismType); 
-		boxSize += builder.Field("reserved1", 6, this.reserved1); 
-		boxSize += builder.Field("chromaFormat", 2, this.chromaFormat); 
-		boxSize += builder.Field("reserved2", 5, this.reserved2); 
-		boxSize += builder.Field("bitDepthLumaMinus8", 3, this.bitDepthLumaMinus8); 
-		boxSize += builder.Field("reserved3", 5, this.reserved3); 
-		boxSize += builder.Field("bitDepthChromaMinus8", 3, this.bitDepthChromaMinus8); 
-		boxSize += builder.Field("avgFrameRate", 16, this.avgFrameRate); 
-		boxSize += builder.Field("constantFrameRate", 2, this.constantFrameRate); 
-		boxSize += builder.Field("numTemporalLayers", 3, this.numTemporalLayers); 
-		boxSize += builder.Field("temporalIdNested", 1, this.temporalIdNested); 
-		boxSize += builder.Field("lengthSizeMinusOne", 2, this.lengthSizeMinusOne); 
-		boxSize += builder.Field("numOfArrays", 8, this.numOfArrays); 
+		boxSize += tracer.Field("configurationVersion", 8, this.configurationVersion); 
+		boxSize += tracer.Field("general_profile_space", 2, this.general_profile_space); 
+		boxSize += tracer.Field("general_tier_flag", 1, this.general_tier_flag); 
+		boxSize += tracer.Field("general_profile_idc", 5, this.general_profile_idc); 
+		boxSize += tracer.Field("general_profile_compatibility_flags", 32, this.general_profile_compatibility_flags); 
+		boxSize += tracer.Field("general_constraint_indicator_flags", 48, this.general_constraint_indicator_flags); 
+		boxSize += tracer.Field("general_level_idc", 8, this.general_level_idc); 
+		boxSize += tracer.Field("reserved", 4, this.reserved); 
+		boxSize += tracer.Field("min_spatial_segmentation_idc", 12, this.min_spatial_segmentation_idc); 
+		boxSize += tracer.Field("reserved0", 6, this.reserved0); 
+		boxSize += tracer.Field("parallelismType", 2, this.parallelismType); 
+		boxSize += tracer.Field("reserved1", 6, this.reserved1); 
+		boxSize += tracer.Field("chromaFormat", 2, this.chromaFormat); 
+		boxSize += tracer.Field("reserved2", 5, this.reserved2); 
+		boxSize += tracer.Field("bitDepthLumaMinus8", 3, this.bitDepthLumaMinus8); 
+		boxSize += tracer.Field("reserved3", 5, this.reserved3); 
+		boxSize += tracer.Field("bitDepthChromaMinus8", 3, this.bitDepthChromaMinus8); 
+		boxSize += tracer.Field("avgFrameRate", 16, this.avgFrameRate); 
+		boxSize += tracer.Field("constantFrameRate", 2, this.constantFrameRate); 
+		boxSize += tracer.Field("numTemporalLayers", 3, this.numTemporalLayers); 
+		boxSize += tracer.Field("temporalIdNested", 1, this.temporalIdNested); 
+		boxSize += tracer.Field("lengthSizeMinusOne", 2, this.lengthSizeMinusOne); 
+		boxSize += tracer.Field("numOfArrays", 8, this.numOfArrays); 
 
 		for (int j=0; j < numOfArrays; j++)
 		{
-			boxSize += builder.Field($"array_completeness[{j}]", 1, this.array_completeness[j]); 
-			boxSize += builder.Field($"reserved4[{j}]", 1, this.reserved4[j]); 
-			boxSize += builder.Field($"NAL_unit_type[{j}]", 6, this.NAL_unit_type[j]); 
-			boxSize += builder.Field($"numNalus[{j}]", 16, this.numNalus[j]); 
+			boxSize += tracer.Field($"array_completeness[{j}]", 1, this.array_completeness[j]); 
+			boxSize += tracer.Field($"reserved4[{j}]", 1, this.reserved4[j]); 
+			boxSize += tracer.Field($"NAL_unit_type[{j}]", 6, this.NAL_unit_type[j]); 
+			boxSize += tracer.Field($"numNalus[{j}]", 16, this.numNalus[j]); 
 
 			for (int i=0; i< numNalus[j]; i++)
 			{
-				boxSize += builder.Field($"nalUnitLength[{j}][{i}]", 16, this.nalUnitLength[j][i]); 
-				boxSize += builder.Field($"nalUnit[{j}][{i}]", (ulong)(8*nalUnitLength[j][i] ), this.nalUnit[j][i]); 
+				boxSize += tracer.Field($"nalUnitLength[{j}][{i}]", 16, this.nalUnitLength[j][i]); 
+				boxSize += tracer.Field($"nalUnit[{j}][{i}]", (ulong)(8*nalUnitLength[j][i] ), this.nalUnit[j][i]); 
 			}
 		}
 		return boxSize;

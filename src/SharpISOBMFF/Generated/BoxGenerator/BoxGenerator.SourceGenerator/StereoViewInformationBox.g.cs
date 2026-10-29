@@ -18,6 +18,16 @@ unsigned int(1) has_left_eye_view;
 */
 public partial class StereoViewInformationBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class StereoViewInformationBox extends FullBox('stri', 0, 0) { 
+unsigned int(4) reserved;   
+// reserved, set to 0 
+unsigned int(1) eye_views_reversed; 
+unsigned int(1) has_additional_views; 
+unsigned int(1) has_right_eye_view; // video contains a right-eye view 
+unsigned int(1) has_left_eye_view; 
+// video contains a left-eye view 
+} "; } }
 	public const string TYPE = "stri";
 	public override string DisplayName { get { return "StereoViewInformationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -79,15 +89,15 @@ public partial class StereoViewInformationBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved", 4, this.reserved); // reserved, set to 0 
-		boxSize += builder.Field("eye_views_reversed", 1, this.eye_views_reversed); 
-		boxSize += builder.Field("has_additional_views", 1, this.has_additional_views); 
-		boxSize += builder.Field("has_right_eye_view", 1, this.has_right_eye_view); // video contains a right-eye view 
-		boxSize += builder.Field("has_left_eye_view", 1, this.has_left_eye_view); // video contains a left-eye view 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved", 4, this.reserved); // reserved, set to 0 
+		boxSize += tracer.Field("eye_views_reversed", 1, this.eye_views_reversed); 
+		boxSize += tracer.Field("has_additional_views", 1, this.has_additional_views); 
+		boxSize += tracer.Field("has_right_eye_view", 1, this.has_right_eye_view); // video contains a right-eye view 
+		boxSize += tracer.Field("has_left_eye_view", 1, this.has_left_eye_view); // video contains a left-eye view 
 		return boxSize;
 	}
 }

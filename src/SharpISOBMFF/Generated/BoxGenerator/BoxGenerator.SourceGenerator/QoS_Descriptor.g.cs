@@ -15,6 +15,13 @@ class QoS_Descriptor extends BaseDescriptor : bit(8) tag=QoS_DescrTag {
 */
 public partial class QoS_Descriptor : BaseDescriptor
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class QoS_Descriptor extends BaseDescriptor : bit(8) tag=QoS_DescrTag {
+ bit(8) predefined;
+ if (predefined==0) {
+ QoS_Qualifier qualifiers[];
+ }
+ }"; } }
 	public const byte TYPE = DescriptorTags.QoS_DescrTag;
 	public override string DisplayName { get { return "QoS_Descriptor"; } }
 
@@ -68,17 +75,17 @@ public partial class QoS_Descriptor : BaseDescriptor
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("predefined", 8, this.predefined); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("predefined", 8, this.predefined); 
 
 		if (predefined==0)
 		{
-			// boxSize += builder.Field("qualifiers", IsoStream.CalculateDescriptorSize(qualifiers), this.qualifiers); 
+			// boxSize += tracer.Field("qualifiers", IsoStream.CalculateDescriptorSize(qualifiers), this.qualifiers); 
 		}
-		boxSize += builder.Descriptors(this);
+		boxSize += tracer.Descriptors(this);
 		return boxSize;
 	}
 }

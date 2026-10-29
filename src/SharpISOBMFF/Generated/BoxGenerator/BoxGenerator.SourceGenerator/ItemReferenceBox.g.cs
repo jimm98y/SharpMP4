@@ -16,16 +16,24 @@ aligned(8) class ItemReferenceBox extends FullBox('iref', version, 0) {
 */
 public partial class ItemReferenceBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ItemReferenceBox extends FullBox('iref', version, 0) {
+	if (version==0) {
+		SingleItemTypeReferenceBox				references[];
+	} else if (version==1) {
+		SingleItemTypeReferenceBoxLarge	references[];
+	}
+}"; } }
 	public const string TYPE = "iref";
 	public override string DisplayName { get { return "ItemReferenceBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("FullBox(meta)"); }
 
 
-	protected SingleItemTypeReferenceBox[] references; 
+	protected SingleItemTypeReferenceBox[] references = []; 
 	public SingleItemTypeReferenceBox[] References { get { return this.references; } set { this.references = value; } }
 
-	protected SingleItemTypeReferenceBoxLarge[] references0; 
+	protected SingleItemTypeReferenceBoxLarge[] references0 = []; 
 	public SingleItemTypeReferenceBoxLarge[] References0 { get { return this.references0; } set { this.references0 = value; } }
 
 	public ItemReferenceBox(byte version = 0): base(IsoStream.FromFourCC("iref"), version, 0)
@@ -83,19 +91,19 @@ public partial class ItemReferenceBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if (version==0)
 		{
-			boxSize += builder.Field("references", IsoStream.CalculateBoxSize(references), this.references); 
+			boxSize += tracer.Field("references", IsoStream.CalculateBoxSize(references), this.references); 
 		}
 
 		else if (version==1)
 		{
-			boxSize += builder.Field("references0", IsoStream.CalculateBoxSize(references0), this.references0); 
+			boxSize += tracer.Field("references0", IsoStream.CalculateBoxSize(references0), this.references0); 
 		}
 		return boxSize;
 	}

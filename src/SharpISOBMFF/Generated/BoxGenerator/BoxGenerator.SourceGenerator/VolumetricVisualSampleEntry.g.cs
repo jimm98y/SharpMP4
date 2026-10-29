@@ -14,12 +14,18 @@ class VolumetricVisualSampleEntry(codingname)
 */
 public partial class VolumetricVisualSampleEntry : SampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class VolumetricVisualSampleEntry(codingname) 
+	extends SampleEntry (codingname){
+	unsigned int(8)[32] compressorname;
+	// other boxes from derived specifications
+}"; } }
 	public override string DisplayName { get { return "VolumetricVisualSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "stsd" }); }
 
 
-	protected byte[] compressorname;  //  other boxes from derived specifications
+	protected byte[] compressorname = new byte[32];  //  other boxes from derived specifications
 	public byte[] Compressorname { get { return this.compressorname; } set { this.compressorname = value; } }
 
 	public VolumetricVisualSampleEntry(uint codingname = 0): base(codingname)
@@ -53,12 +59,12 @@ public partial class VolumetricVisualSampleEntry : SampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("compressorname", 32 * 8, this.compressorname); // other boxes from derived specifications
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("compressorname", 32 * 8, this.compressorname); // other boxes from derived specifications
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

@@ -30,6 +30,28 @@ aligned(8) class TrackFragmentRandomAccessBox
 */
 public partial class TrackFragmentRandomAccessBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TrackFragmentRandomAccessBox
+ extends FullBox('tfra', version, 0) {
+	unsigned int(32)	track_ID;
+	const unsigned int(26)	reserved = 0;
+	unsigned int(2)	length_size_of_traf_num;
+	unsigned int(2)	length_size_of_trun_num;
+	unsigned int(2)	length_size_of_sample_num;
+	unsigned int(32)	number_of_entry;
+	for(i=1; i <= number_of_entry; i++){
+		if(version==1){
+			unsigned int(64)	time;
+			unsigned int(64)	moof_offset;
+		}else{
+			unsigned int(32)	time;
+			unsigned int(32)	moof_offset;
+		}
+		unsigned int((length_size_of_traf_num+1) * 8)	traf_number;
+		unsigned int((length_size_of_trun_num+1) * 8)	trun_number;
+		unsigned int((length_size_of_sample_num+1) * 8)	sample_delta;
+	}
+}"; } }
 	public const string TYPE = "tfra";
 	public override string DisplayName { get { return "TrackFragmentRandomAccessBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -174,34 +196,34 @@ public partial class TrackFragmentRandomAccessBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("track_ID", 32, this.track_ID); 
-		boxSize += builder.Field("reserved", 26, this.reserved); 
-		boxSize += builder.Field("length_size_of_traf_num", 2, this.length_size_of_traf_num); 
-		boxSize += builder.Field("length_size_of_trun_num", 2, this.length_size_of_trun_num); 
-		boxSize += builder.Field("length_size_of_sample_num", 2, this.length_size_of_sample_num); 
-		boxSize += builder.Field("number_of_entry", 32, this.number_of_entry); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("track_ID", 32, this.track_ID); 
+		boxSize += tracer.Field("reserved", 26, this.reserved); 
+		boxSize += tracer.Field("length_size_of_traf_num", 2, this.length_size_of_traf_num); 
+		boxSize += tracer.Field("length_size_of_trun_num", 2, this.length_size_of_trun_num); 
+		boxSize += tracer.Field("length_size_of_sample_num", 2, this.length_size_of_sample_num); 
+		boxSize += tracer.Field("number_of_entry", 32, this.number_of_entry); 
 
 		for (int i=0; i < number_of_entry; i++)
 		{
 
 			if (version==1)
 			{
-				boxSize += builder.Field($"time[{i}]", 64, this.time[i]); 
-				boxSize += builder.Field($"moof_offset[{i}]", 64, this.moof_offset[i]); 
+				boxSize += tracer.Field($"time[{i}]", 64, this.time[i]); 
+				boxSize += tracer.Field($"moof_offset[{i}]", 64, this.moof_offset[i]); 
 			}
 
 			else 
 			{
-				boxSize += builder.Field($"time[{i}]", 32, this.time[i]); 
-				boxSize += builder.Field($"moof_offset[{i}]", 32, this.moof_offset[i]); 
+				boxSize += tracer.Field($"time[{i}]", 32, this.time[i]); 
+				boxSize += tracer.Field($"moof_offset[{i}]", 32, this.moof_offset[i]); 
 			}
-			boxSize += builder.Field($"traf_number[{i}]", (ulong)((length_size_of_traf_num+1) * 8 ), this.traf_number[i]); 
-			boxSize += builder.Field($"trun_number[{i}]", (ulong)((length_size_of_trun_num+1) * 8 ), this.trun_number[i]); 
-			boxSize += builder.Field($"sample_delta[{i}]", (ulong)((length_size_of_sample_num+1) * 8 ), this.sample_delta[i]); 
+			boxSize += tracer.Field($"traf_number[{i}]", (ulong)((length_size_of_traf_num+1) * 8 ), this.traf_number[i]); 
+			boxSize += tracer.Field($"trun_number[{i}]", (ulong)((length_size_of_trun_num+1) * 8 ), this.trun_number[i]); 
+			boxSize += tracer.Field($"sample_delta[{i}]", (ulong)((length_size_of_sample_num+1) * 8 ), this.sample_delta[i]); 
 		}
 		return boxSize;
 	}

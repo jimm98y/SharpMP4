@@ -15,6 +15,13 @@ extends Box('av1C')
 */
 public partial class AV1CodecConfigurationBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AV1CodecConfigurationBox
+extends Box('av1C')
+{
+  AV1CodecConfigurationRecord av1Config;
+}
+"; } }
 	public const string TYPE = "av1C";
 	public override string DisplayName { get { return "AV1CodecConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -52,11 +59,11 @@ public partial class AV1CodecConfigurationBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("av1Config", IsoStream.CalculateClassSize(av1Config), this.av1Config); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("av1Config", IsoStream.CalculateClassSize(av1Config), this.av1Config); 
 		return boxSize;
 	}
 }

@@ -15,6 +15,13 @@ aligned(8) class TaicBox() extends FullBox('taic') {
 */
 public partial class TaicBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TaicBox() extends FullBox('taic') {
+	 unsigned int(64) time_uncertainty;
+ unsigned int(32) clock_resolution;
+ signed int(32) clock_drift_rate;
+ unsigned int(8) clock_type;
+ } "; } }
 	public const string TYPE = "taic";
 	public override string DisplayName { get { return "TaicBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -70,14 +77,14 @@ public partial class TaicBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("time_uncertainty", 64, this.time_uncertainty); 
-		boxSize += builder.Field("clock_resolution", 32, this.clock_resolution); 
-		boxSize += builder.Field("clock_drift_rate", 32, this.clock_drift_rate); 
-		boxSize += builder.Field("clock_type", 8, this.clock_type); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("time_uncertainty", 64, this.time_uncertainty); 
+		boxSize += tracer.Field("clock_resolution", 32, this.clock_resolution); 
+		boxSize += tracer.Field("clock_drift_rate", 32, this.clock_drift_rate); 
+		boxSize += tracer.Field("clock_type", 8, this.clock_type); 
 		return boxSize;
 	}
 }

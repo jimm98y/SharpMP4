@@ -12,6 +12,10 @@ aligned(8) class ExtendedLanguageBox extends FullBox('elng', 0, 0) {
 */
 public partial class ExtendedLanguageBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ExtendedLanguageBox extends FullBox('elng', 0, 0) {
+	utf8string	extended_language;
+}"; } }
 	public const string TYPE = "elng";
 	public override string DisplayName { get { return "ExtendedLanguageBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class ExtendedLanguageBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("extended_language", IsoStream.CalculateStringSize(extended_language), this.extended_language); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("extended_language", IsoStream.CalculateStringSize(extended_language), this.extended_language); 
 		return boxSize;
 	}
 }

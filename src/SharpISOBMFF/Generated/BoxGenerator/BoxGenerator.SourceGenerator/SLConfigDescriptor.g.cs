@@ -42,6 +42,40 @@ class SLConfigDescriptor extends BaseDescriptor : bit(8) tag=SLConfigDescrTag {
 */
 public partial class SLConfigDescriptor : BaseDescriptor
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class SLConfigDescriptor extends BaseDescriptor : bit(8) tag=SLConfigDescrTag {
+ bit(8) predefined;
+ if (predefined==0) {
+ bit(1) useAccessUnitStartFlag;
+ bit(1) useAccessUnitEndFlag;
+ bit(1) useRandomAccessPointFlag;
+ bit(1) hasRandomAccessUnitsOnlyFlag;
+ bit(1) usePaddingFlag;
+ bit(1) useTimeStampsFlag;
+ bit(1) useIdleFlag;
+ bit(1) durationFlag;
+ bit(32) timeStampResolution;
+ bit(32) OCRResolution;
+ bit(8) timeStampLength; // must be <= 64
+ bit(8) OCRLength; // must be <= 64
+ bit(8) AU_Length; // must be <= 32
+ bit(8) instantBitrateLength;
+ bit(4) degradationPriorityLength;
+ bit(5) AU_seqNumLength; // must be <= 16
+ bit(5) packetSeqNumLength; // must be <= 16
+ bit(2) reserved=0b11;
+ }
+ if (durationFlag) {
+ bit(32) timeScale;
+ bit(16) accessUnitDuration;
+ bit(16) compositionUnitDuration;
+ }
+ if (!useTimeStampsFlag) {
+ bit(timeStampLength) startDecodingTimeStamp;
+ bit(timeStampLength) startCompositionTimeStamp;
+ }
+ bit(8) ocr[]; // OCR stream flag, reserved, OCR_ES_id 
+ }"; } }
 	public const byte TYPE = DescriptorTags.SLConfigDescrTag;
 	public override string DisplayName { get { return "SLConfigDescriptor"; } }
 
@@ -111,13 +145,13 @@ public partial class SLConfigDescriptor : BaseDescriptor
 	protected ushort compositionUnitDuration; 
 	public ushort CompositionUnitDuration { get { return this.compositionUnitDuration; } set { this.compositionUnitDuration = value; } }
 
-	protected byte[] startDecodingTimeStamp; 
+	protected byte[] startDecodingTimeStamp = []; 
 	public byte[] StartDecodingTimeStamp { get { return this.startDecodingTimeStamp; } set { this.startDecodingTimeStamp = value; } }
 
-	protected byte[] startCompositionTimeStamp; 
+	protected byte[] startCompositionTimeStamp = []; 
 	public byte[] StartCompositionTimeStamp { get { return this.startCompositionTimeStamp; } set { this.startCompositionTimeStamp = value; } }
 
-	protected byte[] ocr;  //  OCR stream flag, reserved, OCR_ES_id 
+	protected byte[] ocr = [];  //  OCR stream flag, reserved, OCR_ES_id 
 	public byte[] Ocr { get { return this.ocr; } set { this.ocr = value; } }
 
 	public SLConfigDescriptor(): base(DescriptorTags.SLConfigDescrTag)
@@ -256,47 +290,47 @@ public partial class SLConfigDescriptor : BaseDescriptor
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("predefined", 8, this.predefined); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("predefined", 8, this.predefined); 
 
 		if (predefined==0)
 		{
-			boxSize += builder.Field("useAccessUnitStartFlag", 1, this.useAccessUnitStartFlag); 
-			boxSize += builder.Field("useAccessUnitEndFlag", 1, this.useAccessUnitEndFlag); 
-			boxSize += builder.Field("useRandomAccessPointFlag", 1, this.useRandomAccessPointFlag); 
-			boxSize += builder.Field("hasRandomAccessUnitsOnlyFlag", 1, this.hasRandomAccessUnitsOnlyFlag); 
-			boxSize += builder.Field("usePaddingFlag", 1, this.usePaddingFlag); 
-			boxSize += builder.Field("useTimeStampsFlag", 1, this.useTimeStampsFlag); 
-			boxSize += builder.Field("useIdleFlag", 1, this.useIdleFlag); 
-			boxSize += builder.Field("durationFlag", 1, this.durationFlag); 
-			boxSize += builder.Field("timeStampResolution", 32, this.timeStampResolution); 
-			boxSize += builder.Field("OCRResolution", 32, this.OCRResolution); 
-			boxSize += builder.Field("timeStampLength", 8, this.timeStampLength); // must be <= 64
-			boxSize += builder.Field("OCRLength", 8, this.OCRLength); // must be <= 64
-			boxSize += builder.Field("AU_Length", 8, this.AU_Length); // must be <= 32
-			boxSize += builder.Field("instantBitrateLength", 8, this.instantBitrateLength); 
-			boxSize += builder.Field("degradationPriorityLength", 4, this.degradationPriorityLength); 
-			boxSize += builder.Field("AU_seqNumLength", 5, this.AU_seqNumLength); // must be <= 16
-			boxSize += builder.Field("packetSeqNumLength", 5, this.packetSeqNumLength); // must be <= 16
-			boxSize += builder.Field("reserved", 2, this.reserved); 
+			boxSize += tracer.Field("useAccessUnitStartFlag", 1, this.useAccessUnitStartFlag); 
+			boxSize += tracer.Field("useAccessUnitEndFlag", 1, this.useAccessUnitEndFlag); 
+			boxSize += tracer.Field("useRandomAccessPointFlag", 1, this.useRandomAccessPointFlag); 
+			boxSize += tracer.Field("hasRandomAccessUnitsOnlyFlag", 1, this.hasRandomAccessUnitsOnlyFlag); 
+			boxSize += tracer.Field("usePaddingFlag", 1, this.usePaddingFlag); 
+			boxSize += tracer.Field("useTimeStampsFlag", 1, this.useTimeStampsFlag); 
+			boxSize += tracer.Field("useIdleFlag", 1, this.useIdleFlag); 
+			boxSize += tracer.Field("durationFlag", 1, this.durationFlag); 
+			boxSize += tracer.Field("timeStampResolution", 32, this.timeStampResolution); 
+			boxSize += tracer.Field("OCRResolution", 32, this.OCRResolution); 
+			boxSize += tracer.Field("timeStampLength", 8, this.timeStampLength); // must be <= 64
+			boxSize += tracer.Field("OCRLength", 8, this.OCRLength); // must be <= 64
+			boxSize += tracer.Field("AU_Length", 8, this.AU_Length); // must be <= 32
+			boxSize += tracer.Field("instantBitrateLength", 8, this.instantBitrateLength); 
+			boxSize += tracer.Field("degradationPriorityLength", 4, this.degradationPriorityLength); 
+			boxSize += tracer.Field("AU_seqNumLength", 5, this.AU_seqNumLength); // must be <= 16
+			boxSize += tracer.Field("packetSeqNumLength", 5, this.packetSeqNumLength); // must be <= 16
+			boxSize += tracer.Field("reserved", 2, this.reserved); 
 		}
 
 		if (durationFlag)
 		{
-			boxSize += builder.Field("timeScale", 32, this.timeScale); 
-			boxSize += builder.Field("accessUnitDuration", 16, this.accessUnitDuration); 
-			boxSize += builder.Field("compositionUnitDuration", 16, this.compositionUnitDuration); 
+			boxSize += tracer.Field("timeScale", 32, this.timeScale); 
+			boxSize += tracer.Field("accessUnitDuration", 16, this.accessUnitDuration); 
+			boxSize += tracer.Field("compositionUnitDuration", 16, this.compositionUnitDuration); 
 		}
 
 		if (!useTimeStampsFlag)
 		{
-			boxSize += builder.Field("startDecodingTimeStamp", (ulong)(timeStampLength ), this.startDecodingTimeStamp); 
-			boxSize += builder.Field("startCompositionTimeStamp", (ulong)(timeStampLength ), this.startCompositionTimeStamp); 
+			boxSize += tracer.Field("startDecodingTimeStamp", (ulong)(timeStampLength ), this.startDecodingTimeStamp); 
+			boxSize += tracer.Field("startCompositionTimeStamp", (ulong)(timeStampLength ), this.startCompositionTimeStamp); 
 		}
-		boxSize += builder.Field("ocr", ((ulong)ocr.Length * 8), this.ocr); // OCR stream flag, reserved, OCR_ES_id 
+		boxSize += tracer.Field("ocr", ((ulong)ocr.Length * 8), this.ocr); // OCR stream flag, reserved, OCR_ES_id 
 		return boxSize;
 	}
 }

@@ -15,6 +15,13 @@ extends ItemFullProperty('ispe', version = 0, flags = 0) {
 */
 public partial class ImageSpatialExtentsProperty : ItemFullProperty
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ImageSpatialExtentsProperty
+extends ItemFullProperty('ispe', version = 0, flags = 0) {
+	unsigned int(32) image_width;
+	unsigned int(32) image_height;
+}
+"; } }
 	public const string TYPE = "ispe";
 	public override string DisplayName { get { return "ImageSpatialExtentsProperty"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -58,12 +65,12 @@ public partial class ImageSpatialExtentsProperty : ItemFullProperty
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("image_width", 32, this.image_width); 
-		boxSize += builder.Field("image_height", 32, this.image_height); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("image_width", 32, this.image_width); 
+		boxSize += tracer.Field("image_height", 32, this.image_height); 
 		return boxSize;
 	}
 }

@@ -25,6 +25,18 @@ public partial class HVXCconfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class HVXCconfig()
+{
+  uimsbf(1) HVXCvarMode;
+  uimsbf(2) HVXCrateMode;
+  uimsbf(1) extensionFlag;
+  if (extensionFlag) {
+    // to be defined in MPEG-4 Version 2
+  }
+}
+
+"; } }
 	public virtual string DisplayName { get { return "HVXCconfig"; } }
 
 	protected bool HVXCvarMode; 
@@ -82,12 +94,12 @@ public partial class HVXCconfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("HVXCvarMode", 1, this.HVXCvarMode); 
-		boxSize += builder.Field("HVXCrateMode", 2, this.HVXCrateMode); 
-		boxSize += builder.Field("extensionFlag", 1, this.extensionFlag); 
+		boxSize += tracer.Field("HVXCvarMode", 1, this.HVXCvarMode); 
+		boxSize += tracer.Field("HVXCrateMode", 2, this.HVXCrateMode); 
+		boxSize += tracer.Field("extensionFlag", 1, this.extensionFlag); 
 
 		if (extensionFlag)
 		{

@@ -17,6 +17,10 @@ public partial class TrickPlayEntry : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class TrickPlayEntry() {
+ unsigned int(2) picType; unsigned int(6) dependencyLevel;
+ } "; } }
 	public virtual string DisplayName { get { return "TrickPlayEntry"; } }
 
 	protected byte picType; 
@@ -53,11 +57,11 @@ public partial class TrickPlayEntry : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("picType", 2, this.picType); 
-		boxSize += builder.Field("dependencyLevel", 6, this.dependencyLevel); 
+		boxSize += tracer.Field("picType", 2, this.picType); 
+		boxSize += tracer.Field("dependencyLevel", 6, this.dependencyLevel); 
 		return boxSize;
 	}
 }

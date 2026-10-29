@@ -14,6 +14,12 @@ aligned(8) class EVRCSpecificBox() extends Box('devc') {
 */
 public partial class EVRCSpecificBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class EVRCSpecificBox() extends Box('devc') {
+	 unsigned int(32) vendor;
+	 unsigned int(8) decoderVersion;
+ unsigned int(8) framesPerSample;
+ } "; } }
 	public const string TYPE = "devc";
 	public override string DisplayName { get { return "EVRCSpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -63,13 +69,13 @@ public partial class EVRCSpecificBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("vendor", 32, this.vendor); 
-		boxSize += builder.Field("decoderVersion", 8, this.decoderVersion); 
-		boxSize += builder.Field("framesPerSample", 8, this.framesPerSample); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("vendor", 32, this.vendor); 
+		boxSize += tracer.Field("decoderVersion", 8, this.decoderVersion); 
+		boxSize += tracer.Field("framesPerSample", 8, this.framesPerSample); 
 		return boxSize;
 	}
 }

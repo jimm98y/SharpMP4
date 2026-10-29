@@ -24,6 +24,22 @@ aligned(8) class SampleAuxiliaryInformationOffsetsBox
 */
 public partial class SampleAuxiliaryInformationOffsetsBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SampleAuxiliaryInformationOffsetsBox
+	extends FullBox('saio', version, flags)
+{
+	if (flags & 1) {
+		unsigned int(32) aux_info_type;
+		unsigned int(32) aux_info_type_parameter;
+	}
+	unsigned int(32) entry_count;
+	if ( version == 0 ) {
+		unsigned int(32) offset[ entry_count ];
+	}
+	else {
+		unsigned int(64) offset[ entry_count ];
+	}
+}"; } }
 	public const string TYPE = "saio";
 	public override string DisplayName { get { return "SampleAuxiliaryInformationOffsetsBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -39,7 +55,7 @@ public partial class SampleAuxiliaryInformationOffsetsBox : FullBox
 	protected uint entry_count; 
 	public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
-	protected ulong[] offset; 
+	protected ulong[] offset = []; 
 	public ulong[] Offset { get { return this.offset; } set { this.offset = value; } }
 
 	public SampleAuxiliaryInformationOffsetsBox(byte version = 0, uint flags = 0): base(IsoStream.FromFourCC("saio"), version, flags)
@@ -118,26 +134,26 @@ public partial class SampleAuxiliaryInformationOffsetsBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if ((flags  &  1) ==  1)
 		{
-			boxSize += builder.Field("aux_info_type", 32, this.aux_info_type); 
-			boxSize += builder.Field("aux_info_type_parameter", 32, this.aux_info_type_parameter); 
+			boxSize += tracer.Field("aux_info_type", 32, this.aux_info_type); 
+			boxSize += tracer.Field("aux_info_type_parameter", 32, this.aux_info_type_parameter); 
 		}
-		boxSize += builder.Field("entry_count", 32, this.entry_count); 
+		boxSize += tracer.Field("entry_count", 32, this.entry_count); 
 
 		if ( version == 0 )
 		{
-			boxSize += builder.Field("offset", ((ulong)( entry_count ) * 32), this.offset); 
+			boxSize += tracer.Field("offset", ((ulong)( entry_count ) * 32), this.offset); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("offset", ((ulong)( entry_count ) * 64), this.offset); 
+			boxSize += tracer.Field("offset", ((ulong)( entry_count ) * 64), this.offset); 
 		}
 		return boxSize;
 	}

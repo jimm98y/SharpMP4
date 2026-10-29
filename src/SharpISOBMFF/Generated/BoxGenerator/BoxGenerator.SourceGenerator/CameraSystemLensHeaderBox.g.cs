@@ -15,6 +15,13 @@ aligned(8) class CameraSystemLensHeaderBox extends FullBox('lnhd', 0, 0) {
 */
 public partial class CameraSystemLensHeaderBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class CameraSystemLensHeaderBox extends FullBox('lnhd', 0, 0) { 
+ unsigned int(32) lens_identifier; // an integer unique to the enclosing CameraSystemLensBox 
+ unsigned int(32) lens_algorithm_kind; // a FourCC for the kind of projection 
+ unsigned int(32) lens_domain; // a FourCC for the kind of lens (e.g., color) 
+ unsigned int(32) lens_role; // a FourCC indicating which lens this is (e.g., left or right for a stereo system) 
+}"; } }
 	public const string TYPE = "lnhd";
 	public override string DisplayName { get { return "CameraSystemLensHeaderBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -70,14 +77,14 @@ public partial class CameraSystemLensHeaderBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("lens_identifier", 32, this.lens_identifier); // an integer unique to the enclosing CameraSystemLensBox 
-		boxSize += builder.Field("lens_algorithm_kind", 32, this.lens_algorithm_kind); // a FourCC for the kind of projection 
-		boxSize += builder.Field("lens_domain", 32, this.lens_domain); // a FourCC for the kind of lens (e.g., color) 
-		boxSize += builder.Field("lens_role", 32, this.lens_role); // a FourCC indicating which lens this is (e.g., left or right for a stereo system) 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("lens_identifier", 32, this.lens_identifier); // an integer unique to the enclosing CameraSystemLensBox 
+		boxSize += tracer.Field("lens_algorithm_kind", 32, this.lens_algorithm_kind); // a FourCC for the kind of projection 
+		boxSize += tracer.Field("lens_domain", 32, this.lens_domain); // a FourCC for the kind of lens (e.g., color) 
+		boxSize += tracer.Field("lens_role", 32, this.lens_role); // a FourCC indicating which lens this is (e.g., left or right for a stereo system) 
 		return boxSize;
 	}
 }

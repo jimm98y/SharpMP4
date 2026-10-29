@@ -26,6 +26,24 @@ aligned(8) class VvcRectRegionOrderEntry () extends VisualSampleGroupEntry('rror
 */
 public partial class VvcRectRegionOrderEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class VvcRectRegionOrderEntry () extends VisualSampleGroupEntry('rror')
+{
+	unsigned int(1) subpic_id_info_flag;
+	bit(7) reserved = 0;
+	unsigned int(16) num_alternate_region_set;
+	for (i = 0; i < num_alternate_region_set; i++) {
+		unsigned int(16) num_regions_in_set[i];
+		unsigned int(16) alternate_region_set_id[i];
+		for (j = 0; j < num_regions_in_set[i]; j++)
+			unsigned int(16) groupID[i][j];
+	}
+	unsigned int(16) num_regions_minus1;
+	for (i = 0; i < num_regions_minus1; i++)
+		unsigned int(16) region_id[i];
+	if (subpic_id_info_flag)
+		VVCSubpicIDRewritingInfomationStruct() subpic_id_rewriting_info;
+}"; } }
 	public const string TYPE = "rror";
 	public override string DisplayName { get { return "VvcRectRegionOrderEntry"; } }
 
@@ -161,34 +179,34 @@ public partial class VvcRectRegionOrderEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("subpic_id_info_flag", 1, this.subpic_id_info_flag); 
-		boxSize += builder.Field("reserved", 7, this.reserved); 
-		boxSize += builder.Field("num_alternate_region_set", 16, this.num_alternate_region_set); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("subpic_id_info_flag", 1, this.subpic_id_info_flag); 
+		boxSize += tracer.Field("reserved", 7, this.reserved); 
+		boxSize += tracer.Field("num_alternate_region_set", 16, this.num_alternate_region_set); 
 
 		for (int i = 0; i < num_alternate_region_set; i++)
 		{
-			boxSize += builder.Field($"num_regions_in_set[{i}]", 16, this.num_regions_in_set[i]); 
-			boxSize += builder.Field($"alternate_region_set_id[{i}]", 16, this.alternate_region_set_id[i]); 
+			boxSize += tracer.Field($"num_regions_in_set[{i}]", 16, this.num_regions_in_set[i]); 
+			boxSize += tracer.Field($"alternate_region_set_id[{i}]", 16, this.alternate_region_set_id[i]); 
 
 			for (int j = 0; j < num_regions_in_set[i]; j++)
 			{
-				boxSize += builder.Field($"groupID[{i}][{j}]", 16, this.groupID[i][j]); 
+				boxSize += tracer.Field($"groupID[{i}][{j}]", 16, this.groupID[i][j]); 
 			}
 		}
-		boxSize += builder.Field("num_regions_minus1", 16, this.num_regions_minus1); 
+		boxSize += tracer.Field("num_regions_minus1", 16, this.num_regions_minus1); 
 
 		for (int i = 0; i < num_regions_minus1; i++)
 		{
-			boxSize += builder.Field($"region_id[{i}]", 16, this.region_id[i]); 
+			boxSize += tracer.Field($"region_id[{i}]", 16, this.region_id[i]); 
 		}
 
 		if (subpic_id_info_flag)
 		{
-			boxSize += builder.Field("subpic_id_rewriting_info", IsoStream.CalculateClassSize(subpic_id_rewriting_info), this.subpic_id_rewriting_info); 
+			boxSize += tracer.Field("subpic_id_rewriting_info", IsoStream.CalculateClassSize(subpic_id_rewriting_info), this.subpic_id_rewriting_info); 
 		}
 		return boxSize;
 	}

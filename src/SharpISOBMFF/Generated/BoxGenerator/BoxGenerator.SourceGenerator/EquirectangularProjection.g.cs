@@ -16,6 +16,14 @@ aligned(8) class EquirectangularProjection extends ProjectionDataBox('equi', 0, 
 */
 public partial class EquirectangularProjection : ProjectionDataBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class EquirectangularProjection extends ProjectionDataBox('equi', 0, 0) {
+    unsigned int(32) projection_bounds_top;
+    unsigned int(32) projection_bounds_bottom;
+    unsigned int(32) projection_bounds_left;
+    unsigned int(32) projection_bounds_right;
+ }
+"; } }
 	public const string TYPE = "equi";
 	public override string DisplayName { get { return "EquirectangularProjection"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -71,14 +79,14 @@ public partial class EquirectangularProjection : ProjectionDataBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("projection_bounds_top", 32, this.projection_bounds_top); 
-		boxSize += builder.Field("projection_bounds_bottom", 32, this.projection_bounds_bottom); 
-		boxSize += builder.Field("projection_bounds_left", 32, this.projection_bounds_left); 
-		boxSize += builder.Field("projection_bounds_right", 32, this.projection_bounds_right); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("projection_bounds_top", 32, this.projection_bounds_top); 
+		boxSize += tracer.Field("projection_bounds_bottom", 32, this.projection_bounds_bottom); 
+		boxSize += tracer.Field("projection_bounds_left", 32, this.projection_bounds_left); 
+		boxSize += tracer.Field("projection_bounds_right", 32, this.projection_bounds_right); 
 		return boxSize;
 	}
 }

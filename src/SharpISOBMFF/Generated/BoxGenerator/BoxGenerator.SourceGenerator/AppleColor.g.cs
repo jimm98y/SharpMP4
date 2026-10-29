@@ -21,6 +21,14 @@ public partial class AppleColor : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class AppleColor() {
+unsigned int(16) alpha;
+ unsigned int(16) red;
+ unsigned int(16) green;
+ unsigned int(16) blue;
+ }
+"; } }
 	public virtual string DisplayName { get { return "AppleColor"; } }
 
 	protected ushort alpha; 
@@ -69,13 +77,13 @@ public partial class AppleColor : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("alpha", 16, this.alpha); 
-		boxSize += builder.Field("red", 16, this.red); 
-		boxSize += builder.Field("green", 16, this.green); 
-		boxSize += builder.Field("blue", 16, this.blue); 
+		boxSize += tracer.Field("alpha", 16, this.alpha); 
+		boxSize += tracer.Field("red", 16, this.red); 
+		boxSize += tracer.Field("green", 16, this.green); 
+		boxSize += tracer.Field("blue", 16, this.blue); 
 		return boxSize;
 	}
 }

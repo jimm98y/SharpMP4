@@ -13,6 +13,11 @@ class PixelAspectRatioBox extends Box('pasp'){
 */
 public partial class PixelAspectRatioBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class PixelAspectRatioBox extends Box('pasp'){
+	unsigned int(32) hSpacing;
+	unsigned int(32) vSpacing;
+}"; } }
 	public const string TYPE = "pasp";
 	public override string DisplayName { get { return "PixelAspectRatioBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -56,12 +61,12 @@ public partial class PixelAspectRatioBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("hSpacing", 32, this.hSpacing); 
-		boxSize += builder.Field("vSpacing", 32, this.vSpacing); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("hSpacing", 32, this.hSpacing); 
+		boxSize += tracer.Field("vSpacing", 32, this.vSpacing); 
 		return boxSize;
 	}
 }

@@ -13,6 +13,11 @@ class URIMetaSampleEntry() extends MetaDataSampleEntry ('urim') {
 */
 public partial class URIMetaSampleEntry : MetaDataSampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class URIMetaSampleEntry() extends MetaDataSampleEntry ('urim') {
+	URIBox			the_label;
+	URIInitBox		init;		// optional
+}"; } }
 	public const string TYPE = "urim";
 	public override string DisplayName { get { return "URIMetaSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -55,13 +60,13 @@ public partial class URIMetaSampleEntry : MetaDataSampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("the_label", IsoStream.CalculateBoxSize(the_label), this.the_label); 
-		// boxSize += builder.Field("init", IsoStream.CalculateBoxSize(init), this.init); // optional
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("the_label", IsoStream.CalculateBoxSize(the_label), this.the_label); 
+		// boxSize += tracer.Field("init", IsoStream.CalculateBoxSize(init), this.init); // optional
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

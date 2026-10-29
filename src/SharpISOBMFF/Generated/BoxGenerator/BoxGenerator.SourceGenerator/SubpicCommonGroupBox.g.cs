@@ -19,6 +19,17 @@ aligned(8) class SubpicCommonGroupBox extends EntityToGroupBox('acgl',0,0)
 */
 public partial class SubpicCommonGroupBox : EntityToGroupBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SubpicCommonGroupBox extends EntityToGroupBox('acgl',0,0)
+{	unsigned int(1) level_is_present_flag;
+	unsigned int(1) level_is_static_flag;
+	bit(6) reserved = 0;
+	if( level_is_present_flag )
+		unsigned int(8) level_idc;
+	if( level_is_static_flag == 0 )
+		unsigned_int(32) level_info_entity_idx;
+	unsigned int(16) num_active_tracks;
+}"; } }
 	public const string TYPE = "acgl";
 	public override string DisplayName { get { return "SubpicCommonGroupBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -110,24 +121,24 @@ public partial class SubpicCommonGroupBox : EntityToGroupBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("level_is_present_flag", 1, this.level_is_present_flag); 
-		boxSize += builder.Field("level_is_static_flag", 1, this.level_is_static_flag); 
-		boxSize += builder.Field("reserved", 6, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("level_is_present_flag", 1, this.level_is_present_flag); 
+		boxSize += tracer.Field("level_is_static_flag", 1, this.level_is_static_flag); 
+		boxSize += tracer.Field("reserved", 6, this.reserved); 
 
 		if ( level_is_present_flag )
 		{
-			boxSize += builder.Field("level_idc", 8, this.level_idc); 
+			boxSize += tracer.Field("level_idc", 8, this.level_idc); 
 		}
 
 		if ( level_is_static_flag == false )
 		{
-			boxSize += builder.Field("level_info_entity_idx", 32, this.level_info_entity_idx); 
+			boxSize += tracer.Field("level_info_entity_idx", 32, this.level_info_entity_idx); 
 		}
-		boxSize += builder.Field("num_active_tracks", 16, this.num_active_tracks); 
+		boxSize += tracer.Field("num_active_tracks", 16, this.num_active_tracks); 
 		return boxSize;
 	}
 }

@@ -13,6 +13,11 @@ class OperatingPointSelectorProperty extends ItemProperty('a1op') {
 */
 public partial class OperatingPointSelectorProperty : ItemProperty
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class OperatingPointSelectorProperty extends ItemProperty('a1op') {
+    unsigned int(8) op_index;
+}
+"; } }
 	public const string TYPE = "a1op";
 	public override string DisplayName { get { return "OperatingPointSelectorProperty"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +55,11 @@ public partial class OperatingPointSelectorProperty : ItemProperty
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("op_index", 8, this.op_index); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("op_index", 8, this.op_index); 
 		return boxSize;
 	}
 }

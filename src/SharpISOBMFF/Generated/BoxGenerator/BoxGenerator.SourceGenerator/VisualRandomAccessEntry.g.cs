@@ -14,6 +14,12 @@ class VisualRandomAccessEntry() extends VisualSampleGroupEntry ('rap ')
 */
 public partial class VisualRandomAccessEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class VisualRandomAccessEntry() extends VisualSampleGroupEntry ('rap ')
+{
+	unsigned int(1) num_leading_samples_known;
+	unsigned int(7) num_leading_samples;
+}"; } }
 	public const string TYPE = "rap ";
 	public override string DisplayName { get { return "VisualRandomAccessEntry"; } }
 
@@ -54,12 +60,12 @@ public partial class VisualRandomAccessEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("num_leading_samples_known", 1, this.num_leading_samples_known); 
-		boxSize += builder.Field("num_leading_samples", 7, this.num_leading_samples); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("num_leading_samples_known", 1, this.num_leading_samples_known); 
+		boxSize += tracer.Field("num_leading_samples", 7, this.num_leading_samples); 
 		return boxSize;
 	}
 }

@@ -39,6 +39,32 @@ public partial class EVCDecoderConfigurationRecord : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"aligned(8) class EVCDecoderConfigurationRecord {
+unsigned int(8) configurationVersion=1;
+unsigned int(8) profile_idc;
+unsigned int(8) level_idc;
+ unsigned int(32) toolset_idc;
+unsigned int(2) chroma_format_idc;
+ unsigned int(3) bit_depth_luma_minus8;
+unsigned int(3) bit_depth_chroma_minus8;
+unsigned int(32) pic_width_in_luma_samples;
+unsigned int(32) pic_height_in_luma_samples;
+unsigned int(5) reserved='00000'b;
+unsigned int(1) sps_in_stream;
+ unsigned int(1) pps_in_stream;
+unsigned int(1) aps_in_stream;
+ unsigned int(8) numOfArrays;
+ for (j=0; j<numOfArrays; j++) {
+bit(2) reserved='00'b;
+unsigned int(6) NAL_unit_type;
+ unsigned int(16) numNalus;
+for (i=0; i<numNalus; i++) {
+ unsigned int(16) nalUnitLength;
+bit(8*nalUnitLength) nalUnit;
+}
+}
+}"; } }
 	public virtual string DisplayName { get { return "EVCDecoderConfigurationRecord"; } }
 
 	protected byte configurationVersion =1; 
@@ -208,34 +234,34 @@ public partial class EVCDecoderConfigurationRecord : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("configurationVersion", 8, this.configurationVersion); 
-		boxSize += builder.Field("profile_idc", 8, this.profile_idc); 
-		boxSize += builder.Field("level_idc", 8, this.level_idc); 
-		boxSize += builder.Field("toolset_idc", 32, this.toolset_idc); 
-		boxSize += builder.Field("chroma_format_idc", 2, this.chroma_format_idc); 
-		boxSize += builder.Field("bit_depth_luma_minus8", 3, this.bit_depth_luma_minus8); 
-		boxSize += builder.Field("bit_depth_chroma_minus8", 3, this.bit_depth_chroma_minus8); 
-		boxSize += builder.Field("pic_width_in_luma_samples", 32, this.pic_width_in_luma_samples); 
-		boxSize += builder.Field("pic_height_in_luma_samples", 32, this.pic_height_in_luma_samples); 
-		boxSize += builder.Field("reserved", 5, this.reserved); 
-		boxSize += builder.Field("sps_in_stream", 1, this.sps_in_stream); 
-		boxSize += builder.Field("pps_in_stream", 1, this.pps_in_stream); 
-		boxSize += builder.Field("aps_in_stream", 1, this.aps_in_stream); 
-		boxSize += builder.Field("numOfArrays", 8, this.numOfArrays); 
+		boxSize += tracer.Field("configurationVersion", 8, this.configurationVersion); 
+		boxSize += tracer.Field("profile_idc", 8, this.profile_idc); 
+		boxSize += tracer.Field("level_idc", 8, this.level_idc); 
+		boxSize += tracer.Field("toolset_idc", 32, this.toolset_idc); 
+		boxSize += tracer.Field("chroma_format_idc", 2, this.chroma_format_idc); 
+		boxSize += tracer.Field("bit_depth_luma_minus8", 3, this.bit_depth_luma_minus8); 
+		boxSize += tracer.Field("bit_depth_chroma_minus8", 3, this.bit_depth_chroma_minus8); 
+		boxSize += tracer.Field("pic_width_in_luma_samples", 32, this.pic_width_in_luma_samples); 
+		boxSize += tracer.Field("pic_height_in_luma_samples", 32, this.pic_height_in_luma_samples); 
+		boxSize += tracer.Field("reserved", 5, this.reserved); 
+		boxSize += tracer.Field("sps_in_stream", 1, this.sps_in_stream); 
+		boxSize += tracer.Field("pps_in_stream", 1, this.pps_in_stream); 
+		boxSize += tracer.Field("aps_in_stream", 1, this.aps_in_stream); 
+		boxSize += tracer.Field("numOfArrays", 8, this.numOfArrays); 
 
 		for (int j=0; j<numOfArrays; j++)
 		{
-			boxSize += builder.Field($"reserved0[{j}]", 2, this.reserved0[j]); 
-			boxSize += builder.Field($"NAL_unit_type[{j}]", 6, this.NAL_unit_type[j]); 
-			boxSize += builder.Field($"numNalus[{j}]", 16, this.numNalus[j]); 
+			boxSize += tracer.Field($"reserved0[{j}]", 2, this.reserved0[j]); 
+			boxSize += tracer.Field($"NAL_unit_type[{j}]", 6, this.NAL_unit_type[j]); 
+			boxSize += tracer.Field($"numNalus[{j}]", 16, this.numNalus[j]); 
 
 			for (int i=0; i<numNalus[j]; i++)
 			{
-				boxSize += builder.Field($"nalUnitLength[{j}][{i}]", 16, this.nalUnitLength[j][i]); 
-				boxSize += builder.Field($"nalUnit[{j}][{i}]", (ulong)(8*nalUnitLength[j][i] ), this.nalUnit[j][i]); 
+				boxSize += tracer.Field($"nalUnitLength[{j}][{i}]", 16, this.nalUnitLength[j][i]); 
+				boxSize += tracer.Field($"nalUnit[{j}][{i}]", (ulong)(8*nalUnitLength[j][i] ), this.nalUnit[j][i]); 
 			}
 		}
 		return boxSize;

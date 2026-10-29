@@ -20,6 +20,18 @@ aligned(8) class ImagePyramidEntityGroupBox extends EntityToGroupBox('pymd',0,0)
 */
 public partial class ImagePyramidEntityGroupBox : EntityToGroupBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// ISO/IEC 23008-12 image pyramid entity group, as libheif's Box_pymd reads and writes it (libheif/box.cc)
+aligned(8) class ImagePyramidEntityGroupBox extends EntityToGroupBox('pymd',0,0)
+{
+	unsigned int(16) tile_size_x;
+	unsigned int(16) tile_size_y;
+	for (i = 0; i < num_entities_in_group; i++) {
+		unsigned int(16) layer_binning[i];
+		unsigned int(16) tiles_in_layer_row_minus1[i];
+		unsigned int(16) tiles_in_layer_column_minus1[i];
+	}
+}"; } }
 	public const string TYPE = "pymd";
 	public override string DisplayName { get { return "ImagePyramidEntityGroupBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -96,18 +108,18 @@ public partial class ImagePyramidEntityGroupBox : EntityToGroupBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("tile_size_x", 16, this.tile_size_x); 
-		boxSize += builder.Field("tile_size_y", 16, this.tile_size_y); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("tile_size_x", 16, this.tile_size_x); 
+		boxSize += tracer.Field("tile_size_y", 16, this.tile_size_y); 
 
 		for (int i = 0; i < num_entities_in_group; i++)
 		{
-			boxSize += builder.Field($"layer_binning[{i}]", 16, this.layer_binning[i]); 
-			boxSize += builder.Field($"tiles_in_layer_row_minus1[{i}]", 16, this.tiles_in_layer_row_minus1[i]); 
-			boxSize += builder.Field($"tiles_in_layer_column_minus1[{i}]", 16, this.tiles_in_layer_column_minus1[i]); 
+			boxSize += tracer.Field($"layer_binning[{i}]", 16, this.layer_binning[i]); 
+			boxSize += tracer.Field($"tiles_in_layer_row_minus1[{i}]", 16, this.tiles_in_layer_row_minus1[i]); 
+			boxSize += tracer.Field($"tiles_in_layer_column_minus1[{i}]", 16, this.tiles_in_layer_column_minus1[i]); 
 		}
 		return boxSize;
 	}

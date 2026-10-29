@@ -12,6 +12,10 @@ class WebVTTConfigurationBox extends Box('vttC') {
 */
 public partial class WebVTTConfigurationBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class WebVTTConfigurationBox extends Box('vttC') {
+	boxstring	config;
+}"; } }
 	public const string TYPE = "vttC";
 	public override string DisplayName { get { return "WebVTTConfigurationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class WebVTTConfigurationBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("config", IsoStream.CalculateStringSize(config), this.config); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("config", IsoStream.CalculateStringSize(config), this.config); 
 		return boxSize;
 	}
 }

@@ -12,13 +12,17 @@ aligned(8) class TypeCombinationBox extends Box('tyco') {
 */
 public partial class TypeCombinationBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TypeCombinationBox extends Box('tyco') {
+	unsigned int(32)	compatible_brands[];	// to end of the box
+}"; } }
 	public const string TYPE = "tyco";
 	public override string DisplayName { get { return "TypeCombinationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("etyp"); }
 
 
-	protected uint[] compatible_brands;  //  to end of the box
+	protected uint[] compatible_brands = [];  //  to end of the box
 	public uint[] CompatibleBrands { get { return this.compatible_brands; } set { this.compatible_brands = value; } }
 
 	public TypeCombinationBox(): base(IsoStream.FromFourCC("tyco"))
@@ -49,11 +53,11 @@ public partial class TypeCombinationBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("compatible_brands", ((ulong)compatible_brands.Length * 32), this.compatible_brands); // to end of the box
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("compatible_brands", ((ulong)compatible_brands.Length * 32), this.compatible_brands); // to end of the box
 		return boxSize;
 	}
 }

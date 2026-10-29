@@ -31,13 +31,36 @@ aligned(8) class TextMediaBox() extends Box('text') {
 */
 public partial class TextMediaBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TextMediaBox() extends Box('text') {
+ unsigned int(8) reserved1[6];
+ unsigned int(16) dataReferenceIndex;
+ unsigned int(32) displayFlags;
+ unsigned int(32) textJustification;
+ unsigned int(16) bgColorRed;
+ unsigned int(16) bgColorGreen;
+ unsigned int(16) bgColorBlue;
+ unsigned int(16) defTextBoxTop;
+ unsigned int(16) defTextBoxLeft;
+ unsigned int(16) defTextBoxBotton;
+ unsigned int(16) defTextBoxRight;
+ unsigned int(64) reserved2;
+ unsigned int(16) fontNumber;
+ unsigned int(16) fontFace;
+ unsigned int(8) reserved3;
+ unsigned int(16) reserved4;
+ unsigned int(16) foreColorRed;
+ unsigned int(16) foreColorGreen;
+ unsigned int(16) foreColorBlue;
+ string name;
+ } "; } }
 	public const string TYPE = "text";
 	public override string DisplayName { get { return "TextMediaBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("stsd", "gmhd"); }
 
 
-	protected byte[] reserved1; 
+	protected byte[] reserved1 = new byte[6]; 
 	public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
 
 	protected ushort dataReferenceIndex; 
@@ -182,30 +205,30 @@ public partial class TextMediaBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("reserved1", 6 * 8, this.reserved1); 
-		boxSize += builder.Field("dataReferenceIndex", 16, this.dataReferenceIndex); 
-		boxSize += builder.Field("displayFlags", 32, this.displayFlags); 
-		boxSize += builder.Field("textJustification", 32, this.textJustification); 
-		boxSize += builder.Field("bgColorRed", 16, this.bgColorRed); 
-		boxSize += builder.Field("bgColorGreen", 16, this.bgColorGreen); 
-		boxSize += builder.Field("bgColorBlue", 16, this.bgColorBlue); 
-		boxSize += builder.Field("defTextBoxTop", 16, this.defTextBoxTop); 
-		boxSize += builder.Field("defTextBoxLeft", 16, this.defTextBoxLeft); 
-		boxSize += builder.Field("defTextBoxBotton", 16, this.defTextBoxBotton); 
-		boxSize += builder.Field("defTextBoxRight", 16, this.defTextBoxRight); 
-		boxSize += builder.Field("reserved2", 64, this.reserved2); 
-		boxSize += builder.Field("fontNumber", 16, this.fontNumber); 
-		boxSize += builder.Field("fontFace", 16, this.fontFace); 
-		boxSize += builder.Field("reserved3", 8, this.reserved3); 
-		boxSize += builder.Field("reserved4", 16, this.reserved4); 
-		boxSize += builder.Field("foreColorRed", 16, this.foreColorRed); 
-		boxSize += builder.Field("foreColorGreen", 16, this.foreColorGreen); 
-		boxSize += builder.Field("foreColorBlue", 16, this.foreColorBlue); 
-		boxSize += builder.Field("name", IsoStream.CalculateStringSize(name), this.name); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("reserved1", 6 * 8, this.reserved1); 
+		boxSize += tracer.Field("dataReferenceIndex", 16, this.dataReferenceIndex); 
+		boxSize += tracer.Field("displayFlags", 32, this.displayFlags); 
+		boxSize += tracer.Field("textJustification", 32, this.textJustification); 
+		boxSize += tracer.Field("bgColorRed", 16, this.bgColorRed); 
+		boxSize += tracer.Field("bgColorGreen", 16, this.bgColorGreen); 
+		boxSize += tracer.Field("bgColorBlue", 16, this.bgColorBlue); 
+		boxSize += tracer.Field("defTextBoxTop", 16, this.defTextBoxTop); 
+		boxSize += tracer.Field("defTextBoxLeft", 16, this.defTextBoxLeft); 
+		boxSize += tracer.Field("defTextBoxBotton", 16, this.defTextBoxBotton); 
+		boxSize += tracer.Field("defTextBoxRight", 16, this.defTextBoxRight); 
+		boxSize += tracer.Field("reserved2", 64, this.reserved2); 
+		boxSize += tracer.Field("fontNumber", 16, this.fontNumber); 
+		boxSize += tracer.Field("fontFace", 16, this.fontFace); 
+		boxSize += tracer.Field("reserved3", 8, this.reserved3); 
+		boxSize += tracer.Field("reserved4", 16, this.reserved4); 
+		boxSize += tracer.Field("foreColorRed", 16, this.foreColorRed); 
+		boxSize += tracer.Field("foreColorGreen", 16, this.foreColorGreen); 
+		boxSize += tracer.Field("foreColorBlue", 16, this.foreColorBlue); 
+		boxSize += tracer.Field("name", IsoStream.CalculateStringSize(name), this.name); 
 		return boxSize;
 	}
 }

@@ -48,6 +48,46 @@ class AudioSampleEntry(codingname) extends SampleEntry (codingname) {
 */
 public partial class AudioSampleEntry : SampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class AudioSampleEntry(codingname) extends SampleEntry (codingname) {
+    unsigned int(16) soundversion = 0;
+    unsigned int(16) reserved1 = 0;
+    unsigned int(32) reserved2 = 0;
+    unsigned int(16) channelcount;
+    template unsigned int(16) samplesize = 16;
+
+    unsigned int(16) pre_defined = 0;
+    const unsigned int(16) reserved = 0;
+    template unsigned int(32) samplerate;
+
+    if(codingname != 'mlpa') {
+        samplerate = samplerate >> 16;
+    }
+
+    if(soundversion == 1 || soundversion == 2) {
+       unsigned int(32) samplesPerPacket;
+       unsigned int(32) bytesPerPacket;
+       unsigned int(32) bytesPerFrame;
+       unsigned int(32) bytesPerSample;
+    }
+
+    if(soundversion == 2) {
+       unsigned int(8)[20] soundVersion2Data;
+    }
+
+    ChannelLayout();
+    // we permit any number of DownMix or DRC boxes: 
+    DownMixInstructions() [];
+    DRCCoefficientsBasic() [];
+    DRCInstructionsBasic() [];
+    DRCCoefficientsUniDRC() [];
+    DRCInstructionsUniDRC() [];
+    // we permit only one DRC Extension box:
+    UniDrcConfigExtension();
+    // optional boxes follow
+    SamplingRateBox();
+    Box (); // further boxes as needed
+}"; } }
 	public override string DisplayName { get { return "AudioSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn(BoxPlacements.Of(this) ?? new[] { "stsd" }); }
@@ -89,7 +129,7 @@ public partial class AudioSampleEntry : SampleEntry
 	protected uint bytesPerSample; 
 	public uint BytesPerSample { get { return this.bytesPerSample; } set { this.bytesPerSample = value; } }
 
-	protected byte[] soundVersion2Data; 
+	protected byte[] soundVersion2Data = new byte[20]; 
 	public byte[] SoundVersion2Data { get { return this.soundVersion2Data; } set { this.soundVersion2Data = value; } }
 	public ChannelLayout _ChannelLayout { get { return this.children.OfType<ChannelLayout>().FirstOrDefault(); } }
 	public IEnumerable<DownMixInstructions> _DownMixInstructions { get { return this.children.OfType<DownMixInstructions>(); } }
@@ -234,18 +274,18 @@ public partial class AudioSampleEntry : SampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("soundversion", 16, this.soundversion); 
-		boxSize += builder.Field("reserved1", 16, this.reserved1); 
-		boxSize += builder.Field("reserved2", 32, this.reserved2); 
-		boxSize += builder.Field("channelcount", 16, this.channelcount); 
-		boxSize += builder.Field("samplesize", 16, this.samplesize); 
-		boxSize += builder.Field("pre_defined", 16, this.pre_defined); 
-		boxSize += builder.Field("reserved", 16, this.reserved); 
-		boxSize += builder.Field("samplerate", 32, this.samplerate); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("soundversion", 16, this.soundversion); 
+		boxSize += tracer.Field("reserved1", 16, this.reserved1); 
+		boxSize += tracer.Field("reserved2", 32, this.reserved2); 
+		boxSize += tracer.Field("channelcount", 16, this.channelcount); 
+		boxSize += tracer.Field("samplesize", 16, this.samplesize); 
+		boxSize += tracer.Field("pre_defined", 16, this.pre_defined); 
+		boxSize += tracer.Field("reserved", 16, this.reserved); 
+		boxSize += tracer.Field("samplerate", 32, this.samplerate); 
 
 		if (FourCC != IsoStream.FromFourCC("mlpa"))
 		{
@@ -254,26 +294,26 @@ public partial class AudioSampleEntry : SampleEntry
 
 		if (soundversion == 1 || soundversion == 2)
 		{
-			boxSize += builder.Field("samplesPerPacket", 32, this.samplesPerPacket); 
-			boxSize += builder.Field("bytesPerPacket", 32, this.bytesPerPacket); 
-			boxSize += builder.Field("bytesPerFrame", 32, this.bytesPerFrame); 
-			boxSize += builder.Field("bytesPerSample", 32, this.bytesPerSample); 
+			boxSize += tracer.Field("samplesPerPacket", 32, this.samplesPerPacket); 
+			boxSize += tracer.Field("bytesPerPacket", 32, this.bytesPerPacket); 
+			boxSize += tracer.Field("bytesPerFrame", 32, this.bytesPerFrame); 
+			boxSize += tracer.Field("bytesPerSample", 32, this.bytesPerSample); 
 		}
 
 		if (soundversion == 2)
 		{
-			boxSize += builder.Field("soundVersion2Data", 20 * 8, this.soundVersion2Data); 
+			boxSize += tracer.Field("soundVersion2Data", 20 * 8, this.soundVersion2Data); 
 		}
-		// boxSize += builder.Field("ChannelLayout", IsoStream.CalculateBoxSize(ChannelLayout), this.ChannelLayout); // we permit any number of DownMix or DRC boxes: 
-		// boxSize += builder.Field("DownMixInstructions", IsoStream.CalculateBoxSize(DownMixInstructions), this.DownMixInstructions); 
-		// boxSize += builder.Field("DRCCoefficientsBasic", IsoStream.CalculateBoxSize(DRCCoefficientsBasic), this.DRCCoefficientsBasic); 
-		// boxSize += builder.Field("DRCInstructionsBasic", IsoStream.CalculateBoxSize(DRCInstructionsBasic), this.DRCInstructionsBasic); 
-		// boxSize += builder.Field("DRCCoefficientsUniDRC", IsoStream.CalculateBoxSize(DRCCoefficientsUniDRC), this.DRCCoefficientsUniDRC); 
-		// boxSize += builder.Field("DRCInstructionsUniDRC", IsoStream.CalculateBoxSize(DRCInstructionsUniDRC), this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
-		// boxSize += builder.Field("UniDrcConfigExtension", IsoStream.CalculateBoxSize(UniDrcConfigExtension), this.UniDrcConfigExtension); // optional boxes follow
-		// boxSize += builder.Field("SamplingRateBox", IsoStream.CalculateBoxSize(SamplingRateBox), this.SamplingRateBox); 
-		// boxSize += builder.Field("Box", IsoStream.CalculateBoxSize(Box), this.Box); // further boxes as needed
-		boxSize += builder.Children(this);
+		// boxSize += tracer.Field("ChannelLayout", IsoStream.CalculateBoxSize(ChannelLayout), this.ChannelLayout); // we permit any number of DownMix or DRC boxes: 
+		// boxSize += tracer.Field("DownMixInstructions", IsoStream.CalculateBoxSize(DownMixInstructions), this.DownMixInstructions); 
+		// boxSize += tracer.Field("DRCCoefficientsBasic", IsoStream.CalculateBoxSize(DRCCoefficientsBasic), this.DRCCoefficientsBasic); 
+		// boxSize += tracer.Field("DRCInstructionsBasic", IsoStream.CalculateBoxSize(DRCInstructionsBasic), this.DRCInstructionsBasic); 
+		// boxSize += tracer.Field("DRCCoefficientsUniDRC", IsoStream.CalculateBoxSize(DRCCoefficientsUniDRC), this.DRCCoefficientsUniDRC); 
+		// boxSize += tracer.Field("DRCInstructionsUniDRC", IsoStream.CalculateBoxSize(DRCInstructionsUniDRC), this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
+		// boxSize += tracer.Field("UniDrcConfigExtension", IsoStream.CalculateBoxSize(UniDrcConfigExtension), this.UniDrcConfigExtension); // optional boxes follow
+		// boxSize += tracer.Field("SamplingRateBox", IsoStream.CalculateBoxSize(SamplingRateBox), this.SamplingRateBox); 
+		// boxSize += tracer.Field("Box", IsoStream.CalculateBoxSize(Box), this.Box); // further boxes as needed
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

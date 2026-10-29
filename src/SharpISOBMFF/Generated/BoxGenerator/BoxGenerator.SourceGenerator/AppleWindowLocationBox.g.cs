@@ -13,6 +13,11 @@ aligned(8) class AppleWindowLocationBox() extends Box('WLOC') {
 */
 public partial class AppleWindowLocationBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AppleWindowLocationBox() extends Box('WLOC') {
+	 signed int(16) locationX;
+ signed int(16) locationY;
+ } "; } }
 	public const string TYPE = "WLOC";
 	public override string DisplayName { get { return "AppleWindowLocationBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -56,12 +61,12 @@ public partial class AppleWindowLocationBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("locationX", 16, this.locationX); 
-		boxSize += builder.Field("locationY", 16, this.locationY); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("locationX", 16, this.locationX); 
+		boxSize += tracer.Field("locationY", 16, this.locationY); 
 		return boxSize;
 	}
 }

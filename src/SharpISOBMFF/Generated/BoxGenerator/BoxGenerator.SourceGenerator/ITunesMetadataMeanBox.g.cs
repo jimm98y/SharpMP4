@@ -12,6 +12,10 @@ aligned(8) class ITunesMetadataMeanBox() extends FullBox('mean') {
 */
 public partial class ITunesMetadataMeanBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ITunesMetadataMeanBox() extends FullBox('mean') {
+ string domain; 
+ }"; } }
 	public const string TYPE = "mean";
 	public override string DisplayName { get { return "ITunesMetadataMeanBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -49,11 +53,11 @@ public partial class ITunesMetadataMeanBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("domain", IsoStream.CalculateStringSize(domain), this.domain); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("domain", IsoStream.CalculateStringSize(domain), this.domain); 
 		return boxSize;
 	}
 }

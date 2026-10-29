@@ -45,6 +45,9 @@ namespace SharpISOBMFF
 
     public class SpatialSpecificConfig : IMp4Serializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public virtual string Syntax { get { return null; } }
+
         public virtual string DisplayName { get { return nameof(SpatialSpecificConfig); } }
         protected IMp4Serializable parent = null;
         public IMp4Serializable GetParent() { return parent; }
@@ -73,7 +76,7 @@ namespace SharpISOBMFF
         public override string ToString() { return BoxStringBuilder.Format(this); }
 
         // of no fields read
-        public virtual ulong ToString(BoxStringBuilder builder)
+        public virtual ulong Trace(BoxTracer tracer)
         {
             return 0;
         }
@@ -81,6 +84,9 @@ namespace SharpISOBMFF
 
     public class StructuredAudioSpecificConfig : IMp4Serializable
     {
+        /// <summary>Of a class of no definition, none.</summary>
+        public virtual string Syntax { get { return null; } }
+
         public virtual string DisplayName { get { return nameof(StructuredAudioSpecificConfig); } }
         protected IMp4Serializable parent = null;
         public IMp4Serializable GetParent() { return parent; }
@@ -109,7 +115,7 @@ namespace SharpISOBMFF
         public override string ToString() { return BoxStringBuilder.Format(this); }
 
         // of no fields read
-        public virtual ulong ToString(BoxStringBuilder builder)
+        public virtual ulong Trace(BoxTracer tracer)
         {
             return 0;
         }

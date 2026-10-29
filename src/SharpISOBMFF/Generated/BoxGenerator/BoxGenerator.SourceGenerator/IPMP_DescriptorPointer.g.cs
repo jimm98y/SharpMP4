@@ -12,6 +12,10 @@ class IPMP_DescriptorPointer extends BaseDescriptor : bit(8) tag=IPMP_DescrPoint
 */
 public partial class IPMP_DescriptorPointer : BaseDescriptor
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class IPMP_DescriptorPointer extends BaseDescriptor : bit(8) tag=IPMP_DescrPointerTag {
+ bit(8) IPMP_DescriptorID;
+ }"; } }
 	public const byte TYPE = DescriptorTags.IPMP_DescrPointerTag;
 	public override string DisplayName { get { return "IPMP_DescriptorPointer"; } }
 
@@ -46,11 +50,11 @@ public partial class IPMP_DescriptorPointer : BaseDescriptor
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("IPMP_DescriptorID", 8, this.IPMP_DescriptorID); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("IPMP_DescriptorID", 8, this.IPMP_DescriptorID); 
 		return boxSize;
 	}
 }

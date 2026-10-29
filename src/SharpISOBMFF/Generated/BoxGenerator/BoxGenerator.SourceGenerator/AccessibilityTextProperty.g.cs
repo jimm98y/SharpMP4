@@ -15,6 +15,13 @@ extends ItemFullProperty('altt', version = 0, flags = 0) {
 */
 public partial class AccessibilityTextProperty : ItemFullProperty
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AccessibilityTextProperty
+extends ItemFullProperty('altt', version = 0, flags = 0) {
+	utf8string alt_text;
+	utf8string alt_lang;
+}
+"; } }
 	public const string TYPE = "altt";
 	public override string DisplayName { get { return "AccessibilityTextProperty"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -58,12 +65,12 @@ public partial class AccessibilityTextProperty : ItemFullProperty
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("alt_text", IsoStream.CalculateStringSize(alt_text), this.alt_text); 
-		boxSize += builder.Field("alt_lang", IsoStream.CalculateStringSize(alt_lang), this.alt_lang); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("alt_text", IsoStream.CalculateStringSize(alt_text), this.alt_text); 
+		boxSize += tracer.Field("alt_lang", IsoStream.CalculateStringSize(alt_lang), this.alt_lang); 
 		return boxSize;
 	}
 }

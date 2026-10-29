@@ -70,6 +70,63 @@ public partial class OperatingPointsRecord : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"// L-HEVC's operating points (ISO/IEC 14496-15 9.6, not at hand: the edition at hand predates it), as GPAC reads them (isomedia/avc_ext.c, gf_isom_oinf_read_entry); scalability_mask & (1 << j) written as a remainder, which the generator's flags need
+class OperatingPointsRecord { 
+unsigned int(16) scalability_mask; 
+bit(2) reserved = 0; 
+unsigned int(6) num_profile_tier_level; 
+for (i=0; i<num_profile_tier_level; i++) { 
+ unsigned int(2) general_profile_space; 
+ unsigned int(1) general_tier_flag; 
+ unsigned int(5) general_profile_idc; 
+ unsigned int(32) general_profile_compatibility_flags; 
+ unsigned int(48) general_constraint_indicator_flags; 
+ unsigned int(8) general_level_idc; 
+} 
+unsigned int(16) num_operating_points; 
+for (i=0; i<num_operating_points; i++) { 
+ unsigned int(16) output_layer_set_idx; 
+ unsigned int(8) max_temporal_id; 
+ unsigned int(8) layer_count; 
+ for (j=0; j<layer_count; j++) { 
+  unsigned int(8) ptl_idx; 
+  unsigned int(6) layer_id; 
+  unsigned int(1) is_outputlayer; 
+  unsigned int(1) is_alternate_outputlayer; 
+ } 
+ unsigned int(16) minPicWidth; 
+ unsigned int(16) minPicHeight; 
+ unsigned int(16) maxPicWidth; 
+ unsigned int(16) maxPicHeight; 
+ unsigned int(2) maxChromaFormat; 
+ unsigned int(3) maxBitDepthMinus8; 
+ bit(1) reserved = 0; 
+ unsigned int(1) frame_rate_info_flag; 
+ unsigned int(1) bit_rate_info_flag; 
+ if (frame_rate_info_flag) { 
+  unsigned int(16) avgFrameRate; 
+  bit(6) reserved = 0; 
+  unsigned int(2) constantFrameRate; 
+ } 
+ if (bit_rate_info_flag) { 
+  unsigned int(32) maxBitRate; 
+  unsigned int(32) avgBitRate; 
+ } 
+} 
+unsigned int(8) max_layer_count; 
+for (i=0; i<max_layer_count; i++) { 
+ unsigned int(8) dependent_layerID; 
+ unsigned int(8) num_layers_dependent_on; 
+ for (j=0; j<num_layers_dependent_on; j++) 
+  unsigned int(8) dependent_on_layerID; 
+ for (j=0; j<16; j++) { 
+  if ((scalability_mask >> j) % 2 == 1) 
+   unsigned int(8) dimension_identifier; 
+ } 
+} 
+}
+"; } }
 	public virtual string DisplayName { get { return "OperatingPointsRecord"; } }
 
 	protected ushort scalability_mask; 
@@ -455,70 +512,70 @@ public partial class OperatingPointsRecord : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("scalability_mask", 16, this.scalability_mask); 
-		boxSize += builder.Field("reserved", 2, this.reserved); 
-		boxSize += builder.Field("num_profile_tier_level", 6, this.num_profile_tier_level); 
+		boxSize += tracer.Field("scalability_mask", 16, this.scalability_mask); 
+		boxSize += tracer.Field("reserved", 2, this.reserved); 
+		boxSize += tracer.Field("num_profile_tier_level", 6, this.num_profile_tier_level); 
 
 		for (int i=0; i<num_profile_tier_level; i++)
 		{
-			boxSize += builder.Field($"general_profile_space[{i}]", 2, this.general_profile_space[i]); 
-			boxSize += builder.Field($"general_tier_flag[{i}]", 1, this.general_tier_flag[i]); 
-			boxSize += builder.Field($"general_profile_idc[{i}]", 5, this.general_profile_idc[i]); 
-			boxSize += builder.Field($"general_profile_compatibility_flags[{i}]", 32, this.general_profile_compatibility_flags[i]); 
-			boxSize += builder.Field($"general_constraint_indicator_flags[{i}]", 48, this.general_constraint_indicator_flags[i]); 
-			boxSize += builder.Field($"general_level_idc[{i}]", 8, this.general_level_idc[i]); 
+			boxSize += tracer.Field($"general_profile_space[{i}]", 2, this.general_profile_space[i]); 
+			boxSize += tracer.Field($"general_tier_flag[{i}]", 1, this.general_tier_flag[i]); 
+			boxSize += tracer.Field($"general_profile_idc[{i}]", 5, this.general_profile_idc[i]); 
+			boxSize += tracer.Field($"general_profile_compatibility_flags[{i}]", 32, this.general_profile_compatibility_flags[i]); 
+			boxSize += tracer.Field($"general_constraint_indicator_flags[{i}]", 48, this.general_constraint_indicator_flags[i]); 
+			boxSize += tracer.Field($"general_level_idc[{i}]", 8, this.general_level_idc[i]); 
 		}
-		boxSize += builder.Field("num_operating_points", 16, this.num_operating_points); 
+		boxSize += tracer.Field("num_operating_points", 16, this.num_operating_points); 
 
 		for (int i=0; i<num_operating_points; i++)
 		{
-			boxSize += builder.Field($"output_layer_set_idx[{i}]", 16, this.output_layer_set_idx[i]); 
-			boxSize += builder.Field($"max_temporal_id[{i}]", 8, this.max_temporal_id[i]); 
-			boxSize += builder.Field($"layer_count[{i}]", 8, this.layer_count[i]); 
+			boxSize += tracer.Field($"output_layer_set_idx[{i}]", 16, this.output_layer_set_idx[i]); 
+			boxSize += tracer.Field($"max_temporal_id[{i}]", 8, this.max_temporal_id[i]); 
+			boxSize += tracer.Field($"layer_count[{i}]", 8, this.layer_count[i]); 
 
 			for (int j=0; j<layer_count[i]; j++)
 			{
-				boxSize += builder.Field($"ptl_idx[{i}][{j}]", 8, this.ptl_idx[i][j]); 
-				boxSize += builder.Field($"layer_id[{i}][{j}]", 6, this.layer_id[i][j]); 
-				boxSize += builder.Field($"is_outputlayer[{i}][{j}]", 1, this.is_outputlayer[i][j]); 
-				boxSize += builder.Field($"is_alternate_outputlayer[{i}][{j}]", 1, this.is_alternate_outputlayer[i][j]); 
+				boxSize += tracer.Field($"ptl_idx[{i}][{j}]", 8, this.ptl_idx[i][j]); 
+				boxSize += tracer.Field($"layer_id[{i}][{j}]", 6, this.layer_id[i][j]); 
+				boxSize += tracer.Field($"is_outputlayer[{i}][{j}]", 1, this.is_outputlayer[i][j]); 
+				boxSize += tracer.Field($"is_alternate_outputlayer[{i}][{j}]", 1, this.is_alternate_outputlayer[i][j]); 
 			}
-			boxSize += builder.Field($"minPicWidth[{i}]", 16, this.minPicWidth[i]); 
-			boxSize += builder.Field($"minPicHeight[{i}]", 16, this.minPicHeight[i]); 
-			boxSize += builder.Field($"maxPicWidth[{i}]", 16, this.maxPicWidth[i]); 
-			boxSize += builder.Field($"maxPicHeight[{i}]", 16, this.maxPicHeight[i]); 
-			boxSize += builder.Field($"maxChromaFormat[{i}]", 2, this.maxChromaFormat[i]); 
-			boxSize += builder.Field($"maxBitDepthMinus8[{i}]", 3, this.maxBitDepthMinus8[i]); 
-			boxSize += builder.Field($"reserved0[{i}]", 1, this.reserved0[i]); 
-			boxSize += builder.Field($"frame_rate_info_flag[{i}]", 1, this.frame_rate_info_flag[i]); 
-			boxSize += builder.Field($"bit_rate_info_flag[{i}]", 1, this.bit_rate_info_flag[i]); 
+			boxSize += tracer.Field($"minPicWidth[{i}]", 16, this.minPicWidth[i]); 
+			boxSize += tracer.Field($"minPicHeight[{i}]", 16, this.minPicHeight[i]); 
+			boxSize += tracer.Field($"maxPicWidth[{i}]", 16, this.maxPicWidth[i]); 
+			boxSize += tracer.Field($"maxPicHeight[{i}]", 16, this.maxPicHeight[i]); 
+			boxSize += tracer.Field($"maxChromaFormat[{i}]", 2, this.maxChromaFormat[i]); 
+			boxSize += tracer.Field($"maxBitDepthMinus8[{i}]", 3, this.maxBitDepthMinus8[i]); 
+			boxSize += tracer.Field($"reserved0[{i}]", 1, this.reserved0[i]); 
+			boxSize += tracer.Field($"frame_rate_info_flag[{i}]", 1, this.frame_rate_info_flag[i]); 
+			boxSize += tracer.Field($"bit_rate_info_flag[{i}]", 1, this.bit_rate_info_flag[i]); 
 
 			if (frame_rate_info_flag[i])
 			{
-				boxSize += builder.Field($"avgFrameRate[{i}]", 16, this.avgFrameRate[i]); 
-				boxSize += builder.Field($"reserved00[{i}]", 6, this.reserved00[i]); 
-				boxSize += builder.Field($"constantFrameRate[{i}]", 2, this.constantFrameRate[i]); 
+				boxSize += tracer.Field($"avgFrameRate[{i}]", 16, this.avgFrameRate[i]); 
+				boxSize += tracer.Field($"reserved00[{i}]", 6, this.reserved00[i]); 
+				boxSize += tracer.Field($"constantFrameRate[{i}]", 2, this.constantFrameRate[i]); 
 			}
 
 			if (bit_rate_info_flag[i])
 			{
-				boxSize += builder.Field($"maxBitRate[{i}]", 32, this.maxBitRate[i]); 
-				boxSize += builder.Field($"avgBitRate[{i}]", 32, this.avgBitRate[i]); 
+				boxSize += tracer.Field($"maxBitRate[{i}]", 32, this.maxBitRate[i]); 
+				boxSize += tracer.Field($"avgBitRate[{i}]", 32, this.avgBitRate[i]); 
 			}
 		}
-		boxSize += builder.Field("max_layer_count", 8, this.max_layer_count); 
+		boxSize += tracer.Field("max_layer_count", 8, this.max_layer_count); 
 
 		for (int i=0; i<max_layer_count; i++)
 		{
-			boxSize += builder.Field($"dependent_layerID[{i}]", 8, this.dependent_layerID[i]); 
-			boxSize += builder.Field($"num_layers_dependent_on[{i}]", 8, this.num_layers_dependent_on[i]); 
+			boxSize += tracer.Field($"dependent_layerID[{i}]", 8, this.dependent_layerID[i]); 
+			boxSize += tracer.Field($"num_layers_dependent_on[{i}]", 8, this.num_layers_dependent_on[i]); 
 
 			for (int j=0; j<num_layers_dependent_on[i]; j++)
 			{
-				boxSize += builder.Field($"dependent_on_layerID[{i}][{j}]", 8, this.dependent_on_layerID[i][j]); 
+				boxSize += tracer.Field($"dependent_on_layerID[{i}][{j}]", 8, this.dependent_on_layerID[i][j]); 
 			}
 
 			for (int j=0; j<16; j++)
@@ -526,7 +583,7 @@ public partial class OperatingPointsRecord : IMp4Serializable
 
 				if ((scalability_mask >> j) % 2 == 1)
 				{
-					boxSize += builder.Field($"dimension_identifier[{i}][{j}]", 8, this.dimension_identifier[i][j]); 
+					boxSize += tracer.Field($"dimension_identifier[{i}][{j}]", 8, this.dimension_identifier[i][j]); 
 				}
 			}
 		}

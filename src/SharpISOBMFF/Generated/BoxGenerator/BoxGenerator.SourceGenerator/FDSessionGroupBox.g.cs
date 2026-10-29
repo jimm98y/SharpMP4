@@ -22,6 +22,20 @@ aligned(8) class FDSessionGroupBox extends Box('segr') {
 */
 public partial class FDSessionGroupBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class FDSessionGroupBox extends Box('segr') {
+	unsigned int(16)	num_session_groups;
+	for(i=0; i < num_session_groups; i++) {
+		unsigned int(8)	entry_count;
+		for (j=0; j < entry_count; j++) {
+			unsigned int(32)	group_ID;
+		}
+		unsigned int(16) num_channels_in_session_group;
+		for(k=0; k < num_channels_in_session_group; k++) {
+			unsigned int(32) hint_track_ID;
+		}
+	}
+}"; } }
 	public const string TYPE = "segr";
 	public override string DisplayName { get { return "FDSessionGroupBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -125,25 +139,25 @@ public partial class FDSessionGroupBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("num_session_groups", 16, this.num_session_groups); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("num_session_groups", 16, this.num_session_groups); 
 
 		for (int i=0; i < num_session_groups; i++)
 		{
-			boxSize += builder.Field($"entry_count[{i}]", 8, this.entry_count[i]); 
+			boxSize += tracer.Field($"entry_count[{i}]", 8, this.entry_count[i]); 
 
 			for (int j=0; j < entry_count[i]; j++)
 			{
-				boxSize += builder.Field($"group_ID[{i}][{j}]", 32, this.group_ID[i][j]); 
+				boxSize += tracer.Field($"group_ID[{i}][{j}]", 32, this.group_ID[i][j]); 
 			}
-			boxSize += builder.Field($"num_channels_in_session_group[{i}]", 16, this.num_channels_in_session_group[i]); 
+			boxSize += tracer.Field($"num_channels_in_session_group[{i}]", 16, this.num_channels_in_session_group[i]); 
 
 			for (int k=0; k < num_channels_in_session_group[i]; k++)
 			{
-				boxSize += builder.Field($"hint_track_ID[{i}][{k}]", 32, this.hint_track_ID[i][k]); 
+				boxSize += tracer.Field($"hint_track_ID[{i}][{k}]", 32, this.hint_track_ID[i][k]); 
 			}
 		}
 		return boxSize;

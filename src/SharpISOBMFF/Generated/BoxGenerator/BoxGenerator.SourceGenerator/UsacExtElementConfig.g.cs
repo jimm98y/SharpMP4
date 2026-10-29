@@ -27,6 +27,20 @@ public partial class UsacExtElementConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class UsacExtElementConfig()
+{
+  EscapedValue(4, 8, 16) usacExtElementType;
+  EscapedValue(4, 8, 16) usacExtElementConfigLength;
+  bslbf(1) usacExtElementDefaultLengthPresent;
+  if (usacExtElementDefaultLengthPresent) {
+    EscapedValue(8, 16, 0) usacExtElementDefaultLength;
+  }
+  bslbf(1) usacExtElementPayloadFrag;
+  bslbf(8) usacExtElementConfigData[usacExtElementConfigLength];
+}
+
+"; } }
 	public virtual string DisplayName { get { return "UsacExtElementConfig"; } }
 
 	protected EscapedValue usacExtElementType; 
@@ -44,7 +58,7 @@ public partial class UsacExtElementConfig : IMp4Serializable
 	protected bool usacExtElementPayloadFrag; 
 	public bool UsacExtElementPayloadFrag { get { return this.usacExtElementPayloadFrag; } set { this.usacExtElementPayloadFrag = value; } }
 
-	protected byte[] usacExtElementConfigData; 
+	protected byte[] usacExtElementConfigData = []; 
 	public byte[] UsacExtElementConfigData { get { return this.usacExtElementConfigData; } set { this.usacExtElementConfigData = value; } }
 
 	public UsacExtElementConfig(): base()
@@ -99,19 +113,19 @@ public partial class UsacExtElementConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("usacExtElementType", IsoStream.CalculateClassSize(usacExtElementType), this.usacExtElementType); 
-		boxSize += builder.Field("usacExtElementConfigLength", IsoStream.CalculateClassSize(usacExtElementConfigLength), this.usacExtElementConfigLength); 
-		boxSize += builder.Field("usacExtElementDefaultLengthPresent", 1, this.usacExtElementDefaultLengthPresent); 
+		boxSize += tracer.Field("usacExtElementType", IsoStream.CalculateClassSize(usacExtElementType), this.usacExtElementType); 
+		boxSize += tracer.Field("usacExtElementConfigLength", IsoStream.CalculateClassSize(usacExtElementConfigLength), this.usacExtElementConfigLength); 
+		boxSize += tracer.Field("usacExtElementDefaultLengthPresent", 1, this.usacExtElementDefaultLengthPresent); 
 
 		if (usacExtElementDefaultLengthPresent)
 		{
-			boxSize += builder.Field("usacExtElementDefaultLength", IsoStream.CalculateClassSize(usacExtElementDefaultLength), this.usacExtElementDefaultLength); 
+			boxSize += tracer.Field("usacExtElementDefaultLength", IsoStream.CalculateClassSize(usacExtElementDefaultLength), this.usacExtElementDefaultLength); 
 		}
-		boxSize += builder.Field("usacExtElementPayloadFrag", 1, this.usacExtElementPayloadFrag); 
-		boxSize += builder.Field("usacExtElementConfigData", ((ulong)(usacExtElementConfigLength) * 8), this.usacExtElementConfigData); 
+		boxSize += tracer.Field("usacExtElementPayloadFrag", 1, this.usacExtElementPayloadFrag); 
+		boxSize += tracer.Field("usacExtElementConfigData", ((ulong)(usacExtElementConfigLength) * 8), this.usacExtElementConfigData); 
 		return boxSize;
 	}
 }

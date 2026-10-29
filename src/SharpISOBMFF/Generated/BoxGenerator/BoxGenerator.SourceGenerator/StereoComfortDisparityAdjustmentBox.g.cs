@@ -13,6 +13,11 @@ int(32) disparity_adjustment;
 */
 public partial class StereoComfortDisparityAdjustmentBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class StereoComfortDisparityAdjustmentBox extends 
+FullBox('dadj') { 
+int(32) disparity_adjustment; 
+} "; } }
 	public const string TYPE = "dadj";
 	public override string DisplayName { get { return "StereoComfortDisparityAdjustmentBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +55,11 @@ public partial class StereoComfortDisparityAdjustmentBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("disparity_adjustment", 32, this.disparity_adjustment); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("disparity_adjustment", 32, this.disparity_adjustment); 
 		return boxSize;
 	}
 }

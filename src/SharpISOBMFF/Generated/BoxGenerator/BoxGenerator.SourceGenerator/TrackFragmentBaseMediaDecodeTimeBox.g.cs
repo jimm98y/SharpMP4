@@ -17,6 +17,15 @@ aligned(8) class TrackFragmentBaseMediaDecodeTimeBox
 */
 public partial class TrackFragmentBaseMediaDecodeTimeBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TrackFragmentBaseMediaDecodeTimeBox
+	extends FullBox('tfdt', version, 0) {
+	if (version==1) {
+		unsigned int(64) baseMediaDecodeTime;
+	} else { // version==0
+		unsigned int(32) baseMediaDecodeTime;
+	}
+}"; } }
 	public const string TYPE = "tfdt";
 	public override string DisplayName { get { return "TrackFragmentBaseMediaDecodeTimeBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -84,20 +93,20 @@ public partial class TrackFragmentBaseMediaDecodeTimeBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if (version==1)
 		{
-			boxSize += builder.Field("baseMediaDecodeTime", 64, this.baseMediaDecodeTime); 
+			boxSize += tracer.Field("baseMediaDecodeTime", 64, this.baseMediaDecodeTime); 
 		}
 
 		else 
 		{
 			/*  version==0 */
-			boxSize += builder.Field("baseMediaDecodeTime", 32, this.baseMediaDecodeTime); 
+			boxSize += tracer.Field("baseMediaDecodeTime", 32, this.baseMediaDecodeTime); 
 		}
 		return boxSize;
 	}

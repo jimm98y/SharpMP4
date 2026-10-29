@@ -15,6 +15,13 @@ aligned(8) class CanonTimedMetadataSampleEntry() extends SampleEntry('CTMD') {
 */
 public partial class CanonTimedMetadataSampleEntry : SampleEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// Canon.pm, CTMD: a CR3's timed metadata; its entry lists the type and size of each record
+aligned(8) class CanonTimedMetadataSampleEntry() extends SampleEntry('CTMD') {
+ unsigned int(32) recordCount;
+ CanonCTMDRecordType recordTypes[recordCount];
+}
+"; } }
 	public const string TYPE = "CTMD";
 	public override string DisplayName { get { return "CanonTimedMetadataSampleEntry"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -24,7 +31,7 @@ public partial class CanonTimedMetadataSampleEntry : SampleEntry
 	protected uint recordCount; 
 	public uint RecordCount { get { return this.recordCount; } set { this.recordCount = value; } }
 
-	protected CanonCTMDRecordType[] recordTypes; 
+	protected CanonCTMDRecordType[] recordTypes = []; 
 	public CanonCTMDRecordType[] RecordTypes { get { return this.recordTypes; } set { this.recordTypes = value; } }
 
 	public CanonTimedMetadataSampleEntry(): base(IsoStream.FromFourCC("CTMD"))
@@ -58,12 +65,12 @@ public partial class CanonTimedMetadataSampleEntry : SampleEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("recordCount", 32, this.recordCount); 
-		boxSize += builder.Field("recordTypes", IsoStream.CalculateClassSize(recordTypes), this.recordTypes); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("recordCount", 32, this.recordCount); 
+		boxSize += tracer.Field("recordTypes", IsoStream.CalculateClassSize(recordTypes), this.recordTypes); 
 		return boxSize;
 	}
 }

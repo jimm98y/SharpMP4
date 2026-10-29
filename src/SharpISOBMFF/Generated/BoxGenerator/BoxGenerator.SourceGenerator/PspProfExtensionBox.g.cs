@@ -14,6 +14,12 @@ aligned(8) class PspProfExtensionBox() extends Box('uuid 50524f4621d24fcebb88695
 */
 public partial class PspProfExtensionBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class PspProfExtensionBox() extends Box('uuid 50524f4621d24fcebb88695cfac9c740') {
+	 unsigned int(32) unknown1;
+ unsigned int(32) entry_count;
+ Box boxes[];
+ }"; } }
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "PspProfExtensionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -63,14 +69,14 @@ public partial class PspProfExtensionBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("unknown1", 32, this.unknown1); 
-		boxSize += builder.Field("entry_count", 32, this.entry_count); 
-		// boxSize += builder.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("unknown1", 32, this.unknown1); 
+		boxSize += tracer.Field("entry_count", 32, this.entry_count); 
+		// boxSize += tracer.Field("boxes", IsoStream.CalculateBoxSize(boxes), this.boxes); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

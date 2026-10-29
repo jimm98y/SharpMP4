@@ -288,6 +288,9 @@ namespace Sharp{type}
 {aomClass.Syntax.Replace("*/", "*//*")}
     */
 ";
+            // the syntax the method reads, as the specification gives it: a property of the context, of the method's name
+            resultCode += $"\r\n        /// <summary>The syntax of {aomClass.MethodName}, as the specification gives it.</summary>\r\n" +
+                $"        public string {aomClass.MethodName.ToPropertyCase()}Syntax {{ get {{ return @\"{aomClass.Syntax.Replace("\"", "\"\"")}\"; }} }}\r\n";
             resultCode += GenerateFields(aomClass);
             RecordStructure(aomClass);
 

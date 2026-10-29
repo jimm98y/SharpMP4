@@ -16,6 +16,14 @@ aligned(8) class MovieExtendsHeaderBox extends FullBox('mehd', version, 0) {
 */
 public partial class MovieExtendsHeaderBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MovieExtendsHeaderBox extends FullBox('mehd', version, 0) {
+	if (version==1) {
+		unsigned int(64)	fragment_duration;
+	} else { // version==0
+		unsigned int(32)	fragment_duration;
+	}
+}"; } }
 	public const string TYPE = "mehd";
 	public override string DisplayName { get { return "MovieExtendsHeaderBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -83,20 +91,20 @@ public partial class MovieExtendsHeaderBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 
 		if (version==1)
 		{
-			boxSize += builder.Field("fragment_duration", 64, this.fragment_duration); 
+			boxSize += tracer.Field("fragment_duration", 64, this.fragment_duration); 
 		}
 
 		else 
 		{
 			/*  version==0 */
-			boxSize += builder.Field("fragment_duration", 32, this.fragment_duration); 
+			boxSize += tracer.Field("fragment_duration", 32, this.fragment_duration); 
 		}
 		return boxSize;
 	}

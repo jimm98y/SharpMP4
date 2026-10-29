@@ -14,13 +14,19 @@ aligned(8) class MetaDataSetupBox extends Box('setu') { // 'init' instead?
 */
 public partial class MetaDataSetupBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MetaDataSetupBox extends Box('setu') { // 'init' instead?
+ bit(8) data[]; // as the key's namespace has it
+}
+
+"; } }
 	public const string TYPE = "setu";
 	public override string DisplayName { get { return "MetaDataSetupBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
 
 
-	protected byte[] data;  //  as the key's namespace has it
+	protected byte[] data = [];  //  as the key's namespace has it
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public MetaDataSetupBox(): base(IsoStream.FromFourCC("setu"))
@@ -57,13 +63,13 @@ public partial class MetaDataSetupBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		/*  'init' instead? */
-		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); // as the key's namespace has it
-		boxSize += builder.Children(this);
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); // as the key's namespace has it
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

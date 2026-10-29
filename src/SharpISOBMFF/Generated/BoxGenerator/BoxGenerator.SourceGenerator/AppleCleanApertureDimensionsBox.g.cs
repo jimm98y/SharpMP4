@@ -13,6 +13,11 @@ aligned(8) class AppleCleanApertureDimensionsBox() extends FullBox('clef') {
 */
 public partial class AppleCleanApertureDimensionsBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class AppleCleanApertureDimensionsBox() extends FullBox('clef') {
+ unsigned int(32) width;
+ unsigned int(32) height;
+ } "; } }
 	public const string TYPE = "clef";
 	public override string DisplayName { get { return "AppleCleanApertureDimensionsBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -56,12 +61,12 @@ public partial class AppleCleanApertureDimensionsBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("width", 32, this.width); 
-		boxSize += builder.Field("height", 32, this.height); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("width", 32, this.width); 
+		boxSize += tracer.Field("height", 32, this.height); 
 		return boxSize;
 	}
 }

@@ -18,6 +18,16 @@ BEFloat32 calibration_limit_radial_angle;
 */
 public partial class CameraSystemLensDistortionsBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class CameraSystemLensDistortionsBox extends FullBox('ldst', version = 0, flags) { 
+BEFloat32 k1; // radial parameter k1 
+BEFloat32 k2; // radial parameter k2 
+BEFloat32 p1; // tangential parameter p1 
+BEFloat32 p2; // tangential parameter p2 
+if (flags & 1) { 
+BEFloat32 calibration_limit_radial_angle; 
+} 
+}"; } }
 	public const string TYPE = "ldst";
 	public override string DisplayName { get { return "CameraSystemLensDistortionsBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -91,18 +101,18 @@ public partial class CameraSystemLensDistortionsBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("k1", 32, this.k1); // radial parameter k1 
-		boxSize += builder.Field("k2", 32, this.k2); // radial parameter k2 
-		boxSize += builder.Field("p1", 32, this.p1); // tangential parameter p1 
-		boxSize += builder.Field("p2", 32, this.p2); // tangential parameter p2 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("k1", 32, this.k1); // radial parameter k1 
+		boxSize += tracer.Field("k2", 32, this.k2); // radial parameter k2 
+		boxSize += tracer.Field("p1", 32, this.p1); // tangential parameter p1 
+		boxSize += tracer.Field("p2", 32, this.p2); // tangential parameter p2 
 
 		if ((flags  &  1) ==  1)
 		{
-			boxSize += builder.Field("calibration_limit_radial_angle", 32, this.calibration_limit_radial_angle); 
+			boxSize += tracer.Field("calibration_limit_radial_angle", 32, this.calibration_limit_radial_angle); 
 		}
 		return boxSize;
 	}

@@ -21,6 +21,14 @@ public partial class DSTSpecificConfig : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class DSTSpecificConfig(channelConfiguration) {
+  uimsbf(1) DSDDST_Coded;
+  uimsbf(14) N_Channels;
+  uimsbf(1) reserved;
+}
+
+"; } }
 	public virtual string DisplayName { get { return "DSTSpecificConfig"; } }
 
 	protected bool DSDDST_Coded; 
@@ -63,12 +71,12 @@ public partial class DSTSpecificConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("DSDDST_Coded", 1, this.DSDDST_Coded); 
-		boxSize += builder.Field("N_Channels", 14, this.N_Channels); 
-		boxSize += builder.Field("reserved", 1, this.reserved); 
+		boxSize += tracer.Field("DSDDST_Coded", 1, this.DSDDST_Coded); 
+		boxSize += tracer.Field("N_Channels", 14, this.N_Channels); 
+		boxSize += tracer.Field("reserved", 1, this.reserved); 
 		return boxSize;
 	}
 }

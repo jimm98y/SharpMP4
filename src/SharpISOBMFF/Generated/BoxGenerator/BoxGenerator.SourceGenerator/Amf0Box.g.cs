@@ -13,13 +13,18 @@ aligned(8) class Amf0Box() extends Box('amf0') {
 */
 public partial class Amf0Box : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// of no layout known: its bytes
+aligned(8) class Amf0Box() extends Box('amf0') {
+ bit(8) data[];
+ }"; } }
 	public const string TYPE = "amf0";
 	public override string DisplayName { get { return "Amf0Box"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("*"); }
 
 
-	protected byte[] data; 
+	protected byte[] data = []; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public Amf0Box(): base(IsoStream.FromFourCC("amf0"))
@@ -50,11 +55,11 @@ public partial class Amf0Box : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

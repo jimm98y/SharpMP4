@@ -20,6 +20,18 @@ aligned(8) class OpusSpecificBox extends Box('dOps'){
 */
 public partial class OpusSpecificBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class OpusSpecificBox extends Box('dOps'){
+ unsigned int(8) Version;
+ unsigned int(8) OutputChannelCount;
+ unsigned int(16) PreSkip;
+ unsigned int(32) InputSampleRate;
+ signed int(16) OutputGain;
+ unsigned int(8) ChannelMappingFamily;
+ if (ChannelMappingFamily != 0) {
+ ChannelMappingTable(OutputChannelCount);
+ }
+ }"; } }
 	public const string TYPE = "dOps";
 	public override string DisplayName { get { return "OpusSpecificBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -105,20 +117,20 @@ public partial class OpusSpecificBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("Version", 8, this.Version); 
-		boxSize += builder.Field("OutputChannelCount", 8, this.OutputChannelCount); 
-		boxSize += builder.Field("PreSkip", 16, this.PreSkip); 
-		boxSize += builder.Field("InputSampleRate", 32, this.InputSampleRate); 
-		boxSize += builder.Field("OutputGain", 16, this.OutputGain); 
-		boxSize += builder.Field("ChannelMappingFamily", 8, this.ChannelMappingFamily); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("Version", 8, this.Version); 
+		boxSize += tracer.Field("OutputChannelCount", 8, this.OutputChannelCount); 
+		boxSize += tracer.Field("PreSkip", 16, this.PreSkip); 
+		boxSize += tracer.Field("InputSampleRate", 32, this.InputSampleRate); 
+		boxSize += tracer.Field("OutputGain", 16, this.OutputGain); 
+		boxSize += tracer.Field("ChannelMappingFamily", 8, this.ChannelMappingFamily); 
 
 		if (ChannelMappingFamily != 0)
 		{
-			boxSize += builder.Field("ChannelMappingTable", IsoStream.CalculateClassSize(ChannelMappingTable), this.ChannelMappingTable); 
+			boxSize += tracer.Field("ChannelMappingTable", IsoStream.CalculateClassSize(ChannelMappingTable), this.ChannelMappingTable); 
 		}
 		return boxSize;
 	}

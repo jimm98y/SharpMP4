@@ -13,6 +13,11 @@ aligned(8) class IpirBox() extends Box('ipir') {
 */
 public partial class IpirBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class IpirBox() extends Box('ipir') {
+	 unsigned int(32) entry_count;
+ unsigned int(32) trackIDs[ entry_count ];
+ } "; } }
 	public const string TYPE = "ipir";
 	public override string DisplayName { get { return "IpirBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -22,7 +27,7 @@ public partial class IpirBox : Box
 	protected uint entry_count; 
 	public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
 
-	protected uint[] trackIDs; 
+	protected uint[] trackIDs = []; 
 	public uint[] TrackIDs { get { return this.trackIDs; } set { this.trackIDs = value; } }
 
 	public IpirBox(): base(IsoStream.FromFourCC("ipir"))
@@ -56,12 +61,12 @@ public partial class IpirBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entry_count", 32, this.entry_count); 
-		boxSize += builder.Field("trackIDs", ((ulong)( entry_count ) * 32), this.trackIDs); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entry_count", 32, this.entry_count); 
+		boxSize += tracer.Field("trackIDs", ((ulong)( entry_count ) * 32), this.trackIDs); 
 		return boxSize;
 	}
 }

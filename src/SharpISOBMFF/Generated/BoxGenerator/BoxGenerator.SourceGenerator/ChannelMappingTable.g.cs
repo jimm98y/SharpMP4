@@ -21,6 +21,14 @@ public partial class ChannelMappingTable : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class ChannelMappingTable (unsigned int(8) OutputChannelCount){
+ unsigned int(8) StreamCount;
+ unsigned int(8) CoupledCount;
+ unsigned int(8 * OutputChannelCount) ChannelMapping;
+ }
+
+ "; } }
 	public virtual string DisplayName { get { return "ChannelMappingTable"; } }
 
 	protected byte StreamCount; 
@@ -29,7 +37,7 @@ public partial class ChannelMappingTable : IMp4Serializable
 	protected byte CoupledCount; 
 	public byte _CoupledCount { get { return this.CoupledCount; } set { this.CoupledCount = value; } }
 
-	protected byte[] ChannelMapping; 
+	protected byte[] ChannelMapping = []; 
 	public byte[] _ChannelMapping { get { return this.ChannelMapping; } set { this.ChannelMapping = value; } }
 
 	protected byte OutputChannelCount; 
@@ -67,12 +75,12 @@ public partial class ChannelMappingTable : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("StreamCount", 8, this.StreamCount); 
-		boxSize += builder.Field("CoupledCount", 8, this.CoupledCount); 
-		boxSize += builder.Field("ChannelMapping", (ulong)(8 * OutputChannelCount ), this.ChannelMapping); 
+		boxSize += tracer.Field("StreamCount", 8, this.StreamCount); 
+		boxSize += tracer.Field("CoupledCount", 8, this.CoupledCount); 
+		boxSize += tracer.Field("ChannelMapping", (ulong)(8 * OutputChannelCount ), this.ChannelMapping); 
 		return boxSize;
 	}
 }

@@ -18,6 +18,16 @@ aligned(8) class HrefBox() extends Box('href') {
 */
 public partial class HrefBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// 3GPP TS 26.245 5.17.3.13, HyperTextBox: a modifier of a timed text sample - after its text, not in the box tree - making a run of its characters a link
+aligned(8) class HrefBox() extends Box('href') {
+ unsigned int(16) startcharoffset;
+ unsigned int(16) endcharoffset;
+ unsigned int(8) urlLength;
+ unsigned int(8) url[urlLength];
+ unsigned int(8) altLength;
+ unsigned int(8) altstring[altLength];
+}"; } }
 	public const string TYPE = "href";
 	public override string DisplayName { get { return "HrefBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -33,13 +43,13 @@ public partial class HrefBox : Box
 	protected byte urlLength; 
 	public byte UrlLength { get { return this.urlLength; } set { this.urlLength = value; } }
 
-	protected byte[] url; 
+	protected byte[] url = []; 
 	public byte[] Url { get { return this.url; } set { this.url = value; } }
 
 	protected byte altLength; 
 	public byte AltLength { get { return this.altLength; } set { this.altLength = value; } }
 
-	protected byte[] altstring; 
+	protected byte[] altstring = []; 
 	public byte[] Altstring { get { return this.altstring; } set { this.altstring = value; } }
 
 	public HrefBox(): base(IsoStream.FromFourCC("href"))
@@ -85,16 +95,16 @@ public partial class HrefBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("startcharoffset", 16, this.startcharoffset); 
-		boxSize += builder.Field("endcharoffset", 16, this.endcharoffset); 
-		boxSize += builder.Field("urlLength", 8, this.urlLength); 
-		boxSize += builder.Field("url", ((ulong)(urlLength) * 8), this.url); 
-		boxSize += builder.Field("altLength", 8, this.altLength); 
-		boxSize += builder.Field("altstring", ((ulong)(altLength) * 8), this.altstring); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("startcharoffset", 16, this.startcharoffset); 
+		boxSize += tracer.Field("endcharoffset", 16, this.endcharoffset); 
+		boxSize += tracer.Field("urlLength", 8, this.urlLength); 
+		boxSize += tracer.Field("url", ((ulong)(urlLength) * 8), this.url); 
+		boxSize += tracer.Field("altLength", 8, this.altLength); 
+		boxSize += tracer.Field("altstring", ((ulong)(altLength) * 8), this.altstring); 
 		return boxSize;
 	}
 }

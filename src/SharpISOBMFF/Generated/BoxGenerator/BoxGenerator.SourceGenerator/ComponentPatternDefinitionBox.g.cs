@@ -18,6 +18,16 @@ aligned(8) class ComponentPatternDefinitionBox() extends FullBox('cpat') {
 */
 public partial class ComponentPatternDefinitionBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// ISO/IEC 23001-17 component pattern, as of a Bayer filter: of each cell of the pattern, its component and gain
+aligned(8) class ComponentPatternDefinitionBox() extends FullBox('cpat') {
+	 unsigned int(16) pattern_width;
+ unsigned int(16) pattern_height;
+ for (i = 0; i < pattern_width * pattern_height; i++) {
+ unsigned int(32) component_index;
+ float(32) component_gain;
+ }
+ } "; } }
 	public const string TYPE = "cpat";
 	public override string DisplayName { get { return "ComponentPatternDefinitionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -87,17 +97,17 @@ public partial class ComponentPatternDefinitionBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("pattern_width", 16, this.pattern_width); 
-		boxSize += builder.Field("pattern_height", 16, this.pattern_height); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("pattern_width", 16, this.pattern_width); 
+		boxSize += tracer.Field("pattern_height", 16, this.pattern_height); 
 
 		for (int i = 0; i < pattern_width * pattern_height; i++)
 		{
-			boxSize += builder.Field($"component_index[{i}]", 32, this.component_index[i]); 
-			boxSize += builder.Field($"component_gain[{i}]", 32, this.component_gain[i]); 
+			boxSize += tracer.Field($"component_index[{i}]", 32, this.component_index[i]); 
+			boxSize += tracer.Field($"component_gain[{i}]", 32, this.component_gain[i]); 
 		}
 		return boxSize;
 	}

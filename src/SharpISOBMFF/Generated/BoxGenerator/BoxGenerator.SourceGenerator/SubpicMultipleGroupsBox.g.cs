@@ -25,6 +25,23 @@ aligned(8) class SubpicMultipleGroupsBox extends EntityToGroupBox('amgl',0,0)
 */
 public partial class SubpicMultipleGroupsBox : EntityToGroupBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class SubpicMultipleGroupsBox extends EntityToGroupBox('amgl',0,0)
+{
+	unsigned int(1) level_is_present_flag;
+	unsigned int(1) level_is_static_flag;
+	bit(7) reserved = 0;
+	if( level_is_present_flag )
+		unsigned int(8) level_idc;
+	if( level_is_static_flag == 0 )
+		unsigned_int(32) level_info_entity_idx;
+	unsigned int(16) num_subgroup_ids;
+	subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8;
+	for (i = 0; i < num_entities_in_group; i++)
+		unsigned int(subgroupIdLen) track_subgroup_id[i];
+	for (i = 0; i < num_subgroup_ids; i++)
+		unsigned int(16) num_active_tracks[i];
+}"; } }
 	public const string TYPE = "amgl";
 	public override string DisplayName { get { return "SubpicMultipleGroupsBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -157,34 +174,34 @@ public partial class SubpicMultipleGroupsBox : EntityToGroupBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("level_is_present_flag", 1, this.level_is_present_flag); 
-		boxSize += builder.Field("level_is_static_flag", 1, this.level_is_static_flag); 
-		boxSize += builder.Field("reserved", 7, this.reserved); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("level_is_present_flag", 1, this.level_is_present_flag); 
+		boxSize += tracer.Field("level_is_static_flag", 1, this.level_is_static_flag); 
+		boxSize += tracer.Field("reserved", 7, this.reserved); 
 
 		if ( level_is_present_flag )
 		{
-			boxSize += builder.Field("level_idc", 8, this.level_idc); 
+			boxSize += tracer.Field("level_idc", 8, this.level_idc); 
 		}
 
 		if ( level_is_static_flag == false )
 		{
-			boxSize += builder.Field("level_info_entity_idx", 32, this.level_info_entity_idx); 
+			boxSize += tracer.Field("level_info_entity_idx", 32, this.level_info_entity_idx); 
 		}
-		boxSize += builder.Field("num_subgroup_ids", 16, this.num_subgroup_ids); 
+		boxSize += tracer.Field("num_subgroup_ids", 16, this.num_subgroup_ids); 
 		ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8);
 
 		for (int i = 0; i < num_entities_in_group; i++)
 		{
-			boxSize += builder.Field($"track_subgroup_id[{i}]", (ulong)(subgroupIdLen ), this.track_subgroup_id[i]); 
+			boxSize += tracer.Field($"track_subgroup_id[{i}]", (ulong)(subgroupIdLen ), this.track_subgroup_id[i]); 
 		}
 
 		for (int i = 0; i < num_subgroup_ids; i++)
 		{
-			boxSize += builder.Field($"num_active_tracks[{i}]", 16, this.num_active_tracks[i]); 
+			boxSize += tracer.Field($"num_active_tracks[{i}]", 16, this.num_active_tracks[i]); 
 		}
 		return boxSize;
 	}

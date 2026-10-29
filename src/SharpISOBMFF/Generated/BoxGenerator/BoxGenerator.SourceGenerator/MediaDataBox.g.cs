@@ -12,13 +12,17 @@ aligned(8) class MediaDataBox extends Box('mdat') {
 */
 public partial class MediaDataBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class MediaDataBox extends Box('mdat') {
+	bit(8) data[];
+}"; } }
 	public const string TYPE = "mdat";
 	public override string DisplayName { get { return "MediaDataBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("file"); }
 
 
-	protected StreamMarker data; 
+	protected StreamMarker data = new StreamMarker(0, 0, null); 
 	public StreamMarker Data { get { return this.data; } set { this.data = value; } }
 
 	public MediaDataBox(): base(IsoStream.FromFourCC("mdat"))
@@ -49,11 +53,11 @@ public partial class MediaDataBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

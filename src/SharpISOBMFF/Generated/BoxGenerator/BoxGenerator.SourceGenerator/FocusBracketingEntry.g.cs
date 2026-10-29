@@ -14,6 +14,12 @@ extends VisualSampleGroupEntry('fobr') {
 */
 public partial class FocusBracketingEntry : VisualSampleGroupEntry
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class FocusBracketingEntry
+extends VisualSampleGroupEntry('fobr') {
+	unsigned int(16) focus_distance_numerator;
+	unsigned int(16) focus_distance_denominator;
+}"; } }
 	public const string TYPE = "fobr";
 	public override string DisplayName { get { return "FocusBracketingEntry"; } }
 
@@ -54,12 +60,12 @@ public partial class FocusBracketingEntry : VisualSampleGroupEntry
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("focus_distance_numerator", 16, this.focus_distance_numerator); 
-		boxSize += builder.Field("focus_distance_denominator", 16, this.focus_distance_denominator); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("focus_distance_numerator", 16, this.focus_distance_numerator); 
+		boxSize += tracer.Field("focus_distance_denominator", 16, this.focus_distance_denominator); 
 		return boxSize;
 	}
 }

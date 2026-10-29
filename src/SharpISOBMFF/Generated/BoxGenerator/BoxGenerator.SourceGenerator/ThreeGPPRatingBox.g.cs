@@ -16,6 +16,14 @@ aligned(8) class ThreeGPPRatingBox() extends FullBox('rtng', version = 0, 0) {
 */
 public partial class ThreeGPPRatingBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class ThreeGPPRatingBox() extends FullBox('rtng', version = 0, 0) {
+	unsigned int(32) rating_entity;
+	unsigned int(32) rating_criteria;
+	bit(1) pad = 0;
+ unsigned int(5)[3] language;
+	string rating_info;
+} "; } }
 	public const string TYPE = "rtng";
 	public override string DisplayName { get { return "ThreeGPPRatingBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -31,7 +39,7 @@ public partial class ThreeGPPRatingBox : FullBox
 	protected bool pad = false; 
 	public bool Pad { get { return this.pad; } set { this.pad = value; } }
 
-	protected string language; 
+	protected string language = "und"; 
 	public string Language { get { return this.language; } set { this.language = value; } }
 
 	protected BinaryUTF8String rating_info; 
@@ -77,15 +85,15 @@ public partial class ThreeGPPRatingBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("rating_entity", 32, this.rating_entity); 
-		boxSize += builder.Field("rating_criteria", 32, this.rating_criteria); 
-		boxSize += builder.Field("pad", 1, this.pad); 
-		boxSize += builder.Field("language", 15, this.language); 
-		boxSize += builder.Field("rating_info", IsoStream.CalculateStringSize(rating_info), this.rating_info); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("rating_entity", 32, this.rating_entity); 
+		boxSize += tracer.Field("rating_criteria", 32, this.rating_criteria); 
+		boxSize += tracer.Field("pad", 1, this.pad); 
+		boxSize += tracer.Field("language", 15, this.language); 
+		boxSize += tracer.Field("rating_info", IsoStream.CalculateStringSize(rating_info), this.rating_info); 
 		return boxSize;
 	}
 }

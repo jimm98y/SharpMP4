@@ -21,6 +21,9 @@ namespace SharpH26X
         public IMp4Logger Logger { get; set; }
         public RbspBitstream Bitstream { get; set; }
 
+        /// <summary>Of each syntax element and class read or written, where it is in the RBSP - or null, nothing.</summary>
+        public IItuTracer Tracer { get; set; }
+
         public ItuStream(RbspBitstream bitstream, IMp4Logger logger)
         {
             this._stream = bitstream.BaseStream;
@@ -175,10 +178,13 @@ namespace SharpH26X
         public ulong ReadClass<T>(ulong size, IItuContext context, T value, string name) where T : IItuSerializable
         {
             LogBegin(name);
+            this.Tracer?.OnBeginClass(name, value, (ulong)this.Bitstream.BitsPosition);
 
             _logLevel++;
             ulong ret = value.Read(context, this);
             _logLevel--;
+
+            this.Tracer?.OnEndClass(name, value, (ulong)this.Bitstream.BitsPosition);
 
             LogEnd(name, ret, value);
 
@@ -754,6 +760,10 @@ namespace SharpH26X
         {
             if (string.IsNullOrEmpty(name))
                 return;
+
+            // a class's end the tracer is told of by ReadClass, around its elements
+            if (this.Tracer != null && !(value is IItuSerializable))
+                this.Tracer.OnField(name, (ulong)this.Bitstream.BitsPosition, size, value);
 
             if (this.Logger == null || !this.Logger.IsInfoEnabled)
                 return;

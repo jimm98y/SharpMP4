@@ -16,6 +16,14 @@ aligned(8) class PiffTrackEncryptionBox() extends FullBox('uuid 8974dbce7be74c51
 */
 public partial class PiffTrackEncryptionBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class PiffTrackEncryptionBox() extends FullBox('uuid 8974dbce7be74c5184f97148f9882554', version, flags) 
+{
+ unsigned int(24) algorithmID;
+ unsigned int(8) Per_Sample_IV_Size;
+ unsigned int(8) kid[16];
+ }
+"; } }
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "PiffTrackEncryptionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -28,7 +36,7 @@ public partial class PiffTrackEncryptionBox : FullBox
 	protected byte Per_Sample_IV_Size; 
 	public byte PerSampleIVSize { get { return this.Per_Sample_IV_Size; } set { this.Per_Sample_IV_Size = value; } }
 
-	protected byte[] kid; 
+	protected byte[] kid = new byte[16]; 
 	public byte[] Kid { get { return this.kid; } set { this.kid = value; } }
 
 	public PiffTrackEncryptionBox(byte version = 0, uint flags = 0): base(IsoStream.FromFourCC("uuid"), version, flags)
@@ -66,13 +74,13 @@ public partial class PiffTrackEncryptionBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("algorithmID", 24, this.algorithmID); 
-		boxSize += builder.Field("Per_Sample_IV_Size", 8, this.Per_Sample_IV_Size); 
-		boxSize += builder.Field("kid", 16 * 8, this.kid); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("algorithmID", 24, this.algorithmID); 
+		boxSize += tracer.Field("Per_Sample_IV_Size", 8, this.Per_Sample_IV_Size); 
+		boxSize += tracer.Field("kid", 16 * 8, this.kid); 
 		return boxSize;
 	}
 }

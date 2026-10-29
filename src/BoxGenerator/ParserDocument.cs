@@ -787,7 +787,7 @@ namespace BoxGenerator
         Read,
         Write,
         Size,
-        // ToString(BoxStringBuilder): each field as it is now, of the size it is written of
+        // Trace(BoxTracer): each field as it is now, of the size it is written of
         Describe
     }
 

@@ -26,6 +26,19 @@ public partial class UsacConfigExtension : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class UsacConfigExtension()
+{
+  EscapedValue(2, 4, 8) numConfigExtensionsMinusOne;
+  for (i = 0; i < numConfigExtensionsMinusOne + 1; i++) {
+    EscapedValue(4, 8, 16) usacConfigExtType;
+    EscapedValue(4, 8, 16) usacConfigExtLength;
+    UsacConfigExtensionData(usacConfigExtLength) usacConfigExtensionData;
+  }
+}
+
+// the bytes of a config extension - loudness info, a stream id, fill - usacConfigExtLength of them
+"; } }
 	public virtual string DisplayName { get { return "UsacConfigExtension"; } }
 
 	protected EscapedValue numConfigExtensionsMinusOne; 
@@ -89,16 +102,16 @@ public partial class UsacConfigExtension : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("numConfigExtensionsMinusOne", IsoStream.CalculateClassSize(numConfigExtensionsMinusOne), this.numConfigExtensionsMinusOne); 
+		boxSize += tracer.Field("numConfigExtensionsMinusOne", IsoStream.CalculateClassSize(numConfigExtensionsMinusOne), this.numConfigExtensionsMinusOne); 
 
 		for (int i = 0; i < numConfigExtensionsMinusOne + 1; i++)
 		{
-			boxSize += builder.Field($"usacConfigExtType[{i}]", IsoStream.CalculateClassSize(usacConfigExtType[i]), this.usacConfigExtType[i]); 
-			boxSize += builder.Field($"usacConfigExtLength[{i}]", IsoStream.CalculateClassSize(usacConfigExtLength[i]), this.usacConfigExtLength[i]); 
-			boxSize += builder.Field($"usacConfigExtensionData[{i}]", IsoStream.CalculateClassSize(usacConfigExtensionData[i]), this.usacConfigExtensionData[i]); 
+			boxSize += tracer.Field($"usacConfigExtType[{i}]", IsoStream.CalculateClassSize(usacConfigExtType[i]), this.usacConfigExtType[i]); 
+			boxSize += tracer.Field($"usacConfigExtLength[{i}]", IsoStream.CalculateClassSize(usacConfigExtLength[i]), this.usacConfigExtLength[i]); 
+			boxSize += tracer.Field($"usacConfigExtensionData[{i}]", IsoStream.CalculateClassSize(usacConfigExtensionData[i]), this.usacConfigExtensionData[i]); 
 		}
 		return boxSize;
 	}

@@ -14,6 +14,12 @@ aligned(8) class TrackSelectionBox
 */
 public partial class TrackSelectionBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class TrackSelectionBox
+	extends FullBox('tsel', version = 0, 0) {
+	template int(32) switch_group = 0;
+	unsigned int(32) attribute_list[];		// to end of the box
+}"; } }
 	public const string TYPE = "tsel";
 	public override string DisplayName { get { return "TrackSelectionBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -23,7 +29,7 @@ public partial class TrackSelectionBox : FullBox
 	protected int switch_group = 0; 
 	public int SwitchGroup { get { return this.switch_group; } set { this.switch_group = value; } }
 
-	protected uint[] attribute_list;  //  to end of the box
+	protected uint[] attribute_list = [];  //  to end of the box
 	public uint[] AttributeList { get { return this.attribute_list; } set { this.attribute_list = value; } }
 
 	public TrackSelectionBox(): base(IsoStream.FromFourCC("tsel"), 0, 0)
@@ -57,12 +63,12 @@ public partial class TrackSelectionBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("switch_group", 32, this.switch_group); 
-		boxSize += builder.Field("attribute_list", ((ulong)attribute_list.Length * 32), this.attribute_list); // to end of the box
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("switch_group", 32, this.switch_group); 
+		boxSize += tracer.Field("attribute_list", ((ulong)attribute_list.Length * 32), this.attribute_list); // to end of the box
 		return boxSize;
 	}
 }

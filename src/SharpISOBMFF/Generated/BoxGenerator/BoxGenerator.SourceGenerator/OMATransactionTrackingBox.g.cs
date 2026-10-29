@@ -12,13 +12,17 @@ aligned(8) class OMATransactionTrackingBox() extends FullBox('odtt') {
 */
 public partial class OMATransactionTrackingBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class OMATransactionTrackingBox() extends FullBox('odtt') {
+	 unsigned int(8) transactionID[16];
+ } "; } }
 	public const string TYPE = "odtt";
 	public override string DisplayName { get { return "OMATransactionTrackingBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("mdri"); }
 
 
-	protected byte[] transactionID; 
+	protected byte[] transactionID = new byte[16]; 
 	public byte[] TransactionID { get { return this.transactionID; } set { this.transactionID = value; } }
 
 	public OMATransactionTrackingBox(): base(IsoStream.FromFourCC("odtt"))
@@ -49,11 +53,11 @@ public partial class OMATransactionTrackingBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("transactionID", 16 * 8, this.transactionID); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("transactionID", 16 * 8, this.transactionID); 
 		return boxSize;
 	}
 }

@@ -19,6 +19,17 @@ aligned(8) class CanonThumbnailBox() extends FullBox('THMB') {
 */
 public partial class CanonThumbnailBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// Canon.pm, THMB: the thumbnail is after 16 bytes
+aligned(8) class CanonThumbnailBox() extends FullBox('THMB') {
+ unsigned int(16) width;
+ unsigned int(16) height;
+ unsigned int(32) thumbnailSize;
+ unsigned int(16) unknown1;
+ unsigned int(16) unknown2;
+ bit(8) data[];
+}
+"; } }
 	public const string TYPE = "THMB";
 	public override string DisplayName { get { return "CanonThumbnailBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -40,7 +51,7 @@ public partial class CanonThumbnailBox : FullBox
 	protected ushort unknown2; 
 	public ushort Unknown2 { get { return this.unknown2; } set { this.unknown2 = value; } }
 
-	protected byte[] data; 
+	protected byte[] data = []; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public CanonThumbnailBox(): base(IsoStream.FromFourCC("THMB"))
@@ -86,16 +97,16 @@ public partial class CanonThumbnailBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("width", 16, this.width); 
-		boxSize += builder.Field("height", 16, this.height); 
-		boxSize += builder.Field("thumbnailSize", 32, this.thumbnailSize); 
-		boxSize += builder.Field("unknown1", 16, this.unknown1); 
-		boxSize += builder.Field("unknown2", 16, this.unknown2); 
-		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("width", 16, this.width); 
+		boxSize += tracer.Field("height", 16, this.height); 
+		boxSize += tracer.Field("thumbnailSize", 32, this.thumbnailSize); 
+		boxSize += tracer.Field("unknown1", 16, this.unknown1); 
+		boxSize += tracer.Field("unknown2", 16, this.unknown2); 
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

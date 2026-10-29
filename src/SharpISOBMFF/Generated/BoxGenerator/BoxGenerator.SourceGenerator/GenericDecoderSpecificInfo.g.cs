@@ -12,10 +12,14 @@ class GenericDecoderSpecificInfo extends DecoderSpecificInfo : bit(8) tag=DecSpe
 */
 public partial class GenericDecoderSpecificInfo : DecoderSpecificInfo
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class GenericDecoderSpecificInfo extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {
+ bit(8) data[];
+ }"; } }
 	public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
 	public override string DisplayName { get { return "GenericDecoderSpecificInfo"; } }
 
-	protected byte[] data; 
+	protected byte[] data = []; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public GenericDecoderSpecificInfo(): base()
@@ -46,11 +50,11 @@ public partial class GenericDecoderSpecificInfo : DecoderSpecificInfo
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("data", ((ulong)data.Length * 8), this.data); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("data", ((ulong)data.Length * 8), this.data); 
 		return boxSize;
 	}
 }

@@ -13,6 +13,11 @@ class MetaDataKeyTableBox extends FullBox('keys') {
 */
 public partial class MetaDataKeyTableBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class MetaDataKeyTableBox extends FullBox('keys') { 
+        unsigned int(32) entry_count;
+        MetaDataKeyBox[];
+    }"; } }
 	public const string TYPE = "keys";
 	public override string DisplayName { get { return "MetaDataKeyTableBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -57,13 +62,13 @@ public partial class MetaDataKeyTableBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entry_count", 32, this.entry_count); 
-		// boxSize += builder.Field("MetaDataKeyBox", IsoStream.CalculateBoxSize(MetaDataKeyBox), this.MetaDataKeyBox); 
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entry_count", 32, this.entry_count); 
+		// boxSize += tracer.Field("MetaDataKeyBox", IsoStream.CalculateBoxSize(MetaDataKeyBox), this.MetaDataKeyBox); 
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

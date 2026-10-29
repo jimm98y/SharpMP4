@@ -26,6 +26,24 @@ aligned(8) class Dvc1Box() extends Box('dvc1') {
 */
 public partial class Dvc1Box : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// VC-1's configuration (SMPTE RP 2025), as FFmpeg's mov_write_dvc1_structs writes it, the sequence header after
+aligned(8) class Dvc1Box() extends Box('dvc1') {
+	unsigned int(4) profile;
+	unsigned int(3) level;
+	bit(1) reserved = 0;
+	unsigned int(3) level2;
+	unsigned int(1) cbr;
+	bit(6) reserved0 = 0;
+	unsigned int(1) no_interlace;
+	unsigned int(1) no_multiple_seq;
+	unsigned int(1) no_multiple_entry;
+	unsigned int(1) no_slice_code;
+	unsigned int(1) no_bframe;
+	bit(1) reserved1 = 0;
+	unsigned int(32) framerate;
+	bit(8) sequenceHeader[];
+}"; } }
 	public const string TYPE = "dvc1";
 	public override string DisplayName { get { return "Dvc1Box"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -71,7 +89,7 @@ public partial class Dvc1Box : Box
 	protected uint framerate; 
 	public uint Framerate { get { return this.framerate; } set { this.framerate = value; } }
 
-	protected byte[] sequenceHeader; 
+	protected byte[] sequenceHeader = []; 
 	public byte[] SequenceHeader { get { return this.sequenceHeader; } set { this.sequenceHeader = value; } }
 
 	public Dvc1Box(): base(IsoStream.FromFourCC("dvc1"))
@@ -141,24 +159,24 @@ public partial class Dvc1Box : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("profile", 4, this.profile); 
-		boxSize += builder.Field("level", 3, this.level); 
-		boxSize += builder.Field("reserved", 1, this.reserved); 
-		boxSize += builder.Field("level2", 3, this.level2); 
-		boxSize += builder.Field("cbr", 1, this.cbr); 
-		boxSize += builder.Field("reserved0", 6, this.reserved0); 
-		boxSize += builder.Field("no_interlace", 1, this.no_interlace); 
-		boxSize += builder.Field("no_multiple_seq", 1, this.no_multiple_seq); 
-		boxSize += builder.Field("no_multiple_entry", 1, this.no_multiple_entry); 
-		boxSize += builder.Field("no_slice_code", 1, this.no_slice_code); 
-		boxSize += builder.Field("no_bframe", 1, this.no_bframe); 
-		boxSize += builder.Field("reserved1", 1, this.reserved1); 
-		boxSize += builder.Field("framerate", 32, this.framerate); 
-		boxSize += builder.Field("sequenceHeader", ((ulong)sequenceHeader.Length * 8), this.sequenceHeader); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("profile", 4, this.profile); 
+		boxSize += tracer.Field("level", 3, this.level); 
+		boxSize += tracer.Field("reserved", 1, this.reserved); 
+		boxSize += tracer.Field("level2", 3, this.level2); 
+		boxSize += tracer.Field("cbr", 1, this.cbr); 
+		boxSize += tracer.Field("reserved0", 6, this.reserved0); 
+		boxSize += tracer.Field("no_interlace", 1, this.no_interlace); 
+		boxSize += tracer.Field("no_multiple_seq", 1, this.no_multiple_seq); 
+		boxSize += tracer.Field("no_multiple_entry", 1, this.no_multiple_entry); 
+		boxSize += tracer.Field("no_slice_code", 1, this.no_slice_code); 
+		boxSize += tracer.Field("no_bframe", 1, this.no_bframe); 
+		boxSize += tracer.Field("reserved1", 1, this.reserved1); 
+		boxSize += tracer.Field("framerate", 32, this.framerate); 
+		boxSize += tracer.Field("sequenceHeader", ((ulong)sequenceHeader.Length * 8), this.sequenceHeader); 
 		return boxSize;
 	}
 }

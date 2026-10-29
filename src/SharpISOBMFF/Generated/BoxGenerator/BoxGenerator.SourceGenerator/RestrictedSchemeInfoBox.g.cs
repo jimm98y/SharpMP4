@@ -14,6 +14,12 @@ aligned(8) class RestrictedSchemeInfoBox(fmt) extends Box('rinf') {
 */
 public partial class RestrictedSchemeInfoBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class RestrictedSchemeInfoBox(fmt) extends Box('rinf') {
+	OriginalFormatBox(fmt)	original_format;
+	SchemeTypeBox			scheme_type_box;
+	SchemeInformationBox	info;				// optional
+}"; } }
 	public const string TYPE = "rinf";
 	public override string DisplayName { get { return "RestrictedSchemeInfoBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -60,14 +66,14 @@ public partial class RestrictedSchemeInfoBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		// boxSize += builder.Field("original_format", IsoStream.CalculateBoxSize(original_format), this.original_format); 
-		// boxSize += builder.Field("scheme_type_box", IsoStream.CalculateBoxSize(scheme_type_box), this.scheme_type_box); 
-		// boxSize += builder.Field("info", IsoStream.CalculateBoxSize(info), this.info); // optional
-		boxSize += builder.Children(this);
+		boxSize += base.Trace(tracer);
+		// boxSize += tracer.Field("original_format", IsoStream.CalculateBoxSize(original_format), this.original_format); 
+		// boxSize += tracer.Field("scheme_type_box", IsoStream.CalculateBoxSize(scheme_type_box), this.scheme_type_box); 
+		// boxSize += tracer.Field("info", IsoStream.CalculateBoxSize(info), this.info); // optional
+		boxSize += tracer.Children(this);
 		return boxSize;
 	}
 }

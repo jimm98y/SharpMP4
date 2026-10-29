@@ -12,6 +12,10 @@ aligned(8) class HintMaxRate extends Box('maxr') {	// maximum data rate
 */
 public partial class HintMaxRate : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class HintMaxRate extends Box('maxr') {	// maximum data rate
+	uint(32)	period;			// in milliseconds
+	uint(32)	bytes; }			// max bytes sent in any period 'period' long including RTP headers"; } }
 	public const string TYPE = "maxr";
 	public override string DisplayName { get { return "HintMaxRate"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -58,13 +62,13 @@ public partial class HintMaxRate : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
+		boxSize += base.Trace(tracer);
 		/*  maximum data rate */
-		boxSize += builder.Field("period", 32, this.period); // in milliseconds
-		boxSize += builder.Field("bytes", 32, this.bytes); 
+		boxSize += tracer.Field("period", 32, this.period); // in milliseconds
+		boxSize += tracer.Field("bytes", 32, this.bytes); 
 		return boxSize;
 	}
 }

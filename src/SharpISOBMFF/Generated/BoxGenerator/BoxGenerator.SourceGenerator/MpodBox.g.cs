@@ -13,13 +13,18 @@ aligned(8) class MpodBox() extends Box('mpod') {
 */
 public partial class MpodBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"// ISO/IEC 14496-14 3.1.2: the track reference of an MPEG-4 Systems OD track to the tracks its object descriptors are of
+aligned(8) class MpodBox() extends Box('mpod') {
+ unsigned int(32) track_IDs[];
+ }"; } }
 	public const string TYPE = "mpod";
 	public override string DisplayName { get { return "MpodBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
 	public override bool ValidatePlacement() { return IsPlacedIn("tref"); }
 
 
-	protected uint[] track_IDs; 
+	protected uint[] track_IDs = []; 
 	public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
 
 	public MpodBox(): base(IsoStream.FromFourCC("mpod"))
@@ -50,11 +55,11 @@ public partial class MpodBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("track_IDs", ((ulong)track_IDs.Length * 32), this.track_IDs); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("track_IDs", ((ulong)track_IDs.Length * 32), this.track_IDs); 
 		return boxSize;
 	}
 }

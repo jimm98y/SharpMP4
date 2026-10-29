@@ -17,6 +17,15 @@ aligned(8) class GroupIdToNameBox
 */
 public partial class GroupIdToNameBox : FullBox
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"aligned(8) class GroupIdToNameBox
+		extends FullBox('gitn', version = 0, 0) {
+	unsigned int(16)	entry_count;
+	for (i=1; i <= entry_count; i++) {
+		unsigned int(32)	group_ID;
+		utf8string			group_name;
+	}
+}"; } }
 	public const string TYPE = "gitn";
 	public override string DisplayName { get { return "GroupIdToNameBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -80,16 +89,16 @@ public partial class GroupIdToNameBox : FullBox
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("entry_count", 16, this.entry_count); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("entry_count", 16, this.entry_count); 
 
 		for (int i=0; i < entry_count; i++)
 		{
-			boxSize += builder.Field($"group_ID[{i}]", 32, this.group_ID[i]); 
-			boxSize += builder.Field($"group_name[{i}]", IsoStream.CalculateStringSize(group_name[i]), this.group_name[i]); 
+			boxSize += tracer.Field($"group_ID[{i}]", 32, this.group_ID[i]); 
+			boxSize += tracer.Field($"group_name[{i}]", IsoStream.CalculateStringSize(group_name[i]), this.group_name[i]); 
 		}
 		return boxSize;
 	}

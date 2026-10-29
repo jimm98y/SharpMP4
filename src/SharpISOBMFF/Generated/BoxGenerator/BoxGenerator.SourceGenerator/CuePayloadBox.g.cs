@@ -12,6 +12,10 @@ class CuePayloadBox() extends Box ('payl') {
 */
 public partial class CuePayloadBox : Box
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class CuePayloadBox() extends Box ('payl') {
+ boxstring cueText; 
+ }"; } }
 	public const string TYPE = "payl";
 	public override string DisplayName { get { return "CuePayloadBox"; } }
 	/// <summary>Whether the box is in a container its definitions place it in: see <see cref="Box.ValidatePlacement"/>.</summary>
@@ -50,11 +54,11 @@ public partial class CuePayloadBox : Box
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("cueText", IsoStream.CalculateStringSize(cueText), this.cueText); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("cueText", IsoStream.CalculateStringSize(cueText), this.cueText); 
 		return boxSize;
 	}
 }

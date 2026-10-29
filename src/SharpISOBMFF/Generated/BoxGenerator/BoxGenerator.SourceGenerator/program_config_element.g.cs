@@ -63,6 +63,56 @@ public partial class program_config_element : IMp4Serializable
 	public IMp4Serializable GetParent() { return parent; }
 	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 	public override string ToString() { return BoxStringBuilder.Format(this); }
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public virtual string Syntax { get { return @"class program_config_element()
+{
+  uimsbf(4) element_instance_tag;
+  uimsbf(2) object_type;
+  uimsbf(4) sampling_frequency_index;
+  uimsbf(4) num_front_channel_elements;
+  uimsbf(4) num_side_channel_elements;
+  uimsbf(4) num_back_channel_elements;
+  uimsbf(2) num_lfe_channel_elements;
+  uimsbf(3) num_assoc_data_elements;
+  uimsbf(4) num_valid_cc_elements;
+  uimsbf(1) mono_mixdown_present;
+  if (mono_mixdown_present == 1)
+    uimsbf(4) mono_mixdown_element_number;
+  uimsbf(1) stereo_mixdown_present;
+  if (stereo_mixdown_present == 1)
+    uimsbf(4) stereo_mixdown_element_number;
+  uimsbf(1) matrix_mixdown_idx_present;
+  if (matrix_mixdown_idx_present == 1) {
+    uimsbf(2) matrix_mixdown_idx;
+    uimsbf(1) pseudo_surround_enable;
+  }
+  for (i = 0; i < num_front_channel_elements; i++) {
+    bslbf(1) front_element_is_cpe[i];
+    uimsbf(4) front_element_tag_select[i];
+  }
+  for (i = 0; i < num_side_channel_elements; i++) {
+    bslbf(1) side_element_is_cpe[i];
+    uimsbf(4) side_element_tag_select[i];
+  }
+  for (i = 0; i < num_back_channel_elements; i++) {
+    bslbf(1) back_element_is_cpe[i];
+    uimsbf(4) back_element_tag_select[i];
+  }
+  for (i = 0; i < num_lfe_channel_elements; i++)
+    uimsbf(4) lfe_element_tag_select[i];
+  for (i = 0; i < num_assoc_data_elements; i++)
+    uimsbf(4) assoc_data_element_tag_select[i];
+  for (i = 0; i < num_valid_cc_elements; i++) {
+    uimsbf(1) cc_element_is_ind_sw[i];
+    uimsbf(4) valid_cc_element_tag_select[i];
+  }
+  byte_alignment();  // Note 1 
+  uimsbf(8) comment_field_bytes;
+  for (i = 0; i < comment_field_bytes; i++)
+    uimsbf(8) comment_field_data[i];
+}
+
+"; } }
 	public virtual string DisplayName { get { return "program_config_element"; } }
 
 	protected byte element_instance_tag; 
@@ -392,77 +442,77 @@ public partial class program_config_element : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong ToString(BoxStringBuilder builder)
+	public virtual ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += builder.Field("element_instance_tag", 4, this.element_instance_tag); 
-		boxSize += builder.Field("object_type", 2, this.object_type); 
-		boxSize += builder.Field("sampling_frequency_index", 4, this.sampling_frequency_index); 
-		boxSize += builder.Field("num_front_channel_elements", 4, this.num_front_channel_elements); 
-		boxSize += builder.Field("num_side_channel_elements", 4, this.num_side_channel_elements); 
-		boxSize += builder.Field("num_back_channel_elements", 4, this.num_back_channel_elements); 
-		boxSize += builder.Field("num_lfe_channel_elements", 2, this.num_lfe_channel_elements); 
-		boxSize += builder.Field("num_assoc_data_elements", 3, this.num_assoc_data_elements); 
-		boxSize += builder.Field("num_valid_cc_elements", 4, this.num_valid_cc_elements); 
-		boxSize += builder.Field("mono_mixdown_present", 1, this.mono_mixdown_present); 
+		boxSize += tracer.Field("element_instance_tag", 4, this.element_instance_tag); 
+		boxSize += tracer.Field("object_type", 2, this.object_type); 
+		boxSize += tracer.Field("sampling_frequency_index", 4, this.sampling_frequency_index); 
+		boxSize += tracer.Field("num_front_channel_elements", 4, this.num_front_channel_elements); 
+		boxSize += tracer.Field("num_side_channel_elements", 4, this.num_side_channel_elements); 
+		boxSize += tracer.Field("num_back_channel_elements", 4, this.num_back_channel_elements); 
+		boxSize += tracer.Field("num_lfe_channel_elements", 2, this.num_lfe_channel_elements); 
+		boxSize += tracer.Field("num_assoc_data_elements", 3, this.num_assoc_data_elements); 
+		boxSize += tracer.Field("num_valid_cc_elements", 4, this.num_valid_cc_elements); 
+		boxSize += tracer.Field("mono_mixdown_present", 1, this.mono_mixdown_present); 
 
 		if (mono_mixdown_present == true)
 		{
-			boxSize += builder.Field("mono_mixdown_element_number", 4, this.mono_mixdown_element_number); 
+			boxSize += tracer.Field("mono_mixdown_element_number", 4, this.mono_mixdown_element_number); 
 		}
-		boxSize += builder.Field("stereo_mixdown_present", 1, this.stereo_mixdown_present); 
+		boxSize += tracer.Field("stereo_mixdown_present", 1, this.stereo_mixdown_present); 
 
 		if (stereo_mixdown_present == true)
 		{
-			boxSize += builder.Field("stereo_mixdown_element_number", 4, this.stereo_mixdown_element_number); 
+			boxSize += tracer.Field("stereo_mixdown_element_number", 4, this.stereo_mixdown_element_number); 
 		}
-		boxSize += builder.Field("matrix_mixdown_idx_present", 1, this.matrix_mixdown_idx_present); 
+		boxSize += tracer.Field("matrix_mixdown_idx_present", 1, this.matrix_mixdown_idx_present); 
 
 		if (matrix_mixdown_idx_present == true)
 		{
-			boxSize += builder.Field("matrix_mixdown_idx", 2, this.matrix_mixdown_idx); 
-			boxSize += builder.Field("pseudo_surround_enable", 1, this.pseudo_surround_enable); 
+			boxSize += tracer.Field("matrix_mixdown_idx", 2, this.matrix_mixdown_idx); 
+			boxSize += tracer.Field("pseudo_surround_enable", 1, this.pseudo_surround_enable); 
 		}
 
 		for (int i = 0; i < num_front_channel_elements; i++)
 		{
-			boxSize += builder.Field($"front_element_is_cpe[{i}]", 1, this.front_element_is_cpe[i]); 
-			boxSize += builder.Field($"front_element_tag_select[{i}]", 4, this.front_element_tag_select[i]); 
+			boxSize += tracer.Field($"front_element_is_cpe[{i}]", 1, this.front_element_is_cpe[i]); 
+			boxSize += tracer.Field($"front_element_tag_select[{i}]", 4, this.front_element_tag_select[i]); 
 		}
 
 		for (int i = 0; i < num_side_channel_elements; i++)
 		{
-			boxSize += builder.Field($"side_element_is_cpe[{i}]", 1, this.side_element_is_cpe[i]); 
-			boxSize += builder.Field($"side_element_tag_select[{i}]", 4, this.side_element_tag_select[i]); 
+			boxSize += tracer.Field($"side_element_is_cpe[{i}]", 1, this.side_element_is_cpe[i]); 
+			boxSize += tracer.Field($"side_element_tag_select[{i}]", 4, this.side_element_tag_select[i]); 
 		}
 
 		for (int i = 0; i < num_back_channel_elements; i++)
 		{
-			boxSize += builder.Field($"back_element_is_cpe[{i}]", 1, this.back_element_is_cpe[i]); 
-			boxSize += builder.Field($"back_element_tag_select[{i}]", 4, this.back_element_tag_select[i]); 
+			boxSize += tracer.Field($"back_element_is_cpe[{i}]", 1, this.back_element_is_cpe[i]); 
+			boxSize += tracer.Field($"back_element_tag_select[{i}]", 4, this.back_element_tag_select[i]); 
 		}
 
 		for (int i = 0; i < num_lfe_channel_elements; i++)
 		{
-			boxSize += builder.Field($"lfe_element_tag_select[{i}]", 4, this.lfe_element_tag_select[i]); 
+			boxSize += tracer.Field($"lfe_element_tag_select[{i}]", 4, this.lfe_element_tag_select[i]); 
 		}
 
 		for (int i = 0; i < num_assoc_data_elements; i++)
 		{
-			boxSize += builder.Field($"assoc_data_element_tag_select[{i}]", 4, this.assoc_data_element_tag_select[i]); 
+			boxSize += tracer.Field($"assoc_data_element_tag_select[{i}]", 4, this.assoc_data_element_tag_select[i]); 
 		}
 
 		for (int i = 0; i < num_valid_cc_elements; i++)
 		{
-			boxSize += builder.Field($"cc_element_is_ind_sw[{i}]", 1, this.cc_element_is_ind_sw[i]); 
-			boxSize += builder.Field($"valid_cc_element_tag_select[{i}]", 4, this.valid_cc_element_tag_select[i]); 
+			boxSize += tracer.Field($"cc_element_is_ind_sw[{i}]", 1, this.cc_element_is_ind_sw[i]); 
+			boxSize += tracer.Field($"valid_cc_element_tag_select[{i}]", 4, this.valid_cc_element_tag_select[i]); 
 		}
-		boxSize += builder.Field("byte_alignment", IsoStream.CalculateByteAlignmentSize(boxSize, byte_alignment), this.byte_alignment); // Note 1 
-		boxSize += builder.Field("comment_field_bytes", 8, this.comment_field_bytes); 
+		boxSize += tracer.Field("byte_alignment", IsoStream.CalculateByteAlignmentSize(boxSize, byte_alignment), this.byte_alignment); // Note 1 
+		boxSize += tracer.Field("comment_field_bytes", 8, this.comment_field_bytes); 
 
 		for (int i = 0; i < comment_field_bytes; i++)
 		{
-			boxSize += builder.Field($"comment_field_data[{i}]", 8, this.comment_field_data[i]); 
+			boxSize += tracer.Field($"comment_field_data[{i}]", 8, this.comment_field_data[i]); 
 		}
 		return boxSize;
 	}

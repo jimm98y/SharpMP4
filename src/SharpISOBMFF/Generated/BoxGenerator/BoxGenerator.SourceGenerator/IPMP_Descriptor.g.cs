@@ -19,6 +19,17 @@ class IPMP_Descriptor() extends BaseDescriptor : bit(8) tag=IPMP_DescrTag {
 */
 public partial class IPMP_Descriptor : BaseDescriptor
 {
+	/// <summary>The syntax the class is defined of, as its definition gives it.</summary>
+	public override string Syntax { get { return @"class IPMP_Descriptor() extends BaseDescriptor : bit(8) tag=IPMP_DescrTag {
+ bit(8) IPMP_DescriptorID;
+ unsigned int(16)
+ IPMPS_Type;
+ if (IPMPS_Type == 0) {
+ bit(8) URLString[sizeOfInstance-3];
+ } else {
+ bit(8) IPMP_data[sizeOfInstance-3];
+ }
+ }"; } }
 	public const byte TYPE = DescriptorTags.IPMP_DescrTag;
 	public override string DisplayName { get { return "IPMP_Descriptor"; } }
 
@@ -28,10 +39,10 @@ public partial class IPMP_Descriptor : BaseDescriptor
 	protected ushort IPMPS_Type; 
 	public ushort IPMPSType { get { return this.IPMPS_Type; } set { this.IPMPS_Type = value; } }
 
-	protected byte[] URLString; 
+	protected byte[] URLString = []; 
 	public byte[] _URLString { get { return this.URLString; } set { this.URLString = value; } }
 
-	protected byte[] IPMP_data; 
+	protected byte[] IPMP_data = []; 
 	public byte[] IPMPData { get { return this.IPMP_data; } set { this.IPMP_data = value; } }
 
 	public IPMP_Descriptor(): base(DescriptorTags.IPMP_DescrTag)
@@ -95,21 +106,21 @@ public partial class IPMP_Descriptor : BaseDescriptor
 		return boxSize;
 	}
 
-	public override ulong ToString(BoxStringBuilder builder)
+	public override ulong Trace(BoxTracer tracer)
 	{
 		ulong boxSize = 0;
-		boxSize += base.ToString(builder);
-		boxSize += builder.Field("IPMP_DescriptorID", 8, this.IPMP_DescriptorID); 
-		boxSize += builder.Field("IPMPS_Type", 16, this.IPMPS_Type); 
+		boxSize += base.Trace(tracer);
+		boxSize += tracer.Field("IPMP_DescriptorID", 8, this.IPMP_DescriptorID); 
+		boxSize += tracer.Field("IPMPS_Type", 16, this.IPMPS_Type); 
 
 		if (IPMPS_Type == 0)
 		{
-			boxSize += builder.Field("URLString", ((ulong)(sizeOfInstance-3) * 8), this.URLString); 
+			boxSize += tracer.Field("URLString", ((ulong)(sizeOfInstance-3) * 8), this.URLString); 
 		}
 
 		else 
 		{
-			boxSize += builder.Field("IPMP_data", ((ulong)(sizeOfInstance-3) * 8), this.IPMP_data); 
+			boxSize += tracer.Field("IPMP_data", ((ulong)(sizeOfInstance-3) * 8), this.IPMP_data); 
 		}
 		return boxSize;
 	}
