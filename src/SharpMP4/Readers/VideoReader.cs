@@ -258,6 +258,10 @@ namespace SharpMP4.Readers
                         // samples all of one size are of that size, looked up as each is read, rather than an array of as
                         // many of it as the box says there are
                         trackContext.ConstantSampleSize = stsz.SampleSize;
+                        // QuickTime's uncompressed sound of a version 0 sound description: each sample a frame, 1 in 'stsz'
+                        // whatever its size, which the description says - not one byte each
+                        if (trackImpl is PcmTrack pcm && stsz.SampleSize == 1 && pcm.BytesPerFrame > 1)
+                            trackContext.ConstantSampleSize = (uint)pcm.BytesPerFrame;
                         trackContext.SizesList = stsz.SampleSize > 0 ? null : stsz.EntrySize ?? Array.Empty<uint>();
                         trackContext.SampleCount = stsz.SampleSize > 0 ? stsz.SampleCount : (uint)trackContext.SizesList.Length;
 

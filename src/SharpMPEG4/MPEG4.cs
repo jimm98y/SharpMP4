@@ -580,9 +580,10 @@ namespace SharpMPEG4
 
         /// <summary>
         /// Reads a unit, from its start code, by what the start code says it is; and keeps what the units after it depend on.
-        /// A unit the syntax here does not describe, or has a part of that is not read, is kept as its bytes.
+        /// A unit the syntax here does not describe, or has a part of that is not read, is kept as its bytes. Of a tracer, it
+        /// is told of what is read, as an <see cref="ItuStream"/>'s is.
         /// </summary>
-        public IItuSerializable ReadUnit(byte[] buffer, int offset, int length, SharpMP4.Common.IMp4Logger logger = null)
+        public IItuSerializable ReadUnit(byte[] buffer, int offset, int length, SharpMP4.Common.IMp4Logger logger = null, IItuTracer tracer = null)
         {
             if (length < 4 || buffer[offset] != 0 || buffer[offset + 1] != 0 || buffer[offset + 2] != 1)
                 throw new InvalidOperationException("A unit starts with a start code: 0x000001 and its value.");
@@ -602,7 +603,9 @@ namespace SharpMPEG4
             {
                 try
                 {
-                    StreamOf(buffer, offset, length, logger).ReadClass(0, this, unit, "");
+                    var stream = StreamOf(buffer, offset, length, logger);
+                    stream.Tracer = tracer;
+                    stream.ReadClass(0, this, unit, "");
                     Keep(unit);
                     return unit;
                 }
