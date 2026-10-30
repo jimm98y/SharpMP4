@@ -830,14 +830,32 @@ public class ConformanceTests
              ["missing movie ItemList:cprt"]),
     };
 
+    /// <summary>
+    /// Metadata test files of metadata ExifTool reads where SharpMP4 does not look for it, with what SharpMP4 does not
+    /// read of it: not of the file's metadata, but of its samples.
+    /// </summary>
+    private static readonly Dictionary<string, (string Why, string[] Unread)> MetadataNotReadFiles = new()
+    {
+        [Path.Combine("metadata", "exiftool", "CanonRaw.cr3")] =
+            ("a second Exif IFD of a record of Canon's timed metadata (CTMD), a sample of a track: ExifTool reads it, SharpMP4 reads the file's",
+             ["missing file Exif-ExifIFD:0xa406"]),
+    };
+
     private static void JudgeMalformedMetadata(string root, StreamResult result)
     {
-        if (!MalformedMetadataFiles.TryGetValue(Path.GetRelativePath(root, result.Path), out var malformed))
+        string path = Path.GetRelativePath(root, result.Path);
+        if (result.Outcome == Outcome.SharpFailed)
             return;
-        if (result.Outcome == Outcome.SharpFailed || !result.Keys.ToHashSet().SetEquals(malformed.Defects))
-            return;
-        result.Outcome = Outcome.Malformed;
-        result.Detail = $"malformed, and read: {malformed.Why}\n    " + result.Detail;
+        if (MalformedMetadataFiles.TryGetValue(path, out var malformed) && result.Keys.ToHashSet().SetEquals(malformed.Defects))
+        {
+            result.Outcome = Outcome.Malformed;
+            result.Detail = $"malformed, and read: {malformed.Why}\n    " + result.Detail;
+        }
+        else if (MetadataNotReadFiles.TryGetValue(path, out var notRead) && result.Keys.ToHashSet().SetEquals(notRead.Unread))
+        {
+            result.Outcome = Outcome.Malformed;
+            result.Detail = $"not read: {notRead.Why}\n    " + result.Detail;
+        }
     }
 
     /// <summary>

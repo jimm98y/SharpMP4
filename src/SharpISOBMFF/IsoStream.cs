@@ -3271,8 +3271,8 @@ namespace SharpISOBMFF
     }
 
     /// <summary>
-    /// A string of UTF-16, big endian - an ICC profile's - kept as the bytes it was read of, which write back as they were:
-    /// a terminating zero, or an odd last byte, too.
+    /// A string of UTF-16 - big endian, as an ICC profile's is, or little endian, as Windows' Exif tags are - kept as the
+    /// bytes it was read of, which write back as they were: a terminating zero, or an odd last byte, too.
     /// </summary>
     public struct BinaryUTF16String
     {
@@ -3280,20 +3280,33 @@ namespace SharpISOBMFF
 
         public byte[] Bytes { get; set; }
 
+        /// <summary>Whether the bytes are little endian; big endian unless said.</summary>
+        public bool IsLittleEndian { get; set; }
+
+        private Encoding Encoding { get { return IsLittleEndian ? Encoding.Unicode : Encoding.BigEndianUnicode; } }
+
         public BinaryUTF16String(byte[] bytes)
         {
             this.Bytes = bytes;
+            this.IsLittleEndian = false;
+        }
+
+        public BinaryUTF16String(byte[] bytes, bool littleEndian)
+        {
+            this.Bytes = bytes;
+            this.IsLittleEndian = littleEndian;
         }
 
         public BinaryUTF16String(string text)
         {
             Bytes = Encoding.BigEndianUnicode.GetBytes(text);
+            IsLittleEndian = false;
         }
 
         /// <summary>The characters of its bytes, all of them: a terminating zero is one.</summary>
         public override string ToString()
         {
-            return Bytes == null ? "" : Encoding.BigEndianUnicode.GetString(Bytes);
+            return Bytes == null ? "" : Encoding.GetString(Bytes);
         }
 
         /// <summary>The text, up to the first zero; what follows it, if anything, is left out.</summary>

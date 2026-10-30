@@ -25,8 +25,27 @@ public static partial class MetadataComparison
         if (group.EndsWith("UserData", StringComparison.Ordinal)) return ("track", "UserData");
         // the packet; the properties in it are the XMP-* groups
         if (group == "XMP") return ("file", "Xmp");
+        // Exif, of its IFDs: each tag of its number - and of Apple's maker notes
+        if (group is "IFD0" or "ExifIFD" or "GPS" or "InteropIFD" or "IFD1" or "Apple") return ("file", "Exif-" + group);
         return null;
     }
+
+    /// <summary>
+    /// Makers' notes SharpMP4 reads the tags of, which ExifTool reads into tags of their own: Canon's and Nikon's arrays,
+    /// each of the values of a tag a tag; not compared.
+    /// </summary>
+    private static readonly HashSet<string> MakerNotesNotCompared = new(StringComparer.Ordinal) { "Canon", "Nikon" };
+
+    /// <summary>Tags of Apple's notes ExifTool reads into tags of their own: RunTime, a binary property list.</summary>
+    private static readonly HashSet<int> AppleTagsNotCompared = new() { 0x0003 };
+
+    /// <summary>ExifTool's group of an IFD SharpMP4 reads a tag of.</summary>
+    private static string ExifGroup(string? ifd) => ifd switch
+    {
+        "Exif" => "ExifIFD",
+        "Interop" => "InteropIFD",
+        _ => ifd ?? "",
+    };
 
     /// <summary>
     /// Atoms of 'udta' that ExifTool reads into groups of their own, not as a UserData tag: SharpMP4 gives
@@ -61,6 +80,10 @@ public static partial class MetadataComparison
             var family = Family(tag.Group);
             // 'free' in 'udta' is room left, not a tag
             if (family == null || tag.Id is "free" or "skip")
+                continue;
+            // of Apple's notes, what ExifTool reads of a tag's property list - RunTime's flags, value, timescale, epoch -
+            // which is of no number of the IFD's
+            if (tag.Group == "Apple" && !tag.Id.StartsWith("0x", StringComparison.Ordinal))
                 continue;
 
             string id = tag.Id;
@@ -102,10 +125,31 @@ public static partial class MetadataComparison
             // ExifTool's id of a key in the 'mdta' namespace is without com.apple.quicktime. or com.
             if (tag.Family == MetadataFamily.Keys && tag.Namespace == "mdta")
                 id = MdtaDomain().Replace(id, "");
-            string key = Key(scope, tag.Family.ToString(), id, language);
+            string family = tag.Family.ToString();
+            // an Exif tag of its IFD and its number, as ExifTool's -H gives it - but a MakerNote, which ExifTool reads
+            // into the maker's group, not as a tag of the Exif IFD
+            if (tag.Family == MetadataFamily.Exif && tag.Key == "MakerNote")
+                continue;
+            if (tag.Family == MetadataFamily.Exif && (MakerNotesNotCompared.Contains(tag.Namespace ?? "")
+                || tag.Namespace == "Apple" && AppleTagsNotCompared.Contains(tag.Id)))
+                continue;
+            if (tag.Family == MetadataFamily.Exif)
+            {
+                scope = "file";
+                family = "Exif-" + ExifGroup(tag.Namespace);
+                // the thumbnail ExifTool keys by its name, not of a number of the IFD's
+                id = tag.Key == "ThumbnailImage" ? "Exif-ThumbnailImage" : $"0x{tag.Id:x4}";
+            }
+            string key = Key(scope, family, id, language);
             if (!ours.TryGetValue(key, out var values))
                 ours[key] = values = [];
-            values.Add(OurValue(tag, key));
+            var ourValue = OurValue(tag, key);
+            // where strips, tiles and a thumbnail are, ExifTool gives of the file, not of the TIFF header the tags are of:
+            // as their description says
+            const string InTheFile = "in the file at ";
+            if (tag.Family == MetadataFamily.Exif && tag.Description?.StartsWith(InTheFile, StringComparison.Ordinal) == true)
+                ourValue = new Value([.. ourValue.Forms, tag.Description.Substring(InTheFile.Length)]);
+            values.Add(ourValue);
 
             if (tag.Family == MetadataFamily.Xmp)
             {
@@ -311,7 +355,114 @@ public static partial class MetadataComparison
         // What ExifTool does not read it gives as bytes: the box's, as it has them
         if (tag.Family == MetadataFamily.UserData && tag.Box != null)
             forms.Add("base64:" + Convert.ToBase64String(ContainerExtensions.Payload(tag.Box)));
+        if (tag.Family == MetadataFamily.Exif)
+            forms.AddRange(ExifForms(tag));
         return new Value(forms);
+    }
+
+    /// <summary>
+    /// The data of a binary property list whose object is data alone: "bplist00", a marker 0x4n - n its length, or of 15,
+    /// an integer marker 0x1m and 2^m bytes of it after - then the data.
+    /// </summary>
+    private static byte[]? PlistData(byte[] bytes)
+    {
+        if (bytes.Length < 10 || System.Text.Encoding.ASCII.GetString(bytes, 0, 8) != "bplist00" || (bytes[8] & 0xF0) != 0x40)
+            return null;
+        int at = 9, length = bytes[8] & 0x0F;
+        if (length == 0x0F)
+        {
+            if ((bytes[at] & 0xF0) != 0x10)
+                return null;
+            int size = 1 << (bytes[at] & 0x0F);
+            if (size > 4 || at + 1 + size > bytes.Length)
+                return null;
+            length = 0;
+            for (int i = 0; i < size; i++)
+                length = (length << 8) | bytes[at + 1 + i];
+            at += 1 + size;
+        }
+        return at + length <= bytes.Length ? bytes.AsSpan(at, length).ToArray() : null;
+    }
+
+    /// <summary>
+    /// An Exif value as ExifTool gives it, of -n: text without its terminating zero and the spaces before it; a rational
+    /// as the number it is, of 10 or 15 digits; a text of a character code without its code.
+    /// </summary>
+    private static IEnumerable<string> ExifForms(MetadataTag tag)
+    {
+        static string Trimmed(string text) => text.TrimEnd('\0').TrimEnd();
+        static string? Decimal(string rational, string format)
+        {
+            int slash = rational.IndexOf('/');
+            if (slash < 0 || !double.TryParse(rational.AsSpan(0, slash), NumberStyles.Integer, CultureInfo.InvariantCulture, out double n)
+                || !double.TryParse(rational.AsSpan(slash + 1), NumberStyles.Integer, CultureInfo.InvariantCulture, out double d))
+                return null;
+            // of a denominator of 0, ExifTool's inf, -inf or undef
+            if (d == 0)
+                return n == 0 ? "undef" : n > 0 ? "inf" : "-inf";
+            return (n / d).ToString(format, CultureInfo.InvariantCulture);
+        }
+
+        // what ExifTool converts even of -n (Exif.pm, ValueConv): APEX values, and GPS positions as degrees
+        if (tag.Value is string apex && Decimal(apex, "R") is string v && double.TryParse(v, NumberStyles.Float, CultureInfo.InvariantCulture, out double value))
+        {
+            double? converted = tag.Key switch
+            {
+                "ShutterSpeedValue" => Math.Pow(2, -value),
+                "ApertureValue" or "MaxApertureValue" => Math.Pow(2, value / 2),
+                _ => null,
+            };
+            if (converted != null)
+            {
+                yield return converted.Value.ToString("G10", CultureInfo.InvariantCulture);
+                yield return converted.Value.ToString("G15", CultureInfo.InvariantCulture);
+            }
+        }
+        if (tag.Value is string[] { Length: 3 } dms && tag.Key is "GPSLatitude" or "GPSLongitude" or "GPSDestLatitude" or "GPSDestLongitude")
+        {
+            var parts = dms.Select(p => Decimal(p, "R")).ToArray();
+            if (parts.All(p => p != null && p != "undef" && p != "inf" && p != "-inf"))
+            {
+                double[] n = parts.Select(p => double.Parse(p!, CultureInfo.InvariantCulture)).ToArray();
+                double degrees = n[0] + n[1] / 60 + n[2] / 3600;
+                yield return degrees.ToString("G10", CultureInfo.InvariantCulture);
+                yield return degrees.ToString("G15", CultureInfo.InvariantCulture);
+            }
+        }
+
+        switch (tag.Value)
+        {
+            // bytes of no text - ComponentsConfiguration's - as the numbers they are; of a binary property list of data
+            // alone - Apple's AEMatrix - the data, which ExifTool gives of it
+            case byte[] bytes:
+                yield return string.Join(" ", bytes);
+                if (PlistData(bytes) is byte[] data)
+                    yield return "base64:" + Convert.ToBase64String(data);
+                break;
+            // of a character code: the text after it
+            case CharacterCodedString coded:
+                yield return Trimmed(coded.Text);
+                yield return coded.Text;
+                break;
+            // text kept as its bytes: as it reads
+            case BinaryUTF8String or BinaryUTF16String:
+                yield return Trimmed(tag.Value.ToString()!);
+                break;
+            case string rational when rational.Contains('/') && Decimal(rational, "G10") is string number:
+                yield return number;
+                yield return Decimal(rational, "G15")!;
+                break;
+            case string text:
+                yield return Trimmed(text);
+                break;
+            case string[] rationals:
+                foreach (var format in new[] { "G10", "G15" })
+                    yield return string.Join(" ", rationals.Select(r => Decimal(r, format) ?? r));
+                break;
+            case long[] numbers:
+                yield return string.Join(" ", numbers);
+                break;
+        }
     }
 
     /// <summary>
@@ -350,6 +501,12 @@ public static partial class MetadataComparison
     private static bool SameValue(string exifTool, string sharp)
     {
         if (exifTool == sharp)
+            return true;
+        // a number ExifTool computed - an APEX value, 2 to the power of a rational it rounded first - of its last digits
+        // otherwise
+        if (double.TryParse(exifTool, NumberStyles.Float, CultureInfo.InvariantCulture, out double theirs)
+            && double.TryParse(sharp, NumberStyles.Float, CultureInfo.InvariantCulture, out double ours)
+            && theirs != 0 && Math.Abs(theirs - ours) <= 1e-8 * Math.Abs(theirs))
             return true;
         // Bytes ExifTool shows as the text or the number they are
         if (sharp.StartsWith("base64:", StringComparison.Ordinal) && !exifTool.StartsWith("base64:", StringComparison.Ordinal))
@@ -414,10 +571,11 @@ public static partial class MetadataComparison
     [GeneratedRegex(@"-([a-z]{2,3}(?:-[A-Z]{2})?|un|smi|nl-NL)$")]
     private static partial Regex LanguageSuffix();
 
-    [GeneratedRegex(@"[-+]?\d+(?:\.\d+)?")]
+    // of the digits 0 to 9: \d is of every script's - Devanagari's १ of Exif text too - which double.Parse is not
+    [GeneratedRegex(@"[-+]?[0-9]+(?:\.[0-9]+)?")]
     private static partial Regex Number();
 
-    [GeneratedRegex(@"\D")]
+    [GeneratedRegex(@"[^0-9]")]
     private static partial Regex Digits();
 
     [GeneratedRegex(@"^\s*(-?\d+)/(\d+)\s*$")]

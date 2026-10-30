@@ -24,6 +24,19 @@ namespace SharpMP4.Readers
             // JPEG XL's: a box of the file
             foreach (var xmp in file.Children.OfType<JpegXMLBox>())
                 tags.Add(Xmp(xmp, 0, xmp.Data.Bytes));
+            // JPEG XL's Exif: a box of the file, of the layout of a HEIF Exif item
+            foreach (var exif in file.Children.OfType<ExifBox>())
+            {
+                byte[] payload = new byte[4 + (exif.Data?.Length ?? 0)];
+                payload[0] = (byte)(exif.TiffHeaderOffset >> 24);
+                payload[1] = (byte)(exif.TiffHeaderOffset >> 16);
+                payload[2] = (byte)(exif.TiffHeaderOffset >> 8);
+                payload[3] = (byte)exif.TiffHeaderOffset;
+                exif.Data?.CopyTo(payload, 4);
+                // the payload is the box's last bytes: after its header, whatever its size
+                long start = exif.GetBoxOffset() + (long)exif.Size - payload.Length;
+                ExifReader.Read(payload, exif, tags, i => start + i);
+            }
             foreach (var meta in file.Children.OfType<MetaBox>())
                 ReadItems(file, meta, tags);
             foreach (var moov in file.Children.OfType<MovieBox>())
@@ -35,7 +48,34 @@ namespace SharpMP4.Readers
                     ReadScope(trak.Children, trackID, tags);
                 }
             }
+            // Canon's of a CR3 (Canon.pm): CMT1 IFD0, CMT2 the Exif IFD, CMT3 the maker notes, CMT4 the GPS IFD, each a TIFF
+            // of its own
+            foreach (var box in Descendants(file.Children))
+            {
+                (byte[] Tiff, string Ifd)? cmt = box switch
+                {
+                    CanonCMT1Box b => (b.Tiff, "IFD0"),
+                    CanonCMT2Box b => (b.Tiff, "Exif"),
+                    CanonCMT3Box b => (b.Tiff, "Canon"),
+                    CanonCMT4Box b => (b.Tiff, "GPS"),
+                    _ => null,
+                };
+                if (cmt?.Tiff == null)
+                    continue;
+                long start = box.GetBoxOffset() + (long)box.Size - cmt.Value.Tiff.Length;
+                ExifReader.Read(cmt.Value.Tiff, box, tags, i => start + i, cmt.Value.Ifd);
+            }
             return tags;
+        }
+
+        private static IEnumerable<Box> Descendants(IEnumerable<Box> boxes)
+        {
+            foreach (var box in boxes ?? Enumerable.Empty<Box>())
+            {
+                yield return box;
+                foreach (var child in Descendants(box.Children))
+                    yield return child;
+            }
         }
 
         // The 'meta' and 'udta' of the movie or of a track
@@ -258,17 +298,52 @@ namespace SharpMP4.Readers
                 }
                 else if (infe.ItemType == IsoStream.FromFourCC("Exif"))
                 {
-                    ExifReader.Read(ItemData(file, meta, infe.ItemID), infe, tags);
+                    byte[] data = ItemData(file, meta, infe.ItemID, out var extents);
+                    ExifReader.Read(data, infe, tags, i => FileOffsetOf(extents, i), readFile: (offset, length) => FileBytes(file, offset, length));
                 }
             }
         }
 
+        // bytes of the file, of the stream its 'mdat' is read of; null where there is none, or they are past its end
+        private static byte[] FileBytes(Container file, long offset, long length)
+        {
+            IsoStream stream = file.Children.OfType<MediaDataBox>().FirstOrDefault(m => m.Data?.Stream != null)?.Data.Stream;
+            if (stream == null || offset < 0 || length <= 0 || offset + length > stream.GetStreamLength())
+                return null;
+            long position = stream.GetCurrentOffset();
+            try
+            {
+                stream.SeekFromBeginning(offset);
+                stream.ReadBytes((ulong)length, out byte[] bytes);
+                return bytes;
+            }
+            finally
+            {
+                stream.SeekFromBeginning(position);
+            }
+        }
+
+        // where a byte of an item is in the file, of its extents one after another; -1 past them
+        private static long FileOffsetOf(List<(long Offset, long Length)> extents, long index)
+        {
+            foreach (var (offset, length) in extents)
+            {
+                if (index < length)
+                    return offset + index;
+                index -= length;
+            }
+            return -1;
+        }
+
+        private static byte[] ItemData(Container file, MetaBox meta, uint itemID) => ItemData(file, meta, itemID, out _);
+
         /// <summary>
         /// An item's bytes (ISO/IEC 14496-12 8.11.3): its extents, in the file (construction method 0) or in
-        /// the 'idat' (1); null for an item elsewhere.
+        /// the 'idat' (1); null for an item elsewhere. Where each extent is in the file, and how long.
         /// </summary>
-        private static byte[] ItemData(Container file, MetaBox meta, uint itemID)
+        private static byte[] ItemData(Container file, MetaBox meta, uint itemID, out List<(long Offset, long Length)> extents)
         {
+            extents = new List<(long Offset, long Length)>();
             var iloc = meta.Children.OfType<ItemLocationBox>().FirstOrDefault();
             if (iloc?.ItemID == null)
                 return null;
@@ -301,6 +376,7 @@ namespace SharpMP4.Readers
                     stream.SeekFromBeginning(offset);
                     stream.ReadBytes((ulong)length, out byte[] extent);
                     data.AddRange(extent);
+                    extents.Add((offset, extent.Length));
                 }
             }
             finally
@@ -517,8 +593,10 @@ namespace SharpMP4.Readers
         Xmp,
 
         /// <summary>
-        /// A tag of an Exif item of a HEIF image (ISO/IEC 23008-12 A.2.1), keyed by its name (Make, DateTimeOriginal), in
-        /// the namespace of its IFD (IFD0, Exif, GPS, Interop, IFD1): ASCII as text, its terminating zero too; a rational as
+        /// A tag of an Exif item of a HEIF image (ISO/IEC 23008-12 A.2.1) or of JPEG XL's 'Exif' box, keyed by its name
+        /// (Make, DateTimeOriginal), in the namespace of its IFD (IFD0, Exif, GPS, Interop, IFD1). Text as its bytes, as the
+        /// strings of boxes are - ASCII and UTF-8 a <see cref="BinaryUTF8String"/>, Windows' XP tags a little endian
+        /// <see cref="BinaryUTF16String"/>, UserComment a <see cref="CharacterCodedString"/>; a rational as
         /// numerator/denominator; numbers as long, of more than one long[] or string[].
         /// </summary>
         Exif,
@@ -556,6 +634,18 @@ namespace SharpMP4.Readers
 
         /// <summary>The box the value is in.</summary>
         public Box Box { get; set; }
+
+        /// <summary>Of an Exif tag, its number (0x010F of Make); -1 of a tag of none.</summary>
+        public int Id { get; set; } = -1;
+
+        /// <summary>Where the value's bytes are in the file - of an Exif tag, its value's; -1 where that is not known.</summary>
+        public long Offset { get; set; } = -1;
+
+        /// <summary>How many bytes the value is, of <see cref="Offset"/>.</summary>
+        public long Length { get; set; }
+
+        /// <summary>What the value means - of an Exif tag of codes, the code's meaning; of a rational, its number - beside it; null of none.</summary>
+        public string Description { get; set; }
 
         public override string ToString() => $"{Family} {(TrackID != 0 ? $"track {TrackID} " : "")}{Key}{(Language != null ? "-" + Language : "")} = {ValueText(Value)}";
 
