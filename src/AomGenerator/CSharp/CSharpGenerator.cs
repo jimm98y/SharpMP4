@@ -323,7 +323,18 @@ namespace Sharp{type}
                 resultCode += $@"
         private {retType} {methodName}({ituClassParameters})
         {{";
-                resultCode += GenerateMethodBody(aomClass, ctorParameters);
+                // a syntax structure read: of its beginning and end, to the stream's tracer - whatever it returns of
+                if (!writing && _readingStructures.Contains(aomClass.MethodName))
+                {
+                    resultCode += $"\r\n\t\t\tstream.BeginClass(\"{aomClass.MethodName}\", {aomClass.MethodName.ToPropertyCase()}Syntax);" +
+                        "\r\n\t\t\ttry\r\n\t\t\t{";
+                    resultCode += GenerateMethodBody(aomClass, ctorParameters).Replace("\r\n", "\r\n\t");
+                    resultCode += $"\r\n\t\t\t}}\r\n\t\t\tfinally\r\n\t\t\t{{\r\n\t\t\t\tstream.EndClass(\"{aomClass.MethodName}\");\r\n\t\t\t}}";
+                }
+                else
+                {
+                    resultCode += GenerateMethodBody(aomClass, ctorParameters);
+                }
                 resultCode += $@"
         }}
 ";

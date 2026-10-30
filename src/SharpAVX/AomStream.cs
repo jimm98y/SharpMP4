@@ -258,7 +258,7 @@ namespace SharpAVX
             value = bytes;
             if (Record != null && !string.IsNullOrEmpty(name))
                 Record.Add(name, new AomSyntaxValue(0, bytes.Length * 8, value));
-            LogEnd(name, (ulong)(bytes.Length * 8), "byte[]");
+            LogEnd(name, (ulong)(bytes.Length * 8), "byte[]", value);
             return (ulong)(bytes.Length * 8);
         }
 
@@ -726,12 +726,30 @@ namespace SharpAVX
         /// </summary>
         public Action<string, long> ElementEnded { get; set; }
 
-        private void LogEnd<T>(string name, ulong size, T value)
+        /// <summary>Told of each syntax structure and element read; none of none, at no cost.</summary>
+        public IAomTracer Tracer { get; set; }
+
+        /// <summary>A syntax structure begins: called by the generated code, as it reads one.</summary>
+        public void BeginClass(string name, string syntax)
+        {
+            Tracer?.OnBeginClass(name, syntax, this.Bitstream.BitsPosition);
+        }
+
+        /// <summary>A syntax structure that began ends.</summary>
+        public void EndClass(string name)
+        {
+            Tracer?.OnEndClass(name, this.Bitstream.BitsPosition);
+        }
+
+        // of a value logged otherwise than it is - bytes as "byte[]" - the value itself is traced
+        private void LogEnd<T>(string name, ulong size, T value, object traced = null)
         {
             byte[] codedAs = _codedAs;
             _codedAs = null;
             if (ElementEnded != null && !string.IsNullOrEmpty(name))
                 ElementEnded(name, this.Bitstream.BitsPosition);
+            if (Tracer != null && !string.IsNullOrEmpty(name))
+                Tracer.OnField(name, this.Bitstream.BitsPosition, size, traced ?? value);
             if (Record != null && !string.IsNullOrEmpty(name))
             {
                 switch (value)
