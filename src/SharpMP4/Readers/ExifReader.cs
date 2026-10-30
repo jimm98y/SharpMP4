@@ -7,6 +7,16 @@ using System.Text;
 
 namespace SharpMP4.Readers
 {
+    /// <summary>The names of the tags of Exif, of their IFDs, as <see cref="ContainerExtensions.ReadMetadata"/> keys them.</summary>
+    public static class ExifTags
+    {
+        /// <summary>
+        /// The name of a tag of an IFD - IFD0, IFD1, Exif, GPS, Interop, or a maker's: Apple, Canon, Nikon - of Exif 3.0,
+        /// TIFF 6.0 and ExifTool's of the makers' notes; of one not known, its number, 0x010F.
+        /// </summary>
+        public static string NameOf(string ifd, ushort tag) => ExifReader.NameOf(ifd, tag);
+    }
+
     /// <summary>
     /// A text of Exif of a character code (Exif 4.6.5 - UserComment, GPSProcessingMethod, GPSAreaInformation): 8 bytes
     /// that say which - "ASCII\0\0\0", "UNICODE\0", "JIS\0\0\0\0\0", or zeros or spaces of none said - then the text in it.
@@ -525,7 +535,7 @@ namespace SharpMP4.Readers
         #region Names
 
         /// <summary>The name of a tag, of its IFD (Exif 3.0, TIFF 6.0, and Windows' and Adobe's of TIFF); of one not known, its number.</summary>
-        private static string NameOf(string ifd, ushort tag)
+        internal static string NameOf(string ifd, ushort tag)
         {
             var names = ifd switch
             {
