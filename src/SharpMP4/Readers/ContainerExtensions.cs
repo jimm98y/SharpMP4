@@ -240,8 +240,8 @@ namespace SharpMP4.Readers
         }
 
         /// <summary>
-        /// The XMP items of a 'meta' (HEIF, ISO/IEC 23008-12 A.2): items of type 'mime' and content type
-        /// application/rdf+xml.
+        /// The XMP and Exif items of a 'meta' (HEIF, ISO/IEC 23008-12 A.2): items of type 'mime' and content type
+        /// application/rdf+xml, and items of type 'Exif' - each tag of their IFDs.
         /// </summary>
         private static void ReadItems(Container file, MetaBox meta, List<MetadataTag> tags)
         {
@@ -255,6 +255,10 @@ namespace SharpMP4.Readers
                     byte[] packet = ItemData(file, meta, infe.ItemID);
                     if (packet != null)
                         tags.Add(Xmp(infe, 0, packet));
+                }
+                else if (infe.ItemType == IsoStream.FromFourCC("Exif"))
+                {
+                    ExifReader.Read(ItemData(file, meta, infe.ItemID), infe, tags);
                 }
             }
         }
@@ -511,6 +515,13 @@ namespace SharpMP4.Readers
         /// Specification Part 3; keyed by its box type.
         /// </summary>
         Xmp,
+
+        /// <summary>
+        /// A tag of an Exif item of a HEIF image (ISO/IEC 23008-12 A.2.1), keyed by its name (Make, DateTimeOriginal), in
+        /// the namespace of its IFD (IFD0, Exif, GPS, Interop, IFD1): ASCII as text, its terminating zero too; a rational as
+        /// numerator/denominator; numbers as long, of more than one long[] or string[].
+        /// </summary>
+        Exif,
     }
 
     /// <summary>A metadata tag as the file has it: its key, language and value.</summary>
