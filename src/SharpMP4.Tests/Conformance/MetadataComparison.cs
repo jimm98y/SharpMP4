@@ -107,6 +107,9 @@ public static partial class MetadataComparison
         var firstOnce = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var tag in sharp)
         {
+            // a value of an XMP packet: compared of its packet's tag, which is read below as ExifTool reads it
+            if (tag.Xmp != null)
+                continue;
             string scope = tag.Family == MetadataFamily.Xmp ? "file" : tag.TrackID == 0 ? "movie" : "track";
             string id = tag.Key ?? "";
             if (tag.Family == MetadataFamily.UserData && ReadIntoOtherGroups.ContainsKey(id))

@@ -20,10 +20,10 @@ namespace SharpMP4.Readers
         {
             var tags = new List<MetadataTag>();
             foreach (var xmp in file.Children.OfType<XMPCustomBox>())
-                tags.Add(Xmp(xmp, 0, xmp.Data.Bytes));
+                AddXmp(tags, xmp, 0, xmp.Data.Bytes);
             // JPEG XL's: a box of the file
             foreach (var xmp in file.Children.OfType<JpegXMLBox>())
-                tags.Add(Xmp(xmp, 0, xmp.Data.Bytes));
+                AddXmp(tags, xmp, 0, xmp.Data.Bytes);
             // JPEG XL's Exif: a box of the file, of the layout of a HEIF Exif item
             foreach (var exif in file.Children.OfType<ExifBox>())
             {
@@ -89,7 +89,7 @@ namespace SharpMP4.Readers
                 }
                 else if (box is XMPCustomBox xmp)
                 {
-                    tags.Add(Xmp(xmp, trackID, xmp.Data.Bytes));
+                    AddXmp(tags, xmp, trackID, xmp.Data.Bytes);
                 }
                 else if (box is UserDataBox udta && udta.Children != null)
                 {
@@ -201,7 +201,7 @@ namespace SharpMP4.Readers
                     // a hint track's information (ISO/IEC 14496-12 9.1.4, 9.1.5): structure, not a tag
                     break;
                 case XMPBox b:
-                    tags.Add(Xmp(b, trackID, b.Data));
+                    AddXmp(tags, b, trackID, b.Data);
                     break;
                 case QuickTimeTextBox text when text.Value != null:
                     AddQuickTime(text.Value);
@@ -292,9 +292,9 @@ namespace SharpMP4.Readers
             {
                 if (infe.ItemType == IsoStream.FromFourCC("mime") && UpToZero(infe.ContentType.Text) == "application/rdf+xml")
                 {
-                    byte[] packet = ItemData(file, meta, infe.ItemID);
+                    byte[] packet = ItemData(file, meta, infe.ItemID, out var extents);
                     if (packet != null)
-                        tags.Add(Xmp(infe, 0, packet));
+                        AddXmp(tags, infe, 0, packet, i => FileOffsetOf(extents, i));
                 }
                 else if (infe.ItemType == IsoStream.FromFourCC("Exif"))
                 {
@@ -386,8 +386,52 @@ namespace SharpMP4.Readers
             return data.ToArray();
         }
 
-        private static MetadataTag Xmp(Box box, uint trackID, byte[] packet) =>
-            new MetadataTag { Family = MetadataFamily.Xmp, Key = IsoStream.ToFourCC(box.FourCC), TrackID = trackID, Value = UpToZero(Encoding.UTF8.GetString(packet ?? Array.Empty<byte>())), Box = box };
+        /// <summary>
+        /// An XMP packet: a tag of the whole packet, then a tag of each of its values (<see cref="XmpReader"/>), each where
+        /// its bytes are in the file - of a box, right after its header, a 'uuid' box's type of it; of an item, of its extents.
+        /// </summary>
+        private static void AddXmp(List<MetadataTag> tags, Box box, uint trackID, byte[] packet, Func<long, long> fileOffset = null)
+        {
+            packet ??= Array.Empty<byte>();
+            if (fileOffset == null)
+            {
+                // a box made, not read, of no header: its last bytes
+                long start = box.Header != null
+                    ? box.GetBoxOffset() + (long)(box.Header.GetHeaderSizeInBits() / 8)
+                    : box.GetBoxOffset() + (long)box.Size - packet.Length;
+                fileOffset = i => start + i;
+            }
+            string text = UpToZero(Encoding.UTF8.GetString(packet));
+            int end = Array.IndexOf(packet, (byte)0);
+            tags.Add(new MetadataTag
+            {
+                Family = MetadataFamily.Xmp, Key = IsoStream.ToFourCC(box.FourCC), TrackID = trackID, Value = text, Box = box,
+                Offset = packet.Length > 0 ? fileOffset(0) : -1, Length = end < 0 ? packet.Length : end,
+            });
+            // where a value is, of its text: of bytes no UTF-8, the text is not of the bytes one for one - nowhere
+            byte[] encoded = Encoding.UTF8.GetBytes(text);
+            bool located = encoded.Length <= packet.Length && encoded.SequenceEqual(packet.Take(encoded.Length));
+
+            List<XmpProperty> properties;
+            try
+            {
+                properties = XmpReader.Read(text);
+            }
+            catch (Exception)
+            {
+                // no XML, or none XMP is of - broken, cut short, of a DTD: the packet's tag is all there is of it, as it is
+                return;
+            }
+            foreach (var property in properties)
+            {
+                tags.Add(new MetadataTag
+                {
+                    Family = MetadataFamily.Xmp, Key = property.PathText, Language = property.Language, TrackID = trackID, Value = property.Value,
+                    Box = box, Xmp = property,
+                    Offset = located && property.Offset >= 0 ? fileOffset(property.Offset) : -1, Length = located ? property.Length : 0,
+                });
+            }
+        }
 
         /// <summary>A box's bytes after its size and type: what a box read as bytes holds, or what the box writes.</summary>
         public static byte[] Payload(Box box)
@@ -647,6 +691,12 @@ namespace SharpMP4.Readers
         /// <summary>What the value means - of an Exif tag of codes, the code's meaning; of a rational, its number - beside it; null of none.</summary>
         public string Description { get; set; }
 
+        /// <summary>
+        /// Of a value of an XMP packet, the value as <see cref="XmpReader"/> reads it: its path, its namespaces; null of
+        /// another tag, and of the tag of the whole packet, which comes before its values.
+        /// </summary>
+        public XmpProperty Xmp { get; set; }
+
         public override string ToString() => $"{Family} {(TrackID != 0 ? $"track {TrackID} " : "")}{Key}{(Language != null ? "-" + Language : "")} = {ValueText(Value)}";
 
         internal static string ValueText(object value) => value switch
@@ -704,9 +754,18 @@ namespace SharpMP4.Readers
         /// <summary>The xml:lang in effect for the value (an item of a language alternative); null where there is none.</summary>
         public string Language { get; set; }
 
+        /// <summary>
+        /// Where the value is in the packet: of its UTF-8 bytes, the first of the value as written - an entity as it is
+        /// written, &amp;amp; - and how many; -1 where it is not known.
+        /// </summary>
+        public long Offset { get; set; } = -1;
+
+        public long Length { get; set; }
+
         /// <summary>The path as XMP writes it: xmpMM:History[2]/stEvt:action.</summary>
-        public override string ToString() =>
-            string.Concat(Path.Select((s, i) => s.Index > 0 ? s.ToString() : (i > 0 ? "/" : "") + s)) + " = " + Value + (Language != null ? $" ({Language})" : "");
+        public string PathText => string.Concat(Path.Select((s, i) => s.Index > 0 ? s.ToString() : (i > 0 ? "/" : "") + s));
+
+        public override string ToString() => PathText + " = " + Value + (Language != null ? $" ({Language})" : "");
     }
 
     /// <summary>
@@ -727,10 +786,12 @@ namespace SharpMP4.Readers
             if (string.IsNullOrEmpty(packet))
                 return properties;
 
+            string text = packet.TrimEnd('\0');
             XDocument document;
             var settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null };
-            using (var reader = XmlReader.Create(new StringReader(packet.TrimEnd('\0')), settings))
-                document = XDocument.Load(reader);
+            using (var reader = XmlReader.Create(new StringReader(text), settings))
+                document = XDocument.Load(reader, LoadOptions.SetLineInfo);
+            var where = new Positions(text);
 
             // x:xmpmeta names the toolkit that wrote the packet (7.3)
             XNamespace meta = "adobe:ns:meta/";
@@ -738,41 +799,41 @@ namespace SharpMP4.Readers
             {
                 var toolkit = xmpmeta.Attribute(meta + "xmptk");
                 if (toolkit != null)
-                    properties.Add(new XmpProperty { Path = new List<XmpStep> { Step(xmpmeta, toolkit.Name) }, Value = toolkit.Value });
+                    properties.Add(where.Of(toolkit, new XmpProperty { Path = new List<XmpStep> { Step(xmpmeta, toolkit.Name) }, Value = toolkit.Value }));
             }
 
             foreach (var rdf in document.Descendants(RdfNs + "RDF"))
             {
                 // what the packet is about (7.4): one URI, or none, for all its descriptions
                 foreach (var about in rdf.Elements(RdfNs + "Description").Select(d => d.Attribute(RdfNs + "about")).Where(a => !string.IsNullOrEmpty(a?.Value)).GroupBy(a => a.Value).Select(g => g.First()))
-                    properties.Add(new XmpProperty { Path = new List<XmpStep> { Step(about.Parent, about.Name) }, Value = about.Value });
+                    properties.Add(where.Of(about, new XmpProperty { Path = new List<XmpStep> { Step(about.Parent, about.Name) }, Value = about.Value }));
 
                 foreach (var description in rdf.Elements(RdfNs + "Description"))
-                    ReadFields(description, new List<XmpStep>(), (string)description.Attribute(Lang), properties);
+                    ReadFields(description, new List<XmpStep>(), (string)description.Attribute(Lang), properties, where);
             }
             return properties;
         }
 
         // The fields of a node - an rdf:Description or a structure: its attributes, then its elements
-        private static void ReadFields(XElement node, List<XmpStep> path, string language, List<XmpProperty> properties)
+        private static void ReadFields(XElement node, List<XmpStep> path, string language, List<XmpProperty> properties, Positions where)
         {
             foreach (var attribute in node.Attributes())
             {
                 if (attribute.IsNamespaceDeclaration || attribute.Name.Namespace == RdfNs || attribute.Name.Namespace == XNamespace.Xml || attribute.Name.Namespace == XNamespace.None)
                     continue;
-                properties.Add(new XmpProperty { Path = With(path, Step(node, attribute.Name)), Value = attribute.Value, Language = language });
+                properties.Add(where.Of(attribute, new XmpProperty { Path = With(path, Step(node, attribute.Name)), Value = attribute.Value, Language = language }));
             }
             foreach (var element in node.Elements())
-                ReadValue(element, With(path, Step(element, element.Name)), (string)element.Attribute(Lang) ?? language, properties);
+                ReadValue(element, With(path, Step(element, element.Name)), (string)element.Attribute(Lang) ?? language, properties, where);
         }
 
         // A property element's value (ISO 16684-1, 7.9): a resource, a structure, an array or text
-        private static void ReadValue(XElement element, List<XmpStep> path, string language, List<XmpProperty> properties)
+        private static void ReadValue(XElement element, List<XmpStep> path, string language, List<XmpProperty> properties, Positions where)
         {
             var resource = element.Attribute(RdfNs + "resource");
             if (resource != null)
             {
-                properties.Add(new XmpProperty { Path = path, Value = resource.Value, Language = language });
+                properties.Add(where.Of(resource, new XmpProperty { Path = path, Value = resource.Value, Language = language }));
                 return;
             }
 
@@ -780,13 +841,13 @@ namespace SharpMP4.Readers
             var qualified = element.Element(RdfNs + "value") ?? element.Element(RdfNs + "Description")?.Element(RdfNs + "value");
             if (qualified != null)
             {
-                ReadValue(qualified, path, (string)qualified.Attribute(Lang) ?? language, properties);
+                ReadValue(qualified, path, (string)qualified.Attribute(Lang) ?? language, properties, where);
                 return;
             }
 
             if ((string)element.Attribute(RdfNs + "parseType") == "Resource")
             {
-                ReadFields(element, path, language, properties);
+                ReadFields(element, path, language, properties, where);
                 return;
             }
 
@@ -795,33 +856,97 @@ namespace SharpMP4.Readers
             {
                 int index = 0;
                 foreach (var item in inner.Elements(RdfNs + "li"))
-                    ReadValue(item, With(path, new XmpStep { Index = ++index }), (string)item.Attribute(Lang) ?? language, properties);
+                    ReadValue(item, With(path, new XmpStep { Index = ++index }), (string)item.Attribute(Lang) ?? language, properties, where);
                 return;
             }
             if (inner != null && inner.Name == RdfNs + "Description")
             {
-                ReadFields(inner, path, (string)inner.Attribute(Lang) ?? language, properties);
+                ReadFields(inner, path, (string)inner.Attribute(Lang) ?? language, properties, where);
                 return;
             }
             if (inner != null)
             {
                 // a structure of fields, written as elements without rdf:parseType
-                ReadFields(element, path, language, properties);
+                ReadFields(element, path, language, properties, where);
                 return;
             }
 
             // a structure written as attributes only (7.9.2.5), or text
             if (element.Attributes().Any(a => !a.IsNamespaceDeclaration && a.Name.Namespace != RdfNs && a.Name.Namespace != XNamespace.Xml && a.Name.Namespace != XNamespace.None))
             {
-                ReadFields(element, path, language, properties);
+                ReadFields(element, path, language, properties, where);
                 return;
             }
-            properties.Add(new XmpProperty { Path = path, Value = element.Value, Language = language });
+            properties.Add(where.Of(element, new XmpProperty { Path = path, Value = element.Value, Language = language }));
         }
 
         private static XmpStep Step(XElement context, XName name) =>
             new XmpStep { Namespace = name.NamespaceName, Name = name.LocalName, Prefix = context.GetPrefixOfNamespace(name.Namespace) };
 
         private static List<XmpStep> With(List<XmpStep> path, XmpStep step) => new List<XmpStep>(path) { step };
+
+        /// <summary>Where the values of a packet's text are, as its UTF-8 bytes: of the lines and columns XML tells.</summary>
+        private sealed class Positions
+        {
+            private readonly string _text;
+            private readonly List<int> _lineStarts = new List<int> { 0 };
+
+            public Positions(string text)
+            {
+                _text = text;
+                for (int i = 0; i < text.Length; i++)
+                {
+                    // a line ends as XML ends one: at \r\n, \n or a \r alone
+                    if (text[i] == '\n' || text[i] == '\r' && (i + 1 == text.Length || text[i + 1] != '\n'))
+                        _lineStarts.Add(i + 1);
+                }
+            }
+
+            // an attribute's value: after its name, its = and its quote, up to the quote that ends it
+            public XmpProperty Of(XAttribute attribute, XmpProperty property)
+            {
+                if (CharacterOf(attribute) is int name)
+                {
+                    int quote = _text.IndexOf('=', name) + 1;
+                    while (quote > 0 && quote < _text.Length && char.IsWhiteSpace(_text[quote]))
+                        quote++;
+                    if (quote > 0 && quote < _text.Length && (_text[quote] == '"' || _text[quote] == '\''))
+                    {
+                        int end = _text.IndexOf(_text[quote], quote + 1);
+                        if (end > quote)
+                            Set(property, quote + 1, end);
+                    }
+                }
+                return property;
+            }
+
+            // an element's text: after the '>' that ends its start tag, up to the '<' of what comes after it
+            public XmpProperty Of(XElement element, XmpProperty property)
+            {
+                if (CharacterOf(element) is int start)
+                {
+                    int close = _text.IndexOf('>', start);
+                    if (close > 0 && _text[close - 1] == '/')
+                        Set(property, close + 1, close + 1);
+                    else if (close > 0 && _text.IndexOf('<', close + 1) is int end && end > close)
+                        Set(property, close + 1, end);
+                }
+                return property;
+            }
+
+            private int? CharacterOf(IXmlLineInfo info)
+            {
+                if (!info.HasLineInfo() || info.LineNumber < 1 || info.LineNumber > _lineStarts.Count)
+                    return null;
+                int index = _lineStarts[info.LineNumber - 1] + info.LinePosition - 1;
+                return index >= 0 && index < _text.Length ? index : (int?)null;
+            }
+
+            private void Set(XmpProperty property, int from, int to)
+            {
+                property.Offset = Encoding.UTF8.GetByteCount(_text.Substring(0, from));
+                property.Length = Encoding.UTF8.GetByteCount(_text.Substring(from, to - from));
+            }
+        }
     }
 }
