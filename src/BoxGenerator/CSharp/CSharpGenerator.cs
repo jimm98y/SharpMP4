@@ -486,6 +486,15 @@ namespace SharpISOBMFF
         }
 ");
 
+            // what the factory makes, to list
+            factory.Append(@"
+        /// <summary>The types <see cref=""DefaultCreateBox""/> makes a box of a class of its own of.</summary>
+        public static readonly string[] BoxTypes = { " + Literal(parserDocument.Boxes.Keys) + @" };
+
+        /// <summary>The types <see cref=""DefaultCreateEntry""/> makes an entry of a class of its own of.</summary>
+        public static readonly string[] EntryTypes = { " + Literal(parserDocument.Entries.Keys) + @" };
+");
+
             factory.Append(
     @"
     }
