@@ -1,0 +1,813 @@
+SharpH262.ActiveRegionWindow
+SharpH262.ActiveRegionWindow.ActiveHorizontalSizeLower.get -> uint
+SharpH262.ActiveRegionWindow.ActiveHorizontalSizeLower.set -> void
+SharpH262.ActiveRegionWindow.ActiveHorizontalSizeUpper.get -> uint
+SharpH262.ActiveRegionWindow.ActiveHorizontalSizeUpper.set -> void
+SharpH262.ActiveRegionWindow.ActiveRegionWindow() -> void
+SharpH262.ActiveRegionWindow.ActiveVerticalSizeLower.get -> uint
+SharpH262.ActiveRegionWindow.ActiveVerticalSizeLower.set -> void
+SharpH262.ActiveRegionWindow.ActiveVerticalSizeUpper.get -> uint
+SharpH262.ActiveRegionWindow.ActiveVerticalSizeUpper.set -> void
+SharpH262.ActiveRegionWindow.HasMoreRbspData.get -> int
+SharpH262.ActiveRegionWindow.HasMoreRbspData.set -> void
+SharpH262.ActiveRegionWindow.MarkerBit.get -> byte
+SharpH262.ActiveRegionWindow.MarkerBit.set -> void
+SharpH262.ActiveRegionWindow.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.ActiveRegionWindow.ReadNextBits.get -> int[]
+SharpH262.ActiveRegionWindow.ReadNextBits.set -> void
+SharpH262.ActiveRegionWindow.Syntax.get -> string
+SharpH262.ActiveRegionWindow.TopLeftxLower.get -> uint
+SharpH262.ActiveRegionWindow.TopLeftxLower.set -> void
+SharpH262.ActiveRegionWindow.TopLeftxUpper.get -> uint
+SharpH262.ActiveRegionWindow.TopLeftxUpper.set -> void
+SharpH262.ActiveRegionWindow.TopLeftyLower.get -> uint
+SharpH262.ActiveRegionWindow.TopLeftyLower.set -> void
+SharpH262.ActiveRegionWindow.TopLeftyUpper.get -> uint
+SharpH262.ActiveRegionWindow.TopLeftyUpper.set -> void
+SharpH262.ActiveRegionWindow.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.AdditionalPanScanParameters
+SharpH262.AdditionalPanScanParameters.AdditionalPanScanParameters() -> void
+SharpH262.AdditionalPanScanParameters.AspectRatioInformation.get -> uint
+SharpH262.AdditionalPanScanParameters.AspectRatioInformation.set -> void
+SharpH262.AdditionalPanScanParameters.DisplayHorizontalSizeLower.get -> uint
+SharpH262.AdditionalPanScanParameters.DisplayHorizontalSizeLower.set -> void
+SharpH262.AdditionalPanScanParameters.DisplayHorizontalSizeUpper.get -> uint
+SharpH262.AdditionalPanScanParameters.DisplayHorizontalSizeUpper.set -> void
+SharpH262.AdditionalPanScanParameters.DisplaySizePresent.get -> byte
+SharpH262.AdditionalPanScanParameters.DisplaySizePresent.set -> void
+SharpH262.AdditionalPanScanParameters.DisplayVerticalSizeLower.get -> uint
+SharpH262.AdditionalPanScanParameters.DisplayVerticalSizeLower.set -> void
+SharpH262.AdditionalPanScanParameters.DisplayVerticalSizeUpper.get -> uint
+SharpH262.AdditionalPanScanParameters.DisplayVerticalSizeUpper.set -> void
+SharpH262.AdditionalPanScanParameters.FrameCentreHorizontalOffsetLower.get -> uint[]
+SharpH262.AdditionalPanScanParameters.FrameCentreHorizontalOffsetLower.set -> void
+SharpH262.AdditionalPanScanParameters.FrameCentreHorizontalOffsetUpper.get -> int[]
+SharpH262.AdditionalPanScanParameters.FrameCentreHorizontalOffsetUpper.set -> void
+SharpH262.AdditionalPanScanParameters.FrameCentreVerticalOffsetLower.get -> uint[]
+SharpH262.AdditionalPanScanParameters.FrameCentreVerticalOffsetLower.set -> void
+SharpH262.AdditionalPanScanParameters.FrameCentreVerticalOffsetUpper.get -> int[]
+SharpH262.AdditionalPanScanParameters.FrameCentreVerticalOffsetUpper.set -> void
+SharpH262.AdditionalPanScanParameters.HasMoreRbspData.get -> int
+SharpH262.AdditionalPanScanParameters.HasMoreRbspData.set -> void
+SharpH262.AdditionalPanScanParameters.LoopMarkerBit.get -> byte[]
+SharpH262.AdditionalPanScanParameters.LoopMarkerBit.set -> void
+SharpH262.AdditionalPanScanParameters.MarkerBit.get -> byte
+SharpH262.AdditionalPanScanParameters.MarkerBit.set -> void
+SharpH262.AdditionalPanScanParameters.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.AdditionalPanScanParameters.ReadNextBits.get -> int[]
+SharpH262.AdditionalPanScanParameters.ReadNextBits.set -> void
+SharpH262.AdditionalPanScanParameters.ReservedBit.get -> byte
+SharpH262.AdditionalPanScanParameters.ReservedBit.set -> void
+SharpH262.AdditionalPanScanParameters.Syntax.get -> string
+SharpH262.AdditionalPanScanParameters.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.CameraParametersExtension
+SharpH262.CameraParametersExtension.CameraDirectionx.get -> int
+SharpH262.CameraParametersExtension.CameraDirectionx.set -> void
+SharpH262.CameraParametersExtension.CameraDirectiony.get -> int
+SharpH262.CameraParametersExtension.CameraDirectiony.set -> void
+SharpH262.CameraParametersExtension.CameraDirectionz.get -> int
+SharpH262.CameraParametersExtension.CameraDirectionz.set -> void
+SharpH262.CameraParametersExtension.CameraId.get -> int
+SharpH262.CameraParametersExtension.CameraId.set -> void
+SharpH262.CameraParametersExtension.CameraParametersExtension() -> void
+SharpH262.CameraParametersExtension.CameraPositionxLower.get -> uint
+SharpH262.CameraParametersExtension.CameraPositionxLower.set -> void
+SharpH262.CameraParametersExtension.CameraPositionxUpper.get -> int
+SharpH262.CameraParametersExtension.CameraPositionxUpper.set -> void
+SharpH262.CameraParametersExtension.CameraPositionyLower.get -> uint
+SharpH262.CameraParametersExtension.CameraPositionyLower.set -> void
+SharpH262.CameraParametersExtension.CameraPositionyUpper.get -> int
+SharpH262.CameraParametersExtension.CameraPositionyUpper.set -> void
+SharpH262.CameraParametersExtension.CameraPositionzLower.get -> uint
+SharpH262.CameraParametersExtension.CameraPositionzLower.set -> void
+SharpH262.CameraParametersExtension.CameraPositionzUpper.get -> int
+SharpH262.CameraParametersExtension.CameraPositionzUpper.set -> void
+SharpH262.CameraParametersExtension.ExtensionStartCodeIdentifier.get -> uint
+SharpH262.CameraParametersExtension.ExtensionStartCodeIdentifier.set -> void
+SharpH262.CameraParametersExtension.FocalLength.get -> uint
+SharpH262.CameraParametersExtension.FocalLength.set -> void
+SharpH262.CameraParametersExtension.HasMoreRbspData.get -> int
+SharpH262.CameraParametersExtension.HasMoreRbspData.set -> void
+SharpH262.CameraParametersExtension.HeightOfImageDevice.get -> uint
+SharpH262.CameraParametersExtension.HeightOfImageDevice.set -> void
+SharpH262.CameraParametersExtension.ImagePlaneVerticalx.get -> int
+SharpH262.CameraParametersExtension.ImagePlaneVerticalx.set -> void
+SharpH262.CameraParametersExtension.ImagePlaneVerticaly.get -> int
+SharpH262.CameraParametersExtension.ImagePlaneVerticaly.set -> void
+SharpH262.CameraParametersExtension.ImagePlaneVerticalz.get -> int
+SharpH262.CameraParametersExtension.ImagePlaneVerticalz.set -> void
+SharpH262.CameraParametersExtension.MarkerBit.get -> byte
+SharpH262.CameraParametersExtension.MarkerBit.set -> void
+SharpH262.CameraParametersExtension.NextStartCode.get -> SharpH262.NextStartCode
+SharpH262.CameraParametersExtension.NextStartCode.set -> void
+SharpH262.CameraParametersExtension.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.CameraParametersExtension.ReadNextBits.get -> int[]
+SharpH262.CameraParametersExtension.ReadNextBits.set -> void
+SharpH262.CameraParametersExtension.Reserved.get -> byte
+SharpH262.CameraParametersExtension.Reserved.set -> void
+SharpH262.CameraParametersExtension.Syntax.get -> string
+SharpH262.CameraParametersExtension.VerticalAngleOfView.get -> uint
+SharpH262.CameraParametersExtension.VerticalAngleOfView.set -> void
+SharpH262.CameraParametersExtension.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.CameraParametersExtension.fNumber.get -> uint
+SharpH262.CameraParametersExtension.fNumber.set -> void
+SharpH262.CaptureTimecode
+SharpH262.CaptureTimecode.CaptureTimecode() -> void
+SharpH262.CaptureTimecode.ClockDivisor.get -> uint
+SharpH262.CaptureTimecode.ClockDivisor.set -> void
+SharpH262.CaptureTimecode.CountingType.get -> uint
+SharpH262.CaptureTimecode.CountingType.set -> void
+SharpH262.CaptureTimecode.FrameOrFieldCaptureTimestamp.get -> SharpH262.FrameOrFieldCaptureTimestamp
+SharpH262.CaptureTimecode.FrameOrFieldCaptureTimestamp.set -> void
+SharpH262.CaptureTimecode.HasMoreRbspData.get -> int
+SharpH262.CaptureTimecode.HasMoreRbspData.set -> void
+SharpH262.CaptureTimecode.MarkerBit.get -> byte
+SharpH262.CaptureTimecode.MarkerBit.set -> void
+SharpH262.CaptureTimecode.NframesConversionCode.get -> byte
+SharpH262.CaptureTimecode.NframesConversionCode.set -> void
+SharpH262.CaptureTimecode.NframesMultiplierLower.get -> uint
+SharpH262.CaptureTimecode.NframesMultiplierLower.set -> void
+SharpH262.CaptureTimecode.NframesMultiplierUpper.get -> uint
+SharpH262.CaptureTimecode.NframesMultiplierUpper.set -> void
+SharpH262.CaptureTimecode.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.CaptureTimecode.ReadNextBits.get -> int[]
+SharpH262.CaptureTimecode.ReadNextBits.set -> void
+SharpH262.CaptureTimecode.ReservedBit.get -> byte
+SharpH262.CaptureTimecode.ReservedBit.set -> void
+SharpH262.CaptureTimecode.Syntax.get -> string
+SharpH262.CaptureTimecode.TimecodeType.get -> uint
+SharpH262.CaptureTimecode.TimecodeType.set -> void
+SharpH262.CaptureTimecode.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.CodedPictureLength
+SharpH262.CodedPictureLength.CodedPictureLength() -> void
+SharpH262.CodedPictureLength.HasMoreRbspData.get -> int
+SharpH262.CodedPictureLength.HasMoreRbspData.set -> void
+SharpH262.CodedPictureLength.MarkerBit.get -> byte
+SharpH262.CodedPictureLength.MarkerBit.set -> void
+SharpH262.CodedPictureLength.PictureByteCountParta.get -> uint
+SharpH262.CodedPictureLength.PictureByteCountParta.set -> void
+SharpH262.CodedPictureLength.PictureByteCountPartb.get -> uint
+SharpH262.CodedPictureLength.PictureByteCountPartb.set -> void
+SharpH262.CodedPictureLength.PictureByteCountPartc.get -> uint
+SharpH262.CodedPictureLength.PictureByteCountPartc.set -> void
+SharpH262.CodedPictureLength.PictureByteCountPartd.get -> uint
+SharpH262.CodedPictureLength.PictureByteCountPartd.set -> void
+SharpH262.CodedPictureLength.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.CodedPictureLength.ReadNextBits.get -> int[]
+SharpH262.CodedPictureLength.ReadNextBits.set -> void
+SharpH262.CodedPictureLength.Syntax.get -> string
+SharpH262.CodedPictureLength.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.ContentDescriptionData
+SharpH262.ContentDescriptionData.ActiveRegionWindow.get -> SharpH262.ActiveRegionWindow
+SharpH262.ContentDescriptionData.ActiveRegionWindow.set -> void
+SharpH262.ContentDescriptionData.AdditionalPanScanParameters.get -> SharpH262.AdditionalPanScanParameters
+SharpH262.ContentDescriptionData.AdditionalPanScanParameters.set -> void
+SharpH262.ContentDescriptionData.CaptureTimecode.get -> SharpH262.CaptureTimecode
+SharpH262.ContentDescriptionData.CaptureTimecode.set -> void
+SharpH262.ContentDescriptionData.CodedPictureLength.get -> SharpH262.CodedPictureLength
+SharpH262.ContentDescriptionData.CodedPictureLength.set -> void
+SharpH262.ContentDescriptionData.ContentDescriptionData() -> void
+SharpH262.ContentDescriptionData.DataLength.get -> uint
+SharpH262.ContentDescriptionData.DataLength.set -> void
+SharpH262.ContentDescriptionData.DataTypeLower.get -> uint
+SharpH262.ContentDescriptionData.DataTypeLower.set -> void
+SharpH262.ContentDescriptionData.DataTypeUpper.get -> uint
+SharpH262.ContentDescriptionData.DataTypeUpper.set -> void
+SharpH262.ContentDescriptionData.HasMoreRbspData.get -> int
+SharpH262.ContentDescriptionData.HasMoreRbspData.set -> void
+SharpH262.ContentDescriptionData.LoopMarkerBit.get -> byte[]
+SharpH262.ContentDescriptionData.LoopMarkerBit.set -> void
+SharpH262.ContentDescriptionData.MarkerBit.get -> byte
+SharpH262.ContentDescriptionData.MarkerBit.set -> void
+SharpH262.ContentDescriptionData.PaddingBytes.get -> SharpH262.PaddingBytes
+SharpH262.ContentDescriptionData.PaddingBytes.set -> void
+SharpH262.ContentDescriptionData.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.ContentDescriptionData.ReadNextBits.get -> int[]
+SharpH262.ContentDescriptionData.ReadNextBits.set -> void
+SharpH262.ContentDescriptionData.ReservedContentDescriptionData.get -> uint[]
+SharpH262.ContentDescriptionData.ReservedContentDescriptionData.set -> void
+SharpH262.ContentDescriptionData.Syntax.get -> string
+SharpH262.ContentDescriptionData.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.CopyrightExtension
+SharpH262.CopyrightExtension.CopyrightExtension() -> void
+SharpH262.CopyrightExtension.CopyrightFlag.get -> byte
+SharpH262.CopyrightExtension.CopyrightFlag.set -> void
+SharpH262.CopyrightExtension.CopyrightIdentifier.get -> uint
+SharpH262.CopyrightExtension.CopyrightIdentifier.set -> void
+SharpH262.CopyrightExtension.CopyrightNumber1.get -> uint
+SharpH262.CopyrightExtension.CopyrightNumber1.set -> void
+SharpH262.CopyrightExtension.CopyrightNumber2.get -> uint
+SharpH262.CopyrightExtension.CopyrightNumber2.set -> void
+SharpH262.CopyrightExtension.CopyrightNumber3.get -> uint
+SharpH262.CopyrightExtension.CopyrightNumber3.set -> void
+SharpH262.CopyrightExtension.ExtensionStartCodeIdentifier.get -> uint
+SharpH262.CopyrightExtension.ExtensionStartCodeIdentifier.set -> void
+SharpH262.CopyrightExtension.HasMoreRbspData.get -> int
+SharpH262.CopyrightExtension.HasMoreRbspData.set -> void
+SharpH262.CopyrightExtension.MarkerBit.get -> byte
+SharpH262.CopyrightExtension.MarkerBit.set -> void
+SharpH262.CopyrightExtension.NextStartCode.get -> SharpH262.NextStartCode
+SharpH262.CopyrightExtension.NextStartCode.set -> void
+SharpH262.CopyrightExtension.OriginalOrCopy.get -> byte
+SharpH262.CopyrightExtension.OriginalOrCopy.set -> void
+SharpH262.CopyrightExtension.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.CopyrightExtension.ReadNextBits.get -> int[]
+SharpH262.CopyrightExtension.ReadNextBits.set -> void
+SharpH262.CopyrightExtension.Reserved.get -> uint
+SharpH262.CopyrightExtension.Reserved.set -> void
+SharpH262.CopyrightExtension.Syntax.get -> string
+SharpH262.CopyrightExtension.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.ExtensionData
+SharpH262.ExtensionData.After.get -> uint
+SharpH262.ExtensionData.After.set -> void
+SharpH262.ExtensionData.CameraParametersExtension.get -> SharpH262.CameraParametersExtension
+SharpH262.ExtensionData.CameraParametersExtension.set -> void
+SharpH262.ExtensionData.CopyrightExtension.get -> SharpH262.CopyrightExtension
+SharpH262.ExtensionData.CopyrightExtension.set -> void
+SharpH262.ExtensionData.ExtensionData(uint after) -> void
+SharpH262.ExtensionData.ExtensionStartCode.get -> uint
+SharpH262.ExtensionData.ExtensionStartCode.set -> void
+SharpH262.ExtensionData.HasMoreRbspData.get -> int
+SharpH262.ExtensionData.HasMoreRbspData.set -> void
+SharpH262.ExtensionData.ItutExtension.get -> SharpH262.ItutExtension
+SharpH262.ExtensionData.ItutExtension.set -> void
+SharpH262.ExtensionData.PictureDisplayExtension.get -> SharpH262.PictureDisplayExtension
+SharpH262.ExtensionData.PictureDisplayExtension.set -> void
+SharpH262.ExtensionData.PictureSpatialScalableExtension.get -> SharpH262.PictureSpatialScalableExtension
+SharpH262.ExtensionData.PictureSpatialScalableExtension.set -> void
+SharpH262.ExtensionData.PictureTemporalScalableExtension.get -> SharpH262.PictureTemporalScalableExtension
+SharpH262.ExtensionData.PictureTemporalScalableExtension.set -> void
+SharpH262.ExtensionData.QuantMatrixExtension.get -> SharpH262.QuantMatrixExtension
+SharpH262.ExtensionData.QuantMatrixExtension.set -> void
+SharpH262.ExtensionData.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.ExtensionData.ReadNextBits.get -> int[]
+SharpH262.ExtensionData.ReadNextBits.set -> void
+SharpH262.ExtensionData.ReservedExtensionDataByte.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpH262.ExtensionData.ReservedExtensionDataByte.set -> void
+SharpH262.ExtensionData.SequenceDisplayExtension.get -> SharpH262.SequenceDisplayExtension
+SharpH262.ExtensionData.SequenceDisplayExtension.set -> void
+SharpH262.ExtensionData.SequenceScalableExtension.get -> SharpH262.SequenceScalableExtension
+SharpH262.ExtensionData.SequenceScalableExtension.set -> void
+SharpH262.ExtensionData.Syntax.get -> string
+SharpH262.ExtensionData.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.FrameOrFieldCaptureTimestamp
+SharpH262.FrameOrFieldCaptureTimestamp.FrameOrFieldCaptureTimestamp() -> void
+SharpH262.FrameOrFieldCaptureTimestamp.HasMoreRbspData.get -> int
+SharpH262.FrameOrFieldCaptureTimestamp.HasMoreRbspData.set -> void
+SharpH262.FrameOrFieldCaptureTimestamp.MarkerBit.get -> byte
+SharpH262.FrameOrFieldCaptureTimestamp.MarkerBit.set -> void
+SharpH262.FrameOrFieldCaptureTimestamp.Nframes.get -> uint
+SharpH262.FrameOrFieldCaptureTimestamp.Nframes.set -> void
+SharpH262.FrameOrFieldCaptureTimestamp.PriorCountDropped.get -> byte
+SharpH262.FrameOrFieldCaptureTimestamp.PriorCountDropped.set -> void
+SharpH262.FrameOrFieldCaptureTimestamp.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.FrameOrFieldCaptureTimestamp.ReadNextBits.get -> int[]
+SharpH262.FrameOrFieldCaptureTimestamp.ReadNextBits.set -> void
+SharpH262.FrameOrFieldCaptureTimestamp.Syntax.get -> string
+SharpH262.FrameOrFieldCaptureTimestamp.TensOfHours.get -> uint
+SharpH262.FrameOrFieldCaptureTimestamp.TensOfHours.set -> void
+SharpH262.FrameOrFieldCaptureTimestamp.TensOfMinutes.get -> uint
+SharpH262.FrameOrFieldCaptureTimestamp.TensOfMinutes.set -> void
+SharpH262.FrameOrFieldCaptureTimestamp.TensOfSeconds.get -> uint
+SharpH262.FrameOrFieldCaptureTimestamp.TensOfSeconds.set -> void
+SharpH262.FrameOrFieldCaptureTimestamp.TimeDiscontinuity.get -> byte
+SharpH262.FrameOrFieldCaptureTimestamp.TimeDiscontinuity.set -> void
+SharpH262.FrameOrFieldCaptureTimestamp.TimeOffsetParta.get -> int
+SharpH262.FrameOrFieldCaptureTimestamp.TimeOffsetParta.set -> void
+SharpH262.FrameOrFieldCaptureTimestamp.TimeOffsetPartb.get -> uint
+SharpH262.FrameOrFieldCaptureTimestamp.TimeOffsetPartb.set -> void
+SharpH262.FrameOrFieldCaptureTimestamp.TimeOffsetPartc.get -> uint
+SharpH262.FrameOrFieldCaptureTimestamp.TimeOffsetPartc.set -> void
+SharpH262.FrameOrFieldCaptureTimestamp.TimeOffsetPartd.get -> uint
+SharpH262.FrameOrFieldCaptureTimestamp.TimeOffsetPartd.set -> void
+SharpH262.FrameOrFieldCaptureTimestamp.UnitsOfHours.get -> uint
+SharpH262.FrameOrFieldCaptureTimestamp.UnitsOfHours.set -> void
+SharpH262.FrameOrFieldCaptureTimestamp.UnitsOfMinutes.get -> uint
+SharpH262.FrameOrFieldCaptureTimestamp.UnitsOfMinutes.set -> void
+SharpH262.FrameOrFieldCaptureTimestamp.UnitsOfSeconds.get -> uint
+SharpH262.FrameOrFieldCaptureTimestamp.UnitsOfSeconds.set -> void
+SharpH262.FrameOrFieldCaptureTimestamp.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.GroupOfPicturesHeader
+SharpH262.GroupOfPicturesHeader.BrokenLink.get -> byte
+SharpH262.GroupOfPicturesHeader.BrokenLink.set -> void
+SharpH262.GroupOfPicturesHeader.ClosedGop.get -> byte
+SharpH262.GroupOfPicturesHeader.ClosedGop.set -> void
+SharpH262.GroupOfPicturesHeader.GroupOfPicturesHeader() -> void
+SharpH262.GroupOfPicturesHeader.GroupStartCode.get -> uint
+SharpH262.GroupOfPicturesHeader.GroupStartCode.set -> void
+SharpH262.GroupOfPicturesHeader.HasMoreRbspData.get -> int
+SharpH262.GroupOfPicturesHeader.HasMoreRbspData.set -> void
+SharpH262.GroupOfPicturesHeader.NextStartCode.get -> SharpH262.NextStartCode
+SharpH262.GroupOfPicturesHeader.NextStartCode.set -> void
+SharpH262.GroupOfPicturesHeader.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.GroupOfPicturesHeader.ReadNextBits.get -> int[]
+SharpH262.GroupOfPicturesHeader.ReadNextBits.set -> void
+SharpH262.GroupOfPicturesHeader.Syntax.get -> string
+SharpH262.GroupOfPicturesHeader.TimeCode.get -> uint
+SharpH262.GroupOfPicturesHeader.TimeCode.set -> void
+SharpH262.GroupOfPicturesHeader.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.H262Context
+SharpH262.H262Context.AtStartCode(SharpH26X.ItuStream stream) -> bool
+SharpH262.H262Context.CountingType.get -> uint
+SharpH262.H262Context.CountingType.set -> void
+SharpH262.H262Context.DataLength.get -> uint
+SharpH262.H262Context.DataLength.set -> void
+SharpH262.H262Context.DataType.get -> uint
+SharpH262.H262Context.DataType.set -> void
+SharpH262.H262Context.ExtensionsAfter.get -> uint
+SharpH262.H262Context.H262Context() -> void
+SharpH262.H262Context.HorizontalSize.get -> uint
+SharpH262.H262Context.NextBits(SharpH26X.ItuStream stream, int count) -> long
+SharpH262.H262Context.NumberOfFrameCentreOffsets.get -> int
+SharpH262.H262Context.PictureCodingExtension.get -> SharpH262.PictureCodingExtension
+SharpH262.H262Context.PictureCodingExtension.set -> void
+SharpH262.H262Context.PictureHeader.get -> SharpH262.PictureHeader
+SharpH262.H262Context.PictureHeader.set -> void
+SharpH262.H262Context.ReadUnit(SharpH26X.ItuStream stream) -> SharpH26X.IItuSerializable
+SharpH262.H262Context.SequenceExtension.get -> SharpH262.SequenceExtension
+SharpH262.H262Context.SequenceExtension.set -> void
+SharpH262.H262Context.SequenceHeader.get -> SharpH262.SequenceHeader
+SharpH262.H262Context.SequenceHeader.set -> void
+SharpH262.H262Context.SequenceScalableExtension.get -> SharpH262.SequenceScalableExtension
+SharpH262.H262Context.SequenceScalableExtension.set -> void
+SharpH262.H262Context.VerticalSize.get -> uint
+SharpH262.H262Context.WriteUnit(SharpH26X.ItuStream stream, SharpH26X.IItuSerializable unit) -> void
+SharpH262.H262ExtensionIds
+SharpH262.H262StartCodes
+SharpH262.ItutExtension
+SharpH262.ItutExtension.ExtensionStartCodeIdentifier.get -> uint
+SharpH262.ItutExtension.ExtensionStartCodeIdentifier.set -> void
+SharpH262.ItutExtension.HasMoreRbspData.get -> int
+SharpH262.ItutExtension.HasMoreRbspData.set -> void
+SharpH262.ItutExtension.ItutData.get -> System.Collections.Generic.Dictionary<int, byte>
+SharpH262.ItutExtension.ItutData.set -> void
+SharpH262.ItutExtension.ItutExtension() -> void
+SharpH262.ItutExtension.NextStartCode.get -> SharpH262.NextStartCode
+SharpH262.ItutExtension.NextStartCode.set -> void
+SharpH262.ItutExtension.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.ItutExtension.ReadNextBits.get -> int[]
+SharpH262.ItutExtension.ReadNextBits.set -> void
+SharpH262.ItutExtension.Syntax.get -> string
+SharpH262.ItutExtension.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.NextStartCode
+SharpH262.NextStartCode.AlignmentBitCount.get -> int
+SharpH262.NextStartCode.AlignmentBitCount.set -> void
+SharpH262.NextStartCode.AlignmentBits.get -> int
+SharpH262.NextStartCode.AlignmentBits.set -> void
+SharpH262.NextStartCode.HasMoreRbspData.get -> int
+SharpH262.NextStartCode.HasMoreRbspData.set -> void
+SharpH262.NextStartCode.NextStartCode() -> void
+SharpH262.NextStartCode.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.NextStartCode.ReadNextBits.get -> int[]
+SharpH262.NextStartCode.ReadNextBits.set -> void
+SharpH262.NextStartCode.Stuffing.get -> byte[]
+SharpH262.NextStartCode.Stuffing.set -> void
+SharpH262.NextStartCode.Syntax.get -> string
+SharpH262.NextStartCode.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.PaddingBytes
+SharpH262.PaddingBytes.HasMoreRbspData.get -> int
+SharpH262.PaddingBytes.HasMoreRbspData.set -> void
+SharpH262.PaddingBytes.LoopMarkerBit.get -> byte[]
+SharpH262.PaddingBytes.LoopMarkerBit.set -> void
+SharpH262.PaddingBytes.PaddingByte.get -> uint[]
+SharpH262.PaddingBytes.PaddingByte.set -> void
+SharpH262.PaddingBytes.PaddingBytes() -> void
+SharpH262.PaddingBytes.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.PaddingBytes.ReadNextBits.get -> int[]
+SharpH262.PaddingBytes.ReadNextBits.set -> void
+SharpH262.PaddingBytes.Syntax.get -> string
+SharpH262.PaddingBytes.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.PictureCodingExtension
+SharpH262.PictureCodingExtension.AlternateScan.get -> byte
+SharpH262.PictureCodingExtension.AlternateScan.set -> void
+SharpH262.PictureCodingExtension.BurstAmplitude.get -> uint
+SharpH262.PictureCodingExtension.BurstAmplitude.set -> void
+SharpH262.PictureCodingExtension.Chroma420Type.get -> byte
+SharpH262.PictureCodingExtension.Chroma420Type.set -> void
+SharpH262.PictureCodingExtension.CompositeDisplayFlag.get -> byte
+SharpH262.PictureCodingExtension.CompositeDisplayFlag.set -> void
+SharpH262.PictureCodingExtension.ConcealmentMotionVectors.get -> byte
+SharpH262.PictureCodingExtension.ConcealmentMotionVectors.set -> void
+SharpH262.PictureCodingExtension.ExtensionStartCode.get -> uint
+SharpH262.PictureCodingExtension.ExtensionStartCode.set -> void
+SharpH262.PictureCodingExtension.ExtensionStartCodeIdentifier.get -> uint
+SharpH262.PictureCodingExtension.ExtensionStartCodeIdentifier.set -> void
+SharpH262.PictureCodingExtension.FieldSequence.get -> uint
+SharpH262.PictureCodingExtension.FieldSequence.set -> void
+SharpH262.PictureCodingExtension.FramePredFrameDct.get -> byte
+SharpH262.PictureCodingExtension.FramePredFrameDct.set -> void
+SharpH262.PictureCodingExtension.HasMoreRbspData.get -> int
+SharpH262.PictureCodingExtension.HasMoreRbspData.set -> void
+SharpH262.PictureCodingExtension.IntraDcPrecision.get -> uint
+SharpH262.PictureCodingExtension.IntraDcPrecision.set -> void
+SharpH262.PictureCodingExtension.IntraVlcFormat.get -> byte
+SharpH262.PictureCodingExtension.IntraVlcFormat.set -> void
+SharpH262.PictureCodingExtension.NextStartCode.get -> SharpH262.NextStartCode
+SharpH262.PictureCodingExtension.NextStartCode.set -> void
+SharpH262.PictureCodingExtension.PictureCodingExtension() -> void
+SharpH262.PictureCodingExtension.PictureStructure.get -> uint
+SharpH262.PictureCodingExtension.PictureStructure.set -> void
+SharpH262.PictureCodingExtension.ProgressiveFrame.get -> byte
+SharpH262.PictureCodingExtension.ProgressiveFrame.set -> void
+SharpH262.PictureCodingExtension.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.PictureCodingExtension.ReadNextBits.get -> int[]
+SharpH262.PictureCodingExtension.ReadNextBits.set -> void
+SharpH262.PictureCodingExtension.RepeatFirstField.get -> byte
+SharpH262.PictureCodingExtension.RepeatFirstField.set -> void
+SharpH262.PictureCodingExtension.SubCarrier.get -> byte
+SharpH262.PictureCodingExtension.SubCarrier.set -> void
+SharpH262.PictureCodingExtension.SubCarrierPhase.get -> uint
+SharpH262.PictureCodingExtension.SubCarrierPhase.set -> void
+SharpH262.PictureCodingExtension.Syntax.get -> string
+SharpH262.PictureCodingExtension.TopFieldFirst.get -> byte
+SharpH262.PictureCodingExtension.TopFieldFirst.set -> void
+SharpH262.PictureCodingExtension.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.PictureCodingExtension.fCode.get -> uint[][]
+SharpH262.PictureCodingExtension.fCode.set -> void
+SharpH262.PictureCodingExtension.qScaleType.get -> byte
+SharpH262.PictureCodingExtension.qScaleType.set -> void
+SharpH262.PictureCodingExtension.vAxis.get -> byte
+SharpH262.PictureCodingExtension.vAxis.set -> void
+SharpH262.PictureDisplayExtension
+SharpH262.PictureDisplayExtension.ExtensionStartCodeIdentifier.get -> uint
+SharpH262.PictureDisplayExtension.ExtensionStartCodeIdentifier.set -> void
+SharpH262.PictureDisplayExtension.FrameCentreHorizontalOffset.get -> int[]
+SharpH262.PictureDisplayExtension.FrameCentreHorizontalOffset.set -> void
+SharpH262.PictureDisplayExtension.FrameCentreVerticalOffset.get -> int[]
+SharpH262.PictureDisplayExtension.FrameCentreVerticalOffset.set -> void
+SharpH262.PictureDisplayExtension.HasMoreRbspData.get -> int
+SharpH262.PictureDisplayExtension.HasMoreRbspData.set -> void
+SharpH262.PictureDisplayExtension.LoopMarkerBit.get -> byte[]
+SharpH262.PictureDisplayExtension.LoopMarkerBit.set -> void
+SharpH262.PictureDisplayExtension.NextStartCode.get -> SharpH262.NextStartCode
+SharpH262.PictureDisplayExtension.NextStartCode.set -> void
+SharpH262.PictureDisplayExtension.PictureDisplayExtension() -> void
+SharpH262.PictureDisplayExtension.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.PictureDisplayExtension.ReadNextBits.get -> int[]
+SharpH262.PictureDisplayExtension.ReadNextBits.set -> void
+SharpH262.PictureDisplayExtension.Syntax.get -> string
+SharpH262.PictureDisplayExtension.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.PictureHeader
+SharpH262.PictureHeader.BackwardfCode.get -> uint
+SharpH262.PictureHeader.BackwardfCode.set -> void
+SharpH262.PictureHeader.ContentDescriptionData.get -> System.Collections.Generic.Dictionary<int, SharpH262.ContentDescriptionData>
+SharpH262.PictureHeader.ContentDescriptionData.set -> void
+SharpH262.PictureHeader.ExtraBitPicture.get -> System.Collections.Generic.Dictionary<int, byte>
+SharpH262.PictureHeader.ExtraBitPicture.set -> void
+SharpH262.PictureHeader.ForwardfCode.get -> uint
+SharpH262.PictureHeader.ForwardfCode.set -> void
+SharpH262.PictureHeader.FullPelBackwardVector.get -> byte
+SharpH262.PictureHeader.FullPelBackwardVector.set -> void
+SharpH262.PictureHeader.FullPelForwardVector.get -> byte
+SharpH262.PictureHeader.FullPelForwardVector.set -> void
+SharpH262.PictureHeader.HasMoreRbspData.get -> int
+SharpH262.PictureHeader.HasMoreRbspData.set -> void
+SharpH262.PictureHeader.LastExtraBitPicture.get -> byte
+SharpH262.PictureHeader.LastExtraBitPicture.set -> void
+SharpH262.PictureHeader.NextStartCode.get -> SharpH262.NextStartCode
+SharpH262.PictureHeader.NextStartCode.set -> void
+SharpH262.PictureHeader.PictureCodingType.get -> uint
+SharpH262.PictureHeader.PictureCodingType.set -> void
+SharpH262.PictureHeader.PictureHeader() -> void
+SharpH262.PictureHeader.PictureStartCode.get -> uint
+SharpH262.PictureHeader.PictureStartCode.set -> void
+SharpH262.PictureHeader.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.PictureHeader.ReadNextBits.get -> int[]
+SharpH262.PictureHeader.ReadNextBits.set -> void
+SharpH262.PictureHeader.Syntax.get -> string
+SharpH262.PictureHeader.TemporalReference.get -> uint
+SharpH262.PictureHeader.TemporalReference.set -> void
+SharpH262.PictureHeader.VbvDelay.get -> uint
+SharpH262.PictureHeader.VbvDelay.set -> void
+SharpH262.PictureHeader.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.PictureSpatialScalableExtension
+SharpH262.PictureSpatialScalableExtension.ExtensionStartCodeIdentifier.get -> uint
+SharpH262.PictureSpatialScalableExtension.ExtensionStartCodeIdentifier.set -> void
+SharpH262.PictureSpatialScalableExtension.HasMoreRbspData.get -> int
+SharpH262.PictureSpatialScalableExtension.HasMoreRbspData.set -> void
+SharpH262.PictureSpatialScalableExtension.LowerLayerDeinterlacedFieldSelect.get -> byte
+SharpH262.PictureSpatialScalableExtension.LowerLayerDeinterlacedFieldSelect.set -> void
+SharpH262.PictureSpatialScalableExtension.LowerLayerHorizontalOffset.get -> int
+SharpH262.PictureSpatialScalableExtension.LowerLayerHorizontalOffset.set -> void
+SharpH262.PictureSpatialScalableExtension.LowerLayerProgressiveFrame.get -> byte
+SharpH262.PictureSpatialScalableExtension.LowerLayerProgressiveFrame.set -> void
+SharpH262.PictureSpatialScalableExtension.LowerLayerTemporalReference.get -> uint
+SharpH262.PictureSpatialScalableExtension.LowerLayerTemporalReference.set -> void
+SharpH262.PictureSpatialScalableExtension.LowerLayerVerticalOffset.get -> int
+SharpH262.PictureSpatialScalableExtension.LowerLayerVerticalOffset.set -> void
+SharpH262.PictureSpatialScalableExtension.MarkerBit.get -> byte
+SharpH262.PictureSpatialScalableExtension.MarkerBit.set -> void
+SharpH262.PictureSpatialScalableExtension.NextStartCode.get -> SharpH262.NextStartCode
+SharpH262.PictureSpatialScalableExtension.NextStartCode.set -> void
+SharpH262.PictureSpatialScalableExtension.PictureSpatialScalableExtension() -> void
+SharpH262.PictureSpatialScalableExtension.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.PictureSpatialScalableExtension.ReadNextBits.get -> int[]
+SharpH262.PictureSpatialScalableExtension.ReadNextBits.set -> void
+SharpH262.PictureSpatialScalableExtension.SpatialTemporalWeightCodeTableIndex.get -> uint
+SharpH262.PictureSpatialScalableExtension.SpatialTemporalWeightCodeTableIndex.set -> void
+SharpH262.PictureSpatialScalableExtension.Syntax.get -> string
+SharpH262.PictureSpatialScalableExtension.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.PictureTemporalScalableExtension
+SharpH262.PictureTemporalScalableExtension.BackwardTemporalReference.get -> uint
+SharpH262.PictureTemporalScalableExtension.BackwardTemporalReference.set -> void
+SharpH262.PictureTemporalScalableExtension.ExtensionStartCodeIdentifier.get -> uint
+SharpH262.PictureTemporalScalableExtension.ExtensionStartCodeIdentifier.set -> void
+SharpH262.PictureTemporalScalableExtension.ForwardTemporalReference.get -> uint
+SharpH262.PictureTemporalScalableExtension.ForwardTemporalReference.set -> void
+SharpH262.PictureTemporalScalableExtension.HasMoreRbspData.get -> int
+SharpH262.PictureTemporalScalableExtension.HasMoreRbspData.set -> void
+SharpH262.PictureTemporalScalableExtension.MarkerBit.get -> byte
+SharpH262.PictureTemporalScalableExtension.MarkerBit.set -> void
+SharpH262.PictureTemporalScalableExtension.NextStartCode.get -> SharpH262.NextStartCode
+SharpH262.PictureTemporalScalableExtension.NextStartCode.set -> void
+SharpH262.PictureTemporalScalableExtension.PictureTemporalScalableExtension() -> void
+SharpH262.PictureTemporalScalableExtension.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.PictureTemporalScalableExtension.ReadNextBits.get -> int[]
+SharpH262.PictureTemporalScalableExtension.ReadNextBits.set -> void
+SharpH262.PictureTemporalScalableExtension.ReferenceSelectCode.get -> uint
+SharpH262.PictureTemporalScalableExtension.ReferenceSelectCode.set -> void
+SharpH262.PictureTemporalScalableExtension.Syntax.get -> string
+SharpH262.PictureTemporalScalableExtension.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.QuantMatrixExtension
+SharpH262.QuantMatrixExtension.ChromaIntraQuantiserMatrix.get -> uint[]
+SharpH262.QuantMatrixExtension.ChromaIntraQuantiserMatrix.set -> void
+SharpH262.QuantMatrixExtension.ChromaNonIntraQuantiserMatrix.get -> uint[]
+SharpH262.QuantMatrixExtension.ChromaNonIntraQuantiserMatrix.set -> void
+SharpH262.QuantMatrixExtension.ExtensionStartCodeIdentifier.get -> uint
+SharpH262.QuantMatrixExtension.ExtensionStartCodeIdentifier.set -> void
+SharpH262.QuantMatrixExtension.HasMoreRbspData.get -> int
+SharpH262.QuantMatrixExtension.HasMoreRbspData.set -> void
+SharpH262.QuantMatrixExtension.IntraQuantiserMatrix.get -> uint[]
+SharpH262.QuantMatrixExtension.IntraQuantiserMatrix.set -> void
+SharpH262.QuantMatrixExtension.LoadChromaIntraQuantiserMatrix.get -> byte
+SharpH262.QuantMatrixExtension.LoadChromaIntraQuantiserMatrix.set -> void
+SharpH262.QuantMatrixExtension.LoadChromaNonIntraQuantiserMatrix.get -> byte
+SharpH262.QuantMatrixExtension.LoadChromaNonIntraQuantiserMatrix.set -> void
+SharpH262.QuantMatrixExtension.LoadIntraQuantiserMatrix.get -> byte
+SharpH262.QuantMatrixExtension.LoadIntraQuantiserMatrix.set -> void
+SharpH262.QuantMatrixExtension.LoadNonIntraQuantiserMatrix.get -> byte
+SharpH262.QuantMatrixExtension.LoadNonIntraQuantiserMatrix.set -> void
+SharpH262.QuantMatrixExtension.NextStartCode.get -> SharpH262.NextStartCode
+SharpH262.QuantMatrixExtension.NextStartCode.set -> void
+SharpH262.QuantMatrixExtension.NonIntraQuantiserMatrix.get -> uint[]
+SharpH262.QuantMatrixExtension.NonIntraQuantiserMatrix.set -> void
+SharpH262.QuantMatrixExtension.QuantMatrixExtension() -> void
+SharpH262.QuantMatrixExtension.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.QuantMatrixExtension.ReadNextBits.get -> int[]
+SharpH262.QuantMatrixExtension.ReadNextBits.set -> void
+SharpH262.QuantMatrixExtension.Syntax.get -> string
+SharpH262.QuantMatrixExtension.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.SequenceDisplayExtension
+SharpH262.SequenceDisplayExtension.ColourDescription.get -> byte
+SharpH262.SequenceDisplayExtension.ColourDescription.set -> void
+SharpH262.SequenceDisplayExtension.ColourPrimaries.get -> uint
+SharpH262.SequenceDisplayExtension.ColourPrimaries.set -> void
+SharpH262.SequenceDisplayExtension.DisplayHorizontalSize.get -> uint
+SharpH262.SequenceDisplayExtension.DisplayHorizontalSize.set -> void
+SharpH262.SequenceDisplayExtension.DisplayVerticalSize.get -> uint
+SharpH262.SequenceDisplayExtension.DisplayVerticalSize.set -> void
+SharpH262.SequenceDisplayExtension.ExtensionStartCodeIdentifier.get -> uint
+SharpH262.SequenceDisplayExtension.ExtensionStartCodeIdentifier.set -> void
+SharpH262.SequenceDisplayExtension.HasMoreRbspData.get -> int
+SharpH262.SequenceDisplayExtension.HasMoreRbspData.set -> void
+SharpH262.SequenceDisplayExtension.MarkerBit.get -> byte
+SharpH262.SequenceDisplayExtension.MarkerBit.set -> void
+SharpH262.SequenceDisplayExtension.MatrixCoefficients.get -> uint
+SharpH262.SequenceDisplayExtension.MatrixCoefficients.set -> void
+SharpH262.SequenceDisplayExtension.NextStartCode.get -> SharpH262.NextStartCode
+SharpH262.SequenceDisplayExtension.NextStartCode.set -> void
+SharpH262.SequenceDisplayExtension.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.SequenceDisplayExtension.ReadNextBits.get -> int[]
+SharpH262.SequenceDisplayExtension.ReadNextBits.set -> void
+SharpH262.SequenceDisplayExtension.SequenceDisplayExtension() -> void
+SharpH262.SequenceDisplayExtension.Syntax.get -> string
+SharpH262.SequenceDisplayExtension.TransferCharacteristics.get -> uint
+SharpH262.SequenceDisplayExtension.TransferCharacteristics.set -> void
+SharpH262.SequenceDisplayExtension.VideoFormat.get -> uint
+SharpH262.SequenceDisplayExtension.VideoFormat.set -> void
+SharpH262.SequenceDisplayExtension.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.SequenceEnd
+SharpH262.SequenceEnd.HasMoreRbspData.get -> int
+SharpH262.SequenceEnd.HasMoreRbspData.set -> void
+SharpH262.SequenceEnd.NextStartCode.get -> SharpH262.NextStartCode
+SharpH262.SequenceEnd.NextStartCode.set -> void
+SharpH262.SequenceEnd.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.SequenceEnd.ReadNextBits.get -> int[]
+SharpH262.SequenceEnd.ReadNextBits.set -> void
+SharpH262.SequenceEnd.SequenceEnd() -> void
+SharpH262.SequenceEnd.SequenceEndCode.get -> uint
+SharpH262.SequenceEnd.SequenceEndCode.set -> void
+SharpH262.SequenceEnd.Syntax.get -> string
+SharpH262.SequenceEnd.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.SequenceExtension
+SharpH262.SequenceExtension.BitRateExtension.get -> uint
+SharpH262.SequenceExtension.BitRateExtension.set -> void
+SharpH262.SequenceExtension.ChromaFormat.get -> uint
+SharpH262.SequenceExtension.ChromaFormat.set -> void
+SharpH262.SequenceExtension.ExtensionStartCode.get -> uint
+SharpH262.SequenceExtension.ExtensionStartCode.set -> void
+SharpH262.SequenceExtension.ExtensionStartCodeIdentifier.get -> uint
+SharpH262.SequenceExtension.ExtensionStartCodeIdentifier.set -> void
+SharpH262.SequenceExtension.FrameRateExtensiond.get -> uint
+SharpH262.SequenceExtension.FrameRateExtensiond.set -> void
+SharpH262.SequenceExtension.FrameRateExtensionn.get -> uint
+SharpH262.SequenceExtension.FrameRateExtensionn.set -> void
+SharpH262.SequenceExtension.HasMoreRbspData.get -> int
+SharpH262.SequenceExtension.HasMoreRbspData.set -> void
+SharpH262.SequenceExtension.HorizontalSizeExtension.get -> uint
+SharpH262.SequenceExtension.HorizontalSizeExtension.set -> void
+SharpH262.SequenceExtension.LowDelay.get -> byte
+SharpH262.SequenceExtension.LowDelay.set -> void
+SharpH262.SequenceExtension.MarkerBit.get -> byte
+SharpH262.SequenceExtension.MarkerBit.set -> void
+SharpH262.SequenceExtension.NextStartCode.get -> SharpH262.NextStartCode
+SharpH262.SequenceExtension.NextStartCode.set -> void
+SharpH262.SequenceExtension.ProfileAndLevelIndication.get -> uint
+SharpH262.SequenceExtension.ProfileAndLevelIndication.set -> void
+SharpH262.SequenceExtension.ProgressiveSequence.get -> byte
+SharpH262.SequenceExtension.ProgressiveSequence.set -> void
+SharpH262.SequenceExtension.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.SequenceExtension.ReadNextBits.get -> int[]
+SharpH262.SequenceExtension.ReadNextBits.set -> void
+SharpH262.SequenceExtension.SequenceExtension() -> void
+SharpH262.SequenceExtension.Syntax.get -> string
+SharpH262.SequenceExtension.VbvBufferSizeExtension.get -> uint
+SharpH262.SequenceExtension.VbvBufferSizeExtension.set -> void
+SharpH262.SequenceExtension.VerticalSizeExtension.get -> uint
+SharpH262.SequenceExtension.VerticalSizeExtension.set -> void
+SharpH262.SequenceExtension.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.SequenceHeader
+SharpH262.SequenceHeader.AspectRatioInformation.get -> uint
+SharpH262.SequenceHeader.AspectRatioInformation.set -> void
+SharpH262.SequenceHeader.BitRateValue.get -> uint
+SharpH262.SequenceHeader.BitRateValue.set -> void
+SharpH262.SequenceHeader.ConstrainedParametersFlag.get -> byte
+SharpH262.SequenceHeader.ConstrainedParametersFlag.set -> void
+SharpH262.SequenceHeader.FrameRateCode.get -> uint
+SharpH262.SequenceHeader.FrameRateCode.set -> void
+SharpH262.SequenceHeader.HasMoreRbspData.get -> int
+SharpH262.SequenceHeader.HasMoreRbspData.set -> void
+SharpH262.SequenceHeader.HorizontalSizeValue.get -> uint
+SharpH262.SequenceHeader.HorizontalSizeValue.set -> void
+SharpH262.SequenceHeader.IntraQuantiserMatrix.get -> uint[]
+SharpH262.SequenceHeader.IntraQuantiserMatrix.set -> void
+SharpH262.SequenceHeader.LoadIntraQuantiserMatrix.get -> byte
+SharpH262.SequenceHeader.LoadIntraQuantiserMatrix.set -> void
+SharpH262.SequenceHeader.LoadNonIntraQuantiserMatrix.get -> byte
+SharpH262.SequenceHeader.LoadNonIntraQuantiserMatrix.set -> void
+SharpH262.SequenceHeader.MarkerBit.get -> byte
+SharpH262.SequenceHeader.MarkerBit.set -> void
+SharpH262.SequenceHeader.NextStartCode.get -> SharpH262.NextStartCode
+SharpH262.SequenceHeader.NextStartCode.set -> void
+SharpH262.SequenceHeader.NonIntraQuantiserMatrix.get -> uint[]
+SharpH262.SequenceHeader.NonIntraQuantiserMatrix.set -> void
+SharpH262.SequenceHeader.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.SequenceHeader.ReadNextBits.get -> int[]
+SharpH262.SequenceHeader.ReadNextBits.set -> void
+SharpH262.SequenceHeader.SequenceHeader() -> void
+SharpH262.SequenceHeader.SequenceHeaderCode.get -> uint
+SharpH262.SequenceHeader.SequenceHeaderCode.set -> void
+SharpH262.SequenceHeader.Syntax.get -> string
+SharpH262.SequenceHeader.VbvBufferSizeValue.get -> uint
+SharpH262.SequenceHeader.VbvBufferSizeValue.set -> void
+SharpH262.SequenceHeader.VerticalSizeValue.get -> uint
+SharpH262.SequenceHeader.VerticalSizeValue.set -> void
+SharpH262.SequenceHeader.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.SequenceScalableExtension
+SharpH262.SequenceScalableExtension.ExtensionStartCodeIdentifier.get -> uint
+SharpH262.SequenceScalableExtension.ExtensionStartCodeIdentifier.set -> void
+SharpH262.SequenceScalableExtension.HasMoreRbspData.get -> int
+SharpH262.SequenceScalableExtension.HasMoreRbspData.set -> void
+SharpH262.SequenceScalableExtension.HorizontalSubsamplingFactorm.get -> uint
+SharpH262.SequenceScalableExtension.HorizontalSubsamplingFactorm.set -> void
+SharpH262.SequenceScalableExtension.HorizontalSubsamplingFactorn.get -> uint
+SharpH262.SequenceScalableExtension.HorizontalSubsamplingFactorn.set -> void
+SharpH262.SequenceScalableExtension.LayerId.get -> uint
+SharpH262.SequenceScalableExtension.LayerId.set -> void
+SharpH262.SequenceScalableExtension.LowerLayerPredictionHorizontalSize.get -> uint
+SharpH262.SequenceScalableExtension.LowerLayerPredictionHorizontalSize.set -> void
+SharpH262.SequenceScalableExtension.LowerLayerPredictionVerticalSize.get -> uint
+SharpH262.SequenceScalableExtension.LowerLayerPredictionVerticalSize.set -> void
+SharpH262.SequenceScalableExtension.MarkerBit.get -> byte
+SharpH262.SequenceScalableExtension.MarkerBit.set -> void
+SharpH262.SequenceScalableExtension.MuxToProgressiveSequence.get -> byte
+SharpH262.SequenceScalableExtension.MuxToProgressiveSequence.set -> void
+SharpH262.SequenceScalableExtension.NextStartCode.get -> SharpH262.NextStartCode
+SharpH262.SequenceScalableExtension.NextStartCode.set -> void
+SharpH262.SequenceScalableExtension.PictureMuxEnable.get -> byte
+SharpH262.SequenceScalableExtension.PictureMuxEnable.set -> void
+SharpH262.SequenceScalableExtension.PictureMuxFactor.get -> uint
+SharpH262.SequenceScalableExtension.PictureMuxFactor.set -> void
+SharpH262.SequenceScalableExtension.PictureMuxOrder.get -> uint
+SharpH262.SequenceScalableExtension.PictureMuxOrder.set -> void
+SharpH262.SequenceScalableExtension.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.SequenceScalableExtension.ReadNextBits.get -> int[]
+SharpH262.SequenceScalableExtension.ReadNextBits.set -> void
+SharpH262.SequenceScalableExtension.ScalableMode.get -> uint
+SharpH262.SequenceScalableExtension.ScalableMode.set -> void
+SharpH262.SequenceScalableExtension.SequenceScalableExtension() -> void
+SharpH262.SequenceScalableExtension.Syntax.get -> string
+SharpH262.SequenceScalableExtension.VerticalSubsamplingFactorm.get -> uint
+SharpH262.SequenceScalableExtension.VerticalSubsamplingFactorm.set -> void
+SharpH262.SequenceScalableExtension.VerticalSubsamplingFactorn.get -> uint
+SharpH262.SequenceScalableExtension.VerticalSubsamplingFactorn.set -> void
+SharpH262.SequenceScalableExtension.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.Slice
+SharpH262.Slice.ExtraBitSlice.get -> System.Collections.Generic.Dictionary<int, byte>
+SharpH262.Slice.ExtraBitSlice.set -> void
+SharpH262.Slice.ExtraInformationSlice.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpH262.Slice.ExtraInformationSlice.set -> void
+SharpH262.Slice.HasMoreRbspData.get -> int
+SharpH262.Slice.HasMoreRbspData.set -> void
+SharpH262.Slice.IntraSlice.get -> byte
+SharpH262.Slice.IntraSlice.set -> void
+SharpH262.Slice.LastExtraBitSlice.get -> byte
+SharpH262.Slice.LastExtraBitSlice.set -> void
+SharpH262.Slice.NextStartCode.get -> SharpH262.NextStartCode
+SharpH262.Slice.NextStartCode.set -> void
+SharpH262.Slice.PriorityBreakpoint.get -> uint
+SharpH262.Slice.PriorityBreakpoint.set -> void
+SharpH262.Slice.QuantiserScaleCode.get -> uint
+SharpH262.Slice.QuantiserScaleCode.set -> void
+SharpH262.Slice.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.Slice.ReadNextBits.get -> int[]
+SharpH262.Slice.ReadNextBits.set -> void
+SharpH262.Slice.Slice() -> void
+SharpH262.Slice.SliceData.get -> SharpH262.SliceData
+SharpH262.Slice.SliceData.set -> void
+SharpH262.Slice.SliceExtensionFlag.get -> byte
+SharpH262.Slice.SliceExtensionFlag.set -> void
+SharpH262.Slice.SlicePictureId.get -> uint
+SharpH262.Slice.SlicePictureId.set -> void
+SharpH262.Slice.SlicePictureIdEnable.get -> byte
+SharpH262.Slice.SlicePictureIdEnable.set -> void
+SharpH262.Slice.SliceStartCode.get -> uint
+SharpH262.Slice.SliceStartCode.set -> void
+SharpH262.Slice.SliceVerticalPositionExtension.get -> uint
+SharpH262.Slice.SliceVerticalPositionExtension.set -> void
+SharpH262.Slice.Syntax.get -> string
+SharpH262.Slice.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.SliceData
+SharpH262.SliceData.Data.get -> byte[]
+SharpH262.SliceData.Data.set -> void
+SharpH262.SliceData.HasMoreRbspData.get -> int
+SharpH262.SliceData.HasMoreRbspData.set -> void
+SharpH262.SliceData.LeadingBitCount.get -> int
+SharpH262.SliceData.LeadingBitCount.set -> void
+SharpH262.SliceData.LeadingBits.get -> int
+SharpH262.SliceData.LeadingBits.set -> void
+SharpH262.SliceData.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.SliceData.ReadNextBits.get -> int[]
+SharpH262.SliceData.ReadNextBits.set -> void
+SharpH262.SliceData.SliceData() -> void
+SharpH262.SliceData.Syntax.get -> string
+SharpH262.SliceData.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.UnknownUnit
+SharpH262.UnknownUnit.Data.get -> byte[]
+SharpH262.UnknownUnit.Data.set -> void
+SharpH262.UnknownUnit.HasMoreRbspData.get -> int
+SharpH262.UnknownUnit.HasMoreRbspData.set -> void
+SharpH262.UnknownUnit.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.UnknownUnit.ReadNextBits.get -> int[]
+SharpH262.UnknownUnit.ReadNextBits.set -> void
+SharpH262.UnknownUnit.Syntax.get -> string
+SharpH262.UnknownUnit.UnknownUnit() -> void
+SharpH262.UnknownUnit.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.UserData
+SharpH262.UserData.HasMoreRbspData.get -> int
+SharpH262.UserData.HasMoreRbspData.set -> void
+SharpH262.UserData.NextStartCode.get -> SharpH262.NextStartCode
+SharpH262.UserData.NextStartCode.set -> void
+SharpH262.UserData.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.UserData.ReadNextBits.get -> int[]
+SharpH262.UserData.ReadNextBits.set -> void
+SharpH262.UserData.Syntax.get -> string
+SharpH262.UserData.UserData() -> void
+SharpH262.UserData.UserDataStartCode.get -> uint
+SharpH262.UserData.UserDataStartCode.set -> void
+SharpH262.UserData.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH262.UserData._UserData.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpH262.UserData._UserData.set -> void
+const SharpH262.H262ExtensionIds.CAMERA_PARAMETERS = 11 -> int
+const SharpH262.H262ExtensionIds.COPYRIGHT = 4 -> int
+const SharpH262.H262ExtensionIds.ITU_T = 12 -> int
+const SharpH262.H262ExtensionIds.PICTURE_CODING = 8 -> int
+const SharpH262.H262ExtensionIds.PICTURE_DISPLAY = 7 -> int
+const SharpH262.H262ExtensionIds.PICTURE_SPATIAL_SCALABLE = 9 -> int
+const SharpH262.H262ExtensionIds.PICTURE_TEMPORAL_SCALABLE = 10 -> int
+const SharpH262.H262ExtensionIds.QUANT_MATRIX = 3 -> int
+const SharpH262.H262ExtensionIds.SEQUENCE = 1 -> int
+const SharpH262.H262ExtensionIds.SEQUENCE_DISPLAY = 2 -> int
+const SharpH262.H262ExtensionIds.SEQUENCE_SCALABLE = 5 -> int
+const SharpH262.H262StartCodes.EXTENSION = 181 -> int
+const SharpH262.H262StartCodes.GROUP = 184 -> int
+const SharpH262.H262StartCodes.PICTURE = 0 -> int
+const SharpH262.H262StartCodes.SEQUENCE_END = 183 -> int
+const SharpH262.H262StartCodes.SEQUENCE_ERROR = 180 -> int
+const SharpH262.H262StartCodes.SEQUENCE_HEADER = 179 -> int
+const SharpH262.H262StartCodes.SLICE_MAX = 175 -> int
+const SharpH262.H262StartCodes.SLICE_MIN = 1 -> int
+const SharpH262.H262StartCodes.USER_DATA = 178 -> int
+static SharpH262.H262Context.StreamOf(System.IO.Stream output, SharpMP4.Common.IMp4Logger logger = null) -> SharpH26X.ItuStream
+static SharpH262.H262Context.StreamOf(byte[] buffer, int offset, int length, SharpMP4.Common.IMp4Logger logger = null) -> SharpH26X.ItuStream
+static SharpH262.H262Context.Units(byte[] data, int offset, int length) -> System.Collections.Generic.List<(int Offset, int Length)>

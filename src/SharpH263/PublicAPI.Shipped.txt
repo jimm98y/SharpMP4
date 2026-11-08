@@ -1,0 +1,200 @@
+SharpH263.Bcm
+SharpH263.Bcm.Bcm() -> void
+SharpH263.Bcm.HasMoreRbspData.get -> int
+SharpH263.Bcm.HasMoreRbspData.set -> void
+SharpH263.Bcm.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH263.Bcm.ReadNextBits.get -> int[]
+SharpH263.Bcm.ReadNextBits.set -> void
+SharpH263.Bcm.Syntax.get -> string
+SharpH263.Bcm.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH263.H263Context
+SharpH263.H263Context.CustomPcfInUse.get -> bool
+SharpH263.H263Context.H263Context() -> void
+SharpH263.H263Context.HasPlusPtype.get -> bool
+SharpH263.H263Context.Height.get -> int
+SharpH263.H263Context.OnCustomPictureFormat(uint pictureWidthIndication, uint pictureHeightIndication) -> void
+SharpH263.H263Context.OnOpptype(SharpH263.PictureLayer picture) -> void
+SharpH263.H263Context.OnPictureCodingType(uint pictureCodingType) -> void
+SharpH263.H263Context.OnPictureTypeCode(uint pictureTypeCode) -> void
+SharpH263.H263Context.OnSourceFormat(uint sourceFormat) -> void
+SharpH263.H263Context.PictureType.get -> int
+SharpH263.H263Context.ReadPicture(SharpH26X.ItuStream stream) -> SharpH263.PictureLayer
+SharpH263.H263Context.RpsInUse.get -> bool
+SharpH263.H263Context.Scalability.get -> bool?
+SharpH263.H263Context.Scalability.set -> void
+SharpH263.H263Context.ScalabilityInUse.get -> bool
+SharpH263.H263Context.Width.get -> int
+SharpH263.H263Context.WritePicture(SharpH26X.ItuStream stream, SharpH263.PictureLayer picture) -> void
+SharpH263.H263PictureTypes
+SharpH263.PictureData
+SharpH263.PictureData.Data.get -> byte[]
+SharpH263.PictureData.Data.set -> void
+SharpH263.PictureData.HasMoreRbspData.get -> int
+SharpH263.PictureData.HasMoreRbspData.set -> void
+SharpH263.PictureData.LeadingBitCount.get -> int
+SharpH263.PictureData.LeadingBitCount.set -> void
+SharpH263.PictureData.LeadingBits.get -> int
+SharpH263.PictureData.LeadingBits.set -> void
+SharpH263.PictureData.PictureData() -> void
+SharpH263.PictureData.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH263.PictureData.ReadNextBits.get -> int[]
+SharpH263.PictureData.ReadNextBits.set -> void
+SharpH263.PictureData.Syntax.get -> string
+SharpH263.PictureData.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH263.PictureLayer
+SharpH263.PictureLayer.AdvancedPredictionMode.get -> byte
+SharpH263.PictureLayer.AdvancedPredictionMode.set -> void
+SharpH263.PictureLayer.AicMode.get -> byte
+SharpH263.PictureLayer.AicMode.set -> void
+SharpH263.PictureLayer.AivMode.get -> byte
+SharpH263.PictureLayer.AivMode.set -> void
+SharpH263.PictureLayer.ApMode.get -> byte
+SharpH263.PictureLayer.ApMode.set -> void
+SharpH263.PictureLayer.ArbitrarySliceOrdering.get -> byte
+SharpH263.PictureLayer.ArbitrarySliceOrdering.set -> void
+SharpH263.PictureLayer.Bci.get -> byte
+SharpH263.PictureLayer.Bci.set -> void
+SharpH263.PictureLayer.BciEnd.get -> byte
+SharpH263.PictureLayer.BciEnd.set -> void
+SharpH263.PictureLayer.Bcm.get -> SharpH263.Bcm
+SharpH263.PictureLayer.Bcm.set -> void
+SharpH263.PictureLayer.ClockConversionCode.get -> byte
+SharpH263.PictureLayer.ClockConversionCode.set -> void
+SharpH263.PictureLayer.ClockDivisor.get -> uint
+SharpH263.PictureLayer.ClockDivisor.set -> void
+SharpH263.PictureLayer.CpfmtStartCodeEmulationBit.get -> byte
+SharpH263.PictureLayer.CpfmtStartCodeEmulationBit.set -> void
+SharpH263.PictureLayer.Cpm.get -> byte
+SharpH263.PictureLayer.Cpm.set -> void
+SharpH263.PictureLayer.CustomPcf.get -> byte
+SharpH263.PictureLayer.CustomPcf.set -> void
+SharpH263.PictureLayer.Dbquant.get -> uint
+SharpH263.PictureLayer.Dbquant.set -> void
+SharpH263.PictureLayer.DfMode.get -> byte
+SharpH263.PictureLayer.DfMode.set -> void
+SharpH263.PictureLayer.DocumentCameraIndicator.get -> byte
+SharpH263.PictureLayer.DocumentCameraIndicator.set -> void
+SharpH263.PictureLayer.Elnum.get -> uint
+SharpH263.PictureLayer.Elnum.set -> void
+SharpH263.PictureLayer.Etr.get -> uint
+SharpH263.PictureLayer.Etr.set -> void
+SharpH263.PictureLayer.FullPictureFreezeRelease.get -> byte
+SharpH263.PictureLayer.FullPictureFreezeRelease.set -> void
+SharpH263.PictureLayer.HasMoreRbspData.get -> int
+SharpH263.PictureLayer.HasMoreRbspData.set -> void
+SharpH263.PictureLayer.IsdMode.get -> byte
+SharpH263.PictureLayer.IsdMode.set -> void
+SharpH263.PictureLayer.MorePei.get -> System.Collections.Generic.Dictionary<int, byte>
+SharpH263.PictureLayer.MorePei.set -> void
+SharpH263.PictureLayer.MpptypeReservedBits.get -> uint
+SharpH263.PictureLayer.MpptypeReservedBits.set -> void
+SharpH263.PictureLayer.MpptypeStartCodeEmulationBit.get -> byte
+SharpH263.PictureLayer.MpptypeStartCodeEmulationBit.set -> void
+SharpH263.PictureLayer.MqMode.get -> byte
+SharpH263.PictureLayer.MqMode.set -> void
+SharpH263.PictureLayer.OpptypeReservedBits.get -> uint
+SharpH263.PictureLayer.OpptypeReservedBits.set -> void
+SharpH263.PictureLayer.OpptypeSourceFormat.get -> uint
+SharpH263.PictureLayer.OpptypeSourceFormat.set -> void
+SharpH263.PictureLayer.OpptypeStartCodeEmulationBit.get -> byte
+SharpH263.PictureLayer.OpptypeStartCodeEmulationBit.set -> void
+SharpH263.PictureLayer.ParHeight.get -> uint
+SharpH263.PictureLayer.ParHeight.set -> void
+SharpH263.PictureLayer.ParWidth.get -> uint
+SharpH263.PictureLayer.ParWidth.set -> void
+SharpH263.PictureLayer.PbFramesMode.get -> byte
+SharpH263.PictureLayer.PbFramesMode.set -> void
+SharpH263.PictureLayer.Pei.get -> byte
+SharpH263.PictureLayer.Pei.set -> void
+SharpH263.PictureLayer.PictureCodingType.get -> byte
+SharpH263.PictureLayer.PictureCodingType.set -> void
+SharpH263.PictureLayer.PictureData.get -> SharpH263.PictureData
+SharpH263.PictureLayer.PictureData.set -> void
+SharpH263.PictureLayer.PictureHeightIndication.get -> uint
+SharpH263.PictureLayer.PictureHeightIndication.set -> void
+SharpH263.PictureLayer.PictureLayer() -> void
+SharpH263.PictureLayer.PictureTypeCode.get -> uint
+SharpH263.PictureLayer.PictureTypeCode.set -> void
+SharpH263.PictureLayer.PictureWidthIndication.get -> uint
+SharpH263.PictureLayer.PictureWidthIndication.set -> void
+SharpH263.PictureLayer.PixelAspectRatioCode.get -> uint
+SharpH263.PictureLayer.PixelAspectRatioCode.set -> void
+SharpH263.PictureLayer.Pquant.get -> uint
+SharpH263.PictureLayer.Pquant.set -> void
+SharpH263.PictureLayer.Psbi.get -> uint
+SharpH263.PictureLayer.Psbi.set -> void
+SharpH263.PictureLayer.Psc.get -> uint
+SharpH263.PictureLayer.Psc.set -> void
+SharpH263.PictureLayer.Psupp.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpH263.PictureLayer.Psupp.set -> void
+SharpH263.PictureLayer.PtypeH261DistinctionBit.get -> byte
+SharpH263.PictureLayer.PtypeH261DistinctionBit.set -> void
+SharpH263.PictureLayer.PtypeStartCodeEmulationBit.get -> byte
+SharpH263.PictureLayer.PtypeStartCodeEmulationBit.set -> void
+SharpH263.PictureLayer.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH263.PictureLayer.ReadNextBits.get -> int[]
+SharpH263.PictureLayer.ReadNextBits.set -> void
+SharpH263.PictureLayer.RectangularSlices.get -> byte
+SharpH263.PictureLayer.RectangularSlices.set -> void
+SharpH263.PictureLayer.Rlnum.get -> uint
+SharpH263.PictureLayer.Rlnum.set -> void
+SharpH263.PictureLayer.RoundingType.get -> byte
+SharpH263.PictureLayer.RoundingType.set -> void
+SharpH263.PictureLayer.RprMode.get -> byte
+SharpH263.PictureLayer.RprMode.set -> void
+SharpH263.PictureLayer.Rprp.get -> SharpH263.Rprp
+SharpH263.PictureLayer.Rprp.set -> void
+SharpH263.PictureLayer.RpsMode.get -> byte
+SharpH263.PictureLayer.RpsMode.set -> void
+SharpH263.PictureLayer.Rpsmf.get -> uint
+SharpH263.PictureLayer.Rpsmf.set -> void
+SharpH263.PictureLayer.RruMode.get -> byte
+SharpH263.PictureLayer.RruMode.set -> void
+SharpH263.PictureLayer.SacMode.get -> byte
+SharpH263.PictureLayer.SacMode.set -> void
+SharpH263.PictureLayer.SourceFormat.get -> uint
+SharpH263.PictureLayer.SourceFormat.set -> void
+SharpH263.PictureLayer.SplitScreenIndicator.get -> byte
+SharpH263.PictureLayer.SplitScreenIndicator.set -> void
+SharpH263.PictureLayer.SsMode.get -> byte
+SharpH263.PictureLayer.SsMode.set -> void
+SharpH263.PictureLayer.Syntax.get -> string
+SharpH263.PictureLayer.SyntaxBasedArithmeticCodingMode.get -> byte
+SharpH263.PictureLayer.SyntaxBasedArithmeticCodingMode.set -> void
+SharpH263.PictureLayer.Tr.get -> uint
+SharpH263.PictureLayer.Tr.set -> void
+SharpH263.PictureLayer.Trb.get -> ulong
+SharpH263.PictureLayer.Trb.set -> void
+SharpH263.PictureLayer.Trp.get -> uint
+SharpH263.PictureLayer.Trp.set -> void
+SharpH263.PictureLayer.Trpi.get -> byte
+SharpH263.PictureLayer.Trpi.set -> void
+SharpH263.PictureLayer.Ufep.get -> uint
+SharpH263.PictureLayer.Ufep.set -> void
+SharpH263.PictureLayer.UmvMode.get -> byte
+SharpH263.PictureLayer.UmvMode.set -> void
+SharpH263.PictureLayer.UnrestrictedMotionVectorMode.get -> byte
+SharpH263.PictureLayer.UnrestrictedMotionVectorMode.set -> void
+SharpH263.PictureLayer.Uui.get -> byte
+SharpH263.PictureLayer.Uui.set -> void
+SharpH263.PictureLayer.UuiUnlimited.get -> byte
+SharpH263.PictureLayer.UuiUnlimited.set -> void
+SharpH263.PictureLayer.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH263.Rprp
+SharpH263.Rprp.HasMoreRbspData.get -> int
+SharpH263.Rprp.HasMoreRbspData.set -> void
+SharpH263.Rprp.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH263.Rprp.ReadNextBits.get -> int[]
+SharpH263.Rprp.ReadNextBits.set -> void
+SharpH263.Rprp.Rprp() -> void
+SharpH263.Rprp.Syntax.get -> string
+SharpH263.Rprp.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+const SharpH263.H263PictureTypes.B = 3 -> int
+const SharpH263.H263PictureTypes.EI = 4 -> int
+const SharpH263.H263PictureTypes.EP = 5 -> int
+const SharpH263.H263PictureTypes.I = 0 -> int
+const SharpH263.H263PictureTypes.IMPROVED_PB = 2 -> int
+const SharpH263.H263PictureTypes.P = 1 -> int
+static SharpH263.H263Context.Pictures(byte[] data, int offset, int length) -> System.Collections.Generic.List<(int Offset, int Length)>
+static SharpH263.H263Context.StreamOf(System.IO.Stream output, SharpMP4.Common.IMp4Logger logger = null) -> SharpH26X.ItuStream
+static SharpH263.H263Context.StreamOf(byte[] buffer, int offset, int length, SharpMP4.Common.IMp4Logger logger = null) -> SharpH26X.ItuStream

@@ -1,0 +1,1361 @@
+SharpMP4.Builders.FragmentBlobEventArgs
+SharpMP4.Builders.FragmentBlobEventArgs.Data.get -> byte[]
+SharpMP4.Builders.FragmentBlobEventArgs.FragmentBlobEventArgs(int sequenceNumber, byte[] data) -> void
+SharpMP4.Builders.FragmentBlobEventArgs.SequenceNumber.get -> int
+SharpMP4.Builders.FragmentedBlobOutput
+SharpMP4.Builders.FragmentedBlobOutput.Dispose() -> void
+SharpMP4.Builders.FragmentedBlobOutput.Flush(System.IO.Stream output, uint sequenceNumber) -> void
+SharpMP4.Builders.FragmentedBlobOutput.FragmentedBlobOutput() -> void
+SharpMP4.Builders.FragmentedBlobOutput.FragmentedBlobOutput(SharpMP4.Common.IMp4Logger logger) -> void
+SharpMP4.Builders.FragmentedBlobOutput.GetStream(uint sequenceNumber) -> System.IO.Stream
+SharpMP4.Builders.FragmentedBlobOutput.Logger.get -> SharpMP4.Common.IMp4Logger
+SharpMP4.Builders.FragmentedBlobOutput.Logger.set -> void
+SharpMP4.Builders.FragmentedBlobOutput.OnFragmentReady -> System.EventHandler<SharpMP4.Builders.FragmentBlobEventArgs>
+SharpMP4.Builders.FragmentedMp4Builder
+SharpMP4.Builders.FragmentedMp4Builder.FragmentedMp4Builder(SharpMP4.Builders.IMp4Output output, ulong maxFragmentLengthInMs, ulong durationInMs = 0, bool appendMovieFragmentRandomAccessBox = true) -> void
+SharpMP4.Builders.FragmentedMp4Builder.MaxFragmentDelayInMs.get -> ulong
+SharpMP4.Builders.FragmentedMp4Builder.MaxFragmentDelayInMs.set -> void
+SharpMP4.Builders.HeifImageBuilder
+SharpMP4.Builders.HeifImageBuilder.Dispose() -> void
+SharpMP4.Builders.HeifImageBuilder.FinalizeImage() -> void
+SharpMP4.Builders.HeifImageBuilder.Format.get -> SharpMP4.Builders.ImageFormat
+SharpMP4.Builders.HeifImageBuilder.HeifImageBuilder(SharpMP4.Builders.IMp4Output output, SharpMP4.Builders.ImageFormat format, SharpMP4.Builders.ImageBuilderOptions options) -> void
+SharpMP4.Builders.HeifImageBuilder.Logger.get -> SharpMP4.Common.IMp4Logger
+SharpMP4.Builders.HeifImageBuilder.ProcessAlphaSample(byte[] sample) -> void
+SharpMP4.Builders.HeifImageBuilder.ProcessAnnexBAlphaSample(byte[] sample) -> void
+SharpMP4.Builders.HeifImageBuilder.ProcessAnnexBImageSample(byte[] sample) -> void
+SharpMP4.Builders.HeifImageBuilder.ProcessAnnexBThumbSample(byte[] sample, int thumb = 0) -> void
+SharpMP4.Builders.HeifImageBuilder.ProcessImageSample(byte[] sample) -> void
+SharpMP4.Builders.HeifImageBuilder.ProcessRawAlphaImage(byte[] image) -> void
+SharpMP4.Builders.HeifImageBuilder.ProcessRawImage(byte[] image) -> void
+SharpMP4.Builders.HeifImageBuilder.ProcessRawThumbImage(byte[] image, int thumb = 0) -> void
+SharpMP4.Builders.HeifImageBuilder.ProcessThumbSample(byte[] sample, int thumb = 0) -> void
+SharpMP4.Builders.HeifImageBuilder.Track.get -> SharpMP4.Tracks.ITrack
+SharpMP4.Builders.IImageBuilder
+SharpMP4.Builders.IImageBuilder.FinalizeImage() -> void
+SharpMP4.Builders.IImageBuilder.Format.get -> SharpMP4.Builders.ImageFormat
+SharpMP4.Builders.IImageBuilder.ProcessAlphaSample(byte[] sample) -> void
+SharpMP4.Builders.IImageBuilder.ProcessAnnexBAlphaSample(byte[] sample) -> void
+SharpMP4.Builders.IImageBuilder.ProcessAnnexBImageSample(byte[] sample) -> void
+SharpMP4.Builders.IImageBuilder.ProcessAnnexBThumbSample(byte[] sample, int thumb = 0) -> void
+SharpMP4.Builders.IImageBuilder.ProcessImageSample(byte[] sample) -> void
+SharpMP4.Builders.IImageBuilder.ProcessRawAlphaImage(byte[] image) -> void
+SharpMP4.Builders.IImageBuilder.ProcessRawImage(byte[] image) -> void
+SharpMP4.Builders.IImageBuilder.ProcessRawThumbImage(byte[] image, int thumb = 0) -> void
+SharpMP4.Builders.IImageBuilder.ProcessThumbSample(byte[] sample, int thumb = 0) -> void
+SharpMP4.Builders.IImageBuilder.Track.get -> SharpMP4.Tracks.ITrack
+SharpMP4.Builders.IMp4Builder
+SharpMP4.Builders.IMp4Builder.AddTrack(SharpMP4.Tracks.ITrack track) -> void
+SharpMP4.Builders.IMp4Builder.AddTrack(SharpMP4.Tracks.ITrack track, SharpMP4.Encryption.TrackProtection protection, byte[] key) -> void
+SharpMP4.Builders.IMp4Builder.FileFormat.get -> SharpMP4.Builders.Mp4FileFormat
+SharpMP4.Builders.IMp4Builder.FileFormat.set -> void
+SharpMP4.Builders.IMp4Builder.FinalizeMedia() -> void
+SharpMP4.Builders.IMp4Builder.GetTrack(uint trackID) -> SharpMP4.Tracks.ITrack
+SharpMP4.Builders.IMp4Builder.Logger.get -> SharpMP4.Common.IMp4Logger
+SharpMP4.Builders.IMp4Builder.Logger.set -> void
+SharpMP4.Builders.IMp4Builder.MovieTimescale.get -> uint
+SharpMP4.Builders.IMp4Builder.MovieTimescale.set -> void
+SharpMP4.Builders.IMp4Builder.ProcessRawSample(uint trackID, System.ArraySegment<byte> sample, int sampleDuration = -1, bool isRandomAccessPoint = true, int compositionOffset = 0) -> void
+SharpMP4.Builders.IMp4Builder.ProcessRawSample(uint trackID, byte[] sample, int sampleDuration = -1, bool isRandomAccessPoint = true, int compositionOffset = 0) -> void
+SharpMP4.Builders.IMp4Builder.ProcessTrackSample(uint trackID, System.ArraySegment<byte> sample, int sampleDuration = -1, int compositionOffset = 0) -> void
+SharpMP4.Builders.IMp4Builder.ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration = -1, int compositionOffset = 0) -> void
+SharpMP4.Builders.IMp4Output
+SharpMP4.Builders.IMp4Output.Flush(System.IO.Stream output, uint sequenceNumber) -> void
+SharpMP4.Builders.IMp4Output.GetStream(uint sequenceNumber) -> System.IO.Stream
+SharpMP4.Builders.IMp4Output.Logger.get -> SharpMP4.Common.IMp4Logger
+SharpMP4.Builders.IMp4Output.Logger.set -> void
+SharpMP4.Builders.ImageBuilder
+SharpMP4.Builders.ImageBuilderOptions
+SharpMP4.Builders.ImageBuilderOptions.CleanAperture.get -> SharpISOBMFF.CleanApertureBox
+SharpMP4.Builders.ImageBuilderOptions.CleanAperture.set -> void
+SharpMP4.Builders.ImageBuilderOptions.Colour.get -> SharpISOBMFF.ColourInformationBox
+SharpMP4.Builders.ImageBuilderOptions.Colour.set -> void
+SharpMP4.Builders.ImageBuilderOptions.GridColumns.get -> uint
+SharpMP4.Builders.ImageBuilderOptions.GridColumns.set -> void
+SharpMP4.Builders.ImageBuilderOptions.GridRows.get -> uint
+SharpMP4.Builders.ImageBuilderOptions.GridRows.set -> void
+SharpMP4.Builders.ImageBuilderOptions.ImageBuilderOptions() -> void
+SharpMP4.Builders.ImageBuilderOptions.Logger.get -> SharpMP4.Common.IMp4Logger
+SharpMP4.Builders.ImageBuilderOptions.Logger.set -> void
+SharpMP4.Builders.ImageBuilderOptions.Mirror.get -> SharpISOBMFF.ImageMirror
+SharpMP4.Builders.ImageBuilderOptions.Mirror.set -> void
+SharpMP4.Builders.ImageBuilderOptions.OutputHeight.get -> uint?
+SharpMP4.Builders.ImageBuilderOptions.OutputHeight.set -> void
+SharpMP4.Builders.ImageBuilderOptions.OutputWidth.get -> uint?
+SharpMP4.Builders.ImageBuilderOptions.OutputWidth.set -> void
+SharpMP4.Builders.ImageBuilderOptions.PixelAspectRatio.get -> SharpISOBMFF.PixelAspectRatioBox
+SharpMP4.Builders.ImageBuilderOptions.PixelAspectRatio.set -> void
+SharpMP4.Builders.ImageBuilderOptions.Rotation.get -> SharpISOBMFF.ImageRotation
+SharpMP4.Builders.ImageBuilderOptions.Rotation.set -> void
+SharpMP4.Builders.ImageFormat
+SharpMP4.Builders.ImageFormat.Avif = 1 -> SharpMP4.Builders.ImageFormat
+SharpMP4.Builders.ImageFormat.Heic = 0 -> SharpMP4.Builders.ImageFormat
+SharpMP4.Builders.Mp4Builder
+SharpMP4.Builders.Mp4Builder.ChunkDurationInMs.get -> uint
+SharpMP4.Builders.Mp4Builder.ChunkDurationInMs.set -> void
+SharpMP4.Builders.Mp4Builder.Mp4Builder(SharpMP4.Builders.IMp4Output output) -> void
+SharpMP4.Builders.Mp4Builder.NegativeCompositionOffsets.get -> SharpMP4.Builders.NegativeCompositionOffsets
+SharpMP4.Builders.Mp4Builder.NegativeCompositionOffsets.set -> void
+SharpMP4.Builders.Mp4Builder.Storage.get -> SharpISOBMFF.IStorage
+SharpMP4.Builders.Mp4Builder.Storage.set -> void
+SharpMP4.Builders.Mp4BuilderBase
+SharpMP4.Builders.Mp4BuilderBase.AddTrack(SharpMP4.Tracks.ITrack track) -> void
+SharpMP4.Builders.Mp4BuilderBase.AddTrack(SharpMP4.Tracks.ITrack track, SharpMP4.Encryption.TrackProtection protection, byte[] key) -> void
+SharpMP4.Builders.Mp4BuilderBase.CreationTime.get -> System.DateTime?
+SharpMP4.Builders.Mp4BuilderBase.CreationTime.set -> void
+SharpMP4.Builders.Mp4BuilderBase.Dispose() -> void
+SharpMP4.Builders.Mp4BuilderBase.FileFormat.get -> SharpMP4.Builders.Mp4FileFormat
+SharpMP4.Builders.Mp4BuilderBase.FileFormat.set -> void
+SharpMP4.Builders.Mp4BuilderBase.FinalizeMedia() -> void
+SharpMP4.Builders.Mp4BuilderBase.Logger.get -> SharpMP4.Common.IMp4Logger
+SharpMP4.Builders.Mp4BuilderBase.Logger.set -> void
+SharpMP4.Builders.Mp4BuilderBase.MovieTimescale.get -> uint
+SharpMP4.Builders.Mp4BuilderBase.MovieTimescale.set -> void
+SharpMP4.Builders.Mp4BuilderBase.ProcessRawSample(uint trackID, System.ArraySegment<byte> sample, int sampleDuration = -1, bool isRandomAccessPoint = true, int compositionOffset = 0) -> void
+SharpMP4.Builders.Mp4BuilderBase.ProcessRawSample(uint trackID, byte[] sample, int sampleDuration = -1, bool isRandomAccessPoint = true, int compositionOffset = 0) -> void
+SharpMP4.Builders.Mp4BuilderBase.ProcessTrackSample(uint trackID, System.ArraySegment<byte> sample, int sampleDuration = -1, int compositionOffset = 0) -> void
+SharpMP4.Builders.Mp4BuilderBase.ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration = -1, int compositionOffset = 0) -> void
+SharpMP4.Builders.Mp4BuilderBase.TemporaryStorageFactory.get -> SharpISOBMFF.ITemporaryStorageFactory
+SharpMP4.Builders.Mp4BuilderBase.TemporaryStorageFactory.set -> void
+SharpMP4.Builders.Mp4BuilderExtensions
+SharpMP4.Builders.Mp4FileFormat
+SharpMP4.Builders.Mp4FileFormat.M4A = 3 -> SharpMP4.Builders.Mp4FileFormat
+SharpMP4.Builders.Mp4FileFormat.M4B = 4 -> SharpMP4.Builders.Mp4FileFormat
+SharpMP4.Builders.Mp4FileFormat.M4V = 2 -> SharpMP4.Builders.Mp4FileFormat
+SharpMP4.Builders.Mp4FileFormat.Mp4 = 0 -> SharpMP4.Builders.Mp4FileFormat
+SharpMP4.Builders.Mp4FileFormat.QuickTime = 1 -> SharpMP4.Builders.Mp4FileFormat
+SharpMP4.Builders.Mp4FileFormat.ThreeGpp = 5 -> SharpMP4.Builders.Mp4FileFormat
+SharpMP4.Builders.Mp4FileFormat.ThreeGpp2 = 6 -> SharpMP4.Builders.Mp4FileFormat
+SharpMP4.Builders.Mp4Layout
+SharpMP4.Builders.Mp4Layout.Fragmented = 1 -> SharpMP4.Builders.Mp4Layout
+SharpMP4.Builders.Mp4Layout.Progressive = 0 -> SharpMP4.Builders.Mp4Layout
+SharpMP4.Builders.MultiStreamFileOutput
+SharpMP4.Builders.MultiStreamFileOutput.Flush(System.IO.Stream output, uint sequenceNumber) -> void
+SharpMP4.Builders.MultiStreamFileOutput.GetStream(uint sequenceNumber) -> System.IO.Stream
+SharpMP4.Builders.MultiStreamFileOutput.Logger.get -> SharpMP4.Common.IMp4Logger
+SharpMP4.Builders.MultiStreamFileOutput.Logger.set -> void
+SharpMP4.Builders.MultiStreamFileOutput.MultiStreamFileOutput(string path, string fileName, SharpMP4.Common.IMp4Logger logger, string fileExtension = "mp4") -> void
+SharpMP4.Builders.MultiStreamFileOutput.MultiStreamFileOutput(string path, string fileName, string fileExtension = "mp4") -> void
+SharpMP4.Builders.NegativeCompositionOffsets
+SharpMP4.Builders.NegativeCompositionOffsets.AsApple = 1 -> SharpMP4.Builders.NegativeCompositionOffsets
+SharpMP4.Builders.NegativeCompositionOffsets.Shifted = 0 -> SharpMP4.Builders.NegativeCompositionOffsets
+SharpMP4.Builders.NegativeCompositionOffsets.Version1 = 2 -> SharpMP4.Builders.NegativeCompositionOffsets
+SharpMP4.Builders.SingleStreamOutput
+SharpMP4.Builders.SingleStreamOutput.Flush(System.IO.Stream output, uint sequenceNumber) -> void
+SharpMP4.Builders.SingleStreamOutput.GetStream(uint sequenceNumber) -> System.IO.Stream
+SharpMP4.Builders.SingleStreamOutput.Logger.get -> SharpMP4.Common.IMp4Logger
+SharpMP4.Builders.SingleStreamOutput.Logger.set -> void
+SharpMP4.Builders.SingleStreamOutput.SingleStreamOutput(System.IO.Stream output) -> void
+SharpMP4.Builders.SingleStreamOutput.SingleStreamOutput(System.IO.Stream output, SharpMP4.Common.IMp4Logger logger) -> void
+SharpMP4.Builders.VideoBuilder
+SharpMP4.Builders.VideoBuilderOptions
+SharpMP4.Builders.VideoBuilderOptions.AppendMovieFragmentRandomAccessBox.get -> bool?
+SharpMP4.Builders.VideoBuilderOptions.AppendMovieFragmentRandomAccessBox.set -> void
+SharpMP4.Builders.VideoBuilderOptions.ChunkDurationInMs.get -> uint?
+SharpMP4.Builders.VideoBuilderOptions.ChunkDurationInMs.set -> void
+SharpMP4.Builders.VideoBuilderOptions.CreationTime.get -> System.DateTime?
+SharpMP4.Builders.VideoBuilderOptions.CreationTime.set -> void
+SharpMP4.Builders.VideoBuilderOptions.DurationInMs.get -> ulong?
+SharpMP4.Builders.VideoBuilderOptions.DurationInMs.set -> void
+SharpMP4.Builders.VideoBuilderOptions.FileFormat.get -> SharpMP4.Builders.Mp4FileFormat
+SharpMP4.Builders.VideoBuilderOptions.FileFormat.set -> void
+SharpMP4.Builders.VideoBuilderOptions.FragmentLengthInMs.get -> ulong?
+SharpMP4.Builders.VideoBuilderOptions.FragmentLengthInMs.set -> void
+SharpMP4.Builders.VideoBuilderOptions.Logger.get -> SharpMP4.Common.IMp4Logger
+SharpMP4.Builders.VideoBuilderOptions.Logger.set -> void
+SharpMP4.Builders.VideoBuilderOptions.MaxFragmentDelayInMs.get -> ulong?
+SharpMP4.Builders.VideoBuilderOptions.MaxFragmentDelayInMs.set -> void
+SharpMP4.Builders.VideoBuilderOptions.MovieTimescale.get -> uint?
+SharpMP4.Builders.VideoBuilderOptions.MovieTimescale.set -> void
+SharpMP4.Builders.VideoBuilderOptions.NegativeCompositionOffsets.get -> SharpMP4.Builders.NegativeCompositionOffsets?
+SharpMP4.Builders.VideoBuilderOptions.NegativeCompositionOffsets.set -> void
+SharpMP4.Builders.VideoBuilderOptions.Storage.get -> SharpISOBMFF.IStorage
+SharpMP4.Builders.VideoBuilderOptions.Storage.set -> void
+SharpMP4.Builders.VideoBuilderOptions.TemporaryStorageFactory.get -> SharpISOBMFF.ITemporaryStorageFactory
+SharpMP4.Builders.VideoBuilderOptions.TemporaryStorageFactory.set -> void
+SharpMP4.Builders.VideoBuilderOptions.VideoBuilderOptions() -> void
+SharpMP4.Encryption.Av1SubsampleSplitter
+SharpMP4.Encryption.Av1SubsampleSplitter.Av1SubsampleSplitter(SharpISOBMFF.AV1CodecConfigurationRecord config, SharpMP4.Common.IMp4Logger logger) -> void
+SharpMP4.Encryption.Av2SubsampleSplitter
+SharpMP4.Encryption.Av2SubsampleSplitter.Av2SubsampleSplitter(SharpISOBMFF.AV2CodecConfigurationBox config, SharpMP4.Common.IMp4Logger logger) -> void
+SharpMP4.Encryption.CommonEncryption
+SharpMP4.Encryption.EncryptionSubsample
+SharpMP4.Encryption.EncryptionSubsample.ClearBytes.get -> int
+SharpMP4.Encryption.EncryptionSubsample.EncryptionSubsample() -> void
+SharpMP4.Encryption.EncryptionSubsample.EncryptionSubsample(int clearBytes, uint protectedBytes) -> void
+SharpMP4.Encryption.EncryptionSubsample.ProtectedBytes.get -> uint
+SharpMP4.Encryption.NalSubsampleSplitter
+SharpMP4.Encryption.NalSubsampleSplitter.ClearLength(byte[] buffer, int offset, int length) -> int
+SharpMP4.Encryption.NalSubsampleSplitter.LengthSize.get -> int
+SharpMP4.Encryption.NalSubsampleSplitter.NalSubsampleSplitter(int lengthSize, SharpMP4.Common.IMp4Logger logger) -> void
+SharpMP4.Encryption.ProtectionSchemes
+SharpMP4.Encryption.ProtectionSystemHeader
+SharpMP4.Encryption.ProtectionSystemHeader.Data.get -> byte[]
+SharpMP4.Encryption.ProtectionSystemHeader.Data.set -> void
+SharpMP4.Encryption.ProtectionSystemHeader.KeyIds.get -> System.Collections.Generic.List<byte[]>
+SharpMP4.Encryption.ProtectionSystemHeader.KeyIds.set -> void
+SharpMP4.Encryption.ProtectionSystemHeader.ProtectionSystemHeader() -> void
+SharpMP4.Encryption.ProtectionSystemHeader.SystemId.get -> byte[]
+SharpMP4.Encryption.ProtectionSystemHeader.SystemId.set -> void
+SharpMP4.Encryption.SampleEncryption
+SharpMP4.Encryption.SampleEncryption.Clone() -> SharpMP4.Encryption.SampleEncryption
+SharpMP4.Encryption.SampleEncryption.CryptByteBlock.get -> byte
+SharpMP4.Encryption.SampleEncryption.CryptByteBlock.set -> void
+SharpMP4.Encryption.SampleEncryption.IV.get -> byte[]
+SharpMP4.Encryption.SampleEncryption.IV.set -> void
+SharpMP4.Encryption.SampleEncryption.IsProtected.get -> bool
+SharpMP4.Encryption.SampleEncryption.IsProtected.set -> void
+SharpMP4.Encryption.SampleEncryption.KeyId.get -> byte[]
+SharpMP4.Encryption.SampleEncryption.KeyId.set -> void
+SharpMP4.Encryption.SampleEncryption.SampleEncryption() -> void
+SharpMP4.Encryption.SampleEncryption.SkipByteBlock.get -> byte
+SharpMP4.Encryption.SampleEncryption.SkipByteBlock.set -> void
+SharpMP4.Encryption.SampleEncryption.Subsamples.get -> SharpMP4.Encryption.EncryptionSubsample[]
+SharpMP4.Encryption.SampleEncryption.Subsamples.set -> void
+SharpMP4.Encryption.SampleEncryptionReader
+SharpMP4.Encryption.SubsampleSplitter
+SharpMP4.Encryption.SubsampleSplitter.Logger.get -> SharpMP4.Common.IMp4Logger
+SharpMP4.Encryption.SubsampleSplitter.Logger.set -> void
+SharpMP4.Encryption.SubsampleSplitter.SubsampleSplitter(SharpMP4.Common.IMp4Logger logger) -> void
+SharpMP4.Encryption.TrackProtection
+SharpMP4.Encryption.TrackProtection.CreateProtectionSchemeInfoBox(uint originalFormat) -> SharpISOBMFF.ProtectionSchemeInfoBox
+SharpMP4.Encryption.TrackProtection.DefaultConstantIV.get -> byte[]
+SharpMP4.Encryption.TrackProtection.DefaultConstantIV.set -> void
+SharpMP4.Encryption.TrackProtection.DefaultCryptByteBlock.get -> byte
+SharpMP4.Encryption.TrackProtection.DefaultCryptByteBlock.set -> void
+SharpMP4.Encryption.TrackProtection.DefaultIsProtected.get -> bool
+SharpMP4.Encryption.TrackProtection.DefaultIsProtected.set -> void
+SharpMP4.Encryption.TrackProtection.DefaultKeyId.get -> byte[]
+SharpMP4.Encryption.TrackProtection.DefaultKeyId.set -> void
+SharpMP4.Encryption.TrackProtection.DefaultPerSampleIVSize.get -> byte
+SharpMP4.Encryption.TrackProtection.DefaultPerSampleIVSize.set -> void
+SharpMP4.Encryption.TrackProtection.DefaultSampleEncryption() -> SharpMP4.Encryption.SampleEncryption
+SharpMP4.Encryption.TrackProtection.DefaultSkipByteBlock.get -> byte
+SharpMP4.Encryption.TrackProtection.DefaultSkipByteBlock.set -> void
+SharpMP4.Encryption.TrackProtection.OriginalFormat.get -> string
+SharpMP4.Encryption.TrackProtection.OriginalFormat.set -> void
+SharpMP4.Encryption.TrackProtection.Scheme.get -> string
+SharpMP4.Encryption.TrackProtection.Scheme.set -> void
+SharpMP4.Encryption.TrackProtection.SchemeVersion.get -> uint
+SharpMP4.Encryption.TrackProtection.SchemeVersion.set -> void
+SharpMP4.Encryption.TrackProtection.Systems.get -> System.Collections.Generic.List<SharpMP4.Encryption.ProtectionSystemHeader>
+SharpMP4.Encryption.TrackProtection.Systems.set -> void
+SharpMP4.Encryption.TrackProtection.TrackProtection() -> void
+SharpMP4.Encryption.TrackProtection.UseAes256.get -> bool
+SharpMP4.Encryption.TrackProtection.UseAes256.set -> void
+SharpMP4.Encryption.Vp9SubsampleSplitter
+SharpMP4.Encryption.Vp9SubsampleSplitter.Vp9SubsampleSplitter(SharpMP4.Common.IMp4Logger logger) -> void
+SharpMP4.Mp4Extensions
+SharpMP4.Readers.CharacterCodedString
+SharpMP4.Readers.CharacterCodedString.Bytes.get -> byte[]
+SharpMP4.Readers.CharacterCodedString.CharacterCodedString() -> void
+SharpMP4.Readers.CharacterCodedString.CharacterCodedString(byte[] bytes, bool littleEndian) -> void
+SharpMP4.Readers.CharacterCodedString.Code.get -> string
+SharpMP4.Readers.CharacterCodedString.IsLittleEndian.get -> bool
+SharpMP4.Readers.CharacterCodedString.Text.get -> string
+SharpMP4.Readers.ContainerExtensions
+SharpMP4.Readers.ExifTags
+SharpMP4.Readers.ImageGrid
+SharpMP4.Readers.ImageGrid.Columns.get -> int
+SharpMP4.Readers.ImageGrid.ImageGrid(int rows, int columns, uint outputWidth, uint outputHeight) -> void
+SharpMP4.Readers.ImageGrid.OutputHeight.get -> uint
+SharpMP4.Readers.ImageGrid.OutputWidth.get -> uint
+SharpMP4.Readers.ImageGrid.Rows.get -> int
+SharpMP4.Readers.ImageReader
+SharpMP4.Readers.ImageReader.Container.get -> SharpISOBMFF.Container
+SharpMP4.Readers.ImageReader.Container.set -> void
+SharpMP4.Readers.ImageReader.CreateTrack(uint itemID) -> SharpMP4.Tracks.ITrack
+SharpMP4.Readers.ImageReader.DerivedFrom(uint itemID) -> System.Collections.Generic.IReadOnlyList<uint>
+SharpMP4.Readers.ImageReader.Dispose() -> void
+SharpMP4.Readers.ImageReader.Groups.get -> System.Collections.Generic.IReadOnlyList<SharpISOBMFF.EntityToGroupBox>
+SharpMP4.Readers.ImageReader.Idat.get -> SharpISOBMFF.ItemDataBox
+SharpMP4.Readers.ImageReader.Iloc.get -> SharpISOBMFF.ItemLocationBox
+SharpMP4.Readers.ImageReader.ImageIndex.get -> int
+SharpMP4.Readers.ImageReader.ImageReader() -> void
+SharpMP4.Readers.ImageReader.ImageReader(SharpMP4.Common.IMp4Logger logger) -> void
+SharpMP4.Readers.ImageReader.Ispe.get -> SharpISOBMFF.ImageSpatialExtentsProperty
+SharpMP4.Readers.ImageReader.ItemTypeOf(uint itemID) -> uint
+SharpMP4.Readers.ImageReader.Logger.get -> SharpMP4.Common.IMp4Logger
+SharpMP4.Readers.ImageReader.Logger.set -> void
+SharpMP4.Readers.ImageReader.Mdat.get -> SharpISOBMFF.MediaDataBox
+SharpMP4.Readers.ImageReader.Meta.get -> SharpISOBMFF.MetaBox
+SharpMP4.Readers.ImageReader.Parse(SharpISOBMFF.Container container) -> void
+SharpMP4.Readers.ImageReader.ParseSample(byte[] sample) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+SharpMP4.Readers.ImageReader.PrimaryItemID.get -> uint
+SharpMP4.Readers.ImageReader.PropertiesOf(uint itemID) -> System.Collections.Generic.IReadOnlyList<SharpISOBMFF.Box>
+SharpMP4.Readers.ImageReader.ReadGrid(uint itemID) -> SharpMP4.Readers.ImageGrid
+SharpMP4.Readers.ImageReader.ReadItem(uint itemID) -> byte[]
+SharpMP4.Readers.ImageReader.ReadSample() -> SharpMP4.Readers.ImageSample
+SharpMP4.Readers.ImageReader.Track.get -> SharpMP4.Tracks.ITrack
+SharpMP4.Readers.ImageReader.Track.set -> void
+SharpMP4.Readers.ImageReader.TrackFactory.get -> SharpMP4.Tracks.TrackFactory
+SharpMP4.Readers.ImageReader.TrackFactory.set -> void
+SharpMP4.Readers.ImageSample
+SharpMP4.Readers.ImageSample.Data.get -> byte[]
+SharpMP4.Readers.ImageSample.Data.set -> void
+SharpMP4.Readers.ImageSample.ImageSample(byte[] data) -> void
+SharpMP4.Readers.MediaSample
+SharpMP4.Readers.MediaSample.DTS.get -> long
+SharpMP4.Readers.MediaSample.DTS.set -> void
+SharpMP4.Readers.MediaSample.Data.get -> System.ArraySegment<byte>
+SharpMP4.Readers.MediaSample.Data.set -> void
+SharpMP4.Readers.MediaSample.Duration.get -> int
+SharpMP4.Readers.MediaSample.Duration.set -> void
+SharpMP4.Readers.MediaSample.Encryption.get -> SharpMP4.Encryption.SampleEncryption
+SharpMP4.Readers.MediaSample.Encryption.set -> void
+SharpMP4.Readers.MediaSample.IsRandomAccessPoint.get -> bool
+SharpMP4.Readers.MediaSample.IsRandomAccessPoint.set -> void
+SharpMP4.Readers.MediaSample.LongDuration.get -> long
+SharpMP4.Readers.MediaSample.LongDuration.set -> void
+SharpMP4.Readers.MediaSample.MediaSample(long pts, long dts, long duration, System.ArraySegment<byte> data, bool isRandomAccessPoint = true) -> void
+SharpMP4.Readers.MediaSample.Offset.get -> long
+SharpMP4.Readers.MediaSample.Offset.set -> void
+SharpMP4.Readers.MediaSample.PTS.get -> long
+SharpMP4.Readers.MediaSample.PTS.set -> void
+SharpMP4.Readers.MetadataChapter
+SharpMP4.Readers.MetadataChapter.MetadataChapter() -> void
+SharpMP4.Readers.MetadataChapter.Start.get -> System.TimeSpan
+SharpMP4.Readers.MetadataChapter.Start.set -> void
+SharpMP4.Readers.MetadataChapter.Title.get -> string
+SharpMP4.Readers.MetadataChapter.Title.set -> void
+SharpMP4.Readers.MetadataFamily
+SharpMP4.Readers.MetadataFamily.Exif = 5 -> SharpMP4.Readers.MetadataFamily
+SharpMP4.Readers.MetadataFamily.Freeform = 1 -> SharpMP4.Readers.MetadataFamily
+SharpMP4.Readers.MetadataFamily.ItemList = 0 -> SharpMP4.Readers.MetadataFamily
+SharpMP4.Readers.MetadataFamily.Keys = 2 -> SharpMP4.Readers.MetadataFamily
+SharpMP4.Readers.MetadataFamily.UserData = 3 -> SharpMP4.Readers.MetadataFamily
+SharpMP4.Readers.MetadataFamily.Xmp = 4 -> SharpMP4.Readers.MetadataFamily
+SharpMP4.Readers.MetadataTag
+SharpMP4.Readers.MetadataTag.Box.get -> SharpISOBMFF.Box
+SharpMP4.Readers.MetadataTag.Box.set -> void
+SharpMP4.Readers.MetadataTag.DataType.get -> int
+SharpMP4.Readers.MetadataTag.DataType.set -> void
+SharpMP4.Readers.MetadataTag.Description.get -> string
+SharpMP4.Readers.MetadataTag.Description.set -> void
+SharpMP4.Readers.MetadataTag.Family.get -> SharpMP4.Readers.MetadataFamily
+SharpMP4.Readers.MetadataTag.Family.set -> void
+SharpMP4.Readers.MetadataTag.Id.get -> int
+SharpMP4.Readers.MetadataTag.Id.set -> void
+SharpMP4.Readers.MetadataTag.Key.get -> string
+SharpMP4.Readers.MetadataTag.Key.set -> void
+SharpMP4.Readers.MetadataTag.Language.get -> string
+SharpMP4.Readers.MetadataTag.Language.set -> void
+SharpMP4.Readers.MetadataTag.Length.get -> long
+SharpMP4.Readers.MetadataTag.Length.set -> void
+SharpMP4.Readers.MetadataTag.MetadataTag() -> void
+SharpMP4.Readers.MetadataTag.Namespace.get -> string
+SharpMP4.Readers.MetadataTag.Namespace.set -> void
+SharpMP4.Readers.MetadataTag.Offset.get -> long
+SharpMP4.Readers.MetadataTag.Offset.set -> void
+SharpMP4.Readers.MetadataTag.TrackID.get -> uint
+SharpMP4.Readers.MetadataTag.TrackID.set -> void
+SharpMP4.Readers.MetadataTag.Value.get -> object
+SharpMP4.Readers.MetadataTag.Value.set -> void
+SharpMP4.Readers.MetadataTag.Xmp.get -> SharpMP4.Readers.XmpProperty
+SharpMP4.Readers.MetadataTag.Xmp.set -> void
+SharpMP4.Readers.SampleTiming
+SharpMP4.Readers.SampleTiming.DTS.get -> long
+SharpMP4.Readers.SampleTiming.Duration.get -> long
+SharpMP4.Readers.SampleTiming.IsSyncSample.get -> bool
+SharpMP4.Readers.SampleTiming.Offset.get -> long
+SharpMP4.Readers.SampleTiming.PTS.get -> long
+SharpMP4.Readers.SampleTiming.SampleTiming() -> void
+SharpMP4.Readers.SampleTiming.SampleTiming(long pts, long dts, long duration, bool isSyncSample) -> void
+SharpMP4.Readers.SampleTiming.SampleTiming(long pts, long dts, long duration, bool isSyncSample, long offset, uint size) -> void
+SharpMP4.Readers.SampleTiming.Size.get -> uint
+SharpMP4.Readers.TrackContext
+SharpMP4.Readers.TrackContext.ChunkAddressList.get -> ulong[]
+SharpMP4.Readers.TrackContext.ChunkAddressList.set -> void
+SharpMP4.Readers.TrackContext.ConstantSampleSize.get -> uint
+SharpMP4.Readers.TrackContext.ConstantSampleSize.set -> void
+SharpMP4.Readers.TrackContext.Ctts.get -> SharpISOBMFF.CompositionOffsetBox
+SharpMP4.Readers.TrackContext.Ctts.set -> void
+SharpMP4.Readers.TrackContext.EntryOfChunk.get -> uint[]
+SharpMP4.Readers.TrackContext.EntryOfChunk.set -> void
+SharpMP4.Readers.TrackContext.EntryProtections.get -> SharpMP4.Encryption.TrackProtection[]
+SharpMP4.Readers.TrackContext.EntryProtections.set -> void
+SharpMP4.Readers.TrackContext.FragmentBaseAddress.get -> long
+SharpMP4.Readers.TrackContext.FragmentBaseAddress.set -> void
+SharpMP4.Readers.TrackContext.FragmentEncryption.get -> SharpMP4.Encryption.SampleEncryption[]
+SharpMP4.Readers.TrackContext.FragmentEncryption.set -> void
+SharpMP4.Readers.TrackContext.FragmentEndDts.get -> long
+SharpMP4.Readers.TrackContext.FragmentEndDts.set -> void
+SharpMP4.Readers.TrackContext.FragmentIndex.get -> int
+SharpMP4.Readers.TrackContext.FragmentIndex.set -> void
+SharpMP4.Readers.TrackContext.FragmentLargestSample.get -> long
+SharpMP4.Readers.TrackContext.FragmentLargestSample.set -> void
+SharpMP4.Readers.TrackContext.FragmentProtection.get -> SharpMP4.Encryption.TrackProtection
+SharpMP4.Readers.TrackContext.FragmentProtection.set -> void
+SharpMP4.Readers.TrackContext.FragmentSampleCount.get -> int
+SharpMP4.Readers.TrackContext.FragmentSampleCount.set -> void
+SharpMP4.Readers.TrackContext.FragmentSampleDts.get -> long[]
+SharpMP4.Readers.TrackContext.FragmentSampleDts.set -> void
+SharpMP4.Readers.TrackContext.FragmentSampleStartAddress.get -> long[]
+SharpMP4.Readers.TrackContext.FragmentSampleStartAddress.set -> void
+SharpMP4.Readers.TrackContext.FragmentSampleTrunEntryIndex.get -> int[]
+SharpMP4.Readers.TrackContext.FragmentSampleTrunEntryIndex.set -> void
+SharpMP4.Readers.TrackContext.FragmentSampleTrunIndex.get -> int[]
+SharpMP4.Readers.TrackContext.FragmentSampleTrunIndex.set -> void
+SharpMP4.Readers.TrackContext.FramesInChunkList.get -> uint[]
+SharpMP4.Readers.TrackContext.FramesInChunkList.set -> void
+SharpMP4.Readers.TrackContext.IsReadingFragments.get -> bool
+SharpMP4.Readers.TrackContext.IsReadingFragments.set -> void
+SharpMP4.Readers.TrackContext.LargestSampleSize.get -> long
+SharpMP4.Readers.TrackContext.Mdat.get -> SharpISOBMFF.MediaDataBox
+SharpMP4.Readers.TrackContext.Mdat.set -> void
+SharpMP4.Readers.TrackContext.Moof.get -> SharpISOBMFF.MovieFragmentBox
+SharpMP4.Readers.TrackContext.Moof.set -> void
+SharpMP4.Readers.TrackContext.Protection.get -> SharpMP4.Encryption.TrackProtection
+SharpMP4.Readers.TrackContext.Protection.set -> void
+SharpMP4.Readers.TrackContext.ProtectionOfEntry(uint index) -> SharpMP4.Encryption.TrackProtection
+SharpMP4.Readers.TrackContext.SampleBuffer.get -> byte[]
+SharpMP4.Readers.TrackContext.SampleBuffer.set -> void
+SharpMP4.Readers.TrackContext.SampleCount.get -> uint
+SharpMP4.Readers.TrackContext.SampleCount.set -> void
+SharpMP4.Readers.TrackContext.SampleEncryptions.get -> SharpMP4.Encryption.SampleEncryption[]
+SharpMP4.Readers.TrackContext.SampleEncryptions.set -> void
+SharpMP4.Readers.TrackContext.SampleIndex.get -> uint
+SharpMP4.Readers.TrackContext.SampleIndex.set -> void
+SharpMP4.Readers.TrackContext.SampleSizeAt(uint index) -> uint
+SharpMP4.Readers.TrackContext.SampleTableDuration() -> long
+SharpMP4.Readers.TrackContext.SizesList.get -> uint[]
+SharpMP4.Readers.TrackContext.SizesList.set -> void
+SharpMP4.Readers.TrackContext.Stbl.get -> SharpISOBMFF.SampleTableBox
+SharpMP4.Readers.TrackContext.Stbl.set -> void
+SharpMP4.Readers.TrackContext.Stss.get -> SharpISOBMFF.SyncSampleBox
+SharpMP4.Readers.TrackContext.Stss.set -> void
+SharpMP4.Readers.TrackContext.Stts.get -> SharpISOBMFF.TimeToSampleBox
+SharpMP4.Readers.TrackContext.Stts.set -> void
+SharpMP4.Readers.TrackContext.Tfhd.get -> SharpISOBMFF.TrackFragmentHeaderBox
+SharpMP4.Readers.TrackContext.Tfhd.set -> void
+SharpMP4.Readers.TrackContext.Track.get -> SharpMP4.Tracks.ITrack
+SharpMP4.Readers.TrackContext.Track.set -> void
+SharpMP4.Readers.TrackContext.TrackContext() -> void
+SharpMP4.Readers.TrackContext.Traf.get -> SharpISOBMFF.TrackFragmentBox
+SharpMP4.Readers.TrackContext.Traf.set -> void
+SharpMP4.Readers.TrackContext.Trex.get -> SharpISOBMFF.TrackExtendsBox
+SharpMP4.Readers.TrackContext.Trex.set -> void
+SharpMP4.Readers.TrackContext.Truns.get -> SharpISOBMFF.TrackRunBox[]
+SharpMP4.Readers.TrackContext.Truns.set -> void
+SharpMP4.Readers.VideoReader
+SharpMP4.Readers.VideoReader.Container.get -> SharpISOBMFF.Container
+SharpMP4.Readers.VideoReader.Container.set -> void
+SharpMP4.Readers.VideoReader.Dispose() -> void
+SharpMP4.Readers.VideoReader.Ftyp.get -> SharpISOBMFF.FileTypeBox
+SharpMP4.Readers.VideoReader.Ftyp.set -> void
+SharpMP4.Readers.VideoReader.GetSampleTimings(uint trackID) -> SharpMP4.Readers.SampleTiming[]
+SharpMP4.Readers.VideoReader.GetTracks() -> System.Collections.Generic.IEnumerable<SharpMP4.Tracks.ITrack>
+SharpMP4.Readers.VideoReader.IsFragmented.get -> bool
+SharpMP4.Readers.VideoReader.IsFragmented.set -> void
+SharpMP4.Readers.VideoReader.IsQuickTime.get -> bool
+SharpMP4.Readers.VideoReader.IsQuickTime.set -> void
+SharpMP4.Readers.VideoReader.KeyProvider.get -> System.Func<byte[], byte[]>
+SharpMP4.Readers.VideoReader.KeyProvider.set -> void
+SharpMP4.Readers.VideoReader.Logger.get -> SharpMP4.Common.IMp4Logger
+SharpMP4.Readers.VideoReader.Logger.set -> void
+SharpMP4.Readers.VideoReader.Mdat.get -> SharpISOBMFF.MediaDataBox
+SharpMP4.Readers.VideoReader.Mdat.set -> void
+SharpMP4.Readers.VideoReader.Moov.get -> SharpISOBMFF.MovieBox
+SharpMP4.Readers.VideoReader.Moov.set -> void
+SharpMP4.Readers.VideoReader.Mvex.get -> SharpISOBMFF.MovieExtendsBox
+SharpMP4.Readers.VideoReader.Mvex.set -> void
+SharpMP4.Readers.VideoReader.Parse(SharpISOBMFF.Container container) -> void
+SharpMP4.Readers.VideoReader.ParseSample(uint trackID, System.ArraySegment<byte> sample) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+SharpMP4.Readers.VideoReader.ReadSample(uint trackID) -> SharpMP4.Readers.MediaSample
+SharpMP4.Readers.VideoReader.ReadSamples(uint trackID, int maxCount) -> SharpMP4.Readers.MediaSample
+SharpMP4.Readers.VideoReader.SeekSample(uint trackID, uint sampleIndex) -> void
+SharpMP4.Readers.VideoReader.ThrowOnMissingKey.get -> bool
+SharpMP4.Readers.VideoReader.ThrowOnMissingKey.set -> void
+SharpMP4.Readers.VideoReader.Track.get -> SharpISOBMFF.TrackBox[]
+SharpMP4.Readers.VideoReader.Track.set -> void
+SharpMP4.Readers.VideoReader.TrackFactory.get -> SharpMP4.Tracks.TrackFactory
+SharpMP4.Readers.VideoReader.TrackFactory.set -> void
+SharpMP4.Readers.VideoReader.Tracks.get -> System.Collections.Generic.Dictionary<uint, SharpMP4.Readers.TrackContext>
+SharpMP4.Readers.VideoReader.Tracks.set -> void
+SharpMP4.Readers.VideoReader.VideoReader() -> void
+SharpMP4.Readers.VideoReader.VideoReader(SharpMP4.Common.IMp4Logger logger) -> void
+SharpMP4.Readers.XmpProperty
+SharpMP4.Readers.XmpProperty.Language.get -> string
+SharpMP4.Readers.XmpProperty.Language.set -> void
+SharpMP4.Readers.XmpProperty.Length.get -> long
+SharpMP4.Readers.XmpProperty.Length.set -> void
+SharpMP4.Readers.XmpProperty.Name.get -> string
+SharpMP4.Readers.XmpProperty.Namespace.get -> string
+SharpMP4.Readers.XmpProperty.Offset.get -> long
+SharpMP4.Readers.XmpProperty.Offset.set -> void
+SharpMP4.Readers.XmpProperty.Path.get -> System.Collections.Generic.List<SharpMP4.Readers.XmpStep>
+SharpMP4.Readers.XmpProperty.Path.set -> void
+SharpMP4.Readers.XmpProperty.PathText.get -> string
+SharpMP4.Readers.XmpProperty.Value.get -> string
+SharpMP4.Readers.XmpProperty.Value.set -> void
+SharpMP4.Readers.XmpProperty.XmpProperty() -> void
+SharpMP4.Readers.XmpReader
+SharpMP4.Readers.XmpStep
+SharpMP4.Readers.XmpStep.Index.get -> int
+SharpMP4.Readers.XmpStep.Index.set -> void
+SharpMP4.Readers.XmpStep.Name.get -> string
+SharpMP4.Readers.XmpStep.Name.set -> void
+SharpMP4.Readers.XmpStep.Namespace.get -> string
+SharpMP4.Readers.XmpStep.Namespace.set -> void
+SharpMP4.Readers.XmpStep.Prefix.get -> string
+SharpMP4.Readers.XmpStep.Prefix.set -> void
+SharpMP4.Readers.XmpStep.XmpStep() -> void
+SharpMP4.Tracks.AACTrack
+SharpMP4.Tracks.AACTrack.AACTrack(SharpISOBMFF.Box config, uint timescale = 0, int sampleDuration = -1) -> void
+SharpMP4.Tracks.AACTrack.AACTrack(SharpMP4.Tracks.AdtsHeader header) -> void
+SharpMP4.Tracks.AACTrack.AACTrack(byte channelCount, uint samplingRateInHz, ushort sampleSizeInBits) -> void
+SharpMP4.Tracks.AACTrack.AACTrack(byte channelCount, uint samplingRateInHz, ushort sampleSizeInBits, byte channelConfiguration) -> void
+SharpMP4.Tracks.AACTrack.AudioSpecificConfig.get -> SharpISOBMFF.AudioSpecificConfig
+SharpMP4.Tracks.AACTrack.ChannelConfiguration.get -> byte
+SharpMP4.Tracks.AACTrack.ChannelCount.get -> byte
+SharpMP4.Tracks.AACTrack.DecoderSpecificInfo.get -> byte[]
+SharpMP4.Tracks.AACTrack.ObjectTypeIndication.get -> byte
+SharpMP4.Tracks.AACTrack.SampleSize.get -> ushort
+SharpMP4.Tracks.AACTrack.SamplingRate.get -> uint
+SharpMP4.Tracks.AC3SyncFrame
+SharpMP4.Tracks.AC3SyncFrame.AC3SyncFrame() -> void
+SharpMP4.Tracks.AC3SyncFrame.Acmod.get -> byte
+SharpMP4.Tracks.AC3SyncFrame.Acmod.set -> void
+SharpMP4.Tracks.AC3SyncFrame.BitRate.get -> ushort
+SharpMP4.Tracks.AC3SyncFrame.BitRateCode.get -> byte
+SharpMP4.Tracks.AC3SyncFrame.Bsid.get -> byte
+SharpMP4.Tracks.AC3SyncFrame.Bsid.set -> void
+SharpMP4.Tracks.AC3SyncFrame.Bsmod.get -> byte
+SharpMP4.Tracks.AC3SyncFrame.Bsmod.set -> void
+SharpMP4.Tracks.AC3SyncFrame.ChannelCount.get -> byte
+SharpMP4.Tracks.AC3SyncFrame.Cmixlev.get -> byte
+SharpMP4.Tracks.AC3SyncFrame.Cmixlev.set -> void
+SharpMP4.Tracks.AC3SyncFrame.Crc1.get -> ushort
+SharpMP4.Tracks.AC3SyncFrame.Crc1.set -> void
+SharpMP4.Tracks.AC3SyncFrame.Dsurmod.get -> byte
+SharpMP4.Tracks.AC3SyncFrame.Dsurmod.set -> void
+SharpMP4.Tracks.AC3SyncFrame.FrameLength.get -> int
+SharpMP4.Tracks.AC3SyncFrame.Frmsizecod.get -> byte
+SharpMP4.Tracks.AC3SyncFrame.Frmsizecod.set -> void
+SharpMP4.Tracks.AC3SyncFrame.Fscod.get -> byte
+SharpMP4.Tracks.AC3SyncFrame.Fscod.set -> void
+SharpMP4.Tracks.AC3SyncFrame.Lfeon.get -> bool
+SharpMP4.Tracks.AC3SyncFrame.Lfeon.set -> void
+SharpMP4.Tracks.AC3SyncFrame.SamplingRate.get -> uint
+SharpMP4.Tracks.AC3SyncFrame.Surmixlev.get -> byte
+SharpMP4.Tracks.AC3SyncFrame.Surmixlev.set -> void
+SharpMP4.Tracks.AC3Track
+SharpMP4.Tracks.AC3Track.AC3Track(SharpISOBMFF.Box config, uint timescale = 0, int sampleDuration = -1) -> void
+SharpMP4.Tracks.AC3Track.AC3Track(SharpMP4.Tracks.AC3SyncFrame syncFrame) -> void
+SharpMP4.Tracks.AC3Track.AC3Track(byte fscod, byte bsid, byte bsmod, byte acmod, bool lfeon, byte bitRateCode) -> void
+SharpMP4.Tracks.AC3Track.Acmod.get -> byte
+SharpMP4.Tracks.AC3Track.BitRate.get -> ushort
+SharpMP4.Tracks.AC3Track.BitRateCode.get -> byte
+SharpMP4.Tracks.AC3Track.Bsid.get -> byte
+SharpMP4.Tracks.AC3Track.Bsmod.get -> byte
+SharpMP4.Tracks.AC3Track.ChannelCount.get -> byte
+SharpMP4.Tracks.AC3Track.Fscod.get -> byte
+SharpMP4.Tracks.AC3Track.Lfeon.get -> bool
+SharpMP4.Tracks.AC3Track.SamplingRate.get -> uint
+SharpMP4.Tracks.AV1Track
+SharpMP4.Tracks.AV1Track.AV1Track() -> void
+SharpMP4.Tracks.AV1Track.AV1Track(SharpISOBMFF.Box config, uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.AV1Track.AV1Track(uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.AV1Track.FrameSize.get -> (int Width, int Height)?
+SharpMP4.Tracks.AV1Track.SequenceHeaderObu.get -> SharpAV1.AV1Context
+SharpMP4.Tracks.AV1Track.SequenceHeaderObu.set -> void
+SharpMP4.Tracks.AV1Track.SequenceHeaderObuRaw.get -> byte[]
+SharpMP4.Tracks.AV1Track.SequenceHeaderObuRaw.set -> void
+SharpMP4.Tracks.AV2Track
+SharpMP4.Tracks.AV2Track.AV2Track() -> void
+SharpMP4.Tracks.AV2Track.AV2Track(SharpISOBMFF.Box config, uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.AV2Track.AV2Track(uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.AV2Track.SequenceHeaderObuRaw.get -> byte[]
+SharpMP4.Tracks.AdtsHeader
+SharpMP4.Tracks.AdtsHeader.AdtsHeader() -> void
+SharpMP4.Tracks.AdtsHeader.BufferFullness.get -> ushort
+SharpMP4.Tracks.AdtsHeader.BufferFullness.set -> void
+SharpMP4.Tracks.AdtsHeader.CRC.get -> ushort
+SharpMP4.Tracks.AdtsHeader.CRC.set -> void
+SharpMP4.Tracks.AdtsHeader.ChannelConfiguration.get -> byte
+SharpMP4.Tracks.AdtsHeader.ChannelConfiguration.set -> void
+SharpMP4.Tracks.AdtsHeader.ChannelCount.get -> byte
+SharpMP4.Tracks.AdtsHeader.CopyrightIDBit.get -> bool
+SharpMP4.Tracks.AdtsHeader.CopyrightIDBit.set -> void
+SharpMP4.Tracks.AdtsHeader.CopyrightIDStart.get -> bool
+SharpMP4.Tracks.AdtsHeader.CopyrightIDStart.set -> void
+SharpMP4.Tracks.AdtsHeader.FrameLength.get -> ushort
+SharpMP4.Tracks.AdtsHeader.FrameLength.set -> void
+SharpMP4.Tracks.AdtsHeader.Home.get -> bool
+SharpMP4.Tracks.AdtsHeader.Home.set -> void
+SharpMP4.Tracks.AdtsHeader.Layer.get -> byte
+SharpMP4.Tracks.AdtsHeader.Layer.set -> void
+SharpMP4.Tracks.AdtsHeader.MpegVersion.get -> bool
+SharpMP4.Tracks.AdtsHeader.MpegVersion.set -> void
+SharpMP4.Tracks.AdtsHeader.Originality.get -> bool
+SharpMP4.Tracks.AdtsHeader.Originality.set -> void
+SharpMP4.Tracks.AdtsHeader.PrivateBit.get -> bool
+SharpMP4.Tracks.AdtsHeader.PrivateBit.set -> void
+SharpMP4.Tracks.AdtsHeader.Profile.get -> byte
+SharpMP4.Tracks.AdtsHeader.Profile.set -> void
+SharpMP4.Tracks.AdtsHeader.ProtectionAbsent.get -> bool
+SharpMP4.Tracks.AdtsHeader.ProtectionAbsent.set -> void
+SharpMP4.Tracks.AdtsHeader.RawDataBlockCountMinus1.get -> byte
+SharpMP4.Tracks.AdtsHeader.RawDataBlockCountMinus1.set -> void
+SharpMP4.Tracks.AdtsHeader.Read(byte[] sample) -> void
+SharpMP4.Tracks.AdtsHeader.SamplingFrequencyIndex.get -> byte
+SharpMP4.Tracks.AdtsHeader.SamplingFrequencyIndex.set -> void
+SharpMP4.Tracks.AdtsHeader.SamplingRate.get -> uint
+SharpMP4.Tracks.AlacTrack
+SharpMP4.Tracks.AlacTrack.AlacTrack(SharpISOBMFF.Box config, uint timescale = 0, int sampleDuration = -1) -> void
+SharpMP4.Tracks.AlacTrack.AlacTrack(byte[] config) -> void
+SharpMP4.Tracks.AlacTrack.AvgBitRate.get -> uint
+SharpMP4.Tracks.AlacTrack.BitDepth.get -> byte
+SharpMP4.Tracks.AlacTrack.ChannelCount.get -> byte
+SharpMP4.Tracks.AlacTrack.Config.get -> byte[]
+SharpMP4.Tracks.AlacTrack.FrameLength.get -> uint
+SharpMP4.Tracks.AlacTrack.MaxFrameBytes.get -> uint
+SharpMP4.Tracks.AlacTrack.SamplingRate.get -> uint
+SharpMP4.Tracks.AmrTrack
+SharpMP4.Tracks.AmrTrack.AmrTrack(SharpISOBMFF.Box config, uint timescale = 0, int sampleDuration = -1) -> void
+SharpMP4.Tracks.AmrTrack.AmrTrack(bool wideband = false, byte framesPerSample = 1, ushort modeSet = 0) -> void
+SharpMP4.Tracks.AmrTrack.ChannelCount.get -> ushort
+SharpMP4.Tracks.AmrTrack.DecoderVersion.get -> byte
+SharpMP4.Tracks.AmrTrack.FramesPerSample.get -> byte
+SharpMP4.Tracks.AmrTrack.IsWideband.get -> bool
+SharpMP4.Tracks.AmrTrack.ModeChangePeriod.get -> byte
+SharpMP4.Tracks.AmrTrack.ModeSet.get -> ushort
+SharpMP4.Tracks.AmrTrack.ParseFrames(byte[] buffer, int offset, int length) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+SharpMP4.Tracks.AmrTrack.SampleRate.get -> uint
+SharpMP4.Tracks.AmrTrack.SamplesPerFrame.get -> int
+SharpMP4.Tracks.AmrTrack.Vendor.get -> uint
+SharpMP4.Tracks.EAC3Track
+SharpMP4.Tracks.EAC3Track.ChannelCount.get -> byte
+SharpMP4.Tracks.EAC3Track.DataRate.get -> ushort
+SharpMP4.Tracks.EAC3Track.EAC3Track(SharpISOBMFF.Box config, uint timescale = 0, int sampleDuration = -1) -> void
+SharpMP4.Tracks.EAC3Track.EAC3Track(ushort dataRate, System.Collections.Generic.IEnumerable<SharpMP4.Tracks.EAC3Track.Substream> substreams, uint samplingRate = 0, byte[] extension = null) -> void
+SharpMP4.Tracks.EAC3Track.Extension.get -> byte[]
+SharpMP4.Tracks.EAC3Track.SamplingRate.get -> uint
+SharpMP4.Tracks.EAC3Track.Substream
+SharpMP4.Tracks.EAC3Track.Substream.Acmod.get -> byte
+SharpMP4.Tracks.EAC3Track.Substream.Acmod.set -> void
+SharpMP4.Tracks.EAC3Track.Substream.Bsid.get -> byte
+SharpMP4.Tracks.EAC3Track.Substream.Bsid.set -> void
+SharpMP4.Tracks.EAC3Track.Substream.Bsmod.get -> byte
+SharpMP4.Tracks.EAC3Track.Substream.Bsmod.set -> void
+SharpMP4.Tracks.EAC3Track.Substream.ChanLoc.get -> ushort
+SharpMP4.Tracks.EAC3Track.Substream.ChanLoc.set -> void
+SharpMP4.Tracks.EAC3Track.Substream.Fscod.get -> byte
+SharpMP4.Tracks.EAC3Track.Substream.Fscod.set -> void
+SharpMP4.Tracks.EAC3Track.Substream.Lfeon.get -> bool
+SharpMP4.Tracks.EAC3Track.Substream.Lfeon.set -> void
+SharpMP4.Tracks.EAC3Track.Substream.NumDepSub.get -> byte
+SharpMP4.Tracks.EAC3Track.Substream.NumDepSub.set -> void
+SharpMP4.Tracks.EAC3Track.Substream.Substream() -> void
+SharpMP4.Tracks.EAC3Track.Substreams.get -> System.Collections.Generic.IReadOnlyList<SharpMP4.Tracks.EAC3Track.Substream>
+SharpMP4.Tracks.FlacStreamHeader
+SharpMP4.Tracks.FlacStreamHeader.FlacStreamHeader() -> void
+SharpMP4.Tracks.FlacStreamHeader.MetadataBlocks.get -> System.Collections.Generic.List<(byte Type, byte[] Data)>
+SharpMP4.Tracks.FlacStreamHeader.StreamInfo.get -> byte[]
+SharpMP4.Tracks.FlacTrack
+SharpMP4.Tracks.FlacTrack.BitsPerSample.get -> byte
+SharpMP4.Tracks.FlacTrack.ChannelCount.get -> byte
+SharpMP4.Tracks.FlacTrack.CreateStreamHeader() -> byte[]
+SharpMP4.Tracks.FlacTrack.FlacTrack(SharpISOBMFF.Box config, uint timescale = 0, int sampleDuration = -1) -> void
+SharpMP4.Tracks.FlacTrack.FlacTrack(SharpMP4.Tracks.FlacStreamHeader header) -> void
+SharpMP4.Tracks.FlacTrack.FlacTrack(System.Collections.Generic.IEnumerable<(byte Type, byte[] Data)> metadataBlocks) -> void
+SharpMP4.Tracks.FlacTrack.FlacTrack(byte[] streamInfo) -> void
+SharpMP4.Tracks.FlacTrack.MaxBlockSize.get -> ushort
+SharpMP4.Tracks.FlacTrack.MetadataBlocks.get -> System.Collections.Generic.IReadOnlyList<(byte Type, byte[] Data)>
+SharpMP4.Tracks.FlacTrack.SamplingRate.get -> uint
+SharpMP4.Tracks.FlacTrack.StreamInfo.get -> byte[]
+SharpMP4.Tracks.GenericTrack
+SharpMP4.Tracks.GenericTrack.Config.get -> SharpISOBMFF.Box
+SharpMP4.Tracks.GenericTrack.GenericTrack(SharpISOBMFF.Box config, uint timescale, int sampleDuration, uint handlerType, string handlerName) -> void
+SharpMP4.Tracks.H261Track
+SharpMP4.Tracks.H261Track.H261Track() -> void
+SharpMP4.Tracks.H261Track.H261Track(SharpISOBMFF.Box entry, uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.H261Track.H261Track(uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.H262Track
+SharpMP4.Tracks.H262Track.H262Track() -> void
+SharpMP4.Tracks.H262Track.H262Track(SharpISOBMFF.Box config, uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.H262Track.H262Track(SharpISOBMFF.VisualSampleEntry entry, string coding, uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.H262Track.H262Track(uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.H262Track.IsMpeg1.get -> bool
+SharpMP4.Tracks.H262Track.ObjectTypeIndication.get -> byte
+SharpMP4.Tracks.H262Track.SampleEntryType.get -> string
+SharpMP4.Tracks.H262Track.SampleEntryType.set -> void
+SharpMP4.Tracks.H263Track
+SharpMP4.Tracks.H263Track.H263Track() -> void
+SharpMP4.Tracks.H263Track.H263Track(SharpISOBMFF.Box config, uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.H263Track.H263Track(uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.H263Track.Level.get -> byte
+SharpMP4.Tracks.H263Track.Level.set -> void
+SharpMP4.Tracks.H263Track.Profile.get -> byte
+SharpMP4.Tracks.H263Track.Profile.set -> void
+SharpMP4.Tracks.H263Track.Vendor.get -> string
+SharpMP4.Tracks.H263Track.Vendor.set -> void
+SharpMP4.Tracks.H264Track
+SharpMP4.Tracks.H264Track.H264Track() -> void
+SharpMP4.Tracks.H264Track.H264Track(SharpISOBMFF.Box config, uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.H264Track.H264Track(uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.H264Track.Pps.get -> System.Collections.Generic.Dictionary<ulong, SharpH264.PicParameterSetRbsp>
+SharpMP4.Tracks.H264Track.Pps.set -> void
+SharpMP4.Tracks.H264Track.PpsRaw.get -> System.Collections.Generic.Dictionary<ulong, byte[]>
+SharpMP4.Tracks.H264Track.PpsRaw.set -> void
+SharpMP4.Tracks.H264Track.Sps.get -> System.Collections.Generic.Dictionary<ulong, SharpH264.SeqParameterSetRbsp>
+SharpMP4.Tracks.H264Track.Sps.set -> void
+SharpMP4.Tracks.H264Track.SpsRaw.get -> System.Collections.Generic.Dictionary<ulong, byte[]>
+SharpMP4.Tracks.H264Track.SpsRaw.set -> void
+SharpMP4.Tracks.H265Track
+SharpMP4.Tracks.H265Track.BuildGeneralProfileCompatibilityFlags(SharpH265.SeqParameterSetRbsp sps) -> uint
+SharpMP4.Tracks.H265Track.BuildGeneralProfileConstraintIndicatorFlags(SharpH265.SeqParameterSetRbsp sps) -> ulong
+SharpMP4.Tracks.H265Track.H265Track() -> void
+SharpMP4.Tracks.H265Track.H265Track(SharpISOBMFF.Box config, uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.H265Track.H265Track(uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.H265Track.Pps.get -> System.Collections.Generic.Dictionary<ulong, SharpH265.PicParameterSetRbsp>
+SharpMP4.Tracks.H265Track.Pps.set -> void
+SharpMP4.Tracks.H265Track.PpsRaw.get -> System.Collections.Generic.Dictionary<ulong, byte[]>
+SharpMP4.Tracks.H265Track.PpsRaw.set -> void
+SharpMP4.Tracks.H265Track.PrefixSei.get -> System.Collections.Generic.List<SharpH265.SeiRbsp>
+SharpMP4.Tracks.H265Track.PrefixSei.set -> void
+SharpMP4.Tracks.H265Track.PrefixSeiRaw.get -> System.Collections.Generic.List<byte[]>
+SharpMP4.Tracks.H265Track.PrefixSeiRaw.set -> void
+SharpMP4.Tracks.H265Track.Sps.get -> System.Collections.Generic.Dictionary<ulong, SharpH265.SeqParameterSetRbsp>
+SharpMP4.Tracks.H265Track.Sps.set -> void
+SharpMP4.Tracks.H265Track.SpsRaw.get -> System.Collections.Generic.Dictionary<ulong, byte[]>
+SharpMP4.Tracks.H265Track.SpsRaw.set -> void
+SharpMP4.Tracks.H265Track.Vps.get -> System.Collections.Generic.Dictionary<ulong, SharpH265.VideoParameterSetRbsp>
+SharpMP4.Tracks.H265Track.Vps.set -> void
+SharpMP4.Tracks.H265Track.VpsRaw.get -> System.Collections.Generic.Dictionary<ulong, byte[]>
+SharpMP4.Tracks.H265Track.VpsRaw.set -> void
+SharpMP4.Tracks.H266Track
+SharpMP4.Tracks.H266Track.H266Track() -> void
+SharpMP4.Tracks.H266Track.H266Track(SharpISOBMFF.Box config, uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.H266Track.H266Track(uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.H266Track.Pps.get -> System.Collections.Generic.Dictionary<ulong, SharpH266.PicParameterSetRbsp>
+SharpMP4.Tracks.H266Track.Pps.set -> void
+SharpMP4.Tracks.H266Track.PpsRaw.get -> System.Collections.Generic.Dictionary<ulong, byte[]>
+SharpMP4.Tracks.H266Track.PpsRaw.set -> void
+SharpMP4.Tracks.H266Track.PrefixSei.get -> System.Collections.Generic.List<SharpH266.SeiRbsp>
+SharpMP4.Tracks.H266Track.PrefixSei.set -> void
+SharpMP4.Tracks.H266Track.PrefixSeiRaw.get -> System.Collections.Generic.List<byte[]>
+SharpMP4.Tracks.H266Track.PrefixSeiRaw.set -> void
+SharpMP4.Tracks.H266Track.Sps.get -> System.Collections.Generic.Dictionary<ulong, SharpH266.SeqParameterSetRbsp>
+SharpMP4.Tracks.H266Track.Sps.set -> void
+SharpMP4.Tracks.H266Track.SpsRaw.get -> System.Collections.Generic.Dictionary<ulong, byte[]>
+SharpMP4.Tracks.H266Track.SpsRaw.set -> void
+SharpMP4.Tracks.H266Track.Vps.get -> System.Collections.Generic.Dictionary<ulong, SharpH266.VideoParameterSetRbsp>
+SharpMP4.Tracks.H266Track.Vps.set -> void
+SharpMP4.Tracks.H266Track.VpsRaw.get -> System.Collections.Generic.Dictionary<ulong, byte[]>
+SharpMP4.Tracks.H266Track.VpsRaw.set -> void
+SharpMP4.Tracks.H26XTrackBase
+SharpMP4.Tracks.H26XTrackBase.AddVclNalUnit(bool isRandomAccessPoint, int layerId = 0) -> void
+SharpMP4.Tracks.H26XTrackBase.AppendNalUnit(byte[] buffer, int offset, int length) -> void
+SharpMP4.Tracks.H26XTrackBase.AttachHeldNalUnits() -> void
+SharpMP4.Tracks.H26XTrackBase.DropConfigurationSample() -> void
+SharpMP4.Tracks.H26XTrackBase.FlushAccessUnit() -> System.ArraySegment<byte>
+SharpMP4.Tracks.H26XTrackBase.H26XTrackBase() -> void
+SharpMP4.Tracks.H26XTrackBase.HoldNalUnit(byte[] buffer, int offset, int length) -> void
+SharpMP4.Tracks.H26XTrackBase.KeepConfigurationSei(System.Collections.Generic.List<byte[]> raw, byte[] buffer, int offset, int length) -> bool
+SharpMP4.Tracks.H26XTrackBase.KeepParameterSet<T>(string kind, System.Collections.Generic.Dictionary<ulong, T> sets, System.Collections.Generic.Dictionary<ulong, byte[]> raw, ulong id, T set, byte[] buffer, int offset, int length) -> void
+SharpMP4.Tracks.H26XTrackBase.NalLengthSize.get -> int
+SharpMP4.Tracks.H26XTrackBase.NalLengthSize.set -> void
+SharpMP4.Tracks.H26XTrackBase.NalStream(byte[] buffer, int offset, int length) -> SharpH26X.ItuStream
+SharpMP4.Tracks.H26XTrackBase.ParseAnnexB(System.IO.Stream sample, int bufferSize = 65536) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+SharpMP4.Tracks.H26XTrackBase.ParseAnnexB(byte[] buffer, int offset, int length) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+SharpMP4.Tracks.H26XTrackBase.ProcessConfiguration(System.Collections.Generic.IEnumerable<byte[]> nalUnits) -> void
+SharpMP4.Tracks.H26XTrackBase.ReadingConfiguration.get -> bool
+SharpMP4.Tracks.H26XTrackBase.ReadingConfiguration.set -> void
+SharpMP4.Tracks.H26XTrackBase.SampleEntryCreated.get -> bool
+SharpMP4.Tracks.H26XTrackBase.SampleEntryCreated.set -> void
+SharpMP4.Tracks.H26XTrackBase.SampleHasIdr.get -> bool
+SharpMP4.Tracks.H26XTrackBase.SampleHasIdr.set -> void
+SharpMP4.Tracks.H26XTrackBase.SampleHasVcl.get -> bool
+SharpMP4.Tracks.H26XTrackBase.SampleHasVcl.set -> void
+SharpMP4.Tracks.H26XTrackBase.StartVclNalUnit(bool startsAccessUnit) -> System.ArraySegment<byte>
+SharpMP4.Tracks.H26XTrackBase.StartsAccessUnit(int layerId) -> bool
+SharpMP4.Tracks.H26XTrackBase.TakeSample() -> System.ArraySegment<byte>
+SharpMP4.Tracks.ISubtitleTrack
+SharpMP4.Tracks.ISubtitleTrack.CreateSample(System.Collections.Generic.IReadOnlyList<SharpMP4.Tracks.SubtitleCue> cues) -> byte[]
+SharpMP4.Tracks.ISubtitleTrack.Forced.get -> bool
+SharpMP4.Tracks.ISubtitleTrack.Forced.set -> void
+SharpMP4.Tracks.ISubtitleTrack.ParseCues(byte[] buffer, int offset, int length, long start, long duration) -> System.Collections.Generic.IReadOnlyList<SharpMP4.Tracks.SubtitleCue>
+SharpMP4.Tracks.ITrack
+SharpMP4.Tracks.ITrack.Clone() -> SharpMP4.Tracks.ITrack
+SharpMP4.Tracks.ITrack.CompatibleBrand.get -> string
+SharpMP4.Tracks.ITrack.CompatibleBrand.set -> void
+SharpMP4.Tracks.ITrack.CreateSampleEntryBox() -> SharpISOBMFF.Box
+SharpMP4.Tracks.ITrack.DefaultSampleDuration.get -> int
+SharpMP4.Tracks.ITrack.DefaultSampleDuration.set -> void
+SharpMP4.Tracks.ITrack.DefaultSampleFlags.get -> uint
+SharpMP4.Tracks.ITrack.DefaultSampleFlags.set -> void
+SharpMP4.Tracks.ITrack.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+SharpMP4.Tracks.ITrack.FrameTickFallback.get -> int
+SharpMP4.Tracks.ITrack.FrameTickFallback.set -> void
+SharpMP4.Tracks.ITrack.FrameTickOverride.get -> int
+SharpMP4.Tracks.ITrack.FrameTickOverride.set -> void
+SharpMP4.Tracks.ITrack.GetContainerSamples() -> System.Collections.Generic.IEnumerable<byte[]>
+SharpMP4.Tracks.ITrack.HandlerName.get -> string
+SharpMP4.Tracks.ITrack.HandlerType.get -> string
+SharpMP4.Tracks.ITrack.Language.get -> string
+SharpMP4.Tracks.ITrack.Language.set -> void
+SharpMP4.Tracks.ITrack.Logger.get -> SharpMP4.Common.IMp4Logger
+SharpMP4.Tracks.ITrack.Logger.set -> void
+SharpMP4.Tracks.ITrack.ParseSample(byte[] buffer, int offset, int length) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+SharpMP4.Tracks.ITrack.ParseSample(byte[] sample) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+SharpMP4.Tracks.ITrack.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+SharpMP4.Tracks.ITrack.ProcessSample(byte[] sample, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+SharpMP4.Tracks.ITrack.ReturnsPreviousSample.get -> bool
+SharpMP4.Tracks.ITrack.Timescale.get -> uint
+SharpMP4.Tracks.ITrack.Timescale.set -> void
+SharpMP4.Tracks.ITrack.TimescaleFallback.get -> uint
+SharpMP4.Tracks.ITrack.TimescaleFallback.set -> void
+SharpMP4.Tracks.ITrack.TimescaleOverride.get -> uint
+SharpMP4.Tracks.ITrack.TimescaleOverride.set -> void
+SharpMP4.Tracks.ITrack.TrackID.get -> uint
+SharpMP4.Tracks.ITrack.TrackID.set -> void
+SharpMP4.Tracks.MPEG4Track
+SharpMP4.Tracks.MPEG4Track.MPEG4Track() -> void
+SharpMP4.Tracks.MPEG4Track.MPEG4Track(SharpISOBMFF.Box config, uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.MPEG4Track.MPEG4Track(uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.MjpegTrack
+SharpMP4.Tracks.MjpegTrack.ChromaFormat.get -> int
+SharpMP4.Tracks.MjpegTrack.Coding.get -> string
+SharpMP4.Tracks.MjpegTrack.Height.get -> int
+SharpMP4.Tracks.MjpegTrack.MjpegTrack() -> void
+SharpMP4.Tracks.MjpegTrack.MjpegTrack(SharpISOBMFF.VisualSampleEntry entry, string coding, uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.MjpegTrack.MjpegTrack(uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.MjpegTrack.Width.get -> int
+SharpMP4.Tracks.Mp3Track
+SharpMP4.Tracks.Mp3Track.AvgBitrate.get -> uint
+SharpMP4.Tracks.Mp3Track.AvgBitrate.set -> void
+SharpMP4.Tracks.Mp3Track.BufferSizeDB.get -> uint
+SharpMP4.Tracks.Mp3Track.BufferSizeDB.set -> void
+SharpMP4.Tracks.Mp3Track.ChannelCount.get -> byte
+SharpMP4.Tracks.Mp3Track.MaxBitrate.get -> uint
+SharpMP4.Tracks.Mp3Track.MaxBitrate.set -> void
+SharpMP4.Tracks.Mp3Track.Mp3Track(SharpISOBMFF.Box config, uint timescale = 0, int sampleDuration = -1) -> void
+SharpMP4.Tracks.Mp3Track.Mp3Track(byte channelCount, uint samplingRate) -> void
+SharpMP4.Tracks.Mp3Track.ObjectTypeIndication.get -> byte
+SharpMP4.Tracks.Mp3Track.ParseFrames(byte[] buffer, int offset, int length) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+SharpMP4.Tracks.Mp3Track.SampleSize.get -> ushort
+SharpMP4.Tracks.Mp3Track.SamplingRate.get -> uint
+SharpMP4.Tracks.OpusTrack
+SharpMP4.Tracks.OpusTrack.ChannelCount.get -> byte
+SharpMP4.Tracks.OpusTrack.ChannelMapping.get -> byte[]
+SharpMP4.Tracks.OpusTrack.ChannelMapping.set -> void
+SharpMP4.Tracks.OpusTrack.ChannelMappingFamily.get -> byte
+SharpMP4.Tracks.OpusTrack.ChannelMappingFamily.set -> void
+SharpMP4.Tracks.OpusTrack.CoupledCount.get -> byte
+SharpMP4.Tracks.OpusTrack.CoupledCount.set -> void
+SharpMP4.Tracks.OpusTrack.InputSampleRate.get -> uint
+SharpMP4.Tracks.OpusTrack.InputSampleRate.set -> void
+SharpMP4.Tracks.OpusTrack.OpusTrack(SharpISOBMFF.Box config, uint timescale = 0, int sampleDuration = -1) -> void
+SharpMP4.Tracks.OpusTrack.OpusTrack(byte channelCount, ushort preSkip, short outputGain, byte channelMappingFamily, byte streamCount = 0, byte coupledCount = 0, byte[] channelMapping = null) -> void
+SharpMP4.Tracks.OpusTrack.OutputGain.get -> short
+SharpMP4.Tracks.OpusTrack.OutputGain.set -> void
+SharpMP4.Tracks.OpusTrack.PreSkip.get -> ushort
+SharpMP4.Tracks.OpusTrack.PreSkip.set -> void
+SharpMP4.Tracks.OpusTrack.SampleSize.get -> ushort
+SharpMP4.Tracks.OpusTrack.SamplingRate.get -> uint
+SharpMP4.Tracks.OpusTrack.StreamCount.get -> byte
+SharpMP4.Tracks.OpusTrack.StreamCount.set -> void
+SharpMP4.Tracks.PcmCompanding
+SharpMP4.Tracks.PcmCompanding.ALaw = 1 -> SharpMP4.Tracks.PcmCompanding
+SharpMP4.Tracks.PcmCompanding.MuLaw = 2 -> SharpMP4.Tracks.PcmCompanding
+SharpMP4.Tracks.PcmCompanding.None = 0 -> SharpMP4.Tracks.PcmCompanding
+SharpMP4.Tracks.PcmTrack
+SharpMP4.Tracks.PcmTrack.BitsPerSample.get -> ushort
+SharpMP4.Tracks.PcmTrack.BytesPerFrame.get -> int
+SharpMP4.Tracks.PcmTrack.ChannelCount.get -> ushort
+SharpMP4.Tracks.PcmTrack.Coding.get -> string
+SharpMP4.Tracks.PcmTrack.Companding.get -> SharpMP4.Tracks.PcmCompanding
+SharpMP4.Tracks.PcmTrack.IsFloat.get -> bool
+SharpMP4.Tracks.PcmTrack.IsLittleEndian.get -> bool
+SharpMP4.Tracks.PcmTrack.IsSigned.get -> bool
+SharpMP4.Tracks.PcmTrack.PcmTrack(SharpISOBMFF.Box config, uint timescale = 0, int sampleDuration = -1) -> void
+SharpMP4.Tracks.PcmTrack.PcmTrack(uint sampleRate, ushort channelCount, ushort bitsPerSample, bool isFloat = false, bool isLittleEndian = true) -> void
+SharpMP4.Tracks.PcmTrack.SampleRate.get -> uint
+SharpMP4.Tracks.ProResProfile
+SharpMP4.Tracks.ProResProfile.HQ = 3 -> SharpMP4.Tracks.ProResProfile
+SharpMP4.Tracks.ProResProfile.LT = 1 -> SharpMP4.Tracks.ProResProfile
+SharpMP4.Tracks.ProResProfile.P4444 = 4 -> SharpMP4.Tracks.ProResProfile
+SharpMP4.Tracks.ProResProfile.P4444XQ = 5 -> SharpMP4.Tracks.ProResProfile
+SharpMP4.Tracks.ProResProfile.Proxy = 0 -> SharpMP4.Tracks.ProResProfile
+SharpMP4.Tracks.ProResProfile.Standard = 2 -> SharpMP4.Tracks.ProResProfile
+SharpMP4.Tracks.ProResTrack
+SharpMP4.Tracks.ProResTrack.ProResTrack(SharpISOBMFF.VisualSampleEntry entry, string coding, uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.ProResTrack.ProResTrack(SharpMP4.Tracks.ProResProfile profile) -> void
+SharpMP4.Tracks.ProResTrack.ProResTrack(SharpMP4.Tracks.ProResProfile profile, uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.ProResTrack.Profile.get -> SharpMP4.Tracks.ProResProfile
+SharpMP4.Tracks.SimpleTextTrack
+SharpMP4.Tracks.SimpleTextTrack.ContentEncoding.get -> string
+SharpMP4.Tracks.SimpleTextTrack.ContentEncoding.set -> void
+SharpMP4.Tracks.SimpleTextTrack.MimeFormat.get -> string
+SharpMP4.Tracks.SimpleTextTrack.MimeFormat.set -> void
+SharpMP4.Tracks.SimpleTextTrack.SimpleTextTrack(SharpISOBMFF.SimpleTextSampleEntry entry, uint timescale) -> void
+SharpMP4.Tracks.SimpleTextTrack.SimpleTextTrack(uint timescale = 1000) -> void
+SharpMP4.Tracks.SimpleTextTrack.TextConfig.get -> string
+SharpMP4.Tracks.SimpleTextTrack.TextConfig.set -> void
+SharpMP4.Tracks.SubtitleCue
+SharpMP4.Tracks.SubtitleCue.End.get -> long
+SharpMP4.Tracks.SubtitleCue.End.set -> void
+SharpMP4.Tracks.SubtitleCue.Id.get -> string
+SharpMP4.Tracks.SubtitleCue.Id.set -> void
+SharpMP4.Tracks.SubtitleCue.Settings.get -> string
+SharpMP4.Tracks.SubtitleCue.Settings.set -> void
+SharpMP4.Tracks.SubtitleCue.Start.get -> long
+SharpMP4.Tracks.SubtitleCue.Start.set -> void
+SharpMP4.Tracks.SubtitleCue.SubtitleCue() -> void
+SharpMP4.Tracks.SubtitleCue.Text.get -> string
+SharpMP4.Tracks.SubtitleCue.Text.set -> void
+SharpMP4.Tracks.SubtitleTrackBase
+SharpMP4.Tracks.SubtitleTrackBase.CopyOfSampleEntry() -> SharpISOBMFF.Box
+SharpMP4.Tracks.SubtitleTrackBase.Forced.get -> bool
+SharpMP4.Tracks.SubtitleTrackBase.Forced.set -> void
+SharpMP4.Tracks.SubtitleTrackBase.SampleEntry.get -> SharpISOBMFF.Box
+SharpMP4.Tracks.SubtitleTrackBase.SampleEntry.set -> void
+SharpMP4.Tracks.SubtitleTrackBase.SubtitleTrackBase() -> void
+SharpMP4.Tracks.SubtitleTrackBase.WithSampleEntryOf<T>(T clone) -> T
+SharpMP4.Tracks.TimedTextTrack
+SharpMP4.Tracks.TimedTextTrack.TimedTextTrack(SharpISOBMFF.Box entry, uint timescale, string handlerType) -> void
+SharpMP4.Tracks.TimedTextTrack.TimedTextTrack(uint timescale = 1000, string handlerType = "text") -> void
+SharpMP4.Tracks.TrackBase
+SharpMP4.Tracks.TrackBase.AppendToSample(byte value) -> void
+SharpMP4.Tracks.TrackBase.AppendToSample(byte[] buffer, int offset, int length) -> void
+SharpMP4.Tracks.TrackBase.CompatibleBrand.get -> string
+SharpMP4.Tracks.TrackBase.CompatibleBrand.set -> void
+SharpMP4.Tracks.TrackBase.CopySettingsTo<T>(T clone) -> T
+SharpMP4.Tracks.TrackBase.DefaultSampleDuration.get -> int
+SharpMP4.Tracks.TrackBase.DefaultSampleDuration.set -> void
+SharpMP4.Tracks.TrackBase.DefaultSampleFlags.get -> uint
+SharpMP4.Tracks.TrackBase.DefaultSampleFlags.set -> void
+SharpMP4.Tracks.TrackBase.Dispose() -> void
+SharpMP4.Tracks.TrackBase.FrameTickFallback.get -> int
+SharpMP4.Tracks.TrackBase.FrameTickFallback.set -> void
+SharpMP4.Tracks.TrackBase.FrameTickOverride.get -> int
+SharpMP4.Tracks.TrackBase.FrameTickOverride.set -> void
+SharpMP4.Tracks.TrackBase.HasSample.get -> bool
+SharpMP4.Tracks.TrackBase.Logger.get -> SharpMP4.Common.IMp4Logger
+SharpMP4.Tracks.TrackBase.Logger.set -> void
+SharpMP4.Tracks.TrackBase.ParseSample(byte[] sample) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+SharpMP4.Tracks.TrackBase.ProcessSample(byte[] sample, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+SharpMP4.Tracks.TrackBase.TakeSample() -> System.ArraySegment<byte>
+SharpMP4.Tracks.TrackBase.Timescale.get -> uint
+SharpMP4.Tracks.TrackBase.Timescale.set -> void
+SharpMP4.Tracks.TrackBase.TimescaleFallback.get -> uint
+SharpMP4.Tracks.TrackBase.TimescaleFallback.set -> void
+SharpMP4.Tracks.TrackBase.TimescaleOverride.get -> uint
+SharpMP4.Tracks.TrackBase.TimescaleOverride.set -> void
+SharpMP4.Tracks.TrackBase.TrackBase() -> void
+SharpMP4.Tracks.TrackBase.TrackID.get -> uint
+SharpMP4.Tracks.TrackBase.TrackID.set -> void
+SharpMP4.Tracks.TrackCreator
+SharpMP4.Tracks.TrackFactory
+SharpMP4.Tracks.TrackFactory.CreateTrack.get -> SharpMP4.Tracks.TrackCreator
+SharpMP4.Tracks.TrackFactory.CreateTrack.set -> void
+SharpMP4.Tracks.TrackFactory.TrackFactory() -> void
+SharpMP4.Tracks.TtmlTrack
+SharpMP4.Tracks.TtmlTrack.AuxiliaryMimeTypes.get -> string
+SharpMP4.Tracks.TtmlTrack.AuxiliaryMimeTypes.set -> void
+SharpMP4.Tracks.TtmlTrack.Namespace.get -> string
+SharpMP4.Tracks.TtmlTrack.Namespace.set -> void
+SharpMP4.Tracks.TtmlTrack.SchemaLocation.get -> string
+SharpMP4.Tracks.TtmlTrack.SchemaLocation.set -> void
+SharpMP4.Tracks.TtmlTrack.TtmlTrack(SharpISOBMFF.XMLSubtitleSampleEntry entry, uint timescale, string handlerType) -> void
+SharpMP4.Tracks.TtmlTrack.TtmlTrack(uint timescale = 1000) -> void
+SharpMP4.Tracks.VP9Track
+SharpMP4.Tracks.VP9Track.ColourPrimaries.get -> byte
+SharpMP4.Tracks.VP9Track.ColourPrimaries.set -> void
+SharpMP4.Tracks.VP9Track.Level.get -> byte
+SharpMP4.Tracks.VP9Track.Level.set -> void
+SharpMP4.Tracks.VP9Track.MatrixCoefficients.get -> byte?
+SharpMP4.Tracks.VP9Track.MatrixCoefficients.set -> void
+SharpMP4.Tracks.VP9Track.TransferCharacteristics.get -> byte
+SharpMP4.Tracks.VP9Track.TransferCharacteristics.set -> void
+SharpMP4.Tracks.VP9Track.VP9Track() -> void
+SharpMP4.Tracks.VP9Track.VP9Track(SharpISOBMFF.Box config, uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.VP9Track.VP9Track(uint timescale, int sampleDuration) -> void
+SharpMP4.Tracks.WebVttTrack
+SharpMP4.Tracks.WebVttTrack.Config.get -> string
+SharpMP4.Tracks.WebVttTrack.Config.set -> void
+SharpMP4.Tracks.WebVttTrack.SourceLabel.get -> string
+SharpMP4.Tracks.WebVttTrack.SourceLabel.set -> void
+SharpMP4.Tracks.WebVttTrack.WebVttTrack(SharpISOBMFF.WVTTSampleEntry entry, uint timescale) -> void
+SharpMP4.Tracks.WebVttTrack.WebVttTrack(uint timescale = 1000) -> void
+SharpMP4.Utils
+abstract SharpMP4.Encryption.NalSubsampleSplitter.HeaderBytes.get -> int
+abstract SharpMP4.Encryption.NalSubsampleSplitter.Read(SharpH26X.ItuStream stream, int length) -> ulong?
+abstract SharpMP4.Encryption.SubsampleSplitter.Split(byte[] buffer, int offset, int length, bool wholeBlocks) -> SharpMP4.Encryption.EncryptionSubsample[]
+abstract SharpMP4.Tracks.SubtitleTrackBase.CreateSample(System.Collections.Generic.IReadOnlyList<SharpMP4.Tracks.SubtitleCue> cues) -> byte[]
+abstract SharpMP4.Tracks.SubtitleTrackBase.ParseCues(byte[] buffer, int offset, int length, long start, long duration) -> System.Collections.Generic.IReadOnlyList<SharpMP4.Tracks.SubtitleCue>
+abstract SharpMP4.Tracks.TrackBase.Clone() -> SharpMP4.Tracks.ITrack
+abstract SharpMP4.Tracks.TrackBase.CreateSampleEntryBox() -> SharpISOBMFF.Box
+abstract SharpMP4.Tracks.TrackBase.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+abstract SharpMP4.Tracks.TrackBase.HandlerName.get -> string
+abstract SharpMP4.Tracks.TrackBase.HandlerType.get -> string
+abstract SharpMP4.Tracks.TrackBase.Language.get -> string
+abstract SharpMP4.Tracks.TrackBase.Language.set -> void
+abstract SharpMP4.Tracks.TrackBase.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+const SharpMP4.Builders.VideoBuilder.DefaultFragmentLengthInMs = 2000 -> ulong
+const SharpMP4.Encryption.ProtectionSchemes.Cbc1 = "cbc1" -> string
+const SharpMP4.Encryption.ProtectionSchemes.Cbcs = "cbcs" -> string
+const SharpMP4.Encryption.ProtectionSchemes.Cenc = "cenc" -> string
+const SharpMP4.Encryption.ProtectionSchemes.Cens = "cens" -> string
+const SharpMP4.Encryption.ProtectionSchemes.Piff = "piff" -> string
+const SharpMP4.Encryption.SubsampleSplitter.BlockSize = 16 -> int
+const SharpMP4.Tracks.AACTrack.AAC_AUDIO_OBJECT_TYPE = 2 -> int
+const SharpMP4.Tracks.AACTrack.AAC_OBJECT_TYPE_INDICATION = 64 -> int
+const SharpMP4.Tracks.AACTrack.AAC_SAMPLE_SIZE = 1024 -> int
+const SharpMP4.Tracks.AACTrack.AAC_STREAM_TYPE = 5 -> int
+const SharpMP4.Tracks.AC3SyncFrame.HeaderLength = 8 -> int
+const SharpMP4.Tracks.AC3Track.AC3_SAMPLES_PER_FRAME = 1536 -> int
+const SharpMP4.Tracks.AV1Track.BRAND = "av01" -> string
+const SharpMP4.Tracks.AV2Track.BRAND = "av02" -> string
+const SharpMP4.Tracks.AlacTrack.CONFIG_SIZE = 24 -> int
+const SharpMP4.Tracks.AlacTrack.DEFAULT_FRAME_LENGTH = 4096 -> uint
+const SharpMP4.Tracks.FlacTrack.STREAMINFO = 0 -> byte
+const SharpMP4.Tracks.FlacTrack.STREAMINFO_SIZE = 34 -> int
+const SharpMP4.Tracks.H262Track.MPEG1 = 106 -> byte
+const SharpMP4.Tracks.H262Track.MPEG2_422 = 101 -> byte
+const SharpMP4.Tracks.H262Track.MPEG2_HIGH = 100 -> byte
+const SharpMP4.Tracks.H262Track.MPEG2_MAIN = 97 -> byte
+const SharpMP4.Tracks.H262Track.MPEG2_SIMPLE = 96 -> byte
+const SharpMP4.Tracks.H262Track.MPEG2_SNR = 98 -> byte
+const SharpMP4.Tracks.H262Track.MPEG2_SPATIAL = 99 -> byte
+const SharpMP4.Tracks.H262Track.VISUAL_STREAM = 4 -> byte
+const SharpMP4.Tracks.H264Track.BRAND = "avc1" -> string
+const SharpMP4.Tracks.H265Track.BRAND = "hvc1" -> string
+const SharpMP4.Tracks.H266Track.BRAND = "vvc1" -> string
+const SharpMP4.Tracks.H26XTrackBase.MaxConfigurationSeiNalUnits = 8 -> int
+const SharpMP4.Tracks.MPEG4Track.VISUAL_ISO_14496_2 = 32 -> byte
+const SharpMP4.Tracks.MPEG4Track.VISUAL_STREAM = 4 -> byte
+const SharpMP4.Tracks.MjpegTrack.JPEG_OBJECT_TYPE_INDICATION = 108 -> byte
+const SharpMP4.Tracks.Mp3Track.AUDIO_STREAM_TYPE = 5 -> byte
+const SharpMP4.Tracks.Mp3Track.MPEG1_AUDIO_OBJECT_TYPE_INDICATION = 107 -> byte
+const SharpMP4.Tracks.Mp3Track.MPEG1_SAMPLES_PER_FRAME = 1152 -> int
+const SharpMP4.Tracks.Mp3Track.MPEG2_AUDIO_OBJECT_TYPE_INDICATION = 105 -> byte
+const SharpMP4.Tracks.Mp3Track.MPEG2_SAMPLES_PER_FRAME = 576 -> int
+const SharpMP4.Tracks.Mp3Track.MPEG4_AUDIO_OBJECT_TYPE_INDICATION = 64 -> byte
+const SharpMP4.Tracks.OpusTrack.OPUS_SAMPLE_RATE = 48000 -> uint
+const SharpMP4.Tracks.OpusTrack.OPUS_SAMPLE_SIZE = 960 -> int
+const SharpMP4.Tracks.SubtitleTrackBase.DashRoleScheme = "urn:mpeg:dash:role:2011" -> string
+const SharpMP4.Tracks.SubtitleTrackBase.ForcedSubtitleRole = "forced-subtitle" -> string
+const SharpMP4.Tracks.TrackBase.QuickTimeBrand = "qt  " -> string
+const SharpMP4.Tracks.VP9Track.BRAND = "vp09" -> string
+override SharpMP4.Encryption.Av1SubsampleSplitter.Split(byte[] buffer, int offset, int length, bool wholeBlocks) -> SharpMP4.Encryption.EncryptionSubsample[]
+override SharpMP4.Encryption.Av1SubsampleSplitter.Supports(string scheme) -> bool
+override SharpMP4.Encryption.Av2SubsampleSplitter.Split(byte[] buffer, int offset, int length, bool wholeBlocks) -> SharpMP4.Encryption.EncryptionSubsample[]
+override SharpMP4.Encryption.Av2SubsampleSplitter.Supports(string scheme) -> bool
+override SharpMP4.Encryption.EncryptionSubsample.ToString() -> string
+override SharpMP4.Encryption.NalSubsampleSplitter.Split(byte[] buffer, int offset, int length, bool wholeBlocks) -> SharpMP4.Encryption.EncryptionSubsample[]
+override SharpMP4.Encryption.Vp9SubsampleSplitter.Split(byte[] buffer, int offset, int length, bool wholeBlocks) -> SharpMP4.Encryption.EncryptionSubsample[]
+override SharpMP4.Readers.CharacterCodedString.ToString() -> string
+override SharpMP4.Readers.MetadataChapter.ToString() -> string
+override SharpMP4.Readers.MetadataTag.ToString() -> string
+override SharpMP4.Readers.XmpProperty.ToString() -> string
+override SharpMP4.Readers.XmpStep.ToString() -> string
+override SharpMP4.Tracks.AACTrack.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.AACTrack.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.AACTrack.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.AACTrack.HandlerName.get -> string
+override SharpMP4.Tracks.AACTrack.HandlerType.get -> string
+override SharpMP4.Tracks.AACTrack.Language.get -> string
+override SharpMP4.Tracks.AACTrack.Language.set -> void
+override SharpMP4.Tracks.AACTrack.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.AC3Track.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.AC3Track.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.AC3Track.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.AC3Track.HandlerName.get -> string
+override SharpMP4.Tracks.AC3Track.HandlerType.get -> string
+override SharpMP4.Tracks.AC3Track.Language.get -> string
+override SharpMP4.Tracks.AC3Track.Language.set -> void
+override SharpMP4.Tracks.AC3Track.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.AV1Track.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.AV1Track.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.AV1Track.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.AV1Track.GetContainerSamples() -> System.Collections.Generic.IEnumerable<byte[]>
+override SharpMP4.Tracks.AV1Track.HandlerName.get -> string
+override SharpMP4.Tracks.AV1Track.HandlerType.get -> string
+override SharpMP4.Tracks.AV1Track.Language.get -> string
+override SharpMP4.Tracks.AV1Track.Language.set -> void
+override SharpMP4.Tracks.AV1Track.ParseSample(byte[] sample, int sampleOffset, int sampleLength) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+override SharpMP4.Tracks.AV1Track.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.AV1Track.ReturnsPreviousSample.get -> bool
+override SharpMP4.Tracks.AV2Track.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.AV2Track.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.AV2Track.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.AV2Track.GetContainerSamples() -> System.Collections.Generic.IEnumerable<byte[]>
+override SharpMP4.Tracks.AV2Track.HandlerName.get -> string
+override SharpMP4.Tracks.AV2Track.HandlerType.get -> string
+override SharpMP4.Tracks.AV2Track.Language.get -> string
+override SharpMP4.Tracks.AV2Track.Language.set -> void
+override SharpMP4.Tracks.AV2Track.ParseSample(byte[] buffer, int offset, int length) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+override SharpMP4.Tracks.AV2Track.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.AV2Track.ReturnsPreviousSample.get -> bool
+override SharpMP4.Tracks.AlacTrack.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.AlacTrack.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.AlacTrack.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.AlacTrack.HandlerName.get -> string
+override SharpMP4.Tracks.AlacTrack.HandlerType.get -> string
+override SharpMP4.Tracks.AlacTrack.Language.get -> string
+override SharpMP4.Tracks.AlacTrack.Language.set -> void
+override SharpMP4.Tracks.AlacTrack.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.AmrTrack.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.AmrTrack.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.AmrTrack.Dispose(bool disposing) -> void
+override SharpMP4.Tracks.AmrTrack.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.AmrTrack.HandlerName.get -> string
+override SharpMP4.Tracks.AmrTrack.HandlerType.get -> string
+override SharpMP4.Tracks.AmrTrack.Language.get -> string
+override SharpMP4.Tracks.AmrTrack.Language.set -> void
+override SharpMP4.Tracks.AmrTrack.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.EAC3Track.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.EAC3Track.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.EAC3Track.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.EAC3Track.HandlerName.get -> string
+override SharpMP4.Tracks.EAC3Track.HandlerType.get -> string
+override SharpMP4.Tracks.EAC3Track.Language.get -> string
+override SharpMP4.Tracks.EAC3Track.Language.set -> void
+override SharpMP4.Tracks.EAC3Track.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.FlacTrack.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.FlacTrack.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.FlacTrack.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.FlacTrack.HandlerName.get -> string
+override SharpMP4.Tracks.FlacTrack.HandlerType.get -> string
+override SharpMP4.Tracks.FlacTrack.Language.get -> string
+override SharpMP4.Tracks.FlacTrack.Language.set -> void
+override SharpMP4.Tracks.FlacTrack.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.GenericTrack.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.GenericTrack.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.GenericTrack.Dispose(bool disposing) -> void
+override SharpMP4.Tracks.GenericTrack.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.GenericTrack.HandlerName.get -> string
+override SharpMP4.Tracks.GenericTrack.HandlerType.get -> string
+override SharpMP4.Tracks.GenericTrack.Language.get -> string
+override SharpMP4.Tracks.GenericTrack.Language.set -> void
+override SharpMP4.Tracks.GenericTrack.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.H261Track.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.H261Track.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.H261Track.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.H261Track.HandlerName.get -> string
+override SharpMP4.Tracks.H261Track.HandlerType.get -> string
+override SharpMP4.Tracks.H261Track.Language.get -> string
+override SharpMP4.Tracks.H261Track.Language.set -> void
+override SharpMP4.Tracks.H261Track.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.H262Track.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.H262Track.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.H262Track.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.H262Track.GetContainerSamples() -> System.Collections.Generic.IEnumerable<byte[]>
+override SharpMP4.Tracks.H262Track.HandlerName.get -> string
+override SharpMP4.Tracks.H262Track.HandlerType.get -> string
+override SharpMP4.Tracks.H262Track.Language.get -> string
+override SharpMP4.Tracks.H262Track.Language.set -> void
+override SharpMP4.Tracks.H262Track.ParseSample(byte[] buffer, int offset, int length) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+override SharpMP4.Tracks.H262Track.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.H262Track.ReturnsPreviousSample.get -> bool
+override SharpMP4.Tracks.H263Track.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.H263Track.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.H263Track.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.H263Track.HandlerName.get -> string
+override SharpMP4.Tracks.H263Track.HandlerType.get -> string
+override SharpMP4.Tracks.H263Track.Language.get -> string
+override SharpMP4.Tracks.H263Track.Language.set -> void
+override SharpMP4.Tracks.H263Track.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.H264Track.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.H264Track.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.H264Track.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.H264Track.GetContainerSamples() -> System.Collections.Generic.IEnumerable<byte[]>
+override SharpMP4.Tracks.H264Track.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.H265Track.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.H265Track.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.H265Track.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.H265Track.GetContainerSamples() -> System.Collections.Generic.IEnumerable<byte[]>
+override SharpMP4.Tracks.H265Track.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.H266Track.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.H266Track.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.H266Track.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.H266Track.GetContainerSamples() -> System.Collections.Generic.IEnumerable<byte[]>
+override SharpMP4.Tracks.H266Track.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.H26XTrackBase.HandlerName.get -> string
+override SharpMP4.Tracks.H26XTrackBase.HandlerType.get -> string
+override SharpMP4.Tracks.H26XTrackBase.Language.get -> string
+override SharpMP4.Tracks.H26XTrackBase.Language.set -> void
+override SharpMP4.Tracks.H26XTrackBase.ParseSample(byte[] buffer, int offset, int length) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+override SharpMP4.Tracks.H26XTrackBase.ReturnsPreviousSample.get -> bool
+override SharpMP4.Tracks.MPEG4Track.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.MPEG4Track.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.MPEG4Track.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.MPEG4Track.GetContainerSamples() -> System.Collections.Generic.IEnumerable<byte[]>
+override SharpMP4.Tracks.MPEG4Track.HandlerName.get -> string
+override SharpMP4.Tracks.MPEG4Track.HandlerType.get -> string
+override SharpMP4.Tracks.MPEG4Track.Language.get -> string
+override SharpMP4.Tracks.MPEG4Track.Language.set -> void
+override SharpMP4.Tracks.MPEG4Track.ParseSample(byte[] buffer, int offset, int length) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+override SharpMP4.Tracks.MPEG4Track.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.MPEG4Track.ReturnsPreviousSample.get -> bool
+override SharpMP4.Tracks.MjpegTrack.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.MjpegTrack.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.MjpegTrack.Dispose(bool disposing) -> void
+override SharpMP4.Tracks.MjpegTrack.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.MjpegTrack.HandlerName.get -> string
+override SharpMP4.Tracks.MjpegTrack.HandlerType.get -> string
+override SharpMP4.Tracks.MjpegTrack.Language.get -> string
+override SharpMP4.Tracks.MjpegTrack.Language.set -> void
+override SharpMP4.Tracks.MjpegTrack.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.Mp3Track.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.Mp3Track.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.Mp3Track.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.Mp3Track.HandlerName.get -> string
+override SharpMP4.Tracks.Mp3Track.HandlerType.get -> string
+override SharpMP4.Tracks.Mp3Track.Language.get -> string
+override SharpMP4.Tracks.Mp3Track.Language.set -> void
+override SharpMP4.Tracks.Mp3Track.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.OpusTrack.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.OpusTrack.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.OpusTrack.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.OpusTrack.HandlerName.get -> string
+override SharpMP4.Tracks.OpusTrack.HandlerType.get -> string
+override SharpMP4.Tracks.OpusTrack.Language.get -> string
+override SharpMP4.Tracks.OpusTrack.Language.set -> void
+override SharpMP4.Tracks.OpusTrack.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.PcmTrack.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.PcmTrack.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.PcmTrack.Dispose(bool disposing) -> void
+override SharpMP4.Tracks.PcmTrack.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.PcmTrack.HandlerName.get -> string
+override SharpMP4.Tracks.PcmTrack.HandlerType.get -> string
+override SharpMP4.Tracks.PcmTrack.Language.get -> string
+override SharpMP4.Tracks.PcmTrack.Language.set -> void
+override SharpMP4.Tracks.PcmTrack.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.ProResTrack.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.ProResTrack.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.ProResTrack.Dispose(bool disposing) -> void
+override SharpMP4.Tracks.ProResTrack.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.ProResTrack.HandlerName.get -> string
+override SharpMP4.Tracks.ProResTrack.HandlerType.get -> string
+override SharpMP4.Tracks.ProResTrack.Language.get -> string
+override SharpMP4.Tracks.ProResTrack.Language.set -> void
+override SharpMP4.Tracks.ProResTrack.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.SimpleTextTrack.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.SimpleTextTrack.CreateSample(System.Collections.Generic.IReadOnlyList<SharpMP4.Tracks.SubtitleCue> cues) -> byte[]
+override SharpMP4.Tracks.SimpleTextTrack.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.SimpleTextTrack.HandlerName.get -> string
+override SharpMP4.Tracks.SimpleTextTrack.HandlerType.get -> string
+override SharpMP4.Tracks.SimpleTextTrack.ParseCues(byte[] buffer, int offset, int length, long start, long duration) -> System.Collections.Generic.IReadOnlyList<SharpMP4.Tracks.SubtitleCue>
+override SharpMP4.Tracks.SubtitleCue.ToString() -> string
+override SharpMP4.Tracks.SubtitleTrackBase.Dispose(bool disposing) -> void
+override SharpMP4.Tracks.SubtitleTrackBase.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.SubtitleTrackBase.Language.get -> string
+override SharpMP4.Tracks.SubtitleTrackBase.Language.set -> void
+override SharpMP4.Tracks.SubtitleTrackBase.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.TimedTextTrack.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.TimedTextTrack.CreateSample(System.Collections.Generic.IReadOnlyList<SharpMP4.Tracks.SubtitleCue> cues) -> byte[]
+override SharpMP4.Tracks.TimedTextTrack.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.TimedTextTrack.HandlerName.get -> string
+override SharpMP4.Tracks.TimedTextTrack.HandlerType.get -> string
+override SharpMP4.Tracks.TimedTextTrack.ParseCues(byte[] buffer, int offset, int length, long start, long duration) -> System.Collections.Generic.IReadOnlyList<SharpMP4.Tracks.SubtitleCue>
+override SharpMP4.Tracks.TtmlTrack.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.TtmlTrack.CreateSample(System.Collections.Generic.IReadOnlyList<SharpMP4.Tracks.SubtitleCue> cues) -> byte[]
+override SharpMP4.Tracks.TtmlTrack.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.TtmlTrack.HandlerName.get -> string
+override SharpMP4.Tracks.TtmlTrack.HandlerType.get -> string
+override SharpMP4.Tracks.TtmlTrack.ParseCues(byte[] buffer, int offset, int length, long start, long duration) -> System.Collections.Generic.IReadOnlyList<SharpMP4.Tracks.SubtitleCue>
+override SharpMP4.Tracks.VP9Track.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.VP9Track.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.VP9Track.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.VP9Track.HandlerName.get -> string
+override SharpMP4.Tracks.VP9Track.HandlerType.get -> string
+override SharpMP4.Tracks.VP9Track.Language.get -> string
+override SharpMP4.Tracks.VP9Track.Language.set -> void
+override SharpMP4.Tracks.VP9Track.ParseSample(byte[] sample, int sampleOffset, int sampleLength) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+override SharpMP4.Tracks.VP9Track.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override SharpMP4.Tracks.WebVttTrack.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.WebVttTrack.CreateSample(System.Collections.Generic.IReadOnlyList<SharpMP4.Tracks.SubtitleCue> cues) -> byte[]
+override SharpMP4.Tracks.WebVttTrack.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.WebVttTrack.HandlerName.get -> string
+override SharpMP4.Tracks.WebVttTrack.HandlerType.get -> string
+override SharpMP4.Tracks.WebVttTrack.ParseCues(byte[] buffer, int offset, int length, long start, long duration) -> System.Collections.Generic.IReadOnlyList<SharpMP4.Tracks.SubtitleCue>
+static SharpMP4.Builders.ImageBuilder.Create(SharpMP4.Builders.IMp4Output output, SharpMP4.Builders.ImageFormat format, SharpMP4.Builders.ImageBuilderOptions options = null) -> SharpMP4.Builders.IImageBuilder
+static SharpMP4.Builders.Mp4BuilderExtensions.ProcessAnnexBTrackSample(this SharpMP4.Builders.IMp4Builder builder, uint trackID, System.ArraySegment<byte> sample, int sampleDuration = -1, int compositionOffset = 0) -> void
+static SharpMP4.Builders.Mp4BuilderExtensions.ProcessAnnexBTrackSample(this SharpMP4.Builders.IMp4Builder builder, uint trackID, byte[] sample, int sampleDuration = -1, int compositionOffset = 0) -> void
+static SharpMP4.Builders.VideoBuilder.Create(SharpMP4.Builders.IMp4Output output, SharpMP4.Builders.Mp4Layout layout, SharpMP4.Builders.VideoBuilderOptions options = null) -> SharpMP4.Builders.IMp4Builder
+static SharpMP4.Encryption.CommonEncryption.Decrypt(string scheme, byte[] key, SharpMP4.Encryption.SampleEncryption encryption, byte[] buffer, int offset, int length) -> void
+static SharpMP4.Encryption.CommonEncryption.Encrypt(string scheme, byte[] key, SharpMP4.Encryption.SampleEncryption encryption, byte[] buffer, int offset, int length) -> void
+static SharpMP4.Encryption.NalSubsampleSplitter.RawLength(byte[] buffer, int offset, int length, ulong rbspBits) -> int
+static SharpMP4.Encryption.ProtectionSchemes.IsCounterMode(string scheme) -> bool
+static SharpMP4.Encryption.ProtectionSchemes.IsPattern(string scheme) -> bool
+static SharpMP4.Encryption.ProtectionSystemHeader.From(SharpISOBMFF.Box box) -> SharpMP4.Encryption.ProtectionSystemHeader
+static SharpMP4.Encryption.SampleEncryptionReader.ForFragment(SharpMP4.Encryption.TrackProtection protection, SharpISOBMFF.TrackFragmentBox traf, SharpISOBMFF.SampleTableBox stbl, int sampleCount, long auxiliaryBase, System.Func<long, int, byte[]> read) -> SharpMP4.Encryption.SampleEncryption[]
+static SharpMP4.Encryption.SampleEncryptionReader.ForTrack(SharpMP4.Encryption.TrackProtection protection, SharpISOBMFF.SampleTableBox stbl, uint[] samplesInChunk, System.Func<long, int, byte[]> read) -> SharpMP4.Encryption.SampleEncryption[]
+static SharpMP4.Encryption.SampleEncryptionReader.ReadSampleData(byte[] data, int sampleCount, uint flags, System.Func<int, int> ivSizeOf) -> System.Collections.Generic.IReadOnlyList<SharpMP4.Encryption.SampleEncryption>
+static SharpMP4.Encryption.SubsampleSplitter.Add(System.Collections.Generic.List<SharpMP4.Encryption.EncryptionSubsample> subsamples, ref long clear, uint protectedBytes) -> void
+static SharpMP4.Encryption.SubsampleSplitter.AddTile(System.Collections.Generic.List<SharpMP4.Encryption.EncryptionSubsample> subsamples, ref long clear, ref int position, int start, int size, bool wholeBlocks) -> void
+static SharpMP4.Encryption.SubsampleSplitter.CodingOf(SharpISOBMFF.Box sampleEntry) -> string
+static SharpMP4.Encryption.SubsampleSplitter.For(SharpISOBMFF.Box sampleEntry, SharpMP4.Common.IMp4Logger logger = null) -> SharpMP4.Encryption.SubsampleSplitter
+static SharpMP4.Encryption.TrackProtection.Create(string scheme, byte[] keyId, bool isVideo) -> SharpMP4.Encryption.TrackProtection
+static SharpMP4.Encryption.TrackProtection.CreateProtectionSystemSpecificHeaderBox(SharpMP4.Encryption.ProtectionSystemHeader header) -> SharpISOBMFF.ProtectionSystemSpecificHeaderBox
+static SharpMP4.Encryption.TrackProtection.FromSampleEntry(SharpISOBMFF.Box sampleEntry) -> SharpMP4.Encryption.TrackProtection
+static SharpMP4.Mp4Extensions.FindAudioTracks(this SharpISOBMFF.Container mp4) -> System.Collections.Generic.IEnumerable<SharpISOBMFF.TrackBox>
+static SharpMP4.Mp4Extensions.FindHintTracks(this SharpISOBMFF.Container mp4) -> System.Collections.Generic.IEnumerable<SharpISOBMFF.TrackBox>
+static SharpMP4.Mp4Extensions.FindVideoTracks(this SharpISOBMFF.Container mp4) -> System.Collections.Generic.IEnumerable<SharpISOBMFF.TrackBox>
+static SharpMP4.Mp4Extensions.GetAudioSampleEntryBox(this SharpISOBMFF.TrackBox track) -> SharpISOBMFF.AudioSampleEntry
+static SharpMP4.Mp4Extensions.GetMovieBox(this SharpISOBMFF.Container mp4) -> SharpISOBMFF.MovieBox
+static SharpMP4.Mp4Extensions.GetTracks(this SharpISOBMFF.MovieBox moov) -> System.Collections.Generic.IEnumerable<SharpISOBMFF.TrackBox>
+static SharpMP4.Readers.ContainerExtensions.Payload(SharpISOBMFF.Box box) -> byte[]
+static SharpMP4.Readers.ContainerExtensions.ReadMetadata(this SharpISOBMFF.Container file) -> System.Collections.Generic.List<SharpMP4.Readers.MetadataTag>
+static SharpMP4.Readers.ExifTags.NameOf(string ifd, ushort tag) -> string
+static SharpMP4.Readers.ImageGrid.Parse(byte[] data) -> SharpMP4.Readers.ImageGrid
+static SharpMP4.Readers.XmpReader.Read(string packet) -> System.Collections.Generic.List<SharpMP4.Readers.XmpProperty>
+static SharpMP4.Tracks.AACTrack.IsAac(SharpISOBMFF.Box config) -> bool
+static SharpMP4.Tracks.AC3SyncFrame.HasSyncWord(byte[] buffer, int offset, int length) -> bool
+static SharpMP4.Tracks.AC3SyncFrame.Parse(byte[] buffer, int offset, int length) -> SharpMP4.Tracks.AC3SyncFrame
+static SharpMP4.Tracks.AC3SyncFrame.Parse(byte[] frame) -> SharpMP4.Tracks.AC3SyncFrame
+static SharpMP4.Tracks.AC3SyncFrame.TryParse(byte[] buffer, int offset, int length, out SharpMP4.Tracks.AC3SyncFrame syncFrame) -> bool
+static SharpMP4.Tracks.AC3SyncFrame.TryParse(byte[] frame, out SharpMP4.Tracks.AC3SyncFrame syncFrame) -> bool
+static SharpMP4.Tracks.AdtsHeader.GetLength(byte[] buffer, int offset, int length) -> int
+static SharpMP4.Tracks.AdtsHeader.GetLength(byte[] sample) -> int
+static SharpMP4.Tracks.AdtsHeader.HasHeader(byte[] buffer, int offset, int length) -> bool
+static SharpMP4.Tracks.AdtsHeader.HasHeader(byte[] sample) -> bool
+static SharpMP4.Tracks.AdtsHeader.Parse(byte[] buffer, int offset, int length) -> SharpMP4.Tracks.AdtsHeader
+static SharpMP4.Tracks.AdtsHeader.Parse(byte[] sample) -> SharpMP4.Tracks.AdtsHeader
+static SharpMP4.Tracks.AdtsHeader.TryParse(byte[] buffer, int offset, int length, out SharpMP4.Tracks.AdtsHeader header) -> bool
+static SharpMP4.Tracks.AdtsHeader.TryParse(byte[] sample, out SharpMP4.Tracks.AdtsHeader header) -> bool
+static SharpMP4.Tracks.AlacTrack.IsAlac(SharpISOBMFF.Box config) -> bool
+static SharpMP4.Tracks.AmrTrack.FrameLength(byte header, bool wideband) -> int
+static SharpMP4.Tracks.FlacStreamHeader.HasMarker(byte[] buffer, int offset, int length) -> bool
+static SharpMP4.Tracks.FlacStreamHeader.Parse(byte[] buffer, int offset, int length) -> SharpMP4.Tracks.FlacStreamHeader
+static SharpMP4.Tracks.FlacStreamHeader.Parse(byte[] header) -> SharpMP4.Tracks.FlacStreamHeader
+static SharpMP4.Tracks.FlacStreamHeader.TryParse(byte[] buffer, int offset, int length, out SharpMP4.Tracks.FlacStreamHeader streamHeader) -> bool
+static SharpMP4.Tracks.FlacStreamHeader.TryParse(byte[] header, out SharpMP4.Tracks.FlacStreamHeader streamHeader) -> bool
+static SharpMP4.Tracks.H262Track.IsH262(byte objectTypeIndication) -> bool
+static SharpMP4.Tracks.H26XTrackBase.IsDeclarativeSei(System.Collections.Generic.IEnumerable<uint> payloadTypes) -> bool
+static SharpMP4.Tracks.H26XTrackBase.SameBytes(byte[] kept, byte[] buffer, int offset, int length) -> bool
+static SharpMP4.Tracks.MPEG4Track.IsMPEG4Visual(byte objectTypeIndication) -> bool
+static SharpMP4.Tracks.MjpegTrack.IsMjpeg(string coding) -> bool
+static SharpMP4.Tracks.MjpegTrack.TryReadFrameHeader(byte[] buffer, int offset, int length, out int width, out int height, out int chromaFormat) -> bool
+static SharpMP4.Tracks.Mp3Track.IsMp3(SharpISOBMFF.Box config) -> bool
+static SharpMP4.Tracks.Mp3Track.IsQuickTimeMp3(string coding) -> bool
+static SharpMP4.Tracks.Mp3Track.LayerOf(byte[] buffer, int offset) -> int
+static SharpMP4.Tracks.Mp3Track.TryParseFrameHeader(byte[] buffer, int offset, out int frameLength, out uint samplingRate, out int channels, out int samplesPerFrame) -> bool
+static SharpMP4.Tracks.PcmTrack.IsPcm(SharpISOBMFF.Box config) -> bool
+static SharpMP4.Tracks.ProResTrack.IsProRes(string coding) -> bool
+static SharpMP4.Tracks.SubtitleTrackBase.CreateUserDataBox(SharpMP4.Tracks.ITrack track) -> SharpISOBMFF.UserDataBox
+static SharpMP4.Tracks.SubtitleTrackBase.Cue(string text, long start, long duration) -> SharpMP4.Tracks.SubtitleCue[]
+static SharpMP4.Tracks.SubtitleTrackBase.IsForced(SharpISOBMFF.TrackBox trak) -> bool
+static SharpMP4.Tracks.SubtitleTrackBase.ReadBoxes(byte[] buffer, int offset, int length) -> System.Collections.Generic.IList<SharpISOBMFF.Box>
+static SharpMP4.Tracks.SubtitleTrackBase.Terminated(string text) -> SharpISOBMFF.BinaryUTF8String
+static SharpMP4.Tracks.SubtitleTrackBase.WriteBoxes(System.Collections.Generic.IEnumerable<SharpISOBMFF.Box> boxes) -> byte[]
+static SharpMP4.Tracks.TrackBase.CopyOf(byte[] buffer, int offset, int length) -> byte[]
+static SharpMP4.Tracks.TrackFactory.CreateGenericTrack(uint trackID, SharpISOBMFF.Box sampleEntry, uint timescale, int sampleDuration, uint handlerType, string handlerName) -> SharpMP4.Tracks.ITrack
+static SharpMP4.Tracks.TrackFactory.DefaultCreateTrack(uint trackID, SharpISOBMFF.Box sampleEntry, uint timescale, int sampleDuration, uint handlerType, string handlerName, SharpMP4.Common.IMp4Logger logger) -> SharpMP4.Tracks.ITrack
+static SharpMP4.Tracks.VP9Track.ParseFrames(byte[] sample, int sampleOffset, int sampleLength) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+static SharpMP4.Utils.BigEndian(uint value, int size) -> byte[]
+static SharpMP4.Utils.NalUnits(SharpMP4.Tracks.ITrack track, uint trackID, System.ArraySegment<byte> buffer) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+static readonly SharpMP4.Tracks.AC3Track.AcmodChannels -> byte[]
+static readonly SharpMP4.Tracks.AC3Track.BitRates -> ushort[]
+static readonly SharpMP4.Tracks.AC3Track.SampleRates -> uint[]
+static readonly SharpMP4.Tracks.H262Track.QuickTimeEntries -> System.Collections.Generic.IReadOnlyDictionary<string, bool>
+virtual SharpMP4.Builders.FragmentedBlobOutput.Dispose(bool disposing) -> void
+virtual SharpMP4.Encryption.SubsampleSplitter.Supports(string scheme) -> bool
+virtual SharpMP4.Tracks.TrackBase.Dispose(bool disposing) -> void
+virtual SharpMP4.Tracks.TrackBase.GetContainerSamples() -> System.Collections.Generic.IEnumerable<byte[]>
+virtual SharpMP4.Tracks.TrackBase.ParseSample(byte[] buffer, int offset, int length) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+virtual SharpMP4.Tracks.TrackBase.ReturnsPreviousSample.get -> bool
+virtual SharpMP4.Tracks.TrackCreator.Invoke(uint trackID, SharpISOBMFF.Box sampleEntry, uint timescale, int sampleDuration, uint handlerType, string handlerName, SharpMP4.Common.IMp4Logger logger) -> SharpMP4.Tracks.ITrack

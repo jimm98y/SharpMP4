@@ -1,0 +1,196 @@
+SharpProRes.Frame
+SharpProRes.Frame.Frame() -> void
+SharpProRes.Frame.FrameHeader.get -> SharpProRes.FrameHeader
+SharpProRes.Frame.FrameHeader.set -> void
+SharpProRes.Frame.FrameIdentifier.get -> uint
+SharpProRes.Frame.FrameIdentifier.set -> void
+SharpProRes.Frame.FrameSize.get -> uint
+SharpProRes.Frame.FrameSize.set -> void
+SharpProRes.Frame.HasMoreRbspData.get -> int
+SharpProRes.Frame.HasMoreRbspData.set -> void
+SharpProRes.Frame.Picture.get -> SharpProRes.Picture
+SharpProRes.Frame.Picture.set -> void
+SharpProRes.Frame.Picture0.get -> SharpProRes.Picture
+SharpProRes.Frame.Picture0.set -> void
+SharpProRes.Frame.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpProRes.Frame.ReadNextBits.get -> int[]
+SharpProRes.Frame.ReadNextBits.set -> void
+SharpProRes.Frame.Stuffing.get -> SharpProRes.Stuffing
+SharpProRes.Frame.Stuffing.set -> void
+SharpProRes.Frame.Syntax.get -> string
+SharpProRes.Frame.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpProRes.FrameHeader
+SharpProRes.FrameHeader.AlphaChannelType.get -> uint
+SharpProRes.FrameHeader.AlphaChannelType.set -> void
+SharpProRes.FrameHeader.AspectRatioInformation.get -> uint
+SharpProRes.FrameHeader.AspectRatioInformation.set -> void
+SharpProRes.FrameHeader.BitstreamVersion.get -> uint
+SharpProRes.FrameHeader.BitstreamVersion.set -> void
+SharpProRes.FrameHeader.ChromaFormat.get -> uint
+SharpProRes.FrameHeader.ChromaFormat.set -> void
+SharpProRes.FrameHeader.ChromaQuantizationMatrix.get -> uint[][]
+SharpProRes.FrameHeader.ChromaQuantizationMatrix.set -> void
+SharpProRes.FrameHeader.ColorPrimaries.get -> uint
+SharpProRes.FrameHeader.ColorPrimaries.set -> void
+SharpProRes.FrameHeader.EncoderIdentifier.get -> uint
+SharpProRes.FrameHeader.EncoderIdentifier.set -> void
+SharpProRes.FrameHeader.FrameHeader() -> void
+SharpProRes.FrameHeader.FrameHeaderRemainder.get -> SharpProRes.FrameHeaderRemainder
+SharpProRes.FrameHeader.FrameHeaderRemainder.set -> void
+SharpProRes.FrameHeader.FrameHeaderSize.get -> uint
+SharpProRes.FrameHeader.FrameHeaderSize.set -> void
+SharpProRes.FrameHeader.FrameRateCode.get -> uint
+SharpProRes.FrameHeader.FrameRateCode.set -> void
+SharpProRes.FrameHeader.HasMoreRbspData.get -> int
+SharpProRes.FrameHeader.HasMoreRbspData.set -> void
+SharpProRes.FrameHeader.HorizontalSize.get -> uint
+SharpProRes.FrameHeader.HorizontalSize.set -> void
+SharpProRes.FrameHeader.InterlaceMode.get -> uint
+SharpProRes.FrameHeader.InterlaceMode.set -> void
+SharpProRes.FrameHeader.LoadChromaQuantizationMatrix.get -> byte
+SharpProRes.FrameHeader.LoadChromaQuantizationMatrix.set -> void
+SharpProRes.FrameHeader.LoadLumaQuantizationMatrix.get -> byte
+SharpProRes.FrameHeader.LoadLumaQuantizationMatrix.set -> void
+SharpProRes.FrameHeader.LumaQuantizationMatrix.get -> uint[][]
+SharpProRes.FrameHeader.LumaQuantizationMatrix.set -> void
+SharpProRes.FrameHeader.MatrixCoefficients.get -> uint
+SharpProRes.FrameHeader.MatrixCoefficients.set -> void
+SharpProRes.FrameHeader.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpProRes.FrameHeader.ReadNextBits.get -> int[]
+SharpProRes.FrameHeader.ReadNextBits.set -> void
+SharpProRes.FrameHeader.Reserved.get -> uint
+SharpProRes.FrameHeader.Reserved.set -> void
+SharpProRes.FrameHeader.Reserved2.get -> uint
+SharpProRes.FrameHeader.Reserved2.set -> void
+SharpProRes.FrameHeader.Reserved3.get -> uint
+SharpProRes.FrameHeader.Reserved3.set -> void
+SharpProRes.FrameHeader.Reserved4.get -> uint
+SharpProRes.FrameHeader.Reserved4.set -> void
+SharpProRes.FrameHeader.Reserved5.get -> uint
+SharpProRes.FrameHeader.Reserved5.set -> void
+SharpProRes.FrameHeader.Syntax.get -> string
+SharpProRes.FrameHeader.TransferCharacteristic.get -> uint
+SharpProRes.FrameHeader.TransferCharacteristic.set -> void
+SharpProRes.FrameHeader.VerticalSize.get -> uint
+SharpProRes.FrameHeader.VerticalSize.set -> void
+SharpProRes.FrameHeader.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpProRes.FrameHeaderRemainder
+SharpProRes.FrameHeaderRemainder.FrameHeaderRemainder() -> void
+SharpProRes.HeaderRemainder
+SharpProRes.HeaderRemainder.Data.get -> byte[]
+SharpProRes.HeaderRemainder.Data.set -> void
+SharpProRes.HeaderRemainder.HasMoreRbspData.get -> int
+SharpProRes.HeaderRemainder.HasMoreRbspData.set -> void
+SharpProRes.HeaderRemainder.HeaderRemainder() -> void
+SharpProRes.HeaderRemainder.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpProRes.HeaderRemainder.ReadNextBits.get -> int[]
+SharpProRes.HeaderRemainder.ReadNextBits.set -> void
+SharpProRes.HeaderRemainder.Syntax.get -> string
+SharpProRes.HeaderRemainder.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpProRes.Picture
+SharpProRes.Picture.HasMoreRbspData.get -> int
+SharpProRes.Picture.HasMoreRbspData.set -> void
+SharpProRes.Picture.Picture(uint temporalOrder) -> void
+SharpProRes.Picture.PictureHeader.get -> SharpProRes.PictureHeader
+SharpProRes.Picture.PictureHeader.set -> void
+SharpProRes.Picture.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpProRes.Picture.ReadNextBits.get -> int[]
+SharpProRes.Picture.ReadNextBits.set -> void
+SharpProRes.Picture.SliceData.get -> SharpProRes.SliceData
+SharpProRes.Picture.SliceData.set -> void
+SharpProRes.Picture.SliceTable.get -> SharpProRes.SliceTable
+SharpProRes.Picture.SliceTable.set -> void
+SharpProRes.Picture.Syntax.get -> string
+SharpProRes.Picture.TemporalOrder.get -> uint
+SharpProRes.Picture.TemporalOrder.set -> void
+SharpProRes.Picture.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpProRes.PictureHeader
+SharpProRes.PictureHeader.DeprecatedNumberOfSlices.get -> uint
+SharpProRes.PictureHeader.DeprecatedNumberOfSlices.set -> void
+SharpProRes.PictureHeader.HasMoreRbspData.get -> int
+SharpProRes.PictureHeader.HasMoreRbspData.set -> void
+SharpProRes.PictureHeader.Log2DesiredSliceSizeInMb.get -> uint
+SharpProRes.PictureHeader.Log2DesiredSliceSizeInMb.set -> void
+SharpProRes.PictureHeader.PictureHeader() -> void
+SharpProRes.PictureHeader.PictureHeaderRemainder.get -> SharpProRes.PictureHeaderRemainder
+SharpProRes.PictureHeader.PictureHeaderRemainder.set -> void
+SharpProRes.PictureHeader.PictureHeaderSize.get -> uint
+SharpProRes.PictureHeader.PictureHeaderSize.set -> void
+SharpProRes.PictureHeader.PictureSize.get -> uint
+SharpProRes.PictureHeader.PictureSize.set -> void
+SharpProRes.PictureHeader.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpProRes.PictureHeader.ReadNextBits.get -> int[]
+SharpProRes.PictureHeader.ReadNextBits.set -> void
+SharpProRes.PictureHeader.Reserved.get -> uint
+SharpProRes.PictureHeader.Reserved.set -> void
+SharpProRes.PictureHeader.Reserved2.get -> uint
+SharpProRes.PictureHeader.Reserved2.set -> void
+SharpProRes.PictureHeader.Reserved3.get -> uint
+SharpProRes.PictureHeader.Reserved3.set -> void
+SharpProRes.PictureHeader.Syntax.get -> string
+SharpProRes.PictureHeader.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpProRes.PictureHeaderRemainder
+SharpProRes.PictureHeaderRemainder.PictureHeaderRemainder() -> void
+SharpProRes.ProResContext
+SharpProRes.ProResContext.FrameHeaderRemainderSize.get -> long
+SharpProRes.ProResContext.FrameHeaderSize.get -> uint
+SharpProRes.ProResContext.FrameHeaderSize.set -> void
+SharpProRes.ProResContext.FrameSize.get -> uint
+SharpProRes.ProResContext.HeightInMb.get -> uint
+SharpProRes.ProResContext.HorizontalSize.get -> uint
+SharpProRes.ProResContext.HorizontalSize.set -> void
+SharpProRes.ProResContext.InterlaceMode.get -> uint
+SharpProRes.ProResContext.InterlaceMode.set -> void
+SharpProRes.ProResContext.Log2DesiredSliceSizeInMb.get -> uint
+SharpProRes.ProResContext.Log2DesiredSliceSizeInMb.set -> void
+SharpProRes.ProResContext.NumberOfSlicesPerMbRow.get -> uint
+SharpProRes.ProResContext.OnFrame(uint frameSize) -> void
+SharpProRes.ProResContext.OnPictureHeader(uint pictureHeaderSize) -> void
+SharpProRes.ProResContext.OnPictureSize(uint pictureSize) -> void
+SharpProRes.ProResContext.OnQuantizationMatrices(uint loadLuma, uint loadChroma) -> void
+SharpProRes.ProResContext.PictureHeaderRemainderSize.get -> long
+SharpProRes.ProResContext.PictureVerticalSize.get -> uint
+SharpProRes.ProResContext.ProResContext() -> void
+SharpProRes.ProResContext.ReadFrame(SharpH26X.ItuStream stream) -> SharpProRes.Frame
+SharpProRes.ProResContext.SliceDataSize.get -> long
+SharpProRes.ProResContext.StuffingSize.get -> long
+SharpProRes.ProResContext.VerticalSize.get -> uint
+SharpProRes.ProResContext.VerticalSize.set -> void
+SharpProRes.ProResContext.WidthInMb.get -> uint
+SharpProRes.ProResContext.WriteFrame(SharpH26X.ItuStream stream, SharpProRes.Frame frame) -> void
+SharpProRes.SliceData
+SharpProRes.SliceData.Data.get -> byte[]
+SharpProRes.SliceData.Data.set -> void
+SharpProRes.SliceData.HasMoreRbspData.get -> int
+SharpProRes.SliceData.HasMoreRbspData.set -> void
+SharpProRes.SliceData.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpProRes.SliceData.ReadNextBits.get -> int[]
+SharpProRes.SliceData.ReadNextBits.set -> void
+SharpProRes.SliceData.SliceData() -> void
+SharpProRes.SliceData.Syntax.get -> string
+SharpProRes.SliceData.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpProRes.SliceTable
+SharpProRes.SliceTable.CodedSizeOfSlice.get -> uint[][]
+SharpProRes.SliceTable.CodedSizeOfSlice.set -> void
+SharpProRes.SliceTable.HasMoreRbspData.get -> int
+SharpProRes.SliceTable.HasMoreRbspData.set -> void
+SharpProRes.SliceTable.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpProRes.SliceTable.ReadNextBits.get -> int[]
+SharpProRes.SliceTable.ReadNextBits.set -> void
+SharpProRes.SliceTable.SliceTable() -> void
+SharpProRes.SliceTable.Syntax.get -> string
+SharpProRes.SliceTable.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpProRes.Stuffing
+SharpProRes.Stuffing.HasMoreRbspData.get -> int
+SharpProRes.Stuffing.HasMoreRbspData.set -> void
+SharpProRes.Stuffing.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpProRes.Stuffing.ReadNextBits.get -> int[]
+SharpProRes.Stuffing.ReadNextBits.set -> void
+SharpProRes.Stuffing.Stuffing() -> void
+SharpProRes.Stuffing.Syntax.get -> string
+SharpProRes.Stuffing.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpProRes.Stuffing.ZeroByte.get -> uint[]
+SharpProRes.Stuffing.ZeroByte.set -> void
+abstract SharpProRes.HeaderRemainder.Count(SharpProRes.ProResContext context) -> long
+static SharpProRes.ProResContext.StreamOf(System.IO.Stream output, SharpMP4.Common.IMp4Logger logger = null) -> SharpH26X.ItuStream
+static SharpProRes.ProResContext.StreamOf(byte[] buffer, int offset, int length, SharpMP4.Common.IMp4Logger logger = null) -> SharpH26X.ItuStream

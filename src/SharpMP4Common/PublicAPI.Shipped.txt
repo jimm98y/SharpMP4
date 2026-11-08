@@ -1,0 +1,127 @@
+SharpMP4.Common.Bitstream
+SharpMP4.Common.Bitstream.AcceptPeek(SharpMP4.Common.Bitstream.PeekState state) -> void
+SharpMP4.Common.Bitstream.BaseStream.get -> System.IO.Stream
+SharpMP4.Common.Bitstream.BeginPeek() -> SharpMP4.Common.Bitstream.PeekState
+SharpMP4.Common.Bitstream.BitsPosition.get -> long
+SharpMP4.Common.Bitstream.BitsPosition.set -> void
+SharpMP4.Common.Bitstream.Bitstream(System.IO.Stream stream) -> void
+SharpMP4.Common.Bitstream.CurrentByte.get -> byte
+SharpMP4.Common.Bitstream.CurrentByte.set -> void
+SharpMP4.Common.Bitstream.EndPeek(SharpMP4.Common.Bitstream.PeekState state) -> void
+SharpMP4.Common.Bitstream.PeekState
+SharpMP4.Common.Bitstream.PeekState.PeekState() -> void
+SharpMP4.Common.Bitstream.PendingBytes.get -> int
+SharpMP4.Common.Bitstream.ReadAlignedBytes(byte[] buffer, int offset, int count) -> void
+SharpMP4.Common.Bitstream.ReadAvailableBytes(byte[] buffer, int offset, int count) -> int
+SharpMP4.Common.Bitstream.ReadBit() -> int
+SharpMP4.Common.Bitstream.ReadBits(uint count) -> uint
+SharpMP4.Common.Bitstream.ReadBits(uint count, out uint value) -> ulong
+SharpMP4.Common.Bitstream.ReadBits(uint count, out ulong value) -> ulong
+SharpMP4.Common.Bitstream.ReadBits(ulong count) -> ulong
+SharpMP4.Common.Bitstream.ReadByte() -> byte
+SharpMP4.Common.Bitstream.SkipBytes(long count) -> void
+SharpMP4.Common.Bitstream.WriteAlignedBytes(byte[] buffer, int offset, int count) -> void
+SharpMP4.Common.Bitstream.WriteBit(int value) -> void
+SharpMP4.Common.Bitstream.WriteBits(uint count, uint value) -> uint
+SharpMP4.Common.Bitstream.WriteBits(uint count, ulong value) -> ulong
+SharpMP4.Common.Bitstream.WriteByte(byte value) -> ulong
+SharpMP4.Common.ConsoleMp4Logger
+SharpMP4.Common.ConsoleMp4Logger.ConsoleMp4Logger() -> void
+SharpMP4.Common.ConsoleMp4Logger.IsDebugEnabled.get -> bool
+SharpMP4.Common.ConsoleMp4Logger.IsDebugEnabled.set -> void
+SharpMP4.Common.ConsoleMp4Logger.IsErrorEnabled.get -> bool
+SharpMP4.Common.ConsoleMp4Logger.IsErrorEnabled.set -> void
+SharpMP4.Common.ConsoleMp4Logger.IsInfoEnabled.get -> bool
+SharpMP4.Common.ConsoleMp4Logger.IsInfoEnabled.set -> void
+SharpMP4.Common.ConsoleMp4Logger.IsTraceEnabled.get -> bool
+SharpMP4.Common.ConsoleMp4Logger.IsTraceEnabled.set -> void
+SharpMP4.Common.ConsoleMp4Logger.IsWarningEnabled.get -> bool
+SharpMP4.Common.ConsoleMp4Logger.IsWarningEnabled.set -> void
+SharpMP4.Common.ConsoleMp4Logger.LogDebug(string debug) -> void
+SharpMP4.Common.ConsoleMp4Logger.LogError(string error) -> void
+SharpMP4.Common.ConsoleMp4Logger.LogInfo(string info) -> void
+SharpMP4.Common.ConsoleMp4Logger.LogTrace(string trace) -> void
+SharpMP4.Common.ConsoleMp4Logger.LogWarning(string warning) -> void
+SharpMP4.Common.DefaultMp4Logger
+SharpMP4.Common.DefaultMp4Logger.DefaultMp4Logger() -> void
+SharpMP4.Common.DefaultMp4Logger.IsDebugEnabled.get -> bool
+SharpMP4.Common.DefaultMp4Logger.IsDebugEnabled.set -> void
+SharpMP4.Common.DefaultMp4Logger.IsErrorEnabled.get -> bool
+SharpMP4.Common.DefaultMp4Logger.IsErrorEnabled.set -> void
+SharpMP4.Common.DefaultMp4Logger.IsInfoEnabled.get -> bool
+SharpMP4.Common.DefaultMp4Logger.IsInfoEnabled.set -> void
+SharpMP4.Common.DefaultMp4Logger.IsLoggingEnabled.get -> bool
+SharpMP4.Common.DefaultMp4Logger.IsLoggingEnabled.set -> void
+SharpMP4.Common.DefaultMp4Logger.IsTraceEnabled.get -> bool
+SharpMP4.Common.DefaultMp4Logger.IsTraceEnabled.set -> void
+SharpMP4.Common.DefaultMp4Logger.IsWarningEnabled.get -> bool
+SharpMP4.Common.DefaultMp4Logger.IsWarningEnabled.set -> void
+SharpMP4.Common.DefaultMp4Logger.LogDebug(string debug) -> void
+SharpMP4.Common.DefaultMp4Logger.LogError(string error) -> void
+SharpMP4.Common.DefaultMp4Logger.LogInfo(string info) -> void
+SharpMP4.Common.DefaultMp4Logger.LogTrace(string trace) -> void
+SharpMP4.Common.DefaultMp4Logger.LogWarning(string warning) -> void
+SharpMP4.Common.IMp4Logger
+SharpMP4.Common.IMp4Logger.IsDebugEnabled.get -> bool
+SharpMP4.Common.IMp4Logger.IsDebugEnabled.set -> void
+SharpMP4.Common.IMp4Logger.IsErrorEnabled.get -> bool
+SharpMP4.Common.IMp4Logger.IsErrorEnabled.set -> void
+SharpMP4.Common.IMp4Logger.IsInfoEnabled.get -> bool
+SharpMP4.Common.IMp4Logger.IsInfoEnabled.set -> void
+SharpMP4.Common.IMp4Logger.IsTraceEnabled.get -> bool
+SharpMP4.Common.IMp4Logger.IsTraceEnabled.set -> void
+SharpMP4.Common.IMp4Logger.IsWarningEnabled.get -> bool
+SharpMP4.Common.IMp4Logger.IsWarningEnabled.set -> void
+SharpMP4.Common.IMp4Logger.LogDebug(string debug) -> void
+SharpMP4.Common.IMp4Logger.LogError(string error) -> void
+SharpMP4.Common.IMp4Logger.LogInfo(string info) -> void
+SharpMP4.Common.IMp4Logger.LogTrace(string trace) -> void
+SharpMP4.Common.IMp4Logger.LogWarning(string warning) -> void
+SharpMP4.Common.NullMp4Logger
+SharpMP4.Common.NullMp4Logger.IsDebugEnabled.get -> bool
+SharpMP4.Common.NullMp4Logger.IsDebugEnabled.set -> void
+SharpMP4.Common.NullMp4Logger.IsErrorEnabled.get -> bool
+SharpMP4.Common.NullMp4Logger.IsErrorEnabled.set -> void
+SharpMP4.Common.NullMp4Logger.IsInfoEnabled.get -> bool
+SharpMP4.Common.NullMp4Logger.IsInfoEnabled.set -> void
+SharpMP4.Common.NullMp4Logger.IsTraceEnabled.get -> bool
+SharpMP4.Common.NullMp4Logger.IsTraceEnabled.set -> void
+SharpMP4.Common.NullMp4Logger.IsWarningEnabled.get -> bool
+SharpMP4.Common.NullMp4Logger.IsWarningEnabled.set -> void
+SharpMP4.Common.NullMp4Logger.LogDebug(string debug) -> void
+SharpMP4.Common.NullMp4Logger.LogError(string error) -> void
+SharpMP4.Common.NullMp4Logger.LogInfo(string info) -> void
+SharpMP4.Common.NullMp4Logger.LogTrace(string trace) -> void
+SharpMP4.Common.NullMp4Logger.LogWarning(string warning) -> void
+SharpMP4.Common.RbspBitstream
+SharpMP4.Common.RbspBitstream.BaseStream.get -> System.IO.Stream
+SharpMP4.Common.RbspBitstream.BaseStream.set -> void
+SharpMP4.Common.RbspBitstream.BeginPeek() -> SharpMP4.Common.RbspBitstream.PeekState
+SharpMP4.Common.RbspBitstream.BitsPosition.get -> long
+SharpMP4.Common.RbspBitstream.BitsPosition.set -> void
+SharpMP4.Common.RbspBitstream.CopyState(SharpMP4.Common.RbspBitstream bitstream) -> void
+SharpMP4.Common.RbspBitstream.CurrentByte.get -> byte
+SharpMP4.Common.RbspBitstream.CurrentByte.set -> void
+SharpMP4.Common.RbspBitstream.EndNalUnit() -> void
+SharpMP4.Common.RbspBitstream.EndPeek(SharpMP4.Common.RbspBitstream.PeekState state) -> void
+SharpMP4.Common.RbspBitstream.GetBitsSinceMark() -> long
+SharpMP4.Common.RbspBitstream.InsertPreventionBytes.get -> bool
+SharpMP4.Common.RbspBitstream.InsertPreventionBytes.set -> void
+SharpMP4.Common.RbspBitstream.Mark() -> void
+SharpMP4.Common.RbspBitstream.MoveMarkBack(long bits) -> void
+SharpMP4.Common.RbspBitstream.PeekState
+SharpMP4.Common.RbspBitstream.PeekState.PeekState() -> void
+SharpMP4.Common.RbspBitstream.PendingBytes.get -> int
+SharpMP4.Common.RbspBitstream.RbspBitstream(System.IO.Stream stream) -> void
+SharpMP4.Common.RbspBitstream.RbspBitstream(byte[] buffer, int offset, int length) -> void
+SharpMP4.Common.RbspBitstream.ReadBit() -> int
+SharpMP4.Common.RbspBitstream.ReadBytes(byte[] buffer, int offset, int count) -> int
+SharpMP4.Common.RbspBitstream.RemainingBytes.get -> long
+SharpMP4.Common.RbspBitstream.Reset(byte[] buffer, int offset, int length) -> void
+SharpMP4.Common.RbspBitstream.SkipPreventionBytes.get -> bool
+SharpMP4.Common.RbspBitstream.SkipPreventionBytes.set -> void
+SharpMP4.Common.RbspBitstream.WriteBit(int value) -> void
+SharpMP4.Common.RbspBitstream.WriteBytes(byte[] buffer, int offset, int count) -> void
+static SharpMP4.Common.DefaultMp4Logger.Instance.get -> SharpMP4.Common.DefaultMp4Logger
+static readonly SharpMP4.Common.ConsoleMp4Logger.Instance -> SharpMP4.Common.ConsoleMp4Logger
+static readonly SharpMP4.Common.NullMp4Logger.Instance -> SharpMP4.Common.NullMp4Logger

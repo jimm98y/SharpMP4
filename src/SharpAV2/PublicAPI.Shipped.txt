@@ -1,0 +1,2574 @@
+SharpAV2.AV2Context
+SharpAV2.AV2Context.AV2Context() -> void
+SharpAV2.AV2Context.ActiveLayerConfigurationRecord.get -> int
+SharpAV2.AV2Context.AtlasSegmentInfoObuSyntax.get -> string
+SharpAV2.AV2Context.AtsBasicInfoSyntax.get -> string
+SharpAV2.AV2Context.AtsEnhancedAtlasInfoSyntax.get -> string
+SharpAV2.AV2Context.AtsLabelSegmentInfoSyntax.get -> string
+SharpAV2.AV2Context.AtsMultistreamInfoSyntax.get -> string
+SharpAV2.AV2Context.AtsMultistreamWithAlphaInfoSyntax.get -> string
+SharpAV2.AV2Context.AtsRegionInfoSyntax.get -> string
+SharpAV2.AV2Context.AtsRegionToSegmentMappingSyntax.get -> string
+SharpAV2.AV2Context.BubbleSortRefScoresSyntax.get -> string
+SharpAV2.AV2Context.BufferRemovalTimingObuSyntax.get -> string
+SharpAV2.AV2Context.ByteAlignmentSyntax.get -> string
+SharpAV2.AV2Context.CcsoParamsSyntax.get -> string
+SharpAV2.AV2Context.CdefParamsSyntax.get -> string
+SharpAV2.AV2Context.CeilLog2Syntax.get -> string
+SharpAV2.AV2Context.ChoosePrimarySecondaryRefFrameSyntax.get -> string
+SharpAV2.AV2Context.ComputeImageSizeSyntax.get -> string
+SharpAV2.AV2Context.ContentInterpretationObuSyntax.get -> string
+SharpAV2.AV2Context.DeblockingFilterParamsSyntax.get -> string
+SharpAV2.AV2Context.DecodeSigned4partSyntax.get -> string
+SharpAV2.AV2Context.DecodeSignedSubexpWithRefSyntax.get -> string
+SharpAV2.AV2Context.DecodeSubexpSyntax.get -> string
+SharpAV2.AV2Context.DecodeUnsigned4partSyntax.get -> string
+SharpAV2.AV2Context.DecodeUnsignedSubexpWithRefSyntax.get -> string
+SharpAV2.AV2Context.DeltaqParamsSyntax.get -> string
+SharpAV2.AV2Context.FillFirstSlotOfBankWithFilterMatchSyntax.get -> string
+SharpAV2.AV2Context.FilmGrainConfigSyntax.get -> string
+SharpAV2.AV2Context.FilmGrainModelSyntax.get -> string
+SharpAV2.AV2Context.FilmGrainObuSyntax.get -> string
+SharpAV2.AV2Context.FirstSlotWithRefSyntax.get -> string
+SharpAV2.AV2Context.FloorLog2Syntax.get -> string
+SharpAV2.AV2Context.FrameHeaderCopySyntax.get -> string
+SharpAV2.AV2Context.FrameHeaderInfoSyntax.get -> string
+SharpAV2.AV2Context.FrameHeaderSyntax.get -> string
+SharpAV2.AV2Context.FrameOpflRefineTypeSyntax.get -> string
+SharpAV2.AV2Context.FrameReferenceModeSyntax.get -> string
+SharpAV2.AV2Context.FrameSizeSyntax.get -> string
+SharpAV2.AV2Context.FrameSizeWithBridgeSyntax.get -> string
+SharpAV2.AV2Context.FrameSizeWithRefsSyntax.get -> string
+SharpAV2.AV2Context.GdfParamsSyntax.get -> string
+SharpAV2.AV2Context.GetDispOrderHintSyntax.get -> string
+SharpAV2.AV2Context.GetFilterSetIndexSyntax.get -> string
+SharpAV2.AV2Context.GetMaxDispOrderHintSyntax.get -> string
+SharpAV2.AV2Context.GetPastFutureCurRefListsSyntax.get -> string
+SharpAV2.AV2Context.GetRefFramesSyntax.get -> string
+SharpAV2.AV2Context.GetRelativeDistSyntax.get -> string
+SharpAV2.AV2Context.GetScanSyntax.get -> string
+SharpAV2.AV2Context.GetSeqSbSizeSyntax.get -> string
+SharpAV2.AV2Context.GetTranslatedPcWienerSyntax.get -> string
+SharpAV2.AV2Context.GetTxRowColSyntax.get -> string
+SharpAV2.AV2Context.GetUnmappedRefSyntax.get -> string
+SharpAV2.AV2Context.GlobalMotionParamsSyntax.get -> string
+SharpAV2.AV2Context.IntrabcParamsSyntax.get -> string
+SharpAV2.AV2Context.InverseRecenterSyntax.get -> string
+SharpAV2.AV2Context.IsExtensibleObuSyntax.get -> string
+SharpAV2.AV2Context.IsRefBetterSyntax.get -> string
+SharpAV2.AV2Context.IsRefOverlaySyntax.get -> string
+SharpAV2.AV2Context.IsSefSyntax.get -> string
+SharpAV2.AV2Context.IsTileGroupSyntax.get -> string
+SharpAV2.AV2Context.IsTipFrameSyntax.get -> string
+SharpAV2.AV2Context.LastObu.get -> SharpAV2.AV2Obu
+SharpAV2.AV2Context.LastObuFrameHeader.get -> byte[]
+SharpAV2.AV2Context.LastObuFrameHeader.set -> void
+SharpAV2.AV2Context.LayerConfigRecordObuSyntax.get -> string
+SharpAV2.AV2Context.LcrAggregateInfoSyntax.get -> string
+SharpAV2.AV2Context.LcrEmbeddedLayerInfoSyntax.get -> string
+SharpAV2.AV2Context.LcrGlobalInfoSyntax.get -> string
+SharpAV2.AV2Context.LcrGlobalPayloadSyntax.get -> string
+SharpAV2.AV2Context.LcrLocalInfoSyntax.get -> string
+SharpAV2.AV2Context.LcrRepInfoSyntax.get -> string
+SharpAV2.AV2Context.LcrSeqProfileTierLevelInfoSyntax.get -> string
+SharpAV2.AV2Context.LcrXlayerColorInfoSyntax.get -> string
+SharpAV2.AV2Context.LcrXlayerInfoSyntax.get -> string
+SharpAV2.AV2Context.LoadXlayerContextSyntax.get -> string
+SharpAV2.AV2Context.LongTermIdInUseSyntax.get -> string
+SharpAV2.AV2Context.LrParamsSyntax.get -> string
+SharpAV2.AV2Context.MetadataBandingHintsSyntax.get -> string
+SharpAV2.AV2Context.MetadataDecodedFrameHashSyntax.get -> string
+SharpAV2.AV2Context.MetadataGroupObuSyntax.get -> string
+SharpAV2.AV2Context.MetadataHdrCllSyntax.get -> string
+SharpAV2.AV2Context.MetadataHdrMdcvSyntax.get -> string
+SharpAV2.AV2Context.MetadataIccProfileSyntax.get -> string
+SharpAV2.AV2Context.MetadataItutT35Syntax.get -> string
+SharpAV2.AV2Context.MetadataScanTypeSyntax.get -> string
+SharpAV2.AV2Context.MetadataShortObuSyntax.get -> string
+SharpAV2.AV2Context.MetadataTemporalPointInfoSyntax.get -> string
+SharpAV2.AV2Context.MetadataTimecodeSyntax.get -> string
+SharpAV2.AV2Context.MetadataUnitSyntax.get -> string
+SharpAV2.AV2Context.MetadataUserDataUnregisteredSyntax.get -> string
+SharpAV2.AV2Context.MotionFieldEstimationSyntax.get -> string
+SharpAV2.AV2Context.MultiFrameHeaderObuSyntax.get -> string
+SharpAV2.AV2Context.MultistreamDecoderOperationObuSyntax.get -> string
+SharpAV2.AV2Context.NewScoreOrDistSyntax.get -> string
+SharpAV2.AV2Context.ObuExtensionDataSyntax.get -> string
+SharpAV2.AV2Context.ObuHeaderSyntax.get -> string
+SharpAV2.AV2Context.ObuSizeLen.get -> int
+SharpAV2.AV2Context.OpenBitstreamUnitSyntax.get -> string
+SharpAV2.AV2Context.OperatingPointPayloadSyntax.get -> string
+SharpAV2.AV2Context.OperatingPointSetObuSyntax.get -> string
+SharpAV2.AV2Context.OpsAggregateInfoSyntax.get -> string
+SharpAV2.AV2Context.OpsColorInfoSyntax.get -> string
+SharpAV2.AV2Context.OpsDecoderModelInfoSyntax.get -> string
+SharpAV2.AV2Context.OpsMlayerInfoSyntax.get -> string
+SharpAV2.AV2Context.OpsSeqProfileTierLevelInfoSyntax.get -> string
+SharpAV2.AV2Context.PaddingObuSyntax.get -> string
+SharpAV2.AV2Context.PredictGroupSyntax.get -> string
+SharpAV2.AV2Context.QuantizationParamsSyntax.get -> string
+SharpAV2.AV2Context.QuantizerMatrixObuSyntax.get -> string
+SharpAV2.AV2Context.Read(SharpAVX.AomStream stream, int size) -> void
+SharpAV2.AV2Context.ReadDeltaqSyntax.get -> string
+SharpAV2.AV2Context.ReadGlobalParamSyntax.get -> string
+SharpAV2.AV2Context.ReadInterpolationFilterSyntax.get -> string
+SharpAV2.AV2Context.ReadTxModeSyntax.get -> string
+SharpAV2.AV2Context.ReadWhole(SharpAVX.AomStream stream, int size) -> System.Exception
+SharpAV2.AV2Context.ReadWienernsFilterSyntax.get -> string
+SharpAV2.AV2Context.RecordSyntax.get -> bool
+SharpAV2.AV2Context.RecordSyntax.set -> void
+SharpAV2.AV2Context.ReservedObuSyntax.get -> string
+SharpAV2.AV2Context.ResetQmSyntax.get -> string
+SharpAV2.AV2Context.ReuseTileParamsSyntax.get -> string
+SharpAV2.AV2Context.Round2Syntax.get -> string
+SharpAV2.AV2Context.SaveXlayerContextSyntax.get -> string
+SharpAV2.AV2Context.ScaleWarpModelSyntax.get -> string
+SharpAV2.AV2Context.ScreenContentParamsSyntax.get -> string
+SharpAV2.AV2Context.SearchFrameFiltersSyntax.get -> string
+SharpAV2.AV2Context.SegFeatureActiveIdxSyntax.get -> string
+SharpAV2.AV2Context.SegInfoSyntax.get -> string
+SharpAV2.AV2Context.SegmentationParamsSyntax.get -> string
+SharpAV2.AV2Context.SelectedOperatingPoint.get -> int
+SharpAV2.AV2Context.SelectedOperatingPoint.set -> void
+SharpAV2.AV2Context.SeqDecoderModelInfoSyntax.get -> string
+SharpAV2.AV2Context.SequenceFilterConfigSyntax.get -> string
+SharpAV2.AV2Context.SequenceHeaderObuSyntax.get -> string
+SharpAV2.AV2Context.SequenceInterConfigSyntax.get -> string
+SharpAV2.AV2Context.SequenceIntraConfigSyntax.get -> string
+SharpAV2.AV2Context.SequencePartitionConfigSyntax.get -> string
+SharpAV2.AV2Context.SequenceSccConfigSyntax.get -> string
+SharpAV2.AV2Context.SequenceSegmentConfigSyntax.get -> string
+SharpAV2.AV2Context.SequenceTileConfigSyntax.get -> string
+SharpAV2.AV2Context.SequenceTransformQuantEntropyConfigSyntax.get -> string
+SharpAV2.AV2Context.SetChromaFormatAndBitDepthSyntax.get -> string
+SharpAV2.AV2Context.SetPrimaryRefFrameAndCtxSyntax.get -> string
+SharpAV2.AV2Context.SetupQmParamsSyntax.get -> string
+SharpAV2.AV2Context.SkipModeParamsSyntax.get -> string
+SharpAV2.AV2Context.TemporalDelimiterObuSyntax.get -> string
+SharpAV2.AV2Context.TileCount.get -> int
+SharpAV2.AV2Context.TileGroupObuSyntax.get -> string
+SharpAV2.AV2Context.TileGroupPayloadSyntax.get -> string
+SharpAV2.AV2Context.TileInfoSyntax.get -> string
+SharpAV2.AV2Context.TileLog2Syntax.get -> string
+SharpAV2.AV2Context.TileParamsSyntax.get -> string
+SharpAV2.AV2Context.TileSize(int i) -> int
+SharpAV2.AV2Context.TileStart(int i) -> long
+SharpAV2.AV2Context.TimingInfoSyntax.get -> string
+SharpAV2.AV2Context.TopoSortRefsSyntax.get -> string
+SharpAV2.AV2Context.TrailingBitsSyntax.get -> string
+SharpAV2.AV2Context.UniformEligibleSyntax.get -> string
+SharpAV2.AV2Context.UniformSpacingSyntax.get -> string
+SharpAV2.AV2Context.UserDefinedQmSyntax.get -> string
+SharpAV2.AV2Context.ValidRefFrameSizeSyntax.get -> string
+SharpAV2.AV2Context.Write(SharpAVX.AomStream stream, SharpAV2.AV2Obu obu) -> void
+SharpAV2.AV2Context._ActiveNumRefFrames.get -> int
+SharpAV2.AV2Context._ActiveNumRefFrames.set -> void
+SharpAV2.AV2Context._AllowBawp.get -> int
+SharpAV2.AV2Context._AllowBawp.set -> void
+SharpAV2.AV2Context._AllowDfSubPu.get -> int
+SharpAV2.AV2Context._AllowDfSubPu.set -> void
+SharpAV2.AV2Context._AllowFrameMaxBvpDrlBits.get -> int
+SharpAV2.AV2Context._AllowFrameMaxBvpDrlBits.set -> void
+SharpAV2.AV2Context._AllowFrameMaxDrlBits.get -> int
+SharpAV2.AV2Context._AllowFrameMaxDrlBits.set -> void
+SharpAV2.AV2Context._AllowGlobalIntrabc.get -> int
+SharpAV2.AV2Context._AllowGlobalIntrabc.set -> void
+SharpAV2.AV2Context._AllowHighPrecisionMv.get -> int
+SharpAV2.AV2Context._AllowHighPrecisionMv.set -> void
+SharpAV2.AV2Context._AllowIntrabc.get -> int
+SharpAV2.AV2Context._AllowIntrabc.set -> void
+SharpAV2.AV2Context._AllowLocalIntrabc.get -> int
+SharpAV2.AV2Context._AllowLocalIntrabc.set -> void
+SharpAV2.AV2Context._AllowParityHiding.get -> int
+SharpAV2.AV2Context._AllowParityHiding.set -> void
+SharpAV2.AV2Context._AllowScreenContentTools.get -> int
+SharpAV2.AV2Context._AllowScreenContentTools.set -> void
+SharpAV2.AV2Context._AllowTcq.get -> int
+SharpAV2.AV2Context._AllowTcq.set -> void
+SharpAV2.AV2Context._AllowTileInfoChange.get -> int
+SharpAV2.AV2Context._AllowTileInfoChange.set -> void
+SharpAV2.AV2Context._AllowTipHoleFill.get -> int
+SharpAV2.AV2Context._AllowTipHoleFill.set -> void
+SharpAV2.AV2Context._AllowWarpmvMode.get -> int
+SharpAV2.AV2Context._AllowWarpmvMode.set -> void
+SharpAV2.AV2Context._AllowedFrames.get -> int
+SharpAV2.AV2Context._AllowedFrames.set -> void
+SharpAV2.AV2Context._ApplyDeblockingFilter.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._ApplyDeblockingFilter.set -> void
+SharpAV2.AV2Context._ApplyDeblockingFilterTip.get -> int
+SharpAV2.AV2Context._ApplyDeblockingFilterTip.set -> void
+SharpAV2.AV2Context._ApplyGrain.get -> int
+SharpAV2.AV2Context._ApplyGrain.set -> void
+SharpAV2.AV2Context._ArCoeffLag.get -> int
+SharpAV2.AV2Context._ArCoeffLag.set -> void
+SharpAV2.AV2Context._ArCoeffShiftMinus6.get -> int
+SharpAV2.AV2Context._ArCoeffShiftMinus6.set -> void
+SharpAV2.AV2Context._ArCoeffsCb.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._ArCoeffsCb.set -> void
+SharpAV2.AV2Context._ArCoeffsCr.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._ArCoeffsCr.set -> void
+SharpAV2.AV2Context._ArCoeffsy.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._ArCoeffsy.set -> void
+SharpAV2.AV2Context._AtlasHeight.get -> int
+SharpAV2.AV2Context._AtlasHeight.set -> void
+SharpAV2.AV2Context._AtlasSegmentIDToIndex.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._AtlasSegmentIDToIndex.set -> void
+SharpAV2.AV2Context._AtlasSegmentId.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._AtlasSegmentId.set -> void
+SharpAV2.AV2Context._AtlasSegmentIndexToID.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._AtlasSegmentIndexToID.set -> void
+SharpAV2.AV2Context._AtlasWidth.get -> int
+SharpAV2.AV2Context._AtlasWidth.set -> void
+SharpAV2.AV2Context._AtsAtlasSegmentId.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._AtsAtlasSegmentId.set -> void
+SharpAV2.AV2Context._AtsAtlasSegmentModeIdc.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._AtsAtlasSegmentModeIdc.set -> void
+SharpAV2.AV2Context._AtsBottomRightRegionColumnOff.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsBottomRightRegionColumnOff.set -> void
+SharpAV2.AV2Context._AtsBottomRightRegionRowOff.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsBottomRightRegionRowOff.set -> void
+SharpAV2.AV2Context._AtsColumnWidthMinus1.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsColumnWidthMinus1.set -> void
+SharpAV2.AV2Context._AtsHeight.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._AtsHeight.set -> void
+SharpAV2.AV2Context._AtsInputStreamId.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsInputStreamId.set -> void
+SharpAV2.AV2Context._AtsMsiAlphaSegmentFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._AtsMsiAlphaSegmentFlag.set -> void
+SharpAV2.AV2Context._AtsMsiAlphaSegmentsPresentFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsMsiAlphaSegmentsPresentFlag.set -> void
+SharpAV2.AV2Context._AtsMsiBackgroundBlueValue.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsMsiBackgroundBlueValue.set -> void
+SharpAV2.AV2Context._AtsMsiBackgroundGreenValue.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsMsiBackgroundGreenValue.set -> void
+SharpAV2.AV2Context._AtsMsiBackgroundInfoPresentFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsMsiBackgroundInfoPresentFlag.set -> void
+SharpAV2.AV2Context._AtsMsiBackgroundRedValue.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsMsiBackgroundRedValue.set -> void
+SharpAV2.AV2Context._AtsMsiHeight.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsMsiHeight.set -> void
+SharpAV2.AV2Context._AtsMsiInputStreamId.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._AtsMsiInputStreamId.set -> void
+SharpAV2.AV2Context._AtsMsiNumAtlasSegmentsMinus1.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsMsiNumAtlasSegmentsMinus1.set -> void
+SharpAV2.AV2Context._AtsMsiSegmentHeight.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._AtsMsiSegmentHeight.set -> void
+SharpAV2.AV2Context._AtsMsiSegmentTopLeftPosx.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._AtsMsiSegmentTopLeftPosx.set -> void
+SharpAV2.AV2Context._AtsMsiSegmentTopLeftPosy.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._AtsMsiSegmentTopLeftPosy.set -> void
+SharpAV2.AV2Context._AtsMsiSegmentWidth.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._AtsMsiSegmentWidth.set -> void
+SharpAV2.AV2Context._AtsMsiWidth.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsMsiWidth.set -> void
+SharpAV2.AV2Context._AtsNominalHeightMinus1.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._AtsNominalHeightMinus1.set -> void
+SharpAV2.AV2Context._AtsNominalWidthMinus1.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._AtsNominalWidthMinus1.set -> void
+SharpAV2.AV2Context._AtsNumAtlasSegmentsMinus1.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._AtsNumAtlasSegmentsMinus1.set -> void
+SharpAV2.AV2Context._AtsNumRegionColumnsMinus1.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._AtsNumRegionColumnsMinus1.set -> void
+SharpAV2.AV2Context._AtsNumRegionRowsMinus1.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._AtsNumRegionRowsMinus1.set -> void
+SharpAV2.AV2Context._AtsRegionHeightMinus1.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._AtsRegionHeightMinus1.set -> void
+SharpAV2.AV2Context._AtsRegionWidthMinus1.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._AtsRegionWidthMinus1.set -> void
+SharpAV2.AV2Context._AtsRowHeightMinus1.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsRowHeightMinus1.set -> void
+SharpAV2.AV2Context._AtsSegmentHeight.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsSegmentHeight.set -> void
+SharpAV2.AV2Context._AtsSegmentTopLeftPosx.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsSegmentTopLeftPosx.set -> void
+SharpAV2.AV2Context._AtsSegmentTopLeftPosy.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsSegmentTopLeftPosy.set -> void
+SharpAV2.AV2Context._AtsSegmentWidth.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsSegmentWidth.set -> void
+SharpAV2.AV2Context._AtsSignaledAtlasSegmentIdsFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsSignaledAtlasSegmentIdsFlag.set -> void
+SharpAV2.AV2Context._AtsSingleRegionPerAtlasSegmentFlag.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._AtsSingleRegionPerAtlasSegmentFlag.set -> void
+SharpAV2.AV2Context._AtsStreamIdPresent.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._AtsStreamIdPresent.set -> void
+SharpAV2.AV2Context._AtsTopLeftRegionColumn.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsTopLeftRegionColumn.set -> void
+SharpAV2.AV2Context._AtsTopLeftRegionRow.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._AtsTopLeftRegionRow.set -> void
+SharpAV2.AV2Context._AtsUniformSpacingFlag.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._AtsUniformSpacingFlag.set -> void
+SharpAV2.AV2Context._AtsWidth.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._AtsWidth.set -> void
+SharpAV2.AV2Context._AvgCdfType.get -> int
+SharpAV2.AV2Context._AvgCdfType.set -> void
+SharpAV2.AV2Context._BandBlockInLumaSamples.get -> int
+SharpAV2.AV2Context._BandBlockInLumaSamples.set -> void
+SharpAV2.AV2Context._BandUnitsInformationPresentFlag.get -> int
+SharpAV2.AV2Context._BandUnitsInformationPresentFlag.set -> void
+SharpAV2.AV2Context._BandingHintsFlag.get -> int
+SharpAV2.AV2Context._BandingHintsFlag.set -> void
+SharpAV2.AV2Context._BandingInBandUnitPresentFlag.get -> int
+SharpAV2.AV2Context._BandingInBandUnitPresentFlag.set -> void
+SharpAV2.AV2Context._BandingInComponentPresentFlag.get -> int
+SharpAV2.AV2Context._BandingInComponentPresentFlag.set -> void
+SharpAV2.AV2Context._BaseDistance.get -> int
+SharpAV2.AV2Context._BaseDistance.set -> void
+SharpAV2.AV2Context._BaseParams.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._BaseParams.set -> void
+SharpAV2.AV2Context._BaseQindex.get -> int
+SharpAV2.AV2Context._BaseQindex.set -> void
+SharpAV2.AV2Context._BaseUVAcDeltaQ.get -> int
+SharpAV2.AV2Context._BaseUVAcDeltaQ.set -> void
+SharpAV2.AV2Context._BaseUVDcDeltaQ.get -> int
+SharpAV2.AV2Context._BaseUVDcDeltaQ.set -> void
+SharpAV2.AV2Context._BaseUvAcDeltaq.get -> int
+SharpAV2.AV2Context._BaseUvAcDeltaq.set -> void
+SharpAV2.AV2Context._BaseUvDcDeltaq.get -> int
+SharpAV2.AV2Context._BaseUvDcDeltaq.set -> void
+SharpAV2.AV2Context._BaseYDcDeltaQ.get -> int
+SharpAV2.AV2Context._BaseYDcDeltaQ.set -> void
+SharpAV2.AV2Context._BaseqIdx.get -> int
+SharpAV2.AV2Context._BaseqIdx.set -> void
+SharpAV2.AV2Context._BaseyDcDeltaq.get -> int
+SharpAV2.AV2Context._BaseyDcDeltaq.set -> void
+SharpAV2.AV2Context._BestDisp.get -> int
+SharpAV2.AV2Context._BestDisp.set -> void
+SharpAV2.AV2Context._BestRatio.get -> int
+SharpAV2.AV2Context._BestRatio.set -> void
+SharpAV2.AV2Context._BitDepth.get -> int
+SharpAV2.AV2Context._BitDepth.set -> void
+SharpAV2.AV2Context._BitDepthIdc.get -> int
+SharpAV2.AV2Context._BitDepthIdc.set -> void
+SharpAV2.AV2Context._BitsPerArCoeffCbMinus5.get -> int
+SharpAV2.AV2Context._BitsPerArCoeffCbMinus5.set -> void
+SharpAV2.AV2Context._BitsPerArCoeffCrMinus5.get -> int
+SharpAV2.AV2Context._BitsPerArCoeffCrMinus5.set -> void
+SharpAV2.AV2Context._BitsPerArCoeffyMinus5.get -> int
+SharpAV2.AV2Context._BitsPerArCoeffyMinus5.set -> void
+SharpAV2.AV2Context._BlkSize.get -> int
+SharpAV2.AV2Context._BlkSize.set -> void
+SharpAV2.AV2Context._BrDecoderModelPresentOpFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._BrDecoderModelPresentOpFlag.set -> void
+SharpAV2.AV2Context._BrOpsCnt.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._BrOpsCnt.set -> void
+SharpAV2.AV2Context._BrOpsDependentFlag.get -> int
+SharpAV2.AV2Context._BrOpsDependentFlag.set -> void
+SharpAV2.AV2Context._BrOpsId.get -> int
+SharpAV2.AV2Context._BrOpsId.set -> void
+SharpAV2.AV2Context._BrTime.get -> int
+SharpAV2.AV2Context._BrTime.set -> void
+SharpAV2.AV2Context._BrTimeOp.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._BrTimeOp.set -> void
+SharpAV2.AV2Context._BridgeFrameHeightMinus1.get -> int
+SharpAV2.AV2Context._BridgeFrameHeightMinus1.set -> void
+SharpAV2.AV2Context._BridgeFrameOverwriteFlag.get -> int
+SharpAV2.AV2Context._BridgeFrameOverwriteFlag.set -> void
+SharpAV2.AV2Context._BridgeFrameRefIdx.get -> int
+SharpAV2.AV2Context._BridgeFrameRefIdx.set -> void
+SharpAV2.AV2Context._BridgeFrameWidthMinus1.get -> int
+SharpAV2.AV2Context._BridgeFrameWidthMinus1.set -> void
+SharpAV2.AV2Context._BruInactive.get -> int
+SharpAV2.AV2Context._BruInactive.set -> void
+SharpAV2.AV2Context._BruRef.get -> int
+SharpAV2.AV2Context._BruRef.set -> void
+SharpAV2.AV2Context._BruTileActive.get -> int
+SharpAV2.AV2Context._BruTileActive.set -> void
+SharpAV2.AV2Context._BruTileActives.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._BruTileActives.set -> void
+SharpAV2.AV2Context._CbLumaMult.get -> int
+SharpAV2.AV2Context._CbLumaMult.set -> void
+SharpAV2.AV2Context._CbMult.get -> int
+SharpAV2.AV2Context._CbMult.set -> void
+SharpAV2.AV2Context._CbOffset.get -> int
+SharpAV2.AV2Context._CbOffset.set -> void
+SharpAV2.AV2Context._CcsoBoOnly.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._CcsoBoOnly.set -> void
+SharpAV2.AV2Context._CcsoEdgeClf.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._CcsoEdgeClf.set -> void
+SharpAV2.AV2Context._CcsoExtFilter.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._CcsoExtFilter.set -> void
+SharpAV2.AV2Context._CcsoFilterOffset.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>>
+SharpAV2.AV2Context._CcsoFilterOffset.set -> void
+SharpAV2.AV2Context._CcsoFrameFlag.get -> int
+SharpAV2.AV2Context._CcsoFrameFlag.set -> void
+SharpAV2.AV2Context._CcsoLumaSizeLog2.get -> int
+SharpAV2.AV2Context._CcsoLumaSizeLog2.set -> void
+SharpAV2.AV2Context._CcsoMaxBandLog2.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._CcsoMaxBandLog2.set -> void
+SharpAV2.AV2Context._CcsoOffsetIdx.get -> int
+SharpAV2.AV2Context._CcsoOffsetIdx.set -> void
+SharpAV2.AV2Context._CcsoPlanes.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._CcsoPlanes.set -> void
+SharpAV2.AV2Context._CcsoQuantIdx.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._CcsoQuantIdx.set -> void
+SharpAV2.AV2Context._CcsoRefIdx.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._CcsoRefIdx.set -> void
+SharpAV2.AV2Context._CcsoScaleIdx.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._CcsoScaleIdx.set -> void
+SharpAV2.AV2Context._CcsoUnitMatchesSbSize.get -> int
+SharpAV2.AV2Context._CcsoUnitMatchesSbSize.set -> void
+SharpAV2.AV2Context._CdefDamping.get -> int
+SharpAV2.AV2Context._CdefDamping.set -> void
+SharpAV2.AV2Context._CdefDampingMinus3.get -> int
+SharpAV2.AV2Context._CdefDampingMinus3.set -> void
+SharpAV2.AV2Context._CdefFrameEnable.get -> int
+SharpAV2.AV2Context._CdefFrameEnable.set -> void
+SharpAV2.AV2Context._CdefOnSkipTxfm.get -> int
+SharpAV2.AV2Context._CdefOnSkipTxfm.set -> void
+SharpAV2.AV2Context._CdefOnSkipTxfmAlwaysOn.get -> int
+SharpAV2.AV2Context._CdefOnSkipTxfmAlwaysOn.set -> void
+SharpAV2.AV2Context._CdefOnSkipTxfmDisabled.get -> int
+SharpAV2.AV2Context._CdefOnSkipTxfmDisabled.set -> void
+SharpAV2.AV2Context._CdefOnSkipTxfmFrameEnable.get -> int
+SharpAV2.AV2Context._CdefOnSkipTxfmFrameEnable.set -> void
+SharpAV2.AV2Context._CdefStrengths.get -> int
+SharpAV2.AV2Context._CdefStrengths.set -> void
+SharpAV2.AV2Context._CdefStrengthsMinus1.get -> int
+SharpAV2.AV2Context._CdefStrengthsMinus1.set -> void
+SharpAV2.AV2Context._CdefUvPriStrength.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._CdefUvPriStrength.set -> void
+SharpAV2.AV2Context._CdefUvPriZero.get -> int
+SharpAV2.AV2Context._CdefUvPriZero.set -> void
+SharpAV2.AV2Context._CdefUvSecStrength.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._CdefUvSecStrength.set -> void
+SharpAV2.AV2Context._CdefyPriStrength.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._CdefyPriStrength.set -> void
+SharpAV2.AV2Context._CdefyPriZero.get -> int
+SharpAV2.AV2Context._CdefyPriZero.set -> void
+SharpAV2.AV2Context._CdefySecStrength.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._CdefySecStrength.set -> void
+SharpAV2.AV2Context._CflDsFilterIndex.get -> int
+SharpAV2.AV2Context._CflDsFilterIndex.set -> void
+SharpAV2.AV2Context._ChangeBvpDrl.get -> int
+SharpAV2.AV2Context._ChangeBvpDrl.set -> void
+SharpAV2.AV2Context._ChangeDrl.get -> int
+SharpAV2.AV2Context._ChangeDrl.set -> void
+SharpAV2.AV2Context._CheckRes.get -> int
+SharpAV2.AV2Context._CheckRes.set -> void
+SharpAV2.AV2Context._ChooseTcqPerFrame.get -> int
+SharpAV2.AV2Context._ChooseTcqPerFrame.set -> void
+SharpAV2.AV2Context._ChromaFormatIdc.get -> int
+SharpAV2.AV2Context._ChromaFormatIdc.set -> void
+SharpAV2.AV2Context._ChromaScalingFromLuma.get -> int
+SharpAV2.AV2Context._ChromaScalingFromLuma.set -> void
+SharpAV2.AV2Context._CiAspectRatioIdc.get -> int
+SharpAV2.AV2Context._CiAspectRatioIdc.set -> void
+SharpAV2.AV2Context._CiAspectRatioInfoPresentFlag.get -> int
+SharpAV2.AV2Context._CiAspectRatioInfoPresentFlag.set -> void
+SharpAV2.AV2Context._CiChromaSamplePositionBottom.get -> int
+SharpAV2.AV2Context._CiChromaSamplePositionBottom.set -> void
+SharpAV2.AV2Context._CiChromaSamplePositionPresentFlag.get -> int
+SharpAV2.AV2Context._CiChromaSamplePositionPresentFlag.set -> void
+SharpAV2.AV2Context._CiChromaSamplePositionTop.get -> int
+SharpAV2.AV2Context._CiChromaSamplePositionTop.set -> void
+SharpAV2.AV2Context._CiColorDescriptionIdc.get -> int
+SharpAV2.AV2Context._CiColorDescriptionIdc.set -> void
+SharpAV2.AV2Context._CiColorDescriptionPresentFlag.get -> int
+SharpAV2.AV2Context._CiColorDescriptionPresentFlag.set -> void
+SharpAV2.AV2Context._CiColorPrimaries.get -> int
+SharpAV2.AV2Context._CiColorPrimaries.set -> void
+SharpAV2.AV2Context._CiFullRangeFlag.get -> int
+SharpAV2.AV2Context._CiFullRangeFlag.set -> void
+SharpAV2.AV2Context._CiMatrixCoefficients.get -> int
+SharpAV2.AV2Context._CiMatrixCoefficients.set -> void
+SharpAV2.AV2Context._CiReserved2bit.get -> int
+SharpAV2.AV2Context._CiReserved2bit.set -> void
+SharpAV2.AV2Context._CiSarHeight.get -> int
+SharpAV2.AV2Context._CiSarHeight.set -> void
+SharpAV2.AV2Context._CiSarWidth.get -> int
+SharpAV2.AV2Context._CiSarWidth.set -> void
+SharpAV2.AV2Context._CiScanTypeIdc.get -> int
+SharpAV2.AV2Context._CiScanTypeIdc.set -> void
+SharpAV2.AV2Context._CiTimingInfoPresentFlag.get -> int
+SharpAV2.AV2Context._CiTimingInfoPresentFlag.set -> void
+SharpAV2.AV2Context._CiTransferCharacteristics.get -> int
+SharpAV2.AV2Context._CiTransferCharacteristics.set -> void
+SharpAV2.AV2Context._ClipToRestrictedRange.get -> int
+SharpAV2.AV2Context._ClipToRestrictedRange.set -> void
+SharpAV2.AV2Context._ClosestFuture.get -> int
+SharpAV2.AV2Context._ClosestFuture.set -> void
+SharpAV2.AV2Context._ClosestPast.get -> int
+SharpAV2.AV2Context._ClosestPast.set -> void
+SharpAV2.AV2Context._CntDroppedFlag.get -> int
+SharpAV2.AV2Context._CntDroppedFlag.set -> void
+SharpAV2.AV2Context._CodedLossless.get -> int
+SharpAV2.AV2Context._CodedLossless.set -> void
+SharpAV2.AV2Context._CodingBandingPresentFlag.get -> int
+SharpAV2.AV2Context._CodingBandingPresentFlag.set -> void
+SharpAV2.AV2Context._ConstrainDrlReorder.get -> int
+SharpAV2.AV2Context._ConstrainDrlReorder.set -> void
+SharpAV2.AV2Context._ContextUpdateTileId.get -> int
+SharpAV2.AV2Context._ContextUpdateTileId.set -> void
+SharpAV2.AV2Context._CountFrameHeaderForLevelConstraint.get -> int
+SharpAV2.AV2Context._CountFrameHeaderForLevelConstraint.set -> void
+SharpAV2.AV2Context._CountingType.get -> int
+SharpAV2.AV2Context._CountingType.set -> void
+SharpAV2.AV2Context._Counts.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._Counts.set -> void
+SharpAV2.AV2Context._CrLumaMult.get -> int
+SharpAV2.AV2Context._CrLumaMult.set -> void
+SharpAV2.AV2Context._CrMult.get -> int
+SharpAV2.AV2Context._CrMult.set -> void
+SharpAV2.AV2Context._CrOffset.get -> int
+SharpAV2.AV2Context._CrOffset.set -> void
+SharpAV2.AV2Context._CropHeight.get -> int
+SharpAV2.AV2Context._CropHeight.set -> void
+SharpAV2.AV2Context._CropLeft.get -> int
+SharpAV2.AV2Context._CropLeft.set -> void
+SharpAV2.AV2Context._CropTop.get -> int
+SharpAV2.AV2Context._CropTop.set -> void
+SharpAV2.AV2Context._CropWidth.get -> int
+SharpAV2.AV2Context._CropWidth.set -> void
+SharpAV2.AV2Context._CurMfhId.get -> int
+SharpAV2.AV2Context._CurMfhId.set -> void
+SharpAV2.AV2Context._CurrentQIndex.get -> int
+SharpAV2.AV2Context._CurrentQIndex.set -> void
+SharpAV2.AV2Context._DecoderBufferDelay.get -> int
+SharpAV2.AV2Context._DecoderBufferDelay.set -> void
+SharpAV2.AV2Context._DecoderModelInfoPresentFlag.get -> int
+SharpAV2.AV2Context._DecoderModelInfoPresentFlag.set -> void
+SharpAV2.AV2Context._DeltaCoded.get -> int
+SharpAV2.AV2Context._DeltaCoded.set -> void
+SharpAV2.AV2Context._DeltaQUAc.get -> int
+SharpAV2.AV2Context._DeltaQUAc.set -> void
+SharpAV2.AV2Context._DeltaQUDc.get -> int
+SharpAV2.AV2Context._DeltaQUDc.set -> void
+SharpAV2.AV2Context._DeltaQVAc.get -> int
+SharpAV2.AV2Context._DeltaQVAc.set -> void
+SharpAV2.AV2Context._DeltaQVDc.get -> int
+SharpAV2.AV2Context._DeltaQVDc.set -> void
+SharpAV2.AV2Context._DeltaQYDc.get -> int
+SharpAV2.AV2Context._DeltaQYDc.set -> void
+SharpAV2.AV2Context._Deltaq.get -> int
+SharpAV2.AV2Context._Deltaq.set -> void
+SharpAV2.AV2Context._DeltaqPresent.get -> int
+SharpAV2.AV2Context._DeltaqPresent.set -> void
+SharpAV2.AV2Context._DeltaqRes.get -> int
+SharpAV2.AV2Context._DeltaqRes.set -> void
+SharpAV2.AV2Context._DeriveSefOrderHint.get -> int
+SharpAV2.AV2Context._DeriveSefOrderHint.set -> void
+SharpAV2.AV2Context._DerivedPrimaryRefFrame.get -> int
+SharpAV2.AV2Context._DerivedPrimaryRefFrame.set -> void
+SharpAV2.AV2Context._DfDeltaQ.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._DfDeltaQ.set -> void
+SharpAV2.AV2Context._DfDeltaq.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._DfDeltaq.set -> void
+SharpAV2.AV2Context._DfDeltaqPresent.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._DfDeltaqPresent.set -> void
+SharpAV2.AV2Context._DfParBitsMinus2.get -> int
+SharpAV2.AV2Context._DfParBitsMinus2.set -> void
+SharpAV2.AV2Context._DiffUvDelta.get -> int
+SharpAV2.AV2Context._DiffUvDelta.set -> void
+SharpAV2.AV2Context._DisableCdfUpdate.get -> int
+SharpAV2.AV2Context._DisableCdfUpdate.set -> void
+SharpAV2.AV2Context._DisableCrossFrameCdfInit.get -> int
+SharpAV2.AV2Context._DisableCrossFrameCdfInit.set -> void
+SharpAV2.AV2Context._DisableDrlReorder.get -> int
+SharpAV2.AV2Context._DisableDrlReorder.set -> void
+SharpAV2.AV2Context._DisableLoopfiltersAcrossTiles.get -> int
+SharpAV2.AV2Context._DisableLoopfiltersAcrossTiles.set -> void
+SharpAV2.AV2Context._DisableTipOutput.get -> int
+SharpAV2.AV2Context._DisableTipOutput.set -> void
+SharpAV2.AV2Context._DiscontinuityFlag.get -> int
+SharpAV2.AV2Context._DiscontinuityFlag.set -> void
+SharpAV2.AV2Context._Dist.get -> int
+SharpAV2.AV2Context._Dist.set -> void
+SharpAV2.AV2Context._DrlReorder.get -> int
+SharpAV2.AV2Context._DrlReorder.set -> void
+SharpAV2.AV2Context._EnableAdaptiveMvd.get -> int
+SharpAV2.AV2Context._EnableAdaptiveMvd.set -> void
+SharpAV2.AV2Context._EnableAvgCdf.get -> int
+SharpAV2.AV2Context._EnableAvgCdf.set -> void
+SharpAV2.AV2Context._EnableBawp.get -> int
+SharpAV2.AV2Context._EnableBawp.set -> void
+SharpAV2.AV2Context._EnableBru.get -> int
+SharpAV2.AV2Context._EnableBru.set -> void
+SharpAV2.AV2Context._EnableCcso.get -> int
+SharpAV2.AV2Context._EnableCcso.set -> void
+SharpAV2.AV2Context._EnableCctx.get -> int
+SharpAV2.AV2Context._EnableCctx.set -> void
+SharpAV2.AV2Context._EnableCdef.get -> int
+SharpAV2.AV2Context._EnableCdef.set -> void
+SharpAV2.AV2Context._EnableCflIntra.get -> int
+SharpAV2.AV2Context._EnableCflIntra.set -> void
+SharpAV2.AV2Context._EnableChromaDctonly.get -> int
+SharpAV2.AV2Context._EnableChromaDctonly.set -> void
+SharpAV2.AV2Context._EnableCwp.get -> int
+SharpAV2.AV2Context._EnableCwp.set -> void
+SharpAV2.AV2Context._EnableDfSubPu.get -> int
+SharpAV2.AV2Context._EnableDfSubPu.set -> void
+SharpAV2.AV2Context._EnableDip.get -> int
+SharpAV2.AV2Context._EnableDip.set -> void
+SharpAV2.AV2Context._EnableExtPartitions.get -> int
+SharpAV2.AV2Context._EnableExtPartitions.set -> void
+SharpAV2.AV2Context._EnableExtSeg.get -> int
+SharpAV2.AV2Context._EnableExtSeg.set -> void
+SharpAV2.AV2Context._EnableExtendedSdp.get -> int
+SharpAV2.AV2Context._EnableExtendedSdp.set -> void
+SharpAV2.AV2Context._EnableFlexMvres.get -> int
+SharpAV2.AV2Context._EnableFlexMvres.set -> void
+SharpAV2.AV2Context._EnableFsc.get -> int
+SharpAV2.AV2Context._EnableFsc.set -> void
+SharpAV2.AV2Context._EnableGdf.get -> int
+SharpAV2.AV2Context._EnableGdf.set -> void
+SharpAV2.AV2Context._EnableGlobalMotion.get -> int
+SharpAV2.AV2Context._EnableGlobalMotion.set -> void
+SharpAV2.AV2Context._EnableIbp.get -> int
+SharpAV2.AV2Context._EnableIbp.set -> void
+SharpAV2.AV2Context._EnableIdtxIntra.get -> int
+SharpAV2.AV2Context._EnableIdtxIntra.set -> void
+SharpAV2.AV2Context._EnableImpMskBld.get -> int
+SharpAV2.AV2Context._EnableImpMskBld.set -> void
+SharpAV2.AV2Context._EnableInterDdt.get -> int
+SharpAV2.AV2Context._EnableInterDdt.set -> void
+SharpAV2.AV2Context._EnableInterIst.get -> int
+SharpAV2.AV2Context._EnableInterIst.set -> void
+SharpAV2.AV2Context._EnableIntraEdgeFilter.get -> int
+SharpAV2.AV2Context._EnableIntraEdgeFilter.set -> void
+SharpAV2.AV2Context._EnableIntraIst.get -> int
+SharpAV2.AV2Context._EnableIntraIst.set -> void
+SharpAV2.AV2Context._EnableMaskedCompound.get -> int
+SharpAV2.AV2Context._EnableMaskedCompound.set -> void
+SharpAV2.AV2Context._EnableMhccp.get -> int
+SharpAV2.AV2Context._EnableMhccp.set -> void
+SharpAV2.AV2Context._EnableMrls.get -> int
+SharpAV2.AV2Context._EnableMrls.set -> void
+SharpAV2.AV2Context._EnableMvTraj.get -> int
+SharpAV2.AV2Context._EnableMvTraj.set -> void
+SharpAV2.AV2Context._EnableMvdSignDerive.get -> int
+SharpAV2.AV2Context._EnableMvdSignDerive.set -> void
+SharpAV2.AV2Context._EnableOpflRefine.get -> int
+SharpAV2.AV2Context._EnableOpflRefine.set -> void
+SharpAV2.AV2Context._EnableParityHiding.get -> int
+SharpAV2.AV2Context._EnableParityHiding.set -> void
+SharpAV2.AV2Context._EnableRefFrameMvs.get -> int
+SharpAV2.AV2Context._EnableRefFrameMvs.set -> void
+SharpAV2.AV2Context._EnableRefinemv.get -> int
+SharpAV2.AV2Context._EnableRefinemv.set -> void
+SharpAV2.AV2Context._EnableRefmvbank.get -> int
+SharpAV2.AV2Context._EnableRefmvbank.set -> void
+SharpAV2.AV2Context._EnableRestoration.get -> int
+SharpAV2.AV2Context._EnableRestoration.set -> void
+SharpAV2.AV2Context._EnableSdp.get -> int
+SharpAV2.AV2Context._EnableSdp.set -> void
+SharpAV2.AV2Context._EnableShortRefreshFrameFlags.get -> int
+SharpAV2.AV2Context._EnableShortRefreshFrameFlags.set -> void
+SharpAV2.AV2Context._EnableSixParamWarpDelta.get -> int
+SharpAV2.AV2Context._EnableSixParamWarpDelta.set -> void
+SharpAV2.AV2Context._EnableTcq.get -> int
+SharpAV2.AV2Context._EnableTcq.set -> void
+SharpAV2.AV2Context._EnableTip.get -> int
+SharpAV2.AV2Context._EnableTip.set -> void
+SharpAV2.AV2Context._EnableTipExplicitQp.get -> int
+SharpAV2.AV2Context._EnableTipExplicitQp.set -> void
+SharpAV2.AV2Context._EnableTipHoleFill.get -> int
+SharpAV2.AV2Context._EnableTipHoleFill.set -> void
+SharpAV2.AV2Context._EnableTipOutput.get -> int
+SharpAV2.AV2Context._EnableTipOutput.set -> void
+SharpAV2.AV2Context._EnableTipRefinemv.get -> int
+SharpAV2.AV2Context._EnableTipRefinemv.set -> void
+SharpAV2.AV2Context._EnableUneven4wayPartitions.get -> int
+SharpAV2.AV2Context._EnableUneven4wayPartitions.set -> void
+SharpAV2.AV2Context._EncoderBufferDelay.get -> int
+SharpAV2.AV2Context._EncoderBufferDelay.set -> void
+SharpAV2.AV2Context._EqualAcDcq.get -> int
+SharpAV2.AV2Context._EqualAcDcq.set -> void
+SharpAV2.AV2Context._EqualPictureInterval.get -> int
+SharpAV2.AV2Context._EqualPictureInterval.set -> void
+SharpAV2.AV2Context._ExplicitNumRefFrames.get -> int
+SharpAV2.AV2Context._ExplicitNumRefFrames.set -> void
+SharpAV2.AV2Context._ExplicitRefFrameMap.get -> int
+SharpAV2.AV2Context._ExplicitRefFrameMap.set -> void
+SharpAV2.AV2Context._Feature.get -> int
+SharpAV2.AV2Context._Feature.set -> void
+SharpAV2.AV2Context._FeatureData.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._FeatureData.set -> void
+SharpAV2.AV2Context._FeatureEnabled.get -> int
+SharpAV2.AV2Context._FeatureEnabled.set -> void
+SharpAV2.AV2Context._FeatureValue.get -> int
+SharpAV2.AV2Context._FeatureValue.set -> void
+SharpAV2.AV2Context._FgMcIdentity.get -> int
+SharpAV2.AV2Context._FgMcIdentity.set -> void
+SharpAV2.AV2Context._FgmChromaIdc.get -> int
+SharpAV2.AV2Context._FgmChromaIdc.set -> void
+SharpAV2.AV2Context._FgmId.get -> int
+SharpAV2.AV2Context._FgmId.set -> void
+SharpAV2.AV2Context._FgmMLayerId.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._FgmMLayerId.set -> void
+SharpAV2.AV2Context._FgmTLayerId.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._FgmTLayerId.set -> void
+SharpAV2.AV2Context._FgmUpdateFlags.get -> int
+SharpAV2.AV2Context._FgmUpdateFlags.set -> void
+SharpAV2.AV2Context._FilmGrainBlockSize.get -> int
+SharpAV2.AV2Context._FilmGrainBlockSize.set -> void
+SharpAV2.AV2Context._FilmGrainParamsPresent.get -> int
+SharpAV2.AV2Context._FilmGrainParamsPresent.set -> void
+SharpAV2.AV2Context._FilmGrainPresent.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._FilmGrainPresent.set -> void
+SharpAV2.AV2Context._FirstPictureInTU.get -> int
+SharpAV2.AV2Context._FirstPictureInTU.set -> void
+SharpAV2.AV2Context._ForceIntegerMv.get -> int
+SharpAV2.AV2Context._ForceIntegerMv.set -> void
+SharpAV2.AV2Context._FoundRef.get -> int
+SharpAV2.AV2Context._FoundRef.set -> void
+SharpAV2.AV2Context._FrameDistance.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._FrameDistance.set -> void
+SharpAV2.AV2Context._FrameEnabledMotionModes.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._FrameEnabledMotionModes.set -> void
+SharpAV2.AV2Context._FrameExplicitRefFrameMap.get -> int
+SharpAV2.AV2Context._FrameExplicitRefFrameMap.set -> void
+SharpAV2.AV2Context._FrameFiltersOn.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._FrameFiltersOn.set -> void
+SharpAV2.AV2Context._FrameHash.get -> byte[]
+SharpAV2.AV2Context._FrameHash.set -> void
+SharpAV2.AV2Context._FrameHeaderPresentFlag.get -> int
+SharpAV2.AV2Context._FrameHeaderPresentFlag.set -> void
+SharpAV2.AV2Context._FrameHeight.get -> int
+SharpAV2.AV2Context._FrameHeight.set -> void
+SharpAV2.AV2Context._FrameHeightBitsMinus1.get -> int
+SharpAV2.AV2Context._FrameHeightBitsMinus1.set -> void
+SharpAV2.AV2Context._FrameHeightMinus1.get -> int
+SharpAV2.AV2Context._FrameHeightMinus1.set -> void
+SharpAV2.AV2Context._FrameIsInter.get -> int
+SharpAV2.AV2Context._FrameIsInter.set -> void
+SharpAV2.AV2Context._FrameIsIntra.get -> int
+SharpAV2.AV2Context._FrameIsIntra.set -> void
+SharpAV2.AV2Context._FrameLrWienerNs.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._FrameLrWienerNs.set -> void
+SharpAV2.AV2Context._FrameMvPrecision.get -> int
+SharpAV2.AV2Context._FrameMvPrecision.set -> void
+SharpAV2.AV2Context._FramePresentationTime.get -> int
+SharpAV2.AV2Context._FramePresentationTime.set -> void
+SharpAV2.AV2Context._FrameRestorationType.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._FrameRestorationType.set -> void
+SharpAV2.AV2Context._FrameSizeOverrideFlag.get -> int
+SharpAV2.AV2Context._FrameSizeOverrideFlag.set -> void
+SharpAV2.AV2Context._FrameSymbolCount.get -> int
+SharpAV2.AV2Context._FrameSymbolCount.set -> void
+SharpAV2.AV2Context._FrameToRefresh.get -> int
+SharpAV2.AV2Context._FrameToRefresh.set -> void
+SharpAV2.AV2Context._FrameToShowMapIdx.get -> int
+SharpAV2.AV2Context._FrameToShowMapIdx.set -> void
+SharpAV2.AV2Context._FrameType.get -> int
+SharpAV2.AV2Context._FrameType.set -> void
+SharpAV2.AV2Context._FrameWidth.get -> int
+SharpAV2.AV2Context._FrameWidth.set -> void
+SharpAV2.AV2Context._FrameWidthBitsMinus1.get -> int
+SharpAV2.AV2Context._FrameWidthBitsMinus1.set -> void
+SharpAV2.AV2Context._FrameWidthMinus1.get -> int
+SharpAV2.AV2Context._FrameWidthMinus1.set -> void
+SharpAV2.AV2Context._FullTimestampFlag.get -> int
+SharpAV2.AV2Context._FullTimestampFlag.set -> void
+SharpAV2.AV2Context._FurthestFuture.get -> int
+SharpAV2.AV2Context._FurthestFuture.set -> void
+SharpAV2.AV2Context._GdfBlkSize.get -> int
+SharpAV2.AV2Context._GdfBlkSize.set -> void
+SharpAV2.AV2Context._GdfFrameEnable.get -> int
+SharpAV2.AV2Context._GdfFrameEnable.set -> void
+SharpAV2.AV2Context._GdfPerBlock.get -> int
+SharpAV2.AV2Context._GdfPerBlock.set -> void
+SharpAV2.AV2Context._GdfPicQcIdx.get -> int
+SharpAV2.AV2Context._GdfPicQcIdx.set -> void
+SharpAV2.AV2Context._GdfPicScaleIdx.get -> int
+SharpAV2.AV2Context._GdfPicScaleIdx.set -> void
+SharpAV2.AV2Context._GdfPixScale.get -> int
+SharpAV2.AV2Context._GdfPixScale.set -> void
+SharpAV2.AV2Context._GdfUnitMatchesSbSize.get -> int
+SharpAV2.AV2Context._GdfUnitMatchesSbSize.set -> void
+SharpAV2.AV2Context._GmParams.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._GmParams.set -> void
+SharpAV2.AV2Context._GmType.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._GmType.set -> void
+SharpAV2.AV2Context._GrainScaleShift.get -> int
+SharpAV2.AV2Context._GrainScaleShift.set -> void
+SharpAV2.AV2Context._GrainScalingMinus8.get -> int
+SharpAV2.AV2Context._GrainScalingMinus8.set -> void
+SharpAV2.AV2Context._GrainSeed.get -> int
+SharpAV2.AV2Context._GrainSeed.set -> void
+SharpAV2.AV2Context._GroupBit.get -> int
+SharpAV2.AV2Context._GroupBit.set -> void
+SharpAV2.AV2Context._HasBothRefs.get -> int
+SharpAV2.AV2Context._HasBothRefs.set -> void
+SharpAV2.AV2Context._HasGrain.get -> int
+SharpAV2.AV2Context._HasGrain.set -> void
+SharpAV2.AV2Context._HasLosslessSegment.get -> int
+SharpAV2.AV2Context._HasLosslessSegment.set -> void
+SharpAV2.AV2Context._HasRefreshFrameFlags.get -> int
+SharpAV2.AV2Context._HasRefreshFrameFlags.set -> void
+SharpAV2.AV2Context._HashType.get -> int
+SharpAV2.AV2Context._HashType.set -> void
+SharpAV2.AV2Context._HeaderBit.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._HeaderBit.set -> void
+SharpAV2.AV2Context._HeightInSbsMinus1.get -> int
+SharpAV2.AV2Context._HeightInSbsMinus1.set -> void
+SharpAV2.AV2Context._High.get -> int
+SharpAV2.AV2Context._High.set -> void
+SharpAV2.AV2Context._HorzSizeInBandBlocksMinus1.get -> int
+SharpAV2.AV2Context._HorzSizeInBandBlocksMinus1.set -> void
+SharpAV2.AV2Context._HoursFlag.get -> int
+SharpAV2.AV2Context._HoursFlag.set -> void
+SharpAV2.AV2Context._HoursValue.get -> int
+SharpAV2.AV2Context._HoursValue.set -> void
+SharpAV2.AV2Context._IBCCoded.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._IBCCoded.set -> void
+SharpAV2.AV2Context._IccProfileDataPayloadBytes.get -> int
+SharpAV2.AV2Context._IccProfileDataPayloadBytes.set -> void
+SharpAV2.AV2Context._Idx.get -> int
+SharpAV2.AV2Context._Idx.set -> void
+SharpAV2.AV2Context._ImmediateOutputFrame.get -> int
+SharpAV2.AV2Context._ImmediateOutputFrame.set -> void
+SharpAV2.AV2Context._ImplicitOutputFrame.get -> int
+SharpAV2.AV2Context._ImplicitOutputFrame.set -> void
+SharpAV2.AV2Context._IncrementTileColsLog2.get -> int
+SharpAV2.AV2Context._IncrementTileColsLog2.set -> void
+SharpAV2.AV2Context._IncrementTileRowsLog2.get -> int
+SharpAV2.AV2Context._IncrementTileRowsLog2.set -> void
+SharpAV2.AV2Context._InterpolationFilter.get -> int
+SharpAV2.AV2Context._InterpolationFilter.set -> void
+SharpAV2.AV2Context._IsBridge.get -> int
+SharpAV2.AV2Context._IsBridge.set -> void
+SharpAV2.AV2Context._IsFilterSwitchable.get -> int
+SharpAV2.AV2Context._IsFilterSwitchable.set -> void
+SharpAV2.AV2Context._IsFirst.get -> int
+SharpAV2.AV2Context._IsFirst.set -> void
+SharpAV2.AV2Context._IsFirstTileGroup.get -> int
+SharpAV2.AV2Context._IsFirstTileGroup.set -> void
+SharpAV2.AV2Context._IsGlobal.get -> int
+SharpAV2.AV2Context._IsGlobal.set -> void
+SharpAV2.AV2Context._IsMonochrome.get -> int
+SharpAV2.AV2Context._IsMonochrome.set -> void
+SharpAV2.AV2Context._IsRegular.get -> int
+SharpAV2.AV2Context._IsRegular.set -> void
+SharpAV2.AV2Context._IsRotZoom.get -> int
+SharpAV2.AV2Context._IsRotZoom.set -> void
+SharpAV2.AV2Context._ItutT35CountryCode.get -> int
+SharpAV2.AV2Context._ItutT35CountryCode.set -> void
+SharpAV2.AV2Context._ItutT35CountryCodeExtensionByte.get -> int
+SharpAV2.AV2Context._ItutT35CountryCodeExtensionByte.set -> void
+SharpAV2.AV2Context._ItutT35PayloadBytes.get -> int
+SharpAV2.AV2Context._ItutT35PayloadBytes.set -> void
+SharpAV2.AV2Context._LastActiveSegId.get -> int
+SharpAV2.AV2Context._LastActiveSegId.set -> void
+SharpAV2.AV2Context._LayerColorDescriptionIdc.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LayerColorDescriptionIdc.set -> void
+SharpAV2.AV2Context._LayerColorPrimaries.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LayerColorPrimaries.set -> void
+SharpAV2.AV2Context._LayerFullRangeFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LayerFullRangeFlag.set -> void
+SharpAV2.AV2Context._LayerMatrixCoefficients.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LayerMatrixCoefficients.set -> void
+SharpAV2.AV2Context._LayerTransferCharacteristics.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LayerTransferCharacteristics.set -> void
+SharpAV2.AV2Context._LcrAggregateInfoPresentFlag.get -> int
+SharpAV2.AV2Context._LcrAggregateInfoPresentFlag.set -> void
+SharpAV2.AV2Context._LcrAggregateLevelIdx.get -> int
+SharpAV2.AV2Context._LcrAggregateLevelIdx.set -> void
+SharpAV2.AV2Context._LcrAuxiliaryType.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._LcrAuxiliaryType.set -> void
+SharpAV2.AV2Context._LcrBitDepthIdc.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LcrBitDepthIdc.set -> void
+SharpAV2.AV2Context._LcrChromaFormatIdc.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LcrChromaFormatIdc.set -> void
+SharpAV2.AV2Context._LcrConfigIdc.get -> int
+SharpAV2.AV2Context._LcrConfigIdc.set -> void
+SharpAV2.AV2Context._LcrCroppingWinBottomOffset.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LcrCroppingWinBottomOffset.set -> void
+SharpAV2.AV2Context._LcrCroppingWinLeftOffset.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LcrCroppingWinLeftOffset.set -> void
+SharpAV2.AV2Context._LcrCroppingWinRightOffset.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LcrCroppingWinRightOffset.set -> void
+SharpAV2.AV2Context._LcrCroppingWinTopOffset.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LcrCroppingWinTopOffset.set -> void
+SharpAV2.AV2Context._LcrCroppingWindowPresentFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LcrCroppingWindowPresentFlag.set -> void
+SharpAV2.AV2Context._LcrDataSize.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LcrDataSize.set -> void
+SharpAV2.AV2Context._LcrDependentLayerMap.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._LcrDependentLayerMap.set -> void
+SharpAV2.AV2Context._LcrDependentXlayersFlag.get -> int
+SharpAV2.AV2Context._LcrDependentXlayersFlag.set -> void
+SharpAV2.AV2Context._LcrDohConstraintFlag.get -> int
+SharpAV2.AV2Context._LcrDohConstraintFlag.set -> void
+SharpAV2.AV2Context._LcrEmbeddedLayerInfoPresentFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LcrEmbeddedLayerInfoPresentFlag.set -> void
+SharpAV2.AV2Context._LcrEnforceTileAlignmentFlag.get -> int
+SharpAV2.AV2Context._LcrEnforceTileAlignmentFlag.set -> void
+SharpAV2.AV2Context._LcrFormatInfoPresentFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LcrFormatInfoPresentFlag.set -> void
+SharpAV2.AV2Context._LcrGlobalAtlasId.get -> int
+SharpAV2.AV2Context._LcrGlobalAtlasId.set -> void
+SharpAV2.AV2Context._LcrGlobalAtlasIdPresentFlag.get -> int
+SharpAV2.AV2Context._LcrGlobalAtlasIdPresentFlag.set -> void
+SharpAV2.AV2Context._LcrGlobalConfigRecordId.get -> int
+SharpAV2.AV2Context._LcrGlobalConfigRecordId.set -> void
+SharpAV2.AV2Context._LcrGlobalId.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LcrGlobalId.set -> void
+SharpAV2.AV2Context._LcrGlobalPayloadPresentFlag.get -> int
+SharpAV2.AV2Context._LcrGlobalPayloadPresentFlag.set -> void
+SharpAV2.AV2Context._LcrGlobalPurposeId.get -> int
+SharpAV2.AV2Context._LcrGlobalPurposeId.set -> void
+SharpAV2.AV2Context._LcrGlobalReservedZero3bits.get -> int
+SharpAV2.AV2Context._LcrGlobalReservedZero3bits.set -> void
+SharpAV2.AV2Context._LcrGlobalReservedZero5bits.get -> int
+SharpAV2.AV2Context._LcrGlobalReservedZero5bits.set -> void
+SharpAV2.AV2Context._LcrLayerAtlasSegmentId.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._LcrLayerAtlasSegmentId.set -> void
+SharpAV2.AV2Context._LcrLayerType.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._LcrLayerType.set -> void
+SharpAV2.AV2Context._LcrLocalAtlasId.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LcrLocalAtlasId.set -> void
+SharpAV2.AV2Context._LcrLocalAtlasIdPresentFlag.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LcrLocalAtlasIdPresentFlag.set -> void
+SharpAV2.AV2Context._LcrLocalId.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LcrLocalId.set -> void
+SharpAV2.AV2Context._LcrLocalReservedZero3bits.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LcrLocalReservedZero3bits.set -> void
+SharpAV2.AV2Context._LcrLocalReservedZero5bits.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LcrLocalReservedZero5bits.set -> void
+SharpAV2.AV2Context._LcrMaxExpectedHeight.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._LcrMaxExpectedHeight.set -> void
+SharpAV2.AV2Context._LcrMaxExpectedWidth.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._LcrMaxExpectedWidth.set -> void
+SharpAV2.AV2Context._LcrMaxInterop.get -> int
+SharpAV2.AV2Context._LcrMaxInterop.set -> void
+SharpAV2.AV2Context._LcrMaxLevelIdx.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LcrMaxLevelIdx.set -> void
+SharpAV2.AV2Context._LcrMaxMlayerCount.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LcrMaxMlayerCount.set -> void
+SharpAV2.AV2Context._LcrMaxNumXLayerCount.get -> int
+SharpAV2.AV2Context._LcrMaxNumXLayerCount.set -> void
+SharpAV2.AV2Context._LcrMaxPicHeight.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LcrMaxPicHeight.set -> void
+SharpAV2.AV2Context._LcrMaxPicWidth.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LcrMaxPicWidth.set -> void
+SharpAV2.AV2Context._LcrMaxTierFlag.get -> int
+SharpAV2.AV2Context._LcrMaxTierFlag.set -> void
+SharpAV2.AV2Context._LcrMlayerMap.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LcrMlayerMap.set -> void
+SharpAV2.AV2Context._LcrNumDependentXlayerMap.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LcrNumDependentXlayerMap.set -> void
+SharpAV2.AV2Context._LcrPriorityOrder.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._LcrPriorityOrder.set -> void
+SharpAV2.AV2Context._LcrProfileTierLevelInfoPresentFlag.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LcrProfileTierLevelInfoPresentFlag.set -> void
+SharpAV2.AV2Context._LcrRemainingPayloadBit.get -> int
+SharpAV2.AV2Context._LcrRemainingPayloadBit.set -> void
+SharpAV2.AV2Context._LcrRenderingMethod.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._LcrRenderingMethod.set -> void
+SharpAV2.AV2Context._LcrRepInfoPresentFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LcrRepInfoPresentFlag.set -> void
+SharpAV2.AV2Context._LcrSameShMaxResolutionFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._LcrSameShMaxResolutionFlag.set -> void
+SharpAV2.AV2Context._LcrSeqProfileIdc.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LcrSeqProfileIdc.set -> void
+SharpAV2.AV2Context._LcrSeqProfileTierLevelInfoPresentFlag.get -> int
+SharpAV2.AV2Context._LcrSeqProfileTierLevelInfoPresentFlag.set -> void
+SharpAV2.AV2Context._LcrTierFlag.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LcrTierFlag.set -> void
+SharpAV2.AV2Context._LcrTlayerMap.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._LcrTlayerMap.set -> void
+SharpAV2.AV2Context._LcrViewId.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._LcrViewId.set -> void
+SharpAV2.AV2Context._LcrViewType.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._LcrViewType.set -> void
+SharpAV2.AV2Context._LcrXLayerID.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LcrXLayerID.set -> void
+SharpAV2.AV2Context._LcrXlayerAtlasSegmentId.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LcrXlayerAtlasSegmentId.set -> void
+SharpAV2.AV2Context._LcrXlayerColorInfoPresentFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LcrXlayerColorInfoPresentFlag.set -> void
+SharpAV2.AV2Context._LcrXlayerMap.get -> int
+SharpAV2.AV2Context._LcrXlayerMap.set -> void
+SharpAV2.AV2Context._LcrXlayerPriorityOrder.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LcrXlayerPriorityOrder.set -> void
+SharpAV2.AV2Context._LcrXlayerPurposeId.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LcrXlayerPurposeId.set -> void
+SharpAV2.AV2Context._LcrXlayerPurposePresentFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LcrXlayerPurposePresentFlag.set -> void
+SharpAV2.AV2Context._LcrXlayerRenderingMethod.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LcrXlayerRenderingMethod.set -> void
+SharpAV2.AV2Context._Level.get -> int
+SharpAV2.AV2Context._Level.set -> void
+SharpAV2.AV2Context._LoadCdfs.get -> int
+SharpAV2.AV2Context._LoadCdfs.set -> void
+SharpAV2.AV2Context._LongTermFrameIdBits.get -> int
+SharpAV2.AV2Context._LongTermFrameIdBits.set -> void
+SharpAV2.AV2Context._LongTermId.get -> int
+SharpAV2.AV2Context._LongTermId.set -> void
+SharpAV2.AV2Context._LongTermIdPlus1.get -> int
+SharpAV2.AV2Context._LongTermIdPlus1.set -> void
+SharpAV2.AV2Context._LoopRestorationSize.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LoopRestorationSize.set -> void
+SharpAV2.AV2Context._LosslessArray.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._LosslessArray.set -> void
+SharpAV2.AV2Context._Low.get -> int
+SharpAV2.AV2Context._Low.set -> void
+SharpAV2.AV2Context._LowDelayModeFlag.get -> int
+SharpAV2.AV2Context._LowDelayModeFlag.set -> void
+SharpAV2.AV2Context._LrChromaUseHalfSize.get -> int
+SharpAV2.AV2Context._LrChromaUseHalfSize.set -> void
+SharpAV2.AV2Context._LrChromaUseMaxSize.get -> int
+SharpAV2.AV2Context._LrChromaUseMaxSize.set -> void
+SharpAV2.AV2Context._LrChromaUseQuarterSize.get -> int
+SharpAV2.AV2Context._LrChromaUseQuarterSize.set -> void
+SharpAV2.AV2Context._LrLumaUseHalfSize.get -> int
+SharpAV2.AV2Context._LrLumaUseHalfSize.set -> void
+SharpAV2.AV2Context._LrLumaUseMaxSize.get -> int
+SharpAV2.AV2Context._LrLumaUseMaxSize.set -> void
+SharpAV2.AV2Context._LrLumaUseQuarterSize.get -> int
+SharpAV2.AV2Context._LrLumaUseQuarterSize.set -> void
+SharpAV2.AV2Context._LrToolsDisable.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._LrToolsDisable.set -> void
+SharpAV2.AV2Context._LrToolsUvPresent.get -> int
+SharpAV2.AV2Context._LrToolsUvPresent.set -> void
+SharpAV2.AV2Context._LrWienerNs.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>>
+SharpAV2.AV2Context._LrWienerNs.set -> void
+SharpAV2.AV2Context._LsptliReserved2bits.get -> int
+SharpAV2.AV2Context._LsptliReserved2bits.set -> void
+SharpAV2.AV2Context._LuminanceMax.get -> int
+SharpAV2.AV2Context._LuminanceMax.set -> void
+SharpAV2.AV2Context._LuminanceMin.get -> int
+SharpAV2.AV2Context._LuminanceMin.set -> void
+SharpAV2.AV2Context._MLayerDependencyMap.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._MLayerDependencyMap.set -> void
+SharpAV2.AV2Context._MLayerPresenceMap.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._MLayerPresenceMap.set -> void
+SharpAV2.AV2Context._MaxBandStepMinus1.get -> int
+SharpAV2.AV2Context._MaxBandStepMinus1.set -> void
+SharpAV2.AV2Context._MaxBandWidthMinus4.get -> int
+SharpAV2.AV2Context._MaxBandWidthMinus4.set -> void
+SharpAV2.AV2Context._MaxBvpDrlBitsMinus1.get -> int
+SharpAV2.AV2Context._MaxBvpDrlBitsMinus1.set -> void
+SharpAV2.AV2Context._MaxCll.get -> int
+SharpAV2.AV2Context._MaxCll.set -> void
+SharpAV2.AV2Context._MaxDrlBitsMinus1.get -> int
+SharpAV2.AV2Context._MaxDrlBitsMinus1.set -> void
+SharpAV2.AV2Context._MaxFall.get -> int
+SharpAV2.AV2Context._MaxFall.set -> void
+SharpAV2.AV2Context._MaxFrameHeightMinus1.get -> int
+SharpAV2.AV2Context._MaxFrameHeightMinus1.set -> void
+SharpAV2.AV2Context._MaxFrameWidthMinus1.get -> int
+SharpAV2.AV2Context._MaxFrameWidthMinus1.set -> void
+SharpAV2.AV2Context._MaxMlayerId.get -> int
+SharpAV2.AV2Context._MaxMlayerId.set -> void
+SharpAV2.AV2Context._MaxPbAspectRatio.get -> int
+SharpAV2.AV2Context._MaxPbAspectRatio.set -> void
+SharpAV2.AV2Context._MaxPbAspectRatioLog2Minus1.get -> int
+SharpAV2.AV2Context._MaxPbAspectRatioLog2Minus1.set -> void
+SharpAV2.AV2Context._MaxQ.get -> int
+SharpAV2.AV2Context._MaxQ.set -> void
+SharpAV2.AV2Context._MaxSegments.get -> int
+SharpAV2.AV2Context._MaxSegments.set -> void
+SharpAV2.AV2Context._MaxTlayerId.get -> int
+SharpAV2.AV2Context._MaxTlayerId.set -> void
+SharpAV2.AV2Context._MergedParam.get -> int
+SharpAV2.AV2Context._MergedParam.set -> void
+SharpAV2.AV2Context._MetadataApplicationId.get -> int
+SharpAV2.AV2Context._MetadataApplicationId.set -> void
+SharpAV2.AV2Context._MetadataIsSuffix.get -> int
+SharpAV2.AV2Context._MetadataIsSuffix.set -> void
+SharpAV2.AV2Context._MetadataNecessityIdc.get -> int
+SharpAV2.AV2Context._MetadataNecessityIdc.set -> void
+SharpAV2.AV2Context._MetadataPayloadSize.get -> int
+SharpAV2.AV2Context._MetadataPayloadSize.set -> void
+SharpAV2.AV2Context._MetadataType.get -> int
+SharpAV2.AV2Context._MetadataType.set -> void
+SharpAV2.AV2Context._MetadataUnitCntMinus1.get -> int
+SharpAV2.AV2Context._MetadataUnitCntMinus1.set -> void
+SharpAV2.AV2Context._MetadataUnitRemainingBit.get -> int
+SharpAV2.AV2Context._MetadataUnitRemainingBit.set -> void
+SharpAV2.AV2Context._MfhAllowSegInfoChange.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._MfhAllowSegInfoChange.set -> void
+SharpAV2.AV2Context._MfhApplyDeblockingFilter.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._MfhApplyDeblockingFilter.set -> void
+SharpAV2.AV2Context._MfhDeblockingFilterUpdate.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._MfhDeblockingFilterUpdate.set -> void
+SharpAV2.AV2Context._MfhExtSegFlag.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._MfhExtSegFlag.set -> void
+SharpAV2.AV2Context._MfhFeatureData.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._MfhFeatureData.set -> void
+SharpAV2.AV2Context._MfhFeatureEnabled.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._MfhFeatureEnabled.set -> void
+SharpAV2.AV2Context._MfhFrameHeightBitsMinus1.get -> int
+SharpAV2.AV2Context._MfhFrameHeightBitsMinus1.set -> void
+SharpAV2.AV2Context._MfhFrameHeightMinus1.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._MfhFrameHeightMinus1.set -> void
+SharpAV2.AV2Context._MfhFrameSizePresentFlag.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._MfhFrameSizePresentFlag.set -> void
+SharpAV2.AV2Context._MfhFrameWidthBitsMinus1.get -> int
+SharpAV2.AV2Context._MfhFrameWidthBitsMinus1.set -> void
+SharpAV2.AV2Context._MfhFrameWidthMinus1.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._MfhFrameWidthMinus1.set -> void
+SharpAV2.AV2Context._MfhIdMinus1.get -> int
+SharpAV2.AV2Context._MfhIdMinus1.set -> void
+SharpAV2.AV2Context._MfhMLayerId.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._MfhMLayerId.set -> void
+SharpAV2.AV2Context._MfhSegInfoPresentFlag.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._MfhSegInfoPresentFlag.set -> void
+SharpAV2.AV2Context._MfhSeqHeaderId.get -> int
+SharpAV2.AV2Context._MfhSeqHeaderId.set -> void
+SharpAV2.AV2Context._MfhTLayerId.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._MfhTLayerId.set -> void
+SharpAV2.AV2Context._MiColEnd.get -> int
+SharpAV2.AV2Context._MiColEnd.set -> void
+SharpAV2.AV2Context._MiColStart.get -> int
+SharpAV2.AV2Context._MiColStart.set -> void
+SharpAV2.AV2Context._MiColStarts.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._MiColStarts.set -> void
+SharpAV2.AV2Context._MiCols.get -> int
+SharpAV2.AV2Context._MiCols.set -> void
+SharpAV2.AV2Context._MiRowEnd.get -> int
+SharpAV2.AV2Context._MiRowEnd.set -> void
+SharpAV2.AV2Context._MiRowStart.get -> int
+SharpAV2.AV2Context._MiRowStart.set -> void
+SharpAV2.AV2Context._MiRowStarts.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._MiRowStarts.set -> void
+SharpAV2.AV2Context._MiRows.get -> int
+SharpAV2.AV2Context._MiRows.set -> void
+SharpAV2.AV2Context._MinutesFlag.get -> int
+SharpAV2.AV2Context._MinutesFlag.set -> void
+SharpAV2.AV2Context._MinutesValue.get -> int
+SharpAV2.AV2Context._MinutesValue.set -> void
+SharpAV2.AV2Context._Mis.get -> int
+SharpAV2.AV2Context._Mis.set -> void
+SharpAV2.AV2Context._MlayerDependencyMap.get -> int
+SharpAV2.AV2Context._MlayerDependencyMap.set -> void
+SharpAV2.AV2Context._MlayerDependencyPresentFlag.get -> int
+SharpAV2.AV2Context._MlayerDependencyPresentFlag.set -> void
+SharpAV2.AV2Context._Monochrome.get -> int
+SharpAV2.AV2Context._Monochrome.set -> void
+SharpAV2.AV2Context._MonotonicOutputOrderFlag.get -> int
+SharpAV2.AV2Context._MonotonicOutputOrderFlag.set -> void
+SharpAV2.AV2Context._MotionFieldChecked.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._MotionFieldChecked.set -> void
+SharpAV2.AV2Context._MotionFieldDepth.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._MotionFieldDepth.set -> void
+SharpAV2.AV2Context._MotionFieldStack.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._MotionFieldStack.set -> void
+SharpAV2.AV2Context._MotionFieldStackCount.get -> int
+SharpAV2.AV2Context._MotionFieldStackCount.set -> void
+SharpAV2.AV2Context._MotionFieldVisited.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._MotionFieldVisited.set -> void
+SharpAV2.AV2Context._MpsDuplicateFlag.get -> int
+SharpAV2.AV2Context._MpsDuplicateFlag.set -> void
+SharpAV2.AV2Context._MpsPicStructType.get -> int
+SharpAV2.AV2Context._MpsPicStructType.set -> void
+SharpAV2.AV2Context._MpsSourceScanTypeIdc.get -> int
+SharpAV2.AV2Context._MpsSourceScanTypeIdc.set -> void
+SharpAV2.AV2Context._MuhCancelFlag.get -> int
+SharpAV2.AV2Context._MuhCancelFlag.set -> void
+SharpAV2.AV2Context._MuhHeaderExtensionByte.get -> int
+SharpAV2.AV2Context._MuhHeaderExtensionByte.set -> void
+SharpAV2.AV2Context._MuhHeaderSize.get -> int
+SharpAV2.AV2Context._MuhHeaderSize.set -> void
+SharpAV2.AV2Context._MuhLayerIdc.get -> int
+SharpAV2.AV2Context._MuhLayerIdc.set -> void
+SharpAV2.AV2Context._MuhMlayerMap.get -> int
+SharpAV2.AV2Context._MuhMlayerMap.set -> void
+SharpAV2.AV2Context._MuhPayloadSize.get -> int
+SharpAV2.AV2Context._MuhPayloadSize.set -> void
+SharpAV2.AV2Context._MuhPersistenceIdc.get -> int
+SharpAV2.AV2Context._MuhPersistenceIdc.set -> void
+SharpAV2.AV2Context._MuhPriority.get -> int
+SharpAV2.AV2Context._MuhPriority.set -> void
+SharpAV2.AV2Context._MuhReservedZero2bits.get -> int
+SharpAV2.AV2Context._MuhReservedZero2bits.set -> void
+SharpAV2.AV2Context._MuhXlayerMap.get -> int
+SharpAV2.AV2Context._MuhXlayerMap.set -> void
+SharpAV2.AV2Context._MultiTlayerDependencyMapPresentFlag.get -> int
+SharpAV2.AV2Context._MultiTlayerDependencyMapPresentFlag.set -> void
+SharpAV2.AV2Context._MultistreamDohConstraintFlag.get -> int
+SharpAV2.AV2Context._MultistreamDohConstraintFlag.set -> void
+SharpAV2.AV2Context._MultistreamEvenAllocationFlag.get -> int
+SharpAV2.AV2Context._MultistreamEvenAllocationFlag.set -> void
+SharpAV2.AV2Context._MultistreamLargePictureIdc.get -> int
+SharpAV2.AV2Context._MultistreamLargePictureIdc.set -> void
+SharpAV2.AV2Context._MultistreamLevelIdx.get -> int
+SharpAV2.AV2Context._MultistreamLevelIdx.set -> void
+SharpAV2.AV2Context._MultistreamProfileIdc.get -> int
+SharpAV2.AV2Context._MultistreamProfileIdc.set -> void
+SharpAV2.AV2Context._MultistreamTier.get -> int
+SharpAV2.AV2Context._MultistreamTier.set -> void
+SharpAV2.AV2Context._MvPrecision.get -> int
+SharpAV2.AV2Context._MvPrecision.set -> void
+SharpAV2.AV2Context._Mx.get -> int
+SharpAV2.AV2Context._Mx.set -> void
+SharpAV2.AV2Context._NRanked.get -> int
+SharpAV2.AV2Context._NRanked.set -> void
+SharpAV2.AV2Context._NbBits.get -> long
+SharpAV2.AV2Context._NbBits.set -> void
+SharpAV2.AV2Context._NumBandUnitsColsMinus1.get -> int
+SharpAV2.AV2Context._NumBandUnitsColsMinus1.set -> void
+SharpAV2.AV2Context._NumBandUnitsRowsMinus1.get -> int
+SharpAV2.AV2Context._NumBandUnitsRowsMinus1.set -> void
+SharpAV2.AV2Context._NumCbPoints.get -> int
+SharpAV2.AV2Context._NumCbPoints.set -> void
+SharpAV2.AV2Context._NumCrPoints.get -> int
+SharpAV2.AV2Context._NumCrPoints.set -> void
+SharpAV2.AV2Context._NumFilterClasses.get -> int
+SharpAV2.AV2Context._NumFilterClasses.set -> void
+SharpAV2.AV2Context._NumFilterClassesIdx.get -> int
+SharpAV2.AV2Context._NumFilterClassesIdx.set -> void
+SharpAV2.AV2Context._NumFrameHeaderBits.get -> int
+SharpAV2.AV2Context._NumFrameHeaderBits.set -> void
+SharpAV2.AV2Context._NumFutureRefs.get -> int
+SharpAV2.AV2Context._NumFutureRefs.set -> void
+SharpAV2.AV2Context._NumKeyRefFrames.get -> int
+SharpAV2.AV2Context._NumKeyRefFrames.set -> void
+SharpAV2.AV2Context._NumPastRefs.get -> int
+SharpAV2.AV2Context._NumPastRefs.set -> void
+SharpAV2.AV2Context._NumPlanes.get -> int
+SharpAV2.AV2Context._NumPlanes.set -> void
+SharpAV2.AV2Context._NumRefFrames.get -> int
+SharpAV2.AV2Context._NumRefFrames.set -> void
+SharpAV2.AV2Context._NumRefFramesMinus1.get -> int
+SharpAV2.AV2Context._NumRefFramesMinus1.set -> void
+SharpAV2.AV2Context._NumRegionsInAtlas.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._NumRegionsInAtlas.set -> void
+SharpAV2.AV2Context._NumSameRefCompound.get -> int
+SharpAV2.AV2Context._NumSameRefCompound.set -> void
+SharpAV2.AV2Context._NumSegments.get -> int
+SharpAV2.AV2Context._NumSegments.set -> void
+SharpAV2.AV2Context._NumStreamsMinus2.get -> int
+SharpAV2.AV2Context._NumStreamsMinus2.set -> void
+SharpAV2.AV2Context._NumSyms.get -> int
+SharpAV2.AV2Context._NumSyms.set -> void
+SharpAV2.AV2Context._NumTicksPerPictureMinus1.get -> int
+SharpAV2.AV2Context._NumTicksPerPictureMinus1.set -> void
+SharpAV2.AV2Context._NumTiles.get -> int
+SharpAV2.AV2Context._NumTiles.set -> void
+SharpAV2.AV2Context._NumTotalRefs.get -> int
+SharpAV2.AV2Context._NumTotalRefs.set -> void
+SharpAV2.AV2Context._NumUnitsInDecodingTick.get -> int
+SharpAV2.AV2Context._NumUnitsInDecodingTick.set -> void
+SharpAV2.AV2Context._NumUnitsInDisplayTick.get -> int
+SharpAV2.AV2Context._NumUnitsInDisplayTick.set -> void
+SharpAV2.AV2Context._NumyPoints.get -> int
+SharpAV2.AV2Context._NumyPoints.set -> void
+SharpAV2.AV2Context._ObuExtensionDataBit.get -> int
+SharpAV2.AV2Context._ObuExtensionDataBit.set -> void
+SharpAV2.AV2Context._ObuExtensionFlag.get -> int
+SharpAV2.AV2Context._ObuExtensionFlag.set -> void
+SharpAV2.AV2Context._ObuHeaderExtensionFlag.get -> int
+SharpAV2.AV2Context._ObuHeaderExtensionFlag.set -> void
+SharpAV2.AV2Context._ObuMlayerId.get -> int
+SharpAV2.AV2Context._ObuMlayerId.set -> void
+SharpAV2.AV2Context._ObuPaddingByte.get -> int
+SharpAV2.AV2Context._ObuPaddingByte.set -> void
+SharpAV2.AV2Context._ObuPayloadSize.get -> int
+SharpAV2.AV2Context._ObuPayloadSize.set -> void
+SharpAV2.AV2Context._ObuTlayerId.get -> int
+SharpAV2.AV2Context._ObuTlayerId.set -> void
+SharpAV2.AV2Context._ObuType.get -> int
+SharpAV2.AV2Context._ObuType.set -> void
+SharpAV2.AV2Context._ObuXLId.get -> int
+SharpAV2.AV2Context._ObuXLId.set -> void
+SharpAV2.AV2Context._ObuXlayerId.get -> int
+SharpAV2.AV2Context._ObuXlayerId.set -> void
+SharpAV2.AV2Context._OlkEncountered.get -> int
+SharpAV2.AV2Context._OlkEncountered.set -> void
+SharpAV2.AV2Context._OlkRefresh.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._OlkRefresh.set -> void
+SharpAV2.AV2Context._OlkTUOrderHint.get -> int
+SharpAV2.AV2Context._OlkTUOrderHint.set -> void
+SharpAV2.AV2Context._OnlyShowable.get -> int
+SharpAV2.AV2Context._OnlyShowable.set -> void
+SharpAV2.AV2Context._OpIndex.get -> int
+SharpAV2.AV2Context._OpIndex.set -> void
+SharpAV2.AV2Context._OpflRefineAll.get -> int
+SharpAV2.AV2Context._OpflRefineAll.set -> void
+SharpAV2.AV2Context._OpflRefineType.get -> int
+SharpAV2.AV2Context._OpflRefineType.set -> void
+SharpAV2.AV2Context._OpsAggregateLevelIdx.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._OpsAggregateLevelIdx.set -> void
+SharpAV2.AV2Context._OpsCnt.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._OpsCnt.set -> void
+SharpAV2.AV2Context._OpsColorDescriptionIdc.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._OpsColorDescriptionIdc.set -> void
+SharpAV2.AV2Context._OpsColorInfoPresentFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._OpsColorInfoPresentFlag.set -> void
+SharpAV2.AV2Context._OpsColorPrimaries.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._OpsColorPrimaries.set -> void
+SharpAV2.AV2Context._OpsConfigIdc.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._OpsConfigIdc.set -> void
+SharpAV2.AV2Context._OpsDataSize.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._OpsDataSize.set -> void
+SharpAV2.AV2Context._OpsDecoderBufferDelay.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._OpsDecoderBufferDelay.set -> void
+SharpAV2.AV2Context._OpsDecoderModelInfoForThisOpPresentFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._OpsDecoderModelInfoForThisOpPresentFlag.set -> void
+SharpAV2.AV2Context._OpsEmbeddedOpIndex.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._OpsEmbeddedOpIndex.set -> void
+SharpAV2.AV2Context._OpsEmbeddedOpsId.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._OpsEmbeddedOpsId.set -> void
+SharpAV2.AV2Context._OpsEncoderBufferDelay.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._OpsEncoderBufferDelay.set -> void
+SharpAV2.AV2Context._OpsFullRangeFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._OpsFullRangeFlag.set -> void
+SharpAV2.AV2Context._OpsID.get -> int
+SharpAV2.AV2Context._OpsID.set -> void
+SharpAV2.AV2Context._OpsId.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._OpsId.set -> void
+SharpAV2.AV2Context._OpsInitialDisplayDelayMinus1.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._OpsInitialDisplayDelayMinus1.set -> void
+SharpAV2.AV2Context._OpsInitialDisplayDelayPresentFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._OpsInitialDisplayDelayPresentFlag.set -> void
+SharpAV2.AV2Context._OpsIntent.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._OpsIntent.set -> void
+SharpAV2.AV2Context._OpsIntentPresentFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._OpsIntentPresentFlag.set -> void
+SharpAV2.AV2Context._OpsLevelIdx.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>>
+SharpAV2.AV2Context._OpsLevelIdx.set -> void
+SharpAV2.AV2Context._OpsLowDelayModeFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._OpsLowDelayModeFlag.set -> void
+SharpAV2.AV2Context._OpsMatrixCoefficients.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._OpsMatrixCoefficients.set -> void
+SharpAV2.AV2Context._OpsMaxInterop.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._OpsMaxInterop.set -> void
+SharpAV2.AV2Context._OpsMaxTierFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._OpsMaxTierFlag.set -> void
+SharpAV2.AV2Context._OpsMlayerCount.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>>
+SharpAV2.AV2Context._OpsMlayerCount.set -> void
+SharpAV2.AV2Context._OpsMlayerExplicitInfoFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._OpsMlayerExplicitInfoFlag.set -> void
+SharpAV2.AV2Context._OpsMlayerInfoIdc.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._OpsMlayerInfoIdc.set -> void
+SharpAV2.AV2Context._OpsMlayerMap.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>>
+SharpAV2.AV2Context._OpsMlayerMap.set -> void
+SharpAV2.AV2Context._OpsOpIntent.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._OpsOpIntent.set -> void
+SharpAV2.AV2Context._OpsPriority.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._OpsPriority.set -> void
+SharpAV2.AV2Context._OpsPtlPresentFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._OpsPtlPresentFlag.set -> void
+SharpAV2.AV2Context._OpsPtlReserved2bits.get -> int
+SharpAV2.AV2Context._OpsPtlReserved2bits.set -> void
+SharpAV2.AV2Context._OpsReserved2bits.get -> int
+SharpAV2.AV2Context._OpsReserved2bits.set -> void
+SharpAV2.AV2Context._OpsResetFlag.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._OpsResetFlag.set -> void
+SharpAV2.AV2Context._OpsSeqProfileIdc.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>>
+SharpAV2.AV2Context._OpsSeqProfileIdc.set -> void
+SharpAV2.AV2Context._OpsTierFlag.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>>
+SharpAV2.AV2Context._OpsTierFlag.set -> void
+SharpAV2.AV2Context._OpsTlayerMap.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>>>
+SharpAV2.AV2Context._OpsTlayerMap.set -> void
+SharpAV2.AV2Context._OpsTransferCharacteristics.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._OpsTransferCharacteristics.set -> void
+SharpAV2.AV2Context._OpsXlayerMap.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._OpsXlayerMap.set -> void
+SharpAV2.AV2Context._OpsxLayerId.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>>
+SharpAV2.AV2Context._OpsxLayerId.set -> void
+SharpAV2.AV2Context._OrderHint.get -> int
+SharpAV2.AV2Context._OrderHint.set -> void
+SharpAV2.AV2Context._OrderHintBits.get -> int
+SharpAV2.AV2Context._OrderHintBits.set -> void
+SharpAV2.AV2Context._OrderHintBitsMinus1.get -> int
+SharpAV2.AV2Context._OrderHintBitsMinus1.set -> void
+SharpAV2.AV2Context._OrderHintLsbs.get -> int
+SharpAV2.AV2Context._OrderHintLsbs.set -> void
+SharpAV2.AV2Context._OrderHints.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._OrderHints.set -> void
+SharpAV2.AV2Context._OrigClosestFuture.get -> int
+SharpAV2.AV2Context._OrigClosestFuture.set -> void
+SharpAV2.AV2Context._OrigClosestPast.get -> int
+SharpAV2.AV2Context._OrigClosestPast.set -> void
+SharpAV2.AV2Context._OurRef.get -> int
+SharpAV2.AV2Context._OurRef.set -> void
+SharpAV2.AV2Context._OverlapFlag.get -> int
+SharpAV2.AV2Context._OverlapFlag.set -> void
+SharpAV2.AV2Context._PerPlane.get -> int
+SharpAV2.AV2Context._PerPlane.set -> void
+SharpAV2.AV2Context._PicQmNumMinus1.get -> int
+SharpAV2.AV2Context._PicQmNumMinus1.set -> void
+SharpAV2.AV2Context._Plane.get -> int
+SharpAV2.AV2Context._Plane.set -> void
+SharpAV2.AV2Context._PlaneHash.get -> SharpAVX.AomArray<byte[]>
+SharpAV2.AV2Context._PlaneHash.set -> void
+SharpAV2.AV2Context._PointCbScaling.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._PointCbScaling.set -> void
+SharpAV2.AV2Context._PointCbValue.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._PointCbValue.set -> void
+SharpAV2.AV2Context._PointCrScaling.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._PointCrScaling.set -> void
+SharpAV2.AV2Context._PointCrValue.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._PointCrValue.set -> void
+SharpAV2.AV2Context._PointScalingBitsMinus5.get -> int
+SharpAV2.AV2Context._PointScalingBitsMinus5.set -> void
+SharpAV2.AV2Context._PointValueIncrementBitsMinus1.get -> int
+SharpAV2.AV2Context._PointValueIncrementBitsMinus1.set -> void
+SharpAV2.AV2Context._PointyScaling.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._PointyScaling.set -> void
+SharpAV2.AV2Context._PointyValue.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._PointyValue.set -> void
+SharpAV2.AV2Context._Pos.get -> int
+SharpAV2.AV2Context._Pos.set -> void
+SharpAV2.AV2Context._PrevGmParams.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._PrevGmParams.set -> void
+SharpAV2.AV2Context._PrevSegmentIds.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._PrevSegmentIds.set -> void
+SharpAV2.AV2Context._PrimaryChromaticityx.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._PrimaryChromaticityx.set -> void
+SharpAV2.AV2Context._PrimaryChromaticityy.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._PrimaryChromaticityy.set -> void
+SharpAV2.AV2Context._PrimaryRefFrame.get -> int
+SharpAV2.AV2Context._PrimaryRefFrame.set -> void
+SharpAV2.AV2Context._ProjStep.get -> int
+SharpAV2.AV2Context._ProjStep.set -> void
+SharpAV2.AV2Context._QThresh.get -> int
+SharpAV2.AV2Context._QThresh.set -> void
+SharpAV2.AV2Context._Qm4x8IsTransposeOf8x4.get -> int
+SharpAV2.AV2Context._Qm4x8IsTransposeOf8x4.set -> void
+SharpAV2.AV2Context._Qm8x8IsSymmetric.get -> int
+SharpAV2.AV2Context._Qm8x8IsSymmetric.set -> void
+SharpAV2.AV2Context._QmBitMap.get -> int
+SharpAV2.AV2Context._QmBitMap.set -> void
+SharpAV2.AV2Context._QmChromaInfoPresentFlag.get -> int
+SharpAV2.AV2Context._QmChromaInfoPresentFlag.set -> void
+SharpAV2.AV2Context._QmCopyFromPreviousPlane.get -> int
+SharpAV2.AV2Context._QmCopyFromPreviousPlane.set -> void
+SharpAV2.AV2Context._QmDataPresent.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._QmDataPresent.set -> void
+SharpAV2.AV2Context._QmIndex.get -> int
+SharpAV2.AV2Context._QmIndex.set -> void
+SharpAV2.AV2Context._QmIsDefaultFlag.get -> int
+SharpAV2.AV2Context._QmIsDefaultFlag.set -> void
+SharpAV2.AV2Context._QmMLayerId.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._QmMLayerId.set -> void
+SharpAV2.AV2Context._QmNumPlanes.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._QmNumPlanes.set -> void
+SharpAV2.AV2Context._QmProtected.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._QmProtected.set -> void
+SharpAV2.AV2Context._QmSeen.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._QmSeen.set -> void
+SharpAV2.AV2Context._QmTLayerId.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._QmTLayerId.set -> void
+SharpAV2.AV2Context._QmUvSameAsy.get -> int
+SharpAV2.AV2Context._QmUvSameAsy.set -> void
+SharpAV2.AV2Context._Qmu.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._Qmu.set -> void
+SharpAV2.AV2Context._Qmv.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._Qmv.set -> void
+SharpAV2.AV2Context._Qmy.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._Qmy.set -> void
+SharpAV2.AV2Context._QuantDelta.get -> int
+SharpAV2.AV2Context._QuantDelta.set -> void
+SharpAV2.AV2Context._ReadFrameFilters.get -> int
+SharpAV2.AV2Context._ReadFrameFilters.set -> void
+SharpAV2.AV2Context._ReducePbAspectRatio.get -> int
+SharpAV2.AV2Context._ReducePbAspectRatio.set -> void
+SharpAV2.AV2Context._ReducedRefFrameMvsMode.get -> int
+SharpAV2.AV2Context._ReducedRefFrameMvsMode.set -> void
+SharpAV2.AV2Context._ReducedTxPartSet.get -> int
+SharpAV2.AV2Context._ReducedTxPartSet.set -> void
+SharpAV2.AV2Context._ReducedTxSet.get -> int
+SharpAV2.AV2Context._ReducedTxSet.set -> void
+SharpAV2.AV2Context._RefDisp.get -> int
+SharpAV2.AV2Context._RefDisp.set -> void
+SharpAV2.AV2Context._RefFrameIdx.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._RefFrameIdx.set -> void
+SharpAV2.AV2Context._RefLongTermId.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._RefLongTermId.set -> void
+SharpAV2.AV2Context._RefLrWienerNs.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>>
+SharpAV2.AV2Context._RefLrWienerNs.set -> void
+SharpAV2.AV2Context._RefOrderHint.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._RefOrderHint.set -> void
+SharpAV2.AV2Context._RefRatio.get -> int
+SharpAV2.AV2Context._RefRatio.set -> void
+SharpAV2.AV2Context._RefValid.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._RefValid.set -> void
+SharpAV2.AV2Context._ReferenceSelect.get -> int
+SharpAV2.AV2Context._ReferenceSelect.set -> void
+SharpAV2.AV2Context._RefreshFrameFlags.get -> int
+SharpAV2.AV2Context._RefreshFrameFlags.set -> void
+SharpAV2.AV2Context._RemainingLcrPayloadBits.get -> int
+SharpAV2.AV2Context._RemainingLcrPayloadBits.set -> void
+SharpAV2.AV2Context._Reserved.get -> int
+SharpAV2.AV2Context._Reserved.set -> void
+SharpAV2.AV2Context._RestrictedPredictionSwitch.get -> int
+SharpAV2.AV2Context._RestrictedPredictionSwitch.set -> void
+SharpAV2.AV2Context._ReuseCcso.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._ReuseCcso.set -> void
+SharpAV2.AV2Context._ReuseSegInfo.get -> int
+SharpAV2.AV2Context._ReuseSegInfo.set -> void
+SharpAV2.AV2Context._ReuseTileInfo.get -> int
+SharpAV2.AV2Context._ReuseTileInfo.set -> void
+SharpAV2.AV2Context._RstRefPicIdx.get -> int
+SharpAV2.AV2Context._RstRefPicIdx.set -> void
+SharpAV2.AV2Context._SbColStarts.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._SbColStarts.set -> void
+SharpAV2.AV2Context._SbNum.get -> int
+SharpAV2.AV2Context._SbNum.set -> void
+SharpAV2.AV2Context._SbReuseCcso.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._SbReuseCcso.set -> void
+SharpAV2.AV2Context._SbRowStarts.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._SbRowStarts.set -> void
+SharpAV2.AV2Context._SbSize.get -> int
+SharpAV2.AV2Context._SbSize.set -> void
+SharpAV2.AV2Context._Score.get -> int
+SharpAV2.AV2Context._Score.set -> void
+SharpAV2.AV2Context._ScoresBaseQIdx.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._ScoresBaseQIdx.set -> void
+SharpAV2.AV2Context._ScoresDistance.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._ScoresDistance.set -> void
+SharpAV2.AV2Context._ScoresIndex.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._ScoresIndex.set -> void
+SharpAV2.AV2Context._ScoresLayer.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._ScoresLayer.set -> void
+SharpAV2.AV2Context._ScoresOrderHint.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._ScoresOrderHint.set -> void
+SharpAV2.AV2Context._ScoresScore.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._ScoresScore.set -> void
+SharpAV2.AV2Context._SecondsFlag.get -> int
+SharpAV2.AV2Context._SecondsFlag.set -> void
+SharpAV2.AV2Context._SecondsValue.get -> int
+SharpAV2.AV2Context._SecondsValue.set -> void
+SharpAV2.AV2Context._SeenFrameHeader.get -> int
+SharpAV2.AV2Context._SeenFrameHeader.set -> void
+SharpAV2.AV2Context._SefOrderHint.get -> int
+SharpAV2.AV2Context._SefOrderHint.set -> void
+SharpAV2.AV2Context._SegIdPreSkip.get -> int
+SharpAV2.AV2Context._SegIdPreSkip.set -> void
+SharpAV2.AV2Context._SegQMLevel.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._SegQMLevel.set -> void
+SharpAV2.AV2Context._SegmentIds.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._SegmentIds.set -> void
+SharpAV2.AV2Context._SegmentationEnabled.get -> int
+SharpAV2.AV2Context._SegmentationEnabled.set -> void
+SharpAV2.AV2Context._SegmentationTemporalUpdate.get -> int
+SharpAV2.AV2Context._SegmentationTemporalUpdate.set -> void
+SharpAV2.AV2Context._SegmentationUpdateMap.get -> int
+SharpAV2.AV2Context._SegmentationUpdateMap.set -> void
+SharpAV2.AV2Context._SeparateUvDeltaq.get -> int
+SharpAV2.AV2Context._SeparateUvDeltaq.set -> void
+SharpAV2.AV2Context._SeqAllowSegInfoChange.get -> int
+SharpAV2.AV2Context._SeqAllowSegInfoChange.set -> void
+SharpAV2.AV2Context._SeqChooseIntegerMv.get -> int
+SharpAV2.AV2Context._SeqChooseIntegerMv.set -> void
+SharpAV2.AV2Context._SeqChooseScreenContentTools.get -> int
+SharpAV2.AV2Context._SeqChooseScreenContentTools.set -> void
+SharpAV2.AV2Context._SeqCroppingWinBottomOffset.get -> int
+SharpAV2.AV2Context._SeqCroppingWinBottomOffset.set -> void
+SharpAV2.AV2Context._SeqCroppingWinLeftOffset.get -> int
+SharpAV2.AV2Context._SeqCroppingWinLeftOffset.set -> void
+SharpAV2.AV2Context._SeqCroppingWinRightOffset.get -> int
+SharpAV2.AV2Context._SeqCroppingWinRightOffset.set -> void
+SharpAV2.AV2Context._SeqCroppingWinTopOffset.get -> int
+SharpAV2.AV2Context._SeqCroppingWinTopOffset.set -> void
+SharpAV2.AV2Context._SeqCroppingWindowPresentFlag.get -> int
+SharpAV2.AV2Context._SeqCroppingWindowPresentFlag.set -> void
+SharpAV2.AV2Context._SeqDecoderModelInfoPresentFlag.get -> int
+SharpAV2.AV2Context._SeqDecoderModelInfoPresentFlag.set -> void
+SharpAV2.AV2Context._SeqEnabledMotionModes.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._SeqEnabledMotionModes.set -> void
+SharpAV2.AV2Context._SeqFeatureData.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._SeqFeatureData.set -> void
+SharpAV2.AV2Context._SeqFeatureEnabled.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._SeqFeatureEnabled.set -> void
+SharpAV2.AV2Context._SeqForceIntegerMv.get -> int
+SharpAV2.AV2Context._SeqForceIntegerMv.set -> void
+SharpAV2.AV2Context._SeqForceScreenContentTools.get -> int
+SharpAV2.AV2Context._SeqForceScreenContentTools.set -> void
+SharpAV2.AV2Context._SeqFrameMotionModesPresentFlag.get -> int
+SharpAV2.AV2Context._SeqFrameMotionModesPresentFlag.set -> void
+SharpAV2.AV2Context._SeqHeaderId.get -> int
+SharpAV2.AV2Context._SeqHeaderId.set -> void
+SharpAV2.AV2Context._SeqHeaderIdInFrameHeader.get -> int
+SharpAV2.AV2Context._SeqHeaderIdInFrameHeader.set -> void
+SharpAV2.AV2Context._SeqInitialDisplayDelayMinus1.get -> int
+SharpAV2.AV2Context._SeqInitialDisplayDelayMinus1.set -> void
+SharpAV2.AV2Context._SeqInitialDisplayDelayPresentFlag.get -> int
+SharpAV2.AV2Context._SeqInitialDisplayDelayPresentFlag.set -> void
+SharpAV2.AV2Context._SeqLcrId.get -> int
+SharpAV2.AV2Context._SeqLcrId.set -> void
+SharpAV2.AV2Context._SeqLevelIdx.get -> int
+SharpAV2.AV2Context._SeqLevelIdx.set -> void
+SharpAV2.AV2Context._SeqMaxBvpDrlBitsMinus1.get -> int
+SharpAV2.AV2Context._SeqMaxBvpDrlBitsMinus1.set -> void
+SharpAV2.AV2Context._SeqMaxDrlBitsMinus1.get -> int
+SharpAV2.AV2Context._SeqMaxDrlBitsMinus1.set -> void
+SharpAV2.AV2Context._SeqMaxMlayerCnt.get -> int
+SharpAV2.AV2Context._SeqMaxMlayerCnt.set -> void
+SharpAV2.AV2Context._SeqMaxMlayerCntMinus1.get -> int
+SharpAV2.AV2Context._SeqMaxMlayerCntMinus1.set -> void
+SharpAV2.AV2Context._SeqProfileIdc.get -> int
+SharpAV2.AV2Context._SeqProfileIdc.set -> void
+SharpAV2.AV2Context._SeqSbColStarts.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._SeqSbColStarts.set -> void
+SharpAV2.AV2Context._SeqSbCols.get -> int
+SharpAV2.AV2Context._SeqSbCols.set -> void
+SharpAV2.AV2Context._SeqSbRowStarts.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._SeqSbRowStarts.set -> void
+SharpAV2.AV2Context._SeqSbRows.get -> int
+SharpAV2.AV2Context._SeqSbRows.set -> void
+SharpAV2.AV2Context._SeqSbSize.get -> int
+SharpAV2.AV2Context._SeqSbSize.set -> void
+SharpAV2.AV2Context._SeqSegInfoPresentFlag.get -> int
+SharpAV2.AV2Context._SeqSegInfoPresentFlag.set -> void
+SharpAV2.AV2Context._SeqTier.get -> int
+SharpAV2.AV2Context._SeqTier.set -> void
+SharpAV2.AV2Context._SeqTileCols.get -> int
+SharpAV2.AV2Context._SeqTileCols.set -> void
+SharpAV2.AV2Context._SeqTileColsLog2.get -> int
+SharpAV2.AV2Context._SeqTileColsLog2.set -> void
+SharpAV2.AV2Context._SeqTileInfoPresentFlag.get -> int
+SharpAV2.AV2Context._SeqTileInfoPresentFlag.set -> void
+SharpAV2.AV2Context._SeqTileRows.get -> int
+SharpAV2.AV2Context._SeqTileRows.set -> void
+SharpAV2.AV2Context._SeqTileRowsLog2.get -> int
+SharpAV2.AV2Context._SeqTileRowsLog2.set -> void
+SharpAV2.AV2Context._SeqUniformTileSpacingFlag.get -> int
+SharpAV2.AV2Context._SeqUniformTileSpacingFlag.set -> void
+SharpAV2.AV2Context._ShowExistingFrame.get -> int
+SharpAV2.AV2Context._ShowExistingFrame.set -> void
+SharpAV2.AV2Context._SignalPrimaryRefFrame.get -> int
+SharpAV2.AV2Context._SignalPrimaryRefFrame.set -> void
+SharpAV2.AV2Context._SinglePictureHeaderFlag.get -> int
+SharpAV2.AV2Context._SinglePictureHeaderFlag.set -> void
+SharpAV2.AV2Context._SkipModeFrame.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._SkipModeFrame.set -> void
+SharpAV2.AV2Context._SkipModePresent.get -> int
+SharpAV2.AV2Context._SkipModePresent.set -> void
+SharpAV2.AV2Context._SkipSegFrame.get -> int
+SharpAV2.AV2Context._SkipSegFrame.set -> void
+SharpAV2.AV2Context._Slot.get -> int
+SharpAV2.AV2Context._Slot.set -> void
+SharpAV2.AV2Context._SourceBandingPresentFlag.get -> int
+SharpAV2.AV2Context._SourceBandingPresentFlag.set -> void
+SharpAV2.AV2Context._StillPicture.get -> int
+SharpAV2.AV2Context._StillPicture.set -> void
+SharpAV2.AV2Context._SubStreamMaxLevel.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._SubStreamMaxLevel.set -> void
+SharpAV2.AV2Context._SubStreamMaxProfile.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._SubStreamMaxProfile.set -> void
+SharpAV2.AV2Context._SubStreamMaxTier.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._SubStreamMaxTier.set -> void
+SharpAV2.AV2Context._SubX.get -> int
+SharpAV2.AV2Context._SubX.set -> void
+SharpAV2.AV2Context._SubXlayerId.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._SubXlayerId.set -> void
+SharpAV2.AV2Context._SubY.get -> int
+SharpAV2.AV2Context._SubY.set -> void
+SharpAV2.AV2Context._SubclassLookup.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._SubclassLookup.set -> void
+SharpAV2.AV2Context._SubexpBits.get -> int
+SharpAV2.AV2Context._SubexpBits.set -> void
+SharpAV2.AV2Context._SubexpFinalBits.get -> int
+SharpAV2.AV2Context._SubexpFinalBits.set -> void
+SharpAV2.AV2Context._SubexpMoreBits.get -> int
+SharpAV2.AV2Context._SubexpMoreBits.set -> void
+SharpAV2.AV2Context._SubsamplingX.get -> int
+SharpAV2.AV2Context._SubsamplingX.set -> void
+SharpAV2.AV2Context._SubsamplingY.get -> int
+SharpAV2.AV2Context._SubsamplingY.set -> void
+SharpAV2.AV2Context._Sz.get -> int
+SharpAV2.AV2Context._Sz.set -> void
+SharpAV2.AV2Context._TLayerDependencyMap.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._TLayerDependencyMap.set -> void
+SharpAV2.AV2Context._Target.get -> int
+SharpAV2.AV2Context._Target.set -> void
+SharpAV2.AV2Context._TemporalPredFlag.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._TemporalPredFlag.set -> void
+SharpAV2.AV2Context._TgEnd.get -> int
+SharpAV2.AV2Context._TgEnd.set -> void
+SharpAV2.AV2Context._TgStart.get -> int
+SharpAV2.AV2Context._TgStart.set -> void
+SharpAV2.AV2Context._TheirRef.get -> int
+SharpAV2.AV2Context._TheirRef.set -> void
+SharpAV2.AV2Context._ThreeColorComponentsFlag.get -> int
+SharpAV2.AV2Context._ThreeColorComponentsFlag.set -> void
+SharpAV2.AV2Context._TileCols.get -> int
+SharpAV2.AV2Context._TileCols.set -> void
+SharpAV2.AV2Context._TileColsLog2.get -> int
+SharpAV2.AV2Context._TileColsLog2.set -> void
+SharpAV2.AV2Context._TileLog2.get -> int
+SharpAV2.AV2Context._TileLog2.set -> void
+SharpAV2.AV2Context._TileNum.get -> int
+SharpAV2.AV2Context._TileNum.set -> void
+SharpAV2.AV2Context._TileRows.get -> int
+SharpAV2.AV2Context._TileRows.set -> void
+SharpAV2.AV2Context._TileRowsLog2.get -> int
+SharpAV2.AV2Context._TileRowsLog2.set -> void
+SharpAV2.AV2Context._TileSizeBytes.get -> int
+SharpAV2.AV2Context._TileSizeBytes.set -> void
+SharpAV2.AV2Context._TileSizeBytesMinus1.get -> int
+SharpAV2.AV2Context._TileSizeBytesMinus1.set -> void
+SharpAV2.AV2Context._TileSizeMinus1.get -> int
+SharpAV2.AV2Context._TileSizeMinus1.set -> void
+SharpAV2.AV2Context._TileStartAndEndPresentFlag.get -> int
+SharpAV2.AV2Context._TileStartAndEndPresentFlag.set -> void
+SharpAV2.AV2Context._TimeOffsetLength.get -> int
+SharpAV2.AV2Context._TimeOffsetLength.set -> void
+SharpAV2.AV2Context._TimeOffsetValue.get -> int
+SharpAV2.AV2Context._TimeOffsetValue.set -> void
+SharpAV2.AV2Context._TimeScale.get -> int
+SharpAV2.AV2Context._TimeScale.set -> void
+SharpAV2.AV2Context._TipFrameMode.get -> int
+SharpAV2.AV2Context._TipFrameMode.set -> void
+SharpAV2.AV2Context._TipGlobalMv.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context._TipGlobalMv.set -> void
+SharpAV2.AV2Context._TipGlobalWtdIndex.get -> int
+SharpAV2.AV2Context._TipGlobalWtdIndex.set -> void
+SharpAV2.AV2Context._TipInterpFilter.get -> int
+SharpAV2.AV2Context._TipInterpFilter.set -> void
+SharpAV2.AV2Context._TipMvCol.get -> int
+SharpAV2.AV2Context._TipMvCol.set -> void
+SharpAV2.AV2Context._TipMvColSign.get -> int
+SharpAV2.AV2Context._TipMvColSign.set -> void
+SharpAV2.AV2Context._TipMvRow.get -> int
+SharpAV2.AV2Context._TipMvRow.set -> void
+SharpAV2.AV2Context._TipMvRowSign.get -> int
+SharpAV2.AV2Context._TipMvRowSign.set -> void
+SharpAV2.AV2Context._TipMvZero.get -> int
+SharpAV2.AV2Context._TipMvZero.set -> void
+SharpAV2.AV2Context._TipRegular.get -> int
+SharpAV2.AV2Context._TipRegular.set -> void
+SharpAV2.AV2Context._TipSharp.get -> int
+SharpAV2.AV2Context._TipSharp.set -> void
+SharpAV2.AV2Context._TlayerDependencyMap.get -> int
+SharpAV2.AV2Context._TlayerDependencyMap.set -> void
+SharpAV2.AV2Context._TlayerDependencyPresentFlag.get -> int
+SharpAV2.AV2Context._TlayerDependencyPresentFlag.set -> void
+SharpAV2.AV2Context._TmvpSampleStepMinus1.get -> int
+SharpAV2.AV2Context._TmvpSampleStepMinus1.set -> void
+SharpAV2.AV2Context._ToolIndex.get -> int
+SharpAV2.AV2Context._ToolIndex.set -> void
+SharpAV2.AV2Context._TrailingOneBit.get -> int
+SharpAV2.AV2Context._TrailingOneBit.set -> void
+SharpAV2.AV2Context._TrailingZeroBit.get -> int
+SharpAV2.AV2Context._TrailingZeroBit.set -> void
+SharpAV2.AV2Context._TxClass.get -> int
+SharpAV2.AV2Context._TxClass.set -> void
+SharpAV2.AV2Context._TxMode.get -> int
+SharpAV2.AV2Context._TxMode.set -> void
+SharpAV2.AV2Context._TxModeSelect.get -> int
+SharpAV2.AV2Context._TxModeSelect.set -> void
+SharpAV2.AV2Context._TxSz.get -> int
+SharpAV2.AV2Context._TxSz.set -> void
+SharpAV2.AV2Context._UniformSbSize.get -> int
+SharpAV2.AV2Context._UniformSbSize.set -> void
+SharpAV2.AV2Context._UniformSpacing.get -> int
+SharpAV2.AV2Context._UniformSpacing.set -> void
+SharpAV2.AV2Context._UniformTileSpacingFlag.get -> int
+SharpAV2.AV2Context._UniformTileSpacingFlag.set -> void
+SharpAV2.AV2Context._UnitCol.get -> int
+SharpAV2.AV2Context._UnitCol.set -> void
+SharpAV2.AV2Context._UnitRow.get -> int
+SharpAV2.AV2Context._UnitRow.set -> void
+SharpAV2.AV2Context._Use128x128Superblock.get -> int
+SharpAV2.AV2Context._Use128x128Superblock.set -> void
+SharpAV2.AV2Context._Use256x256Superblock.get -> int
+SharpAV2.AV2Context._Use256x256Superblock.set -> void
+SharpAV2.AV2Context._UseAltGroup.get -> int
+SharpAV2.AV2Context._UseAltGroup.set -> void
+SharpAV2.AV2Context._UseBank.get -> int
+SharpAV2.AV2Context._UseBank.set -> void
+SharpAV2.AV2Context._UseBru.get -> int
+SharpAV2.AV2Context._UseBru.set -> void
+SharpAV2.AV2Context._UseGlobalMotion.get -> int
+SharpAV2.AV2Context._UseGlobalMotion.set -> void
+SharpAV2.AV2Context._UsePerBlockMvPrecision.get -> int
+SharpAV2.AV2Context._UsePerBlockMvPrecision.set -> void
+SharpAV2.AV2Context._UseQtrPrecisionMv.get -> int
+SharpAV2.AV2Context._UseQtrPrecisionMv.set -> void
+SharpAV2.AV2Context._UseRefFrameMvs.get -> int
+SharpAV2.AV2Context._UseRefFrameMvs.set -> void
+SharpAV2.AV2Context._UserDataPayloadByte.get -> int
+SharpAV2.AV2Context._UserDataPayloadByte.set -> void
+SharpAV2.AV2Context._UserQm.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>>>
+SharpAV2.AV2Context._UserQm.set -> void
+SharpAV2.AV2Context._UsesLr.get -> int
+SharpAV2.AV2Context._UsesLr.set -> void
+SharpAV2.AV2Context._UsingQmatrix.get -> int
+SharpAV2.AV2Context._UsingQmatrix.set -> void
+SharpAV2.AV2Context._UuidIsoIec11578.get -> byte[]
+SharpAV2.AV2Context._UuidIsoIec11578.set -> void
+SharpAV2.AV2Context._UvAcDeltaqEnabled.get -> int
+SharpAV2.AV2Context._UvAcDeltaqEnabled.set -> void
+SharpAV2.AV2Context._UvDcDeltaqEnabled.get -> int
+SharpAV2.AV2Context._UvDcDeltaqEnabled.set -> void
+SharpAV2.AV2Context._VaryingSizeBandUnitsFlag.get -> int
+SharpAV2.AV2Context._VaryingSizeBandUnitsFlag.set -> void
+SharpAV2.AV2Context._VertSizeInBandBlocksMinus1.get -> int
+SharpAV2.AV2Context._VertSizeInBandBlocksMinus1.set -> void
+SharpAV2.AV2Context._WhitePointChromaticityx.get -> int
+SharpAV2.AV2Context._WhitePointChromaticityx.set -> void
+SharpAV2.AV2Context._WhitePointChromaticityy.get -> int
+SharpAV2.AV2Context._WhitePointChromaticityy.set -> void
+SharpAV2.AV2Context._WidthInSbsMinus1.get -> int
+SharpAV2.AV2Context._WidthInSbsMinus1.set -> void
+SharpAV2.AV2Context._WienerNsBankSize.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._WienerNsBankSize.set -> void
+SharpAV2.AV2Context._WienerNsLength.get -> int
+SharpAV2.AV2Context._WienerNsLength.set -> void
+SharpAV2.AV2Context._WienerNsPtr.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context._WienerNsPtr.set -> void
+SharpAV2.AV2Context._WienerNsUvSym.get -> int
+SharpAV2.AV2Context._WienerNsUvSym.set -> void
+SharpAV2.AV2Context._XAId.get -> int
+SharpAV2.AV2Context._XAId.set -> void
+SharpAV2.AV2Context._XCount.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpAV2.AV2Context._XCount.set -> void
+SharpAV2.AV2Context._XId.get -> int
+SharpAV2.AV2Context._XId.set -> void
+SharpAV2.AV2Context._XLId.get -> int
+SharpAV2.AV2Context._XLId.set -> void
+SharpAV2.AV2Context._XlayerId.get -> int
+SharpAV2.AV2Context._XlayerId.set -> void
+SharpAV2.AV2Context._ZeroBit.get -> int
+SharpAV2.AV2Context._ZeroBit.set -> void
+SharpAV2.AV2Context.__BruTileActive.get -> int
+SharpAV2.AV2Context.__BruTileActive.set -> void
+SharpAV2.AV2Context.__FeatureEnabled.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV2.AV2Context.__FeatureEnabled.set -> void
+SharpAV2.AV2Context.__FgmChromaIdc.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context.__FgmChromaIdc.set -> void
+SharpAV2.AV2Context.__FrameHeight.get -> int
+SharpAV2.AV2Context.__FrameHeight.set -> void
+SharpAV2.AV2Context.__FrameWidth.get -> int
+SharpAV2.AV2Context.__FrameWidth.set -> void
+SharpAV2.AV2Context.__IsBridge.get -> int
+SharpAV2.AV2Context.__IsBridge.set -> void
+SharpAV2.AV2Context.__IsGlobal.get -> int
+SharpAV2.AV2Context.__IsGlobal.set -> void
+SharpAV2.AV2Context.__LongTermId.get -> int
+SharpAV2.AV2Context.__LongTermId.set -> void
+SharpAV2.AV2Context.__MfhSeqHeaderId.get -> SharpAVX.AomArray<int>
+SharpAV2.AV2Context.__MfhSeqHeaderId.set -> void
+SharpAV2.AV2Context.__Monochrome.get -> int
+SharpAV2.AV2Context.__Monochrome.set -> void
+SharpAV2.AV2Context.__NumSameRefCompound.get -> int
+SharpAV2.AV2Context.__NumSameRefCompound.set -> void
+SharpAV2.AV2Context.__NumTotalRefs.get -> int
+SharpAV2.AV2Context.__NumTotalRefs.set -> void
+SharpAV2.AV2Context.__OrderHint.get -> int
+SharpAV2.AV2Context.__OrderHint.set -> void
+SharpAV2.AV2Context.__SbSize.get -> int
+SharpAV2.AV2Context.__SbSize.set -> void
+SharpAV2.AV2Context.__TileCols.get -> int
+SharpAV2.AV2Context.__TileCols.set -> void
+SharpAV2.AV2Context.__TileColsLog2.get -> int
+SharpAV2.AV2Context.__TileColsLog2.set -> void
+SharpAV2.AV2Context.__TileRows.get -> int
+SharpAV2.AV2Context.__TileRows.set -> void
+SharpAV2.AV2Context.__TileRowsLog2.get -> int
+SharpAV2.AV2Context.__TileRowsLog2.set -> void
+SharpAV2.AV2Context.__TipFrameMode.get -> int
+SharpAV2.AV2Context.__TipFrameMode.set -> void
+SharpAV2.AV2Context._nFrames.get -> int
+SharpAV2.AV2Context._nFrames.set -> void
+SharpAV2.AV2Context._yDcDeltaqEnabled.get -> int
+SharpAV2.AV2Context._yDcDeltaqEnabled.set -> void
+SharpAV2.AV2Extensions
+SharpAV2.AV2Obu
+SharpAV2.AV2Obu.Edit() -> SharpAV2.AV2Context
+SharpAV2.AV2Obu.Edited.get -> SharpAV2.AV2Context
+SharpAV2.AV2Obu.FromState() -> SharpAV2.AV2Obu
+SharpAV2.AV2Obu.Record.get -> SharpAVX.AomSyntaxRecord
+SharpAV2.AV2Obu.Size.get -> int
+SharpAV2.AV2Obu.Size.set -> void
+SharpAV2.AV2Obu.Unreadable.get -> byte[]
+const SharpAV2.AV2Context.ADST = 2 -> int
+const SharpAV2.AV2Context.ADST_ADST = 3 -> int
+const SharpAV2.AV2Context.ADST_DCT = 1 -> int
+const SharpAV2.AV2Context.ADST_FLIPADST = 7 -> int
+const SharpAV2.AV2Context.ADVISORY = 2 -> int
+const SharpAV2.AV2Context.AFFINE = 2 -> int
+const SharpAV2.AV2Context.ALPHA_AUX = 0 -> int
+const SharpAV2.AV2Context.ANGLE_STEP = 3 -> int
+const SharpAV2.AV2Context.AUX_LAYER = 1 -> int
+const SharpAV2.AV2Context.BANK_REFS_PER_FRAME = 9 -> int
+const SharpAV2.AV2Context.BASIC_ATLAS = 1 -> int
+const SharpAV2.AV2Context.BASIC_PERSISTENCE = 1 -> int
+const SharpAV2.AV2Context.BAWP_SCALES_CTX_COUNT = 3 -> int
+const SharpAV2.AV2Context.BILINEAR = 3 -> int
+const SharpAV2.AV2Context.BLEND_WEIGHT_MAX = 32 -> int
+const SharpAV2.AV2Context.BLOCK_128X128 = 15 -> int
+const SharpAV2.AV2Context.BLOCK_128X256 = 16 -> int
+const SharpAV2.AV2Context.BLOCK_128X64 = 14 -> int
+const SharpAV2.AV2Context.BLOCK_16X16 = 6 -> int
+const SharpAV2.AV2Context.BLOCK_16X32 = 7 -> int
+const SharpAV2.AV2Context.BLOCK_16X4 = 20 -> int
+const SharpAV2.AV2Context.BLOCK_16X64 = 23 -> int
+const SharpAV2.AV2Context.BLOCK_16X8 = 5 -> int
+const SharpAV2.AV2Context.BLOCK_256X128 = 17 -> int
+const SharpAV2.AV2Context.BLOCK_256X256 = 18 -> int
+const SharpAV2.AV2Context.BLOCK_32X16 = 8 -> int
+const SharpAV2.AV2Context.BLOCK_32X32 = 9 -> int
+const SharpAV2.AV2Context.BLOCK_32X4 = 26 -> int
+const SharpAV2.AV2Context.BLOCK_32X64 = 10 -> int
+const SharpAV2.AV2Context.BLOCK_32X8 = 22 -> int
+const SharpAV2.AV2Context.BLOCK_4X16 = 19 -> int
+const SharpAV2.AV2Context.BLOCK_4X32 = 25 -> int
+const SharpAV2.AV2Context.BLOCK_4X4 = 0 -> int
+const SharpAV2.AV2Context.BLOCK_4X8 = 1 -> int
+const SharpAV2.AV2Context.BLOCK_64X128 = 13 -> int
+const SharpAV2.AV2Context.BLOCK_64X16 = 24 -> int
+const SharpAV2.AV2Context.BLOCK_64X32 = 11 -> int
+const SharpAV2.AV2Context.BLOCK_64X64 = 12 -> int
+const SharpAV2.AV2Context.BLOCK_64X8 = 28 -> int
+const SharpAV2.AV2Context.BLOCK_8X16 = 4 -> int
+const SharpAV2.AV2Context.BLOCK_8X32 = 21 -> int
+const SharpAV2.AV2Context.BLOCK_8X4 = 2 -> int
+const SharpAV2.AV2Context.BLOCK_8X64 = 27 -> int
+const SharpAV2.AV2Context.BLOCK_8X8 = 3 -> int
+const SharpAV2.AV2Context.BLOCK_INVALID = 29 -> int
+const SharpAV2.AV2Context.BLOCK_SIZES = 29 -> int
+const SharpAV2.AV2Context.BLOCK_SIZE_GROUPS = 4 -> int
+const SharpAV2.AV2Context.BRU_ACTIVE = 2 -> int
+const SharpAV2.AV2Context.BRU_INACTIVE = 0 -> int
+const SharpAV2.AV2Context.BRU_SUPPORT = 1 -> int
+const SharpAV2.AV2Context.BR_CDF_SIZE = 4 -> int
+const SharpAV2.AV2Context.CCSO_BAND_NUM = 64 -> int
+const SharpAV2.AV2Context.CCSO_CONTEXT = 4 -> int
+const SharpAV2.AV2Context.CCSO_INPUT_INTERVAL = 3 -> int
+const SharpAV2.AV2Context.CCSO_LUMA_SIZE_LOG2 = 8 -> int
+const SharpAV2.AV2Context.CCTX_30 = 2 -> int
+const SharpAV2.AV2Context.CCTX_45 = 1 -> int
+const SharpAV2.AV2Context.CCTX_60 = 3 -> int
+const SharpAV2.AV2Context.CCTX_MINUS30 = 5 -> int
+const SharpAV2.AV2Context.CCTX_MINUS45 = 4 -> int
+const SharpAV2.AV2Context.CCTX_MINUS60 = 6 -> int
+const SharpAV2.AV2Context.CCTX_NONE = 0 -> int
+const SharpAV2.AV2Context.CCTX_PREC_BITS = 8 -> int
+const SharpAV2.AV2Context.CCTX_TYPES = 7 -> int
+const SharpAV2.AV2Context.CDEF_ON_SKIP_TXFM_ADAPTIVE = 2 -> int
+const SharpAV2.AV2Context.CDEF_ON_SKIP_TXFM_ALWAYS_ON = 1 -> int
+const SharpAV2.AV2Context.CDEF_ON_SKIP_TXFM_DISABLED = 0 -> int
+const SharpAV2.AV2Context.CDEF_STRENGTH_INDEX0_CTX = 4 -> int
+const SharpAV2.AV2Context.CFL_ALPHABET_SIZE = 8 -> int
+const SharpAV2.AV2Context.CFL_ALPHA_CONTEXTS = 6 -> int
+const SharpAV2.AV2Context.CFL_CONTEXTS = 3 -> int
+const SharpAV2.AV2Context.CFL_DERIVED_ALPHA = 1 -> int
+const SharpAV2.AV2Context.CFL_EXPLICIT = 0 -> int
+const SharpAV2.AV2Context.CFL_JOINT_SIGNS = 8 -> int
+const SharpAV2.AV2Context.CFL_MULTI = 2 -> int
+const SharpAV2.AV2Context.CHROMA_FORMAT_400 = 1 -> int
+const SharpAV2.AV2Context.CHROMA_FORMAT_420 = 0 -> int
+const SharpAV2.AV2Context.CHROMA_FORMAT_422 = 3 -> int
+const SharpAV2.AV2Context.CHROMA_FORMAT_444 = 2 -> int
+const SharpAV2.AV2Context.CHROMA_MODE_COUNT = 8 -> int
+const SharpAV2.AV2Context.CHROMA_PART = 2 -> int
+const SharpAV2.AV2Context.COEFF_BASE_PH_CONTEXTS = 5 -> int
+const SharpAV2.AV2Context.COEFF_BASE_RANGE = 3 -> int
+const SharpAV2.AV2Context.COEFF_CDF_Q_CTXS = 4 -> int
+const SharpAV2.AV2Context.COMPOUND_AVERAGE = 2 -> int
+const SharpAV2.AV2Context.COMPOUND_DIFFWTD = 1 -> int
+const SharpAV2.AV2Context.COMPOUND_INTRA = 3 -> int
+const SharpAV2.AV2Context.COMPOUND_MODES = 7 -> int
+const SharpAV2.AV2Context.COMPOUND_MODE_CONTEXTS = 5 -> int
+const SharpAV2.AV2Context.COMPOUND_REFERENCE = 1 -> int
+const SharpAV2.AV2Context.COMPOUND_TYPES = 2 -> int
+const SharpAV2.AV2Context.COMPOUND_WEDGE = 0 -> int
+const SharpAV2.AV2Context.COMP_GROUP_IDX_CONTEXTS = 12 -> int
+const SharpAV2.AV2Context.COMP_INTER_CONTEXTS = 5 -> int
+const SharpAV2.AV2Context.CP_BT_2020 = 9 -> int
+const SharpAV2.AV2Context.CP_BT_470_B_G = 5 -> int
+const SharpAV2.AV2Context.CP_BT_470_M = 4 -> int
+const SharpAV2.AV2Context.CP_BT_601 = 6 -> int
+const SharpAV2.AV2Context.CP_BT_709 = 1 -> int
+const SharpAV2.AV2Context.CP_EBU_3213 = 22 -> int
+const SharpAV2.AV2Context.CP_GENERIC_FILM = 8 -> int
+const SharpAV2.AV2Context.CP_SMPTE_240 = 7 -> int
+const SharpAV2.AV2Context.CP_SMPTE_431 = 11 -> int
+const SharpAV2.AV2Context.CP_SMPTE_432 = 12 -> int
+const SharpAV2.AV2Context.CP_UNSPECIFIED = 2 -> int
+const SharpAV2.AV2Context.CP_XYZ = 10 -> int
+const SharpAV2.AV2Context.CSP_BOTTOM = 5 -> int
+const SharpAV2.AV2Context.CSP_BOTTOMLEFT = 4 -> int
+const SharpAV2.AV2Context.CSP_CENTER = 1 -> int
+const SharpAV2.AV2Context.CSP_LEFT = 0 -> int
+const SharpAV2.AV2Context.CSP_TOP = 3 -> int
+const SharpAV2.AV2Context.CSP_TOPLEFT = 2 -> int
+const SharpAV2.AV2Context.CSP_UNSPECIFIED = 6 -> int
+const SharpAV2.AV2Context.CWP_EQUAL = 8 -> int
+const SharpAV2.AV2Context.D113_PRED = 5 -> int
+const SharpAV2.AV2Context.D135_PRED = 4 -> int
+const SharpAV2.AV2Context.D157_PRED = 6 -> int
+const SharpAV2.AV2Context.D203_PRED = 7 -> int
+const SharpAV2.AV2Context.D45_PRED = 3 -> int
+const SharpAV2.AV2Context.D67_PRED = 8 -> int
+const SharpAV2.AV2Context.DBL_REG_DECIS_LEN = 9 -> int
+const SharpAV2.AV2Context.DCT_ADST = 2 -> int
+const SharpAV2.AV2Context.DCT_DCT = 0 -> int
+const SharpAV2.AV2Context.DCT_FLIPADST = 5 -> int
+const SharpAV2.AV2Context.DC_PRED = 0 -> int
+const SharpAV2.AV2Context.DC_SIGN_CONTEXTS = 3 -> int
+const SharpAV2.AV2Context.DC_SIGN_GROUPS = 2 -> int
+const SharpAV2.AV2Context.DDTX = 4 -> int
+const SharpAV2.AV2Context.DECAY_DIST_CAP = 6 -> int
+const SharpAV2.AV2Context.DELTAWARP = 3 -> int
+const SharpAV2.AV2Context.DELTA_DCQUANT_BITS = 5 -> int
+const SharpAV2.AV2Context.DELTA_DCQUANT_MAX = 8 -> int
+const SharpAV2.AV2Context.DELTA_DCQUANT_MIN = -23 -> int
+const SharpAV2.AV2Context.DELTA_Q_SMALL = 7 -> int
+const SharpAV2.AV2Context.DEPTH_AUX = 1 -> int
+const SharpAV2.AV2Context.DF_DELTA_SCALE = 8 -> int
+const SharpAV2.AV2Context.DF_SHIFT = 8 -> int
+const SharpAV2.AV2Context.DIP_CTXS = 3 -> int
+const SharpAV2.AV2Context.DIRECTIONAL_MODES_COUNT = 56 -> int
+const SharpAV2.AV2Context.DISPLAY_ORDER_HINT_BITS = 30 -> int
+const SharpAV2.AV2Context.DIST_WEIGHT_BITS = 6 -> int
+const SharpAV2.AV2Context.DIV_LUT_BITS = 7 -> int
+const SharpAV2.AV2Context.DIV_LUT_NUM = 129 -> int
+const SharpAV2.AV2Context.DIV_LUT_PREC_BITS = 9 -> int
+const SharpAV2.AV2Context.DIV_PREC_BITS = 14 -> int
+const SharpAV2.AV2Context.DIV_PREC_BITS_POW2 = 8 -> int
+const SharpAV2.AV2Context.DIV_SLOT_BITS = 3 -> int
+const SharpAV2.AV2Context.DRL_MODE_CONTEXTS = 5 -> int
+const SharpAV2.AV2Context.DRL_REORDER_ALWAYS = 2 -> int
+const SharpAV2.AV2Context.DRL_REORDER_CONSTRAINT = 1 -> int
+const SharpAV2.AV2Context.DRL_REORDER_DISABLED = 0 -> int
+const SharpAV2.AV2Context.EC_PROB_SHIFT = 7 -> int
+const SharpAV2.AV2Context.EIGHTTAP = 0 -> int
+const SharpAV2.AV2Context.EIGHTTAP_SHARP = 2 -> int
+const SharpAV2.AV2Context.EIGHTTAP_SMOOTH = 1 -> int
+const SharpAV2.AV2Context.ENHANCED_ATLAS = 0 -> int
+const SharpAV2.AV2Context.ENHANCED_PERSISTENCE = 3 -> int
+const SharpAV2.AV2Context.EOB_PLANE_CTXS = 3 -> int
+const SharpAV2.AV2Context.EXTENDWARP = 4 -> int
+const SharpAV2.AV2Context.EXT_PARTITION_TYPES = 10 -> int
+const SharpAV2.AV2Context.EXT_TX_SIZES = 4 -> int
+const SharpAV2.AV2Context.EXT_WARP_PHASES = 64 -> int
+const SharpAV2.AV2Context.EXT_WARP_PHASES_LOG2 = 6 -> int
+const SharpAV2.AV2Context.EXT_WARP_ROUND_BITS = 10 -> int
+const SharpAV2.AV2Context.EXT_WARP_TAPS = 6 -> int
+const SharpAV2.AV2Context.FDDT = 5 -> int
+const SharpAV2.AV2Context.FDST = 3 -> int
+const SharpAV2.AV2Context.FILTER_BITS = 7 -> int
+const SharpAV2.AV2Context.FIRST_MODE_COUNT = 13 -> int
+const SharpAV2.AV2Context.FLIPADST_ADST = 8 -> int
+const SharpAV2.AV2Context.FLIPADST_DCT = 4 -> int
+const SharpAV2.AV2Context.FLIPADST_FLIPADST = 6 -> int
+const SharpAV2.AV2Context.FSC_BSIZE_CONTEXTS = 6 -> int
+const SharpAV2.AV2Context.FSC_MAX = 32 -> int
+const SharpAV2.AV2Context.FSC_MODES = 2 -> int
+const SharpAV2.AV2Context.FSC_MODE_CONTEXTS = 4 -> int
+const SharpAV2.AV2Context.FSC_TX_SIZE_CONTEXTS = 3 -> int
+const SharpAV2.AV2Context.GAIN_MAP_AUX = 3 -> int
+const SharpAV2.AV2Context.GDF_DIAG0 = 2 -> int
+const SharpAV2.AV2Context.GDF_DIAG1 = 3 -> int
+const SharpAV2.AV2Context.GDF_HOR = 1 -> int
+const SharpAV2.AV2Context.GDF_MIN_SIZE = 128 -> int
+const SharpAV2.AV2Context.GDF_VER = 0 -> int
+const SharpAV2.AV2Context.GLOBALMV = 15 -> int
+const SharpAV2.AV2Context.GLOBAL_GLOBALMV = 22 -> int
+const SharpAV2.AV2Context.GLOBAL_PERSISTENCE = 0 -> int
+const SharpAV2.AV2Context.GLOBAL_XLAYER_ID = 31 -> int
+const SharpAV2.AV2Context.GM_ABS_ALPHA_BITS = 9 -> int
+const SharpAV2.AV2Context.GM_ABS_TRANS_BITS = 14 -> int
+const SharpAV2.AV2Context.GM_ALPHA_MAX = 511 -> int
+const SharpAV2.AV2Context.GM_ALPHA_MIN = -511 -> int
+const SharpAV2.AV2Context.GM_ALPHA_PREC_BITS = 10 -> int
+const SharpAV2.AV2Context.GM_ALPHA_PREC_DIFF = 6 -> int
+const SharpAV2.AV2Context.GM_TRANS_MAX = 16383 -> int
+const SharpAV2.AV2Context.GM_TRANS_MIN = -16383 -> int
+const SharpAV2.AV2Context.GM_TRANS_ONLY_PREC_DIFF = 13 -> int
+const SharpAV2.AV2Context.GM_TRANS_PREC_BITS = 3 -> int
+const SharpAV2.AV2Context.GM_TRANS_PREC_DIFF = 13 -> int
+const SharpAV2.AV2Context.H_ADST = 13 -> int
+const SharpAV2.AV2Context.H_DCT = 11 -> int
+const SharpAV2.AV2Context.H_FLIPADST = 15 -> int
+const SharpAV2.AV2Context.H_PRED = 2 -> int
+const SharpAV2.AV2Context.H_WEDGE_ANGLES = 10 -> int
+const SharpAV2.AV2Context.IBC_BUFFER_SIZE = 64 -> int
+const SharpAV2.AV2Context.IBC_BUFFER_SIZE_LOG2 = 6 -> int
+const SharpAV2.AV2Context.IBC_NUM_BUFFERS = 4 -> int
+const SharpAV2.AV2Context.IBP_WEIGHT_MAX = 128 -> int
+const SharpAV2.AV2Context.IBP_WEIGHT_SHIFT = 7 -> int
+const SharpAV2.AV2Context.IBP_WEIGHT_SIZE = 16 -> int
+const SharpAV2.AV2Context.IBP_WEIGHT_SIZE_LOG2 = 4 -> int
+const SharpAV2.AV2Context.IDENTITY = 0 -> int
+const SharpAV2.AV2Context.IDTX = 9 -> int
+const SharpAV2.AV2Context.IDTX_LEVEL_CONTEXTS = 7 -> int
+const SharpAV2.AV2Context.IDTX_SIGN_CONTEXTS = 9 -> int
+const SharpAV2.AV2Context.IDTX_SIG_COEF_CONTEXTS = 7 -> int
+const SharpAV2.AV2Context.II_DC_PRED = 0 -> int
+const SharpAV2.AV2Context.II_H_PRED = 2 -> int
+const SharpAV2.AV2Context.II_SMOOTH_PRED = 3 -> int
+const SharpAV2.AV2Context.II_V_PRED = 1 -> int
+const SharpAV2.AV2Context.INT32MAX = 2147483647 -> int
+const SharpAV2.AV2Context.INT32MIN = -2147483648 -> int
+const SharpAV2.AV2Context.INTERINTRA = 1 -> int
+const SharpAV2.AV2Context.INTERINTRA_MODES = 4 -> int
+const SharpAV2.AV2Context.INTERP_FILTERS = 3 -> int
+const SharpAV2.AV2Context.INTERP_FILTER_CONTEXTS = 16 -> int
+const SharpAV2.AV2Context.INTER_FRAME = 1 -> int
+const SharpAV2.AV2Context.INTER_SDP_BSIZE_GROUP = 4 -> int
+const SharpAV2.AV2Context.INTER_SDP_MAX_BLOCK_SIZE = 64 -> int
+const SharpAV2.AV2Context.INTRABC_CONTEXTS = 3 -> int
+const SharpAV2.AV2Context.INTRABC_DELAY_PIXELS = 256 -> int
+const SharpAV2.AV2Context.INTRABC_DELAY_SB64 = 4 -> int
+const SharpAV2.AV2Context.INTRA_EDGE_KERNELS = 3 -> int
+const SharpAV2.AV2Context.INTRA_EDGE_TAPS = 5 -> int
+const SharpAV2.AV2Context.INTRA_FRAME = 8 -> int
+const SharpAV2.AV2Context.INTRA_MODES = 13 -> int
+const SharpAV2.AV2Context.INTRA_MODE_SETS = 4 -> int
+const SharpAV2.AV2Context.INTRA_ONLY_FRAME = 2 -> int
+const SharpAV2.AV2Context.INTRA_REGION = 0 -> int
+const SharpAV2.AV2Context.INTRA_TX_TYPES = 7 -> int
+const SharpAV2.AV2Context.IST_4X4_HEIGHT = 8 -> int
+const SharpAV2.AV2Context.IST_4X4_WIDTH = 16 -> int
+const SharpAV2.AV2Context.IST_8X8_HEIGHT = 32 -> int
+const SharpAV2.AV2Context.IST_8X8_HEIGHT_RED = 20 -> int
+const SharpAV2.AV2Context.IST_8X8_WIDTH = 48 -> int
+const SharpAV2.AV2Context.IST_DIR_SIZE = 7 -> int
+const SharpAV2.AV2Context.IST_REDUCE_SET_SIZE_ADST_ADST = 4 -> int
+const SharpAV2.AV2Context.IST_SET_SIZE_4X4 = 14 -> int
+const SharpAV2.AV2Context.IST_SET_SIZE_8X8 = 11 -> int
+const SharpAV2.AV2Context.IS_INTER_CONTEXTS = 4 -> int
+const SharpAV2.AV2Context.JOINT_AMVD_SCALE_FACTOR_CNT = 3 -> int
+const SharpAV2.AV2Context.JOINT_NEWMV = 24 -> int
+const SharpAV2.AV2Context.JOINT_NEWMV_SCALE_FACTOR_CNT = 5 -> int
+const SharpAV2.AV2Context.KEY_FRAME = 0 -> int
+const SharpAV2.AV2Context.LAYER_CURRENT = 2 -> int
+const SharpAV2.AV2Context.LAYER_GLOBAL = 1 -> int
+const SharpAV2.AV2Context.LAYER_UNSPECIFIED = 0 -> int
+const SharpAV2.AV2Context.LAYER_VALUES = 3 -> int
+const SharpAV2.AV2Context.LEAST_SQUARES_SAMPLES_MAX = 8 -> int
+const SharpAV2.AV2Context.LEVEL_CONTEXTS = 7 -> int
+const SharpAV2.AV2Context.LEVEL_CONTEXTS_UV = 4 -> int
+const SharpAV2.AV2Context.LF_BASE_SYMBOLS = 6 -> int
+const SharpAV2.AV2Context.LF_LEVEL_CONTEXTS = 14 -> int
+const SharpAV2.AV2Context.LF_NUM_BASE_LEVELS = 4 -> int
+const SharpAV2.AV2Context.LF_SIG_COEF_CONTEXTS = 33 -> int
+const SharpAV2.AV2Context.LF_SIG_COEF_CONTEXTS_1D = 12 -> int
+const SharpAV2.AV2Context.LF_SIG_COEF_CONTEXTS_1D_UV = 4 -> int
+const SharpAV2.AV2Context.LF_SIG_COEF_CONTEXTS_2D = 21 -> int
+const SharpAV2.AV2Context.LF_SIG_COEF_CONTEXTS_2D_UV = 8 -> int
+const SharpAV2.AV2Context.LF_SIG_COEF_CONTEXTS_UV = 12 -> int
+const SharpAV2.AV2Context.LOCALWARP = 2 -> int
+const SharpAV2.AV2Context.LR_BANK_SIZE = 4 -> int
+const SharpAV2.AV2Context.LS_MV_MAX = 256 -> int
+const SharpAV2.AV2Context.LUMA_PART = 1 -> int
+const SharpAV2.AV2Context.MASK_MASTER_SIZE = 128 -> int
+const SharpAV2.AV2Context.MAXQ_10_BITS = 303 -> int
+const SharpAV2.AV2Context.MAXQ_8_BITS = 255 -> int
+const SharpAV2.AV2Context.MAXQ_BITS = 351 -> int
+const SharpAV2.AV2Context.MAXQ_OFFSET = 24 -> int
+const SharpAV2.AV2Context.MAX_AMVD_INDEX = 8 -> int
+const SharpAV2.AV2Context.MAX_ANGLE_DELTA = 3 -> int
+const SharpAV2.AV2Context.MAX_ATLAS_COLS = 64 -> int
+const SharpAV2.AV2Context.MAX_ATLAS_ROWS = 64 -> int
+const SharpAV2.AV2Context.MAX_BASE_BR_RANGE = 6 -> int
+const SharpAV2.AV2Context.MAX_COL_TRUNCATED_UNARY_VAL = 2 -> int
+const SharpAV2.AV2Context.MAX_CWP_NUM = 5 -> int
+const SharpAV2.AV2Context.MAX_DBL_FLT_LEN = 8 -> int
+const SharpAV2.AV2Context.MAX_DR_PR_NUM = 2 -> int
+const SharpAV2.AV2Context.MAX_DR_STACK_SIZE = 4 -> int
+const SharpAV2.AV2Context.MAX_FILM_GRAIN = 8 -> int
+const SharpAV2.AV2Context.MAX_FRAME_DISTANCE = 31 -> int
+const SharpAV2.AV2Context.MAX_LR_FLEX_SWITCHABLE_BITS = 3 -> int
+const SharpAV2.AV2Context.MAX_LS_BITS = 26 -> int
+const SharpAV2.AV2Context.MAX_MFH_NUM = 16 -> int
+const SharpAV2.AV2Context.MAX_NUM_ATLAS_SEGMENTS = 256 -> int
+const SharpAV2.AV2Context.MAX_NUM_MLAYERS = 8 -> int
+const SharpAV2.AV2Context.MAX_NUM_TLAYERS = 4 -> int
+const SharpAV2.AV2Context.MAX_PR_NUM = 16 -> int
+const SharpAV2.AV2Context.MAX_REF_BV_STACK_SIZE = 4 -> int
+const SharpAV2.AV2Context.MAX_REF_MV_STACK_SIZE = 6 -> int
+const SharpAV2.AV2Context.MAX_RMB_SB_HITS = 64 -> int
+const SharpAV2.AV2Context.MAX_SEGMENTS = 16 -> int
+const SharpAV2.AV2Context.MAX_SEQ_NUM = 16 -> int
+const SharpAV2.AV2Context.MAX_SIDE_TABLE = 296 -> int
+const SharpAV2.AV2Context.MAX_TILE_AREA = 9437184 -> int
+const SharpAV2.AV2Context.MAX_TILE_COLS = 64 -> int
+const SharpAV2.AV2Context.MAX_TILE_ROWS = 64 -> int
+const SharpAV2.AV2Context.MAX_TILE_WIDTH = 4096 -> int
+const SharpAV2.AV2Context.MAX_WARP_REF_CANDIDATES = 4 -> int
+const SharpAV2.AV2Context.MAX_WARP_SB_HITS = 64 -> int
+const SharpAV2.AV2Context.MC_BT_2020_CL = 10 -> int
+const SharpAV2.AV2Context.MC_BT_2020_NCL = 9 -> int
+const SharpAV2.AV2Context.MC_BT_470_B_G = 5 -> int
+const SharpAV2.AV2Context.MC_BT_601 = 6 -> int
+const SharpAV2.AV2Context.MC_BT_709 = 1 -> int
+const SharpAV2.AV2Context.MC_CHROMAT_CL = 13 -> int
+const SharpAV2.AV2Context.MC_CHROMAT_NCL = 12 -> int
+const SharpAV2.AV2Context.MC_FCC = 4 -> int
+const SharpAV2.AV2Context.MC_ICTCP = 14 -> int
+const SharpAV2.AV2Context.MC_IDENTITY = 0 -> int
+const SharpAV2.AV2Context.MC_IPT_C2 = 15 -> int
+const SharpAV2.AV2Context.MC_RESERVED_3 = 3 -> int
+const SharpAV2.AV2Context.MC_SMPTE_2085 = 11 -> int
+const SharpAV2.AV2Context.MC_SMPTE_240 = 7 -> int
+const SharpAV2.AV2Context.MC_SMPTE_YCGCO = 8 -> int
+const SharpAV2.AV2Context.MC_UNSPECIFIED = 2 -> int
+const SharpAV2.AV2Context.MC_YCGCO_RE = 16 -> int
+const SharpAV2.AV2Context.MC_YCGCO_RO = 17 -> int
+const SharpAV2.AV2Context.METADATA_TYPE_BANDING_HINTS = 6 -> int
+const SharpAV2.AV2Context.METADATA_TYPE_DECODED_FRAME_HASH = 5 -> int
+const SharpAV2.AV2Context.METADATA_TYPE_HDR_CLL = 1 -> int
+const SharpAV2.AV2Context.METADATA_TYPE_HDR_MDCV = 2 -> int
+const SharpAV2.AV2Context.METADATA_TYPE_ICC_PROFILE = 7 -> int
+const SharpAV2.AV2Context.METADATA_TYPE_ITUT_T35 = 3 -> int
+const SharpAV2.AV2Context.METADATA_TYPE_SCAN_TYPE = 8 -> int
+const SharpAV2.AV2Context.METADATA_TYPE_TEMPORAL_POINT_INFO = 9 -> int
+const SharpAV2.AV2Context.METADATA_TYPE_TIMECODE = 4 -> int
+const SharpAV2.AV2Context.METADATA_TYPE_USER_DATA_UNREGISTERED = 10 -> int
+const SharpAV2.AV2Context.MFMV_STACK_SIZE = 4 -> int
+const SharpAV2.AV2Context.MHCCP_BITS = 16 -> int
+const SharpAV2.AV2Context.MIXED = 3 -> int
+const SharpAV2.AV2Context.MIXED_REGION = 1 -> int
+const SharpAV2.AV2Context.MI_SIZE = 4 -> int
+const SharpAV2.AV2Context.MI_SIZE_LOG2 = 2 -> int
+const SharpAV2.AV2Context.MOBILE = 2 -> int
+const SharpAV2.AV2Context.MOBILE_OR_TV = 1 -> int
+const SharpAV2.AV2Context.MODE_INDEX_COUNT = 8 -> int
+const SharpAV2.AV2Context.MODE_OFFSET_COUNT = 6 -> int
+const SharpAV2.AV2Context.MOTION_MODES = 5 -> int
+const SharpAV2.AV2Context.MRL_INDEX_CONTEXTS = 3 -> int
+const SharpAV2.AV2Context.MULTISTREAM_ALPHA_ATLAS = 4 -> int
+const SharpAV2.AV2Context.MULTISTREAM_ATLAS = 3 -> int
+const SharpAV2.AV2Context.MV_BORDER = 128 -> int
+const SharpAV2.AV2Context.MV_CONTEXTS = 2 -> int
+const SharpAV2.AV2Context.MV_INTRABC_CONTEXT = 1 -> int
+const SharpAV2.AV2Context.MV_IN_USE_BITS = 16 -> int
+const SharpAV2.AV2Context.MV_JOINTS = 4 -> int
+const SharpAV2.AV2Context.MV_JOINT_HNZVNZ = 3 -> int
+const SharpAV2.AV2Context.MV_JOINT_HNZVZ = 1 -> int
+const SharpAV2.AV2Context.MV_JOINT_HZVNZ = 2 -> int
+const SharpAV2.AV2Context.MV_JOINT_ZERO = 0 -> int
+const SharpAV2.AV2Context.MV_LOW = -65536 -> int
+const SharpAV2.AV2Context.MV_PRECISION_EIGHTH_PEL = 6 -> int
+const SharpAV2.AV2Context.MV_PRECISION_EIGHT_PEL = 0 -> int
+const SharpAV2.AV2Context.MV_PRECISION_FOUR_PEL = 1 -> int
+const SharpAV2.AV2Context.MV_PRECISION_HALF_PEL = 4 -> int
+const SharpAV2.AV2Context.MV_PRECISION_ONE_PEL = 3 -> int
+const SharpAV2.AV2Context.MV_PRECISION_QUARTER_PEL = 5 -> int
+const SharpAV2.AV2Context.MV_PRECISION_TWO_PEL = 2 -> int
+const SharpAV2.AV2Context.MV_REFINE_PREC_BITS = 4 -> int
+const SharpAV2.AV2Context.MV_UPP = 65536 -> int
+const SharpAV2.AV2Context.NEARMV = 14 -> int
+const SharpAV2.AV2Context.NEAR_NEARMV = 19 -> int
+const SharpAV2.AV2Context.NEAR_NEWMV = 20 -> int
+const SharpAV2.AV2Context.NECESSARY = 1 -> int
+const SharpAV2.AV2Context.NEWMV = 16 -> int
+const SharpAV2.AV2Context.NEW_NEARMV = 21 -> int
+const SharpAV2.AV2Context.NEW_NEWMV = 23 -> int
+const SharpAV2.AV2Context.NONE = -1 -> int
+const SharpAV2.AV2Context.NON_DIRECTIONAL_MODES_COUNT = 5 -> int
+const SharpAV2.AV2Context.NO_PERSISTENCE = 2 -> int
+const SharpAV2.AV2Context.NUM_BASE_LEVELS = 2 -> int
+const SharpAV2.AV2Context.NUM_CTX_COL_MV_GTX = 2 -> int
+const SharpAV2.AV2Context.NUM_CTX_COL_MV_INDEX = 4 -> int
+const SharpAV2.AV2Context.NUM_CUSTOM_QMS = 15 -> int
+const SharpAV2.AV2Context.NUM_MV_PRECISIONS = 7 -> int
+const SharpAV2.AV2Context.NUM_PARA_COMBINATIONS = 125 -> int
+const SharpAV2.AV2Context.NUM_PARA_INTERVALS = 3 -> int
+const SharpAV2.AV2Context.NUM_PC_WIENER_FILTERS = 64 -> int
+const SharpAV2.AV2Context.NUM_PC_WIENER_LUT_CLASSES = 256 -> int
+const SharpAV2.AV2Context.NUM_RECT_PARTS = 2 -> int
+const SharpAV2.AV2Context.NUM_REF_FRAMES = 16 -> int
+const SharpAV2.AV2Context.NUM_REF_SAM_CFL = 8 -> int
+const SharpAV2.AV2Context.NUM_UNEVEN_4WAY_PARTS = 2 -> int
+const SharpAV2.AV2Context.NUM_WEDGE_DIST = 4 -> int
+const SharpAV2.AV2Context.OBU_ATLAS_SEGMENT = 17 -> int
+const SharpAV2.AV2Context.OBU_BRIDGE_FRAME = 19 -> int
+const SharpAV2.AV2Context.OBU_BUFFER_REMOVAL_TIMING = 15 -> int
+const SharpAV2.AV2Context.OBU_CLOSED_LOOP_KEY = 4 -> int
+const SharpAV2.AV2Context.OBU_CONTENT_INTERPRETATION = 24 -> int
+const SharpAV2.AV2Context.OBU_FILM_GRAIN = 23 -> int
+const SharpAV2.AV2Context.OBU_LAYER_CONFIGURATION_RECORD = 16 -> int
+const SharpAV2.AV2Context.OBU_LEADING_SEF = 11 -> int
+const SharpAV2.AV2Context.OBU_LEADING_TILE_GROUP = 6 -> int
+const SharpAV2.AV2Context.OBU_LEADING_TIP = 13 -> int
+const SharpAV2.AV2Context.OBU_METADATA_GROUP = 9 -> int
+const SharpAV2.AV2Context.OBU_METADATA_SHORT = 8 -> int
+const SharpAV2.AV2Context.OBU_MSDO = 20 -> int
+const SharpAV2.AV2Context.OBU_MULTI_FRAME_HEADER = 3 -> int
+const SharpAV2.AV2Context.OBU_OPEN_LOOP_KEY = 5 -> int
+const SharpAV2.AV2Context.OBU_OPERATING_POINT_SET = 18 -> int
+const SharpAV2.AV2Context.OBU_PADDING = 25 -> int
+const SharpAV2.AV2Context.OBU_QUANTIZATION_MATRIX = 22 -> int
+const SharpAV2.AV2Context.OBU_RAS_FRAME = 21 -> int
+const SharpAV2.AV2Context.OBU_REGULAR_SEF = 12 -> int
+const SharpAV2.AV2Context.OBU_REGULAR_TILE_GROUP = 7 -> int
+const SharpAV2.AV2Context.OBU_REGULAR_TIP = 14 -> int
+const SharpAV2.AV2Context.OBU_SEQUENCE_HEADER = 1 -> int
+const SharpAV2.AV2Context.OBU_SWITCH = 10 -> int
+const SharpAV2.AV2Context.OBU_TEMPORAL_DELIMITER = 2 -> int
+const SharpAV2.AV2Context.ONLY_4X4 = 0 -> int
+const SharpAV2.AV2Context.OPFL_GRAD_UNIT = 16 -> int
+const SharpAV2.AV2Context.OPFL_GRAD_UNIT_LOG2 = 4 -> int
+const SharpAV2.AV2Context.OPFL_MV_DELTA_LIMIT = 16 -> int
+const SharpAV2.AV2Context.OPSI_GAIN_MAP = 5 -> int
+const SharpAV2.AV2Context.OPSI_MULTIVIEW = 6 -> int
+const SharpAV2.AV2Context.OPSI_SCALABILITY = 1 -> int
+const SharpAV2.AV2Context.OPSI_STEREO = 2 -> int
+const SharpAV2.AV2Context.OPSI_TEXTURE_ALPHA = 3 -> int
+const SharpAV2.AV2Context.OPSI_TEXTURE_DEPTH = 4 -> int
+const SharpAV2.AV2Context.OPSI_UNSPECIFIED = 0 -> int
+const SharpAV2.AV2Context.PAETH_PRED = 12 -> int
+const SharpAV2.AV2Context.PALETTE_COLORS = 8 -> int
+const SharpAV2.AV2Context.PALETTE_COLOR_CONTEXTS = 5 -> int
+const SharpAV2.AV2Context.PALETTE_MAX_COLOR_CONTEXT_HASH = 8 -> int
+const SharpAV2.AV2Context.PALETTE_NUM_NEIGHBORS = 3 -> int
+const SharpAV2.AV2Context.PALETTE_ROW_FLAG_CONTEXTS = 4 -> int
+const SharpAV2.AV2Context.PALETTE_SIZES = 7 -> int
+const SharpAV2.AV2Context.PARTITION_CONTEXTS = 64 -> int
+const SharpAV2.AV2Context.PARTITION_HORZ = 1 -> int
+const SharpAV2.AV2Context.PARTITION_HORZ_3 = 3 -> int
+const SharpAV2.AV2Context.PARTITION_HORZ_4A = 5 -> int
+const SharpAV2.AV2Context.PARTITION_HORZ_4B = 6 -> int
+const SharpAV2.AV2Context.PARTITION_NONE = 0 -> int
+const SharpAV2.AV2Context.PARTITION_SPLIT = 9 -> int
+const SharpAV2.AV2Context.PARTITION_STRUCTURE_NUM = 2 -> int
+const SharpAV2.AV2Context.PARTITION_VERT = 2 -> int
+const SharpAV2.AV2Context.PARTITION_VERT_3 = 4 -> int
+const SharpAV2.AV2Context.PARTITION_VERT_4A = 7 -> int
+const SharpAV2.AV2Context.PARTITION_VERT_4B = 8 -> int
+const SharpAV2.AV2Context.PC_WIENER_COEFFS = 13 -> int
+const SharpAV2.AV2Context.PC_WIENER_LAG = 4 -> int
+const SharpAV2.AV2Context.PC_WIENER_LEAD = 1 -> int
+const SharpAV2.AV2Context.PC_WIENER_NUM_FEATURES = 4 -> int
+const SharpAV2.AV2Context.PC_WIENER_PREC_BITS = 7 -> int
+const SharpAV2.AV2Context.PC_WIENER_PREC_FEATURE = 14 -> int
+const SharpAV2.AV2Context.PC_WIENER_TAPS = 25 -> int
+const SharpAV2.AV2Context.PHTHRESH = 4 -> int
+const SharpAV2.AV2Context.PLANE_TYPES = 2 -> int
+const SharpAV2.AV2Context.PRIMARY_REF_CHOOSE = 8 -> int
+const SharpAV2.AV2Context.PRIMARY_REF_NONE = 7 -> int
+const SharpAV2.AV2Context.QUANT_TABLE_BITS = 3 -> int
+const SharpAV2.AV2Context.RECT_HORZ = 0 -> int
+const SharpAV2.AV2Context.RECT_INVALID = 2 -> int
+const SharpAV2.AV2Context.RECT_VERT = 1 -> int
+const SharpAV2.AV2Context.REFINEMV_CONTEXTS = 24 -> int
+const SharpAV2.AV2Context.REFINE_ALL = 2 -> int
+const SharpAV2.AV2Context.REFINE_AUTO = 3 -> int
+const SharpAV2.AV2Context.REFINE_NONE = 0 -> int
+const SharpAV2.AV2Context.REFINE_SWITCHABLE = 1 -> int
+const SharpAV2.AV2Context.REFMVS_LIMIT = 2047 -> int
+const SharpAV2.AV2Context.REFS_PER_FRAME = 7 -> int
+const SharpAV2.AV2Context.REF_CONTEXTS = 3 -> int
+const SharpAV2.AV2Context.REF_MV_BANK_SIZE = 4 -> int
+const SharpAV2.AV2Context.REF_SCALE_SHIFT = 14 -> int
+const SharpAV2.AV2Context.RESTORATION_TILESIZE_MAX = 512 -> int
+const SharpAV2.AV2Context.RESTORE_NONE = 0 -> int
+const SharpAV2.AV2Context.RESTORE_PC_WIENER = 1 -> int
+const SharpAV2.AV2Context.RESTORE_SWITCHABLE = 3 -> int
+const SharpAV2.AV2Context.RESTORE_SWITCHABLE_TYPES = 3 -> int
+const SharpAV2.AV2Context.RESTORE_WIENER_NONSEP = 2 -> int
+const SharpAV2.AV2Context.RESTRICTED_OH = -1 -> int
+const SharpAV2.AV2Context.ROTZOOM = 1 -> int
+const SharpAV2.AV2Context.SCALE_SUBPEL_BITS = 10 -> int
+const SharpAV2.AV2Context.SECOND_MODE_COUNT = 16 -> int
+const SharpAV2.AV2Context.SEGMENTATION_AUX = 2 -> int
+const SharpAV2.AV2Context.SEGMENT_ID_CONTEXTS = 3 -> int
+const SharpAV2.AV2Context.SEGMENT_ID_PREDICTED_CONTEXTS = 3 -> int
+const SharpAV2.AV2Context.SEG_LVL_ALT_Q = 0 -> int
+const SharpAV2.AV2Context.SEG_LVL_GLOBALMV = 2 -> int
+const SharpAV2.AV2Context.SEG_LVL_MAX = 3 -> int
+const SharpAV2.AV2Context.SEG_LVL_SKIP = 1 -> int
+const SharpAV2.AV2Context.SELECT_INTEGER_MV = 2 -> int
+const SharpAV2.AV2Context.SELECT_SCREEN_CONTENT_TOOLS = 2 -> int
+const SharpAV2.AV2Context.SHARED_PART = 0 -> int
+const SharpAV2.AV2Context.SIG_COEF_CONTEXTS = 20 -> int
+const SharpAV2.AV2Context.SIG_COEF_CONTEXTS_BOB = 3 -> int
+const SharpAV2.AV2Context.SIG_COEF_CONTEXTS_EOB = 4 -> int
+const SharpAV2.AV2Context.SIG_COEF_CONTEXTS_UV = 12 -> int
+const SharpAV2.AV2Context.SIG_REF_DIFF_OFFSET_NUM = 5 -> int
+const SharpAV2.AV2Context.SIMPLE = 0 -> int
+const SharpAV2.AV2Context.SINGLE_ATLAS = 2 -> int
+const SharpAV2.AV2Context.SINGLE_MODE_CONTEXTS = 5 -> int
+const SharpAV2.AV2Context.SINGLE_REFERENCE = 0 -> int
+const SharpAV2.AV2Context.SKIP_CONTEXTS = 6 -> int
+const SharpAV2.AV2Context.SKIP_MODE_CONTEXTS = 3 -> int
+const SharpAV2.AV2Context.SMOOTH_H_PRED = 11 -> int
+const SharpAV2.AV2Context.SMOOTH_PRED = 9 -> int
+const SharpAV2.AV2Context.SMOOTH_V_PRED = 10 -> int
+const SharpAV2.AV2Context.SQUARE_SPLIT_CONTEXTS = 8 -> int
+const SharpAV2.AV2Context.STX_TYPES = 4 -> int
+const SharpAV2.AV2Context.SUBPEL_BITS = 4 -> int
+const SharpAV2.AV2Context.SUBPEL_MASK = 15 -> int
+const SharpAV2.AV2Context.SWITCHABLE = 4 -> int
+const SharpAV2.AV2Context.SWITCH_FRAME = 3 -> int
+const SharpAV2.AV2Context.TC_BT_1361 = 12 -> int
+const SharpAV2.AV2Context.TC_BT_2020_10_BIT = 14 -> int
+const SharpAV2.AV2Context.TC_BT_470_B_G = 5 -> int
+const SharpAV2.AV2Context.TC_BT_470_M = 4 -> int
+const SharpAV2.AV2Context.TC_BT_601 = 6 -> int
+const SharpAV2.AV2Context.TC_BT_709 = 1 -> int
+const SharpAV2.AV2Context.TC_HLG = 18 -> int
+const SharpAV2.AV2Context.TC_IEC_61966 = 11 -> int
+const SharpAV2.AV2Context.TC_LINEAR = 8 -> int
+const SharpAV2.AV2Context.TC_LOG_100 = 9 -> int
+const SharpAV2.AV2Context.TC_LOG_100_SQRT10 = 10 -> int
+const SharpAV2.AV2Context.TC_RESERVED_0 = 0 -> int
+const SharpAV2.AV2Context.TC_RESERVED_3 = 3 -> int
+const SharpAV2.AV2Context.TC_SMPTE_2084 = 16 -> int
+const SharpAV2.AV2Context.TC_SMPTE_240 = 7 -> int
+const SharpAV2.AV2Context.TC_SMPTE_428 = 17 -> int
+const SharpAV2.AV2Context.TC_SRGB = 13 -> int
+const SharpAV2.AV2Context.TC_UNSPECIFIED = 2 -> int
+const SharpAV2.AV2Context.TEXTURE_LAYER = 0 -> int
+const SharpAV2.AV2Context.TIP_CONTEXTS = 3 -> int
+const SharpAV2.AV2Context.TIP_FRAME = 7 -> int
+const SharpAV2.AV2Context.TIP_FRAME_AS_OUTPUT = 2 -> int
+const SharpAV2.AV2Context.TIP_FRAME_AS_REF = 1 -> int
+const SharpAV2.AV2Context.TIP_FRAME_DISABLED = 0 -> int
+const SharpAV2.AV2Context.TIP_MFMV_STACK_SIZE = 3 -> int
+const SharpAV2.AV2Context.TOTAL_ANGLE_DELTA_COUNT = 7 -> int
+const SharpAV2.AV2Context.TXB_SKIP_CONTEXTS = 10 -> int
+const SharpAV2.AV2Context.TXFM_SPLIT_GROUP = 9 -> int
+const SharpAV2.AV2Context.TX_16X16 = 2 -> int
+const SharpAV2.AV2Context.TX_16X32 = 9 -> int
+const SharpAV2.AV2Context.TX_16X4 = 14 -> int
+const SharpAV2.AV2Context.TX_16X64 = 17 -> int
+const SharpAV2.AV2Context.TX_16X8 = 8 -> int
+const SharpAV2.AV2Context.TX_32X16 = 10 -> int
+const SharpAV2.AV2Context.TX_32X32 = 3 -> int
+const SharpAV2.AV2Context.TX_32X4 = 20 -> int
+const SharpAV2.AV2Context.TX_32X64 = 11 -> int
+const SharpAV2.AV2Context.TX_32X8 = 16 -> int
+const SharpAV2.AV2Context.TX_4X16 = 13 -> int
+const SharpAV2.AV2Context.TX_4X32 = 19 -> int
+const SharpAV2.AV2Context.TX_4X4 = 0 -> int
+const SharpAV2.AV2Context.TX_4X64 = 23 -> int
+const SharpAV2.AV2Context.TX_4X8 = 5 -> int
+const SharpAV2.AV2Context.TX_64X16 = 18 -> int
+const SharpAV2.AV2Context.TX_64X32 = 12 -> int
+const SharpAV2.AV2Context.TX_64X4 = 24 -> int
+const SharpAV2.AV2Context.TX_64X64 = 4 -> int
+const SharpAV2.AV2Context.TX_64X8 = 22 -> int
+const SharpAV2.AV2Context.TX_8X16 = 7 -> int
+const SharpAV2.AV2Context.TX_8X32 = 15 -> int
+const SharpAV2.AV2Context.TX_8X4 = 6 -> int
+const SharpAV2.AV2Context.TX_8X64 = 21 -> int
+const SharpAV2.AV2Context.TX_8X8 = 1 -> int
+const SharpAV2.AV2Context.TX_CLASS_2D = 0 -> int
+const SharpAV2.AV2Context.TX_CLASS_HORIZ = 1 -> int
+const SharpAV2.AV2Context.TX_CLASS_VERT = 2 -> int
+const SharpAV2.AV2Context.TX_INVALID = 255 -> int
+const SharpAV2.AV2Context.TX_MODE_LARGEST = 1 -> int
+const SharpAV2.AV2Context.TX_MODE_SELECT = 2 -> int
+const SharpAV2.AV2Context.TX_PARTITION_HORZ = 2 -> int
+const SharpAV2.AV2Context.TX_PARTITION_HORZ4 = 4 -> int
+const SharpAV2.AV2Context.TX_PARTITION_HORZ5 = 6 -> int
+const SharpAV2.AV2Context.TX_PARTITION_NONE = 0 -> int
+const SharpAV2.AV2Context.TX_PARTITION_SPLIT = 1 -> int
+const SharpAV2.AV2Context.TX_PARTITION_TYPE_NUM = 7 -> int
+const SharpAV2.AV2Context.TX_PARTITION_TYPE_NUM_VERT_AND_HORZ = 14 -> int
+const SharpAV2.AV2Context.TX_PARTITION_TYPE_NUM_VERT_OR_HORZ = 3 -> int
+const SharpAV2.AV2Context.TX_PARTITION_VERT = 3 -> int
+const SharpAV2.AV2Context.TX_PARTITION_VERT4 = 5 -> int
+const SharpAV2.AV2Context.TX_PARTITION_VERT5 = 7 -> int
+const SharpAV2.AV2Context.TX_SET_DCTONLY = 0 -> int
+const SharpAV2.AV2Context.TX_SET_DCT_IDTX = 1 -> int
+const SharpAV2.AV2Context.TX_SET_DCT_IDTX_IDDCT = 1 -> int
+const SharpAV2.AV2Context.TX_SET_HIGH_32 = 4 -> int
+const SharpAV2.AV2Context.TX_SET_HIGH_64 = 2 -> int
+const SharpAV2.AV2Context.TX_SET_INTER_1 = 1 -> int
+const SharpAV2.AV2Context.TX_SET_INTER_2 = 1 -> int
+const SharpAV2.AV2Context.TX_SET_INTRA_1 = 0 -> int
+const SharpAV2.AV2Context.TX_SET_INTRA_2 = 0 -> int
+const SharpAV2.AV2Context.TX_SET_TYPES_INTER = 9 -> int
+const SharpAV2.AV2Context.TX_SET_TYPES_INTRA = 7 -> int
+const SharpAV2.AV2Context.TX_SET_WIDE_32 = 3 -> int
+const SharpAV2.AV2Context.TX_SET_WIDE_64 = 1 -> int
+const SharpAV2.AV2Context.TX_SIZES = 5 -> int
+const SharpAV2.AV2Context.TX_SIZES_ALL = 25 -> int
+const SharpAV2.AV2Context.TX_TYPES = 16 -> int
+const SharpAV2.AV2Context.UNDEFINED = 0 -> int
+const SharpAV2.AV2Context.UNIFORM_45 = 0 -> int
+const SharpAV2.AV2Context.UNIFORM_45_INV = 1 -> int
+const SharpAV2.AV2Context.UNSPECIFIED = 0 -> int
+const SharpAV2.AV2Context.UV_CFL_PRED = 13 -> int
+const SharpAV2.AV2Context.UV_INTRA_MODES_CFL_ALLOWED = 14 -> int
+const SharpAV2.AV2Context.UV_INTRA_MODES_CFL_NOT_ALLOWED = 13 -> int
+const SharpAV2.AV2Context.UV_MODE_CONTEXTS = 2 -> int
+const SharpAV2.AV2Context.VIEW_CENTER = 1 -> int
+const SharpAV2.AV2Context.VIEW_EXPLICIT = 4 -> int
+const SharpAV2.AV2Context.VIEW_LEFT = 2 -> int
+const SharpAV2.AV2Context.VIEW_RIGHT = 3 -> int
+const SharpAV2.AV2Context.VIEW_UNSPECIFIED = 0 -> int
+const SharpAV2.AV2Context.V_ADST = 12 -> int
+const SharpAV2.AV2Context.V_DCT = 10 -> int
+const SharpAV2.AV2Context.V_FLIPADST = 14 -> int
+const SharpAV2.AV2Context.V_PRED = 1 -> int
+const SharpAV2.AV2Context.V_TXB_SKIP_CONTEXTS = 12 -> int
+const SharpAV2.AV2Context.WAIP_WH_RATIO_16_THRES = 86 -> int
+const SharpAV2.AV2Context.WAIP_WH_RATIO_2_THRES = 61 -> int
+const SharpAV2.AV2Context.WAIP_WH_RATIO_4_THRES = 73 -> int
+const SharpAV2.AV2Context.WAIP_WH_RATIO_8_THRES = 82 -> int
+const SharpAV2.AV2Context.WARPEDDIFF_PREC_BITS = 10 -> int
+const SharpAV2.AV2Context.WARPEDMODEL_PREC_BITS = 16 -> int
+const SharpAV2.AV2Context.WARPEDMODEL_TRANS_CLAMP = 134217728 -> int
+const SharpAV2.AV2Context.WARPEDPIXEL_PREC_SHIFTS = 64 -> int
+const SharpAV2.AV2Context.WARPMV = 17 -> int
+const SharpAV2.AV2Context.WARPMV_MODE_CONTEXT = 5 -> int
+const SharpAV2.AV2Context.WARP_CAUSAL_MODE_CTX = 4 -> int
+const SharpAV2.AV2Context.WARP_DELTA_NUM_SYMBOLS_HIGH = 8 -> int
+const SharpAV2.AV2Context.WARP_DELTA_NUM_SYMBOLS_LOW = 8 -> int
+const SharpAV2.AV2Context.WARP_DELTA_STEP_BITS = 10 -> int
+const SharpAV2.AV2Context.WARP_NEWMV = 18 -> int
+const SharpAV2.AV2Context.WARP_PARAM_BANK_SIZE = 4 -> int
+const SharpAV2.AV2Context.WARP_PARAM_REDUCE_BITS = 6 -> int
+const SharpAV2.AV2Context.WEARABLE = 5 -> int
+const SharpAV2.AV2Context.WEDGE_0 = 0 -> int
+const SharpAV2.AV2Context.WEDGE_117 = 6 -> int
+const SharpAV2.AV2Context.WEDGE_135 = 7 -> int
+const SharpAV2.AV2Context.WEDGE_14 = 1 -> int
+const SharpAV2.AV2Context.WEDGE_153 = 8 -> int
+const SharpAV2.AV2Context.WEDGE_166 = 9 -> int
+const SharpAV2.AV2Context.WEDGE_180 = 10 -> int
+const SharpAV2.AV2Context.WEDGE_194 = 11 -> int
+const SharpAV2.AV2Context.WEDGE_207 = 12 -> int
+const SharpAV2.AV2Context.WEDGE_225 = 13 -> int
+const SharpAV2.AV2Context.WEDGE_243 = 14 -> int
+const SharpAV2.AV2Context.WEDGE_27 = 2 -> int
+const SharpAV2.AV2Context.WEDGE_270 = 15 -> int
+const SharpAV2.AV2Context.WEDGE_297 = 16 -> int
+const SharpAV2.AV2Context.WEDGE_315 = 17 -> int
+const SharpAV2.AV2Context.WEDGE_333 = 18 -> int
+const SharpAV2.AV2Context.WEDGE_346 = 19 -> int
+const SharpAV2.AV2Context.WEDGE_45 = 3 -> int
+const SharpAV2.AV2Context.WEDGE_63 = 4 -> int
+const SharpAV2.AV2Context.WEDGE_90 = 5 -> int
+const SharpAV2.AV2Context.WEDGE_ANGLES = 20 -> int
+const SharpAV2.AV2Context.WEDGE_BLD_LUT_SIZE = 32 -> int
+const SharpAV2.AV2Context.WEDGE_BOUNDARY_SHARP = 0 -> int
+const SharpAV2.AV2Context.WEDGE_BOUNDARY_SMOOTH = 1 -> int
+const SharpAV2.AV2Context.WEDGE_BOUNDARY_TYPES = 2 -> int
+const SharpAV2.AV2Context.WEDGE_TYPES = 68 -> int
+const SharpAV2.AV2Context.WIENER_COEFFS = 3 -> int
+const SharpAV2.AV2Context.WIENER_NS_CHROMA_COEFFS = 18 -> int
+const SharpAV2.AV2Context.WIENER_NS_CLASSES = 16 -> int
+const SharpAV2.AV2Context.WIENER_NS_LUMA_COEFFS = 16 -> int
+const SharpAV2.AV2Context.WIENER_NS_PLANES = 3 -> int
+const SharpAV2.AV2Context.WIENER_NS_PREC_BITS = 7 -> int
+const SharpAV2.AV2Context.WIENER_NS_SHORT_COEFFS = 6 -> int
+const SharpAV2.AV2Context.WIENER_NS_TAPS_UV = 12 -> int
+const SharpAV2.AV2Context.WIENER_NS_TAPS_Y = 32 -> int
+const SharpAV2.AV2Context.Y_MODE_CONTEXTS = 3 -> int
+static SharpAV2.AV2Context.Clip3(int x, int y, int z) -> int
+static SharpAV2.AV2Context.ReadObuSize(SharpAVX.AomStream stream, long endBits) -> int
+static readonly SharpAV2.AV2Context.Adjusted_Tx_Size -> int[]
+static readonly SharpAV2.AV2Context.Aspect_Ratio_Height -> int[]
+static readonly SharpAV2.AV2Context.Aspect_Ratio_Width -> int[]
+static readonly SharpAV2.AV2Context.CCSO_Quant_Sz -> int[][]
+static readonly SharpAV2.AV2Context.Ccso_Offset -> int[]
+static readonly SharpAV2.AV2Context.Decode_Num_Filter_Classes -> int[]
+static readonly SharpAV2.AV2Context.Default_Warp_Params -> int[]
+static readonly SharpAV2.AV2Context.Encode_Num_Filter_Classes -> int[]
+static readonly SharpAV2.AV2Context.Fundamental_Tx_Size -> int[]
+static readonly SharpAV2.AV2Context.Mi_Height_Log2 -> int[]
+static readonly SharpAV2.AV2Context.Mi_Width_Log2 -> int[]
+static readonly SharpAV2.AV2Context.Num_4x4_Blocks_High -> int[]
+static readonly SharpAV2.AV2Context.Num_4x4_Blocks_Wide -> int[]
+static readonly SharpAV2.AV2Context.Param_Max -> int[]
+static readonly SharpAV2.AV2Context.Param_Min -> int[]
+static readonly SharpAV2.AV2Context.Param_Shift -> int[]
+static readonly SharpAV2.AV2Context.Pc_Wiener_Filters -> int[][][]
+static readonly SharpAV2.AV2Context.Pc_Wiener_Sub_Classify2 -> int[][][]
+static readonly SharpAV2.AV2Context.Segmentation_Feature_Bits -> int[]
+static readonly SharpAV2.AV2Context.Segmentation_Feature_Max -> int[]
+static readonly SharpAV2.AV2Context.Segmentation_Feature_Signed -> int[]
+static readonly SharpAV2.AV2Context.Shuffled_Index -> int[]
+static readonly SharpAV2.AV2Context.Tile_Area_Scaling_Factor -> int[][]
+static readonly SharpAV2.AV2Context.Tile_Width_Scaling_Factor -> int[][]
+static readonly SharpAV2.AV2Context.Tx_Height -> int[]
+static readonly SharpAV2.AV2Context.Tx_Width -> int[]
+static readonly SharpAV2.AV2Context.Tx_Width_Log2 -> int[]
+static readonly SharpAV2.AV2Context.Wiener_Ns_Taps_K -> int[][]
+static readonly SharpAV2.AV2Context.Wiener_Ns_Taps_Min -> int[][]
+static readonly SharpAV2.AV2Context.Wiener_Ns_Taps_Present -> int[][][]

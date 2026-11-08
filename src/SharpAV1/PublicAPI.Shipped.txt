@@ -1,0 +1,1103 @@
+SharpAV1.AV1ChromaSamplePosition
+SharpAV1.AV1ColorPrimaries
+SharpAV1.AV1Constants
+SharpAV1.AV1Context
+SharpAV1.AV1Context.AV1Context() -> void
+SharpAV1.AV1Context.AllLayers.get -> int
+SharpAV1.AV1Context.AllLayers.set -> void
+SharpAV1.AV1Context.ByteAlignmentSyntax.get -> string
+SharpAV1.AV1Context.CdefParamsSyntax.get -> string
+SharpAV1.AV1Context.ColorConfigSyntax.get -> string
+SharpAV1.AV1Context.ComputeImageSizeSyntax.get -> string
+SharpAV1.AV1Context.DecodeSignedSubexpWithRefSyntax.get -> string
+SharpAV1.AV1Context.DecodeSubexpSyntax.get -> string
+SharpAV1.AV1Context.DecodeUnsignedSubexpWithRefSyntax.get -> string
+SharpAV1.AV1Context.DecoderModelInfoSyntax.get -> string
+SharpAV1.AV1Context.DeltaLfParamsSyntax.get -> string
+SharpAV1.AV1Context.DeltaqParamsSyntax.get -> string
+SharpAV1.AV1Context.FilmGrainParamsSyntax.get -> string
+SharpAV1.AV1Context.FindEarliestBackwardSyntax.get -> string
+SharpAV1.AV1Context.FindLatestBackwardSyntax.get -> string
+SharpAV1.AV1Context.FindLatestForwardSyntax.get -> string
+SharpAV1.AV1Context.FrameHeaderObuSyntax.get -> string
+SharpAV1.AV1Context.FrameObuSyntax.get -> string
+SharpAV1.AV1Context.FrameReferenceModeSyntax.get -> string
+SharpAV1.AV1Context.FrameSizeSyntax.get -> string
+SharpAV1.AV1Context.FrameSizeWithRefsSyntax.get -> string
+SharpAV1.AV1Context.GetRelativeDistSyntax.get -> string
+SharpAV1.AV1Context.GlobalMotionParamsSyntax.get -> string
+SharpAV1.AV1Context.InverseRecenterSyntax.get -> string
+SharpAV1.AV1Context.ItutT35Payload.get -> byte[]
+SharpAV1.AV1Context.ItutT35Payload.set -> void
+SharpAV1.AV1Context.LastObu.get -> SharpAV1.AV1Obu
+SharpAV1.AV1Context.LastObuFrameHeader.get -> byte[]
+SharpAV1.AV1Context.LastObuFrameHeader.set -> void
+SharpAV1.AV1Context.LoopFilterParamsSyntax.get -> string
+SharpAV1.AV1Context.LrParamsSyntax.get -> string
+SharpAV1.AV1Context.MarkRefFramesSyntax.get -> string
+SharpAV1.AV1Context.MetadataHdrCllSyntax.get -> string
+SharpAV1.AV1Context.MetadataHdrMdcvSyntax.get -> string
+SharpAV1.AV1Context.MetadataItutT35Syntax.get -> string
+SharpAV1.AV1Context.MetadataObuSyntax.get -> string
+SharpAV1.AV1Context.MetadataScalabilitySyntax.get -> string
+SharpAV1.AV1Context.MetadataTimecodeSyntax.get -> string
+SharpAV1.AV1Context.ObuExtensionHeaderSyntax.get -> string
+SharpAV1.AV1Context.ObuHeaderSyntax.get -> string
+SharpAV1.AV1Context.ObuSizeLen.get -> int
+SharpAV1.AV1Context.OpenBitstreamUnitSyntax.get -> string
+SharpAV1.AV1Context.OperatingParametersInfoSyntax.get -> string
+SharpAV1.AV1Context.PaddingObuSyntax.get -> string
+SharpAV1.AV1Context.PrevGmParams.get -> int[][]
+SharpAV1.AV1Context.PrevGmParams.set -> void
+SharpAV1.AV1Context.PrevSegmentIds.get -> int[][]
+SharpAV1.AV1Context.PrevSegmentIds.set -> void
+SharpAV1.AV1Context.QuantizationParamsSyntax.get -> string
+SharpAV1.AV1Context.Read(SharpAVX.AomStream stream, int size) -> void
+SharpAV1.AV1Context.ReadDeltaqSyntax.get -> string
+SharpAV1.AV1Context.ReadGlobalParamSyntax.get -> string
+SharpAV1.AV1Context.ReadInterpolationFilterSyntax.get -> string
+SharpAV1.AV1Context.ReadTxModeSyntax.get -> string
+SharpAV1.AV1Context.RecordSyntax.get -> bool
+SharpAV1.AV1Context.RecordSyntax.set -> void
+SharpAV1.AV1Context.RefFrameHeight.get -> int[]
+SharpAV1.AV1Context.RefFrameHeight.set -> void
+SharpAV1.AV1Context.RefFrameId.get -> int[]
+SharpAV1.AV1Context.RefFrameId.set -> void
+SharpAV1.AV1Context.RefFrameType.get -> int[]
+SharpAV1.AV1Context.RefFrameType.set -> void
+SharpAV1.AV1Context.RefMiCols.get -> int[]
+SharpAV1.AV1Context.RefMiCols.set -> void
+SharpAV1.AV1Context.RefMiRows.get -> int[]
+SharpAV1.AV1Context.RefMiRows.set -> void
+SharpAV1.AV1Context.RefRenderHeight.get -> int[]
+SharpAV1.AV1Context.RefRenderHeight.set -> void
+SharpAV1.AV1Context.RefRenderWidth.get -> int[]
+SharpAV1.AV1Context.RefRenderWidth.set -> void
+SharpAV1.AV1Context.RefUpscaledWidth.get -> int[]
+SharpAV1.AV1Context.RefUpscaledWidth.set -> void
+SharpAV1.AV1Context.Ref_Frame_List -> int[]
+SharpAV1.AV1Context.Remap_Lr_Type.get -> int[]
+SharpAV1.AV1Context.Remap_Lr_Type.set -> void
+SharpAV1.AV1Context.RenderSizeSyntax.get -> string
+SharpAV1.AV1Context.ReservedObuSyntax.get -> string
+SharpAV1.AV1Context.SavedFeatureData.get -> int[][][]
+SharpAV1.AV1Context.SavedFeatureData.set -> void
+SharpAV1.AV1Context.SavedFeatureEnabled.get -> int[][][]
+SharpAV1.AV1Context.SavedFeatureEnabled.set -> void
+SharpAV1.AV1Context.SavedGmParams.get -> int[][][]
+SharpAV1.AV1Context.SavedGmParams.set -> void
+SharpAV1.AV1Context.SavedSegmentIds.get -> int[][][]
+SharpAV1.AV1Context.SavedSegmentIds.set -> void
+SharpAV1.AV1Context.ScalabilityStructureSyntax.get -> string
+SharpAV1.AV1Context.SegmentationParamsSyntax.get -> string
+SharpAV1.AV1Context.Segmentation_Feature_Bits.get -> int[]
+SharpAV1.AV1Context.Segmentation_Feature_Bits.set -> void
+SharpAV1.AV1Context.Segmentation_Feature_Max.get -> int[]
+SharpAV1.AV1Context.Segmentation_Feature_Max.set -> void
+SharpAV1.AV1Context.Segmentation_Feature_Signed.get -> int[]
+SharpAV1.AV1Context.Segmentation_Feature_Signed.set -> void
+SharpAV1.AV1Context.SelectedOperatingPoint.get -> int
+SharpAV1.AV1Context.SelectedOperatingPoint.set -> void
+SharpAV1.AV1Context.SequenceHeaderObuSyntax.get -> string
+SharpAV1.AV1Context.SetFrameRefsSyntax.get -> string
+SharpAV1.AV1Context.SkipModeParamsSyntax.get -> string
+SharpAV1.AV1Context.Strict.get -> bool
+SharpAV1.AV1Context.Strict.set -> void
+SharpAV1.AV1Context.SuperresParamsSyntax.get -> string
+SharpAV1.AV1Context.TemporalDelimiterObuSyntax.get -> string
+SharpAV1.AV1Context.TemporalPointInfoSyntax.get -> string
+SharpAV1.AV1Context.TileCount.get -> int
+SharpAV1.AV1Context.TileGroupObuSyntax.get -> string
+SharpAV1.AV1Context.TileInfoSyntax.get -> string
+SharpAV1.AV1Context.TileListEntrySyntax.get -> string
+SharpAV1.AV1Context.TileListObuSyntax.get -> string
+SharpAV1.AV1Context.TileLog2Syntax.get -> string
+SharpAV1.AV1Context.TileSize(int i) -> int
+SharpAV1.AV1Context.TileStart(int i) -> long
+SharpAV1.AV1Context.TimingInfoSyntax.get -> string
+SharpAV1.AV1Context.TrailingBitsSyntax.get -> string
+SharpAV1.AV1Context.UncompressedHeaderSyntax.get -> string
+SharpAV1.AV1Context.UnknownMetadataPayload.get -> byte[]
+SharpAV1.AV1Context.UnknownMetadataPayload.set -> void
+SharpAV1.AV1Context.Write(SharpAVX.AomStream stream, SharpAV1.AV1Obu obu) -> void
+SharpAV1.AV1Context._AdditionalFrameIdLengthMinus1.get -> int
+SharpAV1.AV1Context._AdditionalFrameIdLengthMinus1.set -> void
+SharpAV1.AV1Context._AllLossless.get -> int
+SharpAV1.AV1Context._AllLossless.set -> void
+SharpAV1.AV1Context._AllowHighPrecisionMv.get -> int
+SharpAV1.AV1Context._AllowHighPrecisionMv.set -> void
+SharpAV1.AV1Context._AllowIntrabc.get -> int
+SharpAV1.AV1Context._AllowIntrabc.set -> void
+SharpAV1.AV1Context._AllowScreenContentTools.get -> int
+SharpAV1.AV1Context._AllowScreenContentTools.set -> void
+SharpAV1.AV1Context._AllowWarpedMotion.get -> int
+SharpAV1.AV1Context._AllowWarpedMotion.set -> void
+SharpAV1.AV1Context._AnchorFrameIdx.get -> int
+SharpAV1.AV1Context._AnchorFrameIdx.set -> void
+SharpAV1.AV1Context._AnchorTileCol.get -> int
+SharpAV1.AV1Context._AnchorTileCol.set -> void
+SharpAV1.AV1Context._AnchorTileRow.get -> int
+SharpAV1.AV1Context._AnchorTileRow.set -> void
+SharpAV1.AV1Context._ApplyGrain.get -> int
+SharpAV1.AV1Context._ApplyGrain.set -> void
+SharpAV1.AV1Context._ArCoeffLag.get -> int
+SharpAV1.AV1Context._ArCoeffLag.set -> void
+SharpAV1.AV1Context._ArCoeffShiftMinus6.get -> int
+SharpAV1.AV1Context._ArCoeffShiftMinus6.set -> void
+SharpAV1.AV1Context._ArCoeffsCbPlus128.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._ArCoeffsCbPlus128.set -> void
+SharpAV1.AV1Context._ArCoeffsCrPlus128.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._ArCoeffsCrPlus128.set -> void
+SharpAV1.AV1Context._ArCoeffsyPlus128.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._ArCoeffsyPlus128.set -> void
+SharpAV1.AV1Context._BaseqIdx.get -> int
+SharpAV1.AV1Context._BaseqIdx.set -> void
+SharpAV1.AV1Context._BitDepth.get -> int
+SharpAV1.AV1Context._BitDepth.set -> void
+SharpAV1.AV1Context._BlkSize.get -> int
+SharpAV1.AV1Context._BlkSize.set -> void
+SharpAV1.AV1Context._BufferDelayLengthMinus1.get -> int
+SharpAV1.AV1Context._BufferDelayLengthMinus1.set -> void
+SharpAV1.AV1Context._BufferRemovalTime.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._BufferRemovalTime.set -> void
+SharpAV1.AV1Context._BufferRemovalTimeLengthMinus1.get -> int
+SharpAV1.AV1Context._BufferRemovalTimeLengthMinus1.set -> void
+SharpAV1.AV1Context._BufferRemovalTimePresentFlag.get -> int
+SharpAV1.AV1Context._BufferRemovalTimePresentFlag.set -> void
+SharpAV1.AV1Context._CbLumaMult.get -> int
+SharpAV1.AV1Context._CbLumaMult.set -> void
+SharpAV1.AV1Context._CbMult.get -> int
+SharpAV1.AV1Context._CbMult.set -> void
+SharpAV1.AV1Context._CbOffset.get -> int
+SharpAV1.AV1Context._CbOffset.set -> void
+SharpAV1.AV1Context._CdefBits.get -> int
+SharpAV1.AV1Context._CdefBits.set -> void
+SharpAV1.AV1Context._CdefDamping.get -> int
+SharpAV1.AV1Context._CdefDamping.set -> void
+SharpAV1.AV1Context._CdefDampingMinus3.get -> int
+SharpAV1.AV1Context._CdefDampingMinus3.set -> void
+SharpAV1.AV1Context._CdefUvPriStrength.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._CdefUvPriStrength.set -> void
+SharpAV1.AV1Context._CdefUvSecStrength.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._CdefUvSecStrength.set -> void
+SharpAV1.AV1Context._CdefyPriStrength.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._CdefyPriStrength.set -> void
+SharpAV1.AV1Context._CdefySecStrength.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._CdefySecStrength.set -> void
+SharpAV1.AV1Context._ChromaSamplePosition.get -> int
+SharpAV1.AV1Context._ChromaSamplePosition.set -> void
+SharpAV1.AV1Context._ChromaScalingFromLuma.get -> int
+SharpAV1.AV1Context._ChromaScalingFromLuma.set -> void
+SharpAV1.AV1Context._ClipToRestrictedRange.get -> int
+SharpAV1.AV1Context._ClipToRestrictedRange.set -> void
+SharpAV1.AV1Context._CntDroppedFlag.get -> int
+SharpAV1.AV1Context._CntDroppedFlag.set -> void
+SharpAV1.AV1Context._CodedDenom.get -> int
+SharpAV1.AV1Context._CodedDenom.set -> void
+SharpAV1.AV1Context._CodedLossless.get -> int
+SharpAV1.AV1Context._CodedLossless.set -> void
+SharpAV1.AV1Context._CodedTileData.get -> byte[]
+SharpAV1.AV1Context._CodedTileData.set -> void
+SharpAV1.AV1Context._ColorDescriptionPresentFlag.get -> int
+SharpAV1.AV1Context._ColorDescriptionPresentFlag.set -> void
+SharpAV1.AV1Context._ColorPrimaries.get -> int
+SharpAV1.AV1Context._ColorPrimaries.set -> void
+SharpAV1.AV1Context._ColorRange.get -> int
+SharpAV1.AV1Context._ColorRange.set -> void
+SharpAV1.AV1Context._ContextUpdateTileId.get -> int
+SharpAV1.AV1Context._ContextUpdateTileId.set -> void
+SharpAV1.AV1Context._CountingType.get -> int
+SharpAV1.AV1Context._CountingType.set -> void
+SharpAV1.AV1Context._CrLumaMult.get -> int
+SharpAV1.AV1Context._CrLumaMult.set -> void
+SharpAV1.AV1Context._CrMult.get -> int
+SharpAV1.AV1Context._CrMult.set -> void
+SharpAV1.AV1Context._CrOffset.get -> int
+SharpAV1.AV1Context._CrOffset.set -> void
+SharpAV1.AV1Context._CurFrameHint.get -> int
+SharpAV1.AV1Context._CurFrameHint.set -> void
+SharpAV1.AV1Context._CurrentFrameId.get -> int
+SharpAV1.AV1Context._CurrentFrameId.set -> void
+SharpAV1.AV1Context._CurrentQIndex.get -> int
+SharpAV1.AV1Context._CurrentQIndex.set -> void
+SharpAV1.AV1Context._DecoderBufferDelay.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._DecoderBufferDelay.set -> void
+SharpAV1.AV1Context._DecoderModelInfoPresentFlag.get -> int
+SharpAV1.AV1Context._DecoderModelInfoPresentFlag.set -> void
+SharpAV1.AV1Context._DecoderModelPresentForThisOp.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._DecoderModelPresentForThisOp.set -> void
+SharpAV1.AV1Context._DeltaCoded.get -> int
+SharpAV1.AV1Context._DeltaCoded.set -> void
+SharpAV1.AV1Context._DeltaFrameId.get -> int
+SharpAV1.AV1Context._DeltaFrameId.set -> void
+SharpAV1.AV1Context._DeltaFrameIdLengthMinus2.get -> int
+SharpAV1.AV1Context._DeltaFrameIdLengthMinus2.set -> void
+SharpAV1.AV1Context._DeltaFrameIdMinus1.get -> int
+SharpAV1.AV1Context._DeltaFrameIdMinus1.set -> void
+SharpAV1.AV1Context._DeltaLfMulti.get -> int
+SharpAV1.AV1Context._DeltaLfMulti.set -> void
+SharpAV1.AV1Context._DeltaLfPresent.get -> int
+SharpAV1.AV1Context._DeltaLfPresent.set -> void
+SharpAV1.AV1Context._DeltaLfRes.get -> int
+SharpAV1.AV1Context._DeltaLfRes.set -> void
+SharpAV1.AV1Context._DeltaQUAc.get -> int
+SharpAV1.AV1Context._DeltaQUAc.set -> void
+SharpAV1.AV1Context._DeltaQUDc.get -> int
+SharpAV1.AV1Context._DeltaQUDc.set -> void
+SharpAV1.AV1Context._DeltaQVAc.get -> int
+SharpAV1.AV1Context._DeltaQVAc.set -> void
+SharpAV1.AV1Context._DeltaQVDc.get -> int
+SharpAV1.AV1Context._DeltaQVDc.set -> void
+SharpAV1.AV1Context._DeltaQYDc.get -> int
+SharpAV1.AV1Context._DeltaQYDc.set -> void
+SharpAV1.AV1Context._Deltaq.get -> int
+SharpAV1.AV1Context._Deltaq.set -> void
+SharpAV1.AV1Context._DeltaqPresent.get -> int
+SharpAV1.AV1Context._DeltaqPresent.set -> void
+SharpAV1.AV1Context._DeltaqRes.get -> int
+SharpAV1.AV1Context._DeltaqRes.set -> void
+SharpAV1.AV1Context._DiffUvDelta.get -> int
+SharpAV1.AV1Context._DiffUvDelta.set -> void
+SharpAV1.AV1Context._DisableCdfUpdate.get -> int
+SharpAV1.AV1Context._DisableCdfUpdate.set -> void
+SharpAV1.AV1Context._DisableFrameEndUpdateCdf.get -> int
+SharpAV1.AV1Context._DisableFrameEndUpdateCdf.set -> void
+SharpAV1.AV1Context._DiscontinuityFlag.get -> int
+SharpAV1.AV1Context._DiscontinuityFlag.set -> void
+SharpAV1.AV1Context._DisplayFrameId.get -> int
+SharpAV1.AV1Context._DisplayFrameId.set -> void
+SharpAV1.AV1Context._EnableCdef.get -> int
+SharpAV1.AV1Context._EnableCdef.set -> void
+SharpAV1.AV1Context._EnableDualFilter.get -> int
+SharpAV1.AV1Context._EnableDualFilter.set -> void
+SharpAV1.AV1Context._EnableFilterIntra.get -> int
+SharpAV1.AV1Context._EnableFilterIntra.set -> void
+SharpAV1.AV1Context._EnableInterintraCompound.get -> int
+SharpAV1.AV1Context._EnableInterintraCompound.set -> void
+SharpAV1.AV1Context._EnableIntraEdgeFilter.get -> int
+SharpAV1.AV1Context._EnableIntraEdgeFilter.set -> void
+SharpAV1.AV1Context._EnableJntComp.get -> int
+SharpAV1.AV1Context._EnableJntComp.set -> void
+SharpAV1.AV1Context._EnableMaskedCompound.get -> int
+SharpAV1.AV1Context._EnableMaskedCompound.set -> void
+SharpAV1.AV1Context._EnableOrderHint.get -> int
+SharpAV1.AV1Context._EnableOrderHint.set -> void
+SharpAV1.AV1Context._EnableRefFrameMvs.get -> int
+SharpAV1.AV1Context._EnableRefFrameMvs.set -> void
+SharpAV1.AV1Context._EnableRestoration.get -> int
+SharpAV1.AV1Context._EnableRestoration.set -> void
+SharpAV1.AV1Context._EnableSuperres.get -> int
+SharpAV1.AV1Context._EnableSuperres.set -> void
+SharpAV1.AV1Context._EnableWarpedMotion.get -> int
+SharpAV1.AV1Context._EnableWarpedMotion.set -> void
+SharpAV1.AV1Context._EncoderBufferDelay.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._EncoderBufferDelay.set -> void
+SharpAV1.AV1Context._EqualPictureInterval.get -> int
+SharpAV1.AV1Context._EqualPictureInterval.set -> void
+SharpAV1.AV1Context._ErrorResilientMode.get -> int
+SharpAV1.AV1Context._ErrorResilientMode.set -> void
+SharpAV1.AV1Context._ExtensionHeaderReserved3bits.get -> int
+SharpAV1.AV1Context._ExtensionHeaderReserved3bits.set -> void
+SharpAV1.AV1Context._FeatureData.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV1.AV1Context._FeatureData.set -> void
+SharpAV1.AV1Context._FeatureEnabled.get -> int
+SharpAV1.AV1Context._FeatureEnabled.set -> void
+SharpAV1.AV1Context._FeatureValue.get -> int
+SharpAV1.AV1Context._FeatureValue.set -> void
+SharpAV1.AV1Context._FilmGrainParamsPresent.get -> int
+SharpAV1.AV1Context._FilmGrainParamsPresent.set -> void
+SharpAV1.AV1Context._FilmGrainParamsRefIdx.get -> int
+SharpAV1.AV1Context._FilmGrainParamsRefIdx.set -> void
+SharpAV1.AV1Context._ForceIntegerMv.get -> int
+SharpAV1.AV1Context._ForceIntegerMv.set -> void
+SharpAV1.AV1Context._FoundRef.get -> int
+SharpAV1.AV1Context._FoundRef.set -> void
+SharpAV1.AV1Context._FrameHeight.get -> int
+SharpAV1.AV1Context._FrameHeight.set -> void
+SharpAV1.AV1Context._FrameHeightBitsMinus1.get -> int
+SharpAV1.AV1Context._FrameHeightBitsMinus1.set -> void
+SharpAV1.AV1Context._FrameHeightMinus1.get -> int
+SharpAV1.AV1Context._FrameHeightMinus1.set -> void
+SharpAV1.AV1Context._FrameIdNumbersPresentFlag.get -> int
+SharpAV1.AV1Context._FrameIdNumbersPresentFlag.set -> void
+SharpAV1.AV1Context._FrameIsIntra.get -> int
+SharpAV1.AV1Context._FrameIsIntra.set -> void
+SharpAV1.AV1Context._FramePresentationTime.get -> int
+SharpAV1.AV1Context._FramePresentationTime.set -> void
+SharpAV1.AV1Context._FramePresentationTimeLengthMinus1.get -> int
+SharpAV1.AV1Context._FramePresentationTimeLengthMinus1.set -> void
+SharpAV1.AV1Context._FrameRefsShortSignaling.get -> int
+SharpAV1.AV1Context._FrameRefsShortSignaling.set -> void
+SharpAV1.AV1Context._FrameRestorationType.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._FrameRestorationType.set -> void
+SharpAV1.AV1Context._FrameSizeOverrideFlag.get -> int
+SharpAV1.AV1Context._FrameSizeOverrideFlag.set -> void
+SharpAV1.AV1Context._FrameToShowMapIdx.get -> int
+SharpAV1.AV1Context._FrameToShowMapIdx.set -> void
+SharpAV1.AV1Context._FrameType.get -> int
+SharpAV1.AV1Context._FrameType.set -> void
+SharpAV1.AV1Context._FrameWidth.get -> int
+SharpAV1.AV1Context._FrameWidth.set -> void
+SharpAV1.AV1Context._FrameWidthBitsMinus1.get -> int
+SharpAV1.AV1Context._FrameWidthBitsMinus1.set -> void
+SharpAV1.AV1Context._FrameWidthMinus1.get -> int
+SharpAV1.AV1Context._FrameWidthMinus1.set -> void
+SharpAV1.AV1Context._FullTimestampFlag.get -> int
+SharpAV1.AV1Context._FullTimestampFlag.set -> void
+SharpAV1.AV1Context._GmParams.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV1.AV1Context._GmParams.set -> void
+SharpAV1.AV1Context._GmType.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._GmType.set -> void
+SharpAV1.AV1Context._GoldFrameIdx.get -> int
+SharpAV1.AV1Context._GoldFrameIdx.set -> void
+SharpAV1.AV1Context._GrainScaleShift.get -> int
+SharpAV1.AV1Context._GrainScaleShift.set -> void
+SharpAV1.AV1Context._GrainScalingMinus8.get -> int
+SharpAV1.AV1Context._GrainScalingMinus8.set -> void
+SharpAV1.AV1Context._GrainSeed.get -> int
+SharpAV1.AV1Context._GrainSeed.set -> void
+SharpAV1.AV1Context._HeightInSbsMinus1.get -> int
+SharpAV1.AV1Context._HeightInSbsMinus1.set -> void
+SharpAV1.AV1Context._High.get -> int
+SharpAV1.AV1Context._High.set -> void
+SharpAV1.AV1Context._HighBitdepth.get -> int
+SharpAV1.AV1Context._HighBitdepth.set -> void
+SharpAV1.AV1Context._HoursFlag.get -> int
+SharpAV1.AV1Context._HoursFlag.set -> void
+SharpAV1.AV1Context._HoursValue.get -> int
+SharpAV1.AV1Context._HoursValue.set -> void
+SharpAV1.AV1Context._IdLen.get -> int
+SharpAV1.AV1Context._IdLen.set -> void
+SharpAV1.AV1Context._Idx.get -> int
+SharpAV1.AV1Context._Idx.set -> void
+SharpAV1.AV1Context._IncrementTileColsLog2.get -> int
+SharpAV1.AV1Context._IncrementTileColsLog2.set -> void
+SharpAV1.AV1Context._IncrementTileRowsLog2.get -> int
+SharpAV1.AV1Context._IncrementTileRowsLog2.set -> void
+SharpAV1.AV1Context._InitialDisplayDelayMinus1.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._InitialDisplayDelayMinus1.set -> void
+SharpAV1.AV1Context._InitialDisplayDelayPresentFlag.get -> int
+SharpAV1.AV1Context._InitialDisplayDelayPresentFlag.set -> void
+SharpAV1.AV1Context._InitialDisplayDelayPresentForThisOp.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._InitialDisplayDelayPresentForThisOp.set -> void
+SharpAV1.AV1Context._InterpolationFilter.get -> int
+SharpAV1.AV1Context._InterpolationFilter.set -> void
+SharpAV1.AV1Context._IsFilterSwitchable.get -> int
+SharpAV1.AV1Context._IsFilterSwitchable.set -> void
+SharpAV1.AV1Context._IsGlobal.get -> int
+SharpAV1.AV1Context._IsGlobal.set -> void
+SharpAV1.AV1Context._IsMotionModeSwitchable.get -> int
+SharpAV1.AV1Context._IsMotionModeSwitchable.set -> void
+SharpAV1.AV1Context._IsRotZoom.get -> int
+SharpAV1.AV1Context._IsRotZoom.set -> void
+SharpAV1.AV1Context._IsTranslation.get -> int
+SharpAV1.AV1Context._IsTranslation.set -> void
+SharpAV1.AV1Context._ItutT35CountryCode.get -> int
+SharpAV1.AV1Context._ItutT35CountryCode.set -> void
+SharpAV1.AV1Context._ItutT35CountryCodeExtensionByte.get -> int
+SharpAV1.AV1Context._ItutT35CountryCodeExtensionByte.set -> void
+SharpAV1.AV1Context._LastActiveSegId.get -> int
+SharpAV1.AV1Context._LastActiveSegId.set -> void
+SharpAV1.AV1Context._LastFrameIdx.get -> int
+SharpAV1.AV1Context._LastFrameIdx.set -> void
+SharpAV1.AV1Context._LoopFilterDeltaEnabled.get -> int
+SharpAV1.AV1Context._LoopFilterDeltaEnabled.set -> void
+SharpAV1.AV1Context._LoopFilterDeltaUpdate.get -> int
+SharpAV1.AV1Context._LoopFilterDeltaUpdate.set -> void
+SharpAV1.AV1Context._LoopFilterLevel.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._LoopFilterLevel.set -> void
+SharpAV1.AV1Context._LoopFilterModeDeltas.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._LoopFilterModeDeltas.set -> void
+SharpAV1.AV1Context._LoopFilterRefDeltas.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._LoopFilterRefDeltas.set -> void
+SharpAV1.AV1Context._LoopFilterSharpness.get -> int
+SharpAV1.AV1Context._LoopFilterSharpness.set -> void
+SharpAV1.AV1Context._LoopRestorationSize.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._LoopRestorationSize.set -> void
+SharpAV1.AV1Context._LosslessArray.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._LosslessArray.set -> void
+SharpAV1.AV1Context._Low.get -> int
+SharpAV1.AV1Context._Low.set -> void
+SharpAV1.AV1Context._LowDelayModeFlag.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._LowDelayModeFlag.set -> void
+SharpAV1.AV1Context._LrType.get -> int
+SharpAV1.AV1Context._LrType.set -> void
+SharpAV1.AV1Context._LrUnitExtraShift.get -> int
+SharpAV1.AV1Context._LrUnitExtraShift.set -> void
+SharpAV1.AV1Context._LrUnitShift.get -> int
+SharpAV1.AV1Context._LrUnitShift.set -> void
+SharpAV1.AV1Context._LrUvShift.get -> int
+SharpAV1.AV1Context._LrUvShift.set -> void
+SharpAV1.AV1Context._LuminanceMax.get -> int
+SharpAV1.AV1Context._LuminanceMax.set -> void
+SharpAV1.AV1Context._LuminanceMin.get -> int
+SharpAV1.AV1Context._LuminanceMin.set -> void
+SharpAV1.AV1Context._MatrixCoefficients.get -> int
+SharpAV1.AV1Context._MatrixCoefficients.set -> void
+SharpAV1.AV1Context._MaxCll.get -> int
+SharpAV1.AV1Context._MaxCll.set -> void
+SharpAV1.AV1Context._MaxFall.get -> int
+SharpAV1.AV1Context._MaxFall.set -> void
+SharpAV1.AV1Context._MaxFrameHeightMinus1.get -> int
+SharpAV1.AV1Context._MaxFrameHeightMinus1.set -> void
+SharpAV1.AV1Context._MaxFrameWidthMinus1.get -> int
+SharpAV1.AV1Context._MaxFrameWidthMinus1.set -> void
+SharpAV1.AV1Context._MetadataType.get -> int
+SharpAV1.AV1Context._MetadataType.set -> void
+SharpAV1.AV1Context._MiColEnd.get -> int
+SharpAV1.AV1Context._MiColEnd.set -> void
+SharpAV1.AV1Context._MiColStart.get -> int
+SharpAV1.AV1Context._MiColStart.set -> void
+SharpAV1.AV1Context._MiColStarts.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._MiColStarts.set -> void
+SharpAV1.AV1Context._MiCols.get -> int
+SharpAV1.AV1Context._MiCols.set -> void
+SharpAV1.AV1Context._MiRowEnd.get -> int
+SharpAV1.AV1Context._MiRowEnd.set -> void
+SharpAV1.AV1Context._MiRowStart.get -> int
+SharpAV1.AV1Context._MiRowStart.set -> void
+SharpAV1.AV1Context._MiRowStarts.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._MiRowStarts.set -> void
+SharpAV1.AV1Context._MiRows.get -> int
+SharpAV1.AV1Context._MiRows.set -> void
+SharpAV1.AV1Context._MinutesFlag.get -> int
+SharpAV1.AV1Context._MinutesFlag.set -> void
+SharpAV1.AV1Context._MinutesValue.get -> int
+SharpAV1.AV1Context._MinutesValue.set -> void
+SharpAV1.AV1Context._MonoChrome.get -> int
+SharpAV1.AV1Context._MonoChrome.set -> void
+SharpAV1.AV1Context._Mx.get -> int
+SharpAV1.AV1Context._Mx.set -> void
+SharpAV1.AV1Context._NbBits.get -> long
+SharpAV1.AV1Context._NbBits.set -> void
+SharpAV1.AV1Context._NumCbPoints.get -> int
+SharpAV1.AV1Context._NumCbPoints.set -> void
+SharpAV1.AV1Context._NumCrPoints.get -> int
+SharpAV1.AV1Context._NumCrPoints.set -> void
+SharpAV1.AV1Context._NumPlanes.get -> int
+SharpAV1.AV1Context._NumPlanes.set -> void
+SharpAV1.AV1Context._NumSyms.get -> int
+SharpAV1.AV1Context._NumSyms.set -> void
+SharpAV1.AV1Context._NumTicksPerPictureMinus1.get -> uint
+SharpAV1.AV1Context._NumTicksPerPictureMinus1.set -> void
+SharpAV1.AV1Context._NumTiles.get -> int
+SharpAV1.AV1Context._NumTiles.set -> void
+SharpAV1.AV1Context._NumUnitsInDecodingTick.get -> int
+SharpAV1.AV1Context._NumUnitsInDecodingTick.set -> void
+SharpAV1.AV1Context._NumUnitsInDisplayTick.get -> int
+SharpAV1.AV1Context._NumUnitsInDisplayTick.set -> void
+SharpAV1.AV1Context._NumyPoints.get -> int
+SharpAV1.AV1Context._NumyPoints.set -> void
+SharpAV1.AV1Context._ObuExtensionFlag.get -> int
+SharpAV1.AV1Context._ObuExtensionFlag.set -> void
+SharpAV1.AV1Context._ObuForbiddenBit.get -> int
+SharpAV1.AV1Context._ObuForbiddenBit.set -> void
+SharpAV1.AV1Context._ObuHasSizeField.get -> int
+SharpAV1.AV1Context._ObuHasSizeField.set -> void
+SharpAV1.AV1Context._ObuPaddingByte.get -> int
+SharpAV1.AV1Context._ObuPaddingByte.set -> void
+SharpAV1.AV1Context._ObuPaddingLength.get -> int
+SharpAV1.AV1Context._ObuPaddingLength.set -> void
+SharpAV1.AV1Context._ObuReserved1bit.get -> int
+SharpAV1.AV1Context._ObuReserved1bit.set -> void
+SharpAV1.AV1Context._ObuSize.get -> int
+SharpAV1.AV1Context._ObuSize.set -> void
+SharpAV1.AV1Context._ObuType.get -> int
+SharpAV1.AV1Context._ObuType.set -> void
+SharpAV1.AV1Context._Op.get -> int
+SharpAV1.AV1Context._Op.set -> void
+SharpAV1.AV1Context._OperatingPointIdc.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._OperatingPointIdc.set -> void
+SharpAV1.AV1Context._OperatingPointsCntMinus1.get -> int
+SharpAV1.AV1Context._OperatingPointsCntMinus1.set -> void
+SharpAV1.AV1Context._OrderHint.get -> int
+SharpAV1.AV1Context._OrderHint.set -> void
+SharpAV1.AV1Context._OrderHintBits.get -> int
+SharpAV1.AV1Context._OrderHintBits.set -> void
+SharpAV1.AV1Context._OrderHintBitsMinus1.get -> int
+SharpAV1.AV1Context._OrderHintBitsMinus1.set -> void
+SharpAV1.AV1Context._OrderHints.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._OrderHints.set -> void
+SharpAV1.AV1Context._OutputFrameHeightInTilesMinus1.get -> int
+SharpAV1.AV1Context._OutputFrameHeightInTilesMinus1.set -> void
+SharpAV1.AV1Context._OutputFrameWidthInTilesMinus1.get -> int
+SharpAV1.AV1Context._OutputFrameWidthInTilesMinus1.set -> void
+SharpAV1.AV1Context._OverlapFlag.get -> int
+SharpAV1.AV1Context._OverlapFlag.set -> void
+SharpAV1.AV1Context._PointCbScaling.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._PointCbScaling.set -> void
+SharpAV1.AV1Context._PointCbValue.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._PointCbValue.set -> void
+SharpAV1.AV1Context._PointCrScaling.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._PointCrScaling.set -> void
+SharpAV1.AV1Context._PointCrValue.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._PointCrValue.set -> void
+SharpAV1.AV1Context._PointyScaling.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._PointyScaling.set -> void
+SharpAV1.AV1Context._PointyValue.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._PointyValue.set -> void
+SharpAV1.AV1Context._PrevFrameID.get -> int
+SharpAV1.AV1Context._PrevFrameID.set -> void
+SharpAV1.AV1Context._PrimaryChromaticityx.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._PrimaryChromaticityx.set -> void
+SharpAV1.AV1Context._PrimaryChromaticityy.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._PrimaryChromaticityy.set -> void
+SharpAV1.AV1Context._PrimaryRefFrame.get -> int
+SharpAV1.AV1Context._PrimaryRefFrame.set -> void
+SharpAV1.AV1Context._Qmu.get -> int
+SharpAV1.AV1Context._Qmu.set -> void
+SharpAV1.AV1Context._Qmv.get -> int
+SharpAV1.AV1Context._Qmv.set -> void
+SharpAV1.AV1Context._Qmy.get -> int
+SharpAV1.AV1Context._Qmy.set -> void
+SharpAV1.AV1Context._ReducedStillPictureHeader.get -> int
+SharpAV1.AV1Context._ReducedStillPictureHeader.set -> void
+SharpAV1.AV1Context._ReducedTxSet.get -> int
+SharpAV1.AV1Context._ReducedTxSet.set -> void
+SharpAV1.AV1Context._RefFrameIdx.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._RefFrameIdx.set -> void
+SharpAV1.AV1Context._RefFrameSignBias.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._RefFrameSignBias.set -> void
+SharpAV1.AV1Context._RefOrderHint.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._RefOrderHint.set -> void
+SharpAV1.AV1Context._RefValid.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._RefValid.set -> void
+SharpAV1.AV1Context._ReferenceSelect.get -> int
+SharpAV1.AV1Context._ReferenceSelect.set -> void
+SharpAV1.AV1Context._RefreshFrameFlags.get -> int
+SharpAV1.AV1Context._RefreshFrameFlags.set -> void
+SharpAV1.AV1Context._RenderAndFrameSizeDifferent.get -> int
+SharpAV1.AV1Context._RenderAndFrameSizeDifferent.set -> void
+SharpAV1.AV1Context._RenderHeight.get -> int
+SharpAV1.AV1Context._RenderHeight.set -> void
+SharpAV1.AV1Context._RenderHeightMinus1.get -> int
+SharpAV1.AV1Context._RenderHeightMinus1.set -> void
+SharpAV1.AV1Context._RenderWidth.get -> int
+SharpAV1.AV1Context._RenderWidth.set -> void
+SharpAV1.AV1Context._RenderWidthMinus1.get -> int
+SharpAV1.AV1Context._RenderWidthMinus1.set -> void
+SharpAV1.AV1Context._ScalabilityModeIdc.get -> int
+SharpAV1.AV1Context._ScalabilityModeIdc.set -> void
+SharpAV1.AV1Context._ScalabilityStructureReserved3bits.get -> int
+SharpAV1.AV1Context._ScalabilityStructureReserved3bits.set -> void
+SharpAV1.AV1Context._SecondsFlag.get -> int
+SharpAV1.AV1Context._SecondsFlag.set -> void
+SharpAV1.AV1Context._SecondsValue.get -> int
+SharpAV1.AV1Context._SecondsValue.set -> void
+SharpAV1.AV1Context._SeenFrameHeader.get -> int
+SharpAV1.AV1Context._SeenFrameHeader.set -> void
+SharpAV1.AV1Context._SegIdPreSkip.get -> int
+SharpAV1.AV1Context._SegIdPreSkip.set -> void
+SharpAV1.AV1Context._SegQMLevel.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV1.AV1Context._SegQMLevel.set -> void
+SharpAV1.AV1Context._SegmentationEnabled.get -> int
+SharpAV1.AV1Context._SegmentationEnabled.set -> void
+SharpAV1.AV1Context._SegmentationTemporalUpdate.get -> int
+SharpAV1.AV1Context._SegmentationTemporalUpdate.set -> void
+SharpAV1.AV1Context._SegmentationUpdateData.get -> int
+SharpAV1.AV1Context._SegmentationUpdateData.set -> void
+SharpAV1.AV1Context._SegmentationUpdateMap.get -> int
+SharpAV1.AV1Context._SegmentationUpdateMap.set -> void
+SharpAV1.AV1Context._SeparateUvDeltaq.get -> int
+SharpAV1.AV1Context._SeparateUvDeltaq.set -> void
+SharpAV1.AV1Context._SeqChooseIntegerMv.get -> int
+SharpAV1.AV1Context._SeqChooseIntegerMv.set -> void
+SharpAV1.AV1Context._SeqChooseScreenContentTools.get -> int
+SharpAV1.AV1Context._SeqChooseScreenContentTools.set -> void
+SharpAV1.AV1Context._SeqForceIntegerMv.get -> int
+SharpAV1.AV1Context._SeqForceIntegerMv.set -> void
+SharpAV1.AV1Context._SeqForceScreenContentTools.get -> int
+SharpAV1.AV1Context._SeqForceScreenContentTools.set -> void
+SharpAV1.AV1Context._SeqLevelIdx.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._SeqLevelIdx.set -> void
+SharpAV1.AV1Context._SeqProfile.get -> int
+SharpAV1.AV1Context._SeqProfile.set -> void
+SharpAV1.AV1Context._SeqTier.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._SeqTier.set -> void
+SharpAV1.AV1Context._ShiftedOrderHints.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._ShiftedOrderHints.set -> void
+SharpAV1.AV1Context._ShowExistingFrame.get -> int
+SharpAV1.AV1Context._ShowExistingFrame.set -> void
+SharpAV1.AV1Context._ShowFrame.get -> int
+SharpAV1.AV1Context._ShowFrame.set -> void
+SharpAV1.AV1Context._ShowableFrame.get -> int
+SharpAV1.AV1Context._ShowableFrame.set -> void
+SharpAV1.AV1Context._SkipModeFrame.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._SkipModeFrame.set -> void
+SharpAV1.AV1Context._SkipModePresent.get -> int
+SharpAV1.AV1Context._SkipModePresent.set -> void
+SharpAV1.AV1Context._SpatialId.get -> int
+SharpAV1.AV1Context._SpatialId.set -> void
+SharpAV1.AV1Context._SpatialLayerDescriptionPresentFlag.get -> int
+SharpAV1.AV1Context._SpatialLayerDescriptionPresentFlag.set -> void
+SharpAV1.AV1Context._SpatialLayerDimensionsPresentFlag.get -> int
+SharpAV1.AV1Context._SpatialLayerDimensionsPresentFlag.set -> void
+SharpAV1.AV1Context._SpatialLayerMaxHeight.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._SpatialLayerMaxHeight.set -> void
+SharpAV1.AV1Context._SpatialLayerMaxWidth.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._SpatialLayerMaxWidth.set -> void
+SharpAV1.AV1Context._SpatialLayerRefId.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._SpatialLayerRefId.set -> void
+SharpAV1.AV1Context._SpatialLayersCntMinus1.get -> int
+SharpAV1.AV1Context._SpatialLayersCntMinus1.set -> void
+SharpAV1.AV1Context._StartPosition.get -> int
+SharpAV1.AV1Context._StartPosition.set -> void
+SharpAV1.AV1Context._StillPicture.get -> int
+SharpAV1.AV1Context._StillPicture.set -> void
+SharpAV1.AV1Context._SubexpBits.get -> int
+SharpAV1.AV1Context._SubexpBits.set -> void
+SharpAV1.AV1Context._SubexpFinalBits.get -> int
+SharpAV1.AV1Context._SubexpFinalBits.set -> void
+SharpAV1.AV1Context._SubexpMoreBits.get -> int
+SharpAV1.AV1Context._SubexpMoreBits.set -> void
+SharpAV1.AV1Context._Subsamplingx.get -> int
+SharpAV1.AV1Context._Subsamplingx.set -> void
+SharpAV1.AV1Context._Subsamplingy.get -> int
+SharpAV1.AV1Context._Subsamplingy.set -> void
+SharpAV1.AV1Context._SuperresDenom.get -> int
+SharpAV1.AV1Context._SuperresDenom.set -> void
+SharpAV1.AV1Context._Sz.get -> int
+SharpAV1.AV1Context._Sz.set -> void
+SharpAV1.AV1Context._Target.get -> int
+SharpAV1.AV1Context._Target.set -> void
+SharpAV1.AV1Context._TemporalGroupDescriptionPresentFlag.get -> int
+SharpAV1.AV1Context._TemporalGroupDescriptionPresentFlag.set -> void
+SharpAV1.AV1Context._TemporalGroupRefCnt.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._TemporalGroupRefCnt.set -> void
+SharpAV1.AV1Context._TemporalGroupRefPicDiff.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV1.AV1Context._TemporalGroupRefPicDiff.set -> void
+SharpAV1.AV1Context._TemporalGroupSize.get -> int
+SharpAV1.AV1Context._TemporalGroupSize.set -> void
+SharpAV1.AV1Context._TemporalGroupSpatialSwitchingUpPointFlag.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._TemporalGroupSpatialSwitchingUpPointFlag.set -> void
+SharpAV1.AV1Context._TemporalGroupTemporalId.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._TemporalGroupTemporalId.set -> void
+SharpAV1.AV1Context._TemporalGroupTemporalSwitchingUpPointFlag.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._TemporalGroupTemporalSwitchingUpPointFlag.set -> void
+SharpAV1.AV1Context._TemporalId.get -> int
+SharpAV1.AV1Context._TemporalId.set -> void
+SharpAV1.AV1Context._TgEnd.get -> int
+SharpAV1.AV1Context._TgEnd.set -> void
+SharpAV1.AV1Context._TgStart.get -> int
+SharpAV1.AV1Context._TgStart.set -> void
+SharpAV1.AV1Context._TileCols.get -> int
+SharpAV1.AV1Context._TileCols.set -> void
+SharpAV1.AV1Context._TileColsLog2.get -> int
+SharpAV1.AV1Context._TileColsLog2.set -> void
+SharpAV1.AV1Context._TileCountMinus1.get -> int
+SharpAV1.AV1Context._TileCountMinus1.set -> void
+SharpAV1.AV1Context._TileDataSizeMinus1.get -> int
+SharpAV1.AV1Context._TileDataSizeMinus1.set -> void
+SharpAV1.AV1Context._TileNum.get -> int
+SharpAV1.AV1Context._TileNum.set -> void
+SharpAV1.AV1Context._TileRows.get -> int
+SharpAV1.AV1Context._TileRows.set -> void
+SharpAV1.AV1Context._TileRowsLog2.get -> int
+SharpAV1.AV1Context._TileRowsLog2.set -> void
+SharpAV1.AV1Context._TileSizeBytes.get -> int
+SharpAV1.AV1Context._TileSizeBytes.set -> void
+SharpAV1.AV1Context._TileSizeBytesMinus1.get -> int
+SharpAV1.AV1Context._TileSizeBytesMinus1.set -> void
+SharpAV1.AV1Context._TileSizeMinus1.get -> int
+SharpAV1.AV1Context._TileSizeMinus1.set -> void
+SharpAV1.AV1Context._TileStartAndEndPresentFlag.get -> int
+SharpAV1.AV1Context._TileStartAndEndPresentFlag.set -> void
+SharpAV1.AV1Context._TimeOffsetLength.get -> int
+SharpAV1.AV1Context._TimeOffsetLength.set -> void
+SharpAV1.AV1Context._TimeOffsetValue.get -> int
+SharpAV1.AV1Context._TimeOffsetValue.set -> void
+SharpAV1.AV1Context._TimeScale.get -> int
+SharpAV1.AV1Context._TimeScale.set -> void
+SharpAV1.AV1Context._TimingInfoPresentFlag.get -> int
+SharpAV1.AV1Context._TimingInfoPresentFlag.set -> void
+SharpAV1.AV1Context._TrailingOneBit.get -> int
+SharpAV1.AV1Context._TrailingOneBit.set -> void
+SharpAV1.AV1Context._TrailingZeroBit.get -> int
+SharpAV1.AV1Context._TrailingZeroBit.set -> void
+SharpAV1.AV1Context._TransferCharacteristics.get -> int
+SharpAV1.AV1Context._TransferCharacteristics.set -> void
+SharpAV1.AV1Context._TwelveBit.get -> int
+SharpAV1.AV1Context._TwelveBit.set -> void
+SharpAV1.AV1Context._TxMode.get -> int
+SharpAV1.AV1Context._TxMode.set -> void
+SharpAV1.AV1Context._TxModeSelect.get -> int
+SharpAV1.AV1Context._TxModeSelect.set -> void
+SharpAV1.AV1Context._Type.get -> int
+SharpAV1.AV1Context._Type.set -> void
+SharpAV1.AV1Context._UniformTileSpacingFlag.get -> int
+SharpAV1.AV1Context._UniformTileSpacingFlag.set -> void
+SharpAV1.AV1Context._UpdateGrain.get -> int
+SharpAV1.AV1Context._UpdateGrain.set -> void
+SharpAV1.AV1Context._UpdateModeDelta.get -> int
+SharpAV1.AV1Context._UpdateModeDelta.set -> void
+SharpAV1.AV1Context._UpdateRefDelta.get -> int
+SharpAV1.AV1Context._UpdateRefDelta.set -> void
+SharpAV1.AV1Context._UpscaledWidth.get -> int
+SharpAV1.AV1Context._UpscaledWidth.set -> void
+SharpAV1.AV1Context._Use128x128Superblock.get -> int
+SharpAV1.AV1Context._Use128x128Superblock.set -> void
+SharpAV1.AV1Context._UseRefFrameMvs.get -> int
+SharpAV1.AV1Context._UseRefFrameMvs.set -> void
+SharpAV1.AV1Context._UseSuperres.get -> int
+SharpAV1.AV1Context._UseSuperres.set -> void
+SharpAV1.AV1Context._UsedFrame.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context._UsedFrame.set -> void
+SharpAV1.AV1Context._UsesLr.get -> int
+SharpAV1.AV1Context._UsesLr.set -> void
+SharpAV1.AV1Context._UsingQmatrix.get -> int
+SharpAV1.AV1Context._UsingQmatrix.set -> void
+SharpAV1.AV1Context._WhitePointChromaticityx.get -> int
+SharpAV1.AV1Context._WhitePointChromaticityx.set -> void
+SharpAV1.AV1Context._WhitePointChromaticityy.get -> int
+SharpAV1.AV1Context._WhitePointChromaticityy.set -> void
+SharpAV1.AV1Context._WidthInSbsMinus1.get -> int
+SharpAV1.AV1Context._WidthInSbsMinus1.set -> void
+SharpAV1.AV1Context._ZeroBit.get -> int
+SharpAV1.AV1Context._ZeroBit.set -> void
+SharpAV1.AV1Context.__FeatureEnabled.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpAV1.AV1Context.__FeatureEnabled.set -> void
+SharpAV1.AV1Context.__OperatingPointIdc.get -> int
+SharpAV1.AV1Context.__OperatingPointIdc.set -> void
+SharpAV1.AV1Context.__OrderHint.get -> int
+SharpAV1.AV1Context.__OrderHint.set -> void
+SharpAV1.AV1Context.__RefOrderHint.get -> SharpAVX.AomArray<int>
+SharpAV1.AV1Context.__RefOrderHint.set -> void
+SharpAV1.AV1Context._nFrames.get -> int
+SharpAV1.AV1Context._nFrames.set -> void
+SharpAV1.AV1Context.saved_loop_filter_mode_deltas -> int[][]
+SharpAV1.AV1Context.saved_loop_filter_ref_deltas -> int[][]
+SharpAV1.AV1Extensions
+SharpAV1.AV1FrameRestorationType
+SharpAV1.AV1FrameTypes
+SharpAV1.AV1InterpolationFilter
+SharpAV1.AV1MatrixCoefficients
+SharpAV1.AV1MetadataType
+SharpAV1.AV1Obu
+SharpAV1.AV1Obu.Edit() -> SharpAV1.AV1Context
+SharpAV1.AV1Obu.Edited.get -> SharpAV1.AV1Context
+SharpAV1.AV1Obu.FromState() -> SharpAV1.AV1Obu
+SharpAV1.AV1Obu.Record.get -> SharpAVX.AomSyntaxRecord
+SharpAV1.AV1Obu.Size.get -> int
+SharpAV1.AV1Obu.Size.set -> void
+SharpAV1.AV1Obu.Unreadable.get -> byte[]
+SharpAV1.AV1ObuTypes
+SharpAV1.AV1RefFrames
+SharpAV1.AV1ScalabilityModeIdc
+SharpAV1.AV1TransferCharacteristics
+SharpAV1.AV1TxModes
+const SharpAV1.AV1ChromaSamplePosition.CSP_COLOCATED = 2 -> int
+const SharpAV1.AV1ChromaSamplePosition.CSP_RESERVED = 3 -> int
+const SharpAV1.AV1ChromaSamplePosition.CSP_UNKNOWN = 0 -> int
+const SharpAV1.AV1ChromaSamplePosition.CSP_VERTICAL = 1 -> int
+const SharpAV1.AV1ColorPrimaries.CP_BT_2020 = 9 -> int
+const SharpAV1.AV1ColorPrimaries.CP_BT_470_B_G = 5 -> int
+const SharpAV1.AV1ColorPrimaries.CP_BT_470_M = 4 -> int
+const SharpAV1.AV1ColorPrimaries.CP_BT_601 = 6 -> int
+const SharpAV1.AV1ColorPrimaries.CP_BT_709 = 1 -> int
+const SharpAV1.AV1ColorPrimaries.CP_EBU_3213 = 22 -> int
+const SharpAV1.AV1ColorPrimaries.CP_GENERIC_FILM = 8 -> int
+const SharpAV1.AV1ColorPrimaries.CP_SMPTE_240 = 7 -> int
+const SharpAV1.AV1ColorPrimaries.CP_SMPTE_431 = 11 -> int
+const SharpAV1.AV1ColorPrimaries.CP_SMPTE_432 = 12 -> int
+const SharpAV1.AV1ColorPrimaries.CP_UNSPECIFIED = 2 -> int
+const SharpAV1.AV1ColorPrimaries.CP_XYZ = 10 -> int
+const SharpAV1.AV1Constants.ADST_ADST = 3 -> int
+const SharpAV1.AV1Constants.ADST_DCT = 1 -> int
+const SharpAV1.AV1Constants.ADST_FLIPADST = 7 -> int
+const SharpAV1.AV1Constants.AFFINE = 3 -> int
+const SharpAV1.AV1Constants.ANGLE_STEP = 3 -> int
+const SharpAV1.AV1Constants.BLOCK_INVALID = 22 -> int
+const SharpAV1.AV1Constants.BLOCK_SIZES = 22 -> int
+const SharpAV1.AV1Constants.BLOCK_SIZE_GROUPS = 4 -> int
+const SharpAV1.AV1Constants.BR_CDF_SIZE = 4 -> int
+const SharpAV1.AV1Constants.BUFFER_POOL_MAX_SIZE = 10 -> int
+const SharpAV1.AV1Constants.BWD_REFS = 3 -> int
+const SharpAV1.AV1Constants.CFL_ALPHABET_SIZE = 16 -> int
+const SharpAV1.AV1Constants.CFL_ALPHA_CONTEXTS = 6 -> int
+const SharpAV1.AV1Constants.CFL_JOINT_SIGNS = 8 -> int
+const SharpAV1.AV1Constants.CLASS0_SIZE = 2 -> int
+const SharpAV1.AV1Constants.COEFF_BASE_RANGE = 12 -> int
+const SharpAV1.AV1Constants.COEFF_CDF_Q_CTXS = 4 -> int
+const SharpAV1.AV1Constants.COMPOUND_IDX_CONTEXTS = 6 -> int
+const SharpAV1.AV1Constants.COMPOUND_MODES = 8 -> int
+const SharpAV1.AV1Constants.COMPOUND_MODE_CONTEXTS = 8 -> int
+const SharpAV1.AV1Constants.COMPOUND_TYPES = 2 -> int
+const SharpAV1.AV1Constants.COMP_GROUP_IDX_CONTEXTS = 6 -> int
+const SharpAV1.AV1Constants.COMP_INTER_CONTEXTS = 5 -> int
+const SharpAV1.AV1Constants.COMP_NEWMV_CTXS = 5 -> int
+const SharpAV1.AV1Constants.COMP_REF_TYPE_CONTEXTS = 5 -> int
+const SharpAV1.AV1Constants.DCT_ADST = 2 -> int
+const SharpAV1.AV1Constants.DCT_DCT = 0 -> int
+const SharpAV1.AV1Constants.DCT_FLIPADST = 5 -> int
+const SharpAV1.AV1Constants.DC_SIGN_CONTEXTS = 3 -> int
+const SharpAV1.AV1Constants.DELTA_LF_SMALL = 3 -> int
+const SharpAV1.AV1Constants.DELTA_Q_SMALL = 3 -> int
+const SharpAV1.AV1Constants.DIRECTIONAL_MODES = 8 -> int
+const SharpAV1.AV1Constants.DIV_LUT_BITS = 8 -> int
+const SharpAV1.AV1Constants.DIV_LUT_NUM = 257 -> int
+const SharpAV1.AV1Constants.DIV_LUT_PREC_BITS = 14 -> int
+const SharpAV1.AV1Constants.DRL_MODE_CONTEXTS = 3 -> int
+const SharpAV1.AV1Constants.EC_MIN_PROB = 4 -> int
+const SharpAV1.AV1Constants.EC_PROB_SHIFT = 6 -> int
+const SharpAV1.AV1Constants.EOB_COEF_CONTEXTS = 9 -> int
+const SharpAV1.AV1Constants.FILTER_BITS = 7 -> int
+const SharpAV1.AV1Constants.FLIPADST_ADST = 8 -> int
+const SharpAV1.AV1Constants.FLIPADST_DCT = 4 -> int
+const SharpAV1.AV1Constants.FLIPADST_FLIPADST = 6 -> int
+const SharpAV1.AV1Constants.FRAME_LF_COUNT = 4 -> int
+const SharpAV1.AV1Constants.FWD_REFS = 4 -> int
+const SharpAV1.AV1Constants.GM_ABS_ALPHA_BITS = 12 -> int
+const SharpAV1.AV1Constants.GM_ABS_TRANS_BITS = 12 -> int
+const SharpAV1.AV1Constants.GM_ABS_TRANS_ONLY_BITS = 9 -> int
+const SharpAV1.AV1Constants.GM_ALPHA_PREC_BITS = 15 -> int
+const SharpAV1.AV1Constants.GM_TRANS_ONLY_PREC_BITS = 3 -> int
+const SharpAV1.AV1Constants.GM_TRANS_PREC_BITS = 6 -> int
+const SharpAV1.AV1Constants.H_ADST = 13 -> int
+const SharpAV1.AV1Constants.H_DCT = 11 -> int
+const SharpAV1.AV1Constants.H_FLIPADST = 15 -> int
+const SharpAV1.AV1Constants.IDENTITY = 0 -> int
+const SharpAV1.AV1Constants.IDTX = 9 -> int
+const SharpAV1.AV1Constants.INTERINTRA_MODES = 4 -> int
+const SharpAV1.AV1Constants.INTERP_FILTERS = 3 -> int
+const SharpAV1.AV1Constants.INTERP_FILTER_CONTEXTS = 16 -> int
+const SharpAV1.AV1Constants.INTRABC_DELAY_PIXELS = 256 -> int
+const SharpAV1.AV1Constants.INTRABC_DELAY_SB64 = 4 -> int
+const SharpAV1.AV1Constants.INTRA_EDGE_KERNELS = 3 -> int
+const SharpAV1.AV1Constants.INTRA_EDGE_TAPS = 5 -> int
+const SharpAV1.AV1Constants.INTRA_FILTER_MODES = 5 -> int
+const SharpAV1.AV1Constants.INTRA_FILTER_SCALE_BITS = 4 -> int
+const SharpAV1.AV1Constants.INTRA_MODES = 13 -> int
+const SharpAV1.AV1Constants.INTRA_MODE_CONTEXTS = 5 -> int
+const SharpAV1.AV1Constants.IS_INTER_CONTEXTS = 4 -> int
+const SharpAV1.AV1Constants.LEAST_SQUARES_SAMPLES_MAX = 8 -> int
+const SharpAV1.AV1Constants.LEVEL_CONTEXTS = 21 -> int
+const SharpAV1.AV1Constants.LOCALWARP = 2 -> int
+const SharpAV1.AV1Constants.LS_MV_MAX = 256 -> int
+const SharpAV1.AV1Constants.MASK_MASTER_SIZE = 64 -> int
+const SharpAV1.AV1Constants.MAX_ANGLE_DELTA = 3 -> int
+const SharpAV1.AV1Constants.MAX_FRAME_DISTANCE = 31 -> int
+const SharpAV1.AV1Constants.MAX_LOOP_FILTER = 63 -> int
+const SharpAV1.AV1Constants.MAX_OFFSET_HEIGHT = 0 -> int
+const SharpAV1.AV1Constants.MAX_OFFSET_WIDTH = 8 -> int
+const SharpAV1.AV1Constants.MAX_REF_MV_STACK_SIZE = 8 -> int
+const SharpAV1.AV1Constants.MAX_SB_SIZE = 128 -> int
+const SharpAV1.AV1Constants.MAX_SEGMENTS = 8 -> int
+const SharpAV1.AV1Constants.MAX_TILE_AREA = 9437184 -> int
+const SharpAV1.AV1Constants.MAX_TILE_COLS = 64 -> int
+const SharpAV1.AV1Constants.MAX_TILE_ROWS = 64 -> int
+const SharpAV1.AV1Constants.MAX_TILE_WIDTH = 4096 -> int
+const SharpAV1.AV1Constants.MAX_TX_DEPTH = 2 -> int
+const SharpAV1.AV1Constants.MAX_VARTX_DEPTH = 2 -> int
+const SharpAV1.AV1Constants.MB_MODE_COUNT = 17 -> int
+const SharpAV1.AV1Constants.MFMV_STACK_SIZE = 3 -> int
+const SharpAV1.AV1Constants.MI_SIZE = 4 -> int
+const SharpAV1.AV1Constants.MI_SIZE_LOG2 = 2 -> int
+const SharpAV1.AV1Constants.MOTION_MODES = 3 -> int
+const SharpAV1.AV1Constants.MV_BORDER = 128 -> int
+const SharpAV1.AV1Constants.MV_CLASSES = 11 -> int
+const SharpAV1.AV1Constants.MV_CONTEXTS = 2 -> int
+const SharpAV1.AV1Constants.MV_INTRABC_CONTEXT = 1 -> int
+const SharpAV1.AV1Constants.MV_JOINTS = 4 -> int
+const SharpAV1.AV1Constants.MV_OFFSET_BITS = 10 -> int
+const SharpAV1.AV1Constants.NEW_MV_CONTEXTS = 6 -> int
+const SharpAV1.AV1Constants.NUM_BASE_LEVELS = 2 -> int
+const SharpAV1.AV1Constants.NUM_REF_FRAMES = 8 -> int
+const SharpAV1.AV1Constants.OBMC = 1 -> int
+const SharpAV1.AV1Constants.PALETTE_BLOCK_SIZE_CONTEXTS = 7 -> int
+const SharpAV1.AV1Constants.PALETTE_COLORS = 8 -> int
+const SharpAV1.AV1Constants.PALETTE_COLOR_CONTEXTS = 5 -> int
+const SharpAV1.AV1Constants.PALETTE_MAX_COLOR_CONTEXT_HASH = 8 -> int
+const SharpAV1.AV1Constants.PALETTE_NUM_NEIGHBORS = 3 -> int
+const SharpAV1.AV1Constants.PALETTE_SIZES = 7 -> int
+const SharpAV1.AV1Constants.PALETTE_UV_MODE_CONTEXTS = 2 -> int
+const SharpAV1.AV1Constants.PALETTE_Y_MODE_CONTEXTS = 3 -> int
+const SharpAV1.AV1Constants.PARTITION_CONTEXTS = 4 -> int
+const SharpAV1.AV1Constants.PLANE_TYPES = 2 -> int
+const SharpAV1.AV1Constants.PRIMARY_REF_NONE = 7 -> int
+const SharpAV1.AV1Constants.QM_TOTAL_SIZE = 3344 -> int
+const SharpAV1.AV1Constants.REFMVS_LIMIT = 4095 -> int
+const SharpAV1.AV1Constants.REFS_PER_FRAME = 7 -> int
+const SharpAV1.AV1Constants.REF_CAT_LEVEL = 640 -> int
+const SharpAV1.AV1Constants.REF_CONTEXTS = 3 -> int
+const SharpAV1.AV1Constants.REF_MV_CONTEXTS = 6 -> int
+const SharpAV1.AV1Constants.REF_SCALE_SHIFT = 14 -> int
+const SharpAV1.AV1Constants.RESTORATION_TILESIZE_MAX = 256 -> int
+const SharpAV1.AV1Constants.ROTZOOM = 2 -> int
+const SharpAV1.AV1Constants.SCALE_SUBPEL_BITS = 10 -> int
+const SharpAV1.AV1Constants.SEGMENT_ID_CONTEXTS = 3 -> int
+const SharpAV1.AV1Constants.SEGMENT_ID_PREDICTED_CONTEXTS = 3 -> int
+const SharpAV1.AV1Constants.SEG_LVL_ALT_LF_Y_V = 1 -> int
+const SharpAV1.AV1Constants.SEG_LVL_ALT_Q = 0 -> int
+const SharpAV1.AV1Constants.SEG_LVL_GLOBALMV = 7 -> int
+const SharpAV1.AV1Constants.SEG_LVL_MAX = 8 -> int
+const SharpAV1.AV1Constants.SEG_LVL_REF_FRAME = 5 -> int
+const SharpAV1.AV1Constants.SEG_LVL_SKIP = 6 -> int
+const SharpAV1.AV1Constants.SELECT_INTEGER_MV = 2 -> int
+const SharpAV1.AV1Constants.SELECT_SCREEN_CONTENT_TOOLS = 2 -> int
+const SharpAV1.AV1Constants.SGRPROJ_MTABLE_BITS = 20 -> int
+const SharpAV1.AV1Constants.SGRPROJ_PARAMS_BITS = 4 -> int
+const SharpAV1.AV1Constants.SGRPROJ_PRJ_BITS = 7 -> int
+const SharpAV1.AV1Constants.SGRPROJ_PRJ_SUBEXP_K = 4 -> int
+const SharpAV1.AV1Constants.SGRPROJ_RECIP_BITS = 12 -> int
+const SharpAV1.AV1Constants.SGRPROJ_RST_BITS = 4 -> int
+const SharpAV1.AV1Constants.SGRPROJ_SGR_BITS = 8 -> int
+const SharpAV1.AV1Constants.SIG_COEF_CONTEXTS = 42 -> int
+const SharpAV1.AV1Constants.SIG_COEF_CONTEXTS_2D = 26 -> int
+const SharpAV1.AV1Constants.SIG_COEF_CONTEXTS_EOB = 4 -> int
+const SharpAV1.AV1Constants.SIG_REF_DIFF_OFFSET_NUM = 5 -> int
+const SharpAV1.AV1Constants.SIMPLE = 0 -> int
+const SharpAV1.AV1Constants.SINGLE_REFS = 7 -> int
+const SharpAV1.AV1Constants.SKIP_CONTEXTS = 3 -> int
+const SharpAV1.AV1Constants.SKIP_MODE_CONTEXTS = 3 -> int
+const SharpAV1.AV1Constants.SUBPEL_BITS = 4 -> int
+const SharpAV1.AV1Constants.SUBPEL_MASK = 15 -> int
+const SharpAV1.AV1Constants.SUPERRES_DENOM_BITS = 3 -> int
+const SharpAV1.AV1Constants.SUPERRES_DENOM_MIN = 9 -> int
+const SharpAV1.AV1Constants.SUPERRES_EXTRA_BITS = 8 -> int
+const SharpAV1.AV1Constants.SUPERRES_FILTER_BITS = 6 -> int
+const SharpAV1.AV1Constants.SUPERRES_FILTER_OFFSET = 3 -> int
+const SharpAV1.AV1Constants.SUPERRES_FILTER_SHIFTS = 64 -> int
+const SharpAV1.AV1Constants.SUPERRES_FILTER_TAPS = 8 -> int
+const SharpAV1.AV1Constants.SUPERRES_NUM = 8 -> int
+const SharpAV1.AV1Constants.SUPERRES_SCALE_BITS = 14 -> int
+const SharpAV1.AV1Constants.SUPERRES_SCALE_MASK = 16383 -> int
+const SharpAV1.AV1Constants.TOTAL_REFS_PER_FRAME = 8 -> int
+const SharpAV1.AV1Constants.TRANSLATION = 1 -> int
+const SharpAV1.AV1Constants.TXB_SKIP_CONTEXTS = 13 -> int
+const SharpAV1.AV1Constants.TXFM_PARTITION_CONTEXTS = 21 -> int
+const SharpAV1.AV1Constants.TX_CLASS_2D = 0 -> int
+const SharpAV1.AV1Constants.TX_CLASS_HORIZ = 1 -> int
+const SharpAV1.AV1Constants.TX_CLASS_VERT = 2 -> int
+const SharpAV1.AV1Constants.TX_MODES = 3 -> int
+const SharpAV1.AV1Constants.TX_SET_TYPES_INTER = 4 -> int
+const SharpAV1.AV1Constants.TX_SET_TYPES_INTRA = 3 -> int
+const SharpAV1.AV1Constants.TX_SIZES = 5 -> int
+const SharpAV1.AV1Constants.TX_SIZES_ALL = 19 -> int
+const SharpAV1.AV1Constants.TX_SIZE_CONTEXTS = 3 -> int
+const SharpAV1.AV1Constants.TX_TYPES = 16 -> int
+const SharpAV1.AV1Constants.UNIDIR_COMP_REFS = 4 -> int
+const SharpAV1.AV1Constants.UV_INTRA_MODES_CFL_ALLOWED = 14 -> int
+const SharpAV1.AV1Constants.UV_INTRA_MODES_CFL_NOT_ALLOWED = 13 -> int
+const SharpAV1.AV1Constants.V_ADST = 12 -> int
+const SharpAV1.AV1Constants.V_DCT = 10 -> int
+const SharpAV1.AV1Constants.V_FLIPADST = 14 -> int
+const SharpAV1.AV1Constants.WARPEDDIFF_PREC_BITS = 10 -> int
+const SharpAV1.AV1Constants.WARPEDMODEL_NONDIAGAFFINE_CLAMP = 8192 -> int
+const SharpAV1.AV1Constants.WARPEDMODEL_PREC_BITS = 16 -> int
+const SharpAV1.AV1Constants.WARPEDMODEL_TRANS_CLAMP = 8388608 -> int
+const SharpAV1.AV1Constants.WARPEDPIXEL_PREC_SHIFTS = 64 -> int
+const SharpAV1.AV1Constants.WARP_PARAM_REDUCE_BITS = 6 -> int
+const SharpAV1.AV1Constants.WEDGE_TYPES = 16 -> int
+const SharpAV1.AV1Constants.WIENER_COEFFS = 3 -> int
+const SharpAV1.AV1Constants.ZERO_MV_CONTEXTS = 2 -> int
+const SharpAV1.AV1FrameRestorationType.RESTORE_NONE = 0 -> int
+const SharpAV1.AV1FrameRestorationType.RESTORE_SGRPROJ = 2 -> int
+const SharpAV1.AV1FrameRestorationType.RESTORE_SWITCHABLE = 3 -> int
+const SharpAV1.AV1FrameRestorationType.RESTORE_WIENER = 1 -> int
+const SharpAV1.AV1FrameTypes.INTER_FRAME = 1 -> int
+const SharpAV1.AV1FrameTypes.INTRA_ONLY_FRAME = 2 -> int
+const SharpAV1.AV1FrameTypes.KEY_FRAME = 0 -> int
+const SharpAV1.AV1FrameTypes.SWITCH_FRAME = 3 -> int
+const SharpAV1.AV1InterpolationFilter.BILINEAR = 3 -> int
+const SharpAV1.AV1InterpolationFilter.EIGHTTAP = 0 -> int
+const SharpAV1.AV1InterpolationFilter.EIGHTTAP_SHARP = 2 -> int
+const SharpAV1.AV1InterpolationFilter.EIGHTTAP_SMOOTH = 1 -> int
+const SharpAV1.AV1InterpolationFilter.SWITCHABLE = 4 -> int
+const SharpAV1.AV1MatrixCoefficients.MC_BT_2020_CL = 10 -> int
+const SharpAV1.AV1MatrixCoefficients.MC_BT_2020_NCL = 9 -> int
+const SharpAV1.AV1MatrixCoefficients.MC_BT_470_B_G = 5 -> int
+const SharpAV1.AV1MatrixCoefficients.MC_BT_601 = 6 -> int
+const SharpAV1.AV1MatrixCoefficients.MC_BT_709 = 1 -> int
+const SharpAV1.AV1MatrixCoefficients.MC_CHROMAT_CL = 13 -> int
+const SharpAV1.AV1MatrixCoefficients.MC_CHROMAT_NCL = 12 -> int
+const SharpAV1.AV1MatrixCoefficients.MC_FCC = 4 -> int
+const SharpAV1.AV1MatrixCoefficients.MC_ICTCP = 14 -> int
+const SharpAV1.AV1MatrixCoefficients.MC_IDENTITY = 0 -> int
+const SharpAV1.AV1MatrixCoefficients.MC_RESERVED_3 = 3 -> int
+const SharpAV1.AV1MatrixCoefficients.MC_SMPTE_2085 = 11 -> int
+const SharpAV1.AV1MatrixCoefficients.MC_SMPTE_240 = 7 -> int
+const SharpAV1.AV1MatrixCoefficients.MC_SMPTE_YCGCO = 8 -> int
+const SharpAV1.AV1MatrixCoefficients.MC_UNSPECIFIED = 2 -> int
+const SharpAV1.AV1MetadataType.METADATA_TYPE_HDR_CLL = 1 -> int
+const SharpAV1.AV1MetadataType.METADATA_TYPE_HDR_MDCV = 2 -> int
+const SharpAV1.AV1MetadataType.METADATA_TYPE_ITUT_T35 = 4 -> int
+const SharpAV1.AV1MetadataType.METADATA_TYPE_SCALABILITY = 3 -> int
+const SharpAV1.AV1MetadataType.METADATA_TYPE_TIMECODE = 5 -> int
+const SharpAV1.AV1ObuTypes.OBU_FRAME = 6 -> int
+const SharpAV1.AV1ObuTypes.OBU_FRAME_HEADER = 3 -> int
+const SharpAV1.AV1ObuTypes.OBU_METADATA = 5 -> int
+const SharpAV1.AV1ObuTypes.OBU_PADDING = 15 -> int
+const SharpAV1.AV1ObuTypes.OBU_REDUNDANT_FRAME_HEADER = 7 -> int
+const SharpAV1.AV1ObuTypes.OBU_RESERVED_0 = 0 -> int
+const SharpAV1.AV1ObuTypes.OBU_RESERVED_10 = 10 -> int
+const SharpAV1.AV1ObuTypes.OBU_RESERVED_11 = 11 -> int
+const SharpAV1.AV1ObuTypes.OBU_RESERVED_12 = 12 -> int
+const SharpAV1.AV1ObuTypes.OBU_RESERVED_13 = 13 -> int
+const SharpAV1.AV1ObuTypes.OBU_RESERVED_14 = 14 -> int
+const SharpAV1.AV1ObuTypes.OBU_RESERVED_9 = 9 -> int
+const SharpAV1.AV1ObuTypes.OBU_SEQUENCE_HEADER = 1 -> int
+const SharpAV1.AV1ObuTypes.OBU_TEMPORAL_DELIMITER = 2 -> int
+const SharpAV1.AV1ObuTypes.OBU_TILE_GROUP = 4 -> int
+const SharpAV1.AV1ObuTypes.OBU_TILE_LIST = 8 -> int
+const SharpAV1.AV1RefFrames.ALTREF2_FRAME = 6 -> int
+const SharpAV1.AV1RefFrames.ALTREF_FRAME = 7 -> int
+const SharpAV1.AV1RefFrames.BWDREF_FRAME = 5 -> int
+const SharpAV1.AV1RefFrames.GOLDEN_FRAME = 4 -> int
+const SharpAV1.AV1RefFrames.INTRA_FRAME = 0 -> int
+const SharpAV1.AV1RefFrames.LAST2_FRAME = 2 -> int
+const SharpAV1.AV1RefFrames.LAST3_FRAME = 3 -> int
+const SharpAV1.AV1RefFrames.LAST_FRAME = 1 -> int
+const SharpAV1.AV1RefFrames.NONE = -1 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L1T2 = 0 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L1T3 = 1 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L2T1 = 2 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L2T1h = 8 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L2T2 = 3 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L2T2h = 9 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L2T3 = 4 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L2T3h = 10 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L3T1 = 15 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L3T2 = 16 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L3T2_KEY = 21 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L3T2_KEY_SHIFT = 25 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L3T3 = 17 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L3T3_KEY = 22 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L3T3_KEY_SHIFT = 26 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L4T5_KEY = 23 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L4T5_KEY_SHIFT = 27 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L4T7_KEY = 24 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_L4T7_KEY_SHIFT = 28 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_S2T1 = 5 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_S2T1h = 11 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_S2T2 = 6 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_S2T2h = 12 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_S2T3 = 7 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_S2T3h = 13 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_S3T1 = 18 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_S3T2 = 19 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_S3T3 = 20 -> int
+const SharpAV1.AV1ScalabilityModeIdc.SCALABILITY_SS = 14 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_BT_1361 = 12 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_BT_2020_10_BIT = 14 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_BT_2020_12_BIT = 15 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_BT_470_B_G = 5 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_BT_470_M = 4 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_BT_601 = 6 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_BT_709 = 1 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_HLG = 18 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_IEC_61966 = 11 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_LINEAR = 8 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_LOG_100 = 9 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_LOG_100_SQRT10 = 10 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_RESERVED_0 = 0 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_RESERVED_3 = 3 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_SMPTE_2084 = 16 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_SMPTE_240 = 7 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_SMPTE_428 = 17 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_SRGB = 13 -> int
+const SharpAV1.AV1TransferCharacteristics.TC_UNSPECIFIED = 2 -> int
+const SharpAV1.AV1TxModes.ONLY_4X4 = 0 -> int
+const SharpAV1.AV1TxModes.TX_MODE_LARGEST = 1 -> int
+const SharpAV1.AV1TxModes.TX_MODE_SELECT = 2 -> int
+static SharpAV1.AV1Context.Clip3(int low, int high, int value) -> int
+static SharpAV1.AV1Extensions.CalculateDimensions(this SharpAV1.AV1Context context) -> (uint Width, uint Height)

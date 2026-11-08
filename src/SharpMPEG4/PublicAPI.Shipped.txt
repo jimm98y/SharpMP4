@@ -1,0 +1,796 @@
+SharpMPEG4.BackwardShape
+SharpMPEG4.BackwardShape.BackwardShape() -> void
+SharpMPEG4.BackwardShape.HasMoreRbspData.get -> int
+SharpMPEG4.BackwardShape.HasMoreRbspData.set -> void
+SharpMPEG4.BackwardShape.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.BackwardShape.ReadNextBits.get -> int[]
+SharpMPEG4.BackwardShape.ReadNextBits.set -> void
+SharpMPEG4.BackwardShape.Syntax.get -> string
+SharpMPEG4.BackwardShape.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.BrightnessChangeFactor
+SharpMPEG4.BrightnessChangeFactor.BrightnessChangeFactor() -> void
+SharpMPEG4.BrightnessChangeFactor.BrightnessChangeFactorCode.get -> uint
+SharpMPEG4.BrightnessChangeFactor.BrightnessChangeFactorCode.set -> void
+SharpMPEG4.BrightnessChangeFactor.BrightnessChangeFactorSize.get -> int
+SharpMPEG4.BrightnessChangeFactor.BrightnessChangeFactorSize.set -> void
+SharpMPEG4.BrightnessChangeFactor.HasMoreRbspData.get -> int
+SharpMPEG4.BrightnessChangeFactor.HasMoreRbspData.set -> void
+SharpMPEG4.BrightnessChangeFactor.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.BrightnessChangeFactor.ReadNextBits.get -> int[]
+SharpMPEG4.BrightnessChangeFactor.ReadNextBits.set -> void
+SharpMPEG4.BrightnessChangeFactor.Syntax.get -> string
+SharpMPEG4.BrightnessChangeFactor.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.DefineVopComplexityEstimationHeader
+SharpMPEG4.DefineVopComplexityEstimationHeader.Apm.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.Apm.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.DctCoefs.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.DctCoefs.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.DctLines.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.DctLines.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.DefineVopComplexityEstimationHeader() -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.EstimationMethod.get -> uint
+SharpMPEG4.DefineVopComplexityEstimationHeader.EstimationMethod.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.ForwBackMcq.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.ForwBackMcq.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.Halfpel2.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.Halfpel2.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.Halfpel4.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.Halfpel4.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.HasMoreRbspData.get -> int
+SharpMPEG4.DefineVopComplexityEstimationHeader.HasMoreRbspData.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.Inter4vBlocks.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.Inter4vBlocks.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.InterBlocks.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.InterBlocks.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.InterCae.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.InterCae.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.InterpolateMcq.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.InterpolateMcq.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.IntraBlocks.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.IntraBlocks.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.IntraCae.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.IntraCae.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.MarkerBit.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.MarkerBit.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.MarkerBit2.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.MarkerBit2.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.MotionCompensationComplexityDisable.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.MotionCompensationComplexityDisable.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.NoUpdate.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.NoUpdate.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.NotCodedBlocks.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.NotCodedBlocks.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.Npm.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.Npm.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.Opaque.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.Opaque.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.Quarterpel.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.Quarterpel.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.DefineVopComplexityEstimationHeader.ReadNextBits.get -> int[]
+SharpMPEG4.DefineVopComplexityEstimationHeader.ReadNextBits.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.Sadct.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.Sadct.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.ShapeComplexityEstimationDisable.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.ShapeComplexityEstimationDisable.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.Syntax.get -> string
+SharpMPEG4.DefineVopComplexityEstimationHeader.TextureComplexityEstimationSet1Disable.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.TextureComplexityEstimationSet1Disable.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.TextureComplexityEstimationSet2Disable.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.TextureComplexityEstimationSet2Disable.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.Transparent.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.Transparent.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.Upsampling.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.Upsampling.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.Version2ComplexityEstimationDisable.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.Version2ComplexityEstimationDisable.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.VlcBits.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.VlcBits.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.VlcSymbols.get -> byte
+SharpMPEG4.DefineVopComplexityEstimationHeader.VlcSymbols.set -> void
+SharpMPEG4.DefineVopComplexityEstimationHeader.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.FgsFrequencyWeightingMatrix
+SharpMPEG4.FgsFrequencyWeightingMatrix.FgsFrequencyWeightingMatrix() -> void
+SharpMPEG4.FgstFrequencyWeightingMatrix
+SharpMPEG4.FgstFrequencyWeightingMatrix.FgstFrequencyWeightingMatrix() -> void
+SharpMPEG4.ForwardShape
+SharpMPEG4.ForwardShape.ForwardShape() -> void
+SharpMPEG4.ForwardShape.HasMoreRbspData.get -> int
+SharpMPEG4.ForwardShape.HasMoreRbspData.set -> void
+SharpMPEG4.ForwardShape.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.ForwardShape.ReadNextBits.get -> int[]
+SharpMPEG4.ForwardShape.ReadNextBits.set -> void
+SharpMPEG4.ForwardShape.Syntax.get -> string
+SharpMPEG4.ForwardShape.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.GroupOfVideoObjectPlane
+SharpMPEG4.GroupOfVideoObjectPlane.BrokenLink.get -> byte
+SharpMPEG4.GroupOfVideoObjectPlane.BrokenLink.set -> void
+SharpMPEG4.GroupOfVideoObjectPlane.ClosedGov.get -> byte
+SharpMPEG4.GroupOfVideoObjectPlane.ClosedGov.set -> void
+SharpMPEG4.GroupOfVideoObjectPlane.GroupOfVideoObjectPlane() -> void
+SharpMPEG4.GroupOfVideoObjectPlane.GroupOfVopStartCode.get -> uint
+SharpMPEG4.GroupOfVideoObjectPlane.GroupOfVopStartCode.set -> void
+SharpMPEG4.GroupOfVideoObjectPlane.HasMoreRbspData.get -> int
+SharpMPEG4.GroupOfVideoObjectPlane.HasMoreRbspData.set -> void
+SharpMPEG4.GroupOfVideoObjectPlane.NextStartCode.get -> SharpMPEG4.NextStartCode
+SharpMPEG4.GroupOfVideoObjectPlane.NextStartCode.set -> void
+SharpMPEG4.GroupOfVideoObjectPlane.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.GroupOfVideoObjectPlane.ReadNextBits.get -> int[]
+SharpMPEG4.GroupOfVideoObjectPlane.ReadNextBits.set -> void
+SharpMPEG4.GroupOfVideoObjectPlane.Syntax.get -> string
+SharpMPEG4.GroupOfVideoObjectPlane.TimeCode.get -> uint
+SharpMPEG4.GroupOfVideoObjectPlane.TimeCode.set -> void
+SharpMPEG4.GroupOfVideoObjectPlane.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.IntraQuantMat
+SharpMPEG4.IntraQuantMat.IntraQuantMat() -> void
+SharpMPEG4.IntraQuantMatGrayscale
+SharpMPEG4.IntraQuantMatGrayscale.IntraQuantMatGrayscale(uint component) -> void
+SharpMPEG4.LoadedMatrix
+SharpMPEG4.LoadedMatrix.HasMoreRbspData.get -> int
+SharpMPEG4.LoadedMatrix.HasMoreRbspData.set -> void
+SharpMPEG4.LoadedMatrix.LoadedMatrix(int bits) -> void
+SharpMPEG4.LoadedMatrix.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.LoadedMatrix.ReadNextBits.get -> int[]
+SharpMPEG4.LoadedMatrix.ReadNextBits.set -> void
+SharpMPEG4.LoadedMatrix.Syntax.get -> string
+SharpMPEG4.LoadedMatrix.Values.get -> System.Collections.Generic.List<uint>
+SharpMPEG4.LoadedMatrix.Values.set -> void
+SharpMPEG4.LoadedMatrix.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.MPEG4Context
+SharpMPEG4.MPEG4Context.AtStartCode(SharpH26X.ItuStream stream) -> bool
+SharpMPEG4.MPEG4Context.AuxCompCount.get -> int
+SharpMPEG4.MPEG4Context.ComplexityEstimation.get -> SharpMPEG4.DefineVopComplexityEstimationHeader
+SharpMPEG4.MPEG4Context.ComplexityEstimation.set -> void
+SharpMPEG4.MPEG4Context.IsStudio.get -> bool
+SharpMPEG4.MPEG4Context.MPEG4Context() -> void
+SharpMPEG4.MPEG4Context.OnObjectLayerIdentifier(uint isObjectLayerIdentifier) -> void
+SharpMPEG4.MPEG4Context.OnVideoObjectLayer(SharpMPEG4.VideoObjectLayer layer) -> void
+SharpMPEG4.MPEG4Context.OnVisualObject(SharpMPEG4.VisualObject visualObject) -> void
+SharpMPEG4.MPEG4Context.QuantBits.get -> ulong
+SharpMPEG4.MPEG4Context.ReadShortHeaderPlane(SharpH26X.ItuStream stream) -> SharpMPEG4.VideoPlaneWithShortHeader
+SharpMPEG4.MPEG4Context.ReadUnit(byte[] buffer, int offset, int length, SharpMP4.Common.IMp4Logger logger = null, SharpH26X.IItuTracer tracer = null) -> SharpH26X.IItuSerializable
+SharpMPEG4.MPEG4Context.VideoObjectLayer.get -> SharpMPEG4.VideoObjectLayer
+SharpMPEG4.MPEG4Context.VideoObjectLayer.set -> void
+SharpMPEG4.MPEG4Context.VideoObjectLayerVerid.get -> uint
+SharpMPEG4.MPEG4Context.VideoObjectLayerVerid.set -> void
+SharpMPEG4.MPEG4Context.VisualObject.get -> SharpMPEG4.VisualObject
+SharpMPEG4.MPEG4Context.VisualObject.set -> void
+SharpMPEG4.MPEG4Context.VisualObjectSequence.get -> SharpMPEG4.VisualObjectSequence
+SharpMPEG4.MPEG4Context.VisualObjectSequence.set -> void
+SharpMPEG4.MPEG4Context.VisualObjectVerid.get -> uint
+SharpMPEG4.MPEG4Context.VisualObjectVerid.set -> void
+SharpMPEG4.MPEG4Context.VopCodingType.get -> uint
+SharpMPEG4.MPEG4Context.VopCodingType.set -> void
+SharpMPEG4.MPEG4Context.VopIdBits.get -> ulong
+SharpMPEG4.MPEG4Context.VopTimeIncrementBits.get -> ulong
+SharpMPEG4.MPEG4Context.WriteUnit(SharpH26X.ItuStream stream, SharpH26X.IItuSerializable unit) -> void
+SharpMPEG4.MPEG4StartCodes
+SharpMPEG4.MPEG4VopCodingTypes
+SharpMPEG4.NextStartCode
+SharpMPEG4.NextStartCode.AlignmentBitCount.get -> int
+SharpMPEG4.NextStartCode.AlignmentBitCount.set -> void
+SharpMPEG4.NextStartCode.AlignmentBits.get -> int
+SharpMPEG4.NextStartCode.AlignmentBits.set -> void
+SharpMPEG4.NextStartCode.HasMoreRbspData.get -> int
+SharpMPEG4.NextStartCode.HasMoreRbspData.set -> void
+SharpMPEG4.NextStartCode.NextStartCode() -> void
+SharpMPEG4.NextStartCode.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.NextStartCode.ReadNextBits.get -> int[]
+SharpMPEG4.NextStartCode.ReadNextBits.set -> void
+SharpMPEG4.NextStartCode.Stuffing.get -> byte[]
+SharpMPEG4.NextStartCode.Stuffing.set -> void
+SharpMPEG4.NextStartCode.Syntax.get -> string
+SharpMPEG4.NextStartCode.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.NonintraQuantMat
+SharpMPEG4.NonintraQuantMat.NonintraQuantMat() -> void
+SharpMPEG4.NonintraQuantMatGrayscale
+SharpMPEG4.NonintraQuantMatGrayscale.NonintraQuantMatGrayscale(uint component) -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsApm.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsApm.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsDctCoefs.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsDctCoefs.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsDctLines.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsDctLines.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsForwBackMcq.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsForwBackMcq.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsHalfpel2.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsHalfpel2.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsHalfpel4.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsHalfpel4.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsInter4vBlocks.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsInter4vBlocks.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsInterBlocks.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsInterBlocks.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsInterCae.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsInterCae.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsInterpolateMcq.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsInterpolateMcq.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsIntraBlocks.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsIntraBlocks.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsIntraCae.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsIntraCae.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsNoUpdate.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsNoUpdate.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsNotCodedBlocks.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsNotCodedBlocks.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsNpm.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsNpm.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsOpaque.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsOpaque.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsQuarterpel.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsQuarterpel.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsSadct.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsSadct.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsTransparent.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsTransparent.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsUpsampling.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsUpsampling.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsVlcBits.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsVlcBits.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsVlcSymbols.get -> uint
+SharpMPEG4.ReadVopComplexityEstimationHeader.DcecsVlcSymbols.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.HasMoreRbspData.get -> int
+SharpMPEG4.ReadVopComplexityEstimationHeader.HasMoreRbspData.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.ReadVopComplexityEstimationHeader.ReadNextBits.get -> int[]
+SharpMPEG4.ReadVopComplexityEstimationHeader.ReadNextBits.set -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.ReadVopComplexityEstimationHeader() -> void
+SharpMPEG4.ReadVopComplexityEstimationHeader.Syntax.get -> string
+SharpMPEG4.ReadVopComplexityEstimationHeader.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.SpriteTrajectory
+SharpMPEG4.SpriteTrajectory.HasMoreRbspData.get -> int
+SharpMPEG4.SpriteTrajectory.HasMoreRbspData.set -> void
+SharpMPEG4.SpriteTrajectory.Points.get -> System.Collections.Generic.List<(SharpMPEG4.SpriteTrajectory.WarpingMvCode Du, SharpMPEG4.SpriteTrajectory.WarpingMvCode Dv)>
+SharpMPEG4.SpriteTrajectory.Points.set -> void
+SharpMPEG4.SpriteTrajectory.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.SpriteTrajectory.ReadNextBits.get -> int[]
+SharpMPEG4.SpriteTrajectory.ReadNextBits.set -> void
+SharpMPEG4.SpriteTrajectory.SpriteTrajectory() -> void
+SharpMPEG4.SpriteTrajectory.Syntax.get -> string
+SharpMPEG4.SpriteTrajectory.WarpingMvCode
+SharpMPEG4.SpriteTrajectory.WarpingMvCode.DmvCode -> uint
+SharpMPEG4.SpriteTrajectory.WarpingMvCode.DmvLength -> int
+SharpMPEG4.SpriteTrajectory.WarpingMvCode.MarkerBit -> int
+SharpMPEG4.SpriteTrajectory.WarpingMvCode.WarpingMvCode() -> void
+SharpMPEG4.SpriteTrajectory.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.StaticSpriteVop
+SharpMPEG4.StaticSpriteVop.HasMoreRbspData.get -> int
+SharpMPEG4.StaticSpriteVop.HasMoreRbspData.set -> void
+SharpMPEG4.StaticSpriteVop.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.StaticSpriteVop.ReadNextBits.get -> int[]
+SharpMPEG4.StaticSpriteVop.ReadNextBits.set -> void
+SharpMPEG4.StaticSpriteVop.StaticSpriteVop() -> void
+SharpMPEG4.StaticSpriteVop.Syntax.get -> string
+SharpMPEG4.StaticSpriteVop.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.Stuffing
+SharpMPEG4.Stuffing.HasMoreRbspData.get -> int
+SharpMPEG4.Stuffing.HasMoreRbspData.set -> void
+SharpMPEG4.Stuffing.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.Stuffing.ReadNextBits.get -> int[]
+SharpMPEG4.Stuffing.ReadNextBits.set -> void
+SharpMPEG4.Stuffing.Stuffing() -> void
+SharpMPEG4.Stuffing.StuffingByte.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpMPEG4.Stuffing.StuffingByte.set -> void
+SharpMPEG4.Stuffing.StuffingStartCode.get -> uint
+SharpMPEG4.Stuffing.StuffingStartCode.set -> void
+SharpMPEG4.Stuffing.Syntax.get -> string
+SharpMPEG4.Stuffing.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.UnknownUnit
+SharpMPEG4.UnknownUnit.Data.get -> byte[]
+SharpMPEG4.UnknownUnit.Data.set -> void
+SharpMPEG4.UnknownUnit.HasMoreRbspData.get -> int
+SharpMPEG4.UnknownUnit.HasMoreRbspData.set -> void
+SharpMPEG4.UnknownUnit.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.UnknownUnit.ReadNextBits.get -> int[]
+SharpMPEG4.UnknownUnit.ReadNextBits.set -> void
+SharpMPEG4.UnknownUnit.Syntax.get -> string
+SharpMPEG4.UnknownUnit.UnknownUnit() -> void
+SharpMPEG4.UnknownUnit.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.UserData
+SharpMPEG4.UserData.HasMoreRbspData.get -> int
+SharpMPEG4.UserData.HasMoreRbspData.set -> void
+SharpMPEG4.UserData.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.UserData.ReadNextBits.get -> int[]
+SharpMPEG4.UserData.ReadNextBits.set -> void
+SharpMPEG4.UserData.Syntax.get -> string
+SharpMPEG4.UserData.UserData() -> void
+SharpMPEG4.UserData.UserDataStartCode.get -> uint
+SharpMPEG4.UserData.UserDataStartCode.set -> void
+SharpMPEG4.UserData.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.UserData._UserData.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpMPEG4.UserData._UserData.set -> void
+SharpMPEG4.VideoObject
+SharpMPEG4.VideoObject.HasMoreRbspData.get -> int
+SharpMPEG4.VideoObject.HasMoreRbspData.set -> void
+SharpMPEG4.VideoObject.NextStartCode.get -> SharpMPEG4.NextStartCode
+SharpMPEG4.VideoObject.NextStartCode.set -> void
+SharpMPEG4.VideoObject.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.VideoObject.ReadNextBits.get -> int[]
+SharpMPEG4.VideoObject.ReadNextBits.set -> void
+SharpMPEG4.VideoObject.Syntax.get -> string
+SharpMPEG4.VideoObject.VideoObject() -> void
+SharpMPEG4.VideoObject.VideoObjectStartCode.get -> uint
+SharpMPEG4.VideoObject.VideoObjectStartCode.set -> void
+SharpMPEG4.VideoObject.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.VideoObjectLayer
+SharpMPEG4.VideoObjectLayer.AspectRatioInfo.get -> uint
+SharpMPEG4.VideoObjectLayer.AspectRatioInfo.set -> void
+SharpMPEG4.VideoObjectLayer.BitsPerPixel.get -> uint
+SharpMPEG4.VideoObjectLayer.BitsPerPixel.set -> void
+SharpMPEG4.VideoObjectLayer.ChromaFormat.get -> uint
+SharpMPEG4.VideoObjectLayer.ChromaFormat.set -> void
+SharpMPEG4.VideoObjectLayer.ComplexityEstimationDisable.get -> byte
+SharpMPEG4.VideoObjectLayer.ComplexityEstimationDisable.set -> void
+SharpMPEG4.VideoObjectLayer.CompositionMethod.get -> byte
+SharpMPEG4.VideoObjectLayer.CompositionMethod.set -> void
+SharpMPEG4.VideoObjectLayer.DataPartitioned.get -> byte
+SharpMPEG4.VideoObjectLayer.DataPartitioned.set -> void
+SharpMPEG4.VideoObjectLayer.DefineVopComplexityEstimationHeader.get -> SharpMPEG4.DefineVopComplexityEstimationHeader
+SharpMPEG4.VideoObjectLayer.DefineVopComplexityEstimationHeader.set -> void
+SharpMPEG4.VideoObjectLayer.EnhancementType.get -> byte
+SharpMPEG4.VideoObjectLayer.EnhancementType.set -> void
+SharpMPEG4.VideoObjectLayer.FgsFrequencyWeightingEnable.get -> byte
+SharpMPEG4.VideoObjectLayer.FgsFrequencyWeightingEnable.set -> void
+SharpMPEG4.VideoObjectLayer.FgsFrequencyWeightingMatrix.get -> SharpMPEG4.FgsFrequencyWeightingMatrix
+SharpMPEG4.VideoObjectLayer.FgsFrequencyWeightingMatrix.set -> void
+SharpMPEG4.VideoObjectLayer.FgsLayerType.get -> uint
+SharpMPEG4.VideoObjectLayer.FgsLayerType.set -> void
+SharpMPEG4.VideoObjectLayer.FgsRefLayerId.get -> uint
+SharpMPEG4.VideoObjectLayer.FgsRefLayerId.set -> void
+SharpMPEG4.VideoObjectLayer.FgsResyncMarkerDisable.get -> byte
+SharpMPEG4.VideoObjectLayer.FgsResyncMarkerDisable.set -> void
+SharpMPEG4.VideoObjectLayer.FgstFrequencyWeightingEnable.get -> byte
+SharpMPEG4.VideoObjectLayer.FgstFrequencyWeightingEnable.set -> void
+SharpMPEG4.VideoObjectLayer.FgstFrequencyWeightingMatrix.get -> SharpMPEG4.FgstFrequencyWeightingMatrix
+SharpMPEG4.VideoObjectLayer.FgstFrequencyWeightingMatrix.set -> void
+SharpMPEG4.VideoObjectLayer.FirstHalfBitRate.get -> uint
+SharpMPEG4.VideoObjectLayer.FirstHalfBitRate.set -> void
+SharpMPEG4.VideoObjectLayer.FirstHalfVbvBufferSize.get -> uint
+SharpMPEG4.VideoObjectLayer.FirstHalfVbvBufferSize.set -> void
+SharpMPEG4.VideoObjectLayer.FirstHalfVbvOccupancy.get -> uint
+SharpMPEG4.VideoObjectLayer.FirstHalfVbvOccupancy.set -> void
+SharpMPEG4.VideoObjectLayer.FixedVopRate.get -> byte
+SharpMPEG4.VideoObjectLayer.FixedVopRate.set -> void
+SharpMPEG4.VideoObjectLayer.FixedVopTimeIncrement.get -> ulong
+SharpMPEG4.VideoObjectLayer.FixedVopTimeIncrement.set -> void
+SharpMPEG4.VideoObjectLayer.HasMoreRbspData.get -> int
+SharpMPEG4.VideoObjectLayer.HasMoreRbspData.set -> void
+SharpMPEG4.VideoObjectLayer.HierarchyType.get -> byte
+SharpMPEG4.VideoObjectLayer.HierarchyType.set -> void
+SharpMPEG4.VideoObjectLayer.HorSamplingFactorm.get -> uint
+SharpMPEG4.VideoObjectLayer.HorSamplingFactorm.set -> void
+SharpMPEG4.VideoObjectLayer.HorSamplingFactorn.get -> uint
+SharpMPEG4.VideoObjectLayer.HorSamplingFactorn.set -> void
+SharpMPEG4.VideoObjectLayer.Interlaced.get -> byte
+SharpMPEG4.VideoObjectLayer.Interlaced.set -> void
+SharpMPEG4.VideoObjectLayer.IntraQuantMat.get -> SharpMPEG4.IntraQuantMat
+SharpMPEG4.VideoObjectLayer.IntraQuantMat.set -> void
+SharpMPEG4.VideoObjectLayer.IntraQuantMatGrayscale.get -> SharpMPEG4.IntraQuantMatGrayscale[]
+SharpMPEG4.VideoObjectLayer.IntraQuantMatGrayscale.set -> void
+SharpMPEG4.VideoObjectLayer.IsObjectLayerIdentifier.get -> byte
+SharpMPEG4.VideoObjectLayer.IsObjectLayerIdentifier.set -> void
+SharpMPEG4.VideoObjectLayer.LatterHalfBitRate.get -> uint
+SharpMPEG4.VideoObjectLayer.LatterHalfBitRate.set -> void
+SharpMPEG4.VideoObjectLayer.LatterHalfVbvBufferSize.get -> uint
+SharpMPEG4.VideoObjectLayer.LatterHalfVbvBufferSize.set -> void
+SharpMPEG4.VideoObjectLayer.LatterHalfVbvOccupancy.get -> uint
+SharpMPEG4.VideoObjectLayer.LatterHalfVbvOccupancy.set -> void
+SharpMPEG4.VideoObjectLayer.LinearComposition.get -> byte
+SharpMPEG4.VideoObjectLayer.LinearComposition.set -> void
+SharpMPEG4.VideoObjectLayer.LoadFgsFrequencyWeightingMatrix.get -> byte
+SharpMPEG4.VideoObjectLayer.LoadFgsFrequencyWeightingMatrix.set -> void
+SharpMPEG4.VideoObjectLayer.LoadFgstFrequencyWeightingMatrix.get -> byte
+SharpMPEG4.VideoObjectLayer.LoadFgstFrequencyWeightingMatrix.set -> void
+SharpMPEG4.VideoObjectLayer.LoadIntraQuantMat.get -> byte
+SharpMPEG4.VideoObjectLayer.LoadIntraQuantMat.set -> void
+SharpMPEG4.VideoObjectLayer.LoadIntraQuantMatGrayscale.get -> byte[]
+SharpMPEG4.VideoObjectLayer.LoadIntraQuantMatGrayscale.set -> void
+SharpMPEG4.VideoObjectLayer.LoadNonintraQuantMat.get -> byte
+SharpMPEG4.VideoObjectLayer.LoadNonintraQuantMat.set -> void
+SharpMPEG4.VideoObjectLayer.LoadNonintraQuantMatGrayscale.get -> byte[]
+SharpMPEG4.VideoObjectLayer.LoadNonintraQuantMatGrayscale.set -> void
+SharpMPEG4.VideoObjectLayer.LowDelay.get -> byte
+SharpMPEG4.VideoObjectLayer.LowDelay.set -> void
+SharpMPEG4.VideoObjectLayer.LowLatencySpriteEnable.get -> byte
+SharpMPEG4.VideoObjectLayer.LowLatencySpriteEnable.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit10.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit10.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit11.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit11.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit12.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit12.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit13.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit13.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit14.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit14.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit15.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit15.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit16.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit16.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit17.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit17.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit18.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit18.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit19.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit19.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit2.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit2.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit3.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit3.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit4.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit4.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit5.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit5.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit6.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit6.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit7.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit7.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit8.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit8.set -> void
+SharpMPEG4.VideoObjectLayer.MarkerBit9.get -> byte
+SharpMPEG4.VideoObjectLayer.MarkerBit9.set -> void
+SharpMPEG4.VideoObjectLayer.NewpredEnable.get -> byte
+SharpMPEG4.VideoObjectLayer.NewpredEnable.set -> void
+SharpMPEG4.VideoObjectLayer.NewpredSegmentType.get -> byte
+SharpMPEG4.VideoObjectLayer.NewpredSegmentType.set -> void
+SharpMPEG4.VideoObjectLayer.NextStartCode.get -> SharpMPEG4.NextStartCode
+SharpMPEG4.VideoObjectLayer.NextStartCode.set -> void
+SharpMPEG4.VideoObjectLayer.NoGrayQuantUpdate.get -> byte
+SharpMPEG4.VideoObjectLayer.NoGrayQuantUpdate.set -> void
+SharpMPEG4.VideoObjectLayer.NoOfSpriteWarpingPoints.get -> uint
+SharpMPEG4.VideoObjectLayer.NoOfSpriteWarpingPoints.set -> void
+SharpMPEG4.VideoObjectLayer.NonintraQuantMat.get -> SharpMPEG4.NonintraQuantMat
+SharpMPEG4.VideoObjectLayer.NonintraQuantMat.set -> void
+SharpMPEG4.VideoObjectLayer.NonintraQuantMatGrayscale.get -> SharpMPEG4.NonintraQuantMatGrayscale[]
+SharpMPEG4.VideoObjectLayer.NonintraQuantMatGrayscale.set -> void
+SharpMPEG4.VideoObjectLayer.Not8Bit.get -> byte
+SharpMPEG4.VideoObjectLayer.Not8Bit.set -> void
+SharpMPEG4.VideoObjectLayer.ObmcDisable.get -> byte
+SharpMPEG4.VideoObjectLayer.ObmcDisable.set -> void
+SharpMPEG4.VideoObjectLayer.ParHeight.get -> uint
+SharpMPEG4.VideoObjectLayer.ParHeight.set -> void
+SharpMPEG4.VideoObjectLayer.ParWidth.get -> uint
+SharpMPEG4.VideoObjectLayer.ParWidth.set -> void
+SharpMPEG4.VideoObjectLayer.QuantPrecision.get -> uint
+SharpMPEG4.VideoObjectLayer.QuantPrecision.set -> void
+SharpMPEG4.VideoObjectLayer.QuantType.get -> byte
+SharpMPEG4.VideoObjectLayer.QuantType.set -> void
+SharpMPEG4.VideoObjectLayer.QuarterSample.get -> byte
+SharpMPEG4.VideoObjectLayer.QuarterSample.set -> void
+SharpMPEG4.VideoObjectLayer.RandomAccessibleVol.get -> byte
+SharpMPEG4.VideoObjectLayer.RandomAccessibleVol.set -> void
+SharpMPEG4.VideoObjectLayer.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.VideoObjectLayer.ReadNextBits.get -> int[]
+SharpMPEG4.VideoObjectLayer.ReadNextBits.set -> void
+SharpMPEG4.VideoObjectLayer.ReducedResolutionVopEnable.get -> byte
+SharpMPEG4.VideoObjectLayer.ReducedResolutionVopEnable.set -> void
+SharpMPEG4.VideoObjectLayer.RefLayerId.get -> uint
+SharpMPEG4.VideoObjectLayer.RefLayerId.set -> void
+SharpMPEG4.VideoObjectLayer.RefLayerSamplingDirec.get -> byte
+SharpMPEG4.VideoObjectLayer.RefLayerSamplingDirec.set -> void
+SharpMPEG4.VideoObjectLayer.RequestedUpstreamMessageType.get -> uint
+SharpMPEG4.VideoObjectLayer.RequestedUpstreamMessageType.set -> void
+SharpMPEG4.VideoObjectLayer.ResyncMarkerDisable.get -> byte
+SharpMPEG4.VideoObjectLayer.ResyncMarkerDisable.set -> void
+SharpMPEG4.VideoObjectLayer.ReversibleVlc.get -> byte
+SharpMPEG4.VideoObjectLayer.ReversibleVlc.set -> void
+SharpMPEG4.VideoObjectLayer.SadctDisable.get -> byte
+SharpMPEG4.VideoObjectLayer.SadctDisable.set -> void
+SharpMPEG4.VideoObjectLayer.Scalability.get -> byte
+SharpMPEG4.VideoObjectLayer.Scalability.set -> void
+SharpMPEG4.VideoObjectLayer.ShapeHorSamplingFactorm.get -> uint
+SharpMPEG4.VideoObjectLayer.ShapeHorSamplingFactorm.set -> void
+SharpMPEG4.VideoObjectLayer.ShapeHorSamplingFactorn.get -> uint
+SharpMPEG4.VideoObjectLayer.ShapeHorSamplingFactorn.set -> void
+SharpMPEG4.VideoObjectLayer.ShapeVertSamplingFactorm.get -> uint
+SharpMPEG4.VideoObjectLayer.ShapeVertSamplingFactorm.set -> void
+SharpMPEG4.VideoObjectLayer.ShapeVertSamplingFactorn.get -> uint
+SharpMPEG4.VideoObjectLayer.ShapeVertSamplingFactorn.set -> void
+SharpMPEG4.VideoObjectLayer.SpriteBrightnessChange.get -> byte
+SharpMPEG4.VideoObjectLayer.SpriteBrightnessChange.set -> void
+SharpMPEG4.VideoObjectLayer.SpriteEnable.get -> byte
+SharpMPEG4.VideoObjectLayer.SpriteEnable.set -> void
+SharpMPEG4.VideoObjectLayer.SpriteHeight.get -> uint
+SharpMPEG4.VideoObjectLayer.SpriteHeight.set -> void
+SharpMPEG4.VideoObjectLayer.SpriteLeftCoordinate.get -> int
+SharpMPEG4.VideoObjectLayer.SpriteLeftCoordinate.set -> void
+SharpMPEG4.VideoObjectLayer.SpriteTopCoordinate.get -> int
+SharpMPEG4.VideoObjectLayer.SpriteTopCoordinate.set -> void
+SharpMPEG4.VideoObjectLayer.SpriteWarpingAccuracy.get -> uint
+SharpMPEG4.VideoObjectLayer.SpriteWarpingAccuracy.set -> void
+SharpMPEG4.VideoObjectLayer.SpriteWidth.get -> uint
+SharpMPEG4.VideoObjectLayer.SpriteWidth.set -> void
+SharpMPEG4.VideoObjectLayer.Syntax.get -> string
+SharpMPEG4.VideoObjectLayer.UseRefShape.get -> byte
+SharpMPEG4.VideoObjectLayer.UseRefShape.set -> void
+SharpMPEG4.VideoObjectLayer.UseRefTexture.get -> byte
+SharpMPEG4.VideoObjectLayer.UseRefTexture.set -> void
+SharpMPEG4.VideoObjectLayer.VbvParameters.get -> byte
+SharpMPEG4.VideoObjectLayer.VbvParameters.set -> void
+SharpMPEG4.VideoObjectLayer.VertSamplingFactorm.get -> uint
+SharpMPEG4.VideoObjectLayer.VertSamplingFactorm.set -> void
+SharpMPEG4.VideoObjectLayer.VertSamplingFactorn.get -> uint
+SharpMPEG4.VideoObjectLayer.VertSamplingFactorn.set -> void
+SharpMPEG4.VideoObjectLayer.VideoObjectLayer() -> void
+SharpMPEG4.VideoObjectLayer.VideoObjectLayerHeight.get -> uint
+SharpMPEG4.VideoObjectLayer.VideoObjectLayerHeight.set -> void
+SharpMPEG4.VideoObjectLayer.VideoObjectLayerPriority.get -> uint
+SharpMPEG4.VideoObjectLayer.VideoObjectLayerPriority.set -> void
+SharpMPEG4.VideoObjectLayer.VideoObjectLayerShape.get -> uint
+SharpMPEG4.VideoObjectLayer.VideoObjectLayerShape.set -> void
+SharpMPEG4.VideoObjectLayer.VideoObjectLayerShapeExtension.get -> uint
+SharpMPEG4.VideoObjectLayer.VideoObjectLayerShapeExtension.set -> void
+SharpMPEG4.VideoObjectLayer.VideoObjectLayerStartCode.get -> uint
+SharpMPEG4.VideoObjectLayer.VideoObjectLayerStartCode.set -> void
+SharpMPEG4.VideoObjectLayer.VideoObjectLayerVerid.get -> uint
+SharpMPEG4.VideoObjectLayer.VideoObjectLayerVerid.set -> void
+SharpMPEG4.VideoObjectLayer.VideoObjectLayerWidth.get -> uint
+SharpMPEG4.VideoObjectLayer.VideoObjectLayerWidth.set -> void
+SharpMPEG4.VideoObjectLayer.VideoObjectTypeIndication.get -> uint
+SharpMPEG4.VideoObjectLayer.VideoObjectTypeIndication.set -> void
+SharpMPEG4.VideoObjectLayer.VolControlParameters.get -> byte
+SharpMPEG4.VideoObjectLayer.VolControlParameters.set -> void
+SharpMPEG4.VideoObjectLayer.VopTimeIncrementResolution.get -> uint
+SharpMPEG4.VideoObjectLayer.VopTimeIncrementResolution.set -> void
+SharpMPEG4.VideoObjectLayer.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.VideoObjectPlane
+SharpMPEG4.VideoObjectPlane.AlternateVerticalScanFlag.get -> byte
+SharpMPEG4.VideoObjectPlane.AlternateVerticalScanFlag.set -> void
+SharpMPEG4.VideoObjectPlane.BackgroundComposition.get -> byte
+SharpMPEG4.VideoObjectPlane.BackgroundComposition.set -> void
+SharpMPEG4.VideoObjectPlane.BackwardShape.get -> SharpMPEG4.BackwardShape
+SharpMPEG4.VideoObjectPlane.BackwardShape.set -> void
+SharpMPEG4.VideoObjectPlane.BackwardShapeHeight.get -> uint
+SharpMPEG4.VideoObjectPlane.BackwardShapeHeight.set -> void
+SharpMPEG4.VideoObjectPlane.BackwardShapeHorizontalMcSpatialRef.get -> int
+SharpMPEG4.VideoObjectPlane.BackwardShapeHorizontalMcSpatialRef.set -> void
+SharpMPEG4.VideoObjectPlane.BackwardShapeVerticalMcSpatialRef.get -> int
+SharpMPEG4.VideoObjectPlane.BackwardShapeVerticalMcSpatialRef.set -> void
+SharpMPEG4.VideoObjectPlane.BackwardShapeWidth.get -> uint
+SharpMPEG4.VideoObjectPlane.BackwardShapeWidth.set -> void
+SharpMPEG4.VideoObjectPlane.BrightnessChangeFactor.get -> SharpMPEG4.BrightnessChangeFactor
+SharpMPEG4.VideoObjectPlane.BrightnessChangeFactor.set -> void
+SharpMPEG4.VideoObjectPlane.ChangeConvRatioDisable.get -> byte
+SharpMPEG4.VideoObjectPlane.ChangeConvRatioDisable.set -> void
+SharpMPEG4.VideoObjectPlane.ForwardShape.get -> SharpMPEG4.ForwardShape
+SharpMPEG4.VideoObjectPlane.ForwardShape.set -> void
+SharpMPEG4.VideoObjectPlane.ForwardShapeHeight.get -> uint
+SharpMPEG4.VideoObjectPlane.ForwardShapeHeight.set -> void
+SharpMPEG4.VideoObjectPlane.ForwardShapeHorizontalMcSpatialRef.get -> int
+SharpMPEG4.VideoObjectPlane.ForwardShapeHorizontalMcSpatialRef.set -> void
+SharpMPEG4.VideoObjectPlane.ForwardShapeVerticalMcSpatialRef.get -> int
+SharpMPEG4.VideoObjectPlane.ForwardShapeVerticalMcSpatialRef.set -> void
+SharpMPEG4.VideoObjectPlane.ForwardShapeWidth.get -> uint
+SharpMPEG4.VideoObjectPlane.ForwardShapeWidth.set -> void
+SharpMPEG4.VideoObjectPlane.HasMoreRbspData.get -> int
+SharpMPEG4.VideoObjectPlane.HasMoreRbspData.set -> void
+SharpMPEG4.VideoObjectPlane.IntraDcVlcThr.get -> uint
+SharpMPEG4.VideoObjectPlane.IntraDcVlcThr.set -> void
+SharpMPEG4.VideoObjectPlane.LoadBackwardShape.get -> byte
+SharpMPEG4.VideoObjectPlane.LoadBackwardShape.set -> void
+SharpMPEG4.VideoObjectPlane.LoadForwardShape.get -> byte
+SharpMPEG4.VideoObjectPlane.LoadForwardShape.set -> void
+SharpMPEG4.VideoObjectPlane.MarkerBit.get -> byte
+SharpMPEG4.VideoObjectPlane.MarkerBit.set -> void
+SharpMPEG4.VideoObjectPlane.MarkerBit2.get -> byte
+SharpMPEG4.VideoObjectPlane.MarkerBit2.set -> void
+SharpMPEG4.VideoObjectPlane.MarkerBit3.get -> byte
+SharpMPEG4.VideoObjectPlane.MarkerBit3.set -> void
+SharpMPEG4.VideoObjectPlane.MarkerBit4.get -> byte
+SharpMPEG4.VideoObjectPlane.MarkerBit4.set -> void
+SharpMPEG4.VideoObjectPlane.MarkerBit5.get -> byte
+SharpMPEG4.VideoObjectPlane.MarkerBit5.set -> void
+SharpMPEG4.VideoObjectPlane.MarkerBit6.get -> byte
+SharpMPEG4.VideoObjectPlane.MarkerBit6.set -> void
+SharpMPEG4.VideoObjectPlane.ModuloTimeBase.get -> System.Collections.Generic.Dictionary<int, byte>
+SharpMPEG4.VideoObjectPlane.ModuloTimeBase.set -> void
+SharpMPEG4.VideoObjectPlane.NextStartCode.get -> SharpMPEG4.NextStartCode
+SharpMPEG4.VideoObjectPlane.NextStartCode.set -> void
+SharpMPEG4.VideoObjectPlane.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.VideoObjectPlane.ReadNextBits.get -> int[]
+SharpMPEG4.VideoObjectPlane.ReadNextBits.set -> void
+SharpMPEG4.VideoObjectPlane.ReadVopComplexityEstimationHeader.get -> SharpMPEG4.ReadVopComplexityEstimationHeader
+SharpMPEG4.VideoObjectPlane.ReadVopComplexityEstimationHeader.set -> void
+SharpMPEG4.VideoObjectPlane.RefSelectCode.get -> uint
+SharpMPEG4.VideoObjectPlane.RefSelectCode.set -> void
+SharpMPEG4.VideoObjectPlane.SpriteTrajectory.get -> SharpMPEG4.SpriteTrajectory
+SharpMPEG4.VideoObjectPlane.SpriteTrajectory.set -> void
+SharpMPEG4.VideoObjectPlane.StaticSpriteVop.get -> SharpMPEG4.StaticSpriteVop
+SharpMPEG4.VideoObjectPlane.StaticSpriteVop.set -> void
+SharpMPEG4.VideoObjectPlane.Syntax.get -> string
+SharpMPEG4.VideoObjectPlane.TopFieldFirst.get -> byte
+SharpMPEG4.VideoObjectPlane.TopFieldFirst.set -> void
+SharpMPEG4.VideoObjectPlane.VideoObjectPlane() -> void
+SharpMPEG4.VideoObjectPlane.VopAlphaQuant.get -> uint[]
+SharpMPEG4.VideoObjectPlane.VopAlphaQuant.set -> void
+SharpMPEG4.VideoObjectPlane.VopCoded.get -> byte
+SharpMPEG4.VideoObjectPlane.VopCoded.set -> void
+SharpMPEG4.VideoObjectPlane.VopCodingType.get -> uint
+SharpMPEG4.VideoObjectPlane.VopCodingType.set -> void
+SharpMPEG4.VideoObjectPlane.VopConstantAlpha.get -> byte
+SharpMPEG4.VideoObjectPlane.VopConstantAlpha.set -> void
+SharpMPEG4.VideoObjectPlane.VopConstantAlphaValue.get -> uint
+SharpMPEG4.VideoObjectPlane.VopConstantAlphaValue.set -> void
+SharpMPEG4.VideoObjectPlane.VopData.get -> SharpMPEG4.VopData
+SharpMPEG4.VideoObjectPlane.VopData.set -> void
+SharpMPEG4.VideoObjectPlane.VopFcodeBackward.get -> uint
+SharpMPEG4.VideoObjectPlane.VopFcodeBackward.set -> void
+SharpMPEG4.VideoObjectPlane.VopFcodeForward.get -> uint
+SharpMPEG4.VideoObjectPlane.VopFcodeForward.set -> void
+SharpMPEG4.VideoObjectPlane.VopHeight.get -> uint
+SharpMPEG4.VideoObjectPlane.VopHeight.set -> void
+SharpMPEG4.VideoObjectPlane.VopHorizontalMcSpatialRef.get -> int
+SharpMPEG4.VideoObjectPlane.VopHorizontalMcSpatialRef.set -> void
+SharpMPEG4.VideoObjectPlane.VopId.get -> ulong
+SharpMPEG4.VideoObjectPlane.VopId.set -> void
+SharpMPEG4.VideoObjectPlane.VopIdForPrediction.get -> ulong
+SharpMPEG4.VideoObjectPlane.VopIdForPrediction.set -> void
+SharpMPEG4.VideoObjectPlane.VopIdForPredictionIndication.get -> byte
+SharpMPEG4.VideoObjectPlane.VopIdForPredictionIndication.set -> void
+SharpMPEG4.VideoObjectPlane.VopQuant.get -> ulong
+SharpMPEG4.VideoObjectPlane.VopQuant.set -> void
+SharpMPEG4.VideoObjectPlane.VopReducedResolution.get -> byte
+SharpMPEG4.VideoObjectPlane.VopReducedResolution.set -> void
+SharpMPEG4.VideoObjectPlane.VopRoundingType.get -> byte
+SharpMPEG4.VideoObjectPlane.VopRoundingType.set -> void
+SharpMPEG4.VideoObjectPlane.VopShapeCodingType.get -> byte
+SharpMPEG4.VideoObjectPlane.VopShapeCodingType.set -> void
+SharpMPEG4.VideoObjectPlane.VopStartCode.get -> uint
+SharpMPEG4.VideoObjectPlane.VopStartCode.set -> void
+SharpMPEG4.VideoObjectPlane.VopTimeIncrement.get -> ulong
+SharpMPEG4.VideoObjectPlane.VopTimeIncrement.set -> void
+SharpMPEG4.VideoObjectPlane.VopVerticalMcSpatialRef.get -> int
+SharpMPEG4.VideoObjectPlane.VopVerticalMcSpatialRef.set -> void
+SharpMPEG4.VideoObjectPlane.VopWidth.get -> uint
+SharpMPEG4.VideoObjectPlane.VopWidth.set -> void
+SharpMPEG4.VideoObjectPlane.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.VideoPlaneWithShortHeader
+SharpMPEG4.VideoPlaneWithShortHeader.DocumentCameraIndicator.get -> byte
+SharpMPEG4.VideoPlaneWithShortHeader.DocumentCameraIndicator.set -> void
+SharpMPEG4.VideoPlaneWithShortHeader.FourReservedZeroBits.get -> uint
+SharpMPEG4.VideoPlaneWithShortHeader.FourReservedZeroBits.set -> void
+SharpMPEG4.VideoPlaneWithShortHeader.FullPictureFreezeRelease.get -> byte
+SharpMPEG4.VideoPlaneWithShortHeader.FullPictureFreezeRelease.set -> void
+SharpMPEG4.VideoPlaneWithShortHeader.HasMoreRbspData.get -> int
+SharpMPEG4.VideoPlaneWithShortHeader.HasMoreRbspData.set -> void
+SharpMPEG4.VideoPlaneWithShortHeader.MarkerBit.get -> byte
+SharpMPEG4.VideoPlaneWithShortHeader.MarkerBit.set -> void
+SharpMPEG4.VideoPlaneWithShortHeader.Pei.get -> System.Collections.Generic.Dictionary<int, byte>
+SharpMPEG4.VideoPlaneWithShortHeader.Pei.set -> void
+SharpMPEG4.VideoPlaneWithShortHeader.PictureCodingType.get -> byte
+SharpMPEG4.VideoPlaneWithShortHeader.PictureCodingType.set -> void
+SharpMPEG4.VideoPlaneWithShortHeader.Psupp.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpMPEG4.VideoPlaneWithShortHeader.Psupp.set -> void
+SharpMPEG4.VideoPlaneWithShortHeader.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.VideoPlaneWithShortHeader.ReadNextBits.get -> int[]
+SharpMPEG4.VideoPlaneWithShortHeader.ReadNextBits.set -> void
+SharpMPEG4.VideoPlaneWithShortHeader.ShortVideoStartMarker.get -> uint
+SharpMPEG4.VideoPlaneWithShortHeader.ShortVideoStartMarker.set -> void
+SharpMPEG4.VideoPlaneWithShortHeader.SourceFormat.get -> uint
+SharpMPEG4.VideoPlaneWithShortHeader.SourceFormat.set -> void
+SharpMPEG4.VideoPlaneWithShortHeader.SplitScreenIndicator.get -> byte
+SharpMPEG4.VideoPlaneWithShortHeader.SplitScreenIndicator.set -> void
+SharpMPEG4.VideoPlaneWithShortHeader.Syntax.get -> string
+SharpMPEG4.VideoPlaneWithShortHeader.TemporalReference.get -> uint
+SharpMPEG4.VideoPlaneWithShortHeader.TemporalReference.set -> void
+SharpMPEG4.VideoPlaneWithShortHeader.VideoPlaneWithShortHeader() -> void
+SharpMPEG4.VideoPlaneWithShortHeader.VopData.get -> SharpMPEG4.VopData
+SharpMPEG4.VideoPlaneWithShortHeader.VopData.set -> void
+SharpMPEG4.VideoPlaneWithShortHeader.VopQuant.get -> uint
+SharpMPEG4.VideoPlaneWithShortHeader.VopQuant.set -> void
+SharpMPEG4.VideoPlaneWithShortHeader.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.VideoPlaneWithShortHeader.ZeroBit.get -> byte
+SharpMPEG4.VideoPlaneWithShortHeader.ZeroBit.set -> void
+SharpMPEG4.VideoSignalType
+SharpMPEG4.VideoSignalType.ColourDescription.get -> byte
+SharpMPEG4.VideoSignalType.ColourDescription.set -> void
+SharpMPEG4.VideoSignalType.ColourPrimaries.get -> uint
+SharpMPEG4.VideoSignalType.ColourPrimaries.set -> void
+SharpMPEG4.VideoSignalType.HasMoreRbspData.get -> int
+SharpMPEG4.VideoSignalType.HasMoreRbspData.set -> void
+SharpMPEG4.VideoSignalType.MatrixCoefficients.get -> uint
+SharpMPEG4.VideoSignalType.MatrixCoefficients.set -> void
+SharpMPEG4.VideoSignalType.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.VideoSignalType.ReadNextBits.get -> int[]
+SharpMPEG4.VideoSignalType.ReadNextBits.set -> void
+SharpMPEG4.VideoSignalType.Syntax.get -> string
+SharpMPEG4.VideoSignalType.TransferCharacteristics.get -> uint
+SharpMPEG4.VideoSignalType.TransferCharacteristics.set -> void
+SharpMPEG4.VideoSignalType.VideoFormat.get -> uint
+SharpMPEG4.VideoSignalType.VideoFormat.set -> void
+SharpMPEG4.VideoSignalType.VideoRange.get -> byte
+SharpMPEG4.VideoSignalType.VideoRange.set -> void
+SharpMPEG4.VideoSignalType.VideoSignalType() -> void
+SharpMPEG4.VideoSignalType.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.VideoSignalType._VideoSignalType.get -> byte
+SharpMPEG4.VideoSignalType._VideoSignalType.set -> void
+SharpMPEG4.VisualObject
+SharpMPEG4.VisualObject.HasMoreRbspData.get -> int
+SharpMPEG4.VisualObject.HasMoreRbspData.set -> void
+SharpMPEG4.VisualObject.IsVisualObjectIdentifier.get -> byte
+SharpMPEG4.VisualObject.IsVisualObjectIdentifier.set -> void
+SharpMPEG4.VisualObject.NextStartCode.get -> SharpMPEG4.NextStartCode
+SharpMPEG4.VisualObject.NextStartCode.set -> void
+SharpMPEG4.VisualObject.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.VisualObject.ReadNextBits.get -> int[]
+SharpMPEG4.VisualObject.ReadNextBits.set -> void
+SharpMPEG4.VisualObject.Syntax.get -> string
+SharpMPEG4.VisualObject.VideoSignalType.get -> SharpMPEG4.VideoSignalType
+SharpMPEG4.VisualObject.VideoSignalType.set -> void
+SharpMPEG4.VisualObject.VisualObject() -> void
+SharpMPEG4.VisualObject.VisualObjectPriority.get -> uint
+SharpMPEG4.VisualObject.VisualObjectPriority.set -> void
+SharpMPEG4.VisualObject.VisualObjectStartCode.get -> uint
+SharpMPEG4.VisualObject.VisualObjectStartCode.set -> void
+SharpMPEG4.VisualObject.VisualObjectType.get -> uint
+SharpMPEG4.VisualObject.VisualObjectType.set -> void
+SharpMPEG4.VisualObject.VisualObjectVerid.get -> uint
+SharpMPEG4.VisualObject.VisualObjectVerid.set -> void
+SharpMPEG4.VisualObject.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.VisualObjectSequence
+SharpMPEG4.VisualObjectSequence.HasMoreRbspData.get -> int
+SharpMPEG4.VisualObjectSequence.HasMoreRbspData.set -> void
+SharpMPEG4.VisualObjectSequence.NextStartCode.get -> SharpMPEG4.NextStartCode
+SharpMPEG4.VisualObjectSequence.NextStartCode.set -> void
+SharpMPEG4.VisualObjectSequence.ProfileAndLevelIndication.get -> uint
+SharpMPEG4.VisualObjectSequence.ProfileAndLevelIndication.set -> void
+SharpMPEG4.VisualObjectSequence.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.VisualObjectSequence.ReadNextBits.get -> int[]
+SharpMPEG4.VisualObjectSequence.ReadNextBits.set -> void
+SharpMPEG4.VisualObjectSequence.Syntax.get -> string
+SharpMPEG4.VisualObjectSequence.VisualObjectSequence() -> void
+SharpMPEG4.VisualObjectSequence.VisualObjectSequenceStartCode.get -> uint
+SharpMPEG4.VisualObjectSequence.VisualObjectSequenceStartCode.set -> void
+SharpMPEG4.VisualObjectSequence.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.VisualObjectSequenceEnd
+SharpMPEG4.VisualObjectSequenceEnd.HasMoreRbspData.get -> int
+SharpMPEG4.VisualObjectSequenceEnd.HasMoreRbspData.set -> void
+SharpMPEG4.VisualObjectSequenceEnd.NextStartCode.get -> SharpMPEG4.NextStartCode
+SharpMPEG4.VisualObjectSequenceEnd.NextStartCode.set -> void
+SharpMPEG4.VisualObjectSequenceEnd.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.VisualObjectSequenceEnd.ReadNextBits.get -> int[]
+SharpMPEG4.VisualObjectSequenceEnd.ReadNextBits.set -> void
+SharpMPEG4.VisualObjectSequenceEnd.Syntax.get -> string
+SharpMPEG4.VisualObjectSequenceEnd.VisualObjectSequenceEnd() -> void
+SharpMPEG4.VisualObjectSequenceEnd.VisualObjectSequenceEndCode.get -> uint
+SharpMPEG4.VisualObjectSequenceEnd.VisualObjectSequenceEndCode.set -> void
+SharpMPEG4.VisualObjectSequenceEnd.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.VopData
+SharpMPEG4.VopData.Data.get -> byte[]
+SharpMPEG4.VopData.Data.set -> void
+SharpMPEG4.VopData.HasMoreRbspData.get -> int
+SharpMPEG4.VopData.HasMoreRbspData.set -> void
+SharpMPEG4.VopData.LeadingBitCount.get -> int
+SharpMPEG4.VopData.LeadingBitCount.set -> void
+SharpMPEG4.VopData.LeadingBits.get -> int
+SharpMPEG4.VopData.LeadingBits.set -> void
+SharpMPEG4.VopData.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpMPEG4.VopData.ReadNextBits.get -> int[]
+SharpMPEG4.VopData.ReadNextBits.set -> void
+SharpMPEG4.VopData.Syntax.get -> string
+SharpMPEG4.VopData.VopData() -> void
+SharpMPEG4.VopData.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+const SharpMPEG4.MPEG4StartCodes.EXTENSION = 184 -> int
+const SharpMPEG4.MPEG4StartCodes.GROUP_OF_VOP = 179 -> int
+const SharpMPEG4.MPEG4StartCodes.SLICE = 183 -> int
+const SharpMPEG4.MPEG4StartCodes.STUFFING = 195 -> int
+const SharpMPEG4.MPEG4StartCodes.USER_DATA = 178 -> int
+const SharpMPEG4.MPEG4StartCodes.VIDEO_OBJECT_LAYER_MAX = 47 -> int
+const SharpMPEG4.MPEG4StartCodes.VIDEO_OBJECT_LAYER_MIN = 32 -> int
+const SharpMPEG4.MPEG4StartCodes.VIDEO_OBJECT_MAX = 31 -> int
+const SharpMPEG4.MPEG4StartCodes.VIDEO_OBJECT_MIN = 0 -> int
+const SharpMPEG4.MPEG4StartCodes.VISUAL_OBJECT = 181 -> int
+const SharpMPEG4.MPEG4StartCodes.VISUAL_OBJECT_SEQUENCE = 176 -> int
+const SharpMPEG4.MPEG4StartCodes.VISUAL_OBJECT_SEQUENCE_END = 177 -> int
+const SharpMPEG4.MPEG4StartCodes.VOP = 182 -> int
+const SharpMPEG4.MPEG4VopCodingTypes.B = 2 -> int
+const SharpMPEG4.MPEG4VopCodingTypes.I = 0 -> int
+const SharpMPEG4.MPEG4VopCodingTypes.P = 1 -> int
+const SharpMPEG4.MPEG4VopCodingTypes.S = 3 -> int
+static SharpMPEG4.MPEG4Context.ShortHeaderPlanes(byte[] data, int offset, int length) -> System.Collections.Generic.List<(int Offset, int Length)>
+static SharpMPEG4.MPEG4Context.StreamOf(System.IO.Stream output, SharpMP4.Common.IMp4Logger logger = null) -> SharpH26X.ItuStream
+static SharpMPEG4.MPEG4Context.StreamOf(byte[] buffer, int offset, int length, SharpMP4.Common.IMp4Logger logger = null) -> SharpH26X.ItuStream
+static SharpMPEG4.MPEG4Context.Units(byte[] data, int offset, int length) -> System.Collections.Generic.List<(int Offset, int Length)>

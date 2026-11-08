@@ -1,0 +1,122 @@
+SharpAVX.AomArray
+SharpAVX.AomArray<T>
+SharpAVX.AomArray<T>.AomArray(System.Func<T> create = null) -> void
+SharpAVX.AomArray<T>.Clone() -> SharpAVX.AomArray<T>
+SharpAVX.AomArray<T>.Length.get -> int
+SharpAVX.AomArray<T>.this[int index].get -> T
+SharpAVX.AomStream
+SharpAVX.AomStream.AomStream(SharpMP4.Common.Bitstream bitstream, SharpMP4.Common.IMp4Logger logger) -> void
+SharpAVX.AomStream.AomStream(System.IO.Stream stream) -> void
+SharpAVX.AomStream.AomStream(System.IO.Stream stream, SharpMP4.Common.IMp4Logger logger) -> void
+SharpAVX.AomStream.BeginClass(string name, string syntax) -> void
+SharpAVX.AomStream.Bitstream.get -> SharpMP4.Common.Bitstream
+SharpAVX.AomStream.Bitstream.set -> void
+SharpAVX.AomStream.Dispose() -> void
+SharpAVX.AomStream.ElementEnded.get -> System.Action<string, long>
+SharpAVX.AomStream.ElementEnded.set -> void
+SharpAVX.AomStream.EndClass(string name) -> void
+SharpAVX.AomStream.ExitBool() -> void
+SharpAVX.AomStream.GetPosition() -> int
+SharpAVX.AomStream.InitBool(int size) -> void
+SharpAVX.AomStream.Leb128Bytes.get -> int
+SharpAVX.AomStream.Logger.get -> SharpMP4.Common.IMp4Logger
+SharpAVX.AomStream.Logger.set -> void
+SharpAVX.AomStream.Lookahead() -> SharpAVX.AomStream
+SharpAVX.AomStream.PeekBytes(byte[] buffer, int offset, int count) -> int
+SharpAVX.AomStream.Pick(string name, byte[] original, byte[] edited) -> byte[]
+SharpAVX.AomStream.Pick(string name, int original, int edited) -> int
+SharpAVX.AomStream.Pick(string name, long original, long edited) -> long
+SharpAVX.AomStream.Pick(string name, uint original, uint edited) -> uint
+SharpAVX.AomStream.ReadBool(int probability, out int value, string name) -> ulong
+SharpAVX.AomStream.ReadBytes(int count, out byte[] value, string name) -> ulong
+SharpAVX.AomStream.ReadFixed(int count, out int value, string name) -> ulong
+SharpAVX.AomStream.ReadLe(int count, out int value, string name) -> ulong
+SharpAVX.AomStream.ReadLeb128(out int value, string name) -> ulong
+SharpAVX.AomStream.ReadLiteral(int count, out int value, string name) -> ulong
+SharpAVX.AomStream.ReadRg(int count, out int value, string name) -> ulong
+SharpAVX.AomStream.ReadSignMagnitude(int count, out int value, string name) -> ulong
+SharpAVX.AomStream.ReadSignedIntVar(int count, out int value, string name) -> ulong
+SharpAVX.AomStream.ReadSvlc(out int value, string name) -> ulong
+SharpAVX.AomStream.ReadTu(int max, out int value, string name) -> ulong
+SharpAVX.AomStream.ReadUnsignedInt(int count, out uint value, string name) -> ulong
+SharpAVX.AomStream.ReadUvlc(out int value, string name) -> ulong
+SharpAVX.AomStream.ReadUvlc(out uint value, string name) -> ulong
+SharpAVX.AomStream.ReadVariable(long count, out int value, string name) -> ulong
+SharpAVX.AomStream.Read_ns(int count, out int value, string name) -> ulong
+SharpAVX.AomStream.Read_ns(int count, out uint value, string name) -> ulong
+SharpAVX.AomStream.Record.get -> SharpAVX.AomSyntaxRecord
+SharpAVX.AomStream.Record.set -> void
+SharpAVX.AomStream.RecordOnly.get -> System.Collections.Generic.Dictionary<string, int>
+SharpAVX.AomStream.RecordOnly.set -> void
+SharpAVX.AomStream.Skip(long bits) -> void
+SharpAVX.AomStream.Source.get -> SharpAVX.AomSyntaxRecord
+SharpAVX.AomStream.Source.set -> void
+SharpAVX.AomStream.StartBool(int size) -> void
+SharpAVX.AomStream.StopBool() -> void
+SharpAVX.AomStream.Tracer.get -> SharpAVX.IAomTracer
+SharpAVX.AomStream.Tracer.set -> void
+SharpAVX.AomStream.Validate.get -> System.Action<string, long>
+SharpAVX.AomStream.Validate.set -> void
+SharpAVX.AomStream.WriteBool(int probability, int value, string name) -> ulong
+SharpAVX.AomStream.WriteBytes(int count, byte[] value, string name) -> ulong
+SharpAVX.AomStream.WriteFixed(int count, int value, string name) -> ulong
+SharpAVX.AomStream.WriteLe(int count, int value, string name) -> ulong
+SharpAVX.AomStream.WriteLeb128(int value, string name) -> ulong
+SharpAVX.AomStream.WriteLeb128(long value, string name) -> ulong
+SharpAVX.AomStream.WriteLimit.get -> long
+SharpAVX.AomStream.WriteLimit.set -> void
+SharpAVX.AomStream.WriteLiteral(int count, int value, string name) -> ulong
+SharpAVX.AomStream.WriteRg(int count, int value, string name) -> ulong
+SharpAVX.AomStream.WriteSignMagnitude(int count, int value, string name) -> ulong
+SharpAVX.AomStream.WriteSignedIntVar(int count, int value, string name) -> ulong
+SharpAVX.AomStream.WriteSvlc(int value, string name) -> ulong
+SharpAVX.AomStream.WriteTu(int max, int value, string name) -> ulong
+SharpAVX.AomStream.WriteUnsignedInt(int count, uint value, string name) -> ulong
+SharpAVX.AomStream.WriteUvlc(int value, string name) -> ulong
+SharpAVX.AomStream.WriteUvlc(uint value, string name) -> ulong
+SharpAVX.AomStream.WriteVariable(long count, int value, string name) -> ulong
+SharpAVX.AomStream.Write_ns(int count, int value, string name) -> ulong
+SharpAVX.AomStream.Write_ns(int count, uint value, string name) -> ulong
+SharpAVX.AomSyntaxRecord
+SharpAVX.AomSyntaxRecord.Add(string name, SharpAVX.AomSyntaxValue value) -> void
+SharpAVX.AomSyntaxRecord.AomSyntaxRecord() -> void
+SharpAVX.AomSyntaxRecord.Count.get -> int
+SharpAVX.AomSyntaxRecord.NameAt(int position) -> string
+SharpAVX.AomSyntaxRecord.Names.get -> System.Collections.Generic.IReadOnlyCollection<string>
+SharpAVX.AomSyntaxRecord.Set(string name, int occurrence, byte[] bytes) -> void
+SharpAVX.AomSyntaxRecord.Set(string name, int occurrence, long value) -> void
+SharpAVX.AomSyntaxRecord.TryGet(string name, int occurrence, out SharpAVX.AomSyntaxValue value) -> bool
+SharpAVX.AomSyntaxRecord.ValueAt(int position) -> SharpAVX.AomSyntaxValue
+SharpAVX.AomSyntaxRecord.this[string name].get -> System.Collections.Generic.IReadOnlyList<SharpAVX.AomSyntaxValue>
+SharpAVX.AomSyntaxValue
+SharpAVX.AomSyntaxValue.AomSyntaxValue() -> void
+SharpAVX.AomSyntaxValue.AomSyntaxValue(long value, int bits, byte[] bytes = null) -> void
+SharpAVX.AomSyntaxValue.Bits.get -> int
+SharpAVX.AomSyntaxValue.Bytes.get -> byte[]
+SharpAVX.AomSyntaxValue.Value.get -> long
+SharpAVX.ConvertEx
+SharpAVX.IAomContext
+SharpAVX.IAomObuContext
+SharpAVX.IAomObuContext.LastObuFrameHeader.get -> byte[]
+SharpAVX.IAomObuContext.LastObuFrameHeader.set -> void
+SharpAVX.IAomObuContext.ObuSizeLen.get -> int
+SharpAVX.IAomObuContext.SelectedOperatingPoint.get -> int
+SharpAVX.IAomObuContext.SelectedOperatingPoint.set -> void
+SharpAVX.IAomSerializable
+SharpAVX.IAomSerializable.Read(SharpAVX.AomStream stream, int size) -> void
+SharpAVX.IAomTracer
+SharpAVX.IAomTracer.OnBeginClass(string name, string syntax, long position) -> void
+SharpAVX.IAomTracer.OnEndClass(string name, long position) -> void
+SharpAVX.IAomTracer.OnField(string name, long end, ulong bits, object value) -> void
+SharpAVX.ICloneableArray
+SharpAVX.ICloneableArray.CloneArray() -> object
+SharpAVX.MathEx
+override SharpAVX.AomSyntaxValue.ToString() -> string
+static SharpAVX.AomArray.IndexOf(SharpAVX.AomArray<int> table, int value) -> int
+static SharpAVX.AomArray.IndexOf(int[] table, int value) -> int
+static SharpAVX.AomArray<T>.implicit operator SharpAVX.AomArray<T>(T[] items) -> SharpAVX.AomArray<T>
+static SharpAVX.ConvertEx.FromHexString(string hex) -> byte[]
+static SharpAVX.ConvertEx.ToHexString(byte[] data) -> string
+static SharpAVX.MathEx.Clamp(int value, int min, int max) -> int
+static SharpAVX.MathEx.Log2(double x) -> double
+virtual SharpAVX.AomStream.Dispose(bool disposing) -> void

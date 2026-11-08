@@ -1,0 +1,423 @@
+SharpVP9.VP9Constants
+SharpVP9.VP9Context
+SharpVP9.VP9Context.CalcMaxLog2TileColsSyntax.get -> string
+SharpVP9.VP9Context.CalcMinLog2TileColsSyntax.get -> string
+SharpVP9.VP9Context.ColorConfigSyntax.get -> string
+SharpVP9.VP9Context.CompressedHeaderSize.get -> int
+SharpVP9.VP9Context.CompressedHeaderSyntax.get -> string
+SharpVP9.VP9Context.ComputeImageSizeSyntax.get -> string
+SharpVP9.VP9Context.DecodeTermSubexpSyntax.get -> string
+SharpVP9.VP9Context.DiffUpdateProbSyntax.get -> string
+SharpVP9.VP9Context.FrameReferenceModeProbsSyntax.get -> string
+SharpVP9.VP9Context.FrameReferenceModeSyntax.get -> string
+SharpVP9.VP9Context.FrameSizeSyntax.get -> string
+SharpVP9.VP9Context.FrameSizeWithRefsSyntax.get -> string
+SharpVP9.VP9Context.FrameSyncCodeSyntax.get -> string
+SharpVP9.VP9Context.FrameSyntax.get -> string
+SharpVP9.VP9Context.InvRecenterNonnegSyntax.get -> string
+SharpVP9.VP9Context.InvRemapProbSyntax.get -> string
+SharpVP9.VP9Context.LastUnit.get -> SharpVP9.VP9Unit
+SharpVP9.VP9Context.LoopFilterParamsSyntax.get -> string
+SharpVP9.VP9Context.MvProbsSyntax.get -> string
+SharpVP9.VP9Context.QuantizationParamsSyntax.get -> string
+SharpVP9.VP9Context.Read(SharpAVX.AomStream stream, int size) -> void
+SharpVP9.VP9Context.ReadCoefProbsSyntax.get -> string
+SharpVP9.VP9Context.ReadDeltaqSyntax.get -> string
+SharpVP9.VP9Context.ReadInterModeProbsSyntax.get -> string
+SharpVP9.VP9Context.ReadInterpFilterProbsSyntax.get -> string
+SharpVP9.VP9Context.ReadInterpolationFilterSyntax.get -> string
+SharpVP9.VP9Context.ReadIsInterProbsSyntax.get -> string
+SharpVP9.VP9Context.ReadPartitionProbsSyntax.get -> string
+SharpVP9.VP9Context.ReadProbSyntax.get -> string
+SharpVP9.VP9Context.ReadSkipProbSyntax.get -> string
+SharpVP9.VP9Context.ReadSuperframeIndex(SharpAVX.AomStream stream, int size) -> void
+SharpVP9.VP9Context.ReadTxModeSyntax.get -> string
+SharpVP9.VP9Context.ReadyModeProbsSyntax.get -> string
+SharpVP9.VP9Context.RecordSyntax.get -> bool
+SharpVP9.VP9Context.RecordSyntax.set -> void
+SharpVP9.VP9Context.RefBitDepth.get -> int[]
+SharpVP9.VP9Context.RefBitDepth.set -> void
+SharpVP9.VP9Context.RefFrameHeight.get -> int[]
+SharpVP9.VP9Context.RefFrameHeight.set -> void
+SharpVP9.VP9Context.RefFrameWidth.get -> int[]
+SharpVP9.VP9Context.RefFrameWidth.set -> void
+SharpVP9.VP9Context.RefSubsamplingX.get -> int[]
+SharpVP9.VP9Context.RefSubsamplingX.set -> void
+SharpVP9.VP9Context.RefSubsamplingY.get -> int[]
+SharpVP9.VP9Context.RefSubsamplingY.set -> void
+SharpVP9.VP9Context.RenderSizeSyntax.get -> string
+SharpVP9.VP9Context.SegmentationParamsSyntax.get -> string
+SharpVP9.VP9Context.SetupCompoundReferenceModeSyntax.get -> string
+SharpVP9.VP9Context.Strict.get -> bool
+SharpVP9.VP9Context.Strict.set -> void
+SharpVP9.VP9Context.SuperframeHeaderSyntax.get -> string
+SharpVP9.VP9Context.SuperframeIndexSyntax.get -> string
+SharpVP9.VP9Context.SuperframeSyntax.get -> string
+SharpVP9.VP9Context.TileInfoSyntax.get -> string
+SharpVP9.VP9Context.TrailingBitsSyntax.get -> string
+SharpVP9.VP9Context.TxModeProbsSyntax.get -> string
+SharpVP9.VP9Context.UncompressedHeaderSize.get -> int
+SharpVP9.VP9Context.UncompressedHeaderSyntax.get -> string
+SharpVP9.VP9Context.UpdateMvProbSyntax.get -> string
+SharpVP9.VP9Context.VP9Context() -> void
+SharpVP9.VP9Context.Write(SharpAVX.AomStream stream, SharpVP9.VP9Unit unit) -> void
+SharpVP9.VP9Context._AllowHighPrecisionMv.get -> int
+SharpVP9.VP9Context._AllowHighPrecisionMv.set -> void
+SharpVP9.VP9Context._BaseqIdx.get -> int
+SharpVP9.VP9Context._BaseqIdx.set -> void
+SharpVP9.VP9Context._Bit.get -> int
+SharpVP9.VP9Context._Bit.set -> void
+SharpVP9.VP9Context._BitDepth.get -> int
+SharpVP9.VP9Context._BitDepth.set -> void
+SharpVP9.VP9Context._BitsToRead.get -> int
+SharpVP9.VP9Context._BitsToRead.set -> void
+SharpVP9.VP9Context._BytesPerFramesizeMinus1.get -> int
+SharpVP9.VP9Context._BytesPerFramesizeMinus1.set -> void
+SharpVP9.VP9Context._CoefProbs.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>>>>
+SharpVP9.VP9Context._CoefProbs.set -> void
+SharpVP9.VP9Context._ColorRange.get -> int
+SharpVP9.VP9Context._ColorRange.set -> void
+SharpVP9.VP9Context._ColorSpace.get -> int
+SharpVP9.VP9Context._ColorSpace.set -> void
+SharpVP9.VP9Context._CompFixedRef.get -> int
+SharpVP9.VP9Context._CompFixedRef.set -> void
+SharpVP9.VP9Context._CompModeProb.get -> SharpAVX.AomArray<int>
+SharpVP9.VP9Context._CompModeProb.set -> void
+SharpVP9.VP9Context._CompRefProb.get -> SharpAVX.AomArray<int>
+SharpVP9.VP9Context._CompRefProb.set -> void
+SharpVP9.VP9Context._CompVarRef.get -> SharpAVX.AomArray<int>
+SharpVP9.VP9Context._CompVarRef.set -> void
+SharpVP9.VP9Context._DeltaCoded.get -> int
+SharpVP9.VP9Context._DeltaCoded.set -> void
+SharpVP9.VP9Context._DeltaProb.get -> int
+SharpVP9.VP9Context._DeltaProb.set -> void
+SharpVP9.VP9Context._Deltaq.get -> int
+SharpVP9.VP9Context._Deltaq.set -> void
+SharpVP9.VP9Context._DeltaqUvAc.get -> int
+SharpVP9.VP9Context._DeltaqUvAc.set -> void
+SharpVP9.VP9Context._DeltaqUvDc.get -> int
+SharpVP9.VP9Context._DeltaqUvDc.set -> void
+SharpVP9.VP9Context._DeltaqyDc.get -> int
+SharpVP9.VP9Context._DeltaqyDc.set -> void
+SharpVP9.VP9Context._ErrorResilientMode.get -> int
+SharpVP9.VP9Context._ErrorResilientMode.set -> void
+SharpVP9.VP9Context._FeatureData.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpVP9.VP9Context._FeatureData.set -> void
+SharpVP9.VP9Context._FeatureEnabled.get -> int
+SharpVP9.VP9Context._FeatureEnabled.set -> void
+SharpVP9.VP9Context._FeatureSign.get -> int
+SharpVP9.VP9Context._FeatureSign.set -> void
+SharpVP9.VP9Context._FeatureValue.get -> int
+SharpVP9.VP9Context._FeatureValue.set -> void
+SharpVP9.VP9Context._FoundRef.get -> int
+SharpVP9.VP9Context._FoundRef.set -> void
+SharpVP9.VP9Context._FrameContextIdx.get -> int
+SharpVP9.VP9Context._FrameContextIdx.set -> void
+SharpVP9.VP9Context._FrameHeight.get -> int
+SharpVP9.VP9Context._FrameHeight.set -> void
+SharpVP9.VP9Context._FrameHeightMinus1.get -> int
+SharpVP9.VP9Context._FrameHeightMinus1.set -> void
+SharpVP9.VP9Context._FrameIsIntra.get -> int
+SharpVP9.VP9Context._FrameIsIntra.set -> void
+SharpVP9.VP9Context._FrameMarker.get -> int
+SharpVP9.VP9Context._FrameMarker.set -> void
+SharpVP9.VP9Context._FrameParallelDecodingMode.get -> int
+SharpVP9.VP9Context._FrameParallelDecodingMode.set -> void
+SharpVP9.VP9Context._FrameSizes.get -> SharpAVX.AomArray<int>
+SharpVP9.VP9Context._FrameSizes.set -> void
+SharpVP9.VP9Context._FrameSyncByte0.get -> int
+SharpVP9.VP9Context._FrameSyncByte0.set -> void
+SharpVP9.VP9Context._FrameSyncByte1.get -> int
+SharpVP9.VP9Context._FrameSyncByte1.set -> void
+SharpVP9.VP9Context._FrameSyncByte2.get -> int
+SharpVP9.VP9Context._FrameSyncByte2.set -> void
+SharpVP9.VP9Context._FrameToShowMapIdx.get -> int
+SharpVP9.VP9Context._FrameToShowMapIdx.set -> void
+SharpVP9.VP9Context._FrameType.get -> int
+SharpVP9.VP9Context._FrameType.set -> void
+SharpVP9.VP9Context._FrameWidth.get -> int
+SharpVP9.VP9Context._FrameWidth.set -> void
+SharpVP9.VP9Context._FrameWidthMinus1.get -> int
+SharpVP9.VP9Context._FrameWidthMinus1.set -> void
+SharpVP9.VP9Context._FramesInSuperframeMinus1.get -> int
+SharpVP9.VP9Context._FramesInSuperframeMinus1.set -> void
+SharpVP9.VP9Context._HeaderSizeInBytes.get -> int
+SharpVP9.VP9Context._HeaderSizeInBytes.set -> void
+SharpVP9.VP9Context._IncrementTileColsLog2.get -> int
+SharpVP9.VP9Context._IncrementTileColsLog2.set -> void
+SharpVP9.VP9Context._IncrementTileRowsLog2.get -> int
+SharpVP9.VP9Context._IncrementTileRowsLog2.set -> void
+SharpVP9.VP9Context._InterModeProbs.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpVP9.VP9Context._InterModeProbs.set -> void
+SharpVP9.VP9Context._InterpFilterProbs.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpVP9.VP9Context._InterpFilterProbs.set -> void
+SharpVP9.VP9Context._InterpolationFilter.get -> int
+SharpVP9.VP9Context._InterpolationFilter.set -> void
+SharpVP9.VP9Context._IntraOnly.get -> int
+SharpVP9.VP9Context._IntraOnly.set -> void
+SharpVP9.VP9Context._IsFilterSwitchable.get -> int
+SharpVP9.VP9Context._IsFilterSwitchable.set -> void
+SharpVP9.VP9Context._IsInterProb.get -> SharpAVX.AomArray<int>
+SharpVP9.VP9Context._IsInterProb.set -> void
+SharpVP9.VP9Context._LastFrameType.get -> int
+SharpVP9.VP9Context._LastFrameType.set -> void
+SharpVP9.VP9Context._LoopFilterDeltaEnabled.get -> int
+SharpVP9.VP9Context._LoopFilterDeltaEnabled.set -> void
+SharpVP9.VP9Context._LoopFilterDeltaUpdate.get -> int
+SharpVP9.VP9Context._LoopFilterDeltaUpdate.set -> void
+SharpVP9.VP9Context._LoopFilterLevel.get -> int
+SharpVP9.VP9Context._LoopFilterLevel.set -> void
+SharpVP9.VP9Context._LoopFilterModeDeltas.get -> SharpAVX.AomArray<int>
+SharpVP9.VP9Context._LoopFilterModeDeltas.set -> void
+SharpVP9.VP9Context._LoopFilterRefDeltas.get -> SharpAVX.AomArray<int>
+SharpVP9.VP9Context._LoopFilterRefDeltas.set -> void
+SharpVP9.VP9Context._LoopFilterSharpness.get -> int
+SharpVP9.VP9Context._LoopFilterSharpness.set -> void
+SharpVP9.VP9Context._Lossless.get -> int
+SharpVP9.VP9Context._Lossless.set -> void
+SharpVP9.VP9Context._MiCols.get -> int
+SharpVP9.VP9Context._MiCols.set -> void
+SharpVP9.VP9Context._MiRows.get -> int
+SharpVP9.VP9Context._MiRows.set -> void
+SharpVP9.VP9Context._MvBitsProb.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpVP9.VP9Context._MvBitsProb.set -> void
+SharpVP9.VP9Context._MvClass0BitProb.get -> SharpAVX.AomArray<int>
+SharpVP9.VP9Context._MvClass0BitProb.set -> void
+SharpVP9.VP9Context._MvClass0FrProbs.get -> SharpAVX.AomArray<SharpAVX.AomArray<SharpAVX.AomArray<int>>>
+SharpVP9.VP9Context._MvClass0FrProbs.set -> void
+SharpVP9.VP9Context._MvClass0HpProb.get -> SharpAVX.AomArray<int>
+SharpVP9.VP9Context._MvClass0HpProb.set -> void
+SharpVP9.VP9Context._MvClassProbs.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpVP9.VP9Context._MvClassProbs.set -> void
+SharpVP9.VP9Context._MvFrProbs.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpVP9.VP9Context._MvFrProbs.set -> void
+SharpVP9.VP9Context._MvHpProb.get -> SharpAVX.AomArray<int>
+SharpVP9.VP9Context._MvHpProb.set -> void
+SharpVP9.VP9Context._MvJointProbs.get -> SharpAVX.AomArray<int>
+SharpVP9.VP9Context._MvJointProbs.set -> void
+SharpVP9.VP9Context._MvProb.get -> int
+SharpVP9.VP9Context._MvProb.set -> void
+SharpVP9.VP9Context._MvSignProb.get -> SharpAVX.AomArray<int>
+SharpVP9.VP9Context._MvSignProb.set -> void
+SharpVP9.VP9Context._NonSingleReference.get -> int
+SharpVP9.VP9Context._NonSingleReference.set -> void
+SharpVP9.VP9Context._PaddingBit.get -> int
+SharpVP9.VP9Context._PaddingBit.set -> void
+SharpVP9.VP9Context._PartitionProbs.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpVP9.VP9Context._PartitionProbs.set -> void
+SharpVP9.VP9Context._Prob.get -> int
+SharpVP9.VP9Context._Prob.set -> void
+SharpVP9.VP9Context._ProbCoded.get -> int
+SharpVP9.VP9Context._ProbCoded.set -> void
+SharpVP9.VP9Context._Profile.get -> int
+SharpVP9.VP9Context._Profile.set -> void
+SharpVP9.VP9Context._ProfileHighBit.get -> int
+SharpVP9.VP9Context._ProfileHighBit.set -> void
+SharpVP9.VP9Context._ProfileLowBit.get -> int
+SharpVP9.VP9Context._ProfileLowBit.set -> void
+SharpVP9.VP9Context._RawInterpolationFilter.get -> int
+SharpVP9.VP9Context._RawInterpolationFilter.set -> void
+SharpVP9.VP9Context._RefFrameIdx.get -> SharpAVX.AomArray<int>
+SharpVP9.VP9Context._RefFrameIdx.set -> void
+SharpVP9.VP9Context._RefFrameSignBias.get -> SharpAVX.AomArray<int>
+SharpVP9.VP9Context._RefFrameSignBias.set -> void
+SharpVP9.VP9Context._ReferenceMode.get -> int
+SharpVP9.VP9Context._ReferenceMode.set -> void
+SharpVP9.VP9Context._ReferenceSelect.get -> int
+SharpVP9.VP9Context._ReferenceSelect.set -> void
+SharpVP9.VP9Context._RefreshFrameContext.get -> int
+SharpVP9.VP9Context._RefreshFrameContext.set -> void
+SharpVP9.VP9Context._RefreshFrameFlags.get -> int
+SharpVP9.VP9Context._RefreshFrameFlags.set -> void
+SharpVP9.VP9Context._RenderAndFrameSizeDifferent.get -> int
+SharpVP9.VP9Context._RenderAndFrameSizeDifferent.set -> void
+SharpVP9.VP9Context._RenderHeight.get -> int
+SharpVP9.VP9Context._RenderHeight.set -> void
+SharpVP9.VP9Context._RenderHeightMinus1.get -> int
+SharpVP9.VP9Context._RenderHeightMinus1.set -> void
+SharpVP9.VP9Context._RenderWidth.get -> int
+SharpVP9.VP9Context._RenderWidth.set -> void
+SharpVP9.VP9Context._RenderWidthMinus1.get -> int
+SharpVP9.VP9Context._RenderWidthMinus1.set -> void
+SharpVP9.VP9Context._ReservedZero.get -> int
+SharpVP9.VP9Context._ReservedZero.set -> void
+SharpVP9.VP9Context._ResetFrameContext.get -> int
+SharpVP9.VP9Context._ResetFrameContext.set -> void
+SharpVP9.VP9Context._Sb64Cols.get -> int
+SharpVP9.VP9Context._Sb64Cols.set -> void
+SharpVP9.VP9Context._Sb64Rows.get -> int
+SharpVP9.VP9Context._Sb64Rows.set -> void
+SharpVP9.VP9Context._SegmentationAbsOrDeltaUpdate.get -> int
+SharpVP9.VP9Context._SegmentationAbsOrDeltaUpdate.set -> void
+SharpVP9.VP9Context._SegmentationEnabled.get -> int
+SharpVP9.VP9Context._SegmentationEnabled.set -> void
+SharpVP9.VP9Context._SegmentationPredProb.get -> SharpAVX.AomArray<int>
+SharpVP9.VP9Context._SegmentationPredProb.set -> void
+SharpVP9.VP9Context._SegmentationTemporalUpdate.get -> int
+SharpVP9.VP9Context._SegmentationTemporalUpdate.set -> void
+SharpVP9.VP9Context._SegmentationTreeProbs.get -> SharpAVX.AomArray<int>
+SharpVP9.VP9Context._SegmentationTreeProbs.set -> void
+SharpVP9.VP9Context._SegmentationUpdateData.get -> int
+SharpVP9.VP9Context._SegmentationUpdateData.set -> void
+SharpVP9.VP9Context._SegmentationUpdateMap.get -> int
+SharpVP9.VP9Context._SegmentationUpdateMap.set -> void
+SharpVP9.VP9Context._ShowExistingFrame.get -> int
+SharpVP9.VP9Context._ShowExistingFrame.set -> void
+SharpVP9.VP9Context._ShowFrame.get -> int
+SharpVP9.VP9Context._ShowFrame.set -> void
+SharpVP9.VP9Context._SingleRefProb.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpVP9.VP9Context._SingleRefProb.set -> void
+SharpVP9.VP9Context._SkipProb.get -> SharpAVX.AomArray<int>
+SharpVP9.VP9Context._SkipProb.set -> void
+SharpVP9.VP9Context._SubExpVal.get -> int
+SharpVP9.VP9Context._SubExpVal.set -> void
+SharpVP9.VP9Context._SubExpValMinus16.get -> int
+SharpVP9.VP9Context._SubExpValMinus16.set -> void
+SharpVP9.VP9Context._SubExpValMinus32.get -> int
+SharpVP9.VP9Context._SubExpValMinus32.set -> void
+SharpVP9.VP9Context._Subsamplingx.get -> int
+SharpVP9.VP9Context._Subsamplingx.set -> void
+SharpVP9.VP9Context._Subsamplingy.get -> int
+SharpVP9.VP9Context._Subsamplingy.set -> void
+SharpVP9.VP9Context._SuperframeMarker.get -> int
+SharpVP9.VP9Context._SuperframeMarker.set -> void
+SharpVP9.VP9Context._Sz.get -> int
+SharpVP9.VP9Context._Sz.set -> void
+SharpVP9.VP9Context._TenOrTwelveBit.get -> int
+SharpVP9.VP9Context._TenOrTwelveBit.set -> void
+SharpVP9.VP9Context._TileColsLog2.get -> int
+SharpVP9.VP9Context._TileColsLog2.set -> void
+SharpVP9.VP9Context._TileRowsLog2.get -> int
+SharpVP9.VP9Context._TileRowsLog2.set -> void
+SharpVP9.VP9Context._TxMode.get -> int
+SharpVP9.VP9Context._TxMode.set -> void
+SharpVP9.VP9Context._TxModeSelect.get -> int
+SharpVP9.VP9Context._TxModeSelect.set -> void
+SharpVP9.VP9Context._TxProbs16x16.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpVP9.VP9Context._TxProbs16x16.set -> void
+SharpVP9.VP9Context._TxProbs32x32.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpVP9.VP9Context._TxProbs32x32.set -> void
+SharpVP9.VP9Context._TxProbs8x8.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpVP9.VP9Context._TxProbs8x8.set -> void
+SharpVP9.VP9Context._UpdateModeDelta.get -> int
+SharpVP9.VP9Context._UpdateModeDelta.set -> void
+SharpVP9.VP9Context._UpdateMvProb.get -> int
+SharpVP9.VP9Context._UpdateMvProb.set -> void
+SharpVP9.VP9Context._UpdateProb.get -> int
+SharpVP9.VP9Context._UpdateProb.set -> void
+SharpVP9.VP9Context._UpdateProbs.get -> int
+SharpVP9.VP9Context._UpdateProbs.set -> void
+SharpVP9.VP9Context._UpdateRefDelta.get -> int
+SharpVP9.VP9Context._UpdateRefDelta.set -> void
+SharpVP9.VP9Context._ZeroBit.get -> int
+SharpVP9.VP9Context._ZeroBit.set -> void
+SharpVP9.VP9Context.__FeatureEnabled.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpVP9.VP9Context.__FeatureEnabled.set -> void
+SharpVP9.VP9Context._yModeProbs.get -> SharpAVX.AomArray<SharpAVX.AomArray<int>>
+SharpVP9.VP9Context._yModeProbs.set -> void
+SharpVP9.VP9Unit
+SharpVP9.VP9Unit.Edit() -> SharpVP9.VP9Context
+SharpVP9.VP9Unit.Edited.get -> SharpVP9.VP9Context
+SharpVP9.VP9Unit.IsSuperframeIndex.get -> bool
+SharpVP9.VP9Unit.Record.get -> SharpAVX.AomSyntaxRecord
+SharpVP9.VP9Unit.Size.get -> int
+SharpVP9.VP9Unit.Size.set -> void
+SharpVP9.VP9Unit.Unreadable.get -> byte[]
+const SharpVP9.VP9Constants.ADST_ADST = 3 -> int
+const SharpVP9.VP9Constants.ADST_DCT = 1 -> int
+const SharpVP9.VP9Constants.ALLOW_16X16 = 2 -> int
+const SharpVP9.VP9Constants.ALLOW_32X32 = 3 -> int
+const SharpVP9.VP9Constants.ALLOW_8X8 = 1 -> int
+const SharpVP9.VP9Constants.ALTREF_FRAME = 3 -> int
+const SharpVP9.VP9Constants.BILINEAR = 3 -> int
+const SharpVP9.VP9Constants.BLOCK_INVALID = 14 -> int
+const SharpVP9.VP9Constants.BLOCK_SIZES = 13 -> int
+const SharpVP9.VP9Constants.BLOCK_SIZE_GROUPS = 4 -> int
+const SharpVP9.VP9Constants.BLOCK_TYPES = 2 -> int
+const SharpVP9.VP9Constants.BORDERINPIXELS = 160 -> int
+const SharpVP9.VP9Constants.BOTH_INTRA = 6 -> int
+const SharpVP9.VP9Constants.BOTH_NEW = 4 -> int
+const SharpVP9.VP9Constants.BOTH_PREDICTED = 2 -> int
+const SharpVP9.VP9Constants.BOTH_ZERO = 0 -> int
+const SharpVP9.VP9Constants.CLASS0_SIZE = 2 -> int
+const SharpVP9.VP9Constants.COEF_BANDS = 6 -> int
+const SharpVP9.VP9Constants.COMPANDED_MVREF_THRESH = 8 -> int
+const SharpVP9.VP9Constants.COMPOUND_REFERENCE = 1 -> int
+const SharpVP9.VP9Constants.COMP_MODE_CONTEXTS = 5 -> int
+const SharpVP9.VP9Constants.COUNT_SAT = 20 -> int
+const SharpVP9.VP9Constants.CS_BT_2020 = 5 -> int
+const SharpVP9.VP9Constants.CS_BT_601 = 1 -> int
+const SharpVP9.VP9Constants.CS_BT_709 = 2 -> int
+const SharpVP9.VP9Constants.CS_RESERVED = 6 -> int
+const SharpVP9.VP9Constants.CS_RGB = 7 -> int
+const SharpVP9.VP9Constants.CS_SMPTE_170 = 3 -> int
+const SharpVP9.VP9Constants.CS_SMPTE_240 = 4 -> int
+const SharpVP9.VP9Constants.CS_UNKNOWN = 0 -> int
+const SharpVP9.VP9Constants.DCT_ADST = 2 -> int
+const SharpVP9.VP9Constants.DCT_DCT = 0 -> int
+const SharpVP9.VP9Constants.EIGHTTAP = 0 -> int
+const SharpVP9.VP9Constants.EIGHTTAP_SHARP = 2 -> int
+const SharpVP9.VP9Constants.EIGHTTAP_SMOOTH = 1 -> int
+const SharpVP9.VP9Constants.GOLDEN_FRAME = 2 -> int
+const SharpVP9.VP9Constants.INTERP_EXTEND = 4 -> int
+const SharpVP9.VP9Constants.INTERP_FILTER_CONTEXTS = 4 -> int
+const SharpVP9.VP9Constants.INTER_MODES = 4 -> int
+const SharpVP9.VP9Constants.INTER_MODE_CONTEXTS = 7 -> int
+const SharpVP9.VP9Constants.INTRA_FRAME = 0 -> int
+const SharpVP9.VP9Constants.INTRA_MODES = 10 -> int
+const SharpVP9.VP9Constants.INTRA_PLUS_NON_INTRA = 5 -> int
+const SharpVP9.VP9Constants.INVALID_CASE = 9 -> int
+const SharpVP9.VP9Constants.IS_INTER_CONTEXTS = 4 -> int
+const SharpVP9.VP9Constants.KEY_FRAME = 0 -> int
+const SharpVP9.VP9Constants.LAST_FRAME = 1 -> int
+const SharpVP9.VP9Constants.MAX_LOOP_FILTER = 63 -> int
+const SharpVP9.VP9Constants.MAX_MODE_LF_DELTAS = 2 -> int
+const SharpVP9.VP9Constants.MAX_MV_REF_CANDIDATES = 2 -> int
+const SharpVP9.VP9Constants.MAX_PROB = 255 -> int
+const SharpVP9.VP9Constants.MAX_REF_FRAMES = 4 -> int
+const SharpVP9.VP9Constants.MAX_SEGMENTS = 8 -> int
+const SharpVP9.VP9Constants.MAX_TILE_WIDTH_B64 = 64 -> int
+const SharpVP9.VP9Constants.MAX_UPDATE_FACTOR = 128 -> int
+const SharpVP9.VP9Constants.MB_MODE_COUNT = 14 -> int
+const SharpVP9.VP9Constants.MIN_TILE_WIDTH_B64 = 4 -> int
+const SharpVP9.VP9Constants.MI_SIZE = 8 -> int
+const SharpVP9.VP9Constants.MVREF_NEIGHBOURS = 8 -> int
+const SharpVP9.VP9Constants.MV_BORDER = 128 -> int
+const SharpVP9.VP9Constants.MV_CLASSES = 11 -> int
+const SharpVP9.VP9Constants.MV_FR_SIZE = 4 -> int
+const SharpVP9.VP9Constants.MV_JOINTS = 4 -> int
+const SharpVP9.VP9Constants.MV_OFFSET_BITS = 10 -> int
+const SharpVP9.VP9Constants.NEW_PLUS_NON_INTRA = 3 -> int
+const SharpVP9.VP9Constants.NON_KEY_FRAME = 1 -> int
+const SharpVP9.VP9Constants.NUM_REF_FRAMES = 8 -> int
+const SharpVP9.VP9Constants.ONLY_4X4 = 0 -> int
+const SharpVP9.VP9Constants.PARTITION_CONTEXTS = 16 -> int
+const SharpVP9.VP9Constants.PARTITION_TYPES = 4 -> int
+const SharpVP9.VP9Constants.PREV_COEF_CONTEXTS = 6 -> int
+const SharpVP9.VP9Constants.REFERENCE_MODE_SELECT = 2 -> int
+const SharpVP9.VP9Constants.REFS_PER_FRAME = 3 -> int
+const SharpVP9.VP9Constants.REF_CONTEXTS = 5 -> int
+const SharpVP9.VP9Constants.REF_SCALE_SHIFT = 14 -> int
+const SharpVP9.VP9Constants.REF_TYPES = 2 -> int
+const SharpVP9.VP9Constants.SEG_LVL_ALT_L = 1 -> int
+const SharpVP9.VP9Constants.SEG_LVL_ALT_Q = 0 -> int
+const SharpVP9.VP9Constants.SEG_LVL_MAX = 4 -> int
+const SharpVP9.VP9Constants.SEG_LVL_REF_FRAME = 2 -> int
+const SharpVP9.VP9Constants.SEG_LVL_SKIP = 3 -> int
+const SharpVP9.VP9Constants.SINGLE_REFERENCE = 0 -> int
+const SharpVP9.VP9Constants.SKIP_CONTEXTS = 3 -> int
+const SharpVP9.VP9Constants.SUBPEL_BITS = 4 -> int
+const SharpVP9.VP9Constants.SUBPEL_MASK = 15 -> int
+const SharpVP9.VP9Constants.SUBPEL_SHIFTS = 16 -> int
+const SharpVP9.VP9Constants.SWITCHABLE = 4 -> int
+const SharpVP9.VP9Constants.SWITCHABLE_FILTERS = 3 -> int
+const SharpVP9.VP9Constants.TX_16X16 = 2 -> int
+const SharpVP9.VP9Constants.TX_32X32 = 3 -> int
+const SharpVP9.VP9Constants.TX_4X4 = 0 -> int
+const SharpVP9.VP9Constants.TX_8X8 = 1 -> int
+const SharpVP9.VP9Constants.TX_MODES = 5 -> int
+const SharpVP9.VP9Constants.TX_MODE_SELECT = 4 -> int
+const SharpVP9.VP9Constants.TX_SIZES = 4 -> int
+const SharpVP9.VP9Constants.TX_SIZE_CONTEXTS = 2 -> int
+const SharpVP9.VP9Constants.UNCONSTRAINED_NODES = 3 -> int
+static SharpVP9.VP9Context.SuperframeFrameSizes(byte[] chunk, int offset, int count) -> int[]

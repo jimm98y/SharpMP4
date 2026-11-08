@@ -1,0 +1,89 @@
+SharpH26X.ConvertEx
+SharpH26X.IItuContext
+SharpH26X.IItuSerializable
+SharpH26X.IItuSerializable.HasMoreRbspData.get -> int
+SharpH26X.IItuSerializable.HasMoreRbspData.set -> void
+SharpH26X.IItuSerializable.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH26X.IItuSerializable.ReadNextBits.get -> int[]
+SharpH26X.IItuSerializable.ReadNextBits.set -> void
+SharpH26X.IItuSerializable.Syntax.get -> string
+SharpH26X.IItuSerializable.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH26X.IItuTracer
+SharpH26X.IItuTracer.OnBeginClass(string name, SharpH26X.IItuSerializable value, ulong position) -> void
+SharpH26X.IItuTracer.OnEndClass(string name, SharpH26X.IItuSerializable value, ulong position) -> void
+SharpH26X.IItuTracer.OnField(string name, ulong end, ulong bits, object value) -> void
+SharpH26X.ItuEndOfStreamException
+SharpH26X.ItuEndOfStreamException.ItuEndOfStreamException(string message) -> void
+SharpH26X.ItuEndOfStreamException.ItuEndOfStreamException(string message, System.Exception innerException) -> void
+SharpH26X.ItuStream
+SharpH26X.ItuStream.Bitstream.get -> SharpMP4.Common.RbspBitstream
+SharpH26X.ItuStream.Bitstream.set -> void
+SharpH26X.ItuStream.ByteAligned() -> bool
+SharpH26X.ItuStream.CheckArrayAllocation(ulong count, string name) -> void
+SharpH26X.ItuStream.Dispose() -> void
+SharpH26X.ItuStream.EndNalUnit() -> void
+SharpH26X.ItuStream.GetBitsPositionSinceLastMark() -> ulong
+SharpH26X.ItuStream.ItuStream(SharpMP4.Common.RbspBitstream bitstream, SharpMP4.Common.IMp4Logger logger) -> void
+SharpH26X.ItuStream.ItuStream(System.IO.Stream stream) -> void
+SharpH26X.ItuStream.ItuStream(System.IO.Stream stream, SharpMP4.Common.IMp4Logger logger) -> void
+SharpH26X.ItuStream.ItuStream(byte[] buffer, int offset, int length, SharpMP4.Common.IMp4Logger logger = null) -> void
+SharpH26X.ItuStream.Logger.get -> SharpMP4.Common.IMp4Logger
+SharpH26X.ItuStream.Logger.set -> void
+SharpH26X.ItuStream.Lookahead() -> SharpH26X.ItuStream
+SharpH26X.ItuStream.MarkCurrentBitsPosition() -> void
+SharpH26X.ItuStream.ReadBits(ulong size, ulong count, int whileIndex, System.Collections.Generic.Dictionary<int, byte> list, string name) -> ulong
+SharpH26X.ItuStream.ReadBits(ulong size, ulong count, out byte value, string name) -> ulong
+SharpH26X.ItuStream.ReadBytes(byte[] buffer, int offset, int count) -> int
+SharpH26X.ItuStream.ReadClass<T>(ulong size, SharpH26X.IItuContext context, T value, string name) -> ulong
+SharpH26X.ItuStream.ReadFixed(ulong size, ulong count, int whileIndex, System.Collections.Generic.Dictionary<int, uint> list, string name) -> ulong
+SharpH26X.ItuStream.ReadFixed(ulong size, ulong count, out uint value, string name) -> ulong
+SharpH26X.ItuStream.ReadMoreRbspData(SharpH26X.IItuSerializable serializable, ulong maxPayloadSize = 18446744073709551615) -> bool
+SharpH26X.ItuStream.ReadNextBits(SharpH26X.IItuSerializable serializable, ulong count) -> int
+SharpH26X.ItuStream.ReadSignedInt(ulong size, ulong count, out int value, string name) -> ulong
+SharpH26X.ItuStream.ReadSignedIntGolomb(ulong size, out long value, string name) -> ulong
+SharpH26X.ItuStream.ReadSignedIntVariable(ulong size, ulong count, out int value, string name) -> ulong
+SharpH26X.ItuStream.ReadUnsignedInt(ulong size, ulong count, int index, System.Collections.Generic.Dictionary<int, uint> value, string name) -> ulong
+SharpH26X.ItuStream.ReadUnsignedInt(ulong size, ulong count, int whileIndex, System.Collections.Generic.Dictionary<int, byte> list, string name) -> ulong
+SharpH26X.ItuStream.ReadUnsignedInt(ulong size, ulong count, out System.Numerics.BigInteger value, string name) -> ulong
+SharpH26X.ItuStream.ReadUnsignedInt(ulong size, ulong count, out byte value, string name) -> ulong
+SharpH26X.ItuStream.ReadUnsignedInt(ulong size, ulong count, out uint value, string name) -> ulong
+SharpH26X.ItuStream.ReadUnsignedInt(ulong size, ulong count, out ulong value, string name) -> ulong
+SharpH26X.ItuStream.ReadUnsignedIntGolomb(ulong size, int whileIndex, System.Collections.Generic.Dictionary<int, ulong> list, string name) -> ulong
+SharpH26X.ItuStream.ReadUnsignedIntGolomb(ulong size, out ulong value, string name) -> ulong
+SharpH26X.ItuStream.ReadUnsignedIntVariable(ulong size, ulong count, out uint value, string name) -> ulong
+SharpH26X.ItuStream.ReadUnsignedIntVariable(ulong size, ulong count, out ulong value, string name) -> ulong
+SharpH26X.ItuStream.ReadUtf8String(ulong size, out byte[] value, string name) -> ulong
+SharpH26X.ItuStream.Reset(byte[] buffer, int offset, int length) -> void
+SharpH26X.ItuStream.RestoreBitsMark(ulong bitsSinceMark) -> void
+SharpH26X.ItuStream.Tracer.get -> SharpH26X.IItuTracer
+SharpH26X.ItuStream.Tracer.set -> void
+SharpH26X.ItuStream.WriteBit(int value) -> void
+SharpH26X.ItuStream.WriteBits(ulong count, byte value, string name) -> ulong
+SharpH26X.ItuStream.WriteBits(ulong count, int whileIndex, System.Collections.Generic.Dictionary<int, byte> list, string name) -> ulong
+SharpH26X.ItuStream.WriteBytes(byte[] buffer, int offset, int count) -> void
+SharpH26X.ItuStream.WriteClass<T>(SharpH26X.IItuContext context, T value, string name) -> ulong
+SharpH26X.ItuStream.WriteClass<T>(SharpH26X.IItuContext context, T[] value, string name) -> ulong
+SharpH26X.ItuStream.WriteClass<T>(SharpH26X.IItuContext context, int whileIndex, System.Collections.Generic.Dictionary<int, T> list, string name) -> ulong
+SharpH26X.ItuStream.WriteFixed(ulong count, int whileIndex, System.Collections.Generic.Dictionary<int, uint> list, string name) -> ulong
+SharpH26X.ItuStream.WriteFixed(ulong count, uint value, string name) -> ulong
+SharpH26X.ItuStream.WriteMoreRbspData(SharpH26X.IItuSerializable serializable, ulong maxPayloadSize = 18446744073709551615) -> bool
+SharpH26X.ItuStream.WriteNextBits(SharpH26X.IItuSerializable serializable, ulong count) -> int
+SharpH26X.ItuStream.WriteSignedInt(ulong count, int value, string name) -> ulong
+SharpH26X.ItuStream.WriteSignedIntGolomb(long value, string name) -> ulong
+SharpH26X.ItuStream.WriteSignedIntVariable(ulong count, int value, string name) -> ulong
+SharpH26X.ItuStream.WriteUnsignedInt(ulong count, System.Numerics.BigInteger value, string name) -> ulong
+SharpH26X.ItuStream.WriteUnsignedInt(ulong count, byte value, string name) -> ulong
+SharpH26X.ItuStream.WriteUnsignedInt(ulong count, int index, System.Collections.Generic.Dictionary<int, uint> value, string name) -> ulong
+SharpH26X.ItuStream.WriteUnsignedInt(ulong count, int whileIndex, System.Collections.Generic.Dictionary<int, byte> list, string name) -> ulong
+SharpH26X.ItuStream.WriteUnsignedInt(ulong count, ulong value, string name) -> ulong
+SharpH26X.ItuStream.WriteUnsignedIntGolomb(int whileIndex, System.Collections.Generic.Dictionary<int, ulong> list, string name) -> ulong
+SharpH26X.ItuStream.WriteUnsignedIntGolomb(ulong value, string name) -> ulong
+SharpH26X.ItuStream.WriteUnsignedIntVariable(ulong count, uint value, string name) -> ulong
+SharpH26X.ItuStream.WriteUnsignedIntVariable(ulong count, ulong value, string name) -> ulong
+SharpH26X.ItuStream.WriteUtf8String(byte[] value, string name) -> ulong
+SharpH26X.MathEx
+static SharpH26X.ConvertEx.FromHexString(string hex) -> byte[]
+static SharpH26X.ConvertEx.ToHexString(byte[] data) -> string
+static SharpH26X.MathEx.Clamp(int value, int min, int max) -> int
+static SharpH26X.MathEx.Log2(double x) -> double
+virtual SharpH26X.ItuStream.Dispose(bool disposing) -> void

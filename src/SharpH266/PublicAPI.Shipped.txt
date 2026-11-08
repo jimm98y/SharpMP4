@@ -1,0 +1,3054 @@
+SharpH266.AccessUnitDelimiterRbsp
+SharpH266.AccessUnitDelimiterRbsp.AccessUnitDelimiterRbsp() -> void
+SharpH266.AccessUnitDelimiterRbsp.AudIrapOrGdrFlag.get -> byte
+SharpH266.AccessUnitDelimiterRbsp.AudIrapOrGdrFlag.set -> void
+SharpH266.AccessUnitDelimiterRbsp.AudPicType.get -> uint
+SharpH266.AccessUnitDelimiterRbsp.AudPicType.set -> void
+SharpH266.AccessUnitDelimiterRbsp.HasMoreRbspData.get -> int
+SharpH266.AccessUnitDelimiterRbsp.HasMoreRbspData.set -> void
+SharpH266.AccessUnitDelimiterRbsp.RbspTrailingBits.get -> SharpH266.RbspTrailingBits
+SharpH266.AccessUnitDelimiterRbsp.RbspTrailingBits.set -> void
+SharpH266.AccessUnitDelimiterRbsp.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.AccessUnitDelimiterRbsp.ReadNextBits.get -> int[]
+SharpH266.AccessUnitDelimiterRbsp.ReadNextBits.set -> void
+SharpH266.AccessUnitDelimiterRbsp.Syntax.get -> string
+SharpH266.AccessUnitDelimiterRbsp.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.AdaptationParameterSetRbsp
+SharpH266.AdaptationParameterSetRbsp.AdaptationParameterSetRbsp() -> void
+SharpH266.AdaptationParameterSetRbsp.AlfData.get -> SharpH266.AlfData
+SharpH266.AdaptationParameterSetRbsp.AlfData.set -> void
+SharpH266.AdaptationParameterSetRbsp.ApsAdaptationParameterSetId.get -> uint
+SharpH266.AdaptationParameterSetRbsp.ApsAdaptationParameterSetId.set -> void
+SharpH266.AdaptationParameterSetRbsp.ApsChromaPresentFlag.get -> byte
+SharpH266.AdaptationParameterSetRbsp.ApsChromaPresentFlag.set -> void
+SharpH266.AdaptationParameterSetRbsp.ApsExtensionDataFlag.get -> System.Collections.Generic.Dictionary<int, byte>
+SharpH266.AdaptationParameterSetRbsp.ApsExtensionDataFlag.set -> void
+SharpH266.AdaptationParameterSetRbsp.ApsExtensionFlag.get -> byte
+SharpH266.AdaptationParameterSetRbsp.ApsExtensionFlag.set -> void
+SharpH266.AdaptationParameterSetRbsp.ApsParamsType.get -> uint
+SharpH266.AdaptationParameterSetRbsp.ApsParamsType.set -> void
+SharpH266.AdaptationParameterSetRbsp.HasMoreRbspData.get -> int
+SharpH266.AdaptationParameterSetRbsp.HasMoreRbspData.set -> void
+SharpH266.AdaptationParameterSetRbsp.LmcsData.get -> SharpH266.LmcsData
+SharpH266.AdaptationParameterSetRbsp.LmcsData.set -> void
+SharpH266.AdaptationParameterSetRbsp.RbspTrailingBits.get -> SharpH266.RbspTrailingBits
+SharpH266.AdaptationParameterSetRbsp.RbspTrailingBits.set -> void
+SharpH266.AdaptationParameterSetRbsp.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.AdaptationParameterSetRbsp.ReadNextBits.get -> int[]
+SharpH266.AdaptationParameterSetRbsp.ReadNextBits.set -> void
+SharpH266.AdaptationParameterSetRbsp.ScalingListData.get -> SharpH266.ScalingListData
+SharpH266.AdaptationParameterSetRbsp.ScalingListData.set -> void
+SharpH266.AdaptationParameterSetRbsp.Syntax.get -> string
+SharpH266.AdaptationParameterSetRbsp.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.AlfData
+SharpH266.AlfData.AlfCcCbCoeffSign.get -> byte[][]
+SharpH266.AlfData.AlfCcCbCoeffSign.set -> void
+SharpH266.AlfData.AlfCcCbFilterSignalFlag.get -> byte
+SharpH266.AlfData.AlfCcCbFilterSignalFlag.set -> void
+SharpH266.AlfData.AlfCcCbFiltersSignalledMinus1.get -> ulong
+SharpH266.AlfData.AlfCcCbFiltersSignalledMinus1.set -> void
+SharpH266.AlfData.AlfCcCbMappedCoeffAbs.get -> uint[][]
+SharpH266.AlfData.AlfCcCbMappedCoeffAbs.set -> void
+SharpH266.AlfData.AlfCcCrCoeffSign.get -> byte[][]
+SharpH266.AlfData.AlfCcCrCoeffSign.set -> void
+SharpH266.AlfData.AlfCcCrFilterSignalFlag.get -> byte
+SharpH266.AlfData.AlfCcCrFilterSignalFlag.set -> void
+SharpH266.AlfData.AlfCcCrFiltersSignalledMinus1.get -> ulong
+SharpH266.AlfData.AlfCcCrFiltersSignalledMinus1.set -> void
+SharpH266.AlfData.AlfCcCrMappedCoeffAbs.get -> uint[][]
+SharpH266.AlfData.AlfCcCrMappedCoeffAbs.set -> void
+SharpH266.AlfData.AlfChromaClipFlag.get -> byte
+SharpH266.AlfData.AlfChromaClipFlag.set -> void
+SharpH266.AlfData.AlfChromaClipIdx.get -> uint[][]
+SharpH266.AlfData.AlfChromaClipIdx.set -> void
+SharpH266.AlfData.AlfChromaCoeffAbs.get -> ulong[][]
+SharpH266.AlfData.AlfChromaCoeffAbs.set -> void
+SharpH266.AlfData.AlfChromaCoeffSign.get -> byte[][]
+SharpH266.AlfData.AlfChromaCoeffSign.set -> void
+SharpH266.AlfData.AlfChromaFilterSignalFlag.get -> byte
+SharpH266.AlfData.AlfChromaFilterSignalFlag.set -> void
+SharpH266.AlfData.AlfChromaNumAltFiltersMinus1.get -> ulong
+SharpH266.AlfData.AlfChromaNumAltFiltersMinus1.set -> void
+SharpH266.AlfData.AlfData() -> void
+SharpH266.AlfData.AlfLumaClipFlag.get -> byte
+SharpH266.AlfData.AlfLumaClipFlag.set -> void
+SharpH266.AlfData.AlfLumaClipIdx.get -> uint[][]
+SharpH266.AlfData.AlfLumaClipIdx.set -> void
+SharpH266.AlfData.AlfLumaCoeffAbs.get -> ulong[][]
+SharpH266.AlfData.AlfLumaCoeffAbs.set -> void
+SharpH266.AlfData.AlfLumaCoeffDeltaIdx.get -> ulong[]
+SharpH266.AlfData.AlfLumaCoeffDeltaIdx.set -> void
+SharpH266.AlfData.AlfLumaCoeffSign.get -> byte[][]
+SharpH266.AlfData.AlfLumaCoeffSign.set -> void
+SharpH266.AlfData.AlfLumaFilterSignalFlag.get -> byte
+SharpH266.AlfData.AlfLumaFilterSignalFlag.set -> void
+SharpH266.AlfData.AlfLumaNumFiltersSignalledMinus1.get -> ulong
+SharpH266.AlfData.AlfLumaNumFiltersSignalledMinus1.set -> void
+SharpH266.AlfData.HasMoreRbspData.get -> int
+SharpH266.AlfData.HasMoreRbspData.set -> void
+SharpH266.AlfData.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.AlfData.ReadNextBits.get -> int[]
+SharpH266.AlfData.ReadNextBits.set -> void
+SharpH266.AlfData.Syntax.get -> string
+SharpH266.AlfData.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.AlphaChannelInfo
+SharpH266.AlphaChannelInfo.AlphaChannelBitDepthMinus8.get -> uint
+SharpH266.AlphaChannelInfo.AlphaChannelBitDepthMinus8.set -> void
+SharpH266.AlphaChannelInfo.AlphaChannelCancelFlag.get -> byte
+SharpH266.AlphaChannelInfo.AlphaChannelCancelFlag.set -> void
+SharpH266.AlphaChannelInfo.AlphaChannelClipFlag.get -> byte
+SharpH266.AlphaChannelInfo.AlphaChannelClipFlag.set -> void
+SharpH266.AlphaChannelInfo.AlphaChannelClipTypeFlag.get -> byte
+SharpH266.AlphaChannelInfo.AlphaChannelClipTypeFlag.set -> void
+SharpH266.AlphaChannelInfo.AlphaChannelIncrFlag.get -> byte
+SharpH266.AlphaChannelInfo.AlphaChannelIncrFlag.set -> void
+SharpH266.AlphaChannelInfo.AlphaChannelInfo(ulong payloadSize) -> void
+SharpH266.AlphaChannelInfo.AlphaChannelUseIdc.get -> uint
+SharpH266.AlphaChannelInfo.AlphaChannelUseIdc.set -> void
+SharpH266.AlphaChannelInfo.AlphaOpaqueValue.get -> ulong
+SharpH266.AlphaChannelInfo.AlphaOpaqueValue.set -> void
+SharpH266.AlphaChannelInfo.AlphaTransparentValue.get -> ulong
+SharpH266.AlphaChannelInfo.AlphaTransparentValue.set -> void
+SharpH266.AlphaChannelInfo.HasMoreRbspData.get -> int
+SharpH266.AlphaChannelInfo.HasMoreRbspData.set -> void
+SharpH266.AlphaChannelInfo.PayloadSize.get -> ulong
+SharpH266.AlphaChannelInfo.PayloadSize.set -> void
+SharpH266.AlphaChannelInfo.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.AlphaChannelInfo.ReadNextBits.get -> int[]
+SharpH266.AlphaChannelInfo.ReadNextBits.set -> void
+SharpH266.AlphaChannelInfo.Syntax.get -> string
+SharpH266.AlphaChannelInfo.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.AlternativeTransferCharacteristics
+SharpH266.AlternativeTransferCharacteristics.AlternativeTransferCharacteristics(ulong payloadSize) -> void
+SharpH266.AlternativeTransferCharacteristics.HasMoreRbspData.get -> int
+SharpH266.AlternativeTransferCharacteristics.HasMoreRbspData.set -> void
+SharpH266.AlternativeTransferCharacteristics.PayloadSize.get -> ulong
+SharpH266.AlternativeTransferCharacteristics.PayloadSize.set -> void
+SharpH266.AlternativeTransferCharacteristics.PreferredTransferCharacteristics.get -> uint
+SharpH266.AlternativeTransferCharacteristics.PreferredTransferCharacteristics.set -> void
+SharpH266.AlternativeTransferCharacteristics.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.AlternativeTransferCharacteristics.ReadNextBits.get -> int[]
+SharpH266.AlternativeTransferCharacteristics.ReadNextBits.set -> void
+SharpH266.AlternativeTransferCharacteristics.Syntax.get -> string
+SharpH266.AlternativeTransferCharacteristics.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.AmbientViewingEnvironment
+SharpH266.AmbientViewingEnvironment.AmbientIlluminance.get -> uint
+SharpH266.AmbientViewingEnvironment.AmbientIlluminance.set -> void
+SharpH266.AmbientViewingEnvironment.AmbientLightx.get -> uint
+SharpH266.AmbientViewingEnvironment.AmbientLightx.set -> void
+SharpH266.AmbientViewingEnvironment.AmbientLighty.get -> uint
+SharpH266.AmbientViewingEnvironment.AmbientLighty.set -> void
+SharpH266.AmbientViewingEnvironment.AmbientViewingEnvironment(ulong payloadSize) -> void
+SharpH266.AmbientViewingEnvironment.HasMoreRbspData.get -> int
+SharpH266.AmbientViewingEnvironment.HasMoreRbspData.set -> void
+SharpH266.AmbientViewingEnvironment.PayloadSize.get -> ulong
+SharpH266.AmbientViewingEnvironment.PayloadSize.set -> void
+SharpH266.AmbientViewingEnvironment.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.AmbientViewingEnvironment.ReadNextBits.get -> int[]
+SharpH266.AmbientViewingEnvironment.ReadNextBits.set -> void
+SharpH266.AmbientViewingEnvironment.Syntax.get -> string
+SharpH266.AmbientViewingEnvironment.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.AnnotatedRegions
+SharpH266.AnnotatedRegions.AnnotatedRegions(ulong payloadSize) -> void
+SharpH266.AnnotatedRegions.ArBitEqualToZero.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpH266.AnnotatedRegions.ArBitEqualToZero.set -> void
+SharpH266.AnnotatedRegions.ArBoundingBoxCancelFlag.get -> byte[]
+SharpH266.AnnotatedRegions.ArBoundingBoxCancelFlag.set -> void
+SharpH266.AnnotatedRegions.ArBoundingBoxHeight.get -> uint[]
+SharpH266.AnnotatedRegions.ArBoundingBoxHeight.set -> void
+SharpH266.AnnotatedRegions.ArBoundingBoxLeft.get -> uint[]
+SharpH266.AnnotatedRegions.ArBoundingBoxLeft.set -> void
+SharpH266.AnnotatedRegions.ArBoundingBoxTop.get -> uint[]
+SharpH266.AnnotatedRegions.ArBoundingBoxTop.set -> void
+SharpH266.AnnotatedRegions.ArBoundingBoxUpdateFlag.get -> byte[]
+SharpH266.AnnotatedRegions.ArBoundingBoxUpdateFlag.set -> void
+SharpH266.AnnotatedRegions.ArBoundingBoxWidth.get -> uint[]
+SharpH266.AnnotatedRegions.ArBoundingBoxWidth.set -> void
+SharpH266.AnnotatedRegions.ArCancelFlag.get -> byte
+SharpH266.AnnotatedRegions.ArCancelFlag.set -> void
+SharpH266.AnnotatedRegions.ArLabel.get -> byte[][]
+SharpH266.AnnotatedRegions.ArLabel.set -> void
+SharpH266.AnnotatedRegions.ArLabelCancelFlag.get -> byte[]
+SharpH266.AnnotatedRegions.ArLabelCancelFlag.set -> void
+SharpH266.AnnotatedRegions.ArLabelIdx.get -> ulong[]
+SharpH266.AnnotatedRegions.ArLabelIdx.set -> void
+SharpH266.AnnotatedRegions.ArNotOptimizedForViewingFlag.get -> byte
+SharpH266.AnnotatedRegions.ArNotOptimizedForViewingFlag.set -> void
+SharpH266.AnnotatedRegions.ArNumLabelUpdates.get -> ulong
+SharpH266.AnnotatedRegions.ArNumLabelUpdates.set -> void
+SharpH266.AnnotatedRegions.ArNumObjectUpdates.get -> ulong
+SharpH266.AnnotatedRegions.ArNumObjectUpdates.set -> void
+SharpH266.AnnotatedRegions.ArObjectCancelFlag.get -> byte[]
+SharpH266.AnnotatedRegions.ArObjectCancelFlag.set -> void
+SharpH266.AnnotatedRegions.ArObjectConfidence.get -> ulong[]
+SharpH266.AnnotatedRegions.ArObjectConfidence.set -> void
+SharpH266.AnnotatedRegions.ArObjectConfidenceInfoPresentFlag.get -> byte
+SharpH266.AnnotatedRegions.ArObjectConfidenceInfoPresentFlag.set -> void
+SharpH266.AnnotatedRegions.ArObjectConfidenceLengthMinus1.get -> uint
+SharpH266.AnnotatedRegions.ArObjectConfidenceLengthMinus1.set -> void
+SharpH266.AnnotatedRegions.ArObjectIdx.get -> ulong[]
+SharpH266.AnnotatedRegions.ArObjectIdx.set -> void
+SharpH266.AnnotatedRegions.ArObjectLabelIdx.get -> ulong[]
+SharpH266.AnnotatedRegions.ArObjectLabelIdx.set -> void
+SharpH266.AnnotatedRegions.ArObjectLabelLanguage.get -> byte[]
+SharpH266.AnnotatedRegions.ArObjectLabelLanguage.set -> void
+SharpH266.AnnotatedRegions.ArObjectLabelLanguagePresentFlag.get -> byte
+SharpH266.AnnotatedRegions.ArObjectLabelLanguagePresentFlag.set -> void
+SharpH266.AnnotatedRegions.ArObjectLabelPresentFlag.get -> byte
+SharpH266.AnnotatedRegions.ArObjectLabelPresentFlag.set -> void
+SharpH266.AnnotatedRegions.ArObjectLabelUpdateFlag.get -> byte[]
+SharpH266.AnnotatedRegions.ArObjectLabelUpdateFlag.set -> void
+SharpH266.AnnotatedRegions.ArOccludedObjectFlag.get -> byte
+SharpH266.AnnotatedRegions.ArOccludedObjectFlag.set -> void
+SharpH266.AnnotatedRegions.ArPartialObjectFlag.get -> byte[]
+SharpH266.AnnotatedRegions.ArPartialObjectFlag.set -> void
+SharpH266.AnnotatedRegions.ArPartialObjectFlagPresentFlag.get -> byte
+SharpH266.AnnotatedRegions.ArPartialObjectFlagPresentFlag.set -> void
+SharpH266.AnnotatedRegions.ArTrueMotionFlag.get -> byte
+SharpH266.AnnotatedRegions.ArTrueMotionFlag.set -> void
+SharpH266.AnnotatedRegions.HasMoreRbspData.get -> int
+SharpH266.AnnotatedRegions.HasMoreRbspData.set -> void
+SharpH266.AnnotatedRegions.PayloadSize.get -> ulong
+SharpH266.AnnotatedRegions.PayloadSize.set -> void
+SharpH266.AnnotatedRegions.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.AnnotatedRegions.ReadNextBits.get -> int[]
+SharpH266.AnnotatedRegions.ReadNextBits.set -> void
+SharpH266.AnnotatedRegions.Syntax.get -> string
+SharpH266.AnnotatedRegions.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.BufferingPeriod
+SharpH266.BufferingPeriod.BpAdditionalConcatenationInfoPresentFlag.get -> byte
+SharpH266.BufferingPeriod.BpAdditionalConcatenationInfoPresentFlag.set -> void
+SharpH266.BufferingPeriod.BpAltCpbParamsPresentFlag.get -> byte
+SharpH266.BufferingPeriod.BpAltCpbParamsPresentFlag.set -> void
+SharpH266.BufferingPeriod.BpConcatenationFlag.get -> byte
+SharpH266.BufferingPeriod.BpConcatenationFlag.set -> void
+SharpH266.BufferingPeriod.BpCpbCntMinus1.get -> ulong
+SharpH266.BufferingPeriod.BpCpbCntMinus1.set -> void
+SharpH266.BufferingPeriod.BpCpbInitialRemovalDelayLengthMinus1.get -> uint
+SharpH266.BufferingPeriod.BpCpbInitialRemovalDelayLengthMinus1.set -> void
+SharpH266.BufferingPeriod.BpCpbRemovalDelayDeltaMinus1.get -> ulong
+SharpH266.BufferingPeriod.BpCpbRemovalDelayDeltaMinus1.set -> void
+SharpH266.BufferingPeriod.BpCpbRemovalDelayDeltaVal.get -> ulong[]
+SharpH266.BufferingPeriod.BpCpbRemovalDelayDeltaVal.set -> void
+SharpH266.BufferingPeriod.BpCpbRemovalDelayDeltasPresentFlag.get -> byte
+SharpH266.BufferingPeriod.BpCpbRemovalDelayDeltasPresentFlag.set -> void
+SharpH266.BufferingPeriod.BpCpbRemovalDelayLengthMinus1.get -> uint
+SharpH266.BufferingPeriod.BpCpbRemovalDelayLengthMinus1.set -> void
+SharpH266.BufferingPeriod.BpDpbOutputDelayDuLengthMinus1.get -> uint
+SharpH266.BufferingPeriod.BpDpbOutputDelayDuLengthMinus1.set -> void
+SharpH266.BufferingPeriod.BpDpbOutputDelayLengthMinus1.get -> uint
+SharpH266.BufferingPeriod.BpDpbOutputDelayLengthMinus1.set -> void
+SharpH266.BufferingPeriod.BpDpbOutputTidOffset.get -> ulong[]
+SharpH266.BufferingPeriod.BpDpbOutputTidOffset.set -> void
+SharpH266.BufferingPeriod.BpDuCpbParamsInPicTimingSeiFlag.get -> byte
+SharpH266.BufferingPeriod.BpDuCpbParamsInPicTimingSeiFlag.set -> void
+SharpH266.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1.get -> uint
+SharpH266.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1.set -> void
+SharpH266.BufferingPeriod.BpDuDpbParamsInPicTimingSeiFlag.get -> byte
+SharpH266.BufferingPeriod.BpDuDpbParamsInPicTimingSeiFlag.set -> void
+SharpH266.BufferingPeriod.BpDuHrdParamsPresentFlag.get -> byte
+SharpH266.BufferingPeriod.BpDuHrdParamsPresentFlag.set -> void
+SharpH266.BufferingPeriod.BpMaxInitialRemovalDelayForConcatenation.get -> ulong
+SharpH266.BufferingPeriod.BpMaxInitialRemovalDelayForConcatenation.set -> void
+SharpH266.BufferingPeriod.BpMaxSublayersMinus1.get -> uint
+SharpH266.BufferingPeriod.BpMaxSublayersMinus1.set -> void
+SharpH266.BufferingPeriod.BpNalHrdParamsPresentFlag.get -> byte
+SharpH266.BufferingPeriod.BpNalHrdParamsPresentFlag.set -> void
+SharpH266.BufferingPeriod.BpNalInitialAltCpbRemovalDelay.get -> ulong[][]
+SharpH266.BufferingPeriod.BpNalInitialAltCpbRemovalDelay.set -> void
+SharpH266.BufferingPeriod.BpNalInitialAltCpbRemovalOffset.get -> ulong[][]
+SharpH266.BufferingPeriod.BpNalInitialAltCpbRemovalOffset.set -> void
+SharpH266.BufferingPeriod.BpNalInitialCpbRemovalDelay.get -> ulong[][]
+SharpH266.BufferingPeriod.BpNalInitialCpbRemovalDelay.set -> void
+SharpH266.BufferingPeriod.BpNalInitialCpbRemovalOffset.get -> ulong[][]
+SharpH266.BufferingPeriod.BpNalInitialCpbRemovalOffset.set -> void
+SharpH266.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1.get -> ulong
+SharpH266.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1.set -> void
+SharpH266.BufferingPeriod.BpSublayerDpbOutputOffsetsPresentFlag.get -> byte
+SharpH266.BufferingPeriod.BpSublayerDpbOutputOffsetsPresentFlag.set -> void
+SharpH266.BufferingPeriod.BpSublayerInitialCpbRemovalDelayPresentFlag.get -> byte
+SharpH266.BufferingPeriod.BpSublayerInitialCpbRemovalDelayPresentFlag.set -> void
+SharpH266.BufferingPeriod.BpUseAltCpbParamsFlag.get -> byte
+SharpH266.BufferingPeriod.BpUseAltCpbParamsFlag.set -> void
+SharpH266.BufferingPeriod.BpVclHrdParamsPresentFlag.get -> byte
+SharpH266.BufferingPeriod.BpVclHrdParamsPresentFlag.set -> void
+SharpH266.BufferingPeriod.BpVclInitialAltCpbRemovalDelay.get -> ulong[][]
+SharpH266.BufferingPeriod.BpVclInitialAltCpbRemovalDelay.set -> void
+SharpH266.BufferingPeriod.BpVclInitialAltCpbRemovalOffset.get -> ulong[][]
+SharpH266.BufferingPeriod.BpVclInitialAltCpbRemovalOffset.set -> void
+SharpH266.BufferingPeriod.BpVclInitialCpbRemovalDelay.get -> ulong[][]
+SharpH266.BufferingPeriod.BpVclInitialCpbRemovalDelay.set -> void
+SharpH266.BufferingPeriod.BpVclInitialCpbRemovalOffset.get -> ulong[][]
+SharpH266.BufferingPeriod.BpVclInitialCpbRemovalOffset.set -> void
+SharpH266.BufferingPeriod.BufferingPeriod(ulong payloadSize) -> void
+SharpH266.BufferingPeriod.HasMoreRbspData.get -> int
+SharpH266.BufferingPeriod.HasMoreRbspData.set -> void
+SharpH266.BufferingPeriod.PayloadSize.get -> ulong
+SharpH266.BufferingPeriod.PayloadSize.set -> void
+SharpH266.BufferingPeriod.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.BufferingPeriod.ReadNextBits.get -> int[]
+SharpH266.BufferingPeriod.ReadNextBits.set -> void
+SharpH266.BufferingPeriod.Syntax.get -> string
+SharpH266.BufferingPeriod.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ByteAlignment
+SharpH266.ByteAlignment.ByteAlignment() -> void
+SharpH266.ByteAlignment.ByteAlignmentBitEqualToOne.get -> uint
+SharpH266.ByteAlignment.ByteAlignmentBitEqualToOne.set -> void
+SharpH266.ByteAlignment.ByteAlignmentBitEqualToZero.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpH266.ByteAlignment.ByteAlignmentBitEqualToZero.set -> void
+SharpH266.ByteAlignment.HasMoreRbspData.get -> int
+SharpH266.ByteAlignment.HasMoreRbspData.set -> void
+SharpH266.ByteAlignment.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ByteAlignment.ReadNextBits.get -> int[]
+SharpH266.ByteAlignment.ReadNextBits.set -> void
+SharpH266.ByteAlignment.Syntax.get -> string
+SharpH266.ByteAlignment.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ColourTransformInfo
+SharpH266.ColourTransformInfo.ColourTranformPrimaries.get -> uint
+SharpH266.ColourTransformInfo.ColourTranformPrimaries.set -> void
+SharpH266.ColourTransformInfo.ColourTransfLut.get -> ulong[][]
+SharpH266.ColourTransformInfo.ColourTransfLut.set -> void
+SharpH266.ColourTransformInfo.ColourTransformBitDepthMinus8.get -> uint
+SharpH266.ColourTransformInfo.ColourTransformBitDepthMinus8.set -> void
+SharpH266.ColourTransformInfo.ColourTransformCancelFlag.get -> byte
+SharpH266.ColourTransformInfo.ColourTransformCancelFlag.set -> void
+SharpH266.ColourTransformInfo.ColourTransformChromaOffset.get -> ulong
+SharpH266.ColourTransformInfo.ColourTransformChromaOffset.set -> void
+SharpH266.ColourTransformInfo.ColourTransformCrossCompInferredFlag.get -> byte
+SharpH266.ColourTransformInfo.ColourTransformCrossCompInferredFlag.set -> void
+SharpH266.ColourTransformInfo.ColourTransformCrossComponentFlag.get -> byte
+SharpH266.ColourTransformInfo.ColourTransformCrossComponentFlag.set -> void
+SharpH266.ColourTransformInfo.ColourTransformFullRangeFlag.get -> byte
+SharpH266.ColourTransformInfo.ColourTransformFullRangeFlag.set -> void
+SharpH266.ColourTransformInfo.ColourTransformId.get -> ulong
+SharpH266.ColourTransformInfo.ColourTransformId.set -> void
+SharpH266.ColourTransformInfo.ColourTransformInfo(ulong payloadSize) -> void
+SharpH266.ColourTransformInfo.ColourTransformLog2NumberOfPointsPerLutMinus1.get -> uint
+SharpH266.ColourTransformInfo.ColourTransformLog2NumberOfPointsPerLutMinus1.set -> void
+SharpH266.ColourTransformInfo.ColourTransformLut2PresentFlag.get -> byte
+SharpH266.ColourTransformInfo.ColourTransformLut2PresentFlag.set -> void
+SharpH266.ColourTransformInfo.ColourTransformMatrixCoefficients.get -> uint
+SharpH266.ColourTransformInfo.ColourTransformMatrixCoefficients.set -> void
+SharpH266.ColourTransformInfo.ColourTransformPersistenceFlag.get -> byte
+SharpH266.ColourTransformInfo.ColourTransformPersistenceFlag.set -> void
+SharpH266.ColourTransformInfo.ColourTransformTransferFunction.get -> uint
+SharpH266.ColourTransformInfo.ColourTransformTransferFunction.set -> void
+SharpH266.ColourTransformInfo.ColourTransformVideoSignalInfoPresentFlag.get -> byte
+SharpH266.ColourTransformInfo.ColourTransformVideoSignalInfoPresentFlag.set -> void
+SharpH266.ColourTransformInfo.HasMoreRbspData.get -> int
+SharpH266.ColourTransformInfo.HasMoreRbspData.set -> void
+SharpH266.ColourTransformInfo.PayloadSize.get -> ulong
+SharpH266.ColourTransformInfo.PayloadSize.set -> void
+SharpH266.ColourTransformInfo.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ColourTransformInfo.ReadNextBits.get -> int[]
+SharpH266.ColourTransformInfo.ReadNextBits.set -> void
+SharpH266.ColourTransformInfo.Syntax.get -> string
+SharpH266.ColourTransformInfo.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ContentColourVolume
+SharpH266.ContentColourVolume.CcvAvgLuminanceValue.get -> uint
+SharpH266.ContentColourVolume.CcvAvgLuminanceValue.set -> void
+SharpH266.ContentColourVolume.CcvAvgLuminanceValuePresentFlag.get -> byte
+SharpH266.ContentColourVolume.CcvAvgLuminanceValuePresentFlag.set -> void
+SharpH266.ContentColourVolume.CcvCancelFlag.get -> byte
+SharpH266.ContentColourVolume.CcvCancelFlag.set -> void
+SharpH266.ContentColourVolume.CcvMaxLuminanceValue.get -> uint
+SharpH266.ContentColourVolume.CcvMaxLuminanceValue.set -> void
+SharpH266.ContentColourVolume.CcvMaxLuminanceValuePresentFlag.get -> byte
+SharpH266.ContentColourVolume.CcvMaxLuminanceValuePresentFlag.set -> void
+SharpH266.ContentColourVolume.CcvMinLuminanceValue.get -> uint
+SharpH266.ContentColourVolume.CcvMinLuminanceValue.set -> void
+SharpH266.ContentColourVolume.CcvMinLuminanceValuePresentFlag.get -> byte
+SharpH266.ContentColourVolume.CcvMinLuminanceValuePresentFlag.set -> void
+SharpH266.ContentColourVolume.CcvPersistenceFlag.get -> byte
+SharpH266.ContentColourVolume.CcvPersistenceFlag.set -> void
+SharpH266.ContentColourVolume.CcvPrimariesPresentFlag.get -> byte
+SharpH266.ContentColourVolume.CcvPrimariesPresentFlag.set -> void
+SharpH266.ContentColourVolume.CcvPrimariesx.get -> int[]
+SharpH266.ContentColourVolume.CcvPrimariesx.set -> void
+SharpH266.ContentColourVolume.CcvPrimariesy.get -> int[]
+SharpH266.ContentColourVolume.CcvPrimariesy.set -> void
+SharpH266.ContentColourVolume.CcvReservedZero2bits.get -> uint
+SharpH266.ContentColourVolume.CcvReservedZero2bits.set -> void
+SharpH266.ContentColourVolume.ContentColourVolume(ulong payloadSize) -> void
+SharpH266.ContentColourVolume.HasMoreRbspData.get -> int
+SharpH266.ContentColourVolume.HasMoreRbspData.set -> void
+SharpH266.ContentColourVolume.PayloadSize.get -> ulong
+SharpH266.ContentColourVolume.PayloadSize.set -> void
+SharpH266.ContentColourVolume.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ContentColourVolume.ReadNextBits.get -> int[]
+SharpH266.ContentColourVolume.ReadNextBits.set -> void
+SharpH266.ContentColourVolume.Syntax.get -> string
+SharpH266.ContentColourVolume.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ContentLightLevelInfo
+SharpH266.ContentLightLevelInfo.ClliMaxContentLightLevel.get -> uint
+SharpH266.ContentLightLevelInfo.ClliMaxContentLightLevel.set -> void
+SharpH266.ContentLightLevelInfo.ClliMaxPicAverageLightLevel.get -> uint
+SharpH266.ContentLightLevelInfo.ClliMaxPicAverageLightLevel.set -> void
+SharpH266.ContentLightLevelInfo.ContentLightLevelInfo(ulong payloadSize) -> void
+SharpH266.ContentLightLevelInfo.HasMoreRbspData.get -> int
+SharpH266.ContentLightLevelInfo.HasMoreRbspData.set -> void
+SharpH266.ContentLightLevelInfo.PayloadSize.get -> ulong
+SharpH266.ContentLightLevelInfo.PayloadSize.set -> void
+SharpH266.ContentLightLevelInfo.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ContentLightLevelInfo.ReadNextBits.get -> int[]
+SharpH266.ContentLightLevelInfo.ReadNextBits.set -> void
+SharpH266.ContentLightLevelInfo.Syntax.get -> string
+SharpH266.ContentLightLevelInfo.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.DecodedPictureHash
+SharpH266.DecodedPictureHash.DecodedPictureHash(ulong payloadSize) -> void
+SharpH266.DecodedPictureHash.DphSeiHashType.get -> uint
+SharpH266.DecodedPictureHash.DphSeiHashType.set -> void
+SharpH266.DecodedPictureHash.DphSeiPictureChecksum.get -> uint[]
+SharpH266.DecodedPictureHash.DphSeiPictureChecksum.set -> void
+SharpH266.DecodedPictureHash.DphSeiPictureCrc.get -> uint[]
+SharpH266.DecodedPictureHash.DphSeiPictureCrc.set -> void
+SharpH266.DecodedPictureHash.DphSeiPictureMd5.get -> byte[][]
+SharpH266.DecodedPictureHash.DphSeiPictureMd5.set -> void
+SharpH266.DecodedPictureHash.DphSeiReservedZero7bits.get -> uint
+SharpH266.DecodedPictureHash.DphSeiReservedZero7bits.set -> void
+SharpH266.DecodedPictureHash.DphSeiSingleComponentFlag.get -> byte
+SharpH266.DecodedPictureHash.DphSeiSingleComponentFlag.set -> void
+SharpH266.DecodedPictureHash.HasMoreRbspData.get -> int
+SharpH266.DecodedPictureHash.HasMoreRbspData.set -> void
+SharpH266.DecodedPictureHash.PayloadSize.get -> ulong
+SharpH266.DecodedPictureHash.PayloadSize.set -> void
+SharpH266.DecodedPictureHash.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.DecodedPictureHash.ReadNextBits.get -> int[]
+SharpH266.DecodedPictureHash.ReadNextBits.set -> void
+SharpH266.DecodedPictureHash.Syntax.get -> string
+SharpH266.DecodedPictureHash.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.DecodingCapabilityInformationRbsp
+SharpH266.DecodingCapabilityInformationRbsp.DciExtensionDataFlag.get -> System.Collections.Generic.Dictionary<int, byte>
+SharpH266.DecodingCapabilityInformationRbsp.DciExtensionDataFlag.set -> void
+SharpH266.DecodingCapabilityInformationRbsp.DciExtensionFlag.get -> byte
+SharpH266.DecodingCapabilityInformationRbsp.DciExtensionFlag.set -> void
+SharpH266.DecodingCapabilityInformationRbsp.DciNumPtlsMinus1.get -> uint
+SharpH266.DecodingCapabilityInformationRbsp.DciNumPtlsMinus1.set -> void
+SharpH266.DecodingCapabilityInformationRbsp.DciReservedZero4bits.get -> uint
+SharpH266.DecodingCapabilityInformationRbsp.DciReservedZero4bits.set -> void
+SharpH266.DecodingCapabilityInformationRbsp.DecodingCapabilityInformationRbsp() -> void
+SharpH266.DecodingCapabilityInformationRbsp.HasMoreRbspData.get -> int
+SharpH266.DecodingCapabilityInformationRbsp.HasMoreRbspData.set -> void
+SharpH266.DecodingCapabilityInformationRbsp.ProfileTierLevel.get -> SharpH266.ProfileTierLevel[]
+SharpH266.DecodingCapabilityInformationRbsp.ProfileTierLevel.set -> void
+SharpH266.DecodingCapabilityInformationRbsp.RbspTrailingBits.get -> SharpH266.RbspTrailingBits
+SharpH266.DecodingCapabilityInformationRbsp.RbspTrailingBits.set -> void
+SharpH266.DecodingCapabilityInformationRbsp.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.DecodingCapabilityInformationRbsp.ReadNextBits.get -> int[]
+SharpH266.DecodingCapabilityInformationRbsp.ReadNextBits.set -> void
+SharpH266.DecodingCapabilityInformationRbsp.Syntax.get -> string
+SharpH266.DecodingCapabilityInformationRbsp.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.DecodingUnitInfo
+SharpH266.DecodingUnitInfo.DecodingUnitInfo(ulong payloadSize) -> void
+SharpH266.DecodingUnitInfo.DuiDecodingUnitIdx.get -> ulong
+SharpH266.DecodingUnitInfo.DuiDecodingUnitIdx.set -> void
+SharpH266.DecodingUnitInfo.DuiDpbOutputDuDelay.get -> ulong
+SharpH266.DecodingUnitInfo.DuiDpbOutputDuDelay.set -> void
+SharpH266.DecodingUnitInfo.DuiDpbOutputDuDelayPresentFlag.get -> byte
+SharpH266.DecodingUnitInfo.DuiDpbOutputDuDelayPresentFlag.set -> void
+SharpH266.DecodingUnitInfo.DuiDuCpbRemovalDelayIncrement.get -> ulong[]
+SharpH266.DecodingUnitInfo.DuiDuCpbRemovalDelayIncrement.set -> void
+SharpH266.DecodingUnitInfo.DuiSublayerDelaysPresentFlag.get -> byte[]
+SharpH266.DecodingUnitInfo.DuiSublayerDelaysPresentFlag.set -> void
+SharpH266.DecodingUnitInfo.HasMoreRbspData.get -> int
+SharpH266.DecodingUnitInfo.HasMoreRbspData.set -> void
+SharpH266.DecodingUnitInfo.PayloadSize.get -> ulong
+SharpH266.DecodingUnitInfo.PayloadSize.set -> void
+SharpH266.DecodingUnitInfo.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.DecodingUnitInfo.ReadNextBits.get -> int[]
+SharpH266.DecodingUnitInfo.ReadNextBits.set -> void
+SharpH266.DecodingUnitInfo.Syntax.get -> string
+SharpH266.DecodingUnitInfo.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.DependentRapIndication
+SharpH266.DependentRapIndication.DependentRapIndication(ulong payloadSize) -> void
+SharpH266.DependentRapIndication.HasMoreRbspData.get -> int
+SharpH266.DependentRapIndication.HasMoreRbspData.set -> void
+SharpH266.DependentRapIndication.PayloadSize.get -> ulong
+SharpH266.DependentRapIndication.PayloadSize.set -> void
+SharpH266.DependentRapIndication.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.DependentRapIndication.ReadNextBits.get -> int[]
+SharpH266.DependentRapIndication.ReadNextBits.set -> void
+SharpH266.DependentRapIndication.Syntax.get -> string
+SharpH266.DependentRapIndication.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.DepthRepInfoElement
+SharpH266.DepthRepInfoElement.DaExponent.get -> uint
+SharpH266.DepthRepInfoElement.DaExponent.set -> void
+SharpH266.DepthRepInfoElement.DaMantissa.get -> ulong
+SharpH266.DepthRepInfoElement.DaMantissa.set -> void
+SharpH266.DepthRepInfoElement.DaMantissaLenMinus1.get -> uint
+SharpH266.DepthRepInfoElement.DaMantissaLenMinus1.set -> void
+SharpH266.DepthRepInfoElement.DaSignFlag.get -> byte
+SharpH266.DepthRepInfoElement.DaSignFlag.set -> void
+SharpH266.DepthRepInfoElement.DepthRepInfoElement() -> void
+SharpH266.DepthRepInfoElement.HasMoreRbspData.get -> int
+SharpH266.DepthRepInfoElement.HasMoreRbspData.set -> void
+SharpH266.DepthRepInfoElement.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.DepthRepInfoElement.ReadNextBits.get -> int[]
+SharpH266.DepthRepInfoElement.ReadNextBits.set -> void
+SharpH266.DepthRepInfoElement.Syntax.get -> string
+SharpH266.DepthRepInfoElement.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.DepthRepresentationInfo
+SharpH266.DepthRepresentationInfo.DepthNonlinearRepresentationModel.get -> ulong[]
+SharpH266.DepthRepresentationInfo.DepthNonlinearRepresentationModel.set -> void
+SharpH266.DepthRepresentationInfo.DepthNonlinearRepresentationNumMinus1.get -> ulong
+SharpH266.DepthRepresentationInfo.DepthNonlinearRepresentationNumMinus1.set -> void
+SharpH266.DepthRepresentationInfo.DepthRepInfoElement.get -> SharpH266.DepthRepInfoElement
+SharpH266.DepthRepresentationInfo.DepthRepInfoElement.set -> void
+SharpH266.DepthRepresentationInfo.DepthRepInfoElement0.get -> SharpH266.DepthRepInfoElement
+SharpH266.DepthRepresentationInfo.DepthRepInfoElement0.set -> void
+SharpH266.DepthRepresentationInfo.DepthRepInfoElement1.get -> SharpH266.DepthRepInfoElement
+SharpH266.DepthRepresentationInfo.DepthRepInfoElement1.set -> void
+SharpH266.DepthRepresentationInfo.DepthRepInfoElement2.get -> SharpH266.DepthRepInfoElement
+SharpH266.DepthRepresentationInfo.DepthRepInfoElement2.set -> void
+SharpH266.DepthRepresentationInfo.DepthRepresentationInfo(ulong payloadSize) -> void
+SharpH266.DepthRepresentationInfo.DepthRepresentationType.get -> ulong
+SharpH266.DepthRepresentationInfo.DepthRepresentationType.set -> void
+SharpH266.DepthRepresentationInfo.DisparityRefViewId.get -> ulong
+SharpH266.DepthRepresentationInfo.DisparityRefViewId.set -> void
+SharpH266.DepthRepresentationInfo.HasMoreRbspData.get -> int
+SharpH266.DepthRepresentationInfo.HasMoreRbspData.set -> void
+SharpH266.DepthRepresentationInfo.PayloadSize.get -> ulong
+SharpH266.DepthRepresentationInfo.PayloadSize.set -> void
+SharpH266.DepthRepresentationInfo.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.DepthRepresentationInfo.ReadNextBits.get -> int[]
+SharpH266.DepthRepresentationInfo.ReadNextBits.set -> void
+SharpH266.DepthRepresentationInfo.Syntax.get -> string
+SharpH266.DepthRepresentationInfo.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.DepthRepresentationInfo.dMaxFlag.get -> byte
+SharpH266.DepthRepresentationInfo.dMaxFlag.set -> void
+SharpH266.DepthRepresentationInfo.dMinFlag.get -> byte
+SharpH266.DepthRepresentationInfo.dMinFlag.set -> void
+SharpH266.DepthRepresentationInfo.zFarFlag.get -> byte
+SharpH266.DepthRepresentationInfo.zFarFlag.set -> void
+SharpH266.DepthRepresentationInfo.zNearFlag.get -> byte
+SharpH266.DepthRepresentationInfo.zNearFlag.set -> void
+SharpH266.DisplayOrientation
+SharpH266.DisplayOrientation.DisplayOrientation(ulong payloadSize) -> void
+SharpH266.DisplayOrientation.DisplayOrientationCancelFlag.get -> byte
+SharpH266.DisplayOrientation.DisplayOrientationCancelFlag.set -> void
+SharpH266.DisplayOrientation.DisplayOrientationPersistenceFlag.get -> byte
+SharpH266.DisplayOrientation.DisplayOrientationPersistenceFlag.set -> void
+SharpH266.DisplayOrientation.DisplayOrientationReservedZero3bits.get -> uint
+SharpH266.DisplayOrientation.DisplayOrientationReservedZero3bits.set -> void
+SharpH266.DisplayOrientation.DisplayOrientationTransformType.get -> uint
+SharpH266.DisplayOrientation.DisplayOrientationTransformType.set -> void
+SharpH266.DisplayOrientation.HasMoreRbspData.get -> int
+SharpH266.DisplayOrientation.HasMoreRbspData.set -> void
+SharpH266.DisplayOrientation.PayloadSize.get -> ulong
+SharpH266.DisplayOrientation.PayloadSize.set -> void
+SharpH266.DisplayOrientation.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.DisplayOrientation.ReadNextBits.get -> int[]
+SharpH266.DisplayOrientation.ReadNextBits.set -> void
+SharpH266.DisplayOrientation.Syntax.get -> string
+SharpH266.DisplayOrientation.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.DpbParameters
+SharpH266.DpbParameters.DpbMaxDecPicBufferingMinus1.get -> ulong[]
+SharpH266.DpbParameters.DpbMaxDecPicBufferingMinus1.set -> void
+SharpH266.DpbParameters.DpbMaxLatencyIncreasePlus1.get -> ulong[]
+SharpH266.DpbParameters.DpbMaxLatencyIncreasePlus1.set -> void
+SharpH266.DpbParameters.DpbMaxNumReorderPics.get -> ulong[]
+SharpH266.DpbParameters.DpbMaxNumReorderPics.set -> void
+SharpH266.DpbParameters.DpbParameters(uint MaxSubLayersMinus1, uint subLayerInfoFlag) -> void
+SharpH266.DpbParameters.HasMoreRbspData.get -> int
+SharpH266.DpbParameters.HasMoreRbspData.set -> void
+SharpH266.DpbParameters.MaxSubLayersMinus1.get -> uint
+SharpH266.DpbParameters.MaxSubLayersMinus1.set -> void
+SharpH266.DpbParameters.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.DpbParameters.ReadNextBits.get -> int[]
+SharpH266.DpbParameters.ReadNextBits.set -> void
+SharpH266.DpbParameters.SubLayerInfoFlag.get -> uint
+SharpH266.DpbParameters.SubLayerInfoFlag.set -> void
+SharpH266.DpbParameters.Syntax.get -> string
+SharpH266.DpbParameters.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.EndOfBitstreamRbsp
+SharpH266.EndOfBitstreamRbsp.EndOfBitstreamRbsp() -> void
+SharpH266.EndOfBitstreamRbsp.HasMoreRbspData.get -> int
+SharpH266.EndOfBitstreamRbsp.HasMoreRbspData.set -> void
+SharpH266.EndOfBitstreamRbsp.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.EndOfBitstreamRbsp.ReadNextBits.get -> int[]
+SharpH266.EndOfBitstreamRbsp.ReadNextBits.set -> void
+SharpH266.EndOfBitstreamRbsp.Syntax.get -> string
+SharpH266.EndOfBitstreamRbsp.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.EndOfSeqRbsp
+SharpH266.EndOfSeqRbsp.EndOfSeqRbsp() -> void
+SharpH266.EndOfSeqRbsp.HasMoreRbspData.get -> int
+SharpH266.EndOfSeqRbsp.HasMoreRbspData.set -> void
+SharpH266.EndOfSeqRbsp.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.EndOfSeqRbsp.ReadNextBits.get -> int[]
+SharpH266.EndOfSeqRbsp.ReadNextBits.set -> void
+SharpH266.EndOfSeqRbsp.Syntax.get -> string
+SharpH266.EndOfSeqRbsp.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.EquirectangularProjection
+SharpH266.EquirectangularProjection.EquirectangularProjection(ulong payloadSize) -> void
+SharpH266.EquirectangularProjection.ErpCancelFlag.get -> byte
+SharpH266.EquirectangularProjection.ErpCancelFlag.set -> void
+SharpH266.EquirectangularProjection.ErpGuardBandFlag.get -> byte
+SharpH266.EquirectangularProjection.ErpGuardBandFlag.set -> void
+SharpH266.EquirectangularProjection.ErpGuardBandType.get -> uint
+SharpH266.EquirectangularProjection.ErpGuardBandType.set -> void
+SharpH266.EquirectangularProjection.ErpLeftGuardBandWidth.get -> uint
+SharpH266.EquirectangularProjection.ErpLeftGuardBandWidth.set -> void
+SharpH266.EquirectangularProjection.ErpPersistenceFlag.get -> byte
+SharpH266.EquirectangularProjection.ErpPersistenceFlag.set -> void
+SharpH266.EquirectangularProjection.ErpReservedZero2bits.get -> uint
+SharpH266.EquirectangularProjection.ErpReservedZero2bits.set -> void
+SharpH266.EquirectangularProjection.ErpRightGuardBandWidth.get -> uint
+SharpH266.EquirectangularProjection.ErpRightGuardBandWidth.set -> void
+SharpH266.EquirectangularProjection.HasMoreRbspData.get -> int
+SharpH266.EquirectangularProjection.HasMoreRbspData.set -> void
+SharpH266.EquirectangularProjection.PayloadSize.get -> ulong
+SharpH266.EquirectangularProjection.PayloadSize.set -> void
+SharpH266.EquirectangularProjection.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.EquirectangularProjection.ReadNextBits.get -> int[]
+SharpH266.EquirectangularProjection.ReadNextBits.set -> void
+SharpH266.EquirectangularProjection.Syntax.get -> string
+SharpH266.EquirectangularProjection.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.FillerDataRbsp
+SharpH266.FillerDataRbsp.FdFfByte.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpH266.FillerDataRbsp.FdFfByte.set -> void
+SharpH266.FillerDataRbsp.FillerDataRbsp() -> void
+SharpH266.FillerDataRbsp.HasMoreRbspData.get -> int
+SharpH266.FillerDataRbsp.HasMoreRbspData.set -> void
+SharpH266.FillerDataRbsp.RbspTrailingBits.get -> SharpH266.RbspTrailingBits
+SharpH266.FillerDataRbsp.RbspTrailingBits.set -> void
+SharpH266.FillerDataRbsp.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.FillerDataRbsp.ReadNextBits.get -> int[]
+SharpH266.FillerDataRbsp.ReadNextBits.set -> void
+SharpH266.FillerDataRbsp.Syntax.get -> string
+SharpH266.FillerDataRbsp.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.FillerPayload
+SharpH266.FillerPayload.FfByte.get -> uint[]
+SharpH266.FillerPayload.FfByte.set -> void
+SharpH266.FillerPayload.FillerPayload(ulong payloadSize) -> void
+SharpH266.FillerPayload.HasMoreRbspData.get -> int
+SharpH266.FillerPayload.HasMoreRbspData.set -> void
+SharpH266.FillerPayload.PayloadSize.get -> ulong
+SharpH266.FillerPayload.PayloadSize.set -> void
+SharpH266.FillerPayload.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.FillerPayload.ReadNextBits.get -> int[]
+SharpH266.FillerPayload.ReadNextBits.set -> void
+SharpH266.FillerPayload.Syntax.get -> string
+SharpH266.FillerPayload.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.FilmGrainCharacteristics
+SharpH266.FilmGrainCharacteristics.FgBitDepthChromaMinus8.get -> uint
+SharpH266.FilmGrainCharacteristics.FgBitDepthChromaMinus8.set -> void
+SharpH266.FilmGrainCharacteristics.FgBitDepthLumaMinus8.get -> uint
+SharpH266.FilmGrainCharacteristics.FgBitDepthLumaMinus8.set -> void
+SharpH266.FilmGrainCharacteristics.FgBlendingModeId.get -> uint
+SharpH266.FilmGrainCharacteristics.FgBlendingModeId.set -> void
+SharpH266.FilmGrainCharacteristics.FgCharacteristicsCancelFlag.get -> byte
+SharpH266.FilmGrainCharacteristics.FgCharacteristicsCancelFlag.set -> void
+SharpH266.FilmGrainCharacteristics.FgCharacteristicsPersistenceFlag.get -> byte
+SharpH266.FilmGrainCharacteristics.FgCharacteristicsPersistenceFlag.set -> void
+SharpH266.FilmGrainCharacteristics.FgColourPrimaries.get -> uint
+SharpH266.FilmGrainCharacteristics.FgColourPrimaries.set -> void
+SharpH266.FilmGrainCharacteristics.FgCompModelPresentFlag.get -> byte[]
+SharpH266.FilmGrainCharacteristics.FgCompModelPresentFlag.set -> void
+SharpH266.FilmGrainCharacteristics.FgCompModelValue.get -> long[][][]
+SharpH266.FilmGrainCharacteristics.FgCompModelValue.set -> void
+SharpH266.FilmGrainCharacteristics.FgFullRangeFlag.get -> byte
+SharpH266.FilmGrainCharacteristics.FgFullRangeFlag.set -> void
+SharpH266.FilmGrainCharacteristics.FgIntensityIntervalLowerBound.get -> uint[][]
+SharpH266.FilmGrainCharacteristics.FgIntensityIntervalLowerBound.set -> void
+SharpH266.FilmGrainCharacteristics.FgIntensityIntervalUpperBound.get -> uint[][]
+SharpH266.FilmGrainCharacteristics.FgIntensityIntervalUpperBound.set -> void
+SharpH266.FilmGrainCharacteristics.FgLog2ScaleFactor.get -> uint
+SharpH266.FilmGrainCharacteristics.FgLog2ScaleFactor.set -> void
+SharpH266.FilmGrainCharacteristics.FgMatrixCoeffs.get -> uint
+SharpH266.FilmGrainCharacteristics.FgMatrixCoeffs.set -> void
+SharpH266.FilmGrainCharacteristics.FgModelId.get -> uint
+SharpH266.FilmGrainCharacteristics.FgModelId.set -> void
+SharpH266.FilmGrainCharacteristics.FgNumIntensityIntervalsMinus1.get -> uint[]
+SharpH266.FilmGrainCharacteristics.FgNumIntensityIntervalsMinus1.set -> void
+SharpH266.FilmGrainCharacteristics.FgNumModelValuesMinus1.get -> uint[]
+SharpH266.FilmGrainCharacteristics.FgNumModelValuesMinus1.set -> void
+SharpH266.FilmGrainCharacteristics.FgSeparateColourDescriptionPresentFlag.get -> byte
+SharpH266.FilmGrainCharacteristics.FgSeparateColourDescriptionPresentFlag.set -> void
+SharpH266.FilmGrainCharacteristics.FgTransferCharacteristics.get -> uint
+SharpH266.FilmGrainCharacteristics.FgTransferCharacteristics.set -> void
+SharpH266.FilmGrainCharacteristics.FilmGrainCharacteristics(ulong payloadSize) -> void
+SharpH266.FilmGrainCharacteristics.HasMoreRbspData.get -> int
+SharpH266.FilmGrainCharacteristics.HasMoreRbspData.set -> void
+SharpH266.FilmGrainCharacteristics.PayloadSize.get -> ulong
+SharpH266.FilmGrainCharacteristics.PayloadSize.set -> void
+SharpH266.FilmGrainCharacteristics.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.FilmGrainCharacteristics.ReadNextBits.get -> int[]
+SharpH266.FilmGrainCharacteristics.ReadNextBits.set -> void
+SharpH266.FilmGrainCharacteristics.Syntax.get -> string
+SharpH266.FilmGrainCharacteristics.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.FrameFieldInfo
+SharpH266.FrameFieldInfo.FfiBottomFieldFlag.get -> byte
+SharpH266.FrameFieldInfo.FfiBottomFieldFlag.set -> void
+SharpH266.FrameFieldInfo.FfiDisplayElementalPeriodsMinus1.get -> uint
+SharpH266.FrameFieldInfo.FfiDisplayElementalPeriodsMinus1.set -> void
+SharpH266.FrameFieldInfo.FfiDisplayFieldsFromFrameFlag.get -> byte
+SharpH266.FrameFieldInfo.FfiDisplayFieldsFromFrameFlag.set -> void
+SharpH266.FrameFieldInfo.FfiDuplicateFlag.get -> byte
+SharpH266.FrameFieldInfo.FfiDuplicateFlag.set -> void
+SharpH266.FrameFieldInfo.FfiFieldPicFlag.get -> byte
+SharpH266.FrameFieldInfo.FfiFieldPicFlag.set -> void
+SharpH266.FrameFieldInfo.FfiPairedWithNextFieldFlag.get -> byte
+SharpH266.FrameFieldInfo.FfiPairedWithNextFieldFlag.set -> void
+SharpH266.FrameFieldInfo.FfiPairingIndicatedFlag.get -> byte
+SharpH266.FrameFieldInfo.FfiPairingIndicatedFlag.set -> void
+SharpH266.FrameFieldInfo.FfiSourceScanType.get -> uint
+SharpH266.FrameFieldInfo.FfiSourceScanType.set -> void
+SharpH266.FrameFieldInfo.FfiTopFieldFirstFlag.get -> byte
+SharpH266.FrameFieldInfo.FfiTopFieldFirstFlag.set -> void
+SharpH266.FrameFieldInfo.FrameFieldInfo(ulong payloadSize) -> void
+SharpH266.FrameFieldInfo.HasMoreRbspData.get -> int
+SharpH266.FrameFieldInfo.HasMoreRbspData.set -> void
+SharpH266.FrameFieldInfo.PayloadSize.get -> ulong
+SharpH266.FrameFieldInfo.PayloadSize.set -> void
+SharpH266.FrameFieldInfo.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.FrameFieldInfo.ReadNextBits.get -> int[]
+SharpH266.FrameFieldInfo.ReadNextBits.set -> void
+SharpH266.FrameFieldInfo.Syntax.get -> string
+SharpH266.FrameFieldInfo.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.FramePackingArrangement
+SharpH266.FramePackingArrangement.FpArrangementCancelFlag.get -> byte
+SharpH266.FramePackingArrangement.FpArrangementCancelFlag.set -> void
+SharpH266.FramePackingArrangement.FpArrangementId.get -> ulong
+SharpH266.FramePackingArrangement.FpArrangementId.set -> void
+SharpH266.FramePackingArrangement.FpArrangementPersistenceFlag.get -> byte
+SharpH266.FramePackingArrangement.FpArrangementPersistenceFlag.set -> void
+SharpH266.FramePackingArrangement.FpArrangementReservedByte.get -> uint
+SharpH266.FramePackingArrangement.FpArrangementReservedByte.set -> void
+SharpH266.FramePackingArrangement.FpArrangementType.get -> uint
+SharpH266.FramePackingArrangement.FpArrangementType.set -> void
+SharpH266.FramePackingArrangement.FpContentInterpretationType.get -> uint
+SharpH266.FramePackingArrangement.FpContentInterpretationType.set -> void
+SharpH266.FramePackingArrangement.FpCurrentFrameIsFrame0Flag.get -> byte
+SharpH266.FramePackingArrangement.FpCurrentFrameIsFrame0Flag.set -> void
+SharpH266.FramePackingArrangement.FpFieldViewsFlag.get -> byte
+SharpH266.FramePackingArrangement.FpFieldViewsFlag.set -> void
+SharpH266.FramePackingArrangement.FpFrame0FlippedFlag.get -> byte
+SharpH266.FramePackingArrangement.FpFrame0FlippedFlag.set -> void
+SharpH266.FramePackingArrangement.FpFrame0GridPositionx.get -> uint
+SharpH266.FramePackingArrangement.FpFrame0GridPositionx.set -> void
+SharpH266.FramePackingArrangement.FpFrame0GridPositiony.get -> uint
+SharpH266.FramePackingArrangement.FpFrame0GridPositiony.set -> void
+SharpH266.FramePackingArrangement.FpFrame0SelfContainedFlag.get -> byte
+SharpH266.FramePackingArrangement.FpFrame0SelfContainedFlag.set -> void
+SharpH266.FramePackingArrangement.FpFrame1GridPositionx.get -> uint
+SharpH266.FramePackingArrangement.FpFrame1GridPositionx.set -> void
+SharpH266.FramePackingArrangement.FpFrame1GridPositiony.get -> uint
+SharpH266.FramePackingArrangement.FpFrame1GridPositiony.set -> void
+SharpH266.FramePackingArrangement.FpFrame1SelfContainedFlag.get -> byte
+SharpH266.FramePackingArrangement.FpFrame1SelfContainedFlag.set -> void
+SharpH266.FramePackingArrangement.FpQuincunxSamplingFlag.get -> byte
+SharpH266.FramePackingArrangement.FpQuincunxSamplingFlag.set -> void
+SharpH266.FramePackingArrangement.FpSpatialFlippingFlag.get -> byte
+SharpH266.FramePackingArrangement.FpSpatialFlippingFlag.set -> void
+SharpH266.FramePackingArrangement.FpUpsampledAspectRatioFlag.get -> byte
+SharpH266.FramePackingArrangement.FpUpsampledAspectRatioFlag.set -> void
+SharpH266.FramePackingArrangement.FramePackingArrangement(ulong payloadSize) -> void
+SharpH266.FramePackingArrangement.HasMoreRbspData.get -> int
+SharpH266.FramePackingArrangement.HasMoreRbspData.set -> void
+SharpH266.FramePackingArrangement.PayloadSize.get -> ulong
+SharpH266.FramePackingArrangement.PayloadSize.set -> void
+SharpH266.FramePackingArrangement.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.FramePackingArrangement.ReadNextBits.get -> int[]
+SharpH266.FramePackingArrangement.ReadNextBits.set -> void
+SharpH266.FramePackingArrangement.Syntax.get -> string
+SharpH266.FramePackingArrangement.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.GeneralConstraintsInfo
+SharpH266.GeneralConstraintsInfo.GciAlignmentZeroBit.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpH266.GeneralConstraintsInfo.GciAlignmentZeroBit.set -> void
+SharpH266.GeneralConstraintsInfo.GciAllLayersIndependentConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciAllLayersIndependentConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciIntraOnlyConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciIntraOnlyConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoActConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoActConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoAffineMotionConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoAffineMotionConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoAlfConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoAlfConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoAmvrConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoAmvrConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoApsConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoApsConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoBcwConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoBcwConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoBdofConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoBdofConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoBdpcmConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoBdpcmConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoCcalfConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoCcalfConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoCclmConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoCclmConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoChromaQpOffsetConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoChromaQpOffsetConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoCiipConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoCiipConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoCraConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoCraConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoCuQpDeltaConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoCuQpDeltaConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoDepQuantConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoDepQuantConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoDmvrConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoDmvrConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoExplicitScalingListConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoExplicitScalingListConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoGdrConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoGdrConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoGpmConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoGpmConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoIbcConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoIbcConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoIdrConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoIdrConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoIdrRplConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoIdrRplConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoIspConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoIspConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoJointCbcrConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoJointCbcrConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoLadfConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoLadfConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoLfnstConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoLfnstConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoLmcsConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoLmcsConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoLumaTransformSize64ConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoLumaTransformSize64ConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoMipConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoMipConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoMixedNaluTypesInPicConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoMixedNaluTypesInPicConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoMmvdConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoMmvdConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoMrlConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoMrlConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoMtsConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoMtsConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoMttConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoMttConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoPaletteConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoPaletteConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoPartitionConstraintsOverrideConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoPartitionConstraintsOverrideConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoProfConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoProfConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoQtbttDualTreeIntraConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoQtbttDualTreeIntraConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoRadlConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoRadlConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoRaslConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoRaslConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoRectangularSliceConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoRectangularSliceConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoRefPicResamplingConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoRefPicResamplingConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoRefWraparoundConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoRefWraparoundConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoResChangeInClvsConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoResChangeInClvsConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoSaoConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoSaoConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoSbtConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoSbtConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoSbtmvpConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoSbtmvpConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoSignDataHidingConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoSignDataHidingConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoSmvdConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoSmvdConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoStsaConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoStsaConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoSubpicInfoConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoSubpicInfoConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoTemporalMvpConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoTemporalMvpConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoTrailConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoTrailConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoTransformSkipConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoTransformSkipConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoVirtualBoundariesConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoVirtualBoundariesConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNoWeightedPredictionConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciNoWeightedPredictionConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciNumReservedBits.get -> uint
+SharpH266.GeneralConstraintsInfo.GciNumReservedBits.set -> void
+SharpH266.GeneralConstraintsInfo.GciOneAuOnlyConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciOneAuOnlyConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciOneSlicePerPicConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciOneSlicePerPicConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciOneSlicePerSubpicConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciOneSlicePerSubpicConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciOneTilePerPicConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciOneTilePerPicConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciPicHeaderInSliceHeaderConstraintFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciPicHeaderInSliceHeaderConstraintFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciPresentFlag.get -> byte
+SharpH266.GeneralConstraintsInfo.GciPresentFlag.set -> void
+SharpH266.GeneralConstraintsInfo.GciReservedZeroBit.get -> byte[]
+SharpH266.GeneralConstraintsInfo.GciReservedZeroBit.set -> void
+SharpH266.GeneralConstraintsInfo.GciSixteenMinusMaxBitdepthConstraintIdc.get -> uint
+SharpH266.GeneralConstraintsInfo.GciSixteenMinusMaxBitdepthConstraintIdc.set -> void
+SharpH266.GeneralConstraintsInfo.GciThreeMinusMaxChromaFormatConstraintIdc.get -> uint
+SharpH266.GeneralConstraintsInfo.GciThreeMinusMaxChromaFormatConstraintIdc.set -> void
+SharpH266.GeneralConstraintsInfo.GciThreeMinusMaxLog2CtuSizeConstraintIdc.get -> uint
+SharpH266.GeneralConstraintsInfo.GciThreeMinusMaxLog2CtuSizeConstraintIdc.set -> void
+SharpH266.GeneralConstraintsInfo.GeneralConstraintsInfo() -> void
+SharpH266.GeneralConstraintsInfo.HasMoreRbspData.get -> int
+SharpH266.GeneralConstraintsInfo.HasMoreRbspData.set -> void
+SharpH266.GeneralConstraintsInfo.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.GeneralConstraintsInfo.ReadNextBits.get -> int[]
+SharpH266.GeneralConstraintsInfo.ReadNextBits.set -> void
+SharpH266.GeneralConstraintsInfo.Syntax.get -> string
+SharpH266.GeneralConstraintsInfo.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.GeneralTimingHrdParameters
+SharpH266.GeneralTimingHrdParameters.BitRateScale.get -> uint
+SharpH266.GeneralTimingHrdParameters.BitRateScale.set -> void
+SharpH266.GeneralTimingHrdParameters.CpbSizeDuScale.get -> uint
+SharpH266.GeneralTimingHrdParameters.CpbSizeDuScale.set -> void
+SharpH266.GeneralTimingHrdParameters.CpbSizeScale.get -> uint
+SharpH266.GeneralTimingHrdParameters.CpbSizeScale.set -> void
+SharpH266.GeneralTimingHrdParameters.GeneralDuHrdParamsPresentFlag.get -> byte
+SharpH266.GeneralTimingHrdParameters.GeneralDuHrdParamsPresentFlag.set -> void
+SharpH266.GeneralTimingHrdParameters.GeneralNalHrdParamsPresentFlag.get -> byte
+SharpH266.GeneralTimingHrdParameters.GeneralNalHrdParamsPresentFlag.set -> void
+SharpH266.GeneralTimingHrdParameters.GeneralSamePicTimingInAllOlsFlag.get -> byte
+SharpH266.GeneralTimingHrdParameters.GeneralSamePicTimingInAllOlsFlag.set -> void
+SharpH266.GeneralTimingHrdParameters.GeneralTimingHrdParameters() -> void
+SharpH266.GeneralTimingHrdParameters.GeneralVclHrdParamsPresentFlag.get -> byte
+SharpH266.GeneralTimingHrdParameters.GeneralVclHrdParamsPresentFlag.set -> void
+SharpH266.GeneralTimingHrdParameters.HasMoreRbspData.get -> int
+SharpH266.GeneralTimingHrdParameters.HasMoreRbspData.set -> void
+SharpH266.GeneralTimingHrdParameters.HrdCpbCntMinus1.get -> ulong
+SharpH266.GeneralTimingHrdParameters.HrdCpbCntMinus1.set -> void
+SharpH266.GeneralTimingHrdParameters.NumUnitsInTick.get -> uint
+SharpH266.GeneralTimingHrdParameters.NumUnitsInTick.set -> void
+SharpH266.GeneralTimingHrdParameters.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.GeneralTimingHrdParameters.ReadNextBits.get -> int[]
+SharpH266.GeneralTimingHrdParameters.ReadNextBits.set -> void
+SharpH266.GeneralTimingHrdParameters.Syntax.get -> string
+SharpH266.GeneralTimingHrdParameters.TickDivisorMinus2.get -> uint
+SharpH266.GeneralTimingHrdParameters.TickDivisorMinus2.set -> void
+SharpH266.GeneralTimingHrdParameters.TimeScale.get -> uint
+SharpH266.GeneralTimingHrdParameters.TimeScale.set -> void
+SharpH266.GeneralTimingHrdParameters.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.GeneralizedCubemapProjection
+SharpH266.GeneralizedCubemapProjection.GcmpCancelFlag.get -> byte
+SharpH266.GeneralizedCubemapProjection.GcmpCancelFlag.set -> void
+SharpH266.GeneralizedCubemapProjection.GcmpFaceIndex.get -> uint[]
+SharpH266.GeneralizedCubemapProjection.GcmpFaceIndex.set -> void
+SharpH266.GeneralizedCubemapProjection.GcmpFaceRotation.get -> uint[]
+SharpH266.GeneralizedCubemapProjection.GcmpFaceRotation.set -> void
+SharpH266.GeneralizedCubemapProjection.GcmpFunctionCoeffu.get -> uint[]
+SharpH266.GeneralizedCubemapProjection.GcmpFunctionCoeffu.set -> void
+SharpH266.GeneralizedCubemapProjection.GcmpFunctionCoeffv.get -> uint[]
+SharpH266.GeneralizedCubemapProjection.GcmpFunctionCoeffv.set -> void
+SharpH266.GeneralizedCubemapProjection.GcmpFunctionuAffectedByvFlag.get -> byte[]
+SharpH266.GeneralizedCubemapProjection.GcmpFunctionuAffectedByvFlag.set -> void
+SharpH266.GeneralizedCubemapProjection.GcmpFunctionvAffectedByuFlag.get -> byte[]
+SharpH266.GeneralizedCubemapProjection.GcmpFunctionvAffectedByuFlag.set -> void
+SharpH266.GeneralizedCubemapProjection.GcmpGuardBandBoundaryExteriorFlag.get -> byte
+SharpH266.GeneralizedCubemapProjection.GcmpGuardBandBoundaryExteriorFlag.set -> void
+SharpH266.GeneralizedCubemapProjection.GcmpGuardBandFlag.get -> byte
+SharpH266.GeneralizedCubemapProjection.GcmpGuardBandFlag.set -> void
+SharpH266.GeneralizedCubemapProjection.GcmpGuardBandSamplesMinus1.get -> uint
+SharpH266.GeneralizedCubemapProjection.GcmpGuardBandSamplesMinus1.set -> void
+SharpH266.GeneralizedCubemapProjection.GcmpGuardBandType.get -> uint
+SharpH266.GeneralizedCubemapProjection.GcmpGuardBandType.set -> void
+SharpH266.GeneralizedCubemapProjection.GcmpMappingFunctionType.get -> uint
+SharpH266.GeneralizedCubemapProjection.GcmpMappingFunctionType.set -> void
+SharpH266.GeneralizedCubemapProjection.GcmpPackingType.get -> uint
+SharpH266.GeneralizedCubemapProjection.GcmpPackingType.set -> void
+SharpH266.GeneralizedCubemapProjection.GcmpPersistenceFlag.get -> byte
+SharpH266.GeneralizedCubemapProjection.GcmpPersistenceFlag.set -> void
+SharpH266.GeneralizedCubemapProjection.GeneralizedCubemapProjection(ulong payloadSize) -> void
+SharpH266.GeneralizedCubemapProjection.HasMoreRbspData.get -> int
+SharpH266.GeneralizedCubemapProjection.HasMoreRbspData.set -> void
+SharpH266.GeneralizedCubemapProjection.PayloadSize.get -> ulong
+SharpH266.GeneralizedCubemapProjection.PayloadSize.set -> void
+SharpH266.GeneralizedCubemapProjection.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.GeneralizedCubemapProjection.ReadNextBits.get -> int[]
+SharpH266.GeneralizedCubemapProjection.ReadNextBits.set -> void
+SharpH266.GeneralizedCubemapProjection.Syntax.get -> string
+SharpH266.GeneralizedCubemapProjection.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.H266Constants
+SharpH266.H266Constants.H266Constants() -> void
+SharpH266.H266Context
+SharpH266.H266Context.AbsDeltaPocSt.get -> ulong[][][]
+SharpH266.H266Context.AbsDeltaPocSt.set -> void
+SharpH266.H266Context.AccessUnitDelimiterRbsp.get -> SharpH266.AccessUnitDelimiterRbsp
+SharpH266.H266Context.AccessUnitDelimiterRbsp.set -> void
+SharpH266.H266Context.AdaptationParameterSetRbsp.get -> SharpH266.AdaptationParameterSetRbsp
+SharpH266.H266Context.AdaptationParameterSetRbsp.set -> void
+SharpH266.H266Context.AddCtbsToSlice(int sliceIdx, ulong startX, ulong stopX, ulong startY, ulong stopY) -> void
+SharpH266.H266Context.ColWidthVal.get -> ulong[]
+SharpH266.H266Context.ColWidthVal.set -> void
+SharpH266.H266Context.CtbAddrInCurrSlice.get -> ulong[]
+SharpH266.H266Context.CtbAddrInCurrSlice.set -> void
+SharpH266.H266Context.CtbAddrInSlice.get -> ulong[][]
+SharpH266.H266Context.CtbAddrInSlice.set -> void
+SharpH266.H266Context.CtbHeightC.get -> uint
+SharpH266.H266Context.CtbHeightC.set -> void
+SharpH266.H266Context.CtbLog2SizeY.get -> uint
+SharpH266.H266Context.CtbLog2SizeY.set -> void
+SharpH266.H266Context.CtbSizeY.get -> uint
+SharpH266.H266Context.CtbSizeY.set -> void
+SharpH266.H266Context.CtbToTileColBd.get -> ulong[]
+SharpH266.H266Context.CtbToTileColBd.set -> void
+SharpH266.H266Context.CtbToTileRowBd.get -> ulong[]
+SharpH266.H266Context.CtbToTileRowBd.set -> void
+SharpH266.H266Context.CtbWidthC.get -> uint
+SharpH266.H266Context.CtbWidthC.set -> void
+SharpH266.H266Context.CurrSubpicIdx.get -> int
+SharpH266.H266Context.CurrSubpicIdx.set -> void
+SharpH266.H266Context.DecodingCapabilityInformationRbsp.get -> SharpH266.DecodingCapabilityInformationRbsp
+SharpH266.H266Context.DecodingCapabilityInformationRbsp.set -> void
+SharpH266.H266Context.DeriveNumEntryPoints() -> int
+SharpH266.H266Context.DeriveNumRefIdxActive() -> ulong[]
+SharpH266.H266Context.DeriveNumWeightsL0(SharpH266.PredWeightTable table) -> ulong
+SharpH266.H266Context.DeriveNumWeightsL1(SharpH266.PredWeightTable table) -> ulong
+SharpH266.H266Context.DeriveOls() -> ulong
+SharpH266.H266Context.DeriveRectSlices(SharpH266.PicParameterSetRbsp pps) -> SharpH266.H266Context
+SharpH266.H266Context.DeriveTotalNumOlss() -> uint
+SharpH266.H266Context.DirectRefLayerIdx.get -> int[][]
+SharpH266.H266Context.DirectRefLayerIdx.set -> void
+SharpH266.H266Context.EndOfBitstreamRbsp.get -> SharpH266.EndOfBitstreamRbsp
+SharpH266.H266Context.EndOfBitstreamRbsp.set -> void
+SharpH266.H266Context.EndOfSeqRbsp.get -> SharpH266.EndOfSeqRbsp
+SharpH266.H266Context.EndOfSeqRbsp.set -> void
+SharpH266.H266Context.FillerDataRbsp.get -> SharpH266.FillerDataRbsp
+SharpH266.H266Context.FillerDataRbsp.set -> void
+SharpH266.H266Context.FitsItsPayload(SharpH26X.ItuStream stream, ulong payloadSize, SharpH26X.IItuSerializable message) -> bool
+SharpH266.H266Context.GeneralLayerIdx.get -> int[]
+SharpH266.H266Context.GeneralLayerIdx.set -> void
+SharpH266.H266Context.GeneralTimingHrdParameters.get -> SharpH266.GeneralTimingHrdParameters
+SharpH266.H266Context.GeneralTimingHrdParameters.set -> void
+SharpH266.H266Context.H266Context() -> void
+SharpH266.H266Context.IbcBufWidthC.get -> uint
+SharpH266.H266Context.IbcBufWidthC.set -> void
+SharpH266.H266Context.IbcBufWidthY.get -> uint
+SharpH266.H266Context.IbcBufWidthY.set -> void
+SharpH266.H266Context.InferPictureHeader(SharpH266.PictureHeaderStructure header) -> void
+SharpH266.H266Context.InferRplSpsFlag(SharpH266.RefPicLists lists, uint i) -> byte
+SharpH266.H266Context.InferSliceHeader(SharpH266.SliceHeader header) -> void
+SharpH266.H266Context.LayerIdInOls.get -> uint[][]
+SharpH266.H266Context.LayerIdInOls.set -> void
+SharpH266.H266Context.LayerUsedAsOutputLayerFlag.get -> uint[]
+SharpH266.H266Context.LayerUsedAsOutputLayerFlag.set -> void
+SharpH266.H266Context.LayerUsedAsRefLayerFlag.get -> uint[]
+SharpH266.H266Context.LayerUsedAsRefLayerFlag.set -> void
+SharpH266.H266Context.LmcsMaxBinIdx.get -> ulong
+SharpH266.H266Context.LmcsMaxBinIdx.set -> void
+SharpH266.H266Context.MaxNumMergeCand.get -> ulong
+SharpH266.H266Context.MaxNumMergeCand.set -> void
+SharpH266.H266Context.MinCbLog2SizeY.get -> ulong
+SharpH266.H266Context.MinCbLog2SizeY.set -> void
+SharpH266.H266Context.MinCbSizeY.get -> uint
+SharpH266.H266Context.MinCbSizeY.set -> void
+SharpH266.H266Context.MultiLayerOlsIdx.get -> ulong[]
+SharpH266.H266Context.MultiLayerOlsIdx.set -> void
+SharpH266.H266Context.NalHeader.get -> SharpH266.NalUnit
+SharpH266.H266Context.NalHeader.set -> void
+SharpH266.H266Context.NumAlfFilters.get -> int
+SharpH266.H266Context.NumAlfFilters.set -> void
+SharpH266.H266Context.NumCtusInCurrSlice.get -> uint
+SharpH266.H266Context.NumCtusInCurrSlice.set -> void
+SharpH266.H266Context.NumCtusInSlice.get -> uint[]
+SharpH266.H266Context.NumCtusInSlice.set -> void
+SharpH266.H266Context.NumDirectRefLayers.get -> int[]
+SharpH266.H266Context.NumDirectRefLayers.set -> void
+SharpH266.H266Context.NumEntryPoints.get -> int
+SharpH266.H266Context.NumEntryPoints.set -> void
+SharpH266.H266Context.NumExtraPhBits.get -> int
+SharpH266.H266Context.NumExtraPhBits.set -> void
+SharpH266.H266Context.NumExtraShBits.get -> int
+SharpH266.H266Context.NumExtraShBits.set -> void
+SharpH266.H266Context.NumLayersInOls.get -> uint[]
+SharpH266.H266Context.NumLayersInOls.set -> void
+SharpH266.H266Context.NumLtrpEntries.get -> uint[][]
+SharpH266.H266Context.NumMultiLayerOlss.get -> ulong
+SharpH266.H266Context.NumMultiLayerOlss.set -> void
+SharpH266.H266Context.NumOutputLayersInOls.get -> uint[]
+SharpH266.H266Context.NumOutputLayersInOls.set -> void
+SharpH266.H266Context.NumRefIdxActive.get -> ulong[]
+SharpH266.H266Context.NumRefIdxActive.set -> void
+SharpH266.H266Context.NumRefLayers.get -> int[]
+SharpH266.H266Context.NumRefLayers.set -> void
+SharpH266.H266Context.NumSlicesInSubpic.get -> uint[]
+SharpH266.H266Context.NumSlicesInSubpic.set -> void
+SharpH266.H266Context.NumSlicesInTile.get -> uint[]
+SharpH266.H266Context.NumSlicesInTile.set -> void
+SharpH266.H266Context.NumSubLayersInLayerInOLS.get -> uint[][]
+SharpH266.H266Context.NumSubLayersInLayerInOLS.set -> void
+SharpH266.H266Context.NumTileColumns.get -> int
+SharpH266.H266Context.NumTileColumns.set -> void
+SharpH266.H266Context.NumTileRows.get -> int
+SharpH266.H266Context.NumTileRows.set -> void
+SharpH266.H266Context.NumTilesInPic.get -> int
+SharpH266.H266Context.NumTilesInPic.set -> void
+SharpH266.H266Context.NumWeightsL0.get -> ulong
+SharpH266.H266Context.NumWeightsL0.set -> void
+SharpH266.H266Context.NumWeightsL1.get -> ulong
+SharpH266.H266Context.NumWeightsL1.set -> void
+SharpH266.H266Context.OnAbsDeltaPocSt(uint listIdx, ulong rplsIdx, uint i, SharpH266.RefPicListStruct refPicListStruct) -> void
+SharpH266.H266Context.OnAlfChromaFilterSignalFlag() -> void
+SharpH266.H266Context.OnFixedPicRateGeneralFlag(SharpH266.OlsTimingHrdParameters hrd, uint i) -> void
+SharpH266.H266Context.OnLmcsDeltaMaxBinIdx() -> void
+SharpH266.H266Context.OnPhGdrOrIrapPicFlag(SharpH266.PictureHeaderStructure header) -> void
+SharpH266.H266Context.OnPpsCabacInitPresentFlag() -> void
+SharpH266.H266Context.OnPpsPicHeightInLumaSamples() -> void
+SharpH266.H266Context.OnPpsSliceSize(SharpH266.PicParameterSetRbsp pps, uint i) -> bool
+SharpH266.H266Context.OnPpsSubpicId() -> void
+SharpH266.H266Context.OnPpsTileRowHeightMinus1(uint i) -> void
+SharpH266.H266Context.OnRefPicListStruct(SharpH266.RefPicListStruct rpl) -> void
+SharpH266.H266Context.OnRplIdx(SharpH266.RefPicLists refPicLists, uint i) -> void
+SharpH266.H266Context.OnShNumRefIdxActiveMinus1() -> void
+SharpH266.H266Context.OnShPictureHeaderInSliceHeaderFlag(SharpH266.SliceHeader header) -> void
+SharpH266.H266Context.OnShSubpicId(ulong sh_subpic_id) -> void
+SharpH266.H266Context.OnSpsExtraPhBitPresentFlag() -> void
+SharpH266.H266Context.OnSpsExtraShBitPresentFlag() -> void
+SharpH266.H266Context.OnSpsLog2CtuSizeMinus5() -> void
+SharpH266.H266Context.OnSpsLog2MinLumaCodingBlockSizeMinus2() -> void
+SharpH266.H266Context.OnSpsRefWraparoundEnabledFlag() -> void
+SharpH266.H266Context.OnSpsSixMinusMaxNumMergeCand() -> void
+SharpH266.H266Context.OnSpsVideoParameterSetId(ulong sps_video_parameter_set_id) -> void
+SharpH266.H266Context.OnVpsDirectRefLayerFlag() -> void
+SharpH266.H266Context.OnVpsMaxLayersMinus1(SharpH266.VideoParameterSetRbsp vps) -> void
+SharpH266.H266Context.OnVpsNumDpbParamsMinus1() -> void
+SharpH266.H266Context.OperatingPointInformationRbsp.get -> SharpH266.OperatingPointInformationRbsp
+SharpH266.H266Context.OperatingPointInformationRbsp.set -> void
+SharpH266.H266Context.OutputLayerIdInOls.get -> uint[][]
+SharpH266.H266Context.OutputLayerIdInOls.set -> void
+SharpH266.H266Context.OutputLayerIdx.get -> int[][]
+SharpH266.H266Context.OutputLayerIdx.set -> void
+SharpH266.H266Context.PicHeightInCtbsY.get -> uint
+SharpH266.H266Context.PicHeightInCtbsY.set -> void
+SharpH266.H266Context.PicHeightInMinCbsY.get -> ulong
+SharpH266.H266Context.PicHeightInMinCbsY.set -> void
+SharpH266.H266Context.PicHeightInSamplesC.get -> ulong
+SharpH266.H266Context.PicHeightInSamplesC.set -> void
+SharpH266.H266Context.PicParameterSetRbsp.get -> SharpH266.PicParameterSetRbsp
+SharpH266.H266Context.PicParameterSetRbsp.set -> void
+SharpH266.H266Context.PicParameterSets.get -> System.Collections.Generic.Dictionary<ulong, SharpH266.PicParameterSetRbsp>
+SharpH266.H266Context.PicSizeInCtbsY.get -> uint
+SharpH266.H266Context.PicSizeInCtbsY.set -> void
+SharpH266.H266Context.PicSizeInMinCbsY.get -> ulong
+SharpH266.H266Context.PicSizeInMinCbsY.set -> void
+SharpH266.H266Context.PicSizeInSamplesY.get -> ulong
+SharpH266.H266Context.PicSizeInSamplesY.set -> void
+SharpH266.H266Context.PicWidthInCtbsY.get -> uint
+SharpH266.H266Context.PicWidthInCtbsY.set -> void
+SharpH266.H266Context.PicWidthInMinCbsY.get -> ulong
+SharpH266.H266Context.PicWidthInMinCbsY.set -> void
+SharpH266.H266Context.PicWidthInSamplesC.get -> ulong
+SharpH266.H266Context.PicWidthInSamplesC.set -> void
+SharpH266.H266Context.PictureHeader.get -> SharpH266.PictureHeaderStructure
+SharpH266.H266Context.PictureHeader.set -> void
+SharpH266.H266Context.PictureHeaderRbsp.get -> SharpH266.PictureHeaderRbsp
+SharpH266.H266Context.PictureHeaderRbsp.set -> void
+SharpH266.H266Context.ReferenceLayerIdx.get -> int[][]
+SharpH266.H266Context.ReferenceLayerIdx.set -> void
+SharpH266.H266Context.RowHeightVal.get -> ulong[]
+SharpH266.H266Context.RowHeightVal.set -> void
+SharpH266.H266Context.RplsIdx.get -> ulong[]
+SharpH266.H266Context.RplsIdx.set -> void
+SharpH266.H266Context.SeiPayload.get -> SharpH266.SeiPayload
+SharpH266.H266Context.SeiPayload.set -> void
+SharpH266.H266Context.SeiRbsp.get -> SharpH266.SeiRbsp
+SharpH266.H266Context.SeiRbsp.set -> void
+SharpH266.H266Context.SeqParameterSetRbsp.get -> SharpH266.SeqParameterSetRbsp
+SharpH266.H266Context.SeqParameterSetRbsp.set -> void
+SharpH266.H266Context.SeqParameterSets.get -> System.Collections.Generic.Dictionary<ulong, SharpH266.SeqParameterSetRbsp>
+SharpH266.H266Context.SetGeneralTimingHrdParameters(SharpH266.GeneralTimingHrdParameters generalTimingHrdParameters) -> void
+SharpH266.H266Context.SetPhPicParameterSetId(ulong ph_pic_parameter_set_id) -> void
+SharpH266.H266Context.SetPpsPicParameterSetId(ulong pps_pic_parameter_set_id) -> void
+SharpH266.H266Context.SetPpsSeqParameterSetId(ulong pps_seq_parameter_set_id) -> void
+SharpH266.H266Context.SetSeiPayload(SharpH266.SeiPayload payload) -> void
+SharpH266.H266Context.SetSpsSeqParameterSetId(ulong sps_seq_parameter_set_id) -> void
+SharpH266.H266Context.SliceLayerRbsp.get -> SharpH266.SliceLayerRbsp
+SharpH266.H266Context.SliceLayerRbsp.set -> void
+SharpH266.H266Context.SliceTopLeftTileIdx.get -> uint[]
+SharpH266.H266Context.SliceTopLeftTileIdx.set -> void
+SharpH266.H266Context.Strict.get -> bool
+SharpH266.H266Context.Strict.set -> void
+SharpH266.H266Context.SubHeightC.get -> uint
+SharpH266.H266Context.SubHeightC.set -> void
+SharpH266.H266Context.SubWidthC.get -> uint
+SharpH266.H266Context.SubWidthC.set -> void
+SharpH266.H266Context.SubpicHeightInTiles.get -> uint[]
+SharpH266.H266Context.SubpicHeightInTiles.set -> void
+SharpH266.H266Context.SubpicIdVal.get -> ulong[]
+SharpH266.H266Context.SubpicIdVal.set -> void
+SharpH266.H266Context.SubpicIdxForSlice.get -> int[]
+SharpH266.H266Context.SubpicIdxForSlice.set -> void
+SharpH266.H266Context.SubpicLevelSliceIdx.get -> uint[]
+SharpH266.H266Context.SubpicLevelSliceIdx.set -> void
+SharpH266.H266Context.SubpicWidthInTiles.get -> uint[]
+SharpH266.H266Context.SubpicWidthInTiles.set -> void
+SharpH266.H266Context.TileColBdVal.get -> ulong[]
+SharpH266.H266Context.TileColBdVal.set -> void
+SharpH266.H266Context.TileRowBdVal.get -> ulong[]
+SharpH266.H266Context.TileRowBdVal.set -> void
+SharpH266.H266Context.TotalNumOlss.get -> uint
+SharpH266.H266Context.TotalNumOlss.set -> void
+SharpH266.H266Context.VSize.get -> uint
+SharpH266.H266Context.VSize.set -> void
+SharpH266.H266Context.VideoParameterSetRbsp.get -> SharpH266.VideoParameterSetRbsp
+SharpH266.H266Context.VideoParameterSetRbsp.set -> void
+SharpH266.H266Context.VpsNumDpbParams.get -> ulong
+SharpH266.H266Context.VpsNumDpbParams.set -> void
+SharpH266.H266Context.ctbToTileColIdx.get -> uint[]
+SharpH266.H266Context.ctbToTileColIdx.set -> void
+SharpH266.H266Context.ctbToTileRowIdx.get -> uint[]
+SharpH266.H266Context.ctbToTileRowIdx.set -> void
+SharpH266.H266Context.layerIncludedInOlsFlag.get -> uint[][]
+SharpH266.H266Context.layerIncludedInOlsFlag.set -> void
+SharpH266.H266Context.olsModeIdc.get -> uint
+SharpH266.H266Context.olsModeIdc.set -> void
+SharpH266.H266Context.sliceHeightInCtus.get -> ulong[]
+SharpH266.H266Context.sliceHeightInCtus.set -> void
+SharpH266.H266Context.sliceHeightInTiles.get -> ulong[]
+SharpH266.H266Context.sliceHeightInTiles.set -> void
+SharpH266.H266Context.sliceWidthInTiles.get -> ulong[]
+SharpH266.H266Context.sliceWidthInTiles.set -> void
+SharpH266.H266Context.subpicHeightLessThanOneTileFlag.get -> uint[]
+SharpH266.H266Context.subpicHeightLessThanOneTileFlag.set -> void
+SharpH266.H266Extensions
+SharpH266.H266FrameTypes
+SharpH266.H266FrameTypes.H266FrameTypes() -> void
+SharpH266.H266NALTypes
+SharpH266.H266NALTypes.H266NALTypes() -> void
+SharpH266.LmcsData
+SharpH266.LmcsData.HasMoreRbspData.get -> int
+SharpH266.LmcsData.HasMoreRbspData.set -> void
+SharpH266.LmcsData.LmcsData() -> void
+SharpH266.LmcsData.LmcsDeltaAbsCrs.get -> uint
+SharpH266.LmcsData.LmcsDeltaAbsCrs.set -> void
+SharpH266.LmcsData.LmcsDeltaAbsCw.get -> ulong[]
+SharpH266.LmcsData.LmcsDeltaAbsCw.set -> void
+SharpH266.LmcsData.LmcsDeltaCwPrecMinus1.get -> ulong
+SharpH266.LmcsData.LmcsDeltaCwPrecMinus1.set -> void
+SharpH266.LmcsData.LmcsDeltaMaxBinIdx.get -> ulong
+SharpH266.LmcsData.LmcsDeltaMaxBinIdx.set -> void
+SharpH266.LmcsData.LmcsDeltaSignCrsFlag.get -> byte
+SharpH266.LmcsData.LmcsDeltaSignCrsFlag.set -> void
+SharpH266.LmcsData.LmcsDeltaSignCwFlag.get -> byte[]
+SharpH266.LmcsData.LmcsDeltaSignCwFlag.set -> void
+SharpH266.LmcsData.LmcsMinBinIdx.get -> ulong
+SharpH266.LmcsData.LmcsMinBinIdx.set -> void
+SharpH266.LmcsData.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.LmcsData.ReadNextBits.get -> int[]
+SharpH266.LmcsData.ReadNextBits.set -> void
+SharpH266.LmcsData.Syntax.get -> string
+SharpH266.LmcsData.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.MasteringDisplayColourVolume
+SharpH266.MasteringDisplayColourVolume.HasMoreRbspData.get -> int
+SharpH266.MasteringDisplayColourVolume.HasMoreRbspData.set -> void
+SharpH266.MasteringDisplayColourVolume.MasteringDisplayColourVolume(ulong payloadSize) -> void
+SharpH266.MasteringDisplayColourVolume.MdcvDisplayPrimariesx.get -> uint[]
+SharpH266.MasteringDisplayColourVolume.MdcvDisplayPrimariesx.set -> void
+SharpH266.MasteringDisplayColourVolume.MdcvDisplayPrimariesy.get -> uint[]
+SharpH266.MasteringDisplayColourVolume.MdcvDisplayPrimariesy.set -> void
+SharpH266.MasteringDisplayColourVolume.MdcvMaxDisplayMasteringLuminance.get -> uint
+SharpH266.MasteringDisplayColourVolume.MdcvMaxDisplayMasteringLuminance.set -> void
+SharpH266.MasteringDisplayColourVolume.MdcvMinDisplayMasteringLuminance.get -> uint
+SharpH266.MasteringDisplayColourVolume.MdcvMinDisplayMasteringLuminance.set -> void
+SharpH266.MasteringDisplayColourVolume.MdcvWhitePointx.get -> uint
+SharpH266.MasteringDisplayColourVolume.MdcvWhitePointx.set -> void
+SharpH266.MasteringDisplayColourVolume.MdcvWhitePointy.get -> uint
+SharpH266.MasteringDisplayColourVolume.MdcvWhitePointy.set -> void
+SharpH266.MasteringDisplayColourVolume.PayloadSize.get -> ulong
+SharpH266.MasteringDisplayColourVolume.PayloadSize.set -> void
+SharpH266.MasteringDisplayColourVolume.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.MasteringDisplayColourVolume.ReadNextBits.get -> int[]
+SharpH266.MasteringDisplayColourVolume.ReadNextBits.set -> void
+SharpH266.MasteringDisplayColourVolume.Syntax.get -> string
+SharpH266.MasteringDisplayColourVolume.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.MultiviewAcquisitionInfo
+SharpH266.MultiviewAcquisitionInfo.ExponentFocalLengthx.get -> uint[]
+SharpH266.MultiviewAcquisitionInfo.ExponentFocalLengthx.set -> void
+SharpH266.MultiviewAcquisitionInfo.ExponentFocalLengthy.get -> uint[]
+SharpH266.MultiviewAcquisitionInfo.ExponentFocalLengthy.set -> void
+SharpH266.MultiviewAcquisitionInfo.ExponentPrincipalPointx.get -> uint[]
+SharpH266.MultiviewAcquisitionInfo.ExponentPrincipalPointx.set -> void
+SharpH266.MultiviewAcquisitionInfo.ExponentPrincipalPointy.get -> uint[]
+SharpH266.MultiviewAcquisitionInfo.ExponentPrincipalPointy.set -> void
+SharpH266.MultiviewAcquisitionInfo.ExponentSkewFactor.get -> uint[]
+SharpH266.MultiviewAcquisitionInfo.ExponentSkewFactor.set -> void
+SharpH266.MultiviewAcquisitionInfo.Exponentr.get -> uint[][][]
+SharpH266.MultiviewAcquisitionInfo.Exponentr.set -> void
+SharpH266.MultiviewAcquisitionInfo.Exponentt.get -> uint[][]
+SharpH266.MultiviewAcquisitionInfo.Exponentt.set -> void
+SharpH266.MultiviewAcquisitionInfo.ExtrinsicParamFlag.get -> byte
+SharpH266.MultiviewAcquisitionInfo.ExtrinsicParamFlag.set -> void
+SharpH266.MultiviewAcquisitionInfo.HasMoreRbspData.get -> int
+SharpH266.MultiviewAcquisitionInfo.HasMoreRbspData.set -> void
+SharpH266.MultiviewAcquisitionInfo.IntrinsicParamFlag.get -> byte
+SharpH266.MultiviewAcquisitionInfo.IntrinsicParamFlag.set -> void
+SharpH266.MultiviewAcquisitionInfo.IntrinsicParamsEqualFlag.get -> byte
+SharpH266.MultiviewAcquisitionInfo.IntrinsicParamsEqualFlag.set -> void
+SharpH266.MultiviewAcquisitionInfo.MantissaFocalLengthx.get -> ulong[]
+SharpH266.MultiviewAcquisitionInfo.MantissaFocalLengthx.set -> void
+SharpH266.MultiviewAcquisitionInfo.MantissaFocalLengthy.get -> ulong[]
+SharpH266.MultiviewAcquisitionInfo.MantissaFocalLengthy.set -> void
+SharpH266.MultiviewAcquisitionInfo.MantissaPrincipalPointx.get -> ulong[]
+SharpH266.MultiviewAcquisitionInfo.MantissaPrincipalPointx.set -> void
+SharpH266.MultiviewAcquisitionInfo.MantissaPrincipalPointy.get -> ulong[]
+SharpH266.MultiviewAcquisitionInfo.MantissaPrincipalPointy.set -> void
+SharpH266.MultiviewAcquisitionInfo.MantissaSkewFactor.get -> ulong[]
+SharpH266.MultiviewAcquisitionInfo.MantissaSkewFactor.set -> void
+SharpH266.MultiviewAcquisitionInfo.Mantissar.get -> ulong[][][]
+SharpH266.MultiviewAcquisitionInfo.Mantissar.set -> void
+SharpH266.MultiviewAcquisitionInfo.Mantissat.get -> ulong[][]
+SharpH266.MultiviewAcquisitionInfo.Mantissat.set -> void
+SharpH266.MultiviewAcquisitionInfo.MultiviewAcquisitionInfo(ulong payloadSize) -> void
+SharpH266.MultiviewAcquisitionInfo.NumViewsMinus1.get -> ulong
+SharpH266.MultiviewAcquisitionInfo.NumViewsMinus1.set -> void
+SharpH266.MultiviewAcquisitionInfo.PayloadSize.get -> ulong
+SharpH266.MultiviewAcquisitionInfo.PayloadSize.set -> void
+SharpH266.MultiviewAcquisitionInfo.PrecFocalLength.get -> ulong
+SharpH266.MultiviewAcquisitionInfo.PrecFocalLength.set -> void
+SharpH266.MultiviewAcquisitionInfo.PrecPrincipalPoint.get -> ulong
+SharpH266.MultiviewAcquisitionInfo.PrecPrincipalPoint.set -> void
+SharpH266.MultiviewAcquisitionInfo.PrecRotationParam.get -> ulong
+SharpH266.MultiviewAcquisitionInfo.PrecRotationParam.set -> void
+SharpH266.MultiviewAcquisitionInfo.PrecSkewFactor.get -> ulong
+SharpH266.MultiviewAcquisitionInfo.PrecSkewFactor.set -> void
+SharpH266.MultiviewAcquisitionInfo.PrecTranslationParam.get -> ulong
+SharpH266.MultiviewAcquisitionInfo.PrecTranslationParam.set -> void
+SharpH266.MultiviewAcquisitionInfo.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.MultiviewAcquisitionInfo.ReadNextBits.get -> int[]
+SharpH266.MultiviewAcquisitionInfo.ReadNextBits.set -> void
+SharpH266.MultiviewAcquisitionInfo.SignFocalLengthx.get -> byte[]
+SharpH266.MultiviewAcquisitionInfo.SignFocalLengthx.set -> void
+SharpH266.MultiviewAcquisitionInfo.SignFocalLengthy.get -> byte[]
+SharpH266.MultiviewAcquisitionInfo.SignFocalLengthy.set -> void
+SharpH266.MultiviewAcquisitionInfo.SignPrincipalPointx.get -> byte[]
+SharpH266.MultiviewAcquisitionInfo.SignPrincipalPointx.set -> void
+SharpH266.MultiviewAcquisitionInfo.SignPrincipalPointy.get -> byte[]
+SharpH266.MultiviewAcquisitionInfo.SignPrincipalPointy.set -> void
+SharpH266.MultiviewAcquisitionInfo.SignSkewFactor.get -> byte[]
+SharpH266.MultiviewAcquisitionInfo.SignSkewFactor.set -> void
+SharpH266.MultiviewAcquisitionInfo.Signr.get -> byte[][][]
+SharpH266.MultiviewAcquisitionInfo.Signr.set -> void
+SharpH266.MultiviewAcquisitionInfo.Signt.get -> byte[][]
+SharpH266.MultiviewAcquisitionInfo.Signt.set -> void
+SharpH266.MultiviewAcquisitionInfo.Syntax.get -> string
+SharpH266.MultiviewAcquisitionInfo.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.MultiviewViewPosition
+SharpH266.MultiviewViewPosition.HasMoreRbspData.get -> int
+SharpH266.MultiviewViewPosition.HasMoreRbspData.set -> void
+SharpH266.MultiviewViewPosition.MultiviewViewPosition(ulong payloadSize) -> void
+SharpH266.MultiviewViewPosition.NumViewsMinus1.get -> ulong
+SharpH266.MultiviewViewPosition.NumViewsMinus1.set -> void
+SharpH266.MultiviewViewPosition.PayloadSize.get -> ulong
+SharpH266.MultiviewViewPosition.PayloadSize.set -> void
+SharpH266.MultiviewViewPosition.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.MultiviewViewPosition.ReadNextBits.get -> int[]
+SharpH266.MultiviewViewPosition.ReadNextBits.set -> void
+SharpH266.MultiviewViewPosition.Syntax.get -> string
+SharpH266.MultiviewViewPosition.ViewPosition.get -> ulong[]
+SharpH266.MultiviewViewPosition.ViewPosition.set -> void
+SharpH266.MultiviewViewPosition.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.NalUnit
+SharpH266.NalUnit.HasMoreRbspData.get -> int
+SharpH266.NalUnit.HasMoreRbspData.set -> void
+SharpH266.NalUnit.NalUnit(uint NumBytesInNalUnit) -> void
+SharpH266.NalUnit.NalUnitHeader.get -> SharpH266.NalUnitHeader
+SharpH266.NalUnit.NalUnitHeader.set -> void
+SharpH266.NalUnit.NumBytesInNalUnit.get -> uint
+SharpH266.NalUnit.NumBytesInNalUnit.set -> void
+SharpH266.NalUnit.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.NalUnit.ReadNextBits.get -> int[]
+SharpH266.NalUnit.ReadNextBits.set -> void
+SharpH266.NalUnit.Syntax.get -> string
+SharpH266.NalUnit.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.NalUnitHeader
+SharpH266.NalUnitHeader.ForbiddenZeroBit.get -> uint
+SharpH266.NalUnitHeader.ForbiddenZeroBit.set -> void
+SharpH266.NalUnitHeader.HasMoreRbspData.get -> int
+SharpH266.NalUnitHeader.HasMoreRbspData.set -> void
+SharpH266.NalUnitHeader.NalUnitHeader() -> void
+SharpH266.NalUnitHeader.NalUnitType.get -> uint
+SharpH266.NalUnitHeader.NalUnitType.set -> void
+SharpH266.NalUnitHeader.NuhLayerId.get -> uint
+SharpH266.NalUnitHeader.NuhLayerId.set -> void
+SharpH266.NalUnitHeader.NuhReservedZeroBit.get -> byte
+SharpH266.NalUnitHeader.NuhReservedZeroBit.set -> void
+SharpH266.NalUnitHeader.NuhTemporalIdPlus1.get -> uint
+SharpH266.NalUnitHeader.NuhTemporalIdPlus1.set -> void
+SharpH266.NalUnitHeader.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.NalUnitHeader.ReadNextBits.get -> int[]
+SharpH266.NalUnitHeader.ReadNextBits.set -> void
+SharpH266.NalUnitHeader.Syntax.get -> string
+SharpH266.NalUnitHeader.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.OlsTimingHrdParameters
+SharpH266.OlsTimingHrdParameters.ElementalDurationInTcMinus1.get -> ulong[]
+SharpH266.OlsTimingHrdParameters.ElementalDurationInTcMinus1.set -> void
+SharpH266.OlsTimingHrdParameters.FirstSubLayer.get -> uint
+SharpH266.OlsTimingHrdParameters.FirstSubLayer.set -> void
+SharpH266.OlsTimingHrdParameters.FixedPicRateGeneralFlag.get -> byte[]
+SharpH266.OlsTimingHrdParameters.FixedPicRateGeneralFlag.set -> void
+SharpH266.OlsTimingHrdParameters.FixedPicRateWithinCvsFlag.get -> byte[]
+SharpH266.OlsTimingHrdParameters.FixedPicRateWithinCvsFlag.set -> void
+SharpH266.OlsTimingHrdParameters.HasMoreRbspData.get -> int
+SharpH266.OlsTimingHrdParameters.HasMoreRbspData.set -> void
+SharpH266.OlsTimingHrdParameters.LowDelayHrdFlag.get -> byte[]
+SharpH266.OlsTimingHrdParameters.LowDelayHrdFlag.set -> void
+SharpH266.OlsTimingHrdParameters.MaxSubLayersVal.get -> uint
+SharpH266.OlsTimingHrdParameters.MaxSubLayersVal.set -> void
+SharpH266.OlsTimingHrdParameters.OlsTimingHrdParameters(uint firstSubLayer, uint MaxSubLayersVal) -> void
+SharpH266.OlsTimingHrdParameters.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.OlsTimingHrdParameters.ReadNextBits.get -> int[]
+SharpH266.OlsTimingHrdParameters.ReadNextBits.set -> void
+SharpH266.OlsTimingHrdParameters.SublayerHrdParameters.get -> SharpH266.SublayerHrdParameters
+SharpH266.OlsTimingHrdParameters.SublayerHrdParameters.set -> void
+SharpH266.OlsTimingHrdParameters.Syntax.get -> string
+SharpH266.OlsTimingHrdParameters.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.OmniViewport
+SharpH266.OmniViewport.HasMoreRbspData.get -> int
+SharpH266.OmniViewport.HasMoreRbspData.set -> void
+SharpH266.OmniViewport.OmniViewport(ulong payloadSize) -> void
+SharpH266.OmniViewport.OmniViewportAzimuthCentre.get -> int[]
+SharpH266.OmniViewport.OmniViewportAzimuthCentre.set -> void
+SharpH266.OmniViewport.OmniViewportCancelFlag.get -> byte
+SharpH266.OmniViewport.OmniViewportCancelFlag.set -> void
+SharpH266.OmniViewport.OmniViewportCntMinus1.get -> uint
+SharpH266.OmniViewport.OmniViewportCntMinus1.set -> void
+SharpH266.OmniViewport.OmniViewportElevationCentre.get -> int[]
+SharpH266.OmniViewport.OmniViewportElevationCentre.set -> void
+SharpH266.OmniViewport.OmniViewportHorRange.get -> uint[]
+SharpH266.OmniViewport.OmniViewportHorRange.set -> void
+SharpH266.OmniViewport.OmniViewportId.get -> uint
+SharpH266.OmniViewport.OmniViewportId.set -> void
+SharpH266.OmniViewport.OmniViewportPersistenceFlag.get -> byte
+SharpH266.OmniViewport.OmniViewportPersistenceFlag.set -> void
+SharpH266.OmniViewport.OmniViewportTiltCentre.get -> int[]
+SharpH266.OmniViewport.OmniViewportTiltCentre.set -> void
+SharpH266.OmniViewport.OmniViewportVerRange.get -> uint[]
+SharpH266.OmniViewport.OmniViewportVerRange.set -> void
+SharpH266.OmniViewport.PayloadSize.get -> ulong
+SharpH266.OmniViewport.PayloadSize.set -> void
+SharpH266.OmniViewport.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.OmniViewport.ReadNextBits.get -> int[]
+SharpH266.OmniViewport.ReadNextBits.set -> void
+SharpH266.OmniViewport.Syntax.get -> string
+SharpH266.OmniViewport.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.OperatingPointInformationRbsp
+SharpH266.OperatingPointInformationRbsp.HasMoreRbspData.get -> int
+SharpH266.OperatingPointInformationRbsp.HasMoreRbspData.set -> void
+SharpH266.OperatingPointInformationRbsp.OperatingPointInformationRbsp() -> void
+SharpH266.OperatingPointInformationRbsp.OpiExtensionDataFlag.get -> System.Collections.Generic.Dictionary<int, byte>
+SharpH266.OperatingPointInformationRbsp.OpiExtensionDataFlag.set -> void
+SharpH266.OperatingPointInformationRbsp.OpiExtensionFlag.get -> byte
+SharpH266.OperatingPointInformationRbsp.OpiExtensionFlag.set -> void
+SharpH266.OperatingPointInformationRbsp.OpiHtidInfoPresentFlag.get -> byte
+SharpH266.OperatingPointInformationRbsp.OpiHtidInfoPresentFlag.set -> void
+SharpH266.OperatingPointInformationRbsp.OpiHtidPlus1.get -> uint
+SharpH266.OperatingPointInformationRbsp.OpiHtidPlus1.set -> void
+SharpH266.OperatingPointInformationRbsp.OpiOlsIdx.get -> ulong
+SharpH266.OperatingPointInformationRbsp.OpiOlsIdx.set -> void
+SharpH266.OperatingPointInformationRbsp.OpiOlsInfoPresentFlag.get -> byte
+SharpH266.OperatingPointInformationRbsp.OpiOlsInfoPresentFlag.set -> void
+SharpH266.OperatingPointInformationRbsp.RbspTrailingBits.get -> SharpH266.RbspTrailingBits
+SharpH266.OperatingPointInformationRbsp.RbspTrailingBits.set -> void
+SharpH266.OperatingPointInformationRbsp.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.OperatingPointInformationRbsp.ReadNextBits.get -> int[]
+SharpH266.OperatingPointInformationRbsp.ReadNextBits.set -> void
+SharpH266.OperatingPointInformationRbsp.Syntax.get -> string
+SharpH266.OperatingPointInformationRbsp.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ParameterSetsInclusionIndication
+SharpH266.ParameterSetsInclusionIndication.HasMoreRbspData.get -> int
+SharpH266.ParameterSetsInclusionIndication.HasMoreRbspData.set -> void
+SharpH266.ParameterSetsInclusionIndication.ParameterSetsInclusionIndication(ulong payloadSize) -> void
+SharpH266.ParameterSetsInclusionIndication.PayloadSize.get -> ulong
+SharpH266.ParameterSetsInclusionIndication.PayloadSize.set -> void
+SharpH266.ParameterSetsInclusionIndication.PsiiSelfContainedClvsFlag.get -> byte
+SharpH266.ParameterSetsInclusionIndication.PsiiSelfContainedClvsFlag.set -> void
+SharpH266.ParameterSetsInclusionIndication.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ParameterSetsInclusionIndication.ReadNextBits.get -> int[]
+SharpH266.ParameterSetsInclusionIndication.ReadNextBits.set -> void
+SharpH266.ParameterSetsInclusionIndication.Syntax.get -> string
+SharpH266.ParameterSetsInclusionIndication.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.PhaseIndication
+SharpH266.PhaseIndication.HasMoreRbspData.get -> int
+SharpH266.PhaseIndication.HasMoreRbspData.set -> void
+SharpH266.PhaseIndication.PayloadSize.get -> ulong
+SharpH266.PhaseIndication.PayloadSize.set -> void
+SharpH266.PhaseIndication.PhaseIndication(ulong payloadSize) -> void
+SharpH266.PhaseIndication.PiHorPhaseDenMinus1.get -> uint
+SharpH266.PhaseIndication.PiHorPhaseDenMinus1.set -> void
+SharpH266.PhaseIndication.PiHorPhaseNum.get -> uint
+SharpH266.PhaseIndication.PiHorPhaseNum.set -> void
+SharpH266.PhaseIndication.PiVerPhaseDenMinus1.get -> uint
+SharpH266.PhaseIndication.PiVerPhaseDenMinus1.set -> void
+SharpH266.PhaseIndication.PiVerPhaseNum.get -> uint
+SharpH266.PhaseIndication.PiVerPhaseNum.set -> void
+SharpH266.PhaseIndication.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.PhaseIndication.ReadNextBits.get -> int[]
+SharpH266.PhaseIndication.ReadNextBits.set -> void
+SharpH266.PhaseIndication.Syntax.get -> string
+SharpH266.PhaseIndication.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.PicParameterSetRbsp
+SharpH266.PicParameterSetRbsp.HasMoreRbspData.get -> int
+SharpH266.PicParameterSetRbsp.HasMoreRbspData.set -> void
+SharpH266.PicParameterSetRbsp.PicParameterSetRbsp() -> void
+SharpH266.PicParameterSetRbsp.PpsAlfInfoInPhFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsAlfInfoInPhFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsCabacInitPresentFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsCabacInitPresentFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsCbBetaOffsetDiv2.get -> long
+SharpH266.PicParameterSetRbsp.PpsCbBetaOffsetDiv2.set -> void
+SharpH266.PicParameterSetRbsp.PpsCbQpOffset.get -> long
+SharpH266.PicParameterSetRbsp.PpsCbQpOffset.set -> void
+SharpH266.PicParameterSetRbsp.PpsCbQpOffsetList.get -> long[]
+SharpH266.PicParameterSetRbsp.PpsCbQpOffsetList.set -> void
+SharpH266.PicParameterSetRbsp.PpsCbTcOffsetDiv2.get -> long
+SharpH266.PicParameterSetRbsp.PpsCbTcOffsetDiv2.set -> void
+SharpH266.PicParameterSetRbsp.PpsChromaQpOffsetListLenMinus1.get -> ulong
+SharpH266.PicParameterSetRbsp.PpsChromaQpOffsetListLenMinus1.set -> void
+SharpH266.PicParameterSetRbsp.PpsChromaToolOffsetsPresentFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsChromaToolOffsetsPresentFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsConfWinBottomOffset.get -> ulong
+SharpH266.PicParameterSetRbsp.PpsConfWinBottomOffset.set -> void
+SharpH266.PicParameterSetRbsp.PpsConfWinLeftOffset.get -> ulong
+SharpH266.PicParameterSetRbsp.PpsConfWinLeftOffset.set -> void
+SharpH266.PicParameterSetRbsp.PpsConfWinRightOffset.get -> ulong
+SharpH266.PicParameterSetRbsp.PpsConfWinRightOffset.set -> void
+SharpH266.PicParameterSetRbsp.PpsConfWinTopOffset.get -> ulong
+SharpH266.PicParameterSetRbsp.PpsConfWinTopOffset.set -> void
+SharpH266.PicParameterSetRbsp.PpsConformanceWindowFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsConformanceWindowFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsCrBetaOffsetDiv2.get -> long
+SharpH266.PicParameterSetRbsp.PpsCrBetaOffsetDiv2.set -> void
+SharpH266.PicParameterSetRbsp.PpsCrQpOffset.get -> long
+SharpH266.PicParameterSetRbsp.PpsCrQpOffset.set -> void
+SharpH266.PicParameterSetRbsp.PpsCrQpOffsetList.get -> long[]
+SharpH266.PicParameterSetRbsp.PpsCrQpOffsetList.set -> void
+SharpH266.PicParameterSetRbsp.PpsCrTcOffsetDiv2.get -> long
+SharpH266.PicParameterSetRbsp.PpsCrTcOffsetDiv2.set -> void
+SharpH266.PicParameterSetRbsp.PpsCuChromaQpOffsetListEnabledFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsCuChromaQpOffsetListEnabledFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsCuQpDeltaEnabledFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsCuQpDeltaEnabledFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsDbfInfoInPhFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsDbfInfoInPhFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsDeblockingFilterControlPresentFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsDeblockingFilterControlPresentFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsDeblockingFilterDisabledFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsDeblockingFilterDisabledFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsDeblockingFilterOverrideEnabledFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsDeblockingFilterOverrideEnabledFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsExpSliceHeightInCtusMinus1.get -> ulong[][]
+SharpH266.PicParameterSetRbsp.PpsExpSliceHeightInCtusMinus1.set -> void
+SharpH266.PicParameterSetRbsp.PpsExtensionDataFlag.get -> System.Collections.Generic.Dictionary<int, byte>
+SharpH266.PicParameterSetRbsp.PpsExtensionDataFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsExtensionFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsExtensionFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsInitQpMinus26.get -> long
+SharpH266.PicParameterSetRbsp.PpsInitQpMinus26.set -> void
+SharpH266.PicParameterSetRbsp.PpsJointCbcrQpOffsetList.get -> long[]
+SharpH266.PicParameterSetRbsp.PpsJointCbcrQpOffsetList.set -> void
+SharpH266.PicParameterSetRbsp.PpsJointCbcrQpOffsetPresentFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsJointCbcrQpOffsetPresentFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsJointCbcrQpOffsetValue.get -> long
+SharpH266.PicParameterSetRbsp.PpsJointCbcrQpOffsetValue.set -> void
+SharpH266.PicParameterSetRbsp.PpsLog2CtuSizeMinus5.get -> uint
+SharpH266.PicParameterSetRbsp.PpsLog2CtuSizeMinus5.set -> void
+SharpH266.PicParameterSetRbsp.PpsLoopFilterAcrossSlicesEnabledFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsLoopFilterAcrossSlicesEnabledFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsLoopFilterAcrossTilesEnabledFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsLoopFilterAcrossTilesEnabledFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsLumaBetaOffsetDiv2.get -> long
+SharpH266.PicParameterSetRbsp.PpsLumaBetaOffsetDiv2.set -> void
+SharpH266.PicParameterSetRbsp.PpsLumaTcOffsetDiv2.get -> long
+SharpH266.PicParameterSetRbsp.PpsLumaTcOffsetDiv2.set -> void
+SharpH266.PicParameterSetRbsp.PpsMixedNaluTypesInPicFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsMixedNaluTypesInPicFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsNoPicPartitionFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsNoPicPartitionFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsNumExpSlicesInTile.get -> ulong[]
+SharpH266.PicParameterSetRbsp.PpsNumExpSlicesInTile.set -> void
+SharpH266.PicParameterSetRbsp.PpsNumExpTileColumnsMinus1.get -> ulong
+SharpH266.PicParameterSetRbsp.PpsNumExpTileColumnsMinus1.set -> void
+SharpH266.PicParameterSetRbsp.PpsNumExpTileRowsMinus1.get -> ulong
+SharpH266.PicParameterSetRbsp.PpsNumExpTileRowsMinus1.set -> void
+SharpH266.PicParameterSetRbsp.PpsNumRefIdxDefaultActiveMinus1.get -> ulong[]
+SharpH266.PicParameterSetRbsp.PpsNumRefIdxDefaultActiveMinus1.set -> void
+SharpH266.PicParameterSetRbsp.PpsNumSlicesInPicMinus1.get -> ulong
+SharpH266.PicParameterSetRbsp.PpsNumSlicesInPicMinus1.set -> void
+SharpH266.PicParameterSetRbsp.PpsNumSubpicsMinus1.get -> ulong
+SharpH266.PicParameterSetRbsp.PpsNumSubpicsMinus1.set -> void
+SharpH266.PicParameterSetRbsp.PpsOutputFlagPresentFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsOutputFlagPresentFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsPicHeightInLumaSamples.get -> ulong
+SharpH266.PicParameterSetRbsp.PpsPicHeightInLumaSamples.set -> void
+SharpH266.PicParameterSetRbsp.PpsPicParameterSetId.get -> uint
+SharpH266.PicParameterSetRbsp.PpsPicParameterSetId.set -> void
+SharpH266.PicParameterSetRbsp.PpsPicWidthInLumaSamples.get -> ulong
+SharpH266.PicParameterSetRbsp.PpsPicWidthInLumaSamples.set -> void
+SharpH266.PicParameterSetRbsp.PpsPicWidthMinusWraparoundOffset.get -> ulong
+SharpH266.PicParameterSetRbsp.PpsPicWidthMinusWraparoundOffset.set -> void
+SharpH266.PicParameterSetRbsp.PpsPictureHeaderExtensionPresentFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsPictureHeaderExtensionPresentFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsQpDeltaInfoInPhFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsQpDeltaInfoInPhFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsRectSliceFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsRectSliceFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsRefWraparoundEnabledFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsRefWraparoundEnabledFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsRpl1IdxPresentFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsRpl1IdxPresentFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsRplInfoInPhFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsRplInfoInPhFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsSaoInfoInPhFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsSaoInfoInPhFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsScalingWinBottomOffset.get -> long
+SharpH266.PicParameterSetRbsp.PpsScalingWinBottomOffset.set -> void
+SharpH266.PicParameterSetRbsp.PpsScalingWinLeftOffset.get -> long
+SharpH266.PicParameterSetRbsp.PpsScalingWinLeftOffset.set -> void
+SharpH266.PicParameterSetRbsp.PpsScalingWinRightOffset.get -> long
+SharpH266.PicParameterSetRbsp.PpsScalingWinRightOffset.set -> void
+SharpH266.PicParameterSetRbsp.PpsScalingWinTopOffset.get -> long
+SharpH266.PicParameterSetRbsp.PpsScalingWinTopOffset.set -> void
+SharpH266.PicParameterSetRbsp.PpsScalingWindowExplicitSignallingFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsScalingWindowExplicitSignallingFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsSeqParameterSetId.get -> uint
+SharpH266.PicParameterSetRbsp.PpsSeqParameterSetId.set -> void
+SharpH266.PicParameterSetRbsp.PpsSingleSlicePerSubpicFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsSingleSlicePerSubpicFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsSliceChromaQpOffsetsPresentFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsSliceChromaQpOffsetsPresentFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsSliceHeaderExtensionPresentFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsSliceHeaderExtensionPresentFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsSliceHeightInTilesMinus1.get -> ulong[]
+SharpH266.PicParameterSetRbsp.PpsSliceHeightInTilesMinus1.set -> void
+SharpH266.PicParameterSetRbsp.PpsSliceWidthInTilesMinus1.get -> ulong[]
+SharpH266.PicParameterSetRbsp.PpsSliceWidthInTilesMinus1.set -> void
+SharpH266.PicParameterSetRbsp.PpsSubpicId.get -> ulong[]
+SharpH266.PicParameterSetRbsp.PpsSubpicId.set -> void
+SharpH266.PicParameterSetRbsp.PpsSubpicIdLenMinus1.get -> ulong
+SharpH266.PicParameterSetRbsp.PpsSubpicIdLenMinus1.set -> void
+SharpH266.PicParameterSetRbsp.PpsSubpicIdMappingPresentFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsSubpicIdMappingPresentFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsTileColumnWidthMinus1.get -> ulong[]
+SharpH266.PicParameterSetRbsp.PpsTileColumnWidthMinus1.set -> void
+SharpH266.PicParameterSetRbsp.PpsTileIdxDeltaPresentFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsTileIdxDeltaPresentFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsTileIdxDeltaVal.get -> long[]
+SharpH266.PicParameterSetRbsp.PpsTileIdxDeltaVal.set -> void
+SharpH266.PicParameterSetRbsp.PpsTileRowHeightMinus1.get -> ulong[]
+SharpH266.PicParameterSetRbsp.PpsTileRowHeightMinus1.set -> void
+SharpH266.PicParameterSetRbsp.PpsWeightedBipredFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsWeightedBipredFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsWeightedPredFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsWeightedPredFlag.set -> void
+SharpH266.PicParameterSetRbsp.PpsWpInfoInPhFlag.get -> byte
+SharpH266.PicParameterSetRbsp.PpsWpInfoInPhFlag.set -> void
+SharpH266.PicParameterSetRbsp.RbspTrailingBits.get -> SharpH266.RbspTrailingBits
+SharpH266.PicParameterSetRbsp.RbspTrailingBits.set -> void
+SharpH266.PicParameterSetRbsp.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.PicParameterSetRbsp.ReadNextBits.get -> int[]
+SharpH266.PicParameterSetRbsp.ReadNextBits.set -> void
+SharpH266.PicParameterSetRbsp.Syntax.get -> string
+SharpH266.PicParameterSetRbsp.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.PicTiming
+SharpH266.PicTiming.HasMoreRbspData.get -> int
+SharpH266.PicTiming.HasMoreRbspData.set -> void
+SharpH266.PicTiming.PayloadSize.get -> ulong
+SharpH266.PicTiming.PayloadSize.set -> void
+SharpH266.PicTiming.PicTiming(ulong payloadSize) -> void
+SharpH266.PicTiming.PtCpbAltTimingInfoPresentFlag.get -> byte
+SharpH266.PicTiming.PtCpbAltTimingInfoPresentFlag.set -> void
+SharpH266.PicTiming.PtCpbRemovalDelayDeltaEnabledFlag.get -> byte[]
+SharpH266.PicTiming.PtCpbRemovalDelayDeltaEnabledFlag.set -> void
+SharpH266.PicTiming.PtCpbRemovalDelayDeltaIdx.get -> ulong[]
+SharpH266.PicTiming.PtCpbRemovalDelayDeltaIdx.set -> void
+SharpH266.PicTiming.PtCpbRemovalDelayMinus1.get -> ulong[]
+SharpH266.PicTiming.PtCpbRemovalDelayMinus1.set -> void
+SharpH266.PicTiming.PtDelayForConcatenationEnsuredFlag.get -> byte
+SharpH266.PicTiming.PtDelayForConcatenationEnsuredFlag.set -> void
+SharpH266.PicTiming.PtDisplayElementalPeriodsMinus1.get -> uint
+SharpH266.PicTiming.PtDisplayElementalPeriodsMinus1.set -> void
+SharpH266.PicTiming.PtDpbOutputDelay.get -> ulong
+SharpH266.PicTiming.PtDpbOutputDelay.set -> void
+SharpH266.PicTiming.PtDpbOutputDuDelay.get -> ulong
+SharpH266.PicTiming.PtDpbOutputDuDelay.set -> void
+SharpH266.PicTiming.PtDuCommonCpbRemovalDelayFlag.get -> byte
+SharpH266.PicTiming.PtDuCommonCpbRemovalDelayFlag.set -> void
+SharpH266.PicTiming.PtDuCommonCpbRemovalDelayIncrementMinus1.get -> ulong[]
+SharpH266.PicTiming.PtDuCommonCpbRemovalDelayIncrementMinus1.set -> void
+SharpH266.PicTiming.PtDuCpbRemovalDelayIncrementMinus1.get -> ulong[][]
+SharpH266.PicTiming.PtDuCpbRemovalDelayIncrementMinus1.set -> void
+SharpH266.PicTiming.PtNalCpbAltInitialRemovalDelayDelta.get -> ulong[][]
+SharpH266.PicTiming.PtNalCpbAltInitialRemovalDelayDelta.set -> void
+SharpH266.PicTiming.PtNalCpbAltInitialRemovalOffsetDelta.get -> ulong[][]
+SharpH266.PicTiming.PtNalCpbAltInitialRemovalOffsetDelta.set -> void
+SharpH266.PicTiming.PtNalCpbDelayOffset.get -> ulong[]
+SharpH266.PicTiming.PtNalCpbDelayOffset.set -> void
+SharpH266.PicTiming.PtNalDpbDelayOffset.get -> ulong[]
+SharpH266.PicTiming.PtNalDpbDelayOffset.set -> void
+SharpH266.PicTiming.PtNumDecodingUnitsMinus1.get -> ulong
+SharpH266.PicTiming.PtNumDecodingUnitsMinus1.set -> void
+SharpH266.PicTiming.PtNumNalusInDuMinus1.get -> ulong[]
+SharpH266.PicTiming.PtNumNalusInDuMinus1.set -> void
+SharpH266.PicTiming.PtSublayerDelaysPresentFlag.get -> byte[]
+SharpH266.PicTiming.PtSublayerDelaysPresentFlag.set -> void
+SharpH266.PicTiming.PtVclCpbAltInitialRemovalDelayDelta.get -> ulong[][]
+SharpH266.PicTiming.PtVclCpbAltInitialRemovalDelayDelta.set -> void
+SharpH266.PicTiming.PtVclCpbAltInitialRemovalOffsetDelta.get -> ulong[][]
+SharpH266.PicTiming.PtVclCpbAltInitialRemovalOffsetDelta.set -> void
+SharpH266.PicTiming.PtVclCpbDelayOffset.get -> ulong[]
+SharpH266.PicTiming.PtVclCpbDelayOffset.set -> void
+SharpH266.PicTiming.PtVclDpbDelayOffset.get -> ulong[]
+SharpH266.PicTiming.PtVclDpbDelayOffset.set -> void
+SharpH266.PicTiming.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.PicTiming.ReadNextBits.get -> int[]
+SharpH266.PicTiming.ReadNextBits.set -> void
+SharpH266.PicTiming.Syntax.get -> string
+SharpH266.PicTiming.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.PictureHeaderRbsp
+SharpH266.PictureHeaderRbsp.HasMoreRbspData.get -> int
+SharpH266.PictureHeaderRbsp.HasMoreRbspData.set -> void
+SharpH266.PictureHeaderRbsp.PictureHeaderRbsp() -> void
+SharpH266.PictureHeaderRbsp.PictureHeaderStructure.get -> SharpH266.PictureHeaderStructure
+SharpH266.PictureHeaderRbsp.PictureHeaderStructure.set -> void
+SharpH266.PictureHeaderRbsp.RbspTrailingBits.get -> SharpH266.RbspTrailingBits
+SharpH266.PictureHeaderRbsp.RbspTrailingBits.set -> void
+SharpH266.PictureHeaderRbsp.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.PictureHeaderRbsp.ReadNextBits.get -> int[]
+SharpH266.PictureHeaderRbsp.ReadNextBits.set -> void
+SharpH266.PictureHeaderRbsp.Syntax.get -> string
+SharpH266.PictureHeaderRbsp.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.PictureHeaderStructure
+SharpH266.PictureHeaderStructure.HasMoreRbspData.get -> int
+SharpH266.PictureHeaderStructure.HasMoreRbspData.set -> void
+SharpH266.PictureHeaderStructure.PhAlfApsIdChroma.get -> uint
+SharpH266.PictureHeaderStructure.PhAlfApsIdChroma.set -> void
+SharpH266.PictureHeaderStructure.PhAlfApsIdLuma.get -> uint[]
+SharpH266.PictureHeaderStructure.PhAlfApsIdLuma.set -> void
+SharpH266.PictureHeaderStructure.PhAlfCbEnabledFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhAlfCbEnabledFlag.set -> void
+SharpH266.PictureHeaderStructure.PhAlfCcCbApsId.get -> uint
+SharpH266.PictureHeaderStructure.PhAlfCcCbApsId.set -> void
+SharpH266.PictureHeaderStructure.PhAlfCcCbEnabledFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhAlfCcCbEnabledFlag.set -> void
+SharpH266.PictureHeaderStructure.PhAlfCcCrApsId.get -> uint
+SharpH266.PictureHeaderStructure.PhAlfCcCrApsId.set -> void
+SharpH266.PictureHeaderStructure.PhAlfCcCrEnabledFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhAlfCcCrEnabledFlag.set -> void
+SharpH266.PictureHeaderStructure.PhAlfCrEnabledFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhAlfCrEnabledFlag.set -> void
+SharpH266.PictureHeaderStructure.PhAlfEnabledFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhAlfEnabledFlag.set -> void
+SharpH266.PictureHeaderStructure.PhBdofDisabledFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhBdofDisabledFlag.set -> void
+SharpH266.PictureHeaderStructure.PhCbBetaOffsetDiv2.get -> long
+SharpH266.PictureHeaderStructure.PhCbBetaOffsetDiv2.set -> void
+SharpH266.PictureHeaderStructure.PhCbTcOffsetDiv2.get -> long
+SharpH266.PictureHeaderStructure.PhCbTcOffsetDiv2.set -> void
+SharpH266.PictureHeaderStructure.PhChromaResidualScaleFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhChromaResidualScaleFlag.set -> void
+SharpH266.PictureHeaderStructure.PhCollocatedFromL0Flag.get -> byte
+SharpH266.PictureHeaderStructure.PhCollocatedFromL0Flag.set -> void
+SharpH266.PictureHeaderStructure.PhCollocatedRefIdx.get -> ulong
+SharpH266.PictureHeaderStructure.PhCollocatedRefIdx.set -> void
+SharpH266.PictureHeaderStructure.PhCrBetaOffsetDiv2.get -> long
+SharpH266.PictureHeaderStructure.PhCrBetaOffsetDiv2.set -> void
+SharpH266.PictureHeaderStructure.PhCrTcOffsetDiv2.get -> long
+SharpH266.PictureHeaderStructure.PhCrTcOffsetDiv2.set -> void
+SharpH266.PictureHeaderStructure.PhCuChromaQpOffsetSubdivInterSlice.get -> ulong
+SharpH266.PictureHeaderStructure.PhCuChromaQpOffsetSubdivInterSlice.set -> void
+SharpH266.PictureHeaderStructure.PhCuChromaQpOffsetSubdivIntraSlice.get -> ulong
+SharpH266.PictureHeaderStructure.PhCuChromaQpOffsetSubdivIntraSlice.set -> void
+SharpH266.PictureHeaderStructure.PhCuQpDeltaSubdivInterSlice.get -> ulong
+SharpH266.PictureHeaderStructure.PhCuQpDeltaSubdivInterSlice.set -> void
+SharpH266.PictureHeaderStructure.PhCuQpDeltaSubdivIntraSlice.get -> ulong
+SharpH266.PictureHeaderStructure.PhCuQpDeltaSubdivIntraSlice.set -> void
+SharpH266.PictureHeaderStructure.PhDeblockingFilterDisabledFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhDeblockingFilterDisabledFlag.set -> void
+SharpH266.PictureHeaderStructure.PhDeblockingParamsPresentFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhDeblockingParamsPresentFlag.set -> void
+SharpH266.PictureHeaderStructure.PhDmvrDisabledFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhDmvrDisabledFlag.set -> void
+SharpH266.PictureHeaderStructure.PhExplicitScalingListEnabledFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhExplicitScalingListEnabledFlag.set -> void
+SharpH266.PictureHeaderStructure.PhExtensionDataByte.get -> uint[]
+SharpH266.PictureHeaderStructure.PhExtensionDataByte.set -> void
+SharpH266.PictureHeaderStructure.PhExtensionLength.get -> ulong
+SharpH266.PictureHeaderStructure.PhExtensionLength.set -> void
+SharpH266.PictureHeaderStructure.PhExtraBit.get -> byte[]
+SharpH266.PictureHeaderStructure.PhExtraBit.set -> void
+SharpH266.PictureHeaderStructure.PhGdrOrIrapPicFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhGdrOrIrapPicFlag.set -> void
+SharpH266.PictureHeaderStructure.PhGdrPicFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhGdrPicFlag.set -> void
+SharpH266.PictureHeaderStructure.PhInterSliceAllowedFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhInterSliceAllowedFlag.set -> void
+SharpH266.PictureHeaderStructure.PhIntraSliceAllowedFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhIntraSliceAllowedFlag.set -> void
+SharpH266.PictureHeaderStructure.PhJointCbcrSignFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhJointCbcrSignFlag.set -> void
+SharpH266.PictureHeaderStructure.PhLmcsApsId.get -> uint
+SharpH266.PictureHeaderStructure.PhLmcsApsId.set -> void
+SharpH266.PictureHeaderStructure.PhLmcsEnabledFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhLmcsEnabledFlag.set -> void
+SharpH266.PictureHeaderStructure.PhLog2DiffMaxBtMinQtInterSlice.get -> ulong
+SharpH266.PictureHeaderStructure.PhLog2DiffMaxBtMinQtInterSlice.set -> void
+SharpH266.PictureHeaderStructure.PhLog2DiffMaxBtMinQtIntraSliceChroma.get -> ulong
+SharpH266.PictureHeaderStructure.PhLog2DiffMaxBtMinQtIntraSliceChroma.set -> void
+SharpH266.PictureHeaderStructure.PhLog2DiffMaxBtMinQtIntraSliceLuma.get -> ulong
+SharpH266.PictureHeaderStructure.PhLog2DiffMaxBtMinQtIntraSliceLuma.set -> void
+SharpH266.PictureHeaderStructure.PhLog2DiffMaxTtMinQtInterSlice.get -> ulong
+SharpH266.PictureHeaderStructure.PhLog2DiffMaxTtMinQtInterSlice.set -> void
+SharpH266.PictureHeaderStructure.PhLog2DiffMaxTtMinQtIntraSliceChroma.get -> ulong
+SharpH266.PictureHeaderStructure.PhLog2DiffMaxTtMinQtIntraSliceChroma.set -> void
+SharpH266.PictureHeaderStructure.PhLog2DiffMaxTtMinQtIntraSliceLuma.get -> ulong
+SharpH266.PictureHeaderStructure.PhLog2DiffMaxTtMinQtIntraSliceLuma.set -> void
+SharpH266.PictureHeaderStructure.PhLog2DiffMinQtMinCbInterSlice.get -> ulong
+SharpH266.PictureHeaderStructure.PhLog2DiffMinQtMinCbInterSlice.set -> void
+SharpH266.PictureHeaderStructure.PhLog2DiffMinQtMinCbIntraSliceChroma.get -> ulong
+SharpH266.PictureHeaderStructure.PhLog2DiffMinQtMinCbIntraSliceChroma.set -> void
+SharpH266.PictureHeaderStructure.PhLog2DiffMinQtMinCbIntraSliceLuma.get -> ulong
+SharpH266.PictureHeaderStructure.PhLog2DiffMinQtMinCbIntraSliceLuma.set -> void
+SharpH266.PictureHeaderStructure.PhLumaBetaOffsetDiv2.get -> long
+SharpH266.PictureHeaderStructure.PhLumaBetaOffsetDiv2.set -> void
+SharpH266.PictureHeaderStructure.PhLumaTcOffsetDiv2.get -> long
+SharpH266.PictureHeaderStructure.PhLumaTcOffsetDiv2.set -> void
+SharpH266.PictureHeaderStructure.PhMaxMttHierarchyDepthInterSlice.get -> ulong
+SharpH266.PictureHeaderStructure.PhMaxMttHierarchyDepthInterSlice.set -> void
+SharpH266.PictureHeaderStructure.PhMaxMttHierarchyDepthIntraSliceChroma.get -> ulong
+SharpH266.PictureHeaderStructure.PhMaxMttHierarchyDepthIntraSliceChroma.set -> void
+SharpH266.PictureHeaderStructure.PhMaxMttHierarchyDepthIntraSliceLuma.get -> ulong
+SharpH266.PictureHeaderStructure.PhMaxMttHierarchyDepthIntraSliceLuma.set -> void
+SharpH266.PictureHeaderStructure.PhMmvdFullpelOnlyFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhMmvdFullpelOnlyFlag.set -> void
+SharpH266.PictureHeaderStructure.PhMvdL1ZeroFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhMvdL1ZeroFlag.set -> void
+SharpH266.PictureHeaderStructure.PhNonRefPicFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhNonRefPicFlag.set -> void
+SharpH266.PictureHeaderStructure.PhNumAlfApsIdsLuma.get -> uint
+SharpH266.PictureHeaderStructure.PhNumAlfApsIdsLuma.set -> void
+SharpH266.PictureHeaderStructure.PhNumHorVirtualBoundaries.get -> ulong
+SharpH266.PictureHeaderStructure.PhNumHorVirtualBoundaries.set -> void
+SharpH266.PictureHeaderStructure.PhNumVerVirtualBoundaries.get -> ulong
+SharpH266.PictureHeaderStructure.PhNumVerVirtualBoundaries.set -> void
+SharpH266.PictureHeaderStructure.PhPartitionConstraintsOverrideFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhPartitionConstraintsOverrideFlag.set -> void
+SharpH266.PictureHeaderStructure.PhPicOrderCntLsb.get -> ulong
+SharpH266.PictureHeaderStructure.PhPicOrderCntLsb.set -> void
+SharpH266.PictureHeaderStructure.PhPicOutputFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhPicOutputFlag.set -> void
+SharpH266.PictureHeaderStructure.PhPicParameterSetId.get -> ulong
+SharpH266.PictureHeaderStructure.PhPicParameterSetId.set -> void
+SharpH266.PictureHeaderStructure.PhPocMsbCyclePresentFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhPocMsbCyclePresentFlag.set -> void
+SharpH266.PictureHeaderStructure.PhPocMsbCycleVal.get -> ulong
+SharpH266.PictureHeaderStructure.PhPocMsbCycleVal.set -> void
+SharpH266.PictureHeaderStructure.PhProfDisabledFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhProfDisabledFlag.set -> void
+SharpH266.PictureHeaderStructure.PhQpDelta.get -> long
+SharpH266.PictureHeaderStructure.PhQpDelta.set -> void
+SharpH266.PictureHeaderStructure.PhRecoveryPocCnt.get -> ulong
+SharpH266.PictureHeaderStructure.PhRecoveryPocCnt.set -> void
+SharpH266.PictureHeaderStructure.PhSaoChromaEnabledFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhSaoChromaEnabledFlag.set -> void
+SharpH266.PictureHeaderStructure.PhSaoLumaEnabledFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhSaoLumaEnabledFlag.set -> void
+SharpH266.PictureHeaderStructure.PhScalingListApsId.get -> uint
+SharpH266.PictureHeaderStructure.PhScalingListApsId.set -> void
+SharpH266.PictureHeaderStructure.PhTemporalMvpEnabledFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhTemporalMvpEnabledFlag.set -> void
+SharpH266.PictureHeaderStructure.PhVirtualBoundariesPresentFlag.get -> byte
+SharpH266.PictureHeaderStructure.PhVirtualBoundariesPresentFlag.set -> void
+SharpH266.PictureHeaderStructure.PhVirtualBoundaryPosxMinus1.get -> ulong[]
+SharpH266.PictureHeaderStructure.PhVirtualBoundaryPosxMinus1.set -> void
+SharpH266.PictureHeaderStructure.PhVirtualBoundaryPosyMinus1.get -> ulong[]
+SharpH266.PictureHeaderStructure.PhVirtualBoundaryPosyMinus1.set -> void
+SharpH266.PictureHeaderStructure.PictureHeaderStructure() -> void
+SharpH266.PictureHeaderStructure.PredWeightTable.get -> SharpH266.PredWeightTable
+SharpH266.PictureHeaderStructure.PredWeightTable.set -> void
+SharpH266.PictureHeaderStructure.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.PictureHeaderStructure.ReadNextBits.get -> int[]
+SharpH266.PictureHeaderStructure.ReadNextBits.set -> void
+SharpH266.PictureHeaderStructure.RefPicLists.get -> SharpH266.RefPicLists
+SharpH266.PictureHeaderStructure.RefPicLists.set -> void
+SharpH266.PictureHeaderStructure.Syntax.get -> string
+SharpH266.PictureHeaderStructure.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.PredWeightTable
+SharpH266.PredWeightTable.ChromaWeightL0Flag.get -> byte[]
+SharpH266.PredWeightTable.ChromaWeightL0Flag.set -> void
+SharpH266.PredWeightTable.ChromaWeightL1Flag.get -> byte[]
+SharpH266.PredWeightTable.ChromaWeightL1Flag.set -> void
+SharpH266.PredWeightTable.DeltaChromaLog2WeightDenom.get -> long
+SharpH266.PredWeightTable.DeltaChromaLog2WeightDenom.set -> void
+SharpH266.PredWeightTable.DeltaChromaOffsetL0.get -> long[][]
+SharpH266.PredWeightTable.DeltaChromaOffsetL0.set -> void
+SharpH266.PredWeightTable.DeltaChromaOffsetL1.get -> long[][]
+SharpH266.PredWeightTable.DeltaChromaOffsetL1.set -> void
+SharpH266.PredWeightTable.DeltaChromaWeightL0.get -> long[][]
+SharpH266.PredWeightTable.DeltaChromaWeightL0.set -> void
+SharpH266.PredWeightTable.DeltaChromaWeightL1.get -> long[][]
+SharpH266.PredWeightTable.DeltaChromaWeightL1.set -> void
+SharpH266.PredWeightTable.DeltaLumaWeightL0.get -> long[]
+SharpH266.PredWeightTable.DeltaLumaWeightL0.set -> void
+SharpH266.PredWeightTable.DeltaLumaWeightL1.get -> long[]
+SharpH266.PredWeightTable.DeltaLumaWeightL1.set -> void
+SharpH266.PredWeightTable.HasMoreRbspData.get -> int
+SharpH266.PredWeightTable.HasMoreRbspData.set -> void
+SharpH266.PredWeightTable.LumaLog2WeightDenom.get -> ulong
+SharpH266.PredWeightTable.LumaLog2WeightDenom.set -> void
+SharpH266.PredWeightTable.LumaOffsetL0.get -> long[]
+SharpH266.PredWeightTable.LumaOffsetL0.set -> void
+SharpH266.PredWeightTable.LumaOffsetL1.get -> long[]
+SharpH266.PredWeightTable.LumaOffsetL1.set -> void
+SharpH266.PredWeightTable.LumaWeightL0Flag.get -> byte[]
+SharpH266.PredWeightTable.LumaWeightL0Flag.set -> void
+SharpH266.PredWeightTable.LumaWeightL1Flag.get -> byte[]
+SharpH266.PredWeightTable.LumaWeightL1Flag.set -> void
+SharpH266.PredWeightTable.NumL0Weights.get -> ulong
+SharpH266.PredWeightTable.NumL0Weights.set -> void
+SharpH266.PredWeightTable.NumL1Weights.get -> ulong
+SharpH266.PredWeightTable.NumL1Weights.set -> void
+SharpH266.PredWeightTable.PredWeightTable() -> void
+SharpH266.PredWeightTable.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.PredWeightTable.ReadNextBits.get -> int[]
+SharpH266.PredWeightTable.ReadNextBits.set -> void
+SharpH266.PredWeightTable.Syntax.get -> string
+SharpH266.PredWeightTable.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ProfileTierLevel
+SharpH266.ProfileTierLevel.GeneralConstraintsInfo.get -> SharpH266.GeneralConstraintsInfo
+SharpH266.ProfileTierLevel.GeneralConstraintsInfo.set -> void
+SharpH266.ProfileTierLevel.GeneralLevelIdc.get -> uint
+SharpH266.ProfileTierLevel.GeneralLevelIdc.set -> void
+SharpH266.ProfileTierLevel.GeneralProfileIdc.get -> uint
+SharpH266.ProfileTierLevel.GeneralProfileIdc.set -> void
+SharpH266.ProfileTierLevel.GeneralSubProfileIdc.get -> uint[]
+SharpH266.ProfileTierLevel.GeneralSubProfileIdc.set -> void
+SharpH266.ProfileTierLevel.GeneralTierFlag.get -> byte
+SharpH266.ProfileTierLevel.GeneralTierFlag.set -> void
+SharpH266.ProfileTierLevel.HasMoreRbspData.get -> int
+SharpH266.ProfileTierLevel.HasMoreRbspData.set -> void
+SharpH266.ProfileTierLevel.MaxNumSubLayersMinus1.get -> uint
+SharpH266.ProfileTierLevel.MaxNumSubLayersMinus1.set -> void
+SharpH266.ProfileTierLevel.ProfileTierLevel(uint profileTierPresentFlag, uint MaxNumSubLayersMinus1) -> void
+SharpH266.ProfileTierLevel.ProfileTierPresentFlag.get -> uint
+SharpH266.ProfileTierLevel.ProfileTierPresentFlag.set -> void
+SharpH266.ProfileTierLevel.PtlFrameOnlyConstraintFlag.get -> byte
+SharpH266.ProfileTierLevel.PtlFrameOnlyConstraintFlag.set -> void
+SharpH266.ProfileTierLevel.PtlMultilayerEnabledFlag.get -> byte
+SharpH266.ProfileTierLevel.PtlMultilayerEnabledFlag.set -> void
+SharpH266.ProfileTierLevel.PtlNumSubProfiles.get -> uint
+SharpH266.ProfileTierLevel.PtlNumSubProfiles.set -> void
+SharpH266.ProfileTierLevel.PtlReservedZeroBit.get -> System.Collections.Generic.Dictionary<int, byte>
+SharpH266.ProfileTierLevel.PtlReservedZeroBit.set -> void
+SharpH266.ProfileTierLevel.PtlSublayerLevelPresentFlag.get -> byte[]
+SharpH266.ProfileTierLevel.PtlSublayerLevelPresentFlag.set -> void
+SharpH266.ProfileTierLevel.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ProfileTierLevel.ReadNextBits.get -> int[]
+SharpH266.ProfileTierLevel.ReadNextBits.set -> void
+SharpH266.ProfileTierLevel.SublayerLevelIdc.get -> uint[]
+SharpH266.ProfileTierLevel.SublayerLevelIdc.set -> void
+SharpH266.ProfileTierLevel.Syntax.get -> string
+SharpH266.ProfileTierLevel.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.RbspTrailingBits
+SharpH266.RbspTrailingBits.HasMoreRbspData.get -> int
+SharpH266.RbspTrailingBits.HasMoreRbspData.set -> void
+SharpH266.RbspTrailingBits.RbspAlignmentZeroBit.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpH266.RbspTrailingBits.RbspAlignmentZeroBit.set -> void
+SharpH266.RbspTrailingBits.RbspStopOneBit.get -> uint
+SharpH266.RbspTrailingBits.RbspStopOneBit.set -> void
+SharpH266.RbspTrailingBits.RbspTrailingBits() -> void
+SharpH266.RbspTrailingBits.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.RbspTrailingBits.ReadNextBits.get -> int[]
+SharpH266.RbspTrailingBits.ReadNextBits.set -> void
+SharpH266.RbspTrailingBits.Syntax.get -> string
+SharpH266.RbspTrailingBits.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.RefPicListStruct
+SharpH266.RefPicListStruct.AbsDeltaPocSt.get -> ulong[][][]
+SharpH266.RefPicListStruct.AbsDeltaPocSt.set -> void
+SharpH266.RefPicListStruct.HasMoreRbspData.get -> int
+SharpH266.RefPicListStruct.HasMoreRbspData.set -> void
+SharpH266.RefPicListStruct.IlrpIdx.get -> ulong[][][]
+SharpH266.RefPicListStruct.IlrpIdx.set -> void
+SharpH266.RefPicListStruct.InterLayerRefPicFlag.get -> byte[][][]
+SharpH266.RefPicListStruct.InterLayerRefPicFlag.set -> void
+SharpH266.RefPicListStruct.ListIdx.get -> uint
+SharpH266.RefPicListStruct.ListIdx.set -> void
+SharpH266.RefPicListStruct.LtrpInHeaderFlag.get -> byte[][]
+SharpH266.RefPicListStruct.LtrpInHeaderFlag.set -> void
+SharpH266.RefPicListStruct.NumRefEntries.get -> ulong[][]
+SharpH266.RefPicListStruct.NumRefEntries.set -> void
+SharpH266.RefPicListStruct.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.RefPicListStruct.ReadNextBits.get -> int[]
+SharpH266.RefPicListStruct.ReadNextBits.set -> void
+SharpH266.RefPicListStruct.RefPicListStruct(uint listIdx, ulong rplsIdx) -> void
+SharpH266.RefPicListStruct.RplsIdx.get -> ulong
+SharpH266.RefPicListStruct.RplsIdx.set -> void
+SharpH266.RefPicListStruct.RplsPocLsbLt.get -> ulong[][][]
+SharpH266.RefPicListStruct.RplsPocLsbLt.set -> void
+SharpH266.RefPicListStruct.StRefPicFlag.get -> byte[][][]
+SharpH266.RefPicListStruct.StRefPicFlag.set -> void
+SharpH266.RefPicListStruct.StrpEntrySignFlag.get -> byte[][][]
+SharpH266.RefPicListStruct.StrpEntrySignFlag.set -> void
+SharpH266.RefPicListStruct.Syntax.get -> string
+SharpH266.RefPicListStruct.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.RefPicLists
+SharpH266.RefPicLists.DeltaPocMsbCycleLt.get -> ulong[][]
+SharpH266.RefPicLists.DeltaPocMsbCycleLt.set -> void
+SharpH266.RefPicLists.DeltaPocMsbCyclePresentFlag.get -> byte[][]
+SharpH266.RefPicLists.DeltaPocMsbCyclePresentFlag.set -> void
+SharpH266.RefPicLists.HasMoreRbspData.get -> int
+SharpH266.RefPicLists.HasMoreRbspData.set -> void
+SharpH266.RefPicLists.PocLsbLt.get -> ulong[][]
+SharpH266.RefPicLists.PocLsbLt.set -> void
+SharpH266.RefPicLists.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.RefPicLists.ReadNextBits.get -> int[]
+SharpH266.RefPicLists.ReadNextBits.set -> void
+SharpH266.RefPicLists.RefPicListStruct.get -> SharpH266.RefPicListStruct[]
+SharpH266.RefPicLists.RefPicListStruct.set -> void
+SharpH266.RefPicLists.RefPicLists() -> void
+SharpH266.RefPicLists.RplIdx.get -> ulong[]
+SharpH266.RefPicLists.RplIdx.set -> void
+SharpH266.RefPicLists.RplSpsFlag.get -> byte[]
+SharpH266.RefPicLists.RplSpsFlag.set -> void
+SharpH266.RefPicLists.Syntax.get -> string
+SharpH266.RefPicLists.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.RegionwisePacking
+SharpH266.RegionwisePacking.HasMoreRbspData.get -> int
+SharpH266.RegionwisePacking.HasMoreRbspData.set -> void
+SharpH266.RegionwisePacking.PayloadSize.get -> ulong
+SharpH266.RegionwisePacking.PayloadSize.set -> void
+SharpH266.RegionwisePacking.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.RegionwisePacking.ReadNextBits.get -> int[]
+SharpH266.RegionwisePacking.ReadNextBits.set -> void
+SharpH266.RegionwisePacking.RegionwisePacking(ulong payloadSize) -> void
+SharpH266.RegionwisePacking.RwpBottomGuardBandHeight.get -> uint[]
+SharpH266.RegionwisePacking.RwpBottomGuardBandHeight.set -> void
+SharpH266.RegionwisePacking.RwpCancelFlag.get -> byte
+SharpH266.RegionwisePacking.RwpCancelFlag.set -> void
+SharpH266.RegionwisePacking.RwpConstituentPictureMatchingFlag.get -> byte
+SharpH266.RegionwisePacking.RwpConstituentPictureMatchingFlag.set -> void
+SharpH266.RegionwisePacking.RwpGuardBandFlag.get -> byte[]
+SharpH266.RegionwisePacking.RwpGuardBandFlag.set -> void
+SharpH266.RegionwisePacking.RwpGuardBandNotUsedForPredFlag.get -> byte[]
+SharpH266.RegionwisePacking.RwpGuardBandNotUsedForPredFlag.set -> void
+SharpH266.RegionwisePacking.RwpGuardBandReservedZero3bits.get -> uint[]
+SharpH266.RegionwisePacking.RwpGuardBandReservedZero3bits.set -> void
+SharpH266.RegionwisePacking.RwpGuardBandType.get -> uint[][]
+SharpH266.RegionwisePacking.RwpGuardBandType.set -> void
+SharpH266.RegionwisePacking.RwpLeftGuardBandWidth.get -> uint[]
+SharpH266.RegionwisePacking.RwpLeftGuardBandWidth.set -> void
+SharpH266.RegionwisePacking.RwpNumPackedRegions.get -> uint
+SharpH266.RegionwisePacking.RwpNumPackedRegions.set -> void
+SharpH266.RegionwisePacking.RwpPackedPictureHeight.get -> uint
+SharpH266.RegionwisePacking.RwpPackedPictureHeight.set -> void
+SharpH266.RegionwisePacking.RwpPackedPictureWidth.get -> uint
+SharpH266.RegionwisePacking.RwpPackedPictureWidth.set -> void
+SharpH266.RegionwisePacking.RwpPackedRegionHeight.get -> uint[]
+SharpH266.RegionwisePacking.RwpPackedRegionHeight.set -> void
+SharpH266.RegionwisePacking.RwpPackedRegionLeft.get -> uint[]
+SharpH266.RegionwisePacking.RwpPackedRegionLeft.set -> void
+SharpH266.RegionwisePacking.RwpPackedRegionTop.get -> uint[]
+SharpH266.RegionwisePacking.RwpPackedRegionTop.set -> void
+SharpH266.RegionwisePacking.RwpPackedRegionWidth.get -> uint[]
+SharpH266.RegionwisePacking.RwpPackedRegionWidth.set -> void
+SharpH266.RegionwisePacking.RwpPersistenceFlag.get -> byte
+SharpH266.RegionwisePacking.RwpPersistenceFlag.set -> void
+SharpH266.RegionwisePacking.RwpProjPictureHeight.get -> uint
+SharpH266.RegionwisePacking.RwpProjPictureHeight.set -> void
+SharpH266.RegionwisePacking.RwpProjPictureWidth.get -> uint
+SharpH266.RegionwisePacking.RwpProjPictureWidth.set -> void
+SharpH266.RegionwisePacking.RwpProjRegionHeight.get -> uint[]
+SharpH266.RegionwisePacking.RwpProjRegionHeight.set -> void
+SharpH266.RegionwisePacking.RwpProjRegionLeft.get -> uint[]
+SharpH266.RegionwisePacking.RwpProjRegionLeft.set -> void
+SharpH266.RegionwisePacking.RwpProjRegionTop.get -> uint[]
+SharpH266.RegionwisePacking.RwpProjRegionTop.set -> void
+SharpH266.RegionwisePacking.RwpProjRegionWidth.get -> uint[]
+SharpH266.RegionwisePacking.RwpProjRegionWidth.set -> void
+SharpH266.RegionwisePacking.RwpReservedZero4bits.get -> uint[]
+SharpH266.RegionwisePacking.RwpReservedZero4bits.set -> void
+SharpH266.RegionwisePacking.RwpReservedZero5bits.get -> uint
+SharpH266.RegionwisePacking.RwpReservedZero5bits.set -> void
+SharpH266.RegionwisePacking.RwpRightGuardBandWidth.get -> uint[]
+SharpH266.RegionwisePacking.RwpRightGuardBandWidth.set -> void
+SharpH266.RegionwisePacking.RwpTopGuardBandHeight.get -> uint[]
+SharpH266.RegionwisePacking.RwpTopGuardBandHeight.set -> void
+SharpH266.RegionwisePacking.RwpTransformType.get -> uint[]
+SharpH266.RegionwisePacking.RwpTransformType.set -> void
+SharpH266.RegionwisePacking.Syntax.get -> string
+SharpH266.RegionwisePacking.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ReservedMessage
+SharpH266.ReservedMessage.HasMoreRbspData.get -> int
+SharpH266.ReservedMessage.HasMoreRbspData.set -> void
+SharpH266.ReservedMessage.PayloadSize.get -> ulong
+SharpH266.ReservedMessage.PayloadSize.set -> void
+SharpH266.ReservedMessage.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ReservedMessage.ReadNextBits.get -> int[]
+SharpH266.ReservedMessage.ReadNextBits.set -> void
+SharpH266.ReservedMessage.ReservedMessage(ulong payloadSize) -> void
+SharpH266.ReservedMessage.ReservedMessagePayloadByte.get -> uint[]
+SharpH266.ReservedMessage.ReservedMessagePayloadByte.set -> void
+SharpH266.ReservedMessage.Syntax.get -> string
+SharpH266.ReservedMessage.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SampleAspectRatioInfo
+SharpH266.SampleAspectRatioInfo.HasMoreRbspData.get -> int
+SharpH266.SampleAspectRatioInfo.HasMoreRbspData.set -> void
+SharpH266.SampleAspectRatioInfo.PayloadSize.get -> ulong
+SharpH266.SampleAspectRatioInfo.PayloadSize.set -> void
+SharpH266.SampleAspectRatioInfo.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SampleAspectRatioInfo.ReadNextBits.get -> int[]
+SharpH266.SampleAspectRatioInfo.ReadNextBits.set -> void
+SharpH266.SampleAspectRatioInfo.SampleAspectRatioInfo(ulong payloadSize) -> void
+SharpH266.SampleAspectRatioInfo.SariAspectRatioIdc.get -> uint
+SharpH266.SampleAspectRatioInfo.SariAspectRatioIdc.set -> void
+SharpH266.SampleAspectRatioInfo.SariCancelFlag.get -> byte
+SharpH266.SampleAspectRatioInfo.SariCancelFlag.set -> void
+SharpH266.SampleAspectRatioInfo.SariPersistenceFlag.get -> byte
+SharpH266.SampleAspectRatioInfo.SariPersistenceFlag.set -> void
+SharpH266.SampleAspectRatioInfo.SariSarHeight.get -> uint
+SharpH266.SampleAspectRatioInfo.SariSarHeight.set -> void
+SharpH266.SampleAspectRatioInfo.SariSarWidth.get -> uint
+SharpH266.SampleAspectRatioInfo.SariSarWidth.set -> void
+SharpH266.SampleAspectRatioInfo.Syntax.get -> string
+SharpH266.SampleAspectRatioInfo.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ScalabilityDimensionInfo
+SharpH266.ScalabilityDimensionInfo.HasMoreRbspData.get -> int
+SharpH266.ScalabilityDimensionInfo.HasMoreRbspData.set -> void
+SharpH266.ScalabilityDimensionInfo.PayloadSize.get -> ulong
+SharpH266.ScalabilityDimensionInfo.PayloadSize.set -> void
+SharpH266.ScalabilityDimensionInfo.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ScalabilityDimensionInfo.ReadNextBits.get -> int[]
+SharpH266.ScalabilityDimensionInfo.ReadNextBits.set -> void
+SharpH266.ScalabilityDimensionInfo.ScalabilityDimensionInfo(ulong payloadSize) -> void
+SharpH266.ScalabilityDimensionInfo.SdiAssociatedPrimaryLayerIdx.get -> uint[][]
+SharpH266.ScalabilityDimensionInfo.SdiAssociatedPrimaryLayerIdx.set -> void
+SharpH266.ScalabilityDimensionInfo.SdiAuxId.get -> uint[]
+SharpH266.ScalabilityDimensionInfo.SdiAuxId.set -> void
+SharpH266.ScalabilityDimensionInfo.SdiAuxiliaryInfoFlag.get -> byte
+SharpH266.ScalabilityDimensionInfo.SdiAuxiliaryInfoFlag.set -> void
+SharpH266.ScalabilityDimensionInfo.SdiLayerId.get -> uint[]
+SharpH266.ScalabilityDimensionInfo.SdiLayerId.set -> void
+SharpH266.ScalabilityDimensionInfo.SdiMaxLayersMinus1.get -> uint
+SharpH266.ScalabilityDimensionInfo.SdiMaxLayersMinus1.set -> void
+SharpH266.ScalabilityDimensionInfo.SdiMultiviewInfoFlag.get -> byte
+SharpH266.ScalabilityDimensionInfo.SdiMultiviewInfoFlag.set -> void
+SharpH266.ScalabilityDimensionInfo.SdiNumAssociatedPrimaryLayersMinus1.get -> uint[]
+SharpH266.ScalabilityDimensionInfo.SdiNumAssociatedPrimaryLayersMinus1.set -> void
+SharpH266.ScalabilityDimensionInfo.SdiViewIdLenMinus1.get -> uint
+SharpH266.ScalabilityDimensionInfo.SdiViewIdLenMinus1.set -> void
+SharpH266.ScalabilityDimensionInfo.SdiViewIdVal.get -> ulong[]
+SharpH266.ScalabilityDimensionInfo.SdiViewIdVal.set -> void
+SharpH266.ScalabilityDimensionInfo.Syntax.get -> string
+SharpH266.ScalabilityDimensionInfo.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ScalableNesting
+SharpH266.ScalableNesting.HasMoreRbspData.get -> int
+SharpH266.ScalableNesting.HasMoreRbspData.set -> void
+SharpH266.ScalableNesting.PayloadSize.get -> ulong
+SharpH266.ScalableNesting.PayloadSize.set -> void
+SharpH266.ScalableNesting.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ScalableNesting.ReadNextBits.get -> int[]
+SharpH266.ScalableNesting.ReadNextBits.set -> void
+SharpH266.ScalableNesting.ScalableNesting(ulong payloadSize) -> void
+SharpH266.ScalableNesting.SeiMessage.get -> SharpH266.SeiMessage[]
+SharpH266.ScalableNesting.SeiMessage.set -> void
+SharpH266.ScalableNesting.SnAllLayersFlag.get -> byte
+SharpH266.ScalableNesting.SnAllLayersFlag.set -> void
+SharpH266.ScalableNesting.SnLayerId.get -> uint[]
+SharpH266.ScalableNesting.SnLayerId.set -> void
+SharpH266.ScalableNesting.SnNumLayersMinus1.get -> ulong
+SharpH266.ScalableNesting.SnNumLayersMinus1.set -> void
+SharpH266.ScalableNesting.SnNumOlssMinus1.get -> ulong
+SharpH266.ScalableNesting.SnNumOlssMinus1.set -> void
+SharpH266.ScalableNesting.SnNumSeisMinus1.get -> ulong
+SharpH266.ScalableNesting.SnNumSeisMinus1.set -> void
+SharpH266.ScalableNesting.SnNumSubpicsMinus1.get -> ulong
+SharpH266.ScalableNesting.SnNumSubpicsMinus1.set -> void
+SharpH266.ScalableNesting.SnOlsFlag.get -> byte
+SharpH266.ScalableNesting.SnOlsFlag.set -> void
+SharpH266.ScalableNesting.SnOlsIdxDeltaMinus1.get -> ulong[]
+SharpH266.ScalableNesting.SnOlsIdxDeltaMinus1.set -> void
+SharpH266.ScalableNesting.SnSubpicFlag.get -> byte
+SharpH266.ScalableNesting.SnSubpicFlag.set -> void
+SharpH266.ScalableNesting.SnSubpicId.get -> ulong[]
+SharpH266.ScalableNesting.SnSubpicId.set -> void
+SharpH266.ScalableNesting.SnSubpicIdLenMinus1.get -> ulong
+SharpH266.ScalableNesting.SnSubpicIdLenMinus1.set -> void
+SharpH266.ScalableNesting.SnZeroBit.get -> System.Collections.Generic.Dictionary<int, byte>
+SharpH266.ScalableNesting.SnZeroBit.set -> void
+SharpH266.ScalableNesting.Syntax.get -> string
+SharpH266.ScalableNesting.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ScalingListData
+SharpH266.ScalingListData.HasMoreRbspData.get -> int
+SharpH266.ScalingListData.HasMoreRbspData.set -> void
+SharpH266.ScalingListData.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ScalingListData.ReadNextBits.get -> int[]
+SharpH266.ScalingListData.ReadNextBits.set -> void
+SharpH266.ScalingListData.ScalingListCopyModeFlag.get -> byte[]
+SharpH266.ScalingListData.ScalingListCopyModeFlag.set -> void
+SharpH266.ScalingListData.ScalingListData() -> void
+SharpH266.ScalingListData.ScalingListDcCoef.get -> long[]
+SharpH266.ScalingListData.ScalingListDcCoef.set -> void
+SharpH266.ScalingListData.ScalingListDeltaCoef.get -> long[][]
+SharpH266.ScalingListData.ScalingListDeltaCoef.set -> void
+SharpH266.ScalingListData.ScalingListPredIdDelta.get -> ulong[]
+SharpH266.ScalingListData.ScalingListPredIdDelta.set -> void
+SharpH266.ScalingListData.ScalingListPredModeFlag.get -> byte[]
+SharpH266.ScalingListData.ScalingListPredModeFlag.set -> void
+SharpH266.ScalingListData.Syntax.get -> string
+SharpH266.ScalingListData.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SeiMessage
+SharpH266.SeiMessage.HasMoreRbspData.get -> int
+SharpH266.SeiMessage.HasMoreRbspData.set -> void
+SharpH266.SeiMessage.PayloadSizeByte.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpH266.SeiMessage.PayloadSizeByte.set -> void
+SharpH266.SeiMessage.PayloadTypeByte.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpH266.SeiMessage.PayloadTypeByte.set -> void
+SharpH266.SeiMessage.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SeiMessage.ReadNextBits.get -> int[]
+SharpH266.SeiMessage.ReadNextBits.set -> void
+SharpH266.SeiMessage.SeiMessage() -> void
+SharpH266.SeiMessage.SeiPayload.get -> SharpH266.SeiPayload
+SharpH266.SeiMessage.SeiPayload.set -> void
+SharpH266.SeiMessage.Syntax.get -> string
+SharpH266.SeiMessage.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SeiPayload
+SharpH266.SeiPayload.AlternativeTransferCharacteristics.get -> SharpH266.AlternativeTransferCharacteristics
+SharpH266.SeiPayload.AlternativeTransferCharacteristics.set -> void
+SharpH266.SeiPayload.AmbientViewingEnvironment.get -> SharpH266.AmbientViewingEnvironment
+SharpH266.SeiPayload.AmbientViewingEnvironment.set -> void
+SharpH266.SeiPayload.BufferingPeriod.get -> SharpH266.BufferingPeriod
+SharpH266.SeiPayload.BufferingPeriod.set -> void
+SharpH266.SeiPayload.ContentColourVolume.get -> SharpH266.ContentColourVolume
+SharpH266.SeiPayload.ContentColourVolume.set -> void
+SharpH266.SeiPayload.ContentLightLevelInfo.get -> SharpH266.ContentLightLevelInfo
+SharpH266.SeiPayload.ContentLightLevelInfo.set -> void
+SharpH266.SeiPayload.DecodedPictureHash.get -> SharpH266.DecodedPictureHash
+SharpH266.SeiPayload.DecodedPictureHash.set -> void
+SharpH266.SeiPayload.DecodingUnitInfo.get -> SharpH266.DecodingUnitInfo
+SharpH266.SeiPayload.DecodingUnitInfo.set -> void
+SharpH266.SeiPayload.DependentRapIndication.get -> SharpH266.DependentRapIndication
+SharpH266.SeiPayload.DependentRapIndication.set -> void
+SharpH266.SeiPayload.EquirectangularProjection.get -> SharpH266.EquirectangularProjection
+SharpH266.SeiPayload.EquirectangularProjection.set -> void
+SharpH266.SeiPayload.FillerPayload.get -> SharpH266.FillerPayload
+SharpH266.SeiPayload.FillerPayload.set -> void
+SharpH266.SeiPayload.FilmGrainCharacteristics.get -> SharpH266.FilmGrainCharacteristics
+SharpH266.SeiPayload.FilmGrainCharacteristics.set -> void
+SharpH266.SeiPayload.FrameFieldInfo.get -> SharpH266.FrameFieldInfo
+SharpH266.SeiPayload.FrameFieldInfo.set -> void
+SharpH266.SeiPayload.FramePackingArrangement.get -> SharpH266.FramePackingArrangement
+SharpH266.SeiPayload.FramePackingArrangement.set -> void
+SharpH266.SeiPayload.GeneralizedCubemapProjection.get -> SharpH266.GeneralizedCubemapProjection
+SharpH266.SeiPayload.GeneralizedCubemapProjection.set -> void
+SharpH266.SeiPayload.HasMoreRbspData.get -> int
+SharpH266.SeiPayload.HasMoreRbspData.set -> void
+SharpH266.SeiPayload.MasteringDisplayColourVolume.get -> SharpH266.MasteringDisplayColourVolume
+SharpH266.SeiPayload.MasteringDisplayColourVolume.set -> void
+SharpH266.SeiPayload.OmniViewport.get -> SharpH266.OmniViewport
+SharpH266.SeiPayload.OmniViewport.set -> void
+SharpH266.SeiPayload.ParameterSetsInclusionIndication.get -> SharpH266.ParameterSetsInclusionIndication
+SharpH266.SeiPayload.ParameterSetsInclusionIndication.set -> void
+SharpH266.SeiPayload.PayloadSize.get -> ulong
+SharpH266.SeiPayload.PayloadSize.set -> void
+SharpH266.SeiPayload.PayloadType.get -> uint
+SharpH266.SeiPayload.PayloadType.set -> void
+SharpH266.SeiPayload.PicTiming.get -> SharpH266.PicTiming
+SharpH266.SeiPayload.PicTiming.set -> void
+SharpH266.SeiPayload.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SeiPayload.ReadNextBits.get -> int[]
+SharpH266.SeiPayload.ReadNextBits.set -> void
+SharpH266.SeiPayload.RegionwisePacking.get -> SharpH266.RegionwisePacking
+SharpH266.SeiPayload.RegionwisePacking.set -> void
+SharpH266.SeiPayload.ReservedMessage.get -> SharpH266.ReservedMessage
+SharpH266.SeiPayload.ReservedMessage.set -> void
+SharpH266.SeiPayload.SampleAspectRatioInfo.get -> SharpH266.SampleAspectRatioInfo
+SharpH266.SeiPayload.SampleAspectRatioInfo.set -> void
+SharpH266.SeiPayload.ScalableNesting.get -> SharpH266.ScalableNesting
+SharpH266.SeiPayload.ScalableNesting.set -> void
+SharpH266.SeiPayload.SeiPayload(uint payloadType, ulong payloadSize) -> void
+SharpH266.SeiPayload.SeiPayloadBitEqualToOne.get -> uint
+SharpH266.SeiPayload.SeiPayloadBitEqualToOne.set -> void
+SharpH266.SeiPayload.SeiPayloadBitEqualToZero.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpH266.SeiPayload.SeiPayloadBitEqualToZero.set -> void
+SharpH266.SeiPayload.SeiReservedPayloadExtensionData.get -> ulong
+SharpH266.SeiPayload.SeiReservedPayloadExtensionData.set -> void
+SharpH266.SeiPayload.SphereRotation.get -> SharpH266.SphereRotation
+SharpH266.SeiPayload.SphereRotation.set -> void
+SharpH266.SeiPayload.SubpicLevelInfo.get -> SharpH266.SubpicLevelInfo
+SharpH266.SeiPayload.SubpicLevelInfo.set -> void
+SharpH266.SeiPayload.Syntax.get -> string
+SharpH266.SeiPayload.UserDataRegisteredItutT35.get -> SharpH266.UserDataRegisteredItutT35
+SharpH266.SeiPayload.UserDataRegisteredItutT35.set -> void
+SharpH266.SeiPayload.UserDataUnregistered.get -> SharpH266.UserDataUnregistered
+SharpH266.SeiPayload.UserDataUnregistered.set -> void
+SharpH266.SeiPayload.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SeiRbsp
+SharpH266.SeiRbsp.HasMoreRbspData.get -> int
+SharpH266.SeiRbsp.HasMoreRbspData.set -> void
+SharpH266.SeiRbsp.RbspTrailingBits.get -> SharpH266.RbspTrailingBits
+SharpH266.SeiRbsp.RbspTrailingBits.set -> void
+SharpH266.SeiRbsp.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SeiRbsp.ReadNextBits.get -> int[]
+SharpH266.SeiRbsp.ReadNextBits.set -> void
+SharpH266.SeiRbsp.SeiMessage.get -> System.Collections.Generic.Dictionary<int, SharpH266.SeiMessage>
+SharpH266.SeiRbsp.SeiMessage.set -> void
+SharpH266.SeiRbsp.SeiRbsp() -> void
+SharpH266.SeiRbsp.Syntax.get -> string
+SharpH266.SeiRbsp.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SeqParameterSetRbsp
+SharpH266.SeqParameterSetRbsp.DpbParameters.get -> SharpH266.DpbParameters
+SharpH266.SeqParameterSetRbsp.DpbParameters.set -> void
+SharpH266.SeqParameterSetRbsp.GeneralTimingHrdParameters.get -> SharpH266.GeneralTimingHrdParameters
+SharpH266.SeqParameterSetRbsp.GeneralTimingHrdParameters.set -> void
+SharpH266.SeqParameterSetRbsp.HasMoreRbspData.get -> int
+SharpH266.SeqParameterSetRbsp.HasMoreRbspData.set -> void
+SharpH266.SeqParameterSetRbsp.OlsTimingHrdParameters.get -> SharpH266.OlsTimingHrdParameters
+SharpH266.SeqParameterSetRbsp.OlsTimingHrdParameters.set -> void
+SharpH266.SeqParameterSetRbsp.ProfileTierLevel.get -> SharpH266.ProfileTierLevel
+SharpH266.SeqParameterSetRbsp.ProfileTierLevel.set -> void
+SharpH266.SeqParameterSetRbsp.RbspTrailingBits.get -> SharpH266.RbspTrailingBits
+SharpH266.SeqParameterSetRbsp.RbspTrailingBits.set -> void
+SharpH266.SeqParameterSetRbsp.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SeqParameterSetRbsp.ReadNextBits.get -> int[]
+SharpH266.SeqParameterSetRbsp.ReadNextBits.set -> void
+SharpH266.SeqParameterSetRbsp.RefPicListStruct.get -> SharpH266.RefPicListStruct[][]
+SharpH266.SeqParameterSetRbsp.RefPicListStruct.set -> void
+SharpH266.SeqParameterSetRbsp.SeqParameterSetRbsp() -> void
+SharpH266.SeqParameterSetRbsp.Sps6paramAffineEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.Sps6paramAffineEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsActEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsActEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsAffineAmvrEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsAffineAmvrEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsAffineEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsAffineEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsAffineProfEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsAffineProfEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsAlfEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsAlfEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsAmvrEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsAmvrEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsBcwEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsBcwEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsBdofControlPresentInPhFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsBdofControlPresentInPhFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsBdofEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsBdofEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsBdpcmEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsBdpcmEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsBitdepthMinus8.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsBitdepthMinus8.set -> void
+SharpH266.SeqParameterSetRbsp.SpsCcalfEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsCcalfEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsCclmEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsCclmEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsChromaFormatIdc.get -> uint
+SharpH266.SeqParameterSetRbsp.SpsChromaFormatIdc.set -> void
+SharpH266.SeqParameterSetRbsp.SpsChromaHorizontalCollocatedFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsChromaHorizontalCollocatedFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsChromaVerticalCollocatedFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsChromaVerticalCollocatedFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsCiipEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsCiipEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsConfWinBottomOffset.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsConfWinBottomOffset.set -> void
+SharpH266.SeqParameterSetRbsp.SpsConfWinLeftOffset.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsConfWinLeftOffset.set -> void
+SharpH266.SeqParameterSetRbsp.SpsConfWinRightOffset.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsConfWinRightOffset.set -> void
+SharpH266.SeqParameterSetRbsp.SpsConfWinTopOffset.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsConfWinTopOffset.set -> void
+SharpH266.SeqParameterSetRbsp.SpsConformanceWindowFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsConformanceWindowFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsDeltaQpDiffVal.get -> ulong[][]
+SharpH266.SeqParameterSetRbsp.SpsDeltaQpDiffVal.set -> void
+SharpH266.SeqParameterSetRbsp.SpsDeltaQpInValMinus1.get -> ulong[][]
+SharpH266.SeqParameterSetRbsp.SpsDeltaQpInValMinus1.set -> void
+SharpH266.SeqParameterSetRbsp.SpsDepQuantEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsDepQuantEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsDmvrControlPresentInPhFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsDmvrControlPresentInPhFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsDmvrEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsDmvrEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsEntropyCodingSyncEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsEntropyCodingSyncEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsEntryPointOffsetsPresentFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsEntryPointOffsetsPresentFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsExplicitMtsInterEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsExplicitMtsInterEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsExplicitMtsIntraEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsExplicitMtsIntraEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsExplicitScalingListEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsExplicitScalingListEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsExtensionDataFlag.get -> System.Collections.Generic.Dictionary<int, byte>
+SharpH266.SeqParameterSetRbsp.SpsExtensionDataFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsExtensionFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsExtensionFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsExtraPhBitPresentFlag.get -> byte[]
+SharpH266.SeqParameterSetRbsp.SpsExtraPhBitPresentFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsExtraShBitPresentFlag.get -> byte[]
+SharpH266.SeqParameterSetRbsp.SpsExtraShBitPresentFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsFieldSeqFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsFieldSeqFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsFiveMinusMaxNumSubblockMergeCand.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsFiveMinusMaxNumSubblockMergeCand.set -> void
+SharpH266.SeqParameterSetRbsp.SpsGdrEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsGdrEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsGpmEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsGpmEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsIbcEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsIbcEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsIdrRplPresentFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsIdrRplPresentFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsIndependentSubpicsFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsIndependentSubpicsFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsInterLayerPredictionEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsInterLayerPredictionEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsIspEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsIspEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsJointCbcrEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsJointCbcrEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLadfDeltaThresholdMinus1.get -> ulong[]
+SharpH266.SeqParameterSetRbsp.SpsLadfDeltaThresholdMinus1.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLadfEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsLadfEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLadfLowestIntervalQpOffset.get -> long
+SharpH266.SeqParameterSetRbsp.SpsLadfLowestIntervalQpOffset.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLadfQpOffset.get -> long[]
+SharpH266.SeqParameterSetRbsp.SpsLadfQpOffset.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLfnstEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsLfnstEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLmcsEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsLmcsEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLog2CtuSizeMinus5.get -> uint
+SharpH266.SeqParameterSetRbsp.SpsLog2CtuSizeMinus5.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMaxBtMinQtInterSlice.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMaxBtMinQtInterSlice.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMaxBtMinQtIntraSliceChroma.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMaxBtMinQtIntraSliceChroma.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMaxBtMinQtIntraSliceLuma.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMaxBtMinQtIntraSliceLuma.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMaxTtMinQtInterSlice.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMaxTtMinQtInterSlice.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMaxTtMinQtIntraSliceChroma.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMaxTtMinQtIntraSliceChroma.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMaxTtMinQtIntraSliceLuma.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMaxTtMinQtIntraSliceLuma.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMinQtMinCbInterSlice.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMinQtMinCbInterSlice.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMinQtMinCbIntraSliceChroma.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMinQtMinCbIntraSliceChroma.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMinQtMinCbIntraSliceLuma.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsLog2DiffMinQtMinCbIntraSliceLuma.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4.get -> uint
+SharpH266.SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLog2MinLumaCodingBlockSizeMinus2.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsLog2MinLumaCodingBlockSizeMinus2.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLog2ParallelMergeLevelMinus2.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsLog2ParallelMergeLevelMinus2.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLog2TransformSkipMaxSizeMinus2.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsLog2TransformSkipMaxSizeMinus2.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLongTermRefPicsFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsLongTermRefPicsFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsLoopFilterAcrossSubpicEnabledFlag.get -> byte[]
+SharpH266.SeqParameterSetRbsp.SpsLoopFilterAcrossSubpicEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsMaxLumaTransformSize64Flag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsMaxLumaTransformSize64Flag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsMaxMttHierarchyDepthInterSlice.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsMaxMttHierarchyDepthInterSlice.set -> void
+SharpH266.SeqParameterSetRbsp.SpsMaxMttHierarchyDepthIntraSliceChroma.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsMaxMttHierarchyDepthIntraSliceChroma.set -> void
+SharpH266.SeqParameterSetRbsp.SpsMaxMttHierarchyDepthIntraSliceLuma.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsMaxMttHierarchyDepthIntraSliceLuma.set -> void
+SharpH266.SeqParameterSetRbsp.SpsMaxNumMergeCandMinusMaxNumGpmCand.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsMaxNumMergeCandMinusMaxNumGpmCand.set -> void
+SharpH266.SeqParameterSetRbsp.SpsMaxSublayersMinus1.get -> uint
+SharpH266.SeqParameterSetRbsp.SpsMaxSublayersMinus1.set -> void
+SharpH266.SeqParameterSetRbsp.SpsMinQpPrimeTs.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsMinQpPrimeTs.set -> void
+SharpH266.SeqParameterSetRbsp.SpsMipEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsMipEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsMmvdEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsMmvdEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsMmvdFullpelOnlyEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsMmvdFullpelOnlyEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsMrlEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsMrlEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsMtsEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsMtsEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsNumExtraPhBytes.get -> uint
+SharpH266.SeqParameterSetRbsp.SpsNumExtraPhBytes.set -> void
+SharpH266.SeqParameterSetRbsp.SpsNumExtraShBytes.get -> uint
+SharpH266.SeqParameterSetRbsp.SpsNumExtraShBytes.set -> void
+SharpH266.SeqParameterSetRbsp.SpsNumHorVirtualBoundaries.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsNumHorVirtualBoundaries.set -> void
+SharpH266.SeqParameterSetRbsp.SpsNumLadfIntervalsMinus2.get -> uint
+SharpH266.SeqParameterSetRbsp.SpsNumLadfIntervalsMinus2.set -> void
+SharpH266.SeqParameterSetRbsp.SpsNumPointsInQpTableMinus1.get -> ulong[]
+SharpH266.SeqParameterSetRbsp.SpsNumPointsInQpTableMinus1.set -> void
+SharpH266.SeqParameterSetRbsp.SpsNumRefPicLists.get -> ulong[]
+SharpH266.SeqParameterSetRbsp.SpsNumRefPicLists.set -> void
+SharpH266.SeqParameterSetRbsp.SpsNumSubpicsMinus1.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsNumSubpicsMinus1.set -> void
+SharpH266.SeqParameterSetRbsp.SpsNumVerVirtualBoundaries.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsNumVerVirtualBoundaries.set -> void
+SharpH266.SeqParameterSetRbsp.SpsPaletteEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsPaletteEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsPartitionConstraintsOverrideEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsPartitionConstraintsOverrideEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsPicHeightMaxInLumaSamples.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsPicHeightMaxInLumaSamples.set -> void
+SharpH266.SeqParameterSetRbsp.SpsPicWidthMaxInLumaSamples.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsPicWidthMaxInLumaSamples.set -> void
+SharpH266.SeqParameterSetRbsp.SpsPocMsbCycleFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsPocMsbCycleFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsPocMsbCycleLenMinus1.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsPocMsbCycleLenMinus1.set -> void
+SharpH266.SeqParameterSetRbsp.SpsProfControlPresentInPhFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsProfControlPresentInPhFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsPtlDpbHrdParamsPresentFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsPtlDpbHrdParamsPresentFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsQpTableStartMinus26.get -> long[]
+SharpH266.SeqParameterSetRbsp.SpsQpTableStartMinus26.set -> void
+SharpH266.SeqParameterSetRbsp.SpsQtbttDualTreeIntraFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsQtbttDualTreeIntraFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsRefPicResamplingEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsRefPicResamplingEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsRefWraparoundEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsRefWraparoundEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsResChangeInClvsAllowedFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsResChangeInClvsAllowedFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsRpl1SameAsRpl0Flag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsRpl1SameAsRpl0Flag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSameQpTableForChromaFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsSameQpTableForChromaFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSaoEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsSaoEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSbtEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsSbtEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSbtmvpEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsSbtmvpEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsScalingMatrixDesignatedColourSpaceFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsScalingMatrixDesignatedColourSpaceFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsScalingMatrixForAlternativeColourSpaceDisabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsScalingMatrixForAlternativeColourSpaceDisabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsScalingMatrixForLfnstDisabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsScalingMatrixForLfnstDisabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSeqParameterSetId.get -> uint
+SharpH266.SeqParameterSetRbsp.SpsSeqParameterSetId.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSignDataHidingEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsSignDataHidingEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSixMinusMaxNumIbcMergeCand.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsSixMinusMaxNumIbcMergeCand.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSixMinusMaxNumMergeCand.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsSixMinusMaxNumMergeCand.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSmvdEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsSmvdEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSublayerCpbParamsPresentFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsSublayerCpbParamsPresentFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSublayerDpbParamsFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsSublayerDpbParamsFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSubpicCtuTopLeftx.get -> ulong[]
+SharpH266.SeqParameterSetRbsp.SpsSubpicCtuTopLeftx.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSubpicCtuTopLefty.get -> ulong[]
+SharpH266.SeqParameterSetRbsp.SpsSubpicCtuTopLefty.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSubpicHeightMinus1.get -> ulong[]
+SharpH266.SeqParameterSetRbsp.SpsSubpicHeightMinus1.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSubpicId.get -> ulong[]
+SharpH266.SeqParameterSetRbsp.SpsSubpicId.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSubpicIdLenMinus1.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsSubpicIdLenMinus1.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSubpicIdMappingExplicitlySignalledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsSubpicIdMappingExplicitlySignalledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSubpicIdMappingPresentFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsSubpicIdMappingPresentFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSubpicInfoPresentFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsSubpicInfoPresentFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSubpicSameSizeFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsSubpicSameSizeFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSubpicTreatedAsPicFlag.get -> byte[]
+SharpH266.SeqParameterSetRbsp.SpsSubpicTreatedAsPicFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsSubpicWidthMinus1.get -> ulong[]
+SharpH266.SeqParameterSetRbsp.SpsSubpicWidthMinus1.set -> void
+SharpH266.SeqParameterSetRbsp.SpsTemporalMvpEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsTemporalMvpEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsTimingHrdParamsPresentFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsTimingHrdParamsPresentFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsTransformSkipEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsTransformSkipEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsVideoParameterSetId.get -> uint
+SharpH266.SeqParameterSetRbsp.SpsVideoParameterSetId.set -> void
+SharpH266.SeqParameterSetRbsp.SpsVirtualBoundariesEnabledFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsVirtualBoundariesEnabledFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsVirtualBoundariesPresentFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsVirtualBoundariesPresentFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsVirtualBoundaryPosxMinus1.get -> ulong[]
+SharpH266.SeqParameterSetRbsp.SpsVirtualBoundaryPosxMinus1.set -> void
+SharpH266.SeqParameterSetRbsp.SpsVirtualBoundaryPosyMinus1.get -> ulong[]
+SharpH266.SeqParameterSetRbsp.SpsVirtualBoundaryPosyMinus1.set -> void
+SharpH266.SeqParameterSetRbsp.SpsVuiAlignmentZeroBit.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpH266.SeqParameterSetRbsp.SpsVuiAlignmentZeroBit.set -> void
+SharpH266.SeqParameterSetRbsp.SpsVuiParametersPresentFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsVuiParametersPresentFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsVuiPayloadSizeMinus1.get -> ulong
+SharpH266.SeqParameterSetRbsp.SpsVuiPayloadSizeMinus1.set -> void
+SharpH266.SeqParameterSetRbsp.SpsWeightedBipredFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsWeightedBipredFlag.set -> void
+SharpH266.SeqParameterSetRbsp.SpsWeightedPredFlag.get -> byte
+SharpH266.SeqParameterSetRbsp.SpsWeightedPredFlag.set -> void
+SharpH266.SeqParameterSetRbsp.Syntax.get -> string
+SharpH266.SeqParameterSetRbsp.VuiPayload.get -> SharpH266.VuiPayload
+SharpH266.SeqParameterSetRbsp.VuiPayload.set -> void
+SharpH266.SeqParameterSetRbsp.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ShutterIntervalInfo
+SharpH266.ShutterIntervalInfo.HasMoreRbspData.get -> int
+SharpH266.ShutterIntervalInfo.HasMoreRbspData.set -> void
+SharpH266.ShutterIntervalInfo.PayloadSize.get -> ulong
+SharpH266.ShutterIntervalInfo.PayloadSize.set -> void
+SharpH266.ShutterIntervalInfo.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.ShutterIntervalInfo.ReadNextBits.get -> int[]
+SharpH266.ShutterIntervalInfo.ReadNextBits.set -> void
+SharpH266.ShutterIntervalInfo.ShutterIntervalInfo(ulong payloadSize) -> void
+SharpH266.ShutterIntervalInfo.SiiFixedShutterIntervalWithinClvsFlag.get -> byte
+SharpH266.ShutterIntervalInfo.SiiFixedShutterIntervalWithinClvsFlag.set -> void
+SharpH266.ShutterIntervalInfo.SiiMaxSubLayersMinus1.get -> uint
+SharpH266.ShutterIntervalInfo.SiiMaxSubLayersMinus1.set -> void
+SharpH266.ShutterIntervalInfo.SiiNumUnitsInShutterInterval.get -> uint
+SharpH266.ShutterIntervalInfo.SiiNumUnitsInShutterInterval.set -> void
+SharpH266.ShutterIntervalInfo.SiiSubLayerNumUnitsInShutterInterval.get -> uint[]
+SharpH266.ShutterIntervalInfo.SiiSubLayerNumUnitsInShutterInterval.set -> void
+SharpH266.ShutterIntervalInfo.SiiTimeScale.get -> uint
+SharpH266.ShutterIntervalInfo.SiiTimeScale.set -> void
+SharpH266.ShutterIntervalInfo.Syntax.get -> string
+SharpH266.ShutterIntervalInfo.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SliceHeader
+SharpH266.SliceHeader.ByteAlignment.get -> SharpH266.ByteAlignment
+SharpH266.SliceHeader.ByteAlignment.set -> void
+SharpH266.SliceHeader.HasMoreRbspData.get -> int
+SharpH266.SliceHeader.HasMoreRbspData.set -> void
+SharpH266.SliceHeader.PictureHeaderStructure.get -> SharpH266.PictureHeaderStructure
+SharpH266.SliceHeader.PictureHeaderStructure.set -> void
+SharpH266.SliceHeader.PredWeightTable.get -> SharpH266.PredWeightTable
+SharpH266.SliceHeader.PredWeightTable.set -> void
+SharpH266.SliceHeader.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SliceHeader.ReadNextBits.get -> int[]
+SharpH266.SliceHeader.ReadNextBits.set -> void
+SharpH266.SliceHeader.RefPicLists.get -> SharpH266.RefPicLists
+SharpH266.SliceHeader.RefPicLists.set -> void
+SharpH266.SliceHeader.ShAlfApsIdChroma.get -> uint
+SharpH266.SliceHeader.ShAlfApsIdChroma.set -> void
+SharpH266.SliceHeader.ShAlfApsIdLuma.get -> uint[]
+SharpH266.SliceHeader.ShAlfApsIdLuma.set -> void
+SharpH266.SliceHeader.ShAlfCbEnabledFlag.get -> byte
+SharpH266.SliceHeader.ShAlfCbEnabledFlag.set -> void
+SharpH266.SliceHeader.ShAlfCcCbApsId.get -> uint
+SharpH266.SliceHeader.ShAlfCcCbApsId.set -> void
+SharpH266.SliceHeader.ShAlfCcCbEnabledFlag.get -> byte
+SharpH266.SliceHeader.ShAlfCcCbEnabledFlag.set -> void
+SharpH266.SliceHeader.ShAlfCcCrApsId.get -> uint
+SharpH266.SliceHeader.ShAlfCcCrApsId.set -> void
+SharpH266.SliceHeader.ShAlfCcCrEnabledFlag.get -> byte
+SharpH266.SliceHeader.ShAlfCcCrEnabledFlag.set -> void
+SharpH266.SliceHeader.ShAlfCrEnabledFlag.get -> byte
+SharpH266.SliceHeader.ShAlfCrEnabledFlag.set -> void
+SharpH266.SliceHeader.ShAlfEnabledFlag.get -> byte
+SharpH266.SliceHeader.ShAlfEnabledFlag.set -> void
+SharpH266.SliceHeader.ShCabacInitFlag.get -> byte
+SharpH266.SliceHeader.ShCabacInitFlag.set -> void
+SharpH266.SliceHeader.ShCbBetaOffsetDiv2.get -> long
+SharpH266.SliceHeader.ShCbBetaOffsetDiv2.set -> void
+SharpH266.SliceHeader.ShCbQpOffset.get -> long
+SharpH266.SliceHeader.ShCbQpOffset.set -> void
+SharpH266.SliceHeader.ShCbTcOffsetDiv2.get -> long
+SharpH266.SliceHeader.ShCbTcOffsetDiv2.set -> void
+SharpH266.SliceHeader.ShCollocatedFromL0Flag.get -> byte
+SharpH266.SliceHeader.ShCollocatedFromL0Flag.set -> void
+SharpH266.SliceHeader.ShCollocatedRefIdx.get -> ulong
+SharpH266.SliceHeader.ShCollocatedRefIdx.set -> void
+SharpH266.SliceHeader.ShCrBetaOffsetDiv2.get -> long
+SharpH266.SliceHeader.ShCrBetaOffsetDiv2.set -> void
+SharpH266.SliceHeader.ShCrQpOffset.get -> long
+SharpH266.SliceHeader.ShCrQpOffset.set -> void
+SharpH266.SliceHeader.ShCrTcOffsetDiv2.get -> long
+SharpH266.SliceHeader.ShCrTcOffsetDiv2.set -> void
+SharpH266.SliceHeader.ShCuChromaQpOffsetEnabledFlag.get -> byte
+SharpH266.SliceHeader.ShCuChromaQpOffsetEnabledFlag.set -> void
+SharpH266.SliceHeader.ShDeblockingFilterDisabledFlag.get -> byte
+SharpH266.SliceHeader.ShDeblockingFilterDisabledFlag.set -> void
+SharpH266.SliceHeader.ShDeblockingParamsPresentFlag.get -> byte
+SharpH266.SliceHeader.ShDeblockingParamsPresentFlag.set -> void
+SharpH266.SliceHeader.ShDepQuantUsedFlag.get -> byte
+SharpH266.SliceHeader.ShDepQuantUsedFlag.set -> void
+SharpH266.SliceHeader.ShEntryOffsetLenMinus1.get -> ulong
+SharpH266.SliceHeader.ShEntryOffsetLenMinus1.set -> void
+SharpH266.SliceHeader.ShEntryPointOffsetMinus1.get -> ulong[]
+SharpH266.SliceHeader.ShEntryPointOffsetMinus1.set -> void
+SharpH266.SliceHeader.ShExplicitScalingListUsedFlag.get -> byte
+SharpH266.SliceHeader.ShExplicitScalingListUsedFlag.set -> void
+SharpH266.SliceHeader.ShExtraBit.get -> byte[]
+SharpH266.SliceHeader.ShExtraBit.set -> void
+SharpH266.SliceHeader.ShJointCbcrQpOffset.get -> long
+SharpH266.SliceHeader.ShJointCbcrQpOffset.set -> void
+SharpH266.SliceHeader.ShLmcsUsedFlag.get -> byte
+SharpH266.SliceHeader.ShLmcsUsedFlag.set -> void
+SharpH266.SliceHeader.ShLumaBetaOffsetDiv2.get -> long
+SharpH266.SliceHeader.ShLumaBetaOffsetDiv2.set -> void
+SharpH266.SliceHeader.ShLumaTcOffsetDiv2.get -> long
+SharpH266.SliceHeader.ShLumaTcOffsetDiv2.set -> void
+SharpH266.SliceHeader.ShNoOutputOfPriorPicsFlag.get -> byte
+SharpH266.SliceHeader.ShNoOutputOfPriorPicsFlag.set -> void
+SharpH266.SliceHeader.ShNumAlfApsIdsLuma.get -> uint
+SharpH266.SliceHeader.ShNumAlfApsIdsLuma.set -> void
+SharpH266.SliceHeader.ShNumRefIdxActiveMinus1.get -> ulong[]
+SharpH266.SliceHeader.ShNumRefIdxActiveMinus1.set -> void
+SharpH266.SliceHeader.ShNumRefIdxActiveOverrideFlag.get -> byte
+SharpH266.SliceHeader.ShNumRefIdxActiveOverrideFlag.set -> void
+SharpH266.SliceHeader.ShNumTilesInSliceMinus1.get -> ulong
+SharpH266.SliceHeader.ShNumTilesInSliceMinus1.set -> void
+SharpH266.SliceHeader.ShPictureHeaderInSliceHeaderFlag.get -> byte
+SharpH266.SliceHeader.ShPictureHeaderInSliceHeaderFlag.set -> void
+SharpH266.SliceHeader.ShQpDelta.get -> long
+SharpH266.SliceHeader.ShQpDelta.set -> void
+SharpH266.SliceHeader.ShSaoChromaUsedFlag.get -> byte
+SharpH266.SliceHeader.ShSaoChromaUsedFlag.set -> void
+SharpH266.SliceHeader.ShSaoLumaUsedFlag.get -> byte
+SharpH266.SliceHeader.ShSaoLumaUsedFlag.set -> void
+SharpH266.SliceHeader.ShSignDataHidingUsedFlag.get -> byte
+SharpH266.SliceHeader.ShSignDataHidingUsedFlag.set -> void
+SharpH266.SliceHeader.ShSliceAddress.get -> ulong
+SharpH266.SliceHeader.ShSliceAddress.set -> void
+SharpH266.SliceHeader.ShSliceHeaderExtensionDataByte.get -> uint[]
+SharpH266.SliceHeader.ShSliceHeaderExtensionDataByte.set -> void
+SharpH266.SliceHeader.ShSliceHeaderExtensionLength.get -> ulong
+SharpH266.SliceHeader.ShSliceHeaderExtensionLength.set -> void
+SharpH266.SliceHeader.ShSliceType.get -> ulong
+SharpH266.SliceHeader.ShSliceType.set -> void
+SharpH266.SliceHeader.ShSubpicId.get -> ulong
+SharpH266.SliceHeader.ShSubpicId.set -> void
+SharpH266.SliceHeader.ShTsResidualCodingDisabledFlag.get -> byte
+SharpH266.SliceHeader.ShTsResidualCodingDisabledFlag.set -> void
+SharpH266.SliceHeader.SliceHeader() -> void
+SharpH266.SliceHeader.Syntax.get -> string
+SharpH266.SliceHeader.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SliceLayerRbsp
+SharpH266.SliceLayerRbsp.HasMoreRbspData.get -> int
+SharpH266.SliceLayerRbsp.HasMoreRbspData.set -> void
+SharpH266.SliceLayerRbsp.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SliceLayerRbsp.ReadNextBits.get -> int[]
+SharpH266.SliceLayerRbsp.ReadNextBits.set -> void
+SharpH266.SliceLayerRbsp.SliceHeader.get -> SharpH266.SliceHeader
+SharpH266.SliceLayerRbsp.SliceHeader.set -> void
+SharpH266.SliceLayerRbsp.SliceLayerRbsp() -> void
+SharpH266.SliceLayerRbsp.Syntax.get -> string
+SharpH266.SliceLayerRbsp.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SphereRotation
+SharpH266.SphereRotation.HasMoreRbspData.get -> int
+SharpH266.SphereRotation.HasMoreRbspData.set -> void
+SharpH266.SphereRotation.PayloadSize.get -> ulong
+SharpH266.SphereRotation.PayloadSize.set -> void
+SharpH266.SphereRotation.PitchRotation.get -> int
+SharpH266.SphereRotation.PitchRotation.set -> void
+SharpH266.SphereRotation.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SphereRotation.ReadNextBits.get -> int[]
+SharpH266.SphereRotation.ReadNextBits.set -> void
+SharpH266.SphereRotation.RollRotation.get -> int
+SharpH266.SphereRotation.RollRotation.set -> void
+SharpH266.SphereRotation.SphereRotation(ulong payloadSize) -> void
+SharpH266.SphereRotation.SphereRotationCancelFlag.get -> byte
+SharpH266.SphereRotation.SphereRotationCancelFlag.set -> void
+SharpH266.SphereRotation.SphereRotationPersistenceFlag.get -> byte
+SharpH266.SphereRotation.SphereRotationPersistenceFlag.set -> void
+SharpH266.SphereRotation.SphereRotationReservedZero6bits.get -> uint
+SharpH266.SphereRotation.SphereRotationReservedZero6bits.set -> void
+SharpH266.SphereRotation.Syntax.get -> string
+SharpH266.SphereRotation.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SphereRotation.YawRotation.get -> int
+SharpH266.SphereRotation.YawRotation.set -> void
+SharpH266.SublayerHrdParameters
+SharpH266.SublayerHrdParameters.BitRateDuValueMinus1.get -> ulong[][]
+SharpH266.SublayerHrdParameters.BitRateDuValueMinus1.set -> void
+SharpH266.SublayerHrdParameters.BitRateValueMinus1.get -> ulong[][]
+SharpH266.SublayerHrdParameters.BitRateValueMinus1.set -> void
+SharpH266.SublayerHrdParameters.CbrFlag.get -> byte[][]
+SharpH266.SublayerHrdParameters.CbrFlag.set -> void
+SharpH266.SublayerHrdParameters.CpbSizeDuValueMinus1.get -> ulong[][]
+SharpH266.SublayerHrdParameters.CpbSizeDuValueMinus1.set -> void
+SharpH266.SublayerHrdParameters.CpbSizeValueMinus1.get -> ulong[][]
+SharpH266.SublayerHrdParameters.CpbSizeValueMinus1.set -> void
+SharpH266.SublayerHrdParameters.HasMoreRbspData.get -> int
+SharpH266.SublayerHrdParameters.HasMoreRbspData.set -> void
+SharpH266.SublayerHrdParameters.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SublayerHrdParameters.ReadNextBits.get -> int[]
+SharpH266.SublayerHrdParameters.ReadNextBits.set -> void
+SharpH266.SublayerHrdParameters.SubLayerId.get -> uint
+SharpH266.SublayerHrdParameters.SubLayerId.set -> void
+SharpH266.SublayerHrdParameters.SublayerHrdParameters(uint subLayerId) -> void
+SharpH266.SublayerHrdParameters.Syntax.get -> string
+SharpH266.SublayerHrdParameters.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SubpicLevelInfo
+SharpH266.SubpicLevelInfo.HasMoreRbspData.get -> int
+SharpH266.SubpicLevelInfo.HasMoreRbspData.set -> void
+SharpH266.SubpicLevelInfo.PayloadSize.get -> ulong
+SharpH266.SubpicLevelInfo.PayloadSize.set -> void
+SharpH266.SubpicLevelInfo.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.SubpicLevelInfo.ReadNextBits.get -> int[]
+SharpH266.SubpicLevelInfo.ReadNextBits.set -> void
+SharpH266.SubpicLevelInfo.SliAlignmentZeroBit.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpH266.SubpicLevelInfo.SliAlignmentZeroBit.set -> void
+SharpH266.SubpicLevelInfo.SliCbrConstraintFlag.get -> byte
+SharpH266.SubpicLevelInfo.SliCbrConstraintFlag.set -> void
+SharpH266.SubpicLevelInfo.SliExplicitFractionPresentFlag.get -> byte
+SharpH266.SubpicLevelInfo.SliExplicitFractionPresentFlag.set -> void
+SharpH266.SubpicLevelInfo.SliMaxSublayersMinus1.get -> uint
+SharpH266.SubpicLevelInfo.SliMaxSublayersMinus1.set -> void
+SharpH266.SubpicLevelInfo.SliNonSubpicLayersFraction.get -> uint[][]
+SharpH266.SubpicLevelInfo.SliNonSubpicLayersFraction.set -> void
+SharpH266.SubpicLevelInfo.SliNumRefLevelsMinus1.get -> uint
+SharpH266.SubpicLevelInfo.SliNumRefLevelsMinus1.set -> void
+SharpH266.SubpicLevelInfo.SliNumSubpicsMinus1.get -> ulong
+SharpH266.SubpicLevelInfo.SliNumSubpicsMinus1.set -> void
+SharpH266.SubpicLevelInfo.SliRefLevelFractionMinus1.get -> uint[][][]
+SharpH266.SubpicLevelInfo.SliRefLevelFractionMinus1.set -> void
+SharpH266.SubpicLevelInfo.SliRefLevelIdc.get -> uint[][]
+SharpH266.SubpicLevelInfo.SliRefLevelIdc.set -> void
+SharpH266.SubpicLevelInfo.SliSublayerInfoPresentFlag.get -> byte
+SharpH266.SubpicLevelInfo.SliSublayerInfoPresentFlag.set -> void
+SharpH266.SubpicLevelInfo.SubpicLevelInfo(ulong payloadSize) -> void
+SharpH266.SubpicLevelInfo.Syntax.get -> string
+SharpH266.SubpicLevelInfo.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.UserDataRegisteredItutT35
+SharpH266.UserDataRegisteredItutT35.HasMoreRbspData.get -> int
+SharpH266.UserDataRegisteredItutT35.HasMoreRbspData.set -> void
+SharpH266.UserDataRegisteredItutT35.ItutT35CountryCode.get -> byte
+SharpH266.UserDataRegisteredItutT35.ItutT35CountryCode.set -> void
+SharpH266.UserDataRegisteredItutT35.ItutT35CountryCodeExtensionByte.get -> byte
+SharpH266.UserDataRegisteredItutT35.ItutT35CountryCodeExtensionByte.set -> void
+SharpH266.UserDataRegisteredItutT35.ItutT35PayloadByte.get -> System.Collections.Generic.Dictionary<int, byte>
+SharpH266.UserDataRegisteredItutT35.ItutT35PayloadByte.set -> void
+SharpH266.UserDataRegisteredItutT35.PayloadSize.get -> ulong
+SharpH266.UserDataRegisteredItutT35.PayloadSize.set -> void
+SharpH266.UserDataRegisteredItutT35.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.UserDataRegisteredItutT35.ReadNextBits.get -> int[]
+SharpH266.UserDataRegisteredItutT35.ReadNextBits.set -> void
+SharpH266.UserDataRegisteredItutT35.Syntax.get -> string
+SharpH266.UserDataRegisteredItutT35.UserDataRegisteredItutT35(ulong payloadSize) -> void
+SharpH266.UserDataRegisteredItutT35.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.UserDataUnregistered
+SharpH266.UserDataUnregistered.HasMoreRbspData.get -> int
+SharpH266.UserDataUnregistered.HasMoreRbspData.set -> void
+SharpH266.UserDataUnregistered.PayloadSize.get -> ulong
+SharpH266.UserDataUnregistered.PayloadSize.set -> void
+SharpH266.UserDataUnregistered.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.UserDataUnregistered.ReadNextBits.get -> int[]
+SharpH266.UserDataUnregistered.ReadNextBits.set -> void
+SharpH266.UserDataUnregistered.Syntax.get -> string
+SharpH266.UserDataUnregistered.UserDataPayloadByte.get -> byte[]
+SharpH266.UserDataUnregistered.UserDataPayloadByte.set -> void
+SharpH266.UserDataUnregistered.UserDataUnregistered(ulong payloadSize) -> void
+SharpH266.UserDataUnregistered.UuidIsoIec11578.get -> System.Numerics.BigInteger
+SharpH266.UserDataUnregistered.UuidIsoIec11578.set -> void
+SharpH266.UserDataUnregistered.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.VideoParameterSetRbsp
+SharpH266.VideoParameterSetRbsp.DpbParameters.get -> SharpH266.DpbParameters[]
+SharpH266.VideoParameterSetRbsp.DpbParameters.set -> void
+SharpH266.VideoParameterSetRbsp.GeneralTimingHrdParameters.get -> SharpH266.GeneralTimingHrdParameters
+SharpH266.VideoParameterSetRbsp.GeneralTimingHrdParameters.set -> void
+SharpH266.VideoParameterSetRbsp.HasMoreRbspData.get -> int
+SharpH266.VideoParameterSetRbsp.HasMoreRbspData.set -> void
+SharpH266.VideoParameterSetRbsp.OlsTimingHrdParameters.get -> SharpH266.OlsTimingHrdParameters[]
+SharpH266.VideoParameterSetRbsp.OlsTimingHrdParameters.set -> void
+SharpH266.VideoParameterSetRbsp.ProfileTierLevel.get -> SharpH266.ProfileTierLevel[]
+SharpH266.VideoParameterSetRbsp.ProfileTierLevel.set -> void
+SharpH266.VideoParameterSetRbsp.RbspTrailingBits.get -> SharpH266.RbspTrailingBits
+SharpH266.VideoParameterSetRbsp.RbspTrailingBits.set -> void
+SharpH266.VideoParameterSetRbsp.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.VideoParameterSetRbsp.ReadNextBits.get -> int[]
+SharpH266.VideoParameterSetRbsp.ReadNextBits.set -> void
+SharpH266.VideoParameterSetRbsp.Syntax.get -> string
+SharpH266.VideoParameterSetRbsp.VideoParameterSetRbsp() -> void
+SharpH266.VideoParameterSetRbsp.VpsAllIndependentLayersFlag.get -> byte
+SharpH266.VideoParameterSetRbsp.VpsAllIndependentLayersFlag.set -> void
+SharpH266.VideoParameterSetRbsp.VpsDefaultPtlDpbHrdMaxTidFlag.get -> byte
+SharpH266.VideoParameterSetRbsp.VpsDefaultPtlDpbHrdMaxTidFlag.set -> void
+SharpH266.VideoParameterSetRbsp.VpsDirectRefLayerFlag.get -> byte[][]
+SharpH266.VideoParameterSetRbsp.VpsDirectRefLayerFlag.set -> void
+SharpH266.VideoParameterSetRbsp.VpsDpbMaxTid.get -> uint[]
+SharpH266.VideoParameterSetRbsp.VpsDpbMaxTid.set -> void
+SharpH266.VideoParameterSetRbsp.VpsEachLayerIsAnOlsFlag.get -> byte
+SharpH266.VideoParameterSetRbsp.VpsEachLayerIsAnOlsFlag.set -> void
+SharpH266.VideoParameterSetRbsp.VpsExtensionDataFlag.get -> System.Collections.Generic.Dictionary<int, byte>
+SharpH266.VideoParameterSetRbsp.VpsExtensionDataFlag.set -> void
+SharpH266.VideoParameterSetRbsp.VpsExtensionFlag.get -> byte
+SharpH266.VideoParameterSetRbsp.VpsExtensionFlag.set -> void
+SharpH266.VideoParameterSetRbsp.VpsHrdMaxTid.get -> uint[]
+SharpH266.VideoParameterSetRbsp.VpsHrdMaxTid.set -> void
+SharpH266.VideoParameterSetRbsp.VpsIndependentLayerFlag.get -> byte[]
+SharpH266.VideoParameterSetRbsp.VpsIndependentLayerFlag.set -> void
+SharpH266.VideoParameterSetRbsp.VpsLayerId.get -> uint[]
+SharpH266.VideoParameterSetRbsp.VpsLayerId.set -> void
+SharpH266.VideoParameterSetRbsp.VpsMaxLayersMinus1.get -> uint
+SharpH266.VideoParameterSetRbsp.VpsMaxLayersMinus1.set -> void
+SharpH266.VideoParameterSetRbsp.VpsMaxSublayersMinus1.get -> uint
+SharpH266.VideoParameterSetRbsp.VpsMaxSublayersMinus1.set -> void
+SharpH266.VideoParameterSetRbsp.VpsMaxTidIlRefPicsPlus1.get -> uint[][]
+SharpH266.VideoParameterSetRbsp.VpsMaxTidIlRefPicsPlus1.set -> void
+SharpH266.VideoParameterSetRbsp.VpsMaxTidRefPresentFlag.get -> byte[]
+SharpH266.VideoParameterSetRbsp.VpsMaxTidRefPresentFlag.set -> void
+SharpH266.VideoParameterSetRbsp.VpsNumDpbParamsMinus1.get -> ulong
+SharpH266.VideoParameterSetRbsp.VpsNumDpbParamsMinus1.set -> void
+SharpH266.VideoParameterSetRbsp.VpsNumOlsTimingHrdParamsMinus1.get -> ulong
+SharpH266.VideoParameterSetRbsp.VpsNumOlsTimingHrdParamsMinus1.set -> void
+SharpH266.VideoParameterSetRbsp.VpsNumOutputLayerSetsMinus2.get -> uint
+SharpH266.VideoParameterSetRbsp.VpsNumOutputLayerSetsMinus2.set -> void
+SharpH266.VideoParameterSetRbsp.VpsNumPtlsMinus1.get -> uint
+SharpH266.VideoParameterSetRbsp.VpsNumPtlsMinus1.set -> void
+SharpH266.VideoParameterSetRbsp.VpsOlsDpbBitdepthMinus8.get -> ulong[]
+SharpH266.VideoParameterSetRbsp.VpsOlsDpbBitdepthMinus8.set -> void
+SharpH266.VideoParameterSetRbsp.VpsOlsDpbChromaFormat.get -> uint[]
+SharpH266.VideoParameterSetRbsp.VpsOlsDpbChromaFormat.set -> void
+SharpH266.VideoParameterSetRbsp.VpsOlsDpbParamsIdx.get -> ulong[]
+SharpH266.VideoParameterSetRbsp.VpsOlsDpbParamsIdx.set -> void
+SharpH266.VideoParameterSetRbsp.VpsOlsDpbPicHeight.get -> ulong[]
+SharpH266.VideoParameterSetRbsp.VpsOlsDpbPicHeight.set -> void
+SharpH266.VideoParameterSetRbsp.VpsOlsDpbPicWidth.get -> ulong[]
+SharpH266.VideoParameterSetRbsp.VpsOlsDpbPicWidth.set -> void
+SharpH266.VideoParameterSetRbsp.VpsOlsModeIdc.get -> uint
+SharpH266.VideoParameterSetRbsp.VpsOlsModeIdc.set -> void
+SharpH266.VideoParameterSetRbsp.VpsOlsOutputLayerFlag.get -> byte[][]
+SharpH266.VideoParameterSetRbsp.VpsOlsOutputLayerFlag.set -> void
+SharpH266.VideoParameterSetRbsp.VpsOlsPtlIdx.get -> uint[]
+SharpH266.VideoParameterSetRbsp.VpsOlsPtlIdx.set -> void
+SharpH266.VideoParameterSetRbsp.VpsOlsTimingHrdIdx.get -> ulong[]
+SharpH266.VideoParameterSetRbsp.VpsOlsTimingHrdIdx.set -> void
+SharpH266.VideoParameterSetRbsp.VpsPtPresentFlag.get -> byte[]
+SharpH266.VideoParameterSetRbsp.VpsPtPresentFlag.set -> void
+SharpH266.VideoParameterSetRbsp.VpsPtlAlignmentZeroBit.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpH266.VideoParameterSetRbsp.VpsPtlAlignmentZeroBit.set -> void
+SharpH266.VideoParameterSetRbsp.VpsPtlMaxTid.get -> uint[]
+SharpH266.VideoParameterSetRbsp.VpsPtlMaxTid.set -> void
+SharpH266.VideoParameterSetRbsp.VpsSublayerCpbParamsPresentFlag.get -> byte
+SharpH266.VideoParameterSetRbsp.VpsSublayerCpbParamsPresentFlag.set -> void
+SharpH266.VideoParameterSetRbsp.VpsSublayerDpbParamsPresentFlag.get -> byte
+SharpH266.VideoParameterSetRbsp.VpsSublayerDpbParamsPresentFlag.set -> void
+SharpH266.VideoParameterSetRbsp.VpsTimingHrdParamsPresentFlag.get -> byte
+SharpH266.VideoParameterSetRbsp.VpsTimingHrdParamsPresentFlag.set -> void
+SharpH266.VideoParameterSetRbsp.VpsVideoParameterSetId.get -> uint
+SharpH266.VideoParameterSetRbsp.VpsVideoParameterSetId.set -> void
+SharpH266.VideoParameterSetRbsp.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.VuiParameters
+SharpH266.VuiParameters.HasMoreRbspData.get -> int
+SharpH266.VuiParameters.HasMoreRbspData.set -> void
+SharpH266.VuiParameters.PayloadSize.get -> ulong
+SharpH266.VuiParameters.PayloadSize.set -> void
+SharpH266.VuiParameters.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.VuiParameters.ReadNextBits.get -> int[]
+SharpH266.VuiParameters.ReadNextBits.set -> void
+SharpH266.VuiParameters.Syntax.get -> string
+SharpH266.VuiParameters.VuiAspectRatioConstantFlag.get -> byte
+SharpH266.VuiParameters.VuiAspectRatioConstantFlag.set -> void
+SharpH266.VuiParameters.VuiAspectRatioIdc.get -> uint
+SharpH266.VuiParameters.VuiAspectRatioIdc.set -> void
+SharpH266.VuiParameters.VuiAspectRatioInfoPresentFlag.get -> byte
+SharpH266.VuiParameters.VuiAspectRatioInfoPresentFlag.set -> void
+SharpH266.VuiParameters.VuiChromaLocInfoPresentFlag.get -> byte
+SharpH266.VuiParameters.VuiChromaLocInfoPresentFlag.set -> void
+SharpH266.VuiParameters.VuiChromaSampleLocTypeBottomField.get -> ulong
+SharpH266.VuiParameters.VuiChromaSampleLocTypeBottomField.set -> void
+SharpH266.VuiParameters.VuiChromaSampleLocTypeFrame.get -> ulong
+SharpH266.VuiParameters.VuiChromaSampleLocTypeFrame.set -> void
+SharpH266.VuiParameters.VuiChromaSampleLocTypeTopField.get -> ulong
+SharpH266.VuiParameters.VuiChromaSampleLocTypeTopField.set -> void
+SharpH266.VuiParameters.VuiColourDescriptionPresentFlag.get -> byte
+SharpH266.VuiParameters.VuiColourDescriptionPresentFlag.set -> void
+SharpH266.VuiParameters.VuiColourPrimaries.get -> uint
+SharpH266.VuiParameters.VuiColourPrimaries.set -> void
+SharpH266.VuiParameters.VuiFullRangeFlag.get -> byte
+SharpH266.VuiParameters.VuiFullRangeFlag.set -> void
+SharpH266.VuiParameters.VuiInterlacedSourceFlag.get -> byte
+SharpH266.VuiParameters.VuiInterlacedSourceFlag.set -> void
+SharpH266.VuiParameters.VuiMatrixCoeffs.get -> uint
+SharpH266.VuiParameters.VuiMatrixCoeffs.set -> void
+SharpH266.VuiParameters.VuiNonPackedConstraintFlag.get -> byte
+SharpH266.VuiParameters.VuiNonPackedConstraintFlag.set -> void
+SharpH266.VuiParameters.VuiNonProjectedConstraintFlag.get -> byte
+SharpH266.VuiParameters.VuiNonProjectedConstraintFlag.set -> void
+SharpH266.VuiParameters.VuiOverscanAppropriateFlag.get -> byte
+SharpH266.VuiParameters.VuiOverscanAppropriateFlag.set -> void
+SharpH266.VuiParameters.VuiOverscanInfoPresentFlag.get -> byte
+SharpH266.VuiParameters.VuiOverscanInfoPresentFlag.set -> void
+SharpH266.VuiParameters.VuiParameters(ulong payloadSize) -> void
+SharpH266.VuiParameters.VuiProgressiveSourceFlag.get -> byte
+SharpH266.VuiParameters.VuiProgressiveSourceFlag.set -> void
+SharpH266.VuiParameters.VuiSarHeight.get -> uint
+SharpH266.VuiParameters.VuiSarHeight.set -> void
+SharpH266.VuiParameters.VuiSarWidth.get -> uint
+SharpH266.VuiParameters.VuiSarWidth.set -> void
+SharpH266.VuiParameters.VuiTransferCharacteristics.get -> uint
+SharpH266.VuiParameters.VuiTransferCharacteristics.set -> void
+SharpH266.VuiParameters.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.VuiPayload
+SharpH266.VuiPayload.HasMoreRbspData.get -> int
+SharpH266.VuiPayload.HasMoreRbspData.set -> void
+SharpH266.VuiPayload.PayloadSize.get -> ulong
+SharpH266.VuiPayload.PayloadSize.set -> void
+SharpH266.VuiPayload.Read(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+SharpH266.VuiPayload.ReadNextBits.get -> int[]
+SharpH266.VuiPayload.ReadNextBits.set -> void
+SharpH266.VuiPayload.Syntax.get -> string
+SharpH266.VuiPayload.VuiParameters.get -> SharpH266.VuiParameters
+SharpH266.VuiPayload.VuiParameters.set -> void
+SharpH266.VuiPayload.VuiPayload(ulong payloadSize) -> void
+SharpH266.VuiPayload.VuiPayloadBitEqualToOne.get -> uint
+SharpH266.VuiPayload.VuiPayloadBitEqualToOne.set -> void
+SharpH266.VuiPayload.VuiPayloadBitEqualToZero.get -> System.Collections.Generic.Dictionary<int, uint>
+SharpH266.VuiPayload.VuiPayloadBitEqualToZero.set -> void
+SharpH266.VuiPayload.VuiReservedPayloadExtensionData.get -> ulong
+SharpH266.VuiPayload.VuiReservedPayloadExtensionData.set -> void
+SharpH266.VuiPayload.Write(SharpH26X.IItuContext context, SharpH26X.ItuStream stream) -> ulong
+const SharpH266.H266Constants.ALF_APS = 0 -> int
+const SharpH266.H266Constants.LMCS_APS = 1 -> int
+const SharpH266.H266Constants.SCALING_APS = 2 -> int
+const SharpH266.H266FrameTypes.B = 0 -> ulong
+const SharpH266.H266FrameTypes.I = 2 -> ulong
+const SharpH266.H266FrameTypes.P = 1 -> ulong
+const SharpH266.H266NALTypes.AUD_NUT = 20 -> uint
+const SharpH266.H266NALTypes.CRA_NUT = 9 -> uint
+const SharpH266.H266NALTypes.DCI_NUT = 13 -> uint
+const SharpH266.H266NALTypes.EOB_NUT = 22 -> uint
+const SharpH266.H266NALTypes.EOS_NUT = 21 -> uint
+const SharpH266.H266NALTypes.FD_NUT = 25 -> uint
+const SharpH266.H266NALTypes.GDR_NUT = 10 -> uint
+const SharpH266.H266NALTypes.IDR_N_LP = 8 -> uint
+const SharpH266.H266NALTypes.IDR_W_RADL = 7 -> uint
+const SharpH266.H266NALTypes.OPI_NUT = 12 -> uint
+const SharpH266.H266NALTypes.PH_NUT = 19 -> uint
+const SharpH266.H266NALTypes.PPS_NUT = 16 -> uint
+const SharpH266.H266NALTypes.PREFIX_APS_NUT = 17 -> uint
+const SharpH266.H266NALTypes.PREFIX_SEI_NUT = 23 -> uint
+const SharpH266.H266NALTypes.RADL_NUT = 2 -> uint
+const SharpH266.H266NALTypes.RASL_NUT = 3 -> uint
+const SharpH266.H266NALTypes.RSV_IRAP_11 = 11 -> uint
+const SharpH266.H266NALTypes.RSV_NVCL_26 = 26 -> uint
+const SharpH266.H266NALTypes.RSV_NVCL_27 = 27 -> uint
+const SharpH266.H266NALTypes.RSV_VCL_4 = 4 -> uint
+const SharpH266.H266NALTypes.RSV_VCL_5 = 5 -> uint
+const SharpH266.H266NALTypes.RSV_VCL_6 = 6 -> uint
+const SharpH266.H266NALTypes.SPS_NUT = 15 -> uint
+const SharpH266.H266NALTypes.STSA_NUT = 1 -> uint
+const SharpH266.H266NALTypes.SUFFIX_APS_NUT = 18 -> uint
+const SharpH266.H266NALTypes.SUFFIX_SEI_NUT = 24 -> uint
+const SharpH266.H266NALTypes.TRAIL_NUT = 0 -> uint
+const SharpH266.H266NALTypes.UNSPEC_28 = 28 -> uint
+const SharpH266.H266NALTypes.UNSPEC_29 = 29 -> uint
+const SharpH266.H266NALTypes.UNSPEC_30 = 30 -> uint
+const SharpH266.H266NALTypes.UNSPEC_31 = 31 -> uint
+const SharpH266.H266NALTypes.VPS_NUT = 14 -> uint
+static SharpH266.H266Context.NewScalingList() -> uint[][]
+static SharpH266.H266Extensions.CalculateDimensions(this SharpH266.SeqParameterSetRbsp sps) -> (uint Width, uint Height)
+static SharpH266.H266Extensions.CalculateTimescale(this SharpH266.SeqParameterSetRbsp sps) -> (uint Timescale, uint FrameTick)
+static SharpH266.H266FrameTypes.IsB(ulong value) -> bool
+static SharpH266.H266FrameTypes.IsI(ulong value) -> bool
+static SharpH266.H266FrameTypes.IsP(ulong value) -> bool
+static readonly SharpH266.H266Context.DiagScanOrder -> int[][][][]
