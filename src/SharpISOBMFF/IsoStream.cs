@@ -3417,7 +3417,7 @@ namespace SharpISOBMFF
     }
 
 #if !NET7_0_OR_GREATER
-    public static class StreamExtensions
+    internal static class StreamExtensions
     {
         public static int ReadExactly(this Stream stream, byte[] buffer, int offset, int count)
         {
