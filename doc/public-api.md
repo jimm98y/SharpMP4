@@ -1,15 +1,14 @@
 # Public API
 
-What the libraries of SharpMP4 expose is written down, and a change to it does not build until it
-is written down too. The libraries are SharpMP4, SharpISOBMFF, SharpMP4Common, SharpH26X, SharpH261,
+What the libraries of SharpMP4 expose is written down, and a removal from it does not build until it is written down too, an addition warns until it is. The libraries are SharpMP4, SharpISOBMFF, SharpMP4Common, SharpH26X, SharpH261,
 SharpH262, SharpH263, SharpH264, SharpH265, SharpH266, SharpMPEG4, SharpProRes, SharpAVX, SharpAV1,
 SharpAV2 and SharpVP9, and two checks run on every `dotnet build` of each:
 
 - **The API files.** `PublicAPI.Shipped.txt` and `PublicAPI.Unshipped.txt` next to each project list
   its public types and members, the generated ones (the boxes, the syntax of each codec) among them.
   They are the same on all three target frameworks. Shipped is the API as released; Unshipped is what
-  changed since. A public symbol missing from them fails the build with RS0016, a listed one that is
-  gone with RS0017.
+  changed since. A public symbol missing from them is a warning, RS0016, until it is
+  listed - an addition breaks no one - and a listed one that is gone fails the build with RS0017.
 - **Package validation.** Each package being built is checked for its target frameworks agreeing
   with one another: what net481 offers, net8.0 and net10.0 have to offer too. A library with a release
   is compared with it as well (`PackageValidationBaselineVersion` in its project, 0.3.2 now), and every
@@ -18,7 +17,7 @@ SharpAV2 and SharpVP9, and two checks run on every `dotnet build` of each:
 
 ## Adding to the API
 
-Build, and accept the RS0016 fix in the IDE ("Add to public API"), or from the command line:
+List what the RS0016 warnings name: accept their fix in the IDE ("Add to public API"), or from the command line:
 
 ```
 dotnet format analyzers src/SharpMP4.sln --diagnostics RS0016 --severity warn
