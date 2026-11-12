@@ -29,26 +29,32 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
 }
 ```
 Create a new `Container` and call `Read` to get the in-memory representation of all the boxes.
-```cs 
-var mp4 = new Container();
-mp4.Read(new IsoStream(inputFileStream));    ...
-
-```
-To process this in-memory representation and read the audio/video samples, create a new `VideoReader`:
 ```cs
-VideoReader videoReader = new VideoReader();
+var mp4 = new Container();
+mp4.Read(new IsoStream(inputFileStream));
+```
+To process this in-memory representation and read the audio/video samples, create a new `VideoReader`. Disposed, it disposes the tracks it made; the `Container` and the stream it was read from stay yours:
+```cs
+using VideoReader videoReader = new VideoReader();
 videoReader.Parse(mp4);
 ```
 Now it is possible to get all the tracks from the video:
 ```cs
 IEnumerable<ITrack> tracks = videoReader.GetTracks();
 ```
-To read the first track samples, call:
+To read the samples of the first track, call `ReadSample` until it returns `null`:
 ```cs
 uint trackID = tracks.First().TrackID;
-MediaSample sample = videoReader.ReadSample(trackID);
+MediaSample sample;
+while ((sample = videoReader.ReadSample(trackID)) != null)
+{
+    // sample.Data, sample.PTS, sample.DTS, sample.Duration, sample.IsRandomAccessPoint
+}
 ```
-Where `trackID` is the ID of the track you want to read.
+Where `trackID` is the ID of the track you want to read. A video sample holds its NAL units (or OBUs, frames) as the file has them; `ParseSample` splits it into them, and `GetContainerSamples` of the track gives the parameter sets of its sample entry:
+```cs
+IEnumerable<ArraySegment<byte>> units = videoReader.ParseSample(trackID, sample.Data);
+```
 
 ## Build MP4
 To write `MP4` into a file, you first have to create the file:
@@ -60,12 +66,12 @@ using (Stream output = new BufferedStream(new FileStream("bunny_out.mp4", FileMo
 ```
 Next, create the builder depending upon the output format. Currently, there are two builders - `FragmentedMp4Builder` and `Mp4Builder`.
 ```cs
-IMp4Builder outputBuilder = new Mp4Builder(new SingleStreamOutput(output));
+using IMp4Builder outputBuilder = new Mp4Builder(new SingleStreamOutput(output));
 ```
 For fragmented MP4 output, use `FragmentedMp4Builder` with the fragment duration in miliseconds:
 ```cs
 // use fragment duration 2 seconds
-IMp4Builder outputBuilder = new FragmentedMp4Builder(new SingleStreamOutput(output), 2000);
+using IMp4Builder outputBuilder = new FragmentedMp4Builder(new SingleStreamOutput(output), 2000);
 ```
 To write another format of the MP4 family - `.m4v`, `.m4a`, `.m4b`, `.3gp`, `.3g2` or `.mov` - set `FileFormat` before adding the tracks. The `ftyp` then says what the file is, and the builder refuses a track the format cannot hold, such as video in an `.m4a` or a second audio track in a 3GP file of the Basic profile:
 ```cs
@@ -103,28 +109,36 @@ var mp3 = new Mp3Track(2, 44100);                              // MPEG-1 or MPEG
 var ac3 = new AC3Track(AC3SyncFrame.Parse(frame));             // a sync frame's syncinfo and bsi
 var eac3 = new EAC3Track(dataRate, substreams);                 // 'dec3''s data rate and independent substreams
 ```
-An MP3 encoder hands out one frame or several at a time: `Mp3Track.ParseFrames` splits them, a sample each.
+An MP3 encoder hands out one frame or several at a time: the track's `ParseFrames` splits them, a sample each:
+```cs
+foreach (ArraySegment<byte> frame in mp3.ParseFrames(buffer, 0, length))
+    outputBuilder.ProcessTrackSample(mp3.TrackID, frame);
+```
 
 PCM is made of its format and written as QuickTime's `lpcm`, as Apple's devices write it. It takes a block of frames at a time and writes a sample of each, as QuickTime has it. Reading it, QuickTime's `lpcm`, `sowt`, `twos`, `raw `, `in24`, `in32`, `fl32` and `fl64` and ISO's `ipcm` and `fpcm` are read, and `ReadSamples` reads a run of frames at once rather than a read of each:
 ```cs
 var pcm = new PcmTrack(48000, 2, 16);                           // rate, channels, bits; isFloat and isLittleEndian optional
 outputBuilder.ProcessTrackSample(pcm.TrackID, block, block.Length / pcm.BytesPerFrame);
-var run = reader.ReadSamples(trackID, 4800);                    // up to 4800 frames, their duration together
+var run = videoReader.ReadSamples(trackID, 4800);               // up to 4800 frames, their duration together
 ```
 
-When done, call `FinalizeMedia` to create the video file:
+When done, call `FinalizeMedia` to create the video file. Disposing the builder then lets go of where the samples waited - what `FinalizeMedia` has not written is not written. The tracks you made are yours to dispose:
 ```cs
 outputBuilder.FinalizeMedia();
 ```
 ## Extensibility
 ### Logging
-There is an `IMp4Logger` interface exposed on the `Mp4Builder`, `FragmentedMp4Builder`, `VideoReader` and `ImageReader` instances where you can supply your own logger implementation, or use an existing one:
+There is an `IMp4Logger` property, `Logger`, on the `Container`, `IsoStream`, `VideoReader`, `ImageReader`, the builders, their outputs and the tracks, where you can supply your own logger implementation, or use an existing one. `Container`, `VideoReader` and `SingleStreamOutput` take it in their constructor too, and a builder hands its logger to the tracks added to it that have none of their own:
 ```cs
-mp4Builder.Logger = new ConsoleMp4Logger();
+var logger = new ConsoleMp4Logger();
+var mp4 = new Container(logger);
+mp4.Read(new IsoStream(inputFileStream) { Logger = logger });
+using var videoReader = new VideoReader(logger);
+outputBuilder.Logger = logger;
 ```
 You can also enable/disable different trace levels like:
 ```cs
-mp4Builder.Logger.IsWarnEnabled = false;
+logger.IsWarningEnabled = false;
 ```
 
 ## Conformance bitstreams
