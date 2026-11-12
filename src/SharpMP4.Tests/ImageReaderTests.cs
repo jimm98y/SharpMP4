@@ -55,7 +55,7 @@ public class ImageReaderTests
         byte[] between = Ascii("<not of any item>");
         byte[] second = Ascii("second extent of item 1");
         byte[] idat = Ascii("..item 2 in the idat..");
-        byte[] item2 = idat[2..^2];
+        byte[] item2 = idat.AsSpan()[2..^2].ToArray();
 
         var ftyp = Box("ftyp", Ascii("heic"), U32(0), Ascii("mif1"), Ascii("heic"));
 

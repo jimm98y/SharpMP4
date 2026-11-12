@@ -54,7 +54,7 @@ public class AccessUnitTimingTests
             int end = k + 1 < starts.Count ? starts[k + 1] - 3 : stream.Length;
             while (end > starts[k] && stream[end - 1] == 0)
                 end--; // the leading zero of a four byte start code
-            byte[] nal = stream[starts[k]..end];
+            byte[] nal = stream.AsSpan()[starts[k]..end].ToArray();
             int type = nal[0] & 0x1f;
             bool isSlice = type == 1 || type == 5;
             if (isSlice)

@@ -47,7 +47,7 @@ public class TrackConformanceTests
                     failures.Add($"{name}, {how}: {actual.Count} samples of {expected.Count} temporal units");
                     continue;
                 }
-                int differs = Enumerable.Range(0, expected.Count).FirstOrDefault(i => !expected[i].SequenceEqual(actual[i]), -1);
+                int differs = Enumerable.Range(0, expected.Count).Where(i => !expected[i].SequenceEqual(actual[i])).DefaultIfEmpty(-1).First();
                 if (differs >= 0)
                     failures.Add($"{name}, {how}: sample {differs} is not its temporal unit");
             }

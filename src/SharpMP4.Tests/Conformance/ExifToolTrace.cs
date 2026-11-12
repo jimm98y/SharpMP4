@@ -211,9 +211,9 @@ public static partial class ExifToolTrace
         return prefixes;
     }
 
-    [GeneratedRegex(@"(\d+)\s*=>\s*'([^']+)'")]
-    private static partial Regex MacintoshEntry();
+    private static readonly Regex macintoshEntryRegex = new(@"(\d+)\s*=>\s*'([^']+)'", RegexOptions.Compiled);
+    private static Regex MacintoshEntry() => macintoshEntryRegex;
 
-    [GeneratedRegex(@"^\s*'?([\w-]+)'?\s*=>\s*'([^']+)'", RegexOptions.Multiline)]
-    private static partial Regex NamespaceEntry();
+    private static readonly Regex namespaceEntryRegex = new(@"^\s*'?([\w-]+)'?\s*=>\s*'([^']+)'", RegexOptions.Multiline | RegexOptions.Compiled);
+    private static Regex NamespaceEntry() => namespaceEntryRegex;
 }

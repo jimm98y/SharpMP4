@@ -154,7 +154,7 @@ public class EncryptedTrackTests
                     {
                         int length = 0;
                         for (int k = 0; k < lengthSize; k++)
-                            length = length << 8 | data[p + k];
+                            length = length << 8 | data.Array![data.Offset + p + k];
                         p += lengthSize;
                         h264.Write(startCode);
                         h264.Write(data.Array!, data.Offset + p, length);

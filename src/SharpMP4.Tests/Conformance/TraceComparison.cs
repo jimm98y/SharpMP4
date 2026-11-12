@@ -343,7 +343,7 @@ public static class TraceComparison
             .Select(line => line.Trim())
             .Where(line => line.StartsWith("at Sharp", StringComparison.Ordinal))
             .Take(3)
-            .Select(line => line.Split(" in ")[0].Substring(3));
+            .Select(line => line.Split([" in "], StringSplitOptions.None)[0].Substring(3));
 
         return "\n      at: " + string.Join(" <- ", frames);
     }

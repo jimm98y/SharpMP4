@@ -490,8 +490,9 @@ public static partial class MetadataComparison
         byte[] bytes => "base64:" + Convert.ToBase64String(bytes),
         int[] numbers => string.Join(" ", numbers),
         string[] strings => string.Join(" ", strings),
-        // a chapter as ExifTool gives it: its start in seconds, and its title
-        MetadataChapter[] chapters => string.Join(" ", chapters.Select(c => $"{c.Start.TotalSeconds.ToString("R", CultureInfo.InvariantCulture)} {c.Title}")),
+        // a chapter as ExifTool gives it: its start in seconds, and its title - the ticks divided, as .NET's TotalSeconds
+        // does; .NET Framework's multiplies them by 1e-7, a second's tick, which is not exactly a double
+        MetadataChapter[] chapters => string.Join(" ", chapters.Select(c => $"{(c.Start.Ticks / (double)TimeSpan.TicksPerSecond).ToString("R", CultureInfo.InvariantCulture)} {c.Title}")),
         double d => d.ToString("R", CultureInfo.InvariantCulture),
         IFormattable f => f.ToString(null, CultureInfo.InvariantCulture),
         _ => value.ToString() ?? "",
@@ -538,7 +539,7 @@ public static partial class MetadataComparison
         // A list of rationals ExifTool gives as the numbers they are (XMP-aux:LensInfo 18/1 250/1 is 18 250)
         string[] theirItems = exifTool.Split(' '), ourItems = sharp.Split(' ');
         if (ourItems.Length > 1 && ourItems.Length == theirItems.Length && ourItems.Any(item => Rational().IsMatch(item))
-            && theirItems.Zip(ourItems).All(pair => SameValue(pair.First, pair.Second)))
+            && theirItems.Zip(ourItems, SameValue).All(same => same))
             return true;
         // An XMP boolean, True, however it is written
         if (exifTool is "True" or "False" && string.Equals(exifTool, sharp, StringComparison.OrdinalIgnoreCase))
@@ -563,24 +564,24 @@ public static partial class MetadataComparison
     }
 
     private static List<double> Numbers(string text) =>
-        Number().Matches(text).Select(m => double.Parse(m.Value, CultureInfo.InvariantCulture)).ToList();
+        Number().Matches(text).Cast<Match>().Select(m => double.Parse(m.Value, CultureInfo.InvariantCulture)).ToList();
 
-    [GeneratedRegex(@"^com\.(apple\.quicktime\.)?")]
-    private static partial Regex MdtaDomain();
+    private static readonly Regex mdtaDomainRegex = new(@"^com\.(apple\.quicktime\.)?", RegexOptions.Compiled);
+    private static Regex MdtaDomain() => mdtaDomainRegex;
 
-    [GeneratedRegex(@"^Track\d+")]
-    private static partial Regex TrackPrefix();
+    private static readonly Regex trackPrefixRegex = new(@"^Track\d+", RegexOptions.Compiled);
+    private static Regex TrackPrefix() => trackPrefixRegex;
 
-    [GeneratedRegex(@"-([a-z]{2,3}(?:-[A-Z]{2})?|un|smi|nl-NL)$")]
-    private static partial Regex LanguageSuffix();
+    private static readonly Regex languageSuffixRegex = new(@"-([a-z]{2,3}(?:-[A-Z]{2})?|un|smi|nl-NL)$", RegexOptions.Compiled);
+    private static Regex LanguageSuffix() => languageSuffixRegex;
 
     // of the digits 0 to 9: \d is of every script's - Devanagari's १ of Exif text too - which double.Parse is not
-    [GeneratedRegex(@"[-+]?[0-9]+(?:\.[0-9]+)?")]
-    private static partial Regex Number();
+    private static readonly Regex numberRegex = new(@"[-+]?[0-9]+(?:\.[0-9]+)?", RegexOptions.Compiled);
+    private static Regex Number() => numberRegex;
 
-    [GeneratedRegex(@"[^0-9]")]
-    private static partial Regex Digits();
+    private static readonly Regex digitsRegex = new(@"[^0-9]", RegexOptions.Compiled);
+    private static Regex Digits() => digitsRegex;
 
-    [GeneratedRegex(@"^\s*(-?\d+)/(\d+)\s*$")]
-    private static partial Regex Rational();
+    private static readonly Regex rationalRegex = new(@"^\s*(-?\d+)/(\d+)\s*$", RegexOptions.Compiled);
+    private static Regex Rational() => rationalRegex;
 }

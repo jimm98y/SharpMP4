@@ -259,7 +259,7 @@ public class SyncSampleTests
     }
 
     private static bool SameUnits(List<byte[]> a, List<byte[]> b) =>
-        a.Count == b.Count && a.Zip(b).All(x => x.First.AsSpan().SequenceEqual(x.Second));
+        a.Count == b.Count && a.Zip(b, (x, y) => x.AsSpan().SequenceEqual(y)).All(same => same);
 
     private static string Describe(List<byte[]> units, bool av1) => "[" + string.Join(" ", units.Select(u => av1
         ? $"obu{(u[0] >> 3) & 0xF}"

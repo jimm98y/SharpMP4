@@ -463,10 +463,10 @@ public static partial class SharpTrace
         string output = Path.Combine(Path.GetTempPath(), $"sharpmp4-{Guid.NewGuid():N}.ivf");
         using var file = File.Create(output);
         using var writer = new BinaryWriter(file);
-        writer.Write("DKIF"u8);
+        writer.Write("DKIF"u8.ToArray());
         writer.Write((ushort)0);
         writer.Write((ushort)32);
-        writer.Write("AV01"u8);
+        writer.Write("AV01"u8.ToArray());
         writer.Write((ushort)64);
         writer.Write((ushort)64);
         writer.Write(30u);
@@ -511,7 +511,7 @@ public static partial class SharpTrace
             int type = (bytes[position] >> 3) & 0xf;
             if (type == SharpAV1.AV1ObuTypes.OBU_TEMPORAL_DELIMITER && position > start)
             {
-                units.Add(bytes[start..position]);
+                units.Add(bytes.AsSpan()[start..position].ToArray());
                 start = position;
             }
 
@@ -530,7 +530,7 @@ public static partial class SharpTrace
             }
             position = (int)Math.Min(bytes.Length, p + size);
         }
-        units.Add(bytes[start..]);
+        units.Add(bytes.AsSpan()[start..].ToArray());
         return units;
     }
 
@@ -734,8 +734,8 @@ public static partial class SharpTrace
     /// </summary>
     private sealed partial class FieldCapture : IMp4Logger
     {
-        [GeneratedRegex(@"^-* (\S+) +(\d+)   (-?\d+|byte\[\])$")]
-        private static partial Regex FieldLine();
+        private static readonly Regex fieldLineRegex = new(@"^-* (\S+) +(\d+)   (-?\d+|byte\[\])$", RegexOptions.Compiled);
+        private static Regex FieldLine() => fieldLineRegex;
 
         public List<TracedField> Fields { get; set; } = [];
 

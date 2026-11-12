@@ -291,8 +291,8 @@ public class ImageBuilderTests
         uint image = meta.PrimaryResource.ItemID;
         int entry = Array.IndexOf(ipma.ItemID, image);
         var ofImage = ipma.PropertyIndex[entry].Select(i => IsoStream.ToFourCC(iprp.PropertyContainer.Children[i - 1].FourCC)).ToArray();
-        CollectionAssert.AreEqual(new[] { "pasp", "clap", "irot", "imir" }, ofImage[^4..], "the descriptive before the transformative, those as they are applied");
-        CollectionAssert.AreEqual(new[] { false, true, true, true }, ipma.Essential[entry][^4..]);
+        CollectionAssert.AreEqual(new[] { "pasp", "clap", "irot", "imir" }, ofImage.AsSpan()[^4..].ToArray(), "the descriptive before the transformative, those as they are applied");
+        CollectionAssert.AreEqual(new[] { false, true, true, true }, ipma.Essential[entry].AsSpan()[^4..].ToArray());
 
         if (grid)
         {
@@ -424,10 +424,10 @@ public class ImageBuilderTests
         // the descriptive properties in any order - the 'colr' is the image's, before the thumbnail's own - then the
         // transformative, as they are applied
         var ofImage = PropertiesOf(meta, 1);
-        CollectionAssert.AreEquivalent(new[] { "hvcC", "ispe", "pixi", "colr" }, ofImage[..^2]);
-        CollectionAssert.AreEqual(new[] { "clap", "irot" }, ofImage[^2..]);
+        CollectionAssert.AreEquivalent(new[] { "hvcC", "ispe", "pixi", "colr" }, ofImage.AsSpan()[..^2].ToArray());
+        CollectionAssert.AreEqual(new[] { "clap", "irot" }, ofImage.AsSpan()[^2..].ToArray());
         var ofThumbnail = PropertiesOf(meta, 2);
-        CollectionAssert.AreEquivalent(new[] { "hvcC", "ispe", "pixi", "colr" }, ofThumbnail[..^1]);
+        CollectionAssert.AreEquivalent(new[] { "hvcC", "ispe", "pixi", "colr" }, ofThumbnail.AsSpan()[..^1].ToArray());
         Assert.AreEqual("irot", ofThumbnail[^1], "rotated, not cropped");
         Assert.AreEqual(1, meta.Children.OfType<ItemPropertiesBox>().Single().PropertyContainer.Children.OfType<ColourInformationBox>().Count(), "the one 'colr', of both");
     }

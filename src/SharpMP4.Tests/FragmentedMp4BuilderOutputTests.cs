@@ -151,7 +151,7 @@ public class FragmentedMp4BuilderOutputTests
                 long offset = (long)tfra.MoofOffset[i];
                 Assert.AreEqual("moof", System.Text.Encoding.ASCII.GetString(bytes, (int)offset + 4, 4), $"track {tfra.TrackID} entry {i}");
 
-                var moof = (MovieFragmentBox)Read(bytes[(int)offset..]).Children[0];
+                var moof = (MovieFragmentBox)Read(bytes.AsSpan()[(int)offset..].ToArray()).Children[0];
                 var traf = moof.Children.OfType<TrackFragmentBox>().Single();
                 Assert.AreEqual(tfra.TrackID, traf.Children.OfType<TrackFragmentHeaderBox>().Single().TrackID);
                 Assert.AreEqual(1, tfra.TrafNumber[i].Last());

@@ -178,7 +178,7 @@ public class ReaderStreamTests
         foreach (long end in ends)
         {
             var cut = new Container();
-            cut.Read(Open(file[..(int)end], seekable));
+            cut.Read(Open(file.AsSpan()[..(int)end].ToArray(), seekable));
             Assert.IsFalse(cut.IsTruncated, $"cut at {end}, where a box ends");
         }
         foreach (var box in whole.Children)
@@ -188,7 +188,7 @@ public class ReaderStreamTests
             foreach (long at in new[] { start + 9, end - 1, start + (long)box.Size / 2 }.Where(x => x > start + 8 && x < end))
             {
                 var cut = new Container();
-                cut.Read(Open(file[..(int)at], seekable));
+                cut.Read(Open(file.AsSpan()[..(int)at].ToArray(), seekable));
                 Assert.IsTrue(cut.IsTruncated, $"cut at {at}, within '{IsoStream.ToFourCC(box.FourCC)}' of {start}..{end}");
             }
         }

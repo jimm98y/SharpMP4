@@ -18,7 +18,7 @@ public class BoxToStringTests
 
     private static string NL(params string[] lines) => string.Join(Environment.NewLine, lines);
 
-    private static string[] Lines(object value) => value.ToString()!.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+    private static string[] Lines(object value) => value.ToString()!.Split([Environment.NewLine], StringSplitOptions.RemoveEmptyEntries);
 
     // ftyp of the major brand 'isom', version 512, compatible with 'isom' and 'mp41'
     private static readonly byte[] Ftyp = Hex("00000018" + "66747970" + "69736F6D" + "00000200" + "69736F6D" + "6D703431");

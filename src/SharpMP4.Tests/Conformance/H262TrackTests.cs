@@ -61,7 +61,7 @@ public class H262TrackTests
                 if (fromFile.Count != fromStream.Count)
                     failures.Add($"{name}: decoded to {fromFile.Count} pictures of the stream's {fromStream.Count}");
                 int differs = Enumerable.Range(0, Math.Min(fromStream.Count, fromFile.Count))
-                    .FirstOrDefault(i => i < again.Count && fromStream[i] == again[i] && fromStream[i] != fromFile[i], -1);
+                    .Where(i => i < again.Count && fromStream[i] == again[i] && fromStream[i] != fromFile[i]).DefaultIfEmpty(-1).First();
                 if (differs >= 0)
                     failures.Add($"{name}: picture {differs} of {fromStream.Count} decoded otherwise");
                 if (!sync.SequenceEqual(iPictures))

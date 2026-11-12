@@ -76,7 +76,7 @@ public class ReaderCorpusTests
             start.ArgumentList.Add(argument);
         using var process = Process.Start(start)!;
         _ = process.StandardError.ReadToEndAsync();
-        var probed = process.StandardOutput.ReadToEnd().Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(int.Parse).ToArray();
+        var probed = process.StandardOutput.ReadToEnd().Split('\n').Select(line => line.Trim()).Where(line => line.Length > 0).Select(int.Parse).ToArray();
         process.WaitForExit();
 
         CollectionAssert.AreEqual(probed, counts, $"ffprobe {string.Join(",", probed)}, read {string.Join(",", counts)}");

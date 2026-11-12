@@ -41,8 +41,8 @@ public sealed class TracedUnit
 public static partial class FfmpegTrace
 {
     // "16          first_slice_segment_in_pic_flag                             1 = 1"
-    [GeneratedRegex(@"^(\d+)\s+(\S+)\s+([01]+)\s+=\s+(-?\d+)$")]
-    private static partial Regex FieldLine();
+    private static readonly Regex fieldLineRegex = new(@"^(\d+)\s+(\S+)\s+([01]+)\s+=\s+(-?\d+)$", RegexOptions.Compiled);
+    private static Regex FieldLine() => fieldLineRegex;
 
     /// <summary>
     /// Reads every header ffmpeg can decompose, as ffmpeg traced it the last time it was given the
@@ -98,17 +98,40 @@ public static partial class FfmpegTrace
             {
                 if (numbers.TryGetValue(field.Name, out int number))
                 {
-                    writer.Write7BitEncodedInt(number + 1);
+                    Write7BitEncoded(writer, (uint)(number + 1));
                 }
                 else
                 {
-                    writer.Write7BitEncodedInt(0);
+                    Write7BitEncoded(writer, 0);
                     writer.Write(field.Name);
                     numbers[field.Name] = numbers.Count;
                 }
-                writer.Write7BitEncodedInt(field.Bits);
-                writer.Write7BitEncodedInt64(field.Value);
+                Write7BitEncoded(writer, (uint)field.Bits);
+                Write7BitEncoded(writer, (ulong)field.Value);
             }
+        }
+    }
+
+    /// <summary>
+    /// A number seven bits a byte, the lowest first, the top bit of each saying another follows: what BinaryWriter's
+    /// Write7BitEncodedInt and Write7BitEncodedInt64 write, which .NET Framework does not have.
+    /// </summary>
+    private static void Write7BitEncoded(BinaryWriter writer, ulong value)
+    {
+        for (; value >= 0x80; value >>= 7)
+            writer.Write((byte)(value | 0x80));
+        writer.Write((byte)value);
+    }
+
+    private static ulong Read7BitEncoded(BinaryReader reader)
+    {
+        ulong value = 0;
+        for (int shift = 0; ; shift += 7)
+        {
+            byte b = reader.ReadByte();
+            value |= (ulong)(b & 0x7f) << shift;
+            if ((b & 0x80) == 0)
+                return value;
         }
     }
 
@@ -123,13 +146,13 @@ public static partial class FfmpegTrace
             unit.Fields.Capacity = fields;
             for (int i = 0; i < fields; i++)
             {
-                int number = reader.Read7BitEncodedInt();
+                int number = (int)Read7BitEncoded(reader);
                 string name;
                 if (number == 0)
                     names.Add(name = reader.ReadString());
                 else
                     name = names[number - 1];
-                unit.Fields.Add(new TracedField(name, reader.Read7BitEncodedInt(), reader.Read7BitEncodedInt64()));
+                unit.Fields.Add(new TracedField(name, (int)(uint)Read7BitEncoded(reader), (long)Read7BitEncoded(reader)));
             }
             units.Add(unit);
         }

@@ -64,7 +64,7 @@ public class AnnexBBuilderTests
                     failures.Add($"{name}: sample entry differs");
                 if (samplesA.Count != samplesB.Count)
                     failures.Add($"{name}: {samplesB.Count} samples of {samplesA.Count}");
-                else if (Enumerable.Range(0, samplesA.Count).FirstOrDefault(i => !samplesA[i].AsSpan().SequenceEqual(samplesB[i]), -1) is int differs && differs >= 0)
+                else if (Enumerable.Range(0, samplesA.Count).Where(i => !samplesA[i].AsSpan().SequenceEqual(samplesB[i])).DefaultIfEmpty(-1).First() is int differs && differs >= 0)
                     failures.Add($"{name}: sample {differs} differs");
             }
             catch (Exception ex)
