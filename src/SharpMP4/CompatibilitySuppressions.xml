@@ -103,98 +103,98 @@
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpMP4.Builders.FragmentedMp4Builder.ProcessRawSample(System.UInt32,System.Byte[],System.Int32,System.Boolean)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpMP4.Builders.FragmentedMp4Builder.ProcessTrackSample(System.UInt32,System.Byte[],System.Int32)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpMP4.Builders.IMp4Builder.ProcessRawSample(System.UInt32,System.Byte[],System.Int32,System.Boolean)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpMP4.Builders.IMp4Builder.ProcessTrackSample(System.UInt32,System.Byte[],System.Int32)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpMP4.Builders.Mp4Builder.ProcessRawSample(System.UInt32,System.Byte[],System.Int32,System.Boolean)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpMP4.Builders.Mp4Builder.ProcessTrackSample(System.UInt32,System.Byte[],System.Int32)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpMP4.Readers.ImageReader.ParseSample(System.Byte[])</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpMP4.Readers.MediaSample.#ctor(System.Int64,System.Int64,System.Int32,System.Byte[],System.Boolean)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpMP4.Readers.MediaSample.get_Data</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpMP4.Readers.VideoReader.ParseSample(System.UInt32,System.Byte[])</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpMP4.Tracks.ITrack.ParseSample(System.Byte[])</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpMP4.Tracks.ITrack.ProcessSample(System.Byte[],System.Byte[]@,System.Boolean@)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpMP4.Tracks.TrackBase.ParseSample(System.Byte[])</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpMP4.Tracks.TrackBase.ProcessSample(System.Byte[],System.Byte[]@,System.Boolean@)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
@@ -306,7 +306,7 @@
     <DiagnosticId>CP0005</DiagnosticId>
     <Target>M:SharpMP4.Tracks.TrackBase.ProcessSample(System.Byte[],System.Int32,System.Int32,System.ArraySegment{System.Byte}@,System.Boolean@)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
@@ -404,84 +404,84 @@
     <DiagnosticId>CP0006</DiagnosticId>
     <Target>M:SharpMP4.Builders.IMp4Builder.AddTrack(SharpMP4.Tracks.ITrack,SharpMP4.Encryption.TrackProtection,System.Byte[])</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0006</DiagnosticId>
     <Target>M:SharpMP4.Builders.IMp4Builder.GetTrack(System.UInt32)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0006</DiagnosticId>
     <Target>M:SharpMP4.Builders.IMp4Builder.ProcessRawSample(System.UInt32,System.ArraySegment{System.Byte},System.Int32,System.Boolean,System.Int32)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0006</DiagnosticId>
     <Target>M:SharpMP4.Builders.IMp4Builder.ProcessRawSample(System.UInt32,System.Byte[],System.Int32,System.Boolean,System.Int32)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0006</DiagnosticId>
     <Target>M:SharpMP4.Builders.IMp4Builder.ProcessTrackSample(System.UInt32,System.ArraySegment{System.Byte},System.Int32,System.Int32)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0006</DiagnosticId>
     <Target>M:SharpMP4.Builders.IMp4Builder.ProcessTrackSample(System.UInt32,System.Byte[],System.Int32,System.Int32)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0006</DiagnosticId>
     <Target>M:SharpMP4.Tracks.ITrack.ParseSample(System.Byte[],System.Int32,System.Int32)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0006</DiagnosticId>
     <Target>M:SharpMP4.Tracks.ITrack.ParseSample(System.Byte[])</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0006</DiagnosticId>
     <Target>M:SharpMP4.Tracks.ITrack.ProcessSample(System.Byte[],System.ArraySegment{System.Byte}@,System.Boolean@)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0006</DiagnosticId>
     <Target>M:SharpMP4.Tracks.ITrack.ProcessSample(System.Byte[],System.Int32,System.Int32,System.ArraySegment{System.Byte}@,System.Boolean@)</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0006</DiagnosticId>
     <Target>P:SharpMP4.Builders.IMp4Builder.FileFormat</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0006</DiagnosticId>
     <Target>P:SharpMP4.Tracks.ITrack.ReturnsPreviousSample</Target>
     <Left>lib/net481/SharpMP4.dll</Left>
-    <Right>lib/net481/SharpMP4.dll</Right>
+    <Right>lib/net472/SharpMP4.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>

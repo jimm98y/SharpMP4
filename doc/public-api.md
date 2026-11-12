@@ -6,11 +6,11 @@ SharpAV2 and SharpVP9, and two checks run on every `dotnet build` of each:
 
 - **The API files.** `PublicAPI.Shipped.txt` and `PublicAPI.Unshipped.txt` next to each project list
   its public types and members, the generated ones (the boxes, the syntax of each codec) among them.
-  They are the same on all three target frameworks. Shipped is the API as released; Unshipped is what
+  They are the same on all four target frameworks: netstandard2.0, net472, net8.0 and net10.0. Shipped is the API as released; Unshipped is what
   changed since. A public symbol missing from them is a warning, RS0016, until it is
   listed - an addition breaks no one - and a listed one that is gone fails the build with RS0017.
 - **Package validation.** Each package being built is checked for its target frameworks agreeing
-  with one another: what net481 offers, net8.0 and net10.0 have to offer too. A library with a release
+  with one another: what netstandard2.0 offers, net472, net8.0 and net10.0 have to offer too. A library with a release
   is compared with it as well (`PackageValidationBaselineVersion` in its project, 0.3.2 now), and every
   binary or source breaking change fails the build with a CP error. SharpAV2, SharpAVX, SharpVP9,
   SharpH261, SharpH262, SharpH263, SharpMPEG4 and SharpProRes have no release yet.
@@ -26,8 +26,8 @@ dotnet format analyzers src/SharpMP4.sln --diagnostics RS0016 --severity warn
 The new lines land in each project's `PublicAPI.Unshipped.txt`. A change to a generator - a box, a
 syntax element - changes the API of every library it generates code for, and is listed the same way.
 
-What only some frameworks have, inside an `#if` - a polyfill of what net481 lacks, say - is kept
-internal, so that the API is the same on all three.
+What only some frameworks have, inside an `#if` - a polyfill of what netstandard2.0 and net472 lack, say - is kept
+internal, so that the API is the same on all four.
 
 ## Removing or changing the API
 
@@ -58,10 +58,11 @@ rebuild and validates whatever binaries are already in `bin`.
 ## What is recorded now
 
 Against 0.3.2, the `CompatibilitySuppressions.xml` files record what 0.4.0 changes, about a thousand
-breaks, each once for each target framework:
+breaks, each once for each target framework 0.3.2 had: its net481 against the net472 that a net481
+application now gets, and net8.0 and net10.0 against their own:
 
 - **SharpISOBMFF**: the boxes as generated now - fields renamed, retyped or gone, boxes of other base
-  types, a few boxes removed - and `IMp4Serializable` with `Syntax` and `Trace`. On net481,
+  types, a few boxes removed - and `IMp4Serializable` with `Syntax` and `Trace`. On .NET Framework,
   `StreamExtensions`, the polyfill of .NET 7's `Stream.ReadExactly`, is internal now.
 - **SharpAV1**: the types of AOM's syntax moved to SharpAVX (`AomStream`, `IAomContext`,
   `IAomSerializable`, ...), and the context's members as generated now.

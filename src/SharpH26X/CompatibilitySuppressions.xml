@@ -12,7 +12,7 @@
     <DiagnosticId>CP0006</DiagnosticId>
     <Target>P:SharpH26X.IItuSerializable.Syntax</Target>
     <Left>lib/net481/SharpH26X.dll</Left>
-    <Right>lib/net481/SharpH26X.dll</Right>
+    <Right>lib/net472/SharpH26X.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>

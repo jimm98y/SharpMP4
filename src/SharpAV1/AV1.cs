@@ -877,7 +877,7 @@ namespace SharpAV1
                 throw new InvalidDataException("A redundant frame header that differs from the frame header it repeats.");
         }
 
-        /// <summary>Whether data starts with prefix; spans are not in net481's framework.</summary>
+        /// <summary>Whether data starts with prefix; spans are not in netstandard2.0 or net472.</summary>
         private static bool StartsWith(byte[] data, byte[] prefix)
         {
             if (data.Length < prefix.Length)

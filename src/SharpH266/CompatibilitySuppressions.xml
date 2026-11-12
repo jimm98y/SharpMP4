@@ -82,77 +82,77 @@
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH266.H266Context.OnNumL0Weights(System.UInt64)</Target>
     <Left>lib/net481/SharpH266.dll</Left>
-    <Right>lib/net481/SharpH266.dll</Right>
+    <Right>lib/net472/SharpH266.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH266.H266Context.OnNumL1Weights(System.UInt64)</Target>
     <Left>lib/net481/SharpH266.dll</Left>
-    <Right>lib/net481/SharpH266.dll</Right>
+    <Right>lib/net472/SharpH266.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH266.H266Context.OnPpsTileRowHeightMinus1</Target>
     <Left>lib/net481/SharpH266.dll</Left>
-    <Right>lib/net481/SharpH266.dll</Right>
+    <Right>lib/net472/SharpH266.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH266.H266Context.OnShNumTilesInSliceMinus1</Target>
     <Left>lib/net481/SharpH266.dll</Left>
-    <Right>lib/net481/SharpH266.dll</Right>
+    <Right>lib/net472/SharpH266.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH266.H266Context.OnShSliceHeaderExtensionDataByte</Target>
     <Left>lib/net481/SharpH266.dll</Left>
-    <Right>lib/net481/SharpH266.dll</Right>
+    <Right>lib/net472/SharpH266.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH266.H266Context.OnStRefPicFlag(System.UInt32,System.UInt64,SharpH266.RefPicListStruct)</Target>
     <Left>lib/net481/SharpH266.dll</Left>
-    <Right>lib/net481/SharpH266.dll</Right>
+    <Right>lib/net472/SharpH266.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH266.H266Context.OnVpsNumOutputLayerSetsMinus2</Target>
     <Left>lib/net481/SharpH266.dll</Left>
-    <Right>lib/net481/SharpH266.dll</Right>
+    <Right>lib/net472/SharpH266.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH266.H266Context.OnVpsOlsOutputLayerFlag(System.UInt32)</Target>
     <Left>lib/net481/SharpH266.dll</Left>
-    <Right>lib/net481/SharpH266.dll</Right>
+    <Right>lib/net472/SharpH266.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH266.H266Context.set_NumLtrpEntries(System.UInt32[][])</Target>
     <Left>lib/net481/SharpH266.dll</Left>
-    <Right>lib/net481/SharpH266.dll</Right>
+    <Right>lib/net472/SharpH266.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH266.RefPicLists.get_RefPicListStruct</Target>
     <Left>lib/net481/SharpH266.dll</Left>
-    <Right>lib/net481/SharpH266.dll</Right>
+    <Right>lib/net472/SharpH266.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH266.SeqParameterSetRbsp.get_RefPicListStruct</Target>
     <Left>lib/net481/SharpH266.dll</Left>
-    <Right>lib/net481/SharpH266.dll</Right>
+    <Right>lib/net472/SharpH266.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>

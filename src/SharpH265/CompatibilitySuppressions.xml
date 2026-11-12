@@ -103,98 +103,98 @@
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH265.H265Context.OnDeltaIdxMinus1(System.UInt64)</Target>
     <Left>lib/net481/SharpH265.dll</Left>
-    <Right>lib/net481/SharpH265.dll</Right>
+    <Right>lib/net472/SharpH265.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH265.H265Context.OnDimensionId</Target>
     <Left>lib/net481/SharpH265.dll</Left>
-    <Right>lib/net481/SharpH265.dll</Right>
+    <Right>lib/net472/SharpH265.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH265.H265Context.OnDirectDependencyFlag</Target>
     <Left>lib/net481/SharpH265.dll</Left>
-    <Right>lib/net481/SharpH265.dll</Right>
+    <Right>lib/net472/SharpH265.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH265.H265Context.OnLayerIdInNuh(System.UInt32)</Target>
     <Left>lib/net481/SharpH265.dll</Left>
-    <Right>lib/net481/SharpH265.dll</Right>
+    <Right>lib/net472/SharpH265.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH265.H265Context.OnSubLayersVpsMaxMinus1</Target>
     <Left>lib/net481/SharpH265.dll</Left>
-    <Right>lib/net481/SharpH265.dll</Right>
+    <Right>lib/net472/SharpH265.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH265.H265Context.set_NumPicTotalCurr(System.UInt32)</Target>
     <Left>lib/net481/SharpH265.dll</Left>
-    <Right>lib/net481/SharpH265.dll</Right>
+    <Right>lib/net472/SharpH265.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH265.SliceSegmentHeader.get_CpInvOffPlusOff</Target>
     <Left>lib/net481/SharpH265.dll</Left>
-    <Right>lib/net481/SharpH265.dll</Right>
+    <Right>lib/net472/SharpH265.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH265.SliceSegmentHeader.get_CpInvScalePlusScale</Target>
     <Left>lib/net481/SharpH265.dll</Left>
-    <Right>lib/net481/SharpH265.dll</Right>
+    <Right>lib/net472/SharpH265.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH265.SliceSegmentHeader.get_CpOff</Target>
     <Left>lib/net481/SharpH265.dll</Left>
-    <Right>lib/net481/SharpH265.dll</Right>
+    <Right>lib/net472/SharpH265.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH265.SliceSegmentHeader.get_CpScale</Target>
     <Left>lib/net481/SharpH265.dll</Left>
-    <Right>lib/net481/SharpH265.dll</Right>
+    <Right>lib/net472/SharpH265.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH265.Vps3dExtension.get_VpsCpInvOffPlusOff</Target>
     <Left>lib/net481/SharpH265.dll</Left>
-    <Right>lib/net481/SharpH265.dll</Right>
+    <Right>lib/net472/SharpH265.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH265.Vps3dExtension.get_VpsCpInvScalePlusScale</Target>
     <Left>lib/net481/SharpH265.dll</Left>
-    <Right>lib/net481/SharpH265.dll</Right>
+    <Right>lib/net472/SharpH265.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH265.Vps3dExtension.get_VpsCpOff</Target>
     <Left>lib/net481/SharpH265.dll</Left>
-    <Right>lib/net481/SharpH265.dll</Right>
+    <Right>lib/net472/SharpH265.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH265.Vps3dExtension.get_VpsCpScale</Target>
     <Left>lib/net481/SharpH265.dll</Left>
-    <Right>lib/net481/SharpH265.dll</Right>
+    <Right>lib/net472/SharpH265.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>

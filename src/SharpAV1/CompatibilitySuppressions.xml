@@ -40,35 +40,35 @@
     <DiagnosticId>CP0001</DiagnosticId>
     <Target>T:SharpAV1.AomStream</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0001</DiagnosticId>
     <Target>T:SharpAV1.ConvertEx</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0001</DiagnosticId>
     <Target>T:SharpAV1.IAomContext</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0001</DiagnosticId>
     <Target>T:SharpAV1.IAomSerializable</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0001</DiagnosticId>
     <Target>T:SharpAV1.MathEx</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
@@ -2175,2065 +2175,2065 @@
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get___FeatureEnabled</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get___RefOrderHint</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__AbsBits</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__AllFrames</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ArCoeffsCbPlus128</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ArCoeffsCrPlus128</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ArCoeffsyPlus128</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__B2</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__BackwardHint</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__BackwardIdx</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__BitsToRead</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__BufferRemovalTime</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ByteAlignment</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__CdefParams</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__CdefUvPriStrength</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__CdefUvSecStrength</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__CdefyPriStrength</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__CdefySecStrength</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ClippedValue</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ColorConfig</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ComputeImageSize</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__CurrentPosition</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__DecodeFrameWrapup</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__DecoderBufferDelay</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__DecoderModelInfo</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__DecoderModelPresentForThisOp</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__DeltaLfParams</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__DeltaqParams</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__Diff</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__DropObu</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__EncoderBufferDelay</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__EndBitPos</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ExpectedFrameId</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__FeatureData</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__FilmGrainParams</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ForwardHint</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ForwardIdx</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__FrameHeaderCopy</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__FrameHeaderObu</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__FrameObu</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__FrameReferenceMode</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__FrameRestorationType</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__FrameSize</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__FrameSizeWithRefs</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__GlobalMotionParams</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__GmParams</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__GmType</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__HeaderBytes</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__HeightInSbsMinus1</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__Hint</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__InitCoeffCdfs</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__InitialDisplayDelayMinus1</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__InitialDisplayDelayPresentForThisOp</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__InitNonCoeffCdfs</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__InSpatialLayer</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__InTemporalLayer</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ItutT35PayloadBytes</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__Limit</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__LoadCdfs</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__LoadGrainParams</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__LoadPrevious</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__LoadPreviousSegmentIds</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__LoopFilterLevel</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__LoopFilterModeDeltas</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__LoopFilterParams</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__LoopFilterRefDeltas</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__LoopRestorationSize</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__LosslessArray</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__LowDelayModeFlag</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__LrParams</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MarkRefFrames</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MaxHeight</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MaxLog2TileCols</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MaxLog2TileRows</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MaxTileAreaSb</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MaxTileHeightSb</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MaxTileWidthSb</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MaxWidth</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MetadataHdrCll</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MetadataHdrMdcv</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MetadataItutT35</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MetadataObu</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MetadataScalability</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MetadataTimecode</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MiColStarts</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MinLog2TileCols</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MinLog2TileRows</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MinLog2Tiles</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MiRowStarts</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__Mk</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__MotionFieldEstimation</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__NumPosChroma</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__NumPosLuma</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ObuExtensionHeader</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ObuHeader</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__OperatingParametersInfo</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__OperatingPoint</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__OperatingPointIdc</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__OpPtIdc</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__OrderHints</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__PaddingObu</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__PayloadBits</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__PointCbScaling</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__PointCbValue</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__PointCrScaling</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__PointCrValue</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__PointyScaling</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__PointyValue</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__PrecBits</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__PrecDiff</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__PrimaryChromaticityx</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__PrimaryChromaticityy</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__Qindex</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__QuantizationParams</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ReadGlobalParam</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ReadInterpolationFilter</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ReadTxMode</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__RefFrame</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__RefFrameIdx</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__RefFrameSignBias</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__RefHint</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__RefOrderHint</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__RefValid</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__RenderSize</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ReservedObu</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ResetGrainParams</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__Round</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SbCols</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SbRows</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SbShift</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SbSize</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__ScalabilityStructure</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SecondForwardHint</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SecondForwardIdx</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SegmentationParams</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SegQMLevel</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SeqLevelIdx</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SeqTier</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SequenceHeaderObu</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SetFrameRefs</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SetupPastIndependence</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SizeSb</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SkipModeAllowed</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SkipModeFrame</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SkipModeParams</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SkipObu</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SpatialLayerMaxHeight</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SpatialLayerMaxWidth</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SpatialLayerRefId</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__StartBitPos</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__StartSb</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__Sub</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SubexpFinalBits</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__SuperresParams</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__TempGrainSeed</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__TemporalDelimiterObu</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__TemporalGroupRefCnt</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__TemporalGroupRefPicDiff</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__TemporalGroupSpatialSwitchingUpPointFlag</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__TemporalGroupTemporalId</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__TemporalGroupTemporalSwitchingUpPointFlag</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__TemporalPointInfo</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__TileBits</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__TileGroupObu</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__TileHeightSb</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__TileInfo</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__TileListEntry</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__TileListObu</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__TileWidthSb</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__TimingInfo</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__TrailingBits</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__UncompressedHeader</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__UsesChromaLr</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__WidestTileSb</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.get__WidthInSbsMinus1</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.Read(SharpAV1.AomStream,System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__AbsBits(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__AllFrames(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__B2(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__BackwardHint(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__BackwardIdx(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__BitsToRead(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__ByteAlignment(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__CdefParams(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__ClippedValue(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__ColorConfig(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__ComputeImageSize(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__CurrentPosition(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__DecodeFrameWrapup(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__DecoderModelInfo(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__DeltaLfParams(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__DeltaqParams(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__Diff(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__DropObu(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__EndBitPos(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__ExpectedFrameId(System.Int32[])</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__FilmGrainParams(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__ForwardHint(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__ForwardIdx(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__FrameHeaderCopy(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__FrameHeaderObu(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__FrameObu(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__FrameReferenceMode(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__FrameSize(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__FrameSizeWithRefs(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__GlobalMotionParams(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__HeaderBytes(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__Hint(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__InitCoeffCdfs(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__InitNonCoeffCdfs(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__InSpatialLayer(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__InTemporalLayer(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__ItutT35PayloadBytes(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__Limit(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__LoadCdfs(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__LoadGrainParams(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__LoadPrevious(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__LoadPreviousSegmentIds(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__LoopFilterParams(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__LrParams(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MarkRefFrames(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MaxHeight(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MaxLog2TileCols(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MaxLog2TileRows(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MaxTileAreaSb(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MaxTileHeightSb(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MaxTileWidthSb(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MaxWidth(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MetadataHdrCll(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MetadataHdrMdcv(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MetadataItutT35(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MetadataObu(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MetadataScalability(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MetadataTimecode(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MinLog2TileCols(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MinLog2TileRows(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MinLog2Tiles(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__Mk(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__MotionFieldEstimation(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__NumPosChroma(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__NumPosLuma(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__ObuExtensionHeader(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__ObuHeader(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__OperatingParametersInfo(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__OperatingPoint(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__OpPtIdc(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__PaddingObu(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__PayloadBits(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__PrecBits(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__PrecDiff(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__Qindex(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__QuantizationParams(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__ReadGlobalParam(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__ReadInterpolationFilter(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__ReadTxMode(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__RefFrame(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__RefHint(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__RenderSize(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__ReservedObu(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__ResetGrainParams(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__Round(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__SbCols(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__SbRows(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__SbShift(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__SbSize(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__ScalabilityStructure(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__SecondForwardHint(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__SecondForwardIdx(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__SegmentationParams(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__SequenceHeaderObu(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__SetFrameRefs(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__SetupPastIndependence(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__SizeSb(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__SkipModeAllowed(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__SkipModeParams(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__SkipObu(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__StartBitPos(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__StartSb(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__Sub(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__SuperresParams(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__TempGrainSeed(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__TemporalDelimiterObu(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__TemporalPointInfo(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__TileBits(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__TileGroupObu(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__TileHeightSb(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__TileInfo(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__TileListEntry(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__TileListObu(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__TileWidthSb(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__TimingInfo(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__TrailingBits(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__UncompressedHeader(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__UsesChromaLr(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpAV1.AV1Context.set__WidestTileSb(System.Int32)</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
@@ -6312,7 +6312,7 @@
     <DiagnosticId>CP0008</DiagnosticId>
     <Target>T:SharpAV1.AV1Context</Target>
     <Left>lib/net481/SharpAV1.dll</Left>
-    <Right>lib/net481/SharpAV1.dll</Right>
+    <Right>lib/net472/SharpAV1.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>

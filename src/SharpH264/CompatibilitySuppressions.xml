@@ -19,14 +19,14 @@
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH264.H264Context.SetPicParameterSetId(System.UInt64)</Target>
     <Left>lib/net481/SharpH264.dll</Left>
-    <Right>lib/net481/SharpH264.dll</Right>
+    <Right>lib/net472/SharpH264.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:SharpH264.H264Context.SetSeqParameterSetId(System.UInt64)</Target>
     <Left>lib/net481/SharpH264.dll</Left>
-    <Right>lib/net481/SharpH264.dll</Right>
+    <Right>lib/net472/SharpH264.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
   </Suppression>
   <Suppression>
