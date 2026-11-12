@@ -379,7 +379,7 @@ foreach (var file in files)
                                 else
                                 {
                                     audio_pts = audio_dts + sampleCompositionTime;
-                                    size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, sampleSize, out byte[] sampleData, "");
+                                    size += mdat.Data.Stream.ReadUInt8Array(0, (ulong)sampleSize * 8, sampleSize, out byte[] sampleData, "");
                                     audio_dts += sampleDuration;
                                 }
                             }
@@ -578,7 +578,7 @@ ulong ReadH26XSample(int nalLengthSize, IItuContext context, VideoFormat format,
             break;
         }
 
-        size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, nalUnitLength, out byte[] sampleData, "");
+        size += marker.Stream.ReadUInt8Array(size, (ulong)sampleSizeInBytes * 8, nalUnitLength, out byte[] sampleData, "");
         offsetInBytes += sampleData.Length;
 
         ParseNALU(context, format, sampleData);
@@ -1202,7 +1202,7 @@ ulong ReadAVXSample(int length, IAomObuContext context, VideoFormat format, Stre
 
     isobmffLogger.LogDebug($"+++ Sample begin {sampleSizeInBytes}, PTS: {pts}, DTS: {dts}, duration: {duration}");
 
-    size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, sampleSizeInBytes, out byte[] sampleData, "");
+    size += marker.Stream.ReadUInt8Array(0, (ulong)sampleSizeInBytes * 8, sampleSizeInBytes, out byte[] sampleData, "");
     using (AomStream stream = new AomStream(new MemoryStream(sampleData)))
     {
         int len = (int)sampleSizeInBytes;
