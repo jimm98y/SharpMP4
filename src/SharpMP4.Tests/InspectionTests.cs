@@ -61,7 +61,7 @@ public class InspectionTests
     private sealed class Outer : BoxTracer
     {
         public readonly List<string> Begun = new();
-        public Box Root;
+        public required Box Root;
 
         protected override bool Enter(Box box) => ReferenceEquals(box, Root);
         protected override void OnBegin(string name, IMp4Serializable value, ulong position) => Begun.Add(value.DisplayName);
