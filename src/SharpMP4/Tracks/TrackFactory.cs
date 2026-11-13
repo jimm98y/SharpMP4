@@ -161,6 +161,12 @@ namespace SharpMP4.Tracks
                 case "dec3":
                     return new EAC3Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
+                // of a 'dtsc', 'dtsh', 'dtsl' or 'dtse' entry (ETSI TS 102 114 Annex E); or of an 'mp4a' of DTS's object
+                // types, as ffmpeg writes it
+                case "ddts":
+                case "esds" when DtsTrack.IsDts(sampleEntry):
+                    return new DtsTrack(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
+
                 case "dfLa":
                     return new FlacTrack(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 

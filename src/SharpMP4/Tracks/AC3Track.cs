@@ -143,6 +143,12 @@ namespace SharpMP4.Tracks
                 _bit = offset * 8;
             }
 
+            /// <summary>The bit it is at, of the run's start.</summary>
+            public int Position => _bit;
+
+            /// <summary>Goes on so many bits, or back of a negative count.</summary>
+            public void Skip(int count) => _bit += count;
+
             public uint Read(int count)
             {
                 uint value = 0;

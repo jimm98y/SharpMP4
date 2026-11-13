@@ -1,0 +1,114 @@
+const SharpMP4.Tracks.DtsFrame.CoreSyncWord = 2147385345 -> uint
+const SharpMP4.Tracks.DtsFrame.MinimumLength = 11 -> int
+const SharpMP4.Tracks.DtsFrame.SubstreamSyncWord = 1683496997 -> uint
+const SharpMP4.Tracks.DtsTrack.DTSHD_HRA_OBJECT_TYPE_INDICATION = 170 -> byte
+const SharpMP4.Tracks.DtsTrack.DTSHD_MA_OBJECT_TYPE_INDICATION = 171 -> byte
+const SharpMP4.Tracks.DtsTrack.DTS_EXPRESS_OBJECT_TYPE_INDICATION = 172 -> byte
+const SharpMP4.Tracks.DtsTrack.DTS_OBJECT_TYPE_INDICATION = 169 -> byte
+override SharpMP4.Tracks.DtsTrack.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.DtsTrack.CreateSampleEntryBox() -> SharpISOBMFF.Box
+override SharpMP4.Tracks.DtsTrack.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.DtsTrack.HandlerName.get -> string
+override SharpMP4.Tracks.DtsTrack.HandlerType.get -> string
+override SharpMP4.Tracks.DtsTrack.Language.get -> string
+override SharpMP4.Tracks.DtsTrack.Language.set -> void
+override SharpMP4.Tracks.DtsTrack.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+SharpMP4.Tracks.DtsComponents
+SharpMP4.Tracks.DtsComponents.Core = 1 -> SharpMP4.Tracks.DtsComponents
+SharpMP4.Tracks.DtsComponents.CoreX96 = 4 -> SharpMP4.Tracks.DtsComponents
+SharpMP4.Tracks.DtsComponents.CoreXch = 8 -> SharpMP4.Tracks.DtsComponents
+SharpMP4.Tracks.DtsComponents.CoreXxch = 2 -> SharpMP4.Tracks.DtsComponents
+SharpMP4.Tracks.DtsComponents.Lbr = 256 -> SharpMP4.Tracks.DtsComponents
+SharpMP4.Tracks.DtsComponents.None = 0 -> SharpMP4.Tracks.DtsComponents
+SharpMP4.Tracks.DtsComponents.SubstreamCore = 16 -> SharpMP4.Tracks.DtsComponents
+SharpMP4.Tracks.DtsComponents.X96 = 128 -> SharpMP4.Tracks.DtsComponents
+SharpMP4.Tracks.DtsComponents.Xbr = 32 -> SharpMP4.Tracks.DtsComponents
+SharpMP4.Tracks.DtsComponents.Xll = 512 -> SharpMP4.Tracks.DtsComponents
+SharpMP4.Tracks.DtsComponents.Xxch = 64 -> SharpMP4.Tracks.DtsComponents
+SharpMP4.Tracks.DtsFrame
+SharpMP4.Tracks.DtsFrame.Amode.get -> byte
+SharpMP4.Tracks.DtsFrame.Amode.set -> void
+SharpMP4.Tracks.DtsFrame.AssetCount.get -> int
+SharpMP4.Tracks.DtsFrame.AssetCount.set -> void
+SharpMP4.Tracks.DtsFrame.BitDepth.get -> int
+SharpMP4.Tracks.DtsFrame.ChannelCount.get -> byte
+SharpMP4.Tracks.DtsFrame.ChannelLayout.get -> ushort
+SharpMP4.Tracks.DtsFrame.Coding.get -> string
+SharpMP4.Tracks.DtsFrame.Components.get -> SharpMP4.Tracks.DtsComponents
+SharpMP4.Tracks.DtsFrame.Components.set -> void
+SharpMP4.Tracks.DtsFrame.CoreLength.get -> int
+SharpMP4.Tracks.DtsFrame.CoreLength.set -> void
+SharpMP4.Tracks.DtsFrame.CoreSamples.get -> int
+SharpMP4.Tracks.DtsFrame.CoreSamples.set -> void
+SharpMP4.Tracks.DtsFrame.CoreSamplingRate.get -> uint
+SharpMP4.Tracks.DtsFrame.DtsFrame() -> void
+SharpMP4.Tracks.DtsFrame.EmbeddedStereo.get -> bool
+SharpMP4.Tracks.DtsFrame.EmbeddedStereo.set -> void
+SharpMP4.Tracks.DtsFrame.ExtAudio.get -> bool
+SharpMP4.Tracks.DtsFrame.ExtAudio.set -> void
+SharpMP4.Tracks.DtsFrame.ExtAudioId.get -> byte
+SharpMP4.Tracks.DtsFrame.ExtAudioId.set -> void
+SharpMP4.Tracks.DtsFrame.HasCore.get -> bool
+SharpMP4.Tracks.DtsFrame.HasCore.set -> void
+SharpMP4.Tracks.DtsFrame.HasStaticFields.get -> bool
+SharpMP4.Tracks.DtsFrame.HasStaticFields.set -> void
+SharpMP4.Tracks.DtsFrame.HasSubstream.get -> bool
+SharpMP4.Tracks.DtsFrame.HasSubstream.set -> void
+SharpMP4.Tracks.DtsFrame.Length.get -> int
+SharpMP4.Tracks.DtsFrame.Length.set -> void
+SharpMP4.Tracks.DtsFrame.Lff.get -> byte
+SharpMP4.Tracks.DtsFrame.Lff.set -> void
+SharpMP4.Tracks.DtsFrame.Pcmr.get -> byte
+SharpMP4.Tracks.DtsFrame.Pcmr.set -> void
+SharpMP4.Tracks.DtsFrame.Rate.get -> byte
+SharpMP4.Tracks.DtsFrame.Rate.set -> void
+SharpMP4.Tracks.DtsFrame.SamplesPerFrame.get -> int
+SharpMP4.Tracks.DtsFrame.SamplingRate.get -> uint
+SharpMP4.Tracks.DtsFrame.Sfreq.get -> byte
+SharpMP4.Tracks.DtsFrame.Sfreq.set -> void
+SharpMP4.Tracks.DtsFrame.SpeakerMask.get -> ushort
+SharpMP4.Tracks.DtsFrame.SpeakerMask.set -> void
+SharpMP4.Tracks.DtsFrame.StreamConstruction.get -> byte
+SharpMP4.Tracks.DtsFrame.SubstreamBitDepth.get -> byte
+SharpMP4.Tracks.DtsFrame.SubstreamBitDepth.set -> void
+SharpMP4.Tracks.DtsFrame.SubstreamChannels.get -> int
+SharpMP4.Tracks.DtsFrame.SubstreamChannels.set -> void
+SharpMP4.Tracks.DtsFrame.SubstreamLength.get -> int
+SharpMP4.Tracks.DtsFrame.SubstreamLength.set -> void
+SharpMP4.Tracks.DtsFrame.SubstreamSamples.get -> int
+SharpMP4.Tracks.DtsFrame.SubstreamSamples.set -> void
+SharpMP4.Tracks.DtsFrame.SubstreamSamplingRate.get -> uint
+SharpMP4.Tracks.DtsFrame.SubstreamSamplingRate.set -> void
+SharpMP4.Tracks.DtsTrack
+SharpMP4.Tracks.DtsTrack.AvgBitRate.get -> uint
+SharpMP4.Tracks.DtsTrack.AvgBitRate.set -> void
+SharpMP4.Tracks.DtsTrack.BufferSizeDB.get -> uint
+SharpMP4.Tracks.DtsTrack.BufferSizeDB.set -> void
+SharpMP4.Tracks.DtsTrack.ChannelCount.get -> byte
+SharpMP4.Tracks.DtsTrack.ChannelLayout.get -> ushort
+SharpMP4.Tracks.DtsTrack.Coding.get -> string
+SharpMP4.Tracks.DtsTrack.CoreLayout.get -> byte
+SharpMP4.Tracks.DtsTrack.CoreLfePresent.get -> bool
+SharpMP4.Tracks.DtsTrack.CoreSize.get -> ushort
+SharpMP4.Tracks.DtsTrack.DtsTrack(SharpISOBMFF.Box config, uint timescale = 0, int sampleDuration = -1) -> void
+SharpMP4.Tracks.DtsTrack.DtsTrack(SharpMP4.Tracks.DtsFrame frame) -> void
+SharpMP4.Tracks.DtsTrack.LbrDurationMod.get -> bool
+SharpMP4.Tracks.DtsTrack.MaxBitRate.get -> uint
+SharpMP4.Tracks.DtsTrack.MaxBitRate.set -> void
+SharpMP4.Tracks.DtsTrack.MultiAsset.get -> bool
+SharpMP4.Tracks.DtsTrack.ObjectTypeIndication.get -> byte
+SharpMP4.Tracks.DtsTrack.PcmSampleDepth.get -> byte
+SharpMP4.Tracks.DtsTrack.SamplesPerFrame.get -> int
+SharpMP4.Tracks.DtsTrack.SamplingRate.get -> uint
+SharpMP4.Tracks.DtsTrack.StereoDownmix.get -> bool
+SharpMP4.Tracks.DtsTrack.StreamConstruction.get -> byte
+static readonly SharpMP4.Tracks.DtsFrame.CoreSampleRates -> uint[]
+static readonly SharpMP4.Tracks.DtsFrame.SubstreamSampleRates -> uint[]
+static SharpMP4.Tracks.DtsFrame.ChannelsOf(ushort layout) -> byte
+static SharpMP4.Tracks.DtsFrame.FrameDurationCodeOf(int samples) -> int
+static SharpMP4.Tracks.DtsFrame.Parse(byte[] buffer, int offset, int length) -> SharpMP4.Tracks.DtsFrame
+static SharpMP4.Tracks.DtsFrame.Parse(byte[] frame) -> SharpMP4.Tracks.DtsFrame
+static SharpMP4.Tracks.DtsFrame.TryParse(byte[] buffer, int offset, int length, out SharpMP4.Tracks.DtsFrame dtsFrame) -> bool
+static SharpMP4.Tracks.DtsFrame.TryParse(byte[] frame, out SharpMP4.Tracks.DtsFrame dtsFrame) -> bool
+static SharpMP4.Tracks.DtsTrack.IsDts(SharpISOBMFF.Box config) -> bool
+static SharpMP4.Tracks.DtsTrack.ParseFrames(byte[] buffer, int offset, int length) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>

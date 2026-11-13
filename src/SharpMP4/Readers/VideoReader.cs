@@ -320,7 +320,7 @@ namespace SharpMP4.Readers
         private static readonly HashSet<uint> CodecConfigurations = new HashSet<uint>(new[]
         {
             "avcC", "hvcC", "vvcC", "av1C", "av2C", "vpcC", "d263", // video
-            "esds", "wave", "dOps", "dac3", "dec3", "dac4", "dfLa", "alac", "mhaC", // audio
+            "esds", "wave", "dOps", "dac3", "dec3", "dac4", "ddts", "dfLa", "alac", "mhaC", // audio
         }.Select(IsoStream.FromFourCC));
 
         /// <summary>

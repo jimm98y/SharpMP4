@@ -1,5 +1,5 @@
 # SharpMP4
-Simple lightweight mp4/fmp4/mov/m4v reader/writer. Supports H261/H262/H263/MPEG4/H264/H265/H266/VP9/AV1/AV2/ProRes/Motion JPEG for video and AAC/Opus/MP3 (and MP2)/FLAC/ALAC/AC-3/E-AC-3/AMR/PCM (and G.711) for audio. No platform dependencies, easily portable cross-platform. It was designed to be a stream-in and stream-out solution for recording streams from IP cameras into MP4 and fragmented MP4.
+Simple lightweight mp4/fmp4/mov/m4v reader/writer. Supports H261/H262/H263/MPEG4/H264/H265/H266/VP9/AV1/AV2/ProRes/Motion JPEG for video and AAC/Opus/MP3 (and MP2)/FLAC/ALAC/AC-3/E-AC-3/DTS (and DTS-HD)/AMR/PCM (and G.711) for audio. No platform dependencies, easily portable cross-platform. It was designed to be a stream-in and stream-out solution for recording streams from IP cameras into MP4 and fragmented MP4.
 
 [![NuGet version](https://img.shields.io/nuget/v/SharpMP4.svg?style=flat-square)](https://www.nuget.org/packages/SharpMP4)
 
@@ -108,8 +108,9 @@ var alac = new AlacTrack(alacSpecificConfig);                   // the 24 byte m
 var mp3 = new Mp3Track(2, 44100);                              // MPEG-1 or MPEG-2 audio, by the rate
 var ac3 = new AC3Track(AC3SyncFrame.Parse(frame));             // a sync frame's syncinfo and bsi
 var eac3 = new EAC3Track(dataRate, substreams);                 // 'dec3''s data rate and independent substreams
+var dts = new DtsTrack(DtsFrame.Parse(unit));                   // an access unit: a core frame, the extension substreams after it, or those alone
 ```
-An MP3 encoder hands out one frame or several at a time: the track's `ParseFrames` splits them, a sample each:
+A DTS track is a 'dtsc', 'dtsh', 'dtsl' or 'dtse' as the stream is made, and `DtsTrack.ParseFrames` splits an encoder's output into its access units, a sample each. An MP3 encoder hands out one frame or several at a time: the track's `ParseFrames` splits them, a sample each:
 ```cs
 foreach (ArraySegment<byte> frame in mp3.ParseFrames(buffer, 0, length))
     outputBuilder.ProcessTrackSample(mp3.TrackID, frame);

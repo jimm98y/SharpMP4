@@ -441,4 +441,146 @@ public class AudioTrackTests
         Assert.AreEqual((byte)8, read.ChannelCount);
         CollectionAssert.AreEqual(BytesOf(read.CreateSampleEntryBox()), BytesOf(read.Clone().CreateSampleEntryBox()));
     }
+
+    // The headers of DTS access units, of streams ffmpeg's encoder made and of the DTS Express of mp4parser's tests, the
+    // rest of each frame zeros: a core frame of 5.1 at 48 kHz of 1024 bytes and of stereo at 44.1 kHz of 2048, each of
+    // 512 samples; and an extension substream of DTS Express alone, stereo at 48 kHz, of 4096 samples and 2048 bytes -
+    // its header of 28 bytes, its asset's data beginning with LBR's sync word
+    private static byte[] DtsFrameOf(string header, int length)
+    {
+        var frame = new byte[length];
+        Hex(header).CopyTo(frame, 0);
+        return frame;
+    }
+
+    private static byte[] DtsCore51() => DtsFrameOf("7ffe8001fc3c3ff275e005", 1024);
+    private static byte[] DtsCoreStereo() => DtsFrameOf("7ffe8001fc3c7ff0a2c001", 2048);
+    private static byte[] DtsExpress() => DtsFrameOf("64582025000360fffb808081f8c1003f0070810fc700000000008c9c0a801921", 2048);
+
+    /// <summary>
+    /// A DTS core frame's header: its length and samples, its rate, and its channels of its AMODE and LFE - 3/2 and the
+    /// LFE are 0xF of the 'ddts''s masks - a 'dtsc' of a core alone, its StreamConstruction 1.
+    /// </summary>
+    [TestMethod]
+    public void ReadsADtsCoreFrame()
+    {
+        var frame = DtsFrame.Parse(DtsCore51());
+        Assert.AreEqual((true, false, 1024, 1024, 512), (frame.HasCore, frame.HasSubstream, frame.Length, frame.CoreLength, frame.CoreSamples));
+        Assert.AreEqual((48000u, 512, (byte)9, (ushort)0xF, (byte)6, 16), (frame.SamplingRate, frame.SamplesPerFrame, frame.Amode, frame.ChannelLayout, frame.ChannelCount, frame.BitDepth));
+        Assert.AreEqual(("dtsc", (byte)1, DtsComponents.Core), (frame.Coding, frame.StreamConstruction, frame.Components));
+
+        var stereo = DtsFrame.Parse(DtsCoreStereo());
+        Assert.AreEqual((2048, 44100u, (byte)2, (ushort)0x2, (byte)2), (stereo.Length, stereo.SamplingRate, stereo.Amode, stereo.ChannelLayout, stereo.ChannelCount));
+
+        var track = new DtsTrack(frame);
+        Assert.AreEqual(("dtsc", 48000u, 512, 48000u), (track.Coding, track.SamplingRate, track.DefaultSampleDuration, track.Timescale));
+        Assert.AreEqual(((byte)9, true, (ushort)1024, (byte)16), (track.CoreLayout, track.CoreLfePresent, track.CoreSize, track.PcmSampleDepth));
+        Assert.AreEqual(768000u, track.AvgBitRate, "1024 bytes of 512 samples at 48 kHz");
+    }
+
+    /// <summary>
+    /// An extension substream of DTS Express alone: its rate, bits and speakers of its asset descriptor, its duration of
+    /// its static fields, its component LBR - a 'dtse' of StreamConstruction 18 and no core, its CoreLayout 31.
+    /// </summary>
+    [TestMethod]
+    public void ReadsADtsExpressSubstream()
+    {
+        var frame = DtsFrame.Parse(DtsExpress());
+        Assert.AreEqual((false, true, 2048, true, 1), (frame.HasCore, frame.HasSubstream, frame.Length, frame.HasStaticFields, frame.AssetCount));
+        Assert.AreEqual((48000u, 4096, 16, (ushort)0x2, (byte)2), (frame.SamplingRate, frame.SamplesPerFrame, frame.BitDepth, frame.ChannelLayout, frame.ChannelCount));
+        Assert.AreEqual(("dtse", (byte)18, DtsComponents.Lbr), (frame.Coding, frame.StreamConstruction, frame.Components));
+
+        var track = new DtsTrack(frame);
+        Assert.AreEqual(((byte)31, false, (ushort)0, 192000u), (track.CoreLayout, track.CoreLfePresent, track.CoreSize, track.MaxBitRate));
+    }
+
+    /// <summary>
+    /// A core frame and the extension substream after it are one access unit, of the substream's asset - its rate and
+    /// speakers - and of its component: of the core and lossless, a 'dtsh' of StreamConstruction 14.
+    /// </summary>
+    [TestMethod]
+    public void ReadsADtsCoreWithItsExtensionSubstream()
+    {
+        byte[] substream = DtsExpress();
+        Hex("41a29547").CopyTo(substream, 28); // the asset's data of XLL, not of what its descriptor says: its data is taken at its word
+        byte[] unit = DtsCore51().Concat(substream).ToArray();
+
+        var frame = DtsFrame.Parse(unit);
+        Assert.AreEqual((3072, 1024, 2048), (frame.Length, frame.CoreLength, frame.SubstreamLength));
+        Assert.AreEqual(DtsComponents.Core | DtsComponents.Xll, frame.Components);
+        Assert.AreEqual(("dtsh", (byte)14), (frame.Coding, frame.StreamConstruction));
+        Assert.AreEqual(((ushort)0x2, 48000u), (frame.ChannelLayout, frame.SamplingRate), "of the substream's asset");
+
+        var units = DtsTrack.ParseFrames(unit.Concat(unit).ToArray(), 0, unit.Length * 2).ToList();
+        Assert.AreEqual(2, units.Count, "a core and its substream an access unit");
+        Assert.AreEqual(unit.Length, units[1].Offset);
+    }
+
+    /// <summary>
+    /// An encoder's run of DTS is split into its access units: a core frame each, of the length its header says; of
+    /// extension substreams alone, a substream each. Bytes of no frame are skipped.
+    /// </summary>
+    [TestMethod]
+    public void SplitsARunOfDtsIntoItsAccessUnits()
+    {
+        byte[] run = Hex("000102").Concat(DtsCore51()).Concat(DtsCore51()).ToArray();
+        var units = DtsTrack.ParseFrames(run, 0, run.Length).ToList();
+        CollectionAssert.AreEqual(new[] { 3, 1027 }, units.Select(u => u.Offset).ToArray());
+        Assert.IsTrue(units.All(u => u.Count == 1024));
+
+        byte[] express = DtsExpress().Concat(DtsExpress()).Concat(DtsExpress()).ToArray();
+        Assert.AreEqual(3, DtsTrack.ParseFrames(express, 0, express.Length).Count());
+
+        byte[] cut = DtsCore51().Take(1000).ToArray();
+        Assert.AreEqual(0, DtsTrack.ParseFrames(cut, 0, cut.Length).Count(), "a frame cut short is none");
+    }
+
+    /// <summary>Of no sync word, of a frame cut short, or of a reserved rate, there is no DTS access unit.</summary>
+    [TestMethod]
+    public void ReadsNoDtsFrameOfWhatIsNone()
+    {
+        Assert.IsFalse(DtsFrame.TryParse(Hex("0b7712341e40e300000000"), out _), "AC-3");
+        Assert.IsFalse(DtsFrame.TryParse(DtsCore51().Take(512).ToArray(), out _), "cut short");
+        byte[] reserved = DtsCore51();
+        reserved[8] = (byte)(reserved[8] & 0xC3); // SFREQ 0
+        Assert.IsFalse(DtsFrame.TryParse(reserved, out _), "SFREQ 0");
+        Assert.IsFalse(DtsFrame.TryParse(Hex("fe7f0180fc3c3ff275e005"), out _), "of the little-endian stream MP4 does not hold");
+        Assert.ThrowsExactly<ArgumentException>(() => DtsFrame.Parse(Hex("00000000000000000000000000")));
+    }
+
+    /// <summary>
+    /// A DTS track's 'ddts' reads back as it was written - of a core, and of DTS Express - and its sample entry is the
+    /// coding the stream is made of; written again by its clone, the same.
+    /// </summary>
+    [TestMethod]
+    public void WritesDtsAsItIsRead()
+    {
+        foreach (byte[] frame in new[] { DtsCore51(), DtsExpress() })
+        {
+            var track = new DtsTrack(DtsFrame.Parse(frame));
+            var (container, reader, trackID) = WriteAndRead(track, (builder, id) => builder.ProcessTrackSample(id, frame));
+            var read = (DtsTrack)reader.Tracks[trackID].Track;
+            Assert.AreEqual((track.Coding, track.SamplingRate, track.SamplesPerFrame, track.ChannelLayout, track.ChannelCount),
+                (read.Coding, read.SamplingRate, read.SamplesPerFrame, read.ChannelLayout, read.ChannelCount));
+            Assert.AreEqual((track.StreamConstruction, track.CoreLayout, track.CoreLfePresent, track.CoreSize, track.PcmSampleDepth, track.MaxBitRate, track.AvgBitRate),
+                (read.StreamConstruction, read.CoreLayout, read.CoreLfePresent, read.CoreSize, read.PcmSampleDepth, read.MaxBitRate, read.AvgBitRate));
+            Assert.AreEqual(track.Timescale, read.Timescale);
+            CollectionAssert.AreEqual(BytesOf(track.CreateSampleEntryBox()), BytesOf(read.Clone().CreateSampleEntryBox()));
+            CollectionAssert.AreEqual(frame, reader.ReadSample(trackID).Data.ToArray());
+        }
+    }
+
+    /// <summary>
+    /// DTS in an 'mp4a' entry, as ffmpeg writes it - an 'esds' of DTS's object type, 0xA9 - is of a DTS track, written
+    /// back as it was: its object type, rate and channels.
+    /// </summary>
+    [TestMethod]
+    public void ReadsDtsOfAnEsds()
+    {
+        var esds = Esds(DtsTrack.DTS_OBJECT_TYPE_INDICATION, null, channels: 6);
+        var track = (DtsTrack)Create(esds, 48000, 512);
+        Assert.AreEqual(("mp4a", DtsTrack.DTS_OBJECT_TYPE_INDICATION, 48000u, (byte)6, 512), (track.Coding, track.ObjectTypeIndication, track.SamplingRate, track.ChannelCount, track.DefaultSampleDuration));
+        CollectionAssert.AreEqual(BytesOf(track.CreateSampleEntryBox()), BytesOf(track.Clone().CreateSampleEntryBox()));
+        Assert.IsTrue(track.CreateSampleEntryBox().Children.OfType<ESDBox>().Any(), "an 'esds' again, not a 'ddts' of what it does not know");
+    }
 }
