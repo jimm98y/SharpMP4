@@ -336,16 +336,21 @@ public static class TraceComparison
         return result;
     }
 
-    /// <summary>Where in SharpMP4 an exception came from: the top of its stack, which is enough to find it.</summary>
+    /// <summary>
+    /// Where in SharpMP4 an exception came from: the top of its stack, which is enough to find it - and, of one thrown in
+    /// the framework's code SharpMP4 called, that frame too, which tells a list's from a parse's.
+    /// </summary>
     private static string Where(Exception error)
     {
-        var frames = (error.StackTrace ?? "").Split('\n')
+        var lines = (error.StackTrace ?? "").Split('\n')
             .Select(line => line.Trim())
-            .Where(line => line.StartsWith("at Sharp", StringComparison.Ordinal))
-            .Take(3)
-            .Select(line => line.Split([" in "], StringSplitOptions.None)[0].Substring(3));
+            .Where(line => line.StartsWith("at ", StringComparison.Ordinal))
+            .Select(line => line.Split([" in "], StringSplitOptions.None)[0].Substring(3))
+            .ToList();
+        var frames = lines.Where(line => line.StartsWith("Sharp", StringComparison.Ordinal)).Take(3);
+        string thrown = lines.Count > 0 && !lines[0].StartsWith("Sharp", StringComparison.Ordinal) ? $"\n      thrown in: {lines[0]}" : "";
 
-        return "\n      at: " + string.Join(" <- ", frames);
+        return "\n      at: " + string.Join(" <- ", frames) + thrown;
     }
 
     /// <summary>
