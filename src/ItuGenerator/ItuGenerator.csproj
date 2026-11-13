@@ -47,4 +47,9 @@
 			<None Include="$(PKGNewtonsoft_Json)\lib\netstandard2.0\Newtonsoft.Json.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 		</ItemGroup>
 	</Target>
+	<!-- the license each generated file begins with, of the one copy every generator links -->
+	<ItemGroup>
+		<Compile Include="..\Shared\LicenseHeader.cs" Link="LicenseHeader.cs" />
+	</ItemGroup>
+
 </Project>
