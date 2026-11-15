@@ -78,7 +78,7 @@ public static partial class FfmpegTrace
         // as Trace read them out of ffmpeg's log, so a change to Trace or its arguments must count the version up, or
         // the entries made before it are compared as they were read then. 2: the extradata's units are the trace of a
         // stream ffmpeg traces no packet of; entries of 1 were made both with the extradata's units and without them.
-        string? entry = ToolCache.EntryOf("ffmpeg", [ffmpeg], $"trace 2 -f {format} -bsf:v trace_headers", path);
+        string? entry = ToolCache.EntryOf("ffmpeg", [ffmpeg], $"trace 2 -f {format}{InputCodec(format)} -bsf:v trace_headers", path);
         var units = ToolCache.GetOrRun(entry, () =>
         {
             string? made = input?.Invoke(path);
@@ -184,6 +184,13 @@ public static partial class FfmpegTrace
     }
 
     /// <summary>
+    /// What ffmpeg is told of the video of an H.262 demuxer: trace_headers decomposes only mpeg2video, which an MPEG-1
+    /// stream (mpeg1video, of which the syntax is a part) is not, nor a program stream's video ffmpeg did not recognise
+    /// (FATE's t.mpg, of stream id 0x1e1). Neither was traced at all.
+    /// </summary>
+    private static string InputCodec(string format) => format is "mpeg" or "mpegvideo" or "mpegts" ? " -c:v mpeg2video" : "";
+
+    /// <summary>
     /// Runs ffmpeg's trace_headers over a stream. The trace is read as it is written - a long
     /// stream's runs to hundreds of megabytes - and kept only as the fields, named as ffmpeg names them.
     /// </summary>
@@ -197,12 +204,13 @@ public static partial class FfmpegTrace
             CreateNoWindow = true,
         };
 
-        foreach (var argument in new[]
-        {
-            "-hide_banner", "-nostdin", "-v", "info", "-f", format, "-i", path,
+        foreach (var argument in new[] { "-hide_banner", "-nostdin", "-v", "info", "-f", format }
+            .Concat(InputCodec(format).Split([' '], StringSplitOptions.RemoveEmptyEntries)).Concat(
+        [
+            "-i", path,
             // -copyinkf: stream copy drops what comes before the first key frame otherwise.
             "-map", "0:v:0", "-c", "copy", "-copyinkf", "-bsf:v", "trace_headers", "-f", "null", "-",
-        })
+        ]))
         {
             start.ArgumentList.Add(argument);
         }

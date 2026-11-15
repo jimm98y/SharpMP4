@@ -56,11 +56,11 @@ public class H262TrackTests
             byte[] es;
             try
             {
-                es = SharpTrace.H262ElementaryStream(path);
+                es = SharpTrace.H262ElementaryStream(path, identified: true);
             }
             catch (InvalidOperationException)
             {
-                continue; // no video ffmpeg can identify: t.mpg
+                continue; // no video ffmpeg identifies: t.mpg's, which holds the bytes of other streams
             }
 
             string name = Path.GetRelativePath(root, path);
@@ -72,17 +72,21 @@ public class H262TrackTests
                 var (sync, iPictures) = Write(es, mp4);
 
                 // the pictures of the file, as ffmpeg decodes them, are those of the stream - but for those ffmpeg decodes
-                // otherwise each time: a damaged picture, which it conceals with what it has at hand (the last of
-                // mpeg2_field_encoding.ts, a transport stream cut short)
+                // otherwise each time: a damaged picture, which it makes of memory it did not write (the last of
+                // mpeg2_field_encoding.ts, a transport stream cut short, from the stream and from a file of ffmpeg's own
+                // alike, concealed or not). A picture differs where every decoding of the stream gives one picture, and
+                // every one of the file another: decoded twice each, it was found differing one run in three or so.
                 var fromStream = FrameHashes(ffmpeg, "mpegvideo", m2v);
-                var again = FrameHashes(ffmpeg, "mpegvideo", m2v);
+                var streamAgain = new[] { FrameHashes(ffmpeg, "mpegvideo", m2v), FrameHashes(ffmpeg, "mpegvideo", m2v) };
                 var fromFile = FrameHashes(ffmpeg, "mp4", mp4);
+                var fileAgain = FrameHashes(ffmpeg, "mp4", mp4);
                 if (fromStream.Count == 0)
                     continue;
                 if (fromFile.Count != fromStream.Count)
                     failures.Add($"{name}: decoded to {fromFile.Count} pictures of the stream's {fromStream.Count}");
                 int differs = Enumerable.Range(0, Math.Min(fromStream.Count, fromFile.Count))
-                    .Where(i => i < again.Count && fromStream[i] == again[i] && fromStream[i] != fromFile[i]).DefaultIfEmpty(-1).First();
+                    .Where(i => streamAgain.All(a => i < a.Count && a[i] == fromStream[i]) && i < fileAgain.Count && fileAgain[i] == fromFile[i]
+                        && fromStream[i] != fromFile[i]).DefaultIfEmpty(-1).First();
                 if (differs >= 0)
                     failures.Add($"{name}: picture {differs} of {fromStream.Count} decoded otherwise");
                 if (!sync.SequenceEqual(iPictures))

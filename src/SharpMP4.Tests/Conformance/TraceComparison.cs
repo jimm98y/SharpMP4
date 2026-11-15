@@ -122,6 +122,9 @@ public static class TraceComparison
     /// Streams does, on purpose. SharpMP4 reports the bytes read; ffmpeg the value's shortest form.
     /// </summary>
     private const long AV1TemporalDelimiter = 2;
+
+    /// <summary>The type of every H.262 slice, whatever its vertical position: the first of slice_start_code's values.</summary>
+    private const long H262Slice = 1;
     private const long AV1FrameHeader = 3;
     private const long AV1TileGroup = 4;
     private const long AV1Frame = 6;
@@ -381,6 +384,19 @@ public static class TraceComparison
     /// </summary>
     private static long? TypeOf(TracedUnit unit)
     {
+        // H.262: the value of its start code, the first field of every unit, as ffmpeg and SharpTrace name it; a slice's
+        // is its vertical position, a slice whatever it is. Untyped, a unit one side has and the other does not was held
+        // against the other's next, whatever that was.
+        if (unit.Fields.Count > 0)
+        {
+            var first = unit.Fields[0];
+            if (first.Name is "sequence_header_code" or "extension_start_code" or "group_start_code" or "picture_start_code"
+                or "user_data_start_code" or "sequence_end_code")
+                return first.Value;
+            if (first.Name == "slice_vertical_position")
+                return H262Slice;
+        }
+
         long? type = null;
         foreach (var field in unit.Fields)
         {

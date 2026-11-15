@@ -275,12 +275,21 @@ public static partial class SharpTrace
     {
         var capture = new FieldCapture();
         var units = new List<TracedUnit>();
-        var context = new SharpH262.H262Context();
+        // As ffmpeg, reject a forbidden picture_coding_type or quantiser_scale_code: FATE's t.mpg has bytes of other streams
+        // in its video, start codes among them
+        var context = new SharpH262.H262Context { Strict = true };
         try
         {
             byte[] data = H262ElementaryStream(path);
+            // After a unit it rejects, ffmpeg drops the rest of its packet - a picture's, as its parser splits the stream,
+            // or more where what is not video hides where the next starts (t.mpg) - and so does this.
+            int[] packets = H262Packets(path, data.Length);
+            int skipUntil = -1;
             foreach (var (offset, length) in SharpH262.H262Context.Units(data, 0, data.Length))
             {
+                if (offset < skipUntil)
+                    continue;
+
                 capture.Fields = [];
                 Exception? error = null;
                 SharpH26X.IItuSerializable? read = null;
@@ -291,6 +300,8 @@ public static partial class SharpTrace
                 catch (Exception ex)
                 {
                     error = ex;
+                    int next = Array.FindIndex(packets, p => p > offset);
+                    skipUntil = next < 0 ? (packets.Length > 0 ? data.Length : -1) : packets[next];
                 }
 
                 // a unit the syntax does not describe ffmpeg does not trace either
@@ -335,7 +346,9 @@ public static partial class SharpTrace
     /// The video elementary stream of an H.262 file: a raw one as it is; of a program or transport stream, as ffmpeg copies
     /// it out.
     /// </summary>
-    internal static byte[] H262ElementaryStream(string path)
+    /// <param name="identified">Only video ffmpeg identifies as such; otherwise it is told what the video is, as
+    /// FfmpegTrace tells it: t.mpg's, of stream id 0x1e1, it does not identify - nor copy out, untold.</param>
+    internal static byte[] H262ElementaryStream(string path, bool identified = false)
     {
         if (H262Format(path) == "mpegvideo")
             return File.ReadAllBytes(path);
@@ -345,7 +358,9 @@ public static partial class SharpTrace
         try
         {
             var start = new System.Diagnostics.ProcessStartInfo(ffmpeg) { UseShellExecute = false, RedirectStandardError = true, CreateNoWindow = true };
-            foreach (string argument in new[] { "-hide_banner", "-nostdin", "-v", "error", "-f", H262Format(path), "-i", path, "-map", "0:v:0", "-c", "copy", "-copyinkf", "-f", "data", es })
+            foreach (string argument in new[] { "-hide_banner", "-nostdin", "-v", "error", "-f", H262Format(path) }
+                .Concat(identified ? [] : ["-c:v", "mpeg2video"])
+                .Concat(["-i", path, "-map", "0:v:0", "-c", "copy", "-copyinkf", "-f", "data", es]))
                 start.ArgumentList.Add(argument);
             using (var process = System.Diagnostics.Process.Start(start)!)
             {
@@ -360,6 +375,50 @@ public static partial class SharpTrace
         {
             File.Delete(es);
         }
+    }
+
+    /// <summary>
+    /// Where each of the packets ffmpeg makes of an H.262 file's video starts in its elementary stream - from framecrc's
+    /// sizes, demuxed as <see cref="H262ElementaryStream"/> and FfmpegTrace demux it. None where there is no ffmpeg, or
+    /// the sizes do not add up to the elementary stream.
+    /// </summary>
+    internal static int[] H262Packets(string path, int length)
+    {
+        string? ffmpeg = ConformanceCorpus.LocateFfmpeg();
+        if (ffmpeg == null)
+            return [];
+
+        var start = new System.Diagnostics.ProcessStartInfo(ffmpeg)
+        {
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true,
+        };
+        foreach (string argument in new[] { "-hide_banner", "-nostdin", "-v", "error", "-f", H262Format(path), "-c:v", "mpeg2video",
+            "-i", path, "-map", "0:v:0", "-c", "copy", "-copyinkf", "-f", "framecrc", "-" })
+            start.ArgumentList.Add(argument);
+
+        var starts = new List<int>();
+        int position = 0;
+        using (var process = System.Diagnostics.Process.Start(start)!)
+        {
+            process.StandardError.ReadToEndAsync();
+            // "0,          0,          0,     3600,     3950, 0x5e8c1a52": stream, dts, pts, duration, size, checksum
+            for (string? line = process.StandardOutput.ReadLine(); line != null; line = process.StandardOutput.ReadLine())
+            {
+                if (line.StartsWith("#", StringComparison.Ordinal))
+                    continue;
+                string[] parts = line.Split(',');
+                if (parts.Length < 6 || !int.TryParse(parts[4].Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out int size))
+                    continue;
+                starts.Add(position);
+                position += size;
+            }
+            process.WaitForExit();
+        }
+
+        return position == length ? starts.ToArray() : [];
     }
 
     /// <summary>Whether a file is IVF, by its signature: some of libvpx's test vectors named .ivf are WebM.</summary>

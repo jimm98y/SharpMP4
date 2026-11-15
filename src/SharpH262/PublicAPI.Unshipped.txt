@@ -1,0 +1,2 @@
+SharpH262.H262Context.Strict.get -> bool
+SharpH262.H262Context.Strict.set -> void

@@ -338,8 +338,25 @@ namespace SharpH262
 
             IItuSerializable unit = UnitOf((int)(code & 0xFF), stream);
             stream.ReadClass(0, this, unit, "");
+            if (Strict)
+                Check(unit);
             Keep(unit);
             return unit;
+        }
+
+        /// <summary>
+        /// Reject what a conforming stream cannot contain rather than read on: a picture_coding_type of 0 (6.3.9, Table 6-12)
+        /// or a slice's quantiser_scale_code of 0 (6.3.16), both forbidden. Off by default: a stream is read as far as it
+        /// can be. A unit rejected is not kept, so the units after it are read against those before it.
+        /// </summary>
+        public bool Strict { get; set; }
+
+        private static void Check(IItuSerializable unit)
+        {
+            if (unit is PictureHeader picture && picture.PictureCodingType == 0)
+                throw new System.IO.InvalidDataException("picture_coding_type of 0 is forbidden.");
+            if (unit is Slice slice && slice.QuantiserScaleCode == 0)
+                throw new System.IO.InvalidDataException("quantiser_scale_code of 0 is forbidden.");
         }
 
         /// <summary>Writes a unit read with <see cref="ReadUnit"/>, keeping what the units after it depend on as reading does.</summary>
