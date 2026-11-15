@@ -74,8 +74,11 @@ public static partial class FfmpegTrace
     /// once traced. Made only when ffmpeg is run.</param>
     public static List<TracedUnit> Read(string ffmpeg, string path, string format, Func<string, string?>? input = null)
     {
-        // The arguments count in finding an entry, and so does the version of what it holds
-        string? entry = ToolCache.EntryOf("ffmpeg", [ffmpeg], $"trace 1 -f {format} -bsf:v trace_headers", path);
+        // The arguments count in finding an entry, and so does the version of what it holds: an entry holds the units
+        // as Trace read them out of ffmpeg's log, so a change to Trace or its arguments must count the version up, or
+        // the entries made before it are compared as they were read then. 2: the extradata's units are the trace of a
+        // stream ffmpeg traces no packet of; entries of 1 were made both with the extradata's units and without them.
+        string? entry = ToolCache.EntryOf("ffmpeg", [ffmpeg], $"trace 2 -f {format} -bsf:v trace_headers", path);
         var units = ToolCache.GetOrRun(entry, () =>
         {
             string? made = input?.Invoke(path);
@@ -208,6 +211,10 @@ public static partial class FfmpegTrace
         process.StandardOutput.ReadToEndAsync();
 
         var units = new List<TracedUnit>();
+        // what ffmpeg traced of the extradata, the stream's only trace where ffmpeg gives up before its first packet: a
+        // filter that cannot be set up on the extradata (MVC's, 3D-HEVC's and SHVC's other layers), or an output whose
+        // dimensions ffmpeg does not know
+        var extradataUnits = new List<TracedUnit>();
         TracedUnit? current = null;
         string? heading = null;
         // one string per name, not one per line
@@ -229,7 +236,7 @@ public static partial class FfmpegTrace
                 heading = null;
                 continue;
             }
-            if (text.Length == 0 || extradata)
+            if (text.Length == 0)
                 continue;
 
             if (text.StartsWith("Failed to read unit", StringComparison.Ordinal))
@@ -256,7 +263,7 @@ public static partial class FfmpegTrace
                 or "slice_vertical_position" or "user_data_start_code" or "sequence_end_code")
             {
                 current = new TracedUnit(heading);
-                units.Add(current);
+                (extradata ? extradataUnits : units).Add(current);
             }
 
             heading = null;
@@ -270,7 +277,7 @@ public static partial class FfmpegTrace
         }
 
         process.WaitForExit();
-        return units;
+        return units.Count > 0 ? units : extradataUnits;
     }
 
     /// <summary>

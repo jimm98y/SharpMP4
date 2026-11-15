@@ -29,8 +29,9 @@ namespace SharpMP4.Tests.Conformance;
 /// What a third-party tool - ffmpeg, ExifTool - made of a file, kept so that the tool runs once per file and
 /// not on every test run. An entry is found by the tool's programs, its arguments and the file, each by path,
 /// length and time of last write: a new build of the tool, other arguments or a file downloaded anew miss.
-/// What is kept is the tool's output before the harness reads anything into it, so that changing the
-/// harness - ffmpeg's aliases, say - needs no entry made again.
+/// What is kept is what the harness first reads out of the tool's output - ffmpeg's units, as its log has them - before
+/// anything is made of them, so that changing what is made of them - ffmpeg's aliases, say - needs no entry made again.
+/// Changing how they are read out of the log does: the version in the arguments has to count up with it.
 /// </summary>
 /// <remarks>
 /// The entries are in cache under the conformance folder, or under SHARPMP4_TOOL_CACHE if set; set to
@@ -85,7 +86,8 @@ public static class ToolCache
 
         try
         {
-            using var file = new FileStream(entry, FileMode.Open, FileAccess.Read, FileShare.Read, 1 << 16);
+            // FileShare.Delete: an entry being read can be replaced by a host saving it meanwhile
+            using var file = new FileStream(entry, FileMode.Open, FileAccess.Read, FileShare.Read | FileShare.Delete, 1 << 16);
             using var reader = new BinaryReader(new GZipStream(file, CompressionMode.Decompress), Encoding.UTF8);
             value = read(reader);
             return true;
@@ -111,6 +113,11 @@ public static class ToolCache
             using (var writer = new BinaryWriter(new GZipStream(file, CompressionLevel.Fastest), Encoding.UTF8))
                 write(writer, value);
             File.Move(partial, entry, overwrite: true);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // The test hosts of both targets fill the cache at once, each making the same entries: another saved this
+            // one meanwhile, or is reading it. The value is in hand, and the entry is the other's or made next time.
         }
         finally
         {
