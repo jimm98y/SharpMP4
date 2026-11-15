@@ -22,7 +22,7 @@
 using SharpH26X;
 using SharpMP4.Common;
 using SharpMP4.Tracks;
-using System.Text.RegularExpressions;
+using System.Globalization;
 using H264 = SharpH264;
 using H265 = SharpH265;
 using H266 = SharpH266;
@@ -753,11 +753,8 @@ public static partial class SharpTrace
     /// its depth in dashes, the name, the bits it took and the value - and the structures around
     /// them the same way, whose values are objects rather than numbers, and so are left out.
     /// </summary>
-    private sealed partial class FieldCapture : IMp4Logger
+    private sealed class FieldCapture : IMp4Logger
     {
-        private static readonly Regex fieldLineRegex = new(@"^-* (\S+) +(\d+)   (-?\d+|byte\[\])$", RegexOptions.Compiled);
-        private static Regex FieldLine() => fieldLineRegex;
-
         public List<TracedField> Fields { get; set; } = [];
 
         public bool IsErrorEnabled { get; set; }
@@ -768,12 +765,77 @@ public static partial class SharpTrace
 
         public void LogInfo(string info)
         {
-            var match = FieldLine().Match(info);
-            if (match.Success)
-                Fields.Add(new TracedField(match.Groups[1].Value, int.Parse(match.Groups[2].Value),
-                    // A run of bytes read as one, logged without its value.
-                    match.Groups[3].Value == "byte[]" ? TracedField.Opaque : long.Parse(match.Groups[3].Value)));
+            TracedField? field;
+            try
+            {
+                field = Parse(info);
+            }
+            catch (Exception ex)
+            {
+                // The line it failed on, and what parsing it again gives: failing again blames the
+                // line, a field the second time blames whatever broke the first.
+                string again;
+                try
+                {
+                    again = Parse(info)?.ToString() ?? "no field";
+                }
+                catch (Exception retry)
+                {
+                    again = $"{retry.GetType().Name} again";
+                }
+                throw new InvalidDataException($"the trace line \"{info}\" did not parse ({ex.GetType().Name}: {ex.Message}); parsed again: {again}", ex);
+            }
+
+            if (field is { } f)
+                Fields.Add(f);
         }
+
+        /// <summary>
+        /// A field of a line "-- name    bits   value": dashes, a space, the name, spaces, the bits, three spaces, and the
+        /// value - a number, or "byte[]" for a run of bytes read as one - to the end. A structure's line, whose value is
+        /// an object, is none. Read by hand rather than by a Regex, which every thread of a parallel run would share: the
+        /// two failures this harness ever had were thrown inside one, and could not be made again.
+        /// </summary>
+        internal static TracedField? Parse(string info)
+        {
+            int i = 0;
+            while (i < info.Length && info[i] == '-')
+                i++;
+            if (i == info.Length || info[i++] != ' ')
+                return null;
+
+            int nameStart = i;
+            while (i < info.Length && !char.IsWhiteSpace(info[i]))
+                i++;
+            if (i == nameStart || i == info.Length || info[i] != ' ')
+                return null;
+            string name = info.Substring(nameStart, i - nameStart);
+
+            while (i < info.Length && info[i] == ' ')
+                i++;
+            int bitsStart = i;
+            while (i < info.Length && IsDigit(info[i]))
+                i++;
+            if (i == bitsStart || string.CompareOrdinal(info, i, "   ", 0, 3) != 0)
+                return null;
+            int bits = int.Parse(info.Substring(bitsStart, i - bitsStart), CultureInfo.InvariantCulture);
+            i += 3;
+
+            if (string.CompareOrdinal(info, i, "byte[]", 0, int.MaxValue) == 0)
+                return new TracedField(name, bits, TracedField.Opaque);
+
+            int valueStart = i;
+            if (i < info.Length && info[i] == '-')
+                i++;
+            int digitsStart = i;
+            while (i < info.Length && IsDigit(info[i]))
+                i++;
+            if (i == digitsStart || i != info.Length)
+                return null;
+            return new TracedField(name, bits, long.Parse(info.Substring(valueStart), CultureInfo.InvariantCulture));
+        }
+
+        private static bool IsDigit(char c) => c is >= '0' and <= '9';
 
         public void LogError(string error) { }
         public void LogWarning(string warning) { }
