@@ -112,3 +112,6 @@ static SharpMP4.Tracks.DtsFrame.TryParse(byte[] buffer, int offset, int length, 
 static SharpMP4.Tracks.DtsFrame.TryParse(byte[] frame, out SharpMP4.Tracks.DtsFrame dtsFrame) -> bool
 static SharpMP4.Tracks.DtsTrack.IsDts(SharpISOBMFF.Box config) -> bool
 static SharpMP4.Tracks.DtsTrack.ParseFrames(byte[] buffer, int offset, int length) -> System.Collections.Generic.IEnumerable<System.ArraySegment<byte>>
+SharpMP4.Readers.MediaSample.MediaSample() -> void
+SharpMP4.Readers.VideoReader.ReadSample(uint trackID, SharpMP4.Readers.MediaSample sample) -> bool
+SharpMP4.Readers.VideoReader.ReadSamples(uint trackID, int maxCount, SharpMP4.Readers.MediaSample sample) -> bool

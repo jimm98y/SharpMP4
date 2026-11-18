@@ -118,6 +118,27 @@ namespace SharpMP4.Readers
             this.Data = data;
             this.IsRandomAccessPoint = isRandomAccessPoint;
         }
+
+        /// <summary>
+        /// A sample to read into, again and again: see <see cref="VideoReader.ReadSample(uint, MediaSample)"/>. Of no data
+        /// until it is read into.
+        /// </summary>
+        public MediaSample()
+        {
+        }
+
+        /// <summary>Every property set again, as of a sample made of these: what a sample read before had is not kept.</summary>
+        internal MediaSample Set(long pts, long dts, long duration, ArraySegment<byte> data, bool isRandomAccessPoint)
+        {
+            this.PTS = pts;
+            this.DTS = dts;
+            this.LongDuration = duration;
+            this.Data = data;
+            this.IsRandomAccessPoint = isRandomAccessPoint;
+            this.Offset = -1;
+            this.Encryption = null;
+            return this;
+        }
     }
 
     /// <summary>
@@ -621,13 +642,32 @@ namespace SharpMP4.Readers
         /// </summary>
         public MediaSample ReadSample(uint trackID)
         {
+            return ReadSampleInto(trackID, null);
+        }
+
+        /// <summary>
+        /// The next sample of a track, as <see cref="ReadSample(uint)"/>, into a sample of the caller's: every property of it
+        /// set again, none allocated. A player reading sample after sample reads them all into one. Its
+        /// <see cref="MediaSample.Data"/> is valid until the next sample of the track is read, as ever.
+        /// </summary>
+        /// <returns>Whether a sample was read; false after the last, the sample as it was.</returns>
+        public bool ReadSample(uint trackID, MediaSample sample)
+        {
+            if (sample == null)
+                throw new ArgumentNullException(nameof(sample));
+            return ReadSampleInto(trackID, sample) != null;
+        }
+
+        /// <summary>The next sample of a track, into <paramref name="into"/>, or a new one where it is null; null after the last.</summary>
+        private MediaSample ReadSampleInto(uint trackID, MediaSample into)
+        {
             var trackContext = TrackContextOf(trackID);
 
             // the samples of the 'moov' - all of a file that is not fragmented, and any a fragmented one has before its
             // fragments - then those of the fragments
             if (!trackContext.IsReadingFragments)
             {
-                var sample = ReadMp4Sample(trackID, trackContext);
+                var sample = ReadMp4Sample(trackID, trackContext, into);
                 if (sample != null || !this.IsFragmented)
                     return sample;
 
@@ -635,7 +675,7 @@ namespace SharpMP4.Readers
                 trackContext.SampleIndex = 0;
             }
 
-            return ReadFragmentedMp4Sample(trackID, trackContext);
+            return ReadFragmentedMp4Sample(trackID, trackContext, into);
         }
 
         /// <summary>
@@ -646,11 +686,28 @@ namespace SharpMP4.Readers
         /// </summary>
         public MediaSample ReadSamples(uint trackID, int maxCount)
         {
+            return ReadSamplesInto(trackID, maxCount, null);
+        }
+
+        /// <summary>
+        /// The next samples of a track, up to so many, as one - as <see cref="ReadSamples(uint, int)"/> - into a sample of the
+        /// caller's, as <see cref="ReadSample(uint, MediaSample)"/>.
+        /// </summary>
+        /// <returns>Whether samples were read; false after the last, the sample as it was.</returns>
+        public bool ReadSamples(uint trackID, int maxCount, MediaSample sample)
+        {
+            if (sample == null)
+                throw new ArgumentNullException(nameof(sample));
+            return ReadSamplesInto(trackID, maxCount, sample) != null;
+        }
+
+        private MediaSample ReadSamplesInto(uint trackID, int maxCount, MediaSample into)
+        {
             var trackContext = TrackContextOf(trackID);
             uint first = trackContext.SampleIndex;
             if (maxCount <= 1 || trackContext.IsReadingFragments || trackContext.Protection != null
                 || first >= trackContext.SampleCount || !trackContext.MoveTo(first))
-                return ReadSample(trackID);
+                return ReadSampleInto(trackID, into);
 
             long startAddress = trackContext.CursorAddress;
             long dts = trackContext.CursorDts;
@@ -674,17 +731,17 @@ namespace SharpMP4.Readers
                 && trackContext.CursorIsSyncSample == isRandomAccessPoint);
 
             if (count == 0)
-                return ReadSample(trackID);
+                return ReadSampleInto(trackID, into);
 
             trackContext.SampleBuffer = BufferFor(trackContext.SampleBuffer, (uint)size, size);
             ReadSampleData(startAddress, (uint)size, trackContext.SampleBuffer);
             trackContext.SampleIndex = first + count;
 
-            return new MediaSample(dts + compositionOffset, dts, duration,
+            return (into ?? new MediaSample()).Set(dts + compositionOffset, dts, duration,
                 new ArraySegment<byte>(trackContext.SampleBuffer, 0, (int)size), isRandomAccessPoint);
         }
 
-        private MediaSample ReadMp4Sample(uint trackID, TrackContext trackContext)
+        private MediaSample ReadMp4Sample(uint trackID, TrackContext trackContext, MediaSample into)
         {
             uint sampleIndex = trackContext.SampleIndex;
             if (trackContext.SampleCount <= sampleIndex)
@@ -718,7 +775,7 @@ namespace SharpMP4.Readers
 
             ReadSampleData(startAddress, sampleSize, trackContext.SampleBuffer);
 
-            var mediaSample = new MediaSample(pts, dts, duration,
+            var mediaSample = (into ?? new MediaSample()).Set(pts, dts, duration,
                 new ArraySegment<byte>(trackContext.SampleBuffer, 0, (int)sampleSize), isRandomAccessPoint);
             mediaSample.Offset = startAddress;
             mediaSample.Encryption = trackContext.SampleEncryptions != null && sampleIndex < trackContext.SampleEncryptions.Length ? trackContext.SampleEncryptions[sampleIndex] : null;
@@ -750,7 +807,7 @@ namespace SharpMP4.Readers
             return encryptions;
         }
 
-        private MediaSample ReadFragmentedMp4Sample(uint trackID, TrackContext trackContext)
+        private MediaSample ReadFragmentedMp4Sample(uint trackID, TrackContext trackContext, MediaSample into)
         {
             if (trackContext.Moof == null || trackContext.SampleIndex >= trackContext.FragmentSampleCount) // TODO: sample streaming backwards
             {
@@ -767,7 +824,7 @@ namespace SharpMP4.Readers
 
                 // a fragment of no samples is followed by the next
                 if (trackContext.FragmentSampleCount == 0)
-                    return ReadFragmentedMp4Sample(trackID, trackContext);
+                    return ReadFragmentedMp4Sample(trackID, trackContext, into);
             }
 
             var trun = trackContext.Truns[trackContext.FragmentSampleTrunIndex[trackContext.SampleIndex]];
@@ -794,7 +851,7 @@ namespace SharpMP4.Readers
             // an empty sample has nothing to read, where an mdat of its header alone may have no stream
             ReadSampleData(startAddress, sampleSize, trackContext.SampleBuffer);
 
-            var mediaSample = new MediaSample(pts, dts, sampleDuration,
+            var mediaSample = (into ?? new MediaSample()).Set(pts, dts, sampleDuration,
                 new ArraySegment<byte>(trackContext.SampleBuffer, 0, (int)sampleSize), isRandomAccessPoint);
             mediaSample.Offset = startAddress;
             mediaSample.Encryption = trackContext.FragmentEncryption != null && trackContext.SampleIndex < trackContext.FragmentEncryption.Length ? trackContext.FragmentEncryption[trackContext.SampleIndex] : null;
