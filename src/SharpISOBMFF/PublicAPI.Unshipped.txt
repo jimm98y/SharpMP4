@@ -1,0 +1,2 @@
+const SharpISOBMFF.HandlerNames.Metadata = "Metadata Handler\0" -> string
+const SharpISOBMFF.HandlerTypes.Metadata = "meta" -> string

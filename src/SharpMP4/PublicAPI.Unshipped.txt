@@ -115,3 +115,57 @@ static SharpMP4.Tracks.DtsTrack.ParseFrames(byte[] buffer, int offset, int lengt
 SharpMP4.Readers.MediaSample.MediaSample() -> void
 SharpMP4.Readers.VideoReader.ReadSample(uint trackID, SharpMP4.Readers.MediaSample sample) -> bool
 SharpMP4.Readers.VideoReader.ReadSamples(uint trackID, int maxCount, SharpMP4.Readers.MediaSample sample) -> bool
+abstract SharpMP4.Tracks.MetadataTrack.CreateMetadataSampleEntry() -> SharpISOBMFF.MetaDataSampleEntry
+abstract SharpMP4.Tracks.MetadataTrack.SampleEntryType.get -> string
+SharpMP4.Tracks.MetadataTrack
+SharpMP4.Tracks.MetadataTrack.CopyMetadataTo<T>(T clone) -> T
+SharpMP4.Tracks.MetadataTrack.DescribedTrackIDs.get -> System.Collections.Generic.IList<uint>
+SharpMP4.Tracks.MetadataTrack.DescribedTrackIDs.set -> void
+SharpMP4.Tracks.MetadataTrack.MetadataTrack(uint timescale, string handlerType = "meta") -> void
+SharpMP4.Tracks.MetadataTrack.SampleEntry.get -> SharpISOBMFF.Box
+SharpMP4.Tracks.MetadataTrack.SampleEntry.set -> void
+const SharpMP4.Tracks.MetadataTrack.DescribesReference = "cdsc" -> string
+override SharpMP4.Tracks.MetadataTrack.Dispose(bool disposing) -> void
+override SharpMP4.Tracks.MetadataTrack.FillTkhdBox(SharpISOBMFF.TrackHeaderBox tkhd) -> void
+override SharpMP4.Tracks.MetadataTrack.HandlerName.get -> string
+override SharpMP4.Tracks.MetadataTrack.HandlerType.get -> string
+override SharpMP4.Tracks.MetadataTrack.Language.get -> string
+override SharpMP4.Tracks.MetadataTrack.Language.set -> void
+override SharpMP4.Tracks.MetadataTrack.ProcessSample(byte[] buffer, int offset, int length, out System.ArraySegment<byte> output, out bool isRandomAccessPoint) -> void
+override sealed SharpMP4.Tracks.MetadataTrack.CreateSampleEntryBox() -> SharpISOBMFF.Box
+static SharpMP4.Tracks.MetadataTrack.Create(SharpISOBMFF.Box entry, uint timescale, string handlerType = "meta") -> SharpMP4.Tracks.MetadataTrack
+static SharpMP4.Tracks.MetadataTrack.CreateTrackReferenceBox(SharpMP4.Tracks.ITrack track) -> SharpISOBMFF.TrackReferenceBox
+static SharpMP4.Tracks.MetadataTrack.DescribedTrackIDsOf(SharpISOBMFF.TrackBox trak) -> System.Collections.Generic.List<uint>
+static SharpMP4.Tracks.MetadataTrack.IsMetadata(SharpISOBMFF.Box entry) -> bool
+SharpMP4.Tracks.UriMetadataTrack
+SharpMP4.Tracks.UriMetadataTrack.InitializationData.get -> byte[]
+SharpMP4.Tracks.UriMetadataTrack.InitializationData.set -> void
+SharpMP4.Tracks.UriMetadataTrack.Uri.get -> string
+SharpMP4.Tracks.UriMetadataTrack.Uri.set -> void
+SharpMP4.Tracks.UriMetadataTrack.UriMetadataTrack(SharpISOBMFF.URIMetaSampleEntry entry, uint timescale, string handlerType = "meta") -> void
+SharpMP4.Tracks.UriMetadataTrack.UriMetadataTrack(string uri, byte[] initializationData = null, uint timescale = 1000) -> void
+override SharpMP4.Tracks.UriMetadataTrack.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.UriMetadataTrack.CreateMetadataSampleEntry() -> SharpISOBMFF.MetaDataSampleEntry
+override SharpMP4.Tracks.UriMetadataTrack.SampleEntryType.get -> string
+SharpMP4.Tracks.TextMetadataTrack
+SharpMP4.Tracks.TextMetadataTrack.ContentEncoding.get -> string
+SharpMP4.Tracks.TextMetadataTrack.ContentEncoding.set -> void
+SharpMP4.Tracks.TextMetadataTrack.MimeFormat.get -> string
+SharpMP4.Tracks.TextMetadataTrack.MimeFormat.set -> void
+SharpMP4.Tracks.TextMetadataTrack.TextMetadataTrack(SharpISOBMFF.TextMetaDataSampleEntry entry, uint timescale, string handlerType = "meta") -> void
+SharpMP4.Tracks.TextMetadataTrack.TextMetadataTrack(string mimeFormat, string contentEncoding = null, uint timescale = 1000) -> void
+override SharpMP4.Tracks.TextMetadataTrack.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.TextMetadataTrack.CreateMetadataSampleEntry() -> SharpISOBMFF.MetaDataSampleEntry
+override SharpMP4.Tracks.TextMetadataTrack.SampleEntryType.get -> string
+SharpMP4.Tracks.XmlMetadataTrack
+SharpMP4.Tracks.XmlMetadataTrack.ContentEncoding.get -> string
+SharpMP4.Tracks.XmlMetadataTrack.ContentEncoding.set -> void
+SharpMP4.Tracks.XmlMetadataTrack.Namespace.get -> string
+SharpMP4.Tracks.XmlMetadataTrack.Namespace.set -> void
+SharpMP4.Tracks.XmlMetadataTrack.SchemaLocation.get -> string
+SharpMP4.Tracks.XmlMetadataTrack.SchemaLocation.set -> void
+SharpMP4.Tracks.XmlMetadataTrack.XmlMetadataTrack(SharpISOBMFF.XMLMetaDataSampleEntry entry, uint timescale, string handlerType = "meta") -> void
+SharpMP4.Tracks.XmlMetadataTrack.XmlMetadataTrack(string ns, string schemaLocation = null, string contentEncoding = null, uint timescale = 1000) -> void
+override SharpMP4.Tracks.XmlMetadataTrack.Clone() -> SharpMP4.Tracks.ITrack
+override SharpMP4.Tracks.XmlMetadataTrack.CreateMetadataSampleEntry() -> SharpISOBMFF.MetaDataSampleEntry
+override SharpMP4.Tracks.XmlMetadataTrack.SampleEntryType.get -> string

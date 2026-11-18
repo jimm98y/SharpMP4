@@ -304,6 +304,14 @@ namespace SharpMP4.Builders
             tkhd.ModificationTime = creationTime;
             tkhd.Version = MovieTime.Version(trackDuration, creationTime);
 
+            // the tracks it refers to - of a metadata track, the ones it describes - after its header (14496-12 8.3.3)
+            var tref = MetadataTrack.CreateTrackReferenceBox(track.Track);
+            if (tref != null)
+            {
+                tref.SetParent(trak);
+                trak.Children.Add(tref);
+            }
+
             if (edit.HasValue)
             {
                 var (editDuration, mediaTime) = edit.Value;
@@ -420,6 +428,28 @@ namespace SharpMP4.Builders
                     else
                     {
                         // timed text, WebVTT's and 3GPP's, has no media header of its own (14496-12 12.5.2)
+                        var nmhd = new NullMediaHeaderBox();
+                        nmhd.SetParent(minf);
+                        minf.Children.Add(nmhd);
+                    }
+                    break;
+
+                case HandlerTypes.Metadata:
+                    if (quickTime)
+                    {
+                        // QuickTime's media other than sound and video have the base media header, as ffmpeg writes it
+                        var gmhd = new GenericMediaHeaderAtom();
+                        gmhd.SetParent(minf);
+                        gmhd.Children = new List<Box>();
+                        minf.Children.Add(gmhd);
+
+                        var gmin = new BaseMediaInfoAtom { GraphicsMode = 0x40, OpColorR = 0x8000, OpColorG = 0x8000, OpColorB = 0x8000 };
+                        gmin.SetParent(gmhd);
+                        gmhd.Children.Add(gmin);
+                    }
+                    else
+                    {
+                        // timed metadata has no media header of its own (14496-12 12.3.2)
                         var nmhd = new NullMediaHeaderBox();
                         nmhd.SetParent(minf);
                         minf.Children.Add(nmhd);

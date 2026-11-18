@@ -70,6 +70,16 @@ namespace SharpMP4.Tracks
                 return subtitles;
             }
 
+            // timed metadata, as subtitles, by its sample entry: given the entry's first child where it has one
+            Box entry = sampleEntry is SampleEntry ? sampleEntry : sampleEntry?.GetParent() as SampleEntry ?? sampleEntry;
+            MetadataTrack metadata = MetadataTrack.Create(entry, timescale, IsoStream.ToFourCC(handlerType));
+            if (metadata != null)
+            {
+                metadata.TrackID = trackID;
+                metadata.DefaultSampleDuration = sampleDuration;
+                return metadata;
+            }
+
             if (handlerType == IsoStream.FromFourCC(HandlerTypes.Video))
             {
                 return CreateVideoTrack(trackID, sampleEntry, timescale, sampleDuration);

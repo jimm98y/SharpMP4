@@ -288,6 +288,10 @@ namespace SharpMP4.Readers
                         if (trackImpl is ISubtitleTrack subtitles && SubtitleTrackBase.IsForced(track))
                             subtitles.Forced = true;
 
+                        // a metadata track of the tracks its 'cdsc' reference names
+                        if (trackImpl is MetadataTrack metadata)
+                            metadata.DescribedTrackIDs = MetadataTrack.DescribedTrackIDsOf(track);
+
                         this.Tracks[trackID].Track = trackImpl;
 
                         var stco = stbl.Children.OfType<ChunkOffsetBox>().SingleOrDefault();

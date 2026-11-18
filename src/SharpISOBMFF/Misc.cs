@@ -38,6 +38,9 @@ namespace SharpISOBMFF
 
         /// <summary>Apple's subtitles: 3GPP timed text ('tx3g') as QuickTime and Apple's players have it.</summary>
         public const string AppleSubtitle = "sbtl";
+
+        /// <summary>Timed metadata (ISO/IEC 14496-12 12.3): 'urim', 'mett' and 'metx' sample entries.</summary>
+        public const string Metadata = "meta";
     }
 
     public static class HandlerNames
@@ -47,6 +50,7 @@ namespace SharpISOBMFF
         public const string Hint = "Hint Handler\0";
         public const string Text = "Text Handler\0";
         public const string Subtitle = "Subtitle Handler\0";
+        public const string Metadata = "Metadata Handler\0";
     }
 
     public class SampleFlags
