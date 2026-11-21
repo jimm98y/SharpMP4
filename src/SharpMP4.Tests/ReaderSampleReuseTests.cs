@@ -170,5 +170,12 @@ public class ReaderSampleReuseTests
             Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => track.FragmentSampleDts[track.FragmentSampleCount]);
         }
         Assert.AreEqual(12, read);
+
+        // cleared, of none: the same table, filled again of the next fragment read
+        track.FragmentSampleDts.Clear();
+        Assert.AreEqual(0, track.FragmentSampleDts.Count);
+        Assert.IsFalse(track.FragmentSampleDts.Any());
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => track.FragmentSampleDts[0]);
+        Assert.AreSame(times, track.FragmentSampleDts);
     }
 }

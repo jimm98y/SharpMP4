@@ -193,3 +193,4 @@ SharpMP4.Readers.TrackContext.FragmentSampleDts.get -> SharpMP4.Readers.Fragment
 SharpMP4.Readers.TrackContext.FragmentSampleStartAddress.get -> SharpMP4.Readers.FragmentTable<long>
 SharpMP4.Readers.TrackContext.FragmentSampleTrunEntryIndex.get -> SharpMP4.Readers.FragmentTable<int>
 SharpMP4.Readers.TrackContext.FragmentSampleTrunIndex.get -> SharpMP4.Readers.FragmentTable<int>
+SharpMP4.Readers.FragmentTable<T>.Clear() -> void

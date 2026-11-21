@@ -59,6 +59,17 @@ namespace SharpMP4.Readers
             }
         }
 
+        /// <summary>
+        /// Back to none, as it was made: its count 0 and its array let go, so that a track read to its end, or a reader kept,
+        /// holds nothing of its largest fragment. Of the current fragment's tables, its samples not yet read cannot be read
+        /// after; the next fragment read fills them again.
+        /// </summary>
+        public void Clear()
+        {
+            _items = Array.Empty<T>();
+            Count = 0;
+        }
+
         // of a fragment of so many samples: every entry of it written before it is read
         internal void Reset(int count)
         {
