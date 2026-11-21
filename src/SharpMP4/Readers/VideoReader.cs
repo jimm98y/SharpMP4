@@ -401,21 +401,24 @@ namespace SharpMP4.Readers
                 if (container.Children[i] is MovieFragmentBox)
                 {
                     var currentMoof = (MovieFragmentBox)container.Children[i];
-                    var mfhd = currentMoof.Children.OfType<MovieFragmentHeaderBox>().Single();
-                    var trafs = currentMoof.Children.OfType<TrackFragmentBox>();
-                    foreach (var traf in trafs)
+                    SingleChild<MovieFragmentHeaderBox>(currentMoof, required: true);
+                    // of the boxes by index, not of OfType's: of an iterator and an enumerator of each look, of each fragment
+                    var moofChildren = currentMoof.Children;
+                    for (int t = 0; t < moofChildren.Count; t++)
                     {
-                        var tfhd = traf.Children.OfType<TrackFragmentHeaderBox>().Single();
+                        if (!(moofChildren[t] is TrackFragmentBox traf))
+                            continue;
+                        var tfhd = SingleChild<TrackFragmentHeaderBox>(traf, required: true);
                         if(tfhd.TrackID == trackID)
                         {
                             moof = currentMoof;
                             trackContext.Moof = moof;
                             trackContext.Traf = traf;
                             trackContext.Tfhd = tfhd;
-                            trackContext.Truns = traf.Children.OfType<TrackRunBox>().ToArray(); // there can be 1 or multiple trun boxes, depending upon the encoder
+                            trackContext.Truns = RunsOf(traf, trackContext.Truns); // there can be 1 or multiple trun boxes, depending upon the encoder
                             foreach (var trun in trackContext.Truns)
                                 EntriesOf(trun);
-                            var tfdt = traf.Children.OfType<TrackFragmentBaseMediaDecodeTimeBox>().SingleOrDefault();
+                            var tfdt = SingleChild<TrackFragmentBaseMediaDecodeTimeBox>(traf, required: false);
 
                             // pre-calculate DTS and address for the fragment
                             int sampleCount = 0;
@@ -432,10 +435,11 @@ namespace SharpMP4.Readers
                             long startAddressBase = BaseDataOffsetOf(currentMoof, traf);
 
                             trackContext.FragmentBaseAddress = startAddressBase;
-                            trackContext.FragmentSampleStartAddress = new long[sampleCount];
-                            trackContext.FragmentSampleDts = new long[sampleCount];
-                            trackContext.FragmentSampleTrunIndex = new int[sampleCount];
-                            trackContext.FragmentSampleTrunEntryIndex = new int[sampleCount];
+                            // the track's tables filled again, of the fragment's count of samples
+                            trackContext.FragmentSampleStartAddress.Reset(sampleCount);
+                            trackContext.FragmentSampleDts.Reset(sampleCount);
+                            trackContext.FragmentSampleTrunIndex.Reset(sampleCount);
+                            trackContext.FragmentSampleTrunEntryIndex.Reset(sampleCount);
                             trackContext.FragmentLargestSample = 0;
 
                             int sampleIndex = 0;
@@ -610,14 +614,57 @@ namespace SharpMP4.Readers
         /// one; else the start of the 'moof' where default-base-is-moof is set, or it is the first track fragment; else
         /// the end of the data of the track fragment before it.
         /// </summary>
+        // the child of a box of the type: as Single, of none or more than one an error where it is required; as
+        //  SingleOrDefault, of more than one, where not - of the boxes by index, of no iterator nor enumerator of each look
+        private static T SingleChild<T>(Box box, bool required) where T : Box
+        {
+            T found = null;
+            var children = box.Children;
+            for (int i = 0; i < children.Count; i++)
+            {
+                if (children[i] is T child)
+                {
+                    if (found != null)
+                        throw new InvalidOperationException($"More than one {typeof(T).Name} in a {box.GetType().Name}.");
+                    found = child;
+                }
+            }
+            if (found == null && required)
+                throw new InvalidOperationException($"No {typeof(T).Name} in a {box.GetType().Name}.");
+            return found;
+        }
+
+        // the runs of a track fragment, of the array before where it is of as many: of a fragment of one run, as most are, none
+        //  made of each
+        private static TrackRunBox[] RunsOf(TrackFragmentBox traf, TrackRunBox[] before)
+        {
+            var children = traf.Children;
+            int count = 0;
+            for (int i = 0; i < children.Count; i++)
+            {
+                if (children[i] is TrackRunBox)
+                    count++;
+            }
+            var runs = before != null && before.Length == count ? before : new TrackRunBox[count];
+            for (int i = 0, k = 0; i < children.Count; i++)
+            {
+                if (children[i] is TrackRunBox trun)
+                    runs[k++] = trun;
+            }
+            return runs;
+        }
+
         private long BaseDataOffsetOf(MovieFragmentBox moof, TrackFragmentBox target)
         {
             long moofOffset = moof.GetBoxOffset();
             long previousEnd = moofOffset;
             bool first = true;
-            foreach (var traf in moof.Children.OfType<TrackFragmentBox>())
+            var moofChildren = moof.Children;
+            for (int t = 0; t < moofChildren.Count; t++)
             {
-                var tfhd = traf.Children.OfType<TrackFragmentHeaderBox>().Single();
+                if (!(moofChildren[t] is TrackFragmentBox traf))
+                    continue;
+                var tfhd = SingleChild<TrackFragmentHeaderBox>(traf, required: true);
                 long baseOffset = (tfhd.Flags & 0x1) == 0x1 ? (long)tfhd.BaseDataOffset
                     : (tfhd.Flags & 0x20000) == 0x20000 || first ? moofOffset
                     : previousEnd;
@@ -625,11 +672,20 @@ namespace SharpMP4.Readers
                     return baseOffset;
 
                 // where this track fragment's data ends: after the last byte of its runs
-                var trex = this.Mvex?.Children.OfType<TrackExtendsBox>().FirstOrDefault(x => x.TrackID == tfhd.TrackID);
+                TrackExtendsBox trex = null;
+                var mvexChildren = this.Mvex?.Children;
+                for (int i = 0; mvexChildren != null && i < mvexChildren.Count && trex == null; i++)
+                {
+                    if (mvexChildren[i] is TrackExtendsBox extends && extends.TrackID == tfhd.TrackID)
+                        trex = extends;
+                }
                 long position = baseOffset;
                 previousEnd = baseOffset;
-                foreach (var trun in traf.Children.OfType<TrackRunBox>())
+                var trafChildren = traf.Children;
+                for (int r = 0; r < trafChildren.Count; r++)
                 {
+                    if (!(trafChildren[r] is TrackRunBox trun))
+                        continue;
                     if ((trun.Flags & 0x1) == 0x1)
                         position = baseOffset + trun.DataOffset;
                     foreach (var entry in trun._TrunEntry ?? Array.Empty<TrunEntry>())
@@ -831,8 +887,8 @@ namespace SharpMP4.Readers
                     return ReadFragmentedMp4Sample(trackID, trackContext, into);
             }
 
-            var trun = trackContext.Truns[trackContext.FragmentSampleTrunIndex[trackContext.SampleIndex]];
-            int trunEntryIndex = trackContext.FragmentSampleTrunEntryIndex[trackContext.SampleIndex];
+            var trun = trackContext.Truns[trackContext.FragmentSampleTrunIndex[(int)trackContext.SampleIndex]];
+            int trunEntryIndex = trackContext.FragmentSampleTrunEntryIndex[(int)trackContext.SampleIndex];
 
             var entry = trun._TrunEntry[trunEntryIndex];
 
@@ -843,10 +899,10 @@ namespace SharpMP4.Readers
             bool isRandomAccessPoint = IsSyncSampleOf(sampleFlags);
             int sampleCompositionTime = CompositionOffsetOf(entry);
 
-            long dts = trackContext.FragmentSampleDts[trackContext.SampleIndex];
+            long dts = trackContext.FragmentSampleDts[(int)trackContext.SampleIndex];
             long pts = dts + sampleCompositionTime;
 
-            long startAddress = trackContext.FragmentSampleStartAddress[trackContext.SampleIndex];
+            long startAddress = trackContext.FragmentSampleStartAddress[(int)trackContext.SampleIndex];
 
             // Into the track's own buffer, as in the unfragmented case: made the size of the fragment's largest sample at
             // once, rather than grown into.
@@ -942,6 +998,24 @@ namespace SharpMP4.Readers
         {
             var trackContext = TrackContextOf(trackID);
             return trackContext.Track.ParseSample(sample.Array, sample.Offset, sample.Count);
+        }
+
+        /// <summary>
+        /// The units of a sample of a track, as <see cref="ParseSample(uint, ArraySegment{byte})"/>, added to a list of the
+        /// caller's: a server sending sample after sample parses them all into one, of nothing allocated of each.
+        /// </summary>
+        public void ParseSample(uint trackID, ArraySegment<byte> sample, List<ArraySegment<byte>> units)
+        {
+            var track = TrackContextOf(trackID).Track;
+            if (track is TrackBase trackBase)
+            {
+                trackBase.ParseSample(sample.Array, sample.Offset, sample.Count, units);
+                return;
+            }
+            if (units == null)
+                throw new ArgumentNullException(nameof(units));
+            foreach (var unit in track.ParseSample(sample.Array, sample.Offset, sample.Count))
+                units.Add(unit);
         }
 
         /// <summary>
@@ -1183,10 +1257,17 @@ namespace SharpMP4.Readers
         /// <summary>The protection of the current fragment's sample entry: null where it is in the clear.</summary>
         public TrackProtection FragmentProtection { get; set; }
         public TrackExtendsBox Trex { get; set; }
-        public int[] FragmentSampleTrunIndex { get; set; }
-        public int[] FragmentSampleTrunEntryIndex { get; set; }
-        public long[] FragmentSampleStartAddress { get; set; }
-        public long[] FragmentSampleDts { get; set; }
+        /// <summary>Of each of the current fragment's samples, the index of its run: of <see cref="FragmentSampleCount"/> entries.</summary>
+        public FragmentTable<int> FragmentSampleTrunIndex { get; } = new FragmentTable<int>();
+
+        /// <summary>Of each of the current fragment's samples, the index of its entry in its run.</summary>
+        public FragmentTable<int> FragmentSampleTrunEntryIndex { get; } = new FragmentTable<int>();
+
+        /// <summary>Of each of the current fragment's samples, where it starts in the file.</summary>
+        public FragmentTable<long> FragmentSampleStartAddress { get; } = new FragmentTable<long>();
+
+        /// <summary>Of each of the current fragment's samples, its decode time.</summary>
+        public FragmentTable<long> FragmentSampleDts { get; } = new FragmentTable<long>();
 
         /// <summary>How many samples the current fragment has; an array of them, so no more than an int counts.</summary>
         public int FragmentSampleCount { get; set; }

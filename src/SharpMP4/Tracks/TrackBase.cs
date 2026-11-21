@@ -159,6 +159,19 @@ namespace SharpMP4.Tracks
             return [ new ArraySegment<byte>(buffer, offset, length) ];
         }
 
+        /// <summary>
+        /// The units a sample is made of, as <see cref="ParseSample(byte[], int, int)"/>, added to a list of the caller's
+        /// rather than of an enumerable of their own: of a track read sample after sample into one list, none allocated of
+        /// each. As those, each a slice of where it already lies; of the base, the sample its one unit. A track parsing a
+        /// sample of its own - overriding <see cref="ParseSample(byte[], int, int)"/> - overrides this too.
+        /// </summary>
+        public virtual void ParseSample(byte[] buffer, int offset, int length, List<ArraySegment<byte>> units)
+        {
+            if (units == null)
+                throw new ArgumentNullException(nameof(units));
+            units.Add(new ArraySegment<byte>(buffer, offset, length));
+        }
+
         public abstract ITrack Clone();
 
         /// <summary>

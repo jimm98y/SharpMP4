@@ -144,4 +144,38 @@ public class ReaderSampleReuseTests
         Assert.AreEqual(0, allocated, $"bytes allocated reading {count - 1} samples");
     }
 #endif
+
+    /// <summary>
+    /// The tables of a fragment's samples are the track's, filled again of each fragment: of exactly its count of samples,
+    /// their entries none past it.
+    /// </summary>
+    [TestMethod]
+    public void TheFragmentTablesAreTheTracksOfEachFragmentsCount()
+    {
+        var reader = Open(Build("fragmented"), out uint trackID);
+        var track = reader.Tracks[trackID];
+        var (starts, times) = (track.FragmentSampleStartAddress, track.FragmentSampleDts);
+        var sample = new MediaSample();
+        int read = 0;
+        while (reader.ReadSample(trackID, sample))
+        {
+            read++;
+            if (!track.IsReadingFragments)
+                continue;
+            Assert.AreSame(starts, track.FragmentSampleStartAddress);
+            Assert.AreSame(times, track.FragmentSampleDts);
+            Assert.AreEqual(track.FragmentSampleCount, track.FragmentSampleDts.Count);
+            Assert.AreEqual(track.FragmentSampleCount, track.FragmentSampleTrunIndex.Count);
+            Assert.AreEqual(track.FragmentSampleCount, track.FragmentSampleStartAddress.Count());
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => track.FragmentSampleDts[track.FragmentSampleCount]);
+        }
+        Assert.AreEqual(12, read);
+
+        // cleared, of none: the same table, filled again of the next fragment read
+        track.FragmentSampleDts.Clear();
+        Assert.AreEqual(0, track.FragmentSampleDts.Count);
+        Assert.IsFalse(track.FragmentSampleDts.Any());
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => track.FragmentSampleDts[0]);
+        Assert.AreSame(times, track.FragmentSampleDts);
+    }
 }

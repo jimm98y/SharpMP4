@@ -169,3 +169,28 @@ SharpMP4.Tracks.XmlMetadataTrack.XmlMetadataTrack(string ns, string schemaLocati
 override SharpMP4.Tracks.XmlMetadataTrack.Clone() -> SharpMP4.Tracks.ITrack
 override SharpMP4.Tracks.XmlMetadataTrack.CreateMetadataSampleEntry() -> SharpISOBMFF.MetaDataSampleEntry
 override SharpMP4.Tracks.XmlMetadataTrack.SampleEntryType.get -> string
+SharpMP4.Readers.VideoReader.ParseSample(uint trackID, System.ArraySegment<byte> sample, System.Collections.Generic.List<System.ArraySegment<byte>> units) -> void
+virtual SharpMP4.Tracks.TrackBase.ParseSample(byte[] buffer, int offset, int length, System.Collections.Generic.List<System.ArraySegment<byte>> units) -> void
+override SharpMP4.Tracks.H26XTrackBase.ParseSample(byte[] buffer, int offset, int length, System.Collections.Generic.List<System.ArraySegment<byte>> units) -> void
+override SharpMP4.Tracks.AV1Track.ParseSample(byte[] buffer, int offset, int length, System.Collections.Generic.List<System.ArraySegment<byte>> units) -> void
+override SharpMP4.Tracks.AV2Track.ParseSample(byte[] buffer, int offset, int length, System.Collections.Generic.List<System.ArraySegment<byte>> units) -> void
+override SharpMP4.Tracks.H262Track.ParseSample(byte[] buffer, int offset, int length, System.Collections.Generic.List<System.ArraySegment<byte>> units) -> void
+override SharpMP4.Tracks.MPEG4Track.ParseSample(byte[] buffer, int offset, int length, System.Collections.Generic.List<System.ArraySegment<byte>> units) -> void
+override SharpMP4.Tracks.VP9Track.ParseSample(byte[] buffer, int offset, int length, System.Collections.Generic.List<System.ArraySegment<byte>> units) -> void
+*REMOVED*SharpMP4.Readers.TrackContext.FragmentSampleDts.get -> long[]
+*REMOVED*SharpMP4.Readers.TrackContext.FragmentSampleDts.set -> void
+*REMOVED*SharpMP4.Readers.TrackContext.FragmentSampleStartAddress.get -> long[]
+*REMOVED*SharpMP4.Readers.TrackContext.FragmentSampleStartAddress.set -> void
+*REMOVED*SharpMP4.Readers.TrackContext.FragmentSampleTrunEntryIndex.get -> int[]
+*REMOVED*SharpMP4.Readers.TrackContext.FragmentSampleTrunEntryIndex.set -> void
+*REMOVED*SharpMP4.Readers.TrackContext.FragmentSampleTrunIndex.get -> int[]
+*REMOVED*SharpMP4.Readers.TrackContext.FragmentSampleTrunIndex.set -> void
+SharpMP4.Readers.FragmentTable<T>
+SharpMP4.Readers.FragmentTable<T>.Count.get -> int
+SharpMP4.Readers.FragmentTable<T>.GetEnumerator() -> System.Collections.Generic.IEnumerator<T>
+SharpMP4.Readers.FragmentTable<T>.this[int index].get -> T
+SharpMP4.Readers.TrackContext.FragmentSampleDts.get -> SharpMP4.Readers.FragmentTable<long>
+SharpMP4.Readers.TrackContext.FragmentSampleStartAddress.get -> SharpMP4.Readers.FragmentTable<long>
+SharpMP4.Readers.TrackContext.FragmentSampleTrunEntryIndex.get -> SharpMP4.Readers.FragmentTable<int>
+SharpMP4.Readers.TrackContext.FragmentSampleTrunIndex.get -> SharpMP4.Readers.FragmentTable<int>
+SharpMP4.Readers.FragmentTable<T>.Clear() -> void

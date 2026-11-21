@@ -331,6 +331,38 @@ namespace SharpMP4.Tracks
             ParseLengthPrefixed(buffer, offset, length);
 
         /// <summary>
+        /// The NAL units of a sample, as <see cref="ParseSample(byte[], int, int)"/>, added to the caller's list: of no
+        /// iterator of each sample.
+        /// </summary>
+        public override void ParseSample(byte[] buffer, int offset, int length, List<ArraySegment<byte>> units)
+        {
+            if (units == null)
+                throw new ArgumentNullException(nameof(units));
+
+            int position = 0;
+            while (position + NalLengthSize <= length)
+            {
+                long nalUnitLength = 0;
+                for (int i = 0; i < NalLengthSize; i++)
+                    nalUnitLength = (nalUnitLength << 8) | buffer[offset + position + i];
+
+                position += NalLengthSize;
+
+                if (nalUnitLength > length - position)
+                {
+                    if (this.Logger.IsErrorEnabled) this.Logger.LogError($"{nameof(H26XTrackBase)}: Invalid NALU size: {nalUnitLength}");
+                    nalUnitLength = length - position;
+                }
+
+                units.Add(new ArraySegment<byte>(buffer, offset + position, (int)nalUnitLength));
+                position += (int)nalUnitLength;
+            }
+
+            if (position != length)
+                throw new Exception("Mismatch!");
+        }
+
+        /// <summary>
         /// The NAL units of a buffer of the Annex B byte stream - each behind a start code of three or
         /// four bytes, as an encoder hands them out - each without its start code.
         /// </summary>
