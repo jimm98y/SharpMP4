@@ -248,6 +248,15 @@ namespace SharpMP4.Tracks
             tkhd.Height = (uint)_renderHeight << 16;
         }
 
+        /// <summary>The units of a sample, as <see cref="ParseSample(byte[], int, int)"/>, added to the caller's list.</summary>
+        public override void ParseSample(byte[] buffer, int offset, int length, List<ArraySegment<byte>> units)
+        {
+            if (units == null)
+                throw new ArgumentNullException(nameof(units));
+            foreach (var unit in ParseSample(buffer, offset, length))
+                units.Add(unit);
+        }
+
         /// <summary>
         /// The sample, whole: what <see cref="ProcessSample(byte[], int, int, out ArraySegment{byte}, out bool)"/> takes is a
         /// sample - a frame, or a superframe with its index - so what this hands out, given to it, makes the same sample, as

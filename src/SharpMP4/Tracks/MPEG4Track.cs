@@ -281,6 +281,15 @@ namespace SharpMP4.Tracks
             tkhd.Height = _height << 16;
         }
 
+        /// <summary>The units of a sample, as <see cref="ParseSample(byte[], int, int)"/>, added to the caller's list.</summary>
+        public override void ParseSample(byte[] buffer, int offset, int length, List<ArraySegment<byte>> units)
+        {
+            if (units == null)
+                throw new ArgumentNullException(nameof(units));
+            foreach (var unit in ParseSample(buffer, offset, length))
+                units.Add(unit);
+        }
+
         /// <summary>The units of a sample, each from its start code to the next.</summary>
         public override IEnumerable<ArraySegment<byte>> ParseSample(byte[] buffer, int offset, int length) =>
             MPEG4Context.Units(buffer, offset, length).Select(u => new ArraySegment<byte>(buffer, u.Offset, u.Length)).ToList();

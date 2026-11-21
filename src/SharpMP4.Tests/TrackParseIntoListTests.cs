@@ -51,6 +51,20 @@ public class TrackParseIntoListTests
         AssertSameUnits(new AACTrack(2, 48000, 16), TwoNalUnits, 5, TwoNalUnits.Length - 5);
         // of a track parsing of its own enumerable alone: two temporal delimiters of size fields
         AssertSameUnits(new AV1Track(), [0x12, 0x00, 0x12, 0x00], 0, 4);
+        AssertSameUnits(new VP9Track(), TwoNalUnits, 5, TwoNalUnits.Length - 5);
+    }
+
+    // a track parsing a sample of its own parses it into a list too: of the base's, the sample would be its one unit
+    [TestMethod]
+    public void EveryTrackOfItsOwnParseOfAListToo()
+    {
+        Type[] parse = [typeof(byte[]), typeof(int), typeof(int)], parseInto = [typeof(byte[]), typeof(int), typeof(int), typeof(List<ArraySegment<byte>>)];
+        foreach (var type in typeof(TrackBase).Assembly.GetTypes().Where(t => typeof(TrackBase).IsAssignableFrom(t)))
+        {
+            bool own = type.GetMethod(nameof(TrackBase.ParseSample), parse)?.DeclaringType == type;
+            bool ownInto = type.GetMethod(nameof(TrackBase.ParseSample), parseInto)?.DeclaringType == type;
+            Assert.IsTrue(!own || ownInto, type.Name);
+        }
     }
 
 #if NET

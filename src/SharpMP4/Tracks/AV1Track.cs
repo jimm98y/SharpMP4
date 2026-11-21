@@ -396,6 +396,15 @@ namespace SharpMP4.Tracks
             tkhd.Height = (uint)Height << 16;
         }
 
+        /// <summary>The units of a sample, as <see cref="ParseSample(byte[], int, int)"/>, added to the caller's list.</summary>
+        public override void ParseSample(byte[] buffer, int offset, int length, List<ArraySegment<byte>> units)
+        {
+            if (units == null)
+                throw new ArgumentNullException(nameof(units));
+            foreach (var unit in ParseSample(buffer, offset, length))
+                units.Add(unit);
+        }
+
         /// <summary>
         /// The OBUs of a sample, each with its header and size, as a slice of the sample: what given to
         /// <see cref="ProcessSample(byte[], int, int, out ArraySegment{byte}, out bool)"/> one at a time makes the sample again.
