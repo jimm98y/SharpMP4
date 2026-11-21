@@ -945,6 +945,24 @@ namespace SharpMP4.Readers
         }
 
         /// <summary>
+        /// The units of a sample of a track, as <see cref="ParseSample(uint, ArraySegment{byte})"/>, added to a list of the
+        /// caller's: a server sending sample after sample parses them all into one, of nothing allocated of each.
+        /// </summary>
+        public void ParseSample(uint trackID, ArraySegment<byte> sample, List<ArraySegment<byte>> units)
+        {
+            var track = TrackContextOf(trackID).Track;
+            if (track is TrackBase trackBase)
+            {
+                trackBase.ParseSample(sample.Array, sample.Offset, sample.Count, units);
+                return;
+            }
+            if (units == null)
+                throw new ArgumentNullException(nameof(units));
+            foreach (var unit in track.ParseSample(sample.Array, sample.Offset, sample.Count))
+                units.Add(unit);
+        }
+
+        /// <summary>
         /// The times of each of a track's samples, and which a decoder can start at: by index, in the order
         /// <see cref="ReadSample"/> reads them - the 'moov's, then those of the fragments - and with the times it gives
         /// them: what a player seeks by.

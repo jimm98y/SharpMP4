@@ -169,3 +169,6 @@ SharpMP4.Tracks.XmlMetadataTrack.XmlMetadataTrack(string ns, string schemaLocati
 override SharpMP4.Tracks.XmlMetadataTrack.Clone() -> SharpMP4.Tracks.ITrack
 override SharpMP4.Tracks.XmlMetadataTrack.CreateMetadataSampleEntry() -> SharpISOBMFF.MetaDataSampleEntry
 override SharpMP4.Tracks.XmlMetadataTrack.SampleEntryType.get -> string
+SharpMP4.Readers.VideoReader.ParseSample(uint trackID, System.ArraySegment<byte> sample, System.Collections.Generic.List<System.ArraySegment<byte>> units) -> void
+virtual SharpMP4.Tracks.TrackBase.ParseSample(byte[] buffer, int offset, int length, System.Collections.Generic.List<System.ArraySegment<byte>> units) -> void
+override SharpMP4.Tracks.H26XTrackBase.ParseSample(byte[] buffer, int offset, int length, System.Collections.Generic.List<System.ArraySegment<byte>> units) -> void

@@ -159,6 +159,29 @@ namespace SharpMP4.Tracks
             return [ new ArraySegment<byte>(buffer, offset, length) ];
         }
 
+        // whether this type parses a sample of its own: of none, the sample is its one unit; -1 until it is looked up
+        private int _parsesOwn = -1;
+
+        /// <summary>
+        /// The units a sample is made of, as <see cref="ParseSample(byte[], int, int)"/>, added to a list of the caller's
+        /// rather than of an enumerable of their own: of a track read sample after sample into one list, none allocated of
+        /// each. As those, each a slice of where it already lies.
+        /// </summary>
+        public virtual void ParseSample(byte[] buffer, int offset, int length, List<ArraySegment<byte>> units)
+        {
+            if (units == null)
+                throw new ArgumentNullException(nameof(units));
+            if (_parsesOwn < 0)
+                _parsesOwn = GetType().GetMethod(nameof(ParseSample), new[] { typeof(byte[]), typeof(int), typeof(int) }).DeclaringType == typeof(TrackBase) ? 0 : 1;
+            if (_parsesOwn == 0)
+            {
+                units.Add(new ArraySegment<byte>(buffer, offset, length));
+                return;
+            }
+            foreach (var unit in ParseSample(buffer, offset, length))
+                units.Add(unit);
+        }
+
         public abstract ITrack Clone();
 
         /// <summary>
