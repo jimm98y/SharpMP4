@@ -6,11 +6,11 @@ SharpAV2 and SharpVP9, and two checks run on every `dotnet build` of each:
 
 - **The API files.** `PublicAPI.Shipped.txt` and `PublicAPI.Unshipped.txt` next to each project list
   its public types and members, the generated ones (the boxes, the syntax of each codec) among them.
-  They are the same on all four target frameworks: netstandard2.0, net472, net8.0 and net10.0. Shipped is the API as released; Unshipped is what
+  They are the same on all four target frameworks: netstandard2.0, net472, net10.0 and net11.0. Shipped is the API as released; Unshipped is what
   changed since. A public symbol missing from them is a warning, RS0016, until it is
   listed - an addition breaks no one - and a listed one that is gone fails the build with RS0017.
 - **Package validation.** Each package being built is checked for its target frameworks agreeing
-  with one another: what netstandard2.0 offers, net472, net8.0 and net10.0 have to offer too. A library with a release
+  with one another: what netstandard2.0 offers, net472, net10.0 and net11.0 have to offer too. A library with a release
   is compared with it as well (`PackageValidationBaselineVersion` in its project, 0.3.2 now), and every
   binary or source breaking change fails the build with a CP error. SharpAV2, SharpAVX, SharpVP9,
   SharpH261, SharpH262, SharpH263, SharpMPEG4 and SharpProRes have no release yet.
@@ -59,7 +59,7 @@ rebuild and validates whatever binaries are already in `bin`.
 
 Against 0.3.2, the `CompatibilitySuppressions.xml` files record what 0.4.0 changes, about a thousand
 breaks, each once for each target framework 0.3.2 had: its net481 against the net472 that a net481
-application now gets, and net8.0 and net10.0 against their own:
+application now gets, and net10.0 and net11.0 against their own:
 
 - **SharpISOBMFF**: the boxes as generated now - fields renamed, retyped or gone, boxes of other base
   types, a few boxes removed - and `IMp4Serializable` with `Syntax` and `Trace`. On .NET Framework,
