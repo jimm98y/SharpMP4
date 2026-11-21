@@ -432,10 +432,16 @@ namespace SharpMP4.Readers
                             long startAddressBase = BaseDataOffsetOf(currentMoof, traf);
 
                             trackContext.FragmentBaseAddress = startAddressBase;
-                            trackContext.FragmentSampleStartAddress = new long[sampleCount];
-                            trackContext.FragmentSampleDts = new long[sampleCount];
-                            trackContext.FragmentSampleTrunIndex = new int[sampleCount];
-                            trackContext.FragmentSampleTrunEntryIndex = new int[sampleCount];
+                            // those of the fragment before, of as many samples - as an encoder's fragments are, but for the
+                            //  last - filled again: of tables of each, four arrays of each fragment of each track
+                            if (trackContext.FragmentSampleStartAddress?.Length != sampleCount || trackContext.FragmentSampleDts?.Length != sampleCount
+                                || trackContext.FragmentSampleTrunIndex?.Length != sampleCount || trackContext.FragmentSampleTrunEntryIndex?.Length != sampleCount)
+                            {
+                                trackContext.FragmentSampleStartAddress = new long[sampleCount];
+                                trackContext.FragmentSampleDts = new long[sampleCount];
+                                trackContext.FragmentSampleTrunIndex = new int[sampleCount];
+                                trackContext.FragmentSampleTrunEntryIndex = new int[sampleCount];
+                            }
                             trackContext.FragmentLargestSample = 0;
 
                             int sampleIndex = 0;
