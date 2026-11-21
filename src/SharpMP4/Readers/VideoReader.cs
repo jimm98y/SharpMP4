@@ -401,21 +401,24 @@ namespace SharpMP4.Readers
                 if (container.Children[i] is MovieFragmentBox)
                 {
                     var currentMoof = (MovieFragmentBox)container.Children[i];
-                    var mfhd = currentMoof.Children.OfType<MovieFragmentHeaderBox>().Single();
-                    var trafs = currentMoof.Children.OfType<TrackFragmentBox>();
-                    foreach (var traf in trafs)
+                    SingleChild<MovieFragmentHeaderBox>(currentMoof, required: true);
+                    // of the boxes by index, not of OfType's: of an iterator and an enumerator of each look, of each fragment
+                    var moofChildren = currentMoof.Children;
+                    for (int t = 0; t < moofChildren.Count; t++)
                     {
-                        var tfhd = traf.Children.OfType<TrackFragmentHeaderBox>().Single();
+                        if (!(moofChildren[t] is TrackFragmentBox traf))
+                            continue;
+                        var tfhd = SingleChild<TrackFragmentHeaderBox>(traf, required: true);
                         if(tfhd.TrackID == trackID)
                         {
                             moof = currentMoof;
                             trackContext.Moof = moof;
                             trackContext.Traf = traf;
                             trackContext.Tfhd = tfhd;
-                            trackContext.Truns = traf.Children.OfType<TrackRunBox>().ToArray(); // there can be 1 or multiple trun boxes, depending upon the encoder
+                            trackContext.Truns = RunsOf(traf, trackContext.Truns); // there can be 1 or multiple trun boxes, depending upon the encoder
                             foreach (var trun in trackContext.Truns)
                                 EntriesOf(trun);
-                            var tfdt = traf.Children.OfType<TrackFragmentBaseMediaDecodeTimeBox>().SingleOrDefault();
+                            var tfdt = SingleChild<TrackFragmentBaseMediaDecodeTimeBox>(traf, required: false);
 
                             // pre-calculate DTS and address for the fragment
                             int sampleCount = 0;
@@ -611,14 +614,57 @@ namespace SharpMP4.Readers
         /// one; else the start of the 'moof' where default-base-is-moof is set, or it is the first track fragment; else
         /// the end of the data of the track fragment before it.
         /// </summary>
+        // the child of a box of the type: as Single, of none or more than one an error where it is required; as
+        //  SingleOrDefault, of more than one, where not - of the boxes by index, of no iterator nor enumerator of each look
+        private static T SingleChild<T>(Box box, bool required) where T : Box
+        {
+            T found = null;
+            var children = box.Children;
+            for (int i = 0; i < children.Count; i++)
+            {
+                if (children[i] is T child)
+                {
+                    if (found != null)
+                        throw new InvalidOperationException($"More than one {typeof(T).Name} in a {box.GetType().Name}.");
+                    found = child;
+                }
+            }
+            if (found == null && required)
+                throw new InvalidOperationException($"No {typeof(T).Name} in a {box.GetType().Name}.");
+            return found;
+        }
+
+        // the runs of a track fragment, of the array before where it is of as many: of a fragment of one run, as most are, none
+        //  made of each
+        private static TrackRunBox[] RunsOf(TrackFragmentBox traf, TrackRunBox[] before)
+        {
+            var children = traf.Children;
+            int count = 0;
+            for (int i = 0; i < children.Count; i++)
+            {
+                if (children[i] is TrackRunBox)
+                    count++;
+            }
+            var runs = before != null && before.Length == count ? before : new TrackRunBox[count];
+            for (int i = 0, k = 0; i < children.Count; i++)
+            {
+                if (children[i] is TrackRunBox trun)
+                    runs[k++] = trun;
+            }
+            return runs;
+        }
+
         private long BaseDataOffsetOf(MovieFragmentBox moof, TrackFragmentBox target)
         {
             long moofOffset = moof.GetBoxOffset();
             long previousEnd = moofOffset;
             bool first = true;
-            foreach (var traf in moof.Children.OfType<TrackFragmentBox>())
+            var moofChildren = moof.Children;
+            for (int t = 0; t < moofChildren.Count; t++)
             {
-                var tfhd = traf.Children.OfType<TrackFragmentHeaderBox>().Single();
+                if (!(moofChildren[t] is TrackFragmentBox traf))
+                    continue;
+                var tfhd = SingleChild<TrackFragmentHeaderBox>(traf, required: true);
                 long baseOffset = (tfhd.Flags & 0x1) == 0x1 ? (long)tfhd.BaseDataOffset
                     : (tfhd.Flags & 0x20000) == 0x20000 || first ? moofOffset
                     : previousEnd;
@@ -626,11 +672,20 @@ namespace SharpMP4.Readers
                     return baseOffset;
 
                 // where this track fragment's data ends: after the last byte of its runs
-                var trex = this.Mvex?.Children.OfType<TrackExtendsBox>().FirstOrDefault(x => x.TrackID == tfhd.TrackID);
+                TrackExtendsBox trex = null;
+                var mvexChildren = this.Mvex?.Children;
+                for (int i = 0; mvexChildren != null && i < mvexChildren.Count && trex == null; i++)
+                {
+                    if (mvexChildren[i] is TrackExtendsBox extends && extends.TrackID == tfhd.TrackID)
+                        trex = extends;
+                }
                 long position = baseOffset;
                 previousEnd = baseOffset;
-                foreach (var trun in traf.Children.OfType<TrackRunBox>())
+                var trafChildren = traf.Children;
+                for (int r = 0; r < trafChildren.Count; r++)
                 {
+                    if (!(trafChildren[r] is TrackRunBox trun))
+                        continue;
                     if ((trun.Flags & 0x1) == 0x1)
                         position = baseOffset + trun.DataOffset;
                     foreach (var entry in trun._TrunEntry ?? Array.Empty<TrunEntry>())
