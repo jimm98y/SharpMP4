@@ -432,16 +432,11 @@ namespace SharpMP4.Readers
                             long startAddressBase = BaseDataOffsetOf(currentMoof, traf);
 
                             trackContext.FragmentBaseAddress = startAddressBase;
-                            // those of the fragment before, of as many samples - as an encoder's fragments are, but for the
-                            //  last - filled again: of tables of each, four arrays of each fragment of each track
-                            if (trackContext.FragmentSampleStartAddress?.Length != sampleCount || trackContext.FragmentSampleDts?.Length != sampleCount
-                                || trackContext.FragmentSampleTrunIndex?.Length != sampleCount || trackContext.FragmentSampleTrunEntryIndex?.Length != sampleCount)
-                            {
-                                trackContext.FragmentSampleStartAddress = new long[sampleCount];
-                                trackContext.FragmentSampleDts = new long[sampleCount];
-                                trackContext.FragmentSampleTrunIndex = new int[sampleCount];
-                                trackContext.FragmentSampleTrunEntryIndex = new int[sampleCount];
-                            }
+                            // the track's tables filled again, of the fragment's count of samples
+                            trackContext.FragmentSampleStartAddress.Reset(sampleCount);
+                            trackContext.FragmentSampleDts.Reset(sampleCount);
+                            trackContext.FragmentSampleTrunIndex.Reset(sampleCount);
+                            trackContext.FragmentSampleTrunEntryIndex.Reset(sampleCount);
                             trackContext.FragmentLargestSample = 0;
 
                             int sampleIndex = 0;
@@ -837,8 +832,8 @@ namespace SharpMP4.Readers
                     return ReadFragmentedMp4Sample(trackID, trackContext, into);
             }
 
-            var trun = trackContext.Truns[trackContext.FragmentSampleTrunIndex[trackContext.SampleIndex]];
-            int trunEntryIndex = trackContext.FragmentSampleTrunEntryIndex[trackContext.SampleIndex];
+            var trun = trackContext.Truns[trackContext.FragmentSampleTrunIndex[(int)trackContext.SampleIndex]];
+            int trunEntryIndex = trackContext.FragmentSampleTrunEntryIndex[(int)trackContext.SampleIndex];
 
             var entry = trun._TrunEntry[trunEntryIndex];
 
@@ -849,10 +844,10 @@ namespace SharpMP4.Readers
             bool isRandomAccessPoint = IsSyncSampleOf(sampleFlags);
             int sampleCompositionTime = CompositionOffsetOf(entry);
 
-            long dts = trackContext.FragmentSampleDts[trackContext.SampleIndex];
+            long dts = trackContext.FragmentSampleDts[(int)trackContext.SampleIndex];
             long pts = dts + sampleCompositionTime;
 
-            long startAddress = trackContext.FragmentSampleStartAddress[trackContext.SampleIndex];
+            long startAddress = trackContext.FragmentSampleStartAddress[(int)trackContext.SampleIndex];
 
             // Into the track's own buffer, as in the unfragmented case: made the size of the fragment's largest sample at
             // once, rather than grown into.
@@ -1207,10 +1202,17 @@ namespace SharpMP4.Readers
         /// <summary>The protection of the current fragment's sample entry: null where it is in the clear.</summary>
         public TrackProtection FragmentProtection { get; set; }
         public TrackExtendsBox Trex { get; set; }
-        public int[] FragmentSampleTrunIndex { get; set; }
-        public int[] FragmentSampleTrunEntryIndex { get; set; }
-        public long[] FragmentSampleStartAddress { get; set; }
-        public long[] FragmentSampleDts { get; set; }
+        /// <summary>Of each of the current fragment's samples, the index of its run: of <see cref="FragmentSampleCount"/> entries.</summary>
+        public FragmentTable<int> FragmentSampleTrunIndex { get; } = new FragmentTable<int>();
+
+        /// <summary>Of each of the current fragment's samples, the index of its entry in its run.</summary>
+        public FragmentTable<int> FragmentSampleTrunEntryIndex { get; } = new FragmentTable<int>();
+
+        /// <summary>Of each of the current fragment's samples, where it starts in the file.</summary>
+        public FragmentTable<long> FragmentSampleStartAddress { get; } = new FragmentTable<long>();
+
+        /// <summary>Of each of the current fragment's samples, its decode time.</summary>
+        public FragmentTable<long> FragmentSampleDts { get; } = new FragmentTable<long>();
 
         /// <summary>How many samples the current fragment has; an array of them, so no more than an int counts.</summary>
         public int FragmentSampleCount { get; set; }
